@@ -10,8 +10,20 @@
 
 static void init (void) {
     assertf(usb_initialize() != CART_NONE, "No flashcart was detected");
+    switch (flashcart_init()) {
+        case FLASHCART_OK:
+            break;
+        case FLASHCART_ERROR_OUTDATED:
+            assertf(false, "Outdated flashcart firmware");
+            break;
+        case FLASHCART_ERROR_UNSUPPORTED:
+            assertf(false, "Unsupported flashcart");
+            break;
+        default:
+            assertf(false, "Unknown error while initializing flashcart");
+            break;
+    }
     assertf(debug_init_sdfs("sd:/", -1), "Couldn't initialize SD card");
-    assertf(flashcart_init(), "Couldn't initialize flashcart");
 }
 
 static void deinit (void) {

@@ -8,6 +8,8 @@
 
 typedef enum {
     FLASHCART_OK,
+    FLASHCART_ERROR_UNSUPPORTED,
+    FLASHCART_ERROR_OUTDATED,
     FLASHCART_ERROR_ARGS,
     FLASHCART_ERROR_LOAD,
     FLASHCART_ERROR_INT,
@@ -25,8 +27,8 @@ typedef enum {
 } flashcart_save_type_t;
 
 typedef struct {
-    bool (*init) (void);
-    void (*deinit) (void);
+    flashcart_error_t (*init) (void);
+    flashcart_error_t (*deinit) (void);
     flashcart_error_t (*load_rom) (char *rom_path);
     flashcart_error_t (*load_save) (char *save_path);
     flashcart_error_t (*set_save_type) (flashcart_save_type_t save_type);
@@ -34,8 +36,8 @@ typedef struct {
 } flashcart_t;
 
 
-bool flashcart_init (void);
-void flashcart_deinit (void);
+flashcart_error_t flashcart_init (void);
+flashcart_error_t flashcart_deinit (void);
 flashcart_error_t flashcart_load_rom (char *rom_path);
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type, bool save_writeback);
 

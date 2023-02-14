@@ -25,21 +25,21 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
 static flashcart_t *flashcart;
 
 
-bool flashcart_init (void) {
+flashcart_error_t flashcart_init (void) {
     switch (usb_getcart()) {
         case CART_SC64:
             flashcart = sc64_get_flashcart();
             break;
 
         default:
-            return false;
+            return FLASHCART_ERROR_UNSUPPORTED;
     }
 
     return flashcart->init();
 }
 
-void flashcart_deinit (void) {
-    flashcart->deinit();
+flashcart_error_t flashcart_deinit (void) {
+    return flashcart->deinit();
 }
 
 flashcart_error_t flashcart_load_rom (char *rom_path) {

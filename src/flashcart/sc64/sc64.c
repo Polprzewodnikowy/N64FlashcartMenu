@@ -12,11 +12,13 @@
 #include "sc64.h"
 
 
-#define SRAM_FLASHRAM_ADDRESS   (0x08000000)
-#define ROM_ADDRESS             (0x10000000)
-#define EXTENDED_ADDRESS        (0x14000000)
-#define SHADOW_ADDRESS          (0x1FFC0000)
-#define EEPROM_ADDRESS          (0x1FFE2000)
+#define SRAM_FLASHRAM_ADDRESS       (0x08000000)
+#define ROM_ADDRESS                 (0x10000000)
+#define EXTENDED_ADDRESS            (0x14000000)
+#define SHADOW_ADDRESS              (0x1FFC0000)
+#define EEPROM_ADDRESS              (0x1FFE2000)
+
+#define MIN_SUPPORTED_API_VERSION   (1)
 
 
 static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br) {
@@ -49,13 +51,29 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
 }
 
 
-static bool sc64_init (void) {
+static flashcart_error_t sc64_init (void) {
+    uint32_t api_version;
+
     sc64_unlock();
-    return sc64_check_presence();
+
+    if (!sc64_check_presence()) {
+        return FLASHCART_ERROR_UNSUPPORTED;
+    }
+
+    if (sc64_get_api_version(&api_version) != SC64_OK) {
+        return FLASHCART_ERROR_OUTDATED;
+    }
+
+    if (api_version < MIN_SUPPORTED_API_VERSION) {
+        return FLASHCART_ERROR_OUTDATED;
+    }
+
+    return FLASHCART_OK;
 }
 
-static void sc64_deinit (void) {
+static flashcart_error_t sc64_deinit (void) {
     sc64_lock();
+    return FLASHCART_OK;
 }
 
 static flashcart_error_t sc64_load_rom (char *rom_path) {

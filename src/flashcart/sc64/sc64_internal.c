@@ -26,6 +26,7 @@ typedef struct {
 
 
 typedef enum {
+    CMD_ID_API_VERSION_GET      = 'V',
     CMD_ID_CONFIG_GET           = 'c',
     CMD_ID_CONFIG_SET           = 'C',
     CMD_ID_WRITEBACK_SD_INFO    = 'W',
@@ -87,6 +88,13 @@ void sc64_write_data (void *src, void *dst, size_t length) {
     data_cache_hit_writeback(src, length);
     dma_write_raw_async(src, (uint32_t) (dst), length);
     dma_wait();
+}
+
+sc64_error_t sc64_get_api_version (uint32_t *api_version) {
+    sc64_cmd_t cmd = { .id = CMD_ID_API_VERSION_GET };
+    sc64_error_t error = sc64_execute_cmd(&cmd);
+    *api_version = cmd.rsp[0];
+    return error;
 }
 
 sc64_error_t sc64_get_config (sc64_cfg_t id, void *value) {

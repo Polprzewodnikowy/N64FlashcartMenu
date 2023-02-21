@@ -6,7 +6,7 @@
 typedef struct {
     uint32_t SR_CMD;
     uint32_t DATA[2];
-    uint32_t VERSION;
+    uint32_t IDENTIFIER;
     uint32_t KEY;
 } sc64_regs_t;
 
@@ -17,7 +17,7 @@ typedef struct {
 #define SC64_SR_CMD_ERROR       (1 << 30)
 #define SC64_SR_CPU_BUSY        (1 << 31)
 
-#define SC64_VERSION_2          (0x53437632)
+#define SC64_V2_IDENTIFIER      (0x53437632)
 
 #define SC64_KEY_RESET          (0x00000000UL)
 #define SC64_KEY_UNLOCK_1       (0x5F554E4CUL)
@@ -26,7 +26,7 @@ typedef struct {
 
 
 typedef enum {
-    CMD_ID_API_VERSION_GET      = 'V',
+    CMD_ID_VERSION_GET          = 'V',
     CMD_ID_CONFIG_GET           = 'c',
     CMD_ID_CONFIG_SET           = 'C',
     CMD_ID_WRITEBACK_SD_INFO    = 'W',
@@ -75,7 +75,7 @@ void sc64_lock (void) {
 }
 
 bool sc64_check_presence (void) {
-    return (io_read((uint32_t) (&SC64_REGS->VERSION)) == SC64_VERSION_2);
+    return (io_read((uint32_t) (&SC64_REGS->IDENTIFIER)) == SC64_V2_IDENTIFIER);
 }
 
 void sc64_read_data (void *src, void *dst, size_t length) {
@@ -90,10 +90,11 @@ void sc64_write_data (void *src, void *dst, size_t length) {
     dma_wait();
 }
 
-sc64_error_t sc64_get_api_version (uint32_t *api_version) {
-    sc64_cmd_t cmd = { .id = CMD_ID_API_VERSION_GET };
+sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor) {
+    sc64_cmd_t cmd = { .id = CMD_ID_VERSION_GET };
     sc64_error_t error = sc64_execute_cmd(&cmd);
-    *api_version = cmd.rsp[0];
+    *major = ((cmd.rsp[0] >> 16) & 0xFFFF);
+    *minor = (cmd.rsp[0] & 0xFFFF);
     return error;
 }
 

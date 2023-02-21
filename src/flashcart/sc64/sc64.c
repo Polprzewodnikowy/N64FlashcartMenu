@@ -18,7 +18,8 @@
 #define SHADOW_ADDRESS              (0x1FFC0000)
 #define EEPROM_ADDRESS              (0x1FFE2000)
 
-#define MIN_SUPPORTED_API_VERSION   (1)
+#define SUPPORTED_MAJOR_VERSION     (2)
+#define SUPPORTED_MINOR_VERSION     (12)
 
 
 static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br) {
@@ -52,19 +53,21 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
 
 
 static flashcart_error_t sc64_init (void) {
-    uint32_t api_version;
+    uint16_t major;
+    uint16_t minor;
 
     sc64_unlock();
 
     if (!sc64_check_presence()) {
         return FLASHCART_ERROR_UNSUPPORTED;
     }
-
-    if (sc64_get_api_version(&api_version) != SC64_OK) {
+    if (sc64_get_version(&major, &minor) != SC64_OK) {
         return FLASHCART_ERROR_OUTDATED;
     }
-
-    if (api_version < MIN_SUPPORTED_API_VERSION) {
+    if (major != SUPPORTED_MAJOR_VERSION) {
+        return FLASHCART_ERROR_OUTDATED;
+    }
+    if (minor < SUPPORTED_MINOR_VERSION) {
         return FLASHCART_ERROR_OUTDATED;
     }
 

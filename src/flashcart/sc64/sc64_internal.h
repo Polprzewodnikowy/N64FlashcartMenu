@@ -60,7 +60,7 @@ void sc64_lock (void);
 bool sc64_check_presence (void);
 void sc64_read_data (void *src, void *dst, size_t length);
 void sc64_write_data (void *src, void *dst, size_t length);
-sc64_error_t sc64_get_api_version (uint32_t *api_version);
+sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor);
 sc64_error_t sc64_get_config (sc64_cfg_t cfg, void *value);
 sc64_error_t sc64_set_config (sc64_cfg_t cfg, uint32_t value);
 sc64_error_t sc64_writeback_enable (void *address);

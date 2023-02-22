@@ -32,6 +32,7 @@ jobs:
       - name: Build libdragon
         run: |
           cd ./libdragon
+          # FIXME: this currently also builds the examples which adds to the build time.
           ./build.sh # release --force-clean
 
       - name: Build rom

@@ -121,7 +121,22 @@ void menu_run (menu_t *menu) {
     }
     else {
         printf("N64 Flashcart Menu\n\n");
-        wait_ms(2000);
+        printf("File list:\n");
+        DIR *dp;
+        struct dirent *ep;     
+        dp = opendir ("sd://");
+        if (dp != NULL)
+        {
+            while ((ep = readdir (dp)) != NULL)
+            puts (ep->d_name);
+                
+            (void) closedir (dp);
+            return 0;
+        }
+        else
+        {
+            printf("Couldn't open the directory");
+        }
         // TODO: wait for a key input
     }
     // TODO: write menu state to SD card

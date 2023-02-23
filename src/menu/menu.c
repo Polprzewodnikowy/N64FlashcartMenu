@@ -154,10 +154,9 @@ void menu_run (menu_t *menu) {
     else {
         printf("N64 Flashcart Menu\n\n");
         printf("File list:\n");
-        FRESULT res;
         char buff[256];
         strcpy(buff, "/");
-        res = scan_files(buff);
+        scan_files(buff);
     
         // TODO: wait for a key input
     }

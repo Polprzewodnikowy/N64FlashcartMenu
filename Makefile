@@ -17,6 +17,7 @@ SRCS = \
 	menu/menu.c \
 	utils/fs.c \
 	libs/toml/toml.c \
+	libs/menu_utils/menu.c \
 	main.c
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))

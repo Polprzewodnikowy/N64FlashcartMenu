@@ -13,15 +13,16 @@
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
-Add a folder called `n64` in the root of your SD card.
-Create a file called `config.txt` in the `n64` folder.
-
+Create a file called `config.sc64.toml.txt`
 Add the following content, replacing the comments.
 ```
-game_path=<!-- path to your ROM from the root of your SD card -->
-save_path=<!-- path to a save file from the root of your SD card -->
-save_type=<!-- a number representing the save type (see save types) -->
+[last_rom]
+    rom_path = "<!-- path to your ROM from the root of your SD card, note the quotes -->"
+    save_path = "<!-- path to a save file from the root of your SD card, note the quotes -->"
+    save_type = <!-- a number representing the save type (see save types) -->
+    auto_load = <!-- a boolean value of `true` or `false` -->
 ```
+Save it to the root folder on your SD card.
 
 #### Save types
 `0` = NONE

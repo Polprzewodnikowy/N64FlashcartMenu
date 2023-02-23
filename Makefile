@@ -16,6 +16,7 @@ SRCS = \
 	flashcart/sc64/sc64.c \
 	menu/menu.c \
 	utils/fs.c \
+	libs/toml/toml.c \
 	main.c
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))

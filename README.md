@@ -21,6 +21,17 @@ Add the following content, replacing the comments.
     save_path = "<!-- path to a save file from the root of your SD card, note the quotes -->"
     save_type = <!-- a number representing the save type (see save types) -->
     auto_load = <!-- a boolean value of `true` or `false` -->
+    save_writeback = false
+
+[last_state]
+    auto_load_last_rom = false
+    current_directory = "sd://"
+
+[boot_params]
+    device_type = 0;
+    reset_type = 1;
+    detect_tv_type = true;
+    detect_cic_seed = true;
 ```
 Save it to the root folder on your SD card.
 

@@ -354,7 +354,7 @@ void menu_draw_background_center(display_context_t disp, int top, int left, int 
 
 	rdp_sync(SYNC_PIPE);
 
-	rdp_attach_display(disp);
+	rdp_attach(disp);
 	rdp_enable_blend_fill();
 	rdp_set_default_clipping();
 
@@ -363,7 +363,7 @@ void menu_draw_background_center(display_context_t disp, int top, int left, int 
 	rdp_draw_filled_triangle(left, top, right, top, right, bottom);
 	rdp_draw_filled_triangle(left, top, left, bottom, right, bottom);
 
-	rdp_detach_display();
+	rdp_detach();
 }
 
 void menu_scroll_fix_y(Menu *menu) {

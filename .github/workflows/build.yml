@@ -33,13 +33,18 @@ jobs:
         run: |
           cd ./libdragon
           # FIXME: this currently also builds the examples which adds to the build time.
-          ./build.sh # release --force-clean
+          # ./build.sh
+          # WORKAROUND: for CI
+          make -j libdragon
+          make install
+          make -j tools
+          make tools-install
+          make install-mk
 
-      - name: Build rom
+      - name: Build N64FlashcartMenu ROM
         run: |
-          # chmod +x build.sh
-          # ./build.sh # release --force-clean
           mkdir build
+          # TODO: split this to use params for each flashcart type.
           make -j all
 
       - name: Upload artifact
@@ -48,9 +53,8 @@ jobs:
           name: N64FlashcartMenu
           path: |
             ./build/N64FlashcartMenu.z64
-          if-no-files-found: ignore
 
-  finalize:
+  finalize-sc64-menu:
     runs-on: ubuntu-latest
     needs: build
 
@@ -76,30 +80,24 @@ jobs:
         run: |
           cd ./build
           python ../tools/finalize.py N64FlashcartMenu.z64
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: N64FlashcartMenu
+          name: SC64-Menu
           path: |
             ./build/sc64menu.n64
           if-no-files-found: ignore
 
-      # - name: Get release
-      #   if: github.event_name == 'release' && github.event.action == 'created'
-      #   id: get_release
-      #   uses: bruceadams/get-release@v1.3.2
-      #   env:
-      #     GITHUB_TOKEN: ${{ github.token }}
 
-      # - name: Upload release asset
-      #   if: github.event_name == 'release' && github.event.action == 'created'
-      #   uses: actions/upload-release-asset@v1 # This will start failing soon due to needing node 12!
-      #   env:
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   with:
-      #     upload_url: ${{ steps.get_release.outputs.upload_url }}
-      #     asset_path: ./build/sc64menu.n64
-      #     asset_name: sc64menu
-      #     asset_content_type: application/zip
+  # release-sc64-menu:
+  #   runs-on: ubuntu-latest
+  #   needs: finalize-sc64-menu
+
+  #   steps:
+  #     - name: Generate release
+  #       if: github.event_name == 'release' && github.event.action == 'created'
+  #       run: |
+  #         echo "still release preview. Check actions for build assets."
+

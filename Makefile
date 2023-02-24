@@ -15,6 +15,7 @@ SRCS = \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \
 	menu/menu.c \
+	menu/settings.c \
 	utils/fs.c \
 	libs/toml/toml.c \
 	libs/menu_utils/src/menu.c \

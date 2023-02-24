@@ -5,6 +5,7 @@
 
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
+#include "menu/settings.h"
 #include "menu/menu.h"
 
 
@@ -28,19 +29,22 @@ static void deinit (void) {
 
 
 int main (void) {
-    menu_t menu;
 
     init();
 
+    settings_t settings;
+    settings_load_default_state(&settings);
+    settings_load_from_file(&settings);
+
     if (boot_is_warm()) {
-        menu_restore(&menu);
+        menu_restore(&settings);
     }
 
-    menu_run(&menu);
+    menu_run(&settings);
 
     deinit();
 
-    boot(&menu.boot_params);
+    boot(&settings.boot_params);
 
     return 1;
 }

@@ -12,7 +12,7 @@
 typedef struct {
     char *rom_path;
     char *save_path;
-    flashcart_save_type_t save_type; //TODO: should this be converted from a string, or use an integer value?
+    flashcart_save_type_t save_type; //TODO: should this be converted from a string, or only use an integer value?
     bool save_writeback; // TODO: this is likely SC64 specific.
 } settings_last_rom_t;
 
@@ -27,6 +27,12 @@ typedef struct {
     boot_params_t boot_params;
 } settings_t;
 
+// TODO:
+// Menu layout: list vs grid
+// Hide extensions
+// Hide hidden files and dirs
+// colour scheme
+// background pic
 
 void settings_load_from_file (settings_t *settings);
 void settings_save (void);

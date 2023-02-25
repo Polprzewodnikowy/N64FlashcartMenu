@@ -40,7 +40,7 @@ void settings_load_from_file (settings_t *settings) {
         //assertf(!conf, "Couldn't parse toml config: %s", error_buffer); // TODO: work out why and handle appropriately.
 	}
 
-    fclose(fp);
+    //fclose(fp);
     assertf(!fclose(fp), "Couldn't close toml config file"); // TODO: work out why and handle appropriately.
     fp = NULL;
 
@@ -124,7 +124,7 @@ void settings_load_from_file (settings_t *settings) {
         wait_ms(10000);
 	}
     else {
-        
+
     }
 
     toml_free(conf);

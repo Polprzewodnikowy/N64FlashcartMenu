@@ -35,4 +35,7 @@ clean:
 	$(shell rm -rf ./$(BUILD_DIR))
 .PHONY: clean
 
+finalize-sc64:
+    $(shell cd ./$(BUILD_DIR) && python3 ../tools/finalize.py ./$(EXE_NAME).z64)
+
 -include $(wildcard $(BUILD_DIR)/*.d)

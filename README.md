@@ -2,10 +2,10 @@
 **This repo and its documentation is currently experimental and subject to change without notice.**
 
 ## Aims
-* Support as many flashcarts as possible
-* Be open source using preferably MIT licensed third party licenced libraries where possible.
+* Support as many N64 FlashCarts as possible.
+* Be open source using preferably MIT licensed third party licensed libraries where possible.
 * Be testable, where possible using CTest, but if not, in an emulated environment.
-* Encourage active development from community members and flashcart owners.
+* Encourage active development from community members and N64 FlashCart owners.
 
 ## Basic usage
 
@@ -46,8 +46,8 @@ Save it to the root folder on your SD card.
 
 
 ### ED64
-Not Currently not suppported, but there is an aim to do so.
-This will likely replace AltraOSv1
+Not currently not supported, but there is an aim to do so.
+The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 
 # Developer documentation
@@ -57,5 +57,6 @@ You can use a dev container in VSCode.
 
 `ms-vscode.makefile-tools` will help (installed automatically in dev container).
 TODO: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/
-WORKAROUND: in the terminal, use make directly `make all`
+WORKAROUND: in the terminal, use make directly `make all` then `make finalize-sc64`
+The ROM will be found in the `build` directory.
 

@@ -1,0 +1,20 @@
+{
+	"name": "N64FlashcartMenu",
+	// If you prefer, you can use the source files and adjust them they are located, with the same names in ./sources. This will alow you to customize them and add anything you may need on top.
+	"dockerFile": "Dockerfile",
+	"context": ".",
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		// Keep command history 
+		"source=nano-bashhistory,target=/home/vscode/commandhistory,type=volume",
+	],
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-vsliveshare.vsliveshare-pack",
+		"streetsidesoftware.code-spell-checker",
+		"ms-vscode.makefile-tools"
+	]
+}

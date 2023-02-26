@@ -53,3 +53,9 @@ This will likely replace AltraOSv1
 # Developer documentation
 **Work in progress!**
 
+You can use a dev container in VSCode.
+
+`ms-vscode.makefile-tools` will help (installed automatically in dev container).
+TODO: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/
+WORKAROUND: in the terminal, use make directly `make all`
+

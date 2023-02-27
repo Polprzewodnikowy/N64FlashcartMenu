@@ -79,7 +79,7 @@ jobs:
       - name: Finalize rom
         run: |
           cd ./build
-          python ../tools/finalize.py N64FlashcartMenu.z64
+          python ../tools/sc64/finalize.py N64FlashcartMenu.z64
         continue-on-error: false
 
       - name: Upload artifact

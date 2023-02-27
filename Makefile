@@ -1,3 +1,5 @@
+# .DEFAULT_GOAL := mytarget
+
 EXE_NAME = N64FlashcartMenu
 
 SOURCE_DIR = src
@@ -34,6 +36,10 @@ all: $(EXE_NAME).z64
 clean:
 	$(shell rm -rf ./$(BUILD_DIR))
 .PHONY: clean
+
+# run:
+
+# test:
 
  finalize-sc64:
     $(shell cd ./$(BUILD_DIR) && python3 ../tools/finalize.py ./$(EXE_NAME).z64)

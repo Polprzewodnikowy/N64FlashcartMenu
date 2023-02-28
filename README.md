@@ -53,10 +53,19 @@ The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [E
 # Developer documentation
 **Work in progress!**
 
-You can use a dev container in VSCode.
+You can use a dev container in VSCode to ease development.
+
+Note: the dev container currently downloads and installs the latest available libdragon from the stable branch, rather than use the repos submodule.
+
+To deploy:
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.12.1/sc64-windows-v2.12.1.zip)
+* Extract and place `sc64.exe` in the `tools/sc64` directory
+* For the moment, deployment cannot happen within the dev container and you must do it from a terminal on the host.
+* Run `./deploy.bat` from the terminal (in windows)
 
 `ms-vscode.makefile-tools` will help (installed automatically in dev container).
 TODO: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/
-WORKAROUND: in the terminal, use make directly `make all` then `make finalize-sc64`
-The ROM will be found in the `build` directory.
+WORKAROUND: in the dev container terminal, use make directly `make all`
+The ROM can be found in the `build` directory.
 
+NOTE: a "release" version of the ROM is called `sc64menu.n64` is created for when you want to add it directly to the SDCard.

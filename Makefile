@@ -31,6 +31,7 @@ $(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
 
 all: $(EXE_NAME).z64
 	$(shell mv $(EXE_NAME).z64 $(BUILD_DIR))
+	$(shell cd $(BUILD_DIR)/ && python3 ../tools/sc64/finalize.py ./$(EXE_NAME).z64)
 .PHONY: all
 
 clean:
@@ -40,8 +41,5 @@ clean:
 # run:
 
 # test:
-
- finalize-sc64:
-    $(shell cd ./$(BUILD_DIR) && python3 ../tools/finalize.py ./$(EXE_NAME).z64)
 
 -include $(wildcard $(BUILD_DIR)/*.d)

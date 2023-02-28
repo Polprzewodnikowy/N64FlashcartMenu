@@ -62,6 +62,7 @@ To deploy:
 * Extract and place `sc64.exe` in the `tools/sc64` directory
 * For the moment, deployment cannot happen within the dev container and you must do it from a terminal on the host.
 * Run `./deploy.bat` from the terminal (in windows)
+* Toggle the N64 power switch to load the ROM.
 
 `ms-vscode.makefile-tools` will help (installed automatically in dev container).
 TODO: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/

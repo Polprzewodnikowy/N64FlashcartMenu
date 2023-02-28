@@ -155,7 +155,7 @@ void settings_load_default_state(settings_t *settings) {
     settings->last_rom.save_type = FLASHCART_SAVE_TYPE_NONE;
     settings->last_rom.save_writeback = false;
 
-    settings->last_state.current_directory = "sd://";
+    settings->last_state.current_directory = "/"; // This must not include the trailing slash on dirs!
     settings->last_state.auto_load_last_rom = false;
 
     settings->boot_params.device_type = BOOT_DEVICE_TYPE_ROM;

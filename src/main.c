@@ -34,7 +34,7 @@ int main (void) {
 
     settings_t settings;
     settings_load_default_state(&settings);
-    settings_load_from_file(&settings);
+    //settings_load_from_file(&settings); // FIXME: this needs a rethink.
 
     // if (boot_is_warm()) {
     //     menu_restore(&settings);

@@ -11,7 +11,7 @@
 #include "settings.h"
 #include "menu_main.h"
 #include "menu_info.h"
-#include "menu_test.h"
+#include "menu_fileinfo.h"
 
 // FIXME: use newlib rather than fatfs to do this!
 FRESULT scan_file_path (char* path) {
@@ -95,7 +95,7 @@ void menu_main_init (settings_t *settings) {
 		}
         if (joypad.c[0].B) {
             console_clear();
-            menu_test();
+            menu_fileinfo();
             menu_main_refresh(settings->last_state.current_directory);
 		}
     }

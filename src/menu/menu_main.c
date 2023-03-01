@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-// #include <sys/stat.h>
-// #include <unistd.h>
 
 #include <libdragon.h>
 #include <fatfs/ff.h>
@@ -13,12 +11,23 @@
 #include "menu_info.h"
 #include "menu_fileinfo.h"
 
+static int scroll_menu_position = 0;
+static int items_in_dir = 0;
+static char current_filename[256];
+
+// e.g. if (str_endswith(cur_rom, ".z64") || str_endswith(cur_rom, ".n64"))
+static bool str_endswith(const char *str, const char *suffix) {
+	char *p = strstr(str, suffix);
+	return p && p[strlen(suffix)] == '\0';
+}
+
 // FIXME: use newlib rather than fatfs to do this!
 FRESULT scan_file_path (char* path) {
 
     FRESULT res;
     DIR dir;
     char sfno[273];
+    int counter = 0;
           
     res = f_opendir(&dir, path);
      
@@ -31,6 +40,8 @@ FRESULT scan_file_path (char* path) {
             if ((res != FR_OK) || (fno.fname[0] == 0)) {
                 break;
             }
+
+            counter ++;
      
             sprintf(sfno, "%c%c%c%c %10d %s/%s",
                 ((fno.fattrib & AM_DIR) ? 'D' : '-'),
@@ -38,10 +49,17 @@ FRESULT scan_file_path (char* path) {
                 ((fno.fattrib & AM_SYS) ? 'S' : '-'),
                 ((fno.fattrib & AM_HID) ? 'H' : '-'),
                 (int)fno.fsize, path, fno.fname);
-     
-            printf("%s\n", sfno);
+           
+            if (scroll_menu_position == counter -1) {
+                printf("> %s\n", sfno);
+                sprintf(current_filename, "%s", fno.fname);
+            }
+            else {
+                    printf("  %s\n", sfno);
+            }
         }
     }
+    items_in_dir = counter -1;
     f_closedir(&dir);
     return res;
 }
@@ -80,13 +98,41 @@ void menu_main_init (settings_t *settings) {
         controller_scan();
 		joypad = get_keys_down();
 
+		if (joypad.c[0].up) {
+            console_clear();
+            if (scroll_menu_position > 0) {
+                scroll_menu_position --;
+            }
+            else {
+                scroll_menu_position = items_in_dir;
+            }
+            menu_main_refresh(settings->last_state.current_directory);
+		}
+
+        if (joypad.c[0].down) {
+            console_clear();
+            if ((scroll_menu_position >= 0) && (scroll_menu_position < items_in_dir)) {
+                scroll_menu_position ++;
+            }
+            else {
+                scroll_menu_position = 0;
+            }
+            menu_main_refresh(settings->last_state.current_directory);
+		}
+
 		if (joypad.c[0].A) {
             console_clear();
-            printf("TODO: loading ROM...\n");
-            wait_ms(1000);
-            printf("Failed... Returning to menu...\n");
-            wait_ms(1000);
-            menu_main_refresh(settings->last_state.current_directory);
+            printf("Loading ROM...\n");
+            printf("%s\n", current_filename);
+            if (str_endswith(current_filename, ".z64") || str_endswith(current_filename, ".n64") || str_endswith(current_filename, ".v64")) {
+                assertf(flashcart_load_rom(current_filename) == FLASHCART_OK, "ROM load error");
+                break;
+            }
+            else {
+                printf("Failed... Returning to menu...\n");
+                wait_ms(1000);
+                menu_main_refresh(settings->last_state.current_directory);
+            }            
 		}
         if (joypad.c[0].start) { // FIXME: the START button on any controller!
             console_clear();

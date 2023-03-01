@@ -6,6 +6,8 @@
 * Be open source using preferably MIT licensed third party licensed libraries where possible.
 * Be testable, where possible using CTest, but if not, in an emulated environment.
 * Encourage active development from community members and N64 FlashCart owners.
+* Support [PixelFX N64Digital](https://gitlab.com/pixelfx-public/n64-game-id)
+
 
 ## Basic usage
 

@@ -11,7 +11,7 @@ body:
 
         If you have a **question**, need clarification on something, need help on a particular situation or want to start a discussion, **DO NOT** open an issue here. _It will be automatically closed!_ 
 
-        If you realy want to raise an issue, please make sure to follow the template and provide the required information. Failing to do so will most likely end up on the issue being close. Don't take offense at this. It is simply a time management decision. Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
+        If you really want to raise an issue, please make sure to follow the template and provide the required information. Failing to do so will most likely end up on the issue being close. Don't take offense at this. It is simply a time management decision. Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
 
   - type: textarea
     id: description
@@ -46,7 +46,7 @@ body:
       label: Additional context
       description: Add any other context or screenshots about the feature request here.
       placeholder: |
-        code snnipets
+        code snippets
         screenshots
         mockups
     validations:

@@ -11,7 +11,7 @@ body:
 
         If you have a **question**, need clarification on something, need help on a particular situation or want to start a discussion, **DO NOT** open an issue here. _It will be automatically closed!_ 
         First raise it in discussions.
-        If you realy want to raise an issue, please make sure to follow the template and provide the required information.
+        If you really want to raise an issue, please make sure to follow the template and provide the required information.
         Failing to do so will most likely end up on the issue being close. Don't take offense at this.
         It is simply a time management decision.
         Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
@@ -55,9 +55,9 @@ body:
       required: false
 
   - type: textarea
-    id: expected_behaviour
+    id: expected_behavior
     attributes:
-      label: Expected behaviour
+      label: Expected behavior
       description: A clear and concise description of what you expected to happen. If applicable.
     validations:
       required: false
@@ -74,7 +74,7 @@ body:
   - type: textarea
     id: other_things
     attributes:
-      label: Aditional information
+      label: Additional information
       description: Other suggested things. If applicable/relevant.
       placeholder: |
         for example link to the repository with sample code

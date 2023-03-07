@@ -126,7 +126,7 @@ void menu_main_init (settings_t *settings) {
             printf("%s\n", current_filename);
             if (str_endswith(current_filename, ".z64") || str_endswith(current_filename, ".n64") || str_endswith(current_filename, ".v64")) {
                 assertf(flashcart_load_rom(current_filename) == FLASHCART_OK, "ROM load error");
-                break;
+                break; //required!
             }
             else {
                 printf("Failed... Returning to menu...\n");

@@ -30,10 +30,10 @@ OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 
 $(BUILD_DIR)/$(EXE_NAME).elf: $(OBJS)
 
-$(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
+$(OUTPUT_DIR)/$(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
 
-sc64menu.n64: $(EXE_NAME).z64
-	python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(EXE_NAME).elf $< $@
+sc64menu.n64: $(OUTPUT_DIR)/$(EXE_NAME).z64
+	python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(EXE_NAME).elf $< $(OUTPUT_DIR)/$@
 
 all: sc64menu.n64
 .PHONY: all

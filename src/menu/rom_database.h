@@ -1,4 +1,6 @@
-// NOTE: these values are independent on flashcart / OS
+#include <stdint.h>
+
+// NOTE: these values are independent of flashcart / OS
 #define DB_SAVE_TYPE_NONE           0x00
 #define DB_SAVE_TYPE_EEPROM_4K      0x01
 #define DB_SAVE_TYPE_EEPROM_16K     0x02

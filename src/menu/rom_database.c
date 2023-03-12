@@ -4,7 +4,7 @@
 uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
 
     if (id == *(uint16_t *)"ED") {
-        return SAVE_TYPE_CART_SPECIFIED;
+        return DB_SAVE_TYPE_CART_SPECIFIED;
     }
 
     // Match the default entries for crc_high.

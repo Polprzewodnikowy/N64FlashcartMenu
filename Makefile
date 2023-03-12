@@ -33,6 +33,9 @@ $(BUILD_DIR)/$(EXE_NAME).elf: $(OBJS)
 $(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
 
 sc64menu.n64: $(EXE_NAME).z64
+	ls -R
+	echo test input: $<
+	echo test output: $@
 	python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(EXE_NAME).elf $(BUILD_DIR)/$< $(OUTPUT_DIR)/$@
 
 all: sc64menu.n64

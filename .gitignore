@@ -1,3 +1,4 @@
 /.vscode
 /build
+/output
 tools/sc64/sc64.exe

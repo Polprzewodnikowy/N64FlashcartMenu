@@ -10,7 +10,7 @@ echo:
 echo:
 :: Load the ROM
 echo Loading ROM...
-sc64 --boot direct-rom %~dp0build\N64FlashcartMenu.z64
+sc64 --boot direct-rom %~dp0output\N64FlashcartMenu.z64
 
 echo:
 echo:

@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := menu
 
 EXE_NAME = N64FlashcartMenu
 
@@ -32,10 +32,14 @@ $(BUILD_DIR)/$(EXE_NAME).elf: $(OBJS)
 
 $(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
 
-all: $(EXE_NAME).z64
-	$(shell mkdir $(OUTPUT_DIR))
-	$(shell mv $(EXE_NAME).z64 $(OUTPUT_DIR))
+ menu: $(EXE_NAME).z64
+	$(shell mkdir -p $(OUTPUT_DIR))
+	$(shell mv $(EXE_NAME).z64 $(OUTPUT_DIR)) 
+
+sc64_minify:
 	$(shell python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(EXE_NAME).elf $(OUTPUT_DIR)/N64FlashcartMenu.z64 $(OUTPUT_DIR)/sc64menu.n64)
+
+all: menu sc64_minify
 .PHONY: all
 
 clean:

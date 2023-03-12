@@ -46,7 +46,7 @@ jobs:
           mkdir build
           mkdir output
           # TODO: split this to use params for each flashcart type.
-          make -j all
+          make menu
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -80,6 +80,7 @@ jobs:
 
       - name: Finalize rom
         run: |
+          # make all
           python ./tools/sc64/minify.py ./build/N64FlashcartMenu.elf ./output/N64FlashcartMenu.z64 ./output/sc64menu.n64
         continue-on-error: false
 

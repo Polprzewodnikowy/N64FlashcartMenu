@@ -37,7 +37,7 @@ sc64menu.n64: $(EXE_NAME).z64
 	echo test input: $<
 	echo test output: $@
 	# in this case, the asset files are in the root directory!
-	python3 ./tools/sc64/minify.py ./$(BUILD_DIR)/$(EXE_NAME).elf ./$< ./$@
+	$(shell python3 ./tools/sc64/minify.py ./$(BUILD_DIR)/$(EXE_NAME).elf ./$< ./$@)
 
 all: sc64menu.n64
 .PHONY: all

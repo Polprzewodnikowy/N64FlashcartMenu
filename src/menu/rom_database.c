@@ -33,11 +33,16 @@ uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
         // SRAM
         "AL", "AY", "A2", "DA", "FZ", "GP", "G6", "K4", "KG", "MF", "OB", "RE", "RI", "TE", "VB", "VP",
         "WI", "W2", "WX", "WZ", "YW", "ZL",
+        // SRAM_BANKED
+        "DZ",
+        // SRAM_128K
+
         // FLASHRAM
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS",
-        // SRAM_BANKED
-        "DZ"
+        // Last entry
+        "!!"
+
     };
     static int save_types[] = {
         // EEP4K
@@ -54,11 +59,13 @@ uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
         // SRAM
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
-        // FLASHRAM
-        0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,
-        0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,
         // SRAM_BANKED
-        0x05,
+        0x04,
+        // SRAM_128K
+
+        // FLASHRAM
+        0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+        0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
         // Last entry.
         0xff
     };
@@ -70,8 +77,10 @@ uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
             // i = i == 1 ? DB_SAVE_TYPE_EEPROM_4K : 
             //     i == 2 ? DB_SAVE_TYPE_EEPROM_16K :
             //     i == 3 ? DB_SAVE_TYPE_SRAM : 
-            //     i == 4 ? DB_SAVE_TYPE_FLASHRAM : 
-            //     i == 5 ? DB_SAVE_TYPE_SRAM_BANKED : 
+            //     i == 4 ? DB_SAVE_TYPE_SRAM_BANKED :
+            //     i == 5 ? DB_SAVE_TYPE_SRAM_128K : 
+            //     i == 6 ? DB_SAVE_TYPE_FLASHRAM : 
+            // //     i == 15 ? DB_SAVE_TYPE_CART_SPECIFIED : 
             //     DB_SAVE_TYPE_NONE;
             return i;
         }

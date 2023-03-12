@@ -45,6 +45,7 @@ Save it to the root folder on your SD card.
 `4` = SRAM_BANKED
 `5` = SRAM_128K
 `6` = FLASHRAM
+~~`15` = CART_HEADER~~
 
 
 ### ED64

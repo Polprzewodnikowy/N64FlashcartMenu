@@ -40,6 +40,8 @@ sc64menu.n64: $(EXE_NAME).z64
 	$(shell python3 ./tools/sc64/minify.py ./$(BUILD_DIR)/$(EXE_NAME).elf ./$< ./$@)
 
 all: sc64menu.n64
+	$(shell mkdir $(OUTPUT_DIR))
+	$(shell mv $(EXE_NAME).z64 $(OUTPUT_DIR))
 .PHONY: all
 
 clean:

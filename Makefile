@@ -20,6 +20,7 @@ SRCS = \
 	menu/menu_info.c \
 	menu/menu_fileinfo.c \
 	menu/settings.c \
+	menu/rom_database.c \
 	utils/fs.c \
 	libs/toml/toml.c \
 	main.c

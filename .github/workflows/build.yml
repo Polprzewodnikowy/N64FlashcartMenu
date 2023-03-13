@@ -46,7 +46,7 @@ jobs:
           mkdir build
           mkdir output
           # TODO: split this to use params for each flashcart type.
-          make menu
+          make
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3

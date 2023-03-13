@@ -10,6 +10,7 @@
 #include "menu_main.h"
 #include "menu_info.h"
 #include "menu_fileinfo.h"
+#include "rom_database.h"
 
 static int scroll_menu_position = 0;
 static int items_in_dir = 0;
@@ -126,6 +127,8 @@ void menu_main_init (settings_t *settings) {
             printf("%s\n", current_filename);
             if (str_endswith(current_filename, ".z64") || str_endswith(current_filename, ".n64") || str_endswith(current_filename, ".v64")) {
                 assertf(flashcart_load_rom(current_filename) == FLASHCART_OK, "ROM load error");
+                // FIXME: we now need the header ID and CRC HI... 
+                //assertf(flashcart_load_save("current_filename.sav", rom_db_match_save_type(id, crc), false) == FLASHCART_OK, "ROM load save error");
                 break; //required!
             }
             else {

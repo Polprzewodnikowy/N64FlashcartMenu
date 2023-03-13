@@ -1,6 +1,7 @@
-.DEFAULT_GOAL := menu
 
-EXE_NAME = N64FlashcartMenu
+PROJECT_NAME = N64FlashcartMenu
+
+.DEFAULT_GOAL := $(PROJECT_NAME)
 
 SOURCE_DIR = src
 BUILD_DIR = build
@@ -28,18 +29,18 @@ SRCS = \
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 
-$(BUILD_DIR)/$(EXE_NAME).elf: $(OBJS)
+$(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
-$(EXE_NAME).z64: N64_ROM_TITLE=$(EXE_NAME)
+$(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
 
- menu: $(EXE_NAME).z64
+$(PROJECT_NAME): $(PROJECT_NAME).z64
 	$(shell mkdir -p $(OUTPUT_DIR))
-	$(shell mv $(EXE_NAME).z64 $(OUTPUT_DIR)) 
+	$(shell mv $(PROJECT_NAME).z64 $(OUTPUT_DIR)) 
 
-sc64_minify:
-	$(shell python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(EXE_NAME).elf $(OUTPUT_DIR)/N64FlashcartMenu.z64 $(OUTPUT_DIR)/sc64menu.n64)
+sc64_minify: $(PROJECT_NAME)
+	$(shell python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(PROJECT_NAME).elf $(OUTPUT_DIR)/$(PROJECT_NAME).z64 $(OUTPUT_DIR)/sc64menu.n64)
 
-all: menu sc64_minify
+all: sc64_minify
 .PHONY: all
 
 clean:
@@ -48,6 +49,7 @@ clean:
 .PHONY: clean
 
 # run:
+# 	$(shell sc64deployer --boot direct-rom %~dp0$(OUTPUT_DIR))\$(PROJECT_NAME).z64)
 
 # test:
 

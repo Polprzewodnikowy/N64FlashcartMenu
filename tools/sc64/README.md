@@ -1,14 +1,12 @@
 # Source
-https://github.com/Polprzewodnikowy/SummerCart64
+This Directory.
 
 # License
-GPL-3.0 license
+See root directory.
 
 # Description
-Used for build and deployment
+`minify.py`
+Removes unnecessary null bytes from the end of ROM file to cut on menu load time from SD card.
 
 # Notes
-It might be preferable to change to a submodule.
-But `finalize.py` is independent.
-
-The deployer needs to be downloaded from https://github.com/Polprzewodnikowy/SummerCart64/releases/tag/v2.12.1 and placed in this folder.
+The deployer `sc64deployer` needs to be downloaded from https://github.com/Polprzewodnikowy/SummerCart64/releases/tag/v2.14.0 and placed in this folder.

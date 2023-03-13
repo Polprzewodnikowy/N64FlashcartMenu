@@ -4,13 +4,17 @@ cd  %~dp0tools\sc64\
 
 :: Make sure we are connected
 echo Detecting SC64...
-sc64deployer --print-state
+sc64deployer list
+
+:: Get the information
+echo SC64 info...
+sc64deployer info
 
 echo:
 echo:
 :: Load the ROM
 echo Loading ROM...
-sc64deployer --boot direct-rom %~dp0output\N64FlashcartMenu.z64
+sc64deployer upload %~dp0output\N64FlashcartMenu.z64
 
 echo:
 echo:

@@ -1,26 +1,25 @@
 {
-     "name": "N64FlashcartMenu",
-    // If you prefer, you can use the source files and adjust them they are located, with the same names in ./sources. This will alow you to customize them and add anything you may need on top.
-    "dockerFile": "Dockerfile",
-    "runArgs": [
-    ],
-    "context": ".",
+    "name": "N64FlashcartMenu",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
     "mounts": [
-        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-        // Keep command history 
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
     ],
+    "postCreateCommand": "git submodule update && cd ./libdragon && ./build.sh",
     "customizations": {
         "vscode": {
-            // Set *default* container specific settings.json values on container create.
-            "settings": {
-            },
-            // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.makefile-tools",
                 "ms-vsliveshare.vsliveshare-pack",
-                "streetsidesoftware.code-spell-checker",
-                "ms-vscode.makefile-tools"
-            ]
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {
+                "git.ignoredRepositories": [
+                    "libdragon"
+                ]
+            }
         }
     }
 }

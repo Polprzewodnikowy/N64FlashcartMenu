@@ -19,6 +19,12 @@ typedef struct {
 typedef struct {
     bool auto_load_last_rom;
     char* current_directory;
+    // TODO:
+    // Menu layout: list vs grid
+    // Hide extensions
+    // Hide hidden files and dirs
+    // colour scheme
+    // background pic
 } settings_last_state_t;
 
 typedef struct {
@@ -26,13 +32,6 @@ typedef struct {
     settings_last_state_t last_state;
     boot_params_t boot_params;
 } settings_t;
-
-// TODO:
-// Menu layout: list vs grid
-// Hide extensions
-// Hide hidden files and dirs
-// colour scheme
-// background pic
 
 void settings_load_from_file (settings_t *settings);
 void settings_save (void);

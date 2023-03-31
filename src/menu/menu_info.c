@@ -12,7 +12,7 @@ void menu_info(void) {
 	draw_header(disp);
 
 	graphics_draw_text(disp, 30, 50, "Authors:");
-	graphics_draw_text(disp, 30, 58, "JonesAlmighty / Networkfusion");
+	graphics_draw_text(disp, 30, 58, "JonesAlmighty / NetworkFusion");
 	graphics_draw_text(disp, 30, 66, "korgeaux / Polprzewodnikowy");
 
 	graphics_draw_text(disp, 30, 80, "Github:");

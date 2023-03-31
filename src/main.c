@@ -11,7 +11,7 @@
 
 static void init (void) {
     assertf(usb_initialize() != CART_NONE, "No flashcart was detected");
-    debug_init_usblog();
+    //debug_init_usblog();
     assertf(debug_init_sdfs("sd:/", -1), "Couldn't initialize SD card");
     flashcart_error_t error = flashcart_init();
     assertf(error != FLASHCART_ERROR_OUTDATED, "Outdated flashcart firmware");

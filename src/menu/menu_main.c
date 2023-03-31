@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h> // TODO: does this work... will unlock qsort!
 #include <string.h>
 
 #include <libdragon.h>
@@ -27,7 +28,7 @@ FRESULT scan_file_path (char* path) {
 
     FRESULT res;
     DIR dir;
-    char sfno[273];
+    char sfno[280];
     int counter = 0;
           
     res = f_opendir(&dir, path);
@@ -42,21 +43,25 @@ FRESULT scan_file_path (char* path) {
                 break;
             }
 
+            if (fno.fattrib & AM_SYS) {
+                continue; // we do not want to show system files ever...
+            }
+
             counter ++;
-     
-            sprintf(sfno, "%c%c%c%c %10d %s/%s",
+            
+            // TODO: convert these to icons...
+            sprintf(sfno, "| %c%c%c | %10d | %s",
                 ((fno.fattrib & AM_DIR) ? 'D' : '-'),
                 ((fno.fattrib & AM_RDO) ? 'R' : '-'),
-                ((fno.fattrib & AM_SYS) ? 'S' : '-'),
                 ((fno.fattrib & AM_HID) ? 'H' : '-'),
-                (int)fno.fsize, path, fno.fname);
+                (int)fno.fsize, fno.fname);
            
             if (scroll_menu_position == counter -1) {
-                printf("> %s\n", sfno);
-                sprintf(current_filename, "%s", fno.fname);
+                printf("-> %s\n", sfno);
+                sprintf(current_filename, fno.fname);
             }
             else {
-                    printf("  %s\n", sfno);
+                printf("   %s\n", sfno);
             }
         }
     }
@@ -67,8 +72,10 @@ FRESULT scan_file_path (char* path) {
 
 void menu_main_refresh (char *dir_path) {
     console_clear();
-    printf("N64 Flashcart Menu V0.0.0\n\n");
+    printf("SC64 Flashcart Menu Rev: 0.0.1\n\n");
     printf("SD Card Directory list:\n\n");
+    printf("   | DRH | FILE SIZE  | FILE NAME\n");
+    printf("   |-----|------------|----------\n");
     scan_file_path(dir_path);
 }
 
@@ -100,7 +107,7 @@ void menu_main_init (settings_t *settings) {
 		joypad = get_keys_down();
 
 		if (joypad.c[0].up) {
-            console_clear();
+            //console_clear();
             if (scroll_menu_position > 0) {
                 scroll_menu_position --;
             }
@@ -111,7 +118,7 @@ void menu_main_init (settings_t *settings) {
 		}
 
         if (joypad.c[0].down) {
-            console_clear();
+            //console_clear();
             if ((scroll_menu_position >= 0) && (scroll_menu_position < items_in_dir)) {
                 scroll_menu_position ++;
             }
@@ -122,28 +129,34 @@ void menu_main_init (settings_t *settings) {
 		}
 
 		if (joypad.c[0].A) {
-            console_clear();
+            //console_clear();
             printf("Loading ROM...\n");
             printf("%s\n", current_filename);
-            if (str_endswith(current_filename, ".z64") || str_endswith(current_filename, ".n64") || str_endswith(current_filename, ".v64")) {
+            // TODO: move this to a function and check that the ROM is valid by checking the header...
+            if (str_endswith(current_filename, ".z64") || str_endswith(current_filename, ".n64") || str_endswith(current_filename, ".v64") || str_endswith(current_filename, ".rom")) {
                 assertf(flashcart_load_rom(current_filename) == FLASHCART_OK, "ROM load error");
-                // FIXME: we now need the header ID and CRC HI... 
+                // FIXME: we now need the header ID and CRC HI...
+                // ed64_dma_read_rom(buff, 0, 1);
+                // crc_high = (buff[0x10] << 24) | (buff[0x11] << 16) | (buff[0x12] << 8) | (buff[0x13] << 0);
+                // crc_low =  (buff[0x14] << 24) | (buff[0x15] << 16) | (buff[0x16] << 8) | (buff[0x17] << 0);
+                // id = (buff[0x3c] << 8) | buff[0x3d];
                 //assertf(flashcart_load_save("current_filename.sav", rom_db_match_save_type(id, crc), false) == FLASHCART_OK, "ROM load save error");
                 break; //required!
             }
             else {
+                // TODO: if this is a directory we need to transverse to it!
                 printf("Failed... Returning to menu...\n");
                 wait_ms(1000);
                 menu_main_refresh(settings->last_state.current_directory);
             }            
 		}
         if (joypad.c[0].start) { // FIXME: the START button on any controller!
-            console_clear();
+            //console_clear();
             menu_info();
             menu_main_refresh(settings->last_state.current_directory);
 		}
-        if (joypad.c[0].B) {
-            console_clear();
+        if (joypad.c[0].Z) {
+            //console_clear();
             menu_fileinfo();
             menu_main_refresh(settings->last_state.current_directory);
 		}

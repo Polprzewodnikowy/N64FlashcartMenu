@@ -1,13 +1,19 @@
 #include "rom_database.h"
 #include <stdint.h>
 
-uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
+// TODO: make sure this can also handle an external input file.
 
+uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {  //FIXME: the ID should be 4 chars (uint32)
+
+    // These are ordered to ensure they are handled correctly...
+
+    // First: Match by the `ED` Developer ID
+    // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
     if (id == *(uint16_t *)"ED") {
         return DB_SAVE_TYPE_CART_SPECIFIED;
     }
 
-    // Match the default entries for crc_high.
+    // Second: Match the default entries for crc_high.
     if (crc == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
     if (crc == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
     if (crc == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
@@ -17,7 +23,9 @@ uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {
     if (crc == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
     
 
-    // Match the default entries for ROM ID.
+    // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
+
+    // Finally: Match the default entries for "unique" ROM ID.
     // It is useful to use this rather than CRC's so that ROM hacks continue to work.
     static char *cart_ids[] = {
         // EEP4K

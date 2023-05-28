@@ -11,9 +11,7 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.cpptools",
-                "ms-vscode.makefile-tools",
-                "ms-vsliveshare.vsliveshare-pack",
-                "streetsidesoftware.code-spell-checker"
+                "ms-vscode.makefile-tools"
             ],
             "settings": {
                 "git.ignoredRepositories": [

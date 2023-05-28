@@ -6,7 +6,7 @@
     "mounts": [
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": "git submodule update && cd ./libdragon && ./build.sh",
+    "postCreateCommand": "cd ./libdragon && ./build.sh",
     "customizations": {
         "vscode": {
             "extensions": [

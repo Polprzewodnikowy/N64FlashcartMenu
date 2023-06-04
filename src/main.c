@@ -17,6 +17,8 @@ static void init (void) {
     assertf(error != FLASHCART_ERROR_OUTDATED, "Outdated flashcart firmware");
     assertf(error != FLASHCART_ERROR_UNSUPPORTED, "Unsupported flashcart");
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
+    
+    display_init(RESOLUTION_512x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
 }
 
 static void deinit (void) {

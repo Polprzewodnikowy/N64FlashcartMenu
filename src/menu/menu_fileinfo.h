@@ -1,6 +1,8 @@
 #ifndef MENU_FILEINFO_H__
 #define MENU_FILEINFO_H__
 
-void menu_fileinfo(void);
+#include <fatfs/ff.h>
+
+void menu_fileinfo(FILINFO current_fileinfo);
 
 #endif

@@ -12,17 +12,14 @@
 #include "menu_info.h"
 #include "menu_fileinfo.h"
 #include "rom_database.h"
+#include "menu_res_setup.h"
+
+#include "../utils/str_utils.h"
 
 static int scroll_menu_position = 1;
 static int items_in_dir = 1;
 
 static FILINFO current_fileinfo;
-
-// e.g. if (str_endswith(cur_rom, ".z64") || str_endswith(cur_rom, ".n64"))
-static bool str_endswith(const char *str, const char *suffix) {
-	char *p = strstr(str, suffix);
-	return p && p[strlen(suffix)] == '\0';
-}
 
 // FIXME: use newlib rather than fatfs to do this!
 FRESULT scan_file_path (char* path) {
@@ -72,6 +69,9 @@ FRESULT scan_file_path (char* path) {
 }
 
 void menu_main_refresh (char *dir_path) {
+    // display_context_t disp = display_try_get();
+	// graphics_fill_screen(disp, 0);
+    // graphics_draw_text(disp, 200-70, 10, "SC64 Flashcart Menu Rev: 0.0.2\n\n");
     console_clear();
     printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
     printf("SD Card Directory list: %s\n\n", dir_path);
@@ -169,13 +169,11 @@ void menu_main_init (settings_t *settings) {
                 current_dir = last_dir;
         }
         if (joypad.c[0].start) { // FIXME: the START button on any controller!
-            //console_clear();
             menu_info();
             menu_main_refresh(current_dir);
 		}
         if (joypad.c[0].Z) {
-            //console_clear();
-            menu_fileinfo();
+            menu_fileinfo(current_fileinfo);
             menu_main_refresh(current_dir);
 		}
     }

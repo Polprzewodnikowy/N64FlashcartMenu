@@ -1,29 +1,46 @@
 #include <libdragon.h>
+#include "menu_info.h"
+#include "menu_res_setup.h"
 
-static void draw_header(display_context_t disp) {
-	graphics_draw_text(disp, 200-70, 10, "Menu Information");
+void menu_info_draw_header(display_context_t disp) {
+	
+	graphics_draw_text(disp, (disp->width / 2) - 64, vertical_start_position, "MENU INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
+	graphics_draw_line(disp,0,30,disp->width,30, 0xff);
+	
 }
 
+void menu_info_draw_footer(display_context_t disp) {
+	
+	graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
+	graphics_draw_text(disp, (disp->width / 2) - 80,disp->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
+	
+}
 
 void menu_info(void) {
-	display_init(RESOLUTION_512x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
-	display_context_t disp = display_get();
-	graphics_fill_screen(disp, 0);
-	draw_header(disp);
+	
+	display_context_t disp = display_try_get();
+	graphics_fill_screen(disp, 0x00);
+	menu_info_draw_header(disp);
 
-	graphics_draw_text(disp, 30, 50, "Authors:");
-	graphics_draw_text(disp, 30, 58, "JonesAlmighty / NetworkFusion");
-	graphics_draw_text(disp, 30, 66, "korgeaux / Polprzewodnikowy");
+	int16_t vertical_position = 40;
 
-	graphics_draw_text(disp, 30, 80, "Github:");
-	graphics_draw_text(disp, 30, 88, "https://github.com/Polprzewodnikowy/SummerCart64");
-	graphics_draw_text(disp, 30, 96, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
+	graphics_draw_text(disp, horizontal_start_position, vertical_position, "Menu Version:");
+	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "Vx.x.x.x"); // FIXME: use global setting.
+	vertical_position += (font_vertical_pixels * 2);
+	graphics_draw_text(disp, horizontal_start_position, vertical_position, "Authors:");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "JonesAlmighty / NetworkFusion");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "korgeaux / Polprzewodnikowy");
+	vertical_position += (font_vertical_pixels * 2);
+	graphics_draw_text(disp, horizontal_start_position, vertical_position += font_vertical_pixels, "Github:");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/networkfusion/N64FlashcartMenu");
+	vertical_position += (font_vertical_pixels * 2);
+	graphics_draw_text(disp, horizontal_start_position, vertical_position, "OSS licenses used:");
+	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "GPL");
+	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "MIT");
 
-	graphics_draw_text(disp, 30,112, "OSS licenses used:");
-	graphics_draw_text(disp, 30,120, "GPL");
-	graphics_draw_text(disp, 30,128, "MIT");
-
-	graphics_draw_text(disp, 30,144, "Press B to return!");
+	menu_info_draw_footer(disp);
 
 	display_show(disp);
 

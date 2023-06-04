@@ -11,13 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # container:
-    #   image: ../Dockerfile
-    #   # credentials:
-    #   #   username: ${{ github.actor }}
-    #   #   password: ${{ secrets.github_token }}
-    #   volumes:
-    #     - my_docker_volume:/volume_mount
 
     steps:
 
@@ -26,7 +19,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          submodules: true
+          submodules: recursive
           fetch-depth: 1 # we only require the last check-in, unless we want to create a changelog.
 
       - name: Login to GitHub Container Registry
@@ -35,18 +28,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Build libdragon
-      #   run: |
-      #     cd ./libdragon
-      #     # FIXME: this currently also builds the examples which adds to the build time.
-      #     # ./build.sh
-      #     # WORKAROUND: for CI
-      #     make -j libdragon
-      #     make install
-      #     make -j tools
-      #     make tools-install
-      #     make install-mk
 
       - name: Build N64FlashcartMenu ROM
         uses: devcontainers/ci@v0.3

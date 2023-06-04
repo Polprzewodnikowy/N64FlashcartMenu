@@ -44,13 +44,17 @@ all: sc64_minify
 .PHONY: all
 
 clean:
-	$(shell rm -rf ./$(BUILD_DIR))
-	$(shell rm -rf ./$(OUTPUT_DIR))
+	$(shell rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR))
 .PHONY: clean
 
 # run:
-# 	$(shell sc64deployer --boot direct-rom %~dp0$(OUTPUT_DIR))\$(PROJECT_NAME).z64)
+#   $(shell ./remotedeploy.sh -d)
+#   FIXME: improve ability to deploy.
+#   if devcontainer, use remotedeploy.sh, else
+# 	  $(shell sc64deployer --boot direct-rom %~dp0$(OUTPUT_DIR))\$(PROJECT_NAME).z64)
+# .PHONY: run
 
 # test:
+#   TODO: run tests
 
 -include $(wildcard $(BUILD_DIR)/*.d)

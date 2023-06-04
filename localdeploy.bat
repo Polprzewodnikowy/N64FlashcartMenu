@@ -21,3 +21,5 @@ echo !!! Now toggle power to the N64 !!!
 echo:
 echo:
 ::pause
+
+::%~dp0tools\sc64\sc64deployer debug

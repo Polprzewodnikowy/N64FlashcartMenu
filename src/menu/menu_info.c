@@ -7,7 +7,7 @@ static void draw_header(display_context_t disp) {
 
 void menu_info(void) {
 	display_init(RESOLUTION_512x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
-	display_context_t disp = display_lock();
+	display_context_t disp = display_get();
 	graphics_fill_screen(disp, 0);
 	draw_header(disp);
 

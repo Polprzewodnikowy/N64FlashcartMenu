@@ -16,6 +16,7 @@
 
 #include "../utils/str_utils.h"
 
+
 static int scroll_menu_position = 1;
 static int items_in_dir = 1;
 
@@ -68,17 +69,31 @@ FRESULT scan_file_path (char* path) {
     return res;
 }
 
+void menu_main_draw_header() {
+
+        printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
+}
+
+void menu_main_draw_footer(char *dir_path) {
+	
+    printf("\n\nDirectory: %s\n\n", dir_path);
+    printf("    File: %d of %d\n\n", scroll_menu_position, items_in_dir);
+	
+}
+
 void menu_main_refresh (char *dir_path) {
-    // display_context_t disp = display_try_get();
-	// graphics_fill_screen(disp, 0);
-    // graphics_draw_text(disp, 200-70, 10, "SC64 Flashcart Menu Rev: 0.0.2\n\n");
+
     console_clear();
-    printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
-    printf("SD Card Directory list: %s\n\n", dir_path);
-    printf("SD Card Directory files: %d of %d\n\n", scroll_menu_position, items_in_dir);
+
+    menu_main_draw_header();
+
     printf("   | DRH | FILE SIZE  | FILE NAME\n");
     printf("   |-----|------------|----------\n");
+    
     scan_file_path(dir_path);
+
+    menu_main_draw_footer(dir_path);
+
 }
 
 void menu_main_init (settings_t *settings) {
@@ -86,10 +101,9 @@ void menu_main_init (settings_t *settings) {
 
     console_init();
     console_set_debug(true);
+    console_clear();
 
     controller_init();
-
-    controller_scan();
 
     char *current_dir = settings->last_state.current_directory;
     char *last_dir = current_dir;
@@ -112,7 +126,6 @@ void menu_main_init (settings_t *settings) {
 		joypad = get_keys_down();
 
 		if (joypad.c[0].up) {
-            //console_clear();
             if (scroll_menu_position > 1 && scroll_menu_position <= items_in_dir) {
                 scroll_menu_position --;
             }
@@ -123,7 +136,6 @@ void menu_main_init (settings_t *settings) {
 		}
 
         if (joypad.c[0].down) {
-            //console_clear();
             if (scroll_menu_position < items_in_dir) {
                 scroll_menu_position ++;
             }
@@ -134,7 +146,6 @@ void menu_main_init (settings_t *settings) {
 		}
 
 		if (joypad.c[0].A) {
-            //console_clear();
             // TODO: move this to a function and check that the ROM is valid by checking the header...
             if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
                 printf("Loading N64 ROM type...\n");

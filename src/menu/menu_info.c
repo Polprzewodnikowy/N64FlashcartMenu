@@ -32,12 +32,12 @@ void menu_info(void) {
 	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "korgeaux / Polprzewodnikowy");
 	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(disp, horizontal_start_position, vertical_position += font_vertical_pixels, "Github:");
-	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
+	// graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
 	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
-	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/networkfusion/N64FlashcartMenu");
+	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/NetworkFusion/N64FlashcartMenu");
 	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(disp, horizontal_start_position, vertical_position, "OSS licenses used:");
-	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "GPL");
+	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "UNLICENSE");
 	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "MIT");
 
 	menu_info_draw_footer(disp);

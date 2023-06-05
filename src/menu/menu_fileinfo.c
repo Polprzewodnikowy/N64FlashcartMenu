@@ -72,7 +72,8 @@ void menu_fileinfo(FILINFO current_fileinfo) {
                 ((current_fileinfo.fattrib & AM_RDO) ? " | Readonly" : ""),
                 ((current_fileinfo.fattrib & AM_SYS) ? " | System" : ""),
                 ((current_fileinfo.fattrib & AM_ARC) ? " | Archive" : ""),
-                ((current_fileinfo.fattrib & AM_HID) ? " | Hidden" : ""));
+                ((current_fileinfo.fattrib & AM_HID) ? " | Hidden" : "")
+                );
            
     graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
     vertical_position += (font_vertical_pixels * 2);

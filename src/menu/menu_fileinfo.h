@@ -3,6 +3,8 @@
 
 #include <fatfs/ff.h>
 
+//struct n64_rom_header
+
 void menu_fileinfo(FILINFO current_fileinfo);
 
 #endif

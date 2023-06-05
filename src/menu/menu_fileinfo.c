@@ -4,7 +4,7 @@
 #include "../utils/str_utils.h"
 
 
-static char* get_file_type(FILINFO current_fileinfo) {
+static char *get_file_type(FILINFO current_fileinfo) {
     // TODO: should be at least a switch statement!
     if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
         // TODO: check the necessary bytes in the header to ensure!
@@ -62,21 +62,23 @@ void menu_fileinfo(FILINFO current_fileinfo) {
     vertical_position += (font_vertical_pixels * 2);
 
     graphics_draw_text(disp, horizontal_start_position, vertical_position, "Size:");
-    sprintf(str_buffer, "%10d %s", (int)current_fileinfo.fsize, "Bytes");
+    sprintf(str_buffer, "%d %s", (int)current_fileinfo.fsize, "Bytes");
     graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
     vertical_position += (font_vertical_pixels * 2);
 
     graphics_draw_text(disp, horizontal_start_position, vertical_position, "Attributes:");
-    sprintf(str_buffer, "%s%s%s",
-                ((current_fileinfo.fattrib & AM_DIR) ? "Directory\n" : "File\n"),
-                ((current_fileinfo.fattrib & AM_RDO) ? "Readonly\n" : " "),
-                ((current_fileinfo.fattrib & AM_HID) ? "Hidden\n" : " "));
+    sprintf(str_buffer, "%s%s%s%s%s\n",
+                ((current_fileinfo.fattrib & AM_DIR) ? "Directory" : "File"),
+                ((current_fileinfo.fattrib & AM_RDO) ? " | Readonly" : ""),
+                ((current_fileinfo.fattrib & AM_SYS) ? " | System" : ""),
+                ((current_fileinfo.fattrib & AM_ARC) ? " | Archive" : ""),
+                ((current_fileinfo.fattrib & AM_HID) ? " | Hidden" : ""));
            
     graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
     vertical_position += (font_vertical_pixels * 2);
 
-    graphics_draw_text(disp, horizontal_start_position, vertical_position, "Modified Date:");
-    sprintf(str_buffer, "%d T %d", current_fileinfo.fdate, current_fileinfo.ftime);
+    graphics_draw_text(disp, horizontal_start_position, vertical_position, "Modified Timestamp:");
+    sprintf(str_buffer, "%u-%02u-%02u, %02u:%02u", (current_fileinfo.fdate >> 9) + 1980, current_fileinfo.fdate >> 5 & 15, current_fileinfo.fdate & 31, current_fileinfo.ftime >> 11, current_fileinfo.ftime >> 5 & 63);
     graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
     vertical_position += (font_vertical_pixels * 2);
 

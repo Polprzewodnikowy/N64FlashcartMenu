@@ -71,7 +71,7 @@ FRESULT scan_file_path (char* path) {
 
 void menu_main_draw_header() {
 
-        printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
+    printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
 }
 
 void menu_main_draw_footer(char *dir_path) {

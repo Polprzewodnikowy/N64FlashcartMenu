@@ -22,8 +22,52 @@ static int items_in_dir = 1;
 
 static FILINFO current_fileinfo;
 
+void file_read_rom_header(char *path) {
+    FILE *fp = fopen(path, "rb");
+    printf("loading path: %s\n", path);
+	if (!fp) {
+        printf("Error loading rom file header\n");
+    }
+
+    // rom_header_t header; // malloc(size);
+
+    uint64_t checksum;
+    char rom_title[14];
+    //char category_code[1];
+    uint16_t unique_id;
+    //char destination_code;
+    //char version;
+
+    fseek(fp, 0x10, SEEK_SET);
+    fread(&checksum, sizeof(uint64_t), 1, fp);
+    fseek(fp, 0x20, SEEK_SET);
+	fread(&rom_title, sizeof(rom_title), 1, fp);
+    //fseek(fp, 0x3b, SEEK_SET);
+    //fread(&category_code, sizeof(char), 1, fp);
+    fseek(fp, 0x3c, SEEK_SET);
+    fread(&unique_id, sizeof(uint16_t), 1, fp);
+    //fseek(fp, 0x3e, SEEK_SET);
+    //fread(&destination_code, sizeof(char), 1, fp);
+    //fseek(fp, 0x3f, SEEK_SET);
+    //fread(&version, sizeof(char), 1, fp);
+
+	printf("ROM checksum: %llu\n", checksum);
+    printf("ROM title: %s\n", rom_title);
+    //printf("ROM cat type code: %c\n", category_code);
+    printf("ROM unique id: %hu\n", unique_id);
+    //printf("ROM dest market code: %c\n", destination_code);
+    //printf("ROM ver code: %c\n", version);
+
+    fclose(fp);
+
+    // header.check_code = check_code;
+    // header.game_code.unique_code = unique_code;
+
+    // return header;
+}
+
 // FIXME: use newlib rather than fatfs to do this!
-FRESULT scan_file_path (char* path) {
+FRESULT scan_file_path (char *path) {
 
     FRESULT res;
     DIR dir;
@@ -69,37 +113,42 @@ FRESULT scan_file_path (char* path) {
     return res;
 }
 
-void menu_main_draw_header() {
+void menu_main_draw_header(surface_t *disp) {
 
-    printf("SC64 Flashcart Menu Rev: 0.0.2\n\n");
+    printf("           FILE MENU\n\n\n\n");
+
+    // graphics_draw_text(disp, (disp->width / 2) - 36, vertical_start_position, "FILE MENU"); // centre = numchars * font_horizontal_pixels / 2
+    // graphics_draw_line(disp,0,30,disp->width,30, 0xff);
 }
 
-void menu_main_draw_footer(char *dir_path) {
+void menu_main_draw_footer(char *dir_path, surface_t *disp) {
 	
-    printf("\n\nDirectory: %s\n\n", dir_path);
+    // graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
+    
+    printf("\n\nCurrent Directory: %s\n", dir_path);
     printf("    File: %d of %d\n\n", scroll_menu_position, items_in_dir);
 	
 }
 
-void menu_main_refresh (char *dir_path) {
+void menu_main_refresh (char *dir_path, surface_t *disp) {
 
     console_clear();
 
-    menu_main_draw_header();
+    menu_main_draw_header(disp);
 
     printf("   | DRH | FILE SIZE  | FILE NAME\n");
     printf("   |-----|------------|----------\n");
     
     scan_file_path(dir_path);
 
-    menu_main_draw_footer(dir_path);
+    menu_main_draw_footer(dir_path, disp);
 
 }
 
 void menu_main_init (settings_t *settings) {
     // TODO: implement nice user interface here
     surface_t *disp = display_try_get();
-    graphics_draw_line(disp,0,30,disp->width,30, 0xff);
+
 
 
     console_init();
@@ -121,7 +170,7 @@ void menu_main_init (settings_t *settings) {
     }
     else {
         settings->last_state.auto_load_last_rom = false;
-        menu_main_refresh(current_dir);
+        menu_main_refresh(current_dir, disp);
     }
     
     for (;;) {
@@ -135,7 +184,7 @@ void menu_main_init (settings_t *settings) {
             else {
                 scroll_menu_position = items_in_dir;
             }
-            menu_main_refresh(current_dir);
+            menu_main_refresh(current_dir, disp);
 		}
 
         if (joypad.c[0].down) {
@@ -145,7 +194,7 @@ void menu_main_init (settings_t *settings) {
             else {
                 scroll_menu_position = 1;
             }
-            menu_main_refresh(current_dir);
+            menu_main_refresh(current_dir, disp);
 		}
 
 		if (joypad.c[0].A) {
@@ -153,7 +202,15 @@ void menu_main_init (settings_t *settings) {
             if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
                 printf("Loading N64 ROM type...\n");
                 printf("%s\n", current_fileinfo.fname);
+                char tmp_buffer[280];
+                sprintf(tmp_buffer, "sd:/%s", current_fileinfo.fname);
+                //rom_header_t temp_header = 
+                file_read_rom_header(tmp_buffer);
+                //printf("header: %d", temp_header.game_code.unique_code);
+                //uint8_t save_type = rom_db_match_save_type(temp_header);
 
+                //printf("save type: %d", save_type);
+                wait_ms(5000);
                 // FIXME: we now need the header ID and CRC HI...
                 // f_read
                 // crc_high = (buff[0x10] << 24) | (buff[0x11] << 16) | (buff[0x12] << 8) | (buff[0x13] << 0);
@@ -161,7 +218,7 @@ void menu_main_init (settings_t *settings) {
                 // id = (buff[0x3c] << 8) | buff[0x3d];
                 //assertf(flashcart_load_save("current_filename.sav", rom_db_match_save_type(id, crc), false) == FLASHCART_OK, "ROM load save error");
 
-                assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+                //assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
 
                 break; //required!
             }
@@ -172,26 +229,26 @@ void menu_main_init (settings_t *settings) {
                     scroll_menu_position = 1;
                     last_dir = current_dir;
                     current_dir = current_fileinfo.fname;
-                    menu_main_refresh(current_dir);
+                    menu_main_refresh(current_dir, disp);
                 }
                 else {
                     printf("Failed... Returning to menu...\n");
                     wait_ms(1000);
-                    menu_main_refresh(current_dir);
+                    menu_main_refresh(current_dir, disp);
                 }
             }            
 		}
         if (joypad.c[0].B) {
-                menu_main_refresh(last_dir);
+                menu_main_refresh(last_dir, disp);
                 current_dir = last_dir;
         }
         if (joypad.c[0].start) { // FIXME: the START button on any controller!
             menu_info();
-            menu_main_refresh(current_dir);
+            menu_main_refresh(current_dir, disp);
 		}
         if (joypad.c[0].Z) {
             menu_fileinfo(current_fileinfo);
-            menu_main_refresh(current_dir);
+            menu_main_refresh(current_dir, disp);
 		}
     }
     // TODO: write menu state to SD card

@@ -3,24 +3,26 @@
 
 // TODO: make sure this can also handle an external input file.
 
-uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {  //FIXME: the ID should be 4 chars (uint32)
+uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     // These are ordered to ensure they are handled correctly...
 
     // First: Match by the `ED` Developer ID
     // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
-    if (id == *(uint16_t *)"ED") {
+    if (rom_header.game_code.unique_code == *(uint16_t *)"ED") {
+        // FIXME: should probably just return the specified save type.
         return DB_SAVE_TYPE_CART_SPECIFIED;
     }
 
     // Second: Match the default entries for crc_high.
-    if (crc == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
-    if (crc == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    if (crc == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    if (crc == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
-    if (crc == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
-    if (crc == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    if (crc == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    // FIXME: use full check code, or pad.
+    if (rom_header.check_code == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
+    if (rom_header.check_code == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    if (rom_header.check_code == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    if (rom_header.check_code == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
+    if (rom_header.check_code == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
+    if (rom_header.check_code == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
+    if (rom_header.check_code == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
     
 
     // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
@@ -80,7 +82,7 @@ uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc) {  //FIXME: the ID sho
 
     for (int i = 0; save_types[i] != 0xff; i++) {
 
-        if (id == *(uint16_t *) cart_ids[i]) {
+        if (rom_header.game_code.unique_code == *(uint16_t *) cart_ids[i]) {
             i = save_types[i];
             // i = i == 1 ? DB_SAVE_TYPE_EEPROM_4K : 
             //     i == 2 ? DB_SAVE_TYPE_EEPROM_16K :

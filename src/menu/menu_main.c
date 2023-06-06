@@ -98,12 +98,15 @@ void menu_main_refresh (char *dir_path) {
 
 void menu_main_init (settings_t *settings) {
     // TODO: implement nice user interface here
+    surface_t *disp = display_try_get();
+    graphics_draw_line(disp,0,30,disp->width,30, 0xff);
+
 
     console_init();
     console_set_debug(true);
     console_clear();
 
-    controller_init();
+    
 
     char *current_dir = settings->last_state.current_directory;
     char *last_dir = current_dir;
@@ -150,13 +153,16 @@ void menu_main_init (settings_t *settings) {
             if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
                 printf("Loading N64 ROM type...\n");
                 printf("%s\n", current_fileinfo.fname);
-                assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+
                 // FIXME: we now need the header ID and CRC HI...
-                // ed64_dma_read_rom(buff, 0, 1);
+                // f_read
                 // crc_high = (buff[0x10] << 24) | (buff[0x11] << 16) | (buff[0x12] << 8) | (buff[0x13] << 0);
                 // crc_low =  (buff[0x14] << 24) | (buff[0x15] << 16) | (buff[0x16] << 8) | (buff[0x17] << 0);
                 // id = (buff[0x3c] << 8) | buff[0x3d];
                 //assertf(flashcart_load_save("current_filename.sav", rom_db_match_save_type(id, crc), false) == FLASHCART_OK, "ROM load save error");
+
+                assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+
                 break; //required!
             }
             else {

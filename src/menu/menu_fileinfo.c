@@ -33,14 +33,14 @@ static char *get_file_type(FILINFO current_fileinfo) {
     }
 }
 
-void menu_fileinfo_draw_header(display_context_t disp) {
+void menu_fileinfo_draw_header(surface_t *disp) {
 	
 	graphics_draw_text(disp, (disp->width / 2) - 64, vertical_start_position, "FILE INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
 	graphics_draw_line(disp,0,30,disp->width,30, 0xff);
 	
 }
 
-void menu_fileinfo_draw_footer(display_context_t disp) {
+void menu_fileinfo_draw_footer(surface_t *disp) {
 	
 	graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
 	graphics_draw_text(disp, (disp->width / 2) - 80,disp->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
@@ -51,7 +51,7 @@ void menu_fileinfo(FILINFO current_fileinfo) {
 
     char str_buffer[1024];
 
-	display_context_t disp = display_try_get();
+	surface_t *disp = display_try_get();
 	graphics_fill_screen(disp, 0x00);
 	menu_fileinfo_draw_header(disp);
 
@@ -69,7 +69,7 @@ void menu_fileinfo(FILINFO current_fileinfo) {
     graphics_draw_text(disp, horizontal_start_position, vertical_position, "Attributes:");
     sprintf(str_buffer, "%s%s%s%s%s\n",
                 ((current_fileinfo.fattrib & AM_DIR) ? "Directory" : "File"),
-                ((current_fileinfo.fattrib & AM_RDO) ? " | Readonly" : ""),
+                ((current_fileinfo.fattrib & AM_RDO) ? " | ReadOnly" : ""),
                 ((current_fileinfo.fattrib & AM_SYS) ? " | System" : ""),
                 ((current_fileinfo.fattrib & AM_ARC) ? " | Archive" : ""),
                 ((current_fileinfo.fattrib & AM_HID) ? " | Hidden" : "")

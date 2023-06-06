@@ -11,4 +11,28 @@
 #define DB_SAVE_TYPE_FLASHRAM       0x06
 #define DB_SAVE_TYPE_CART_SPECIFIED 0x0f
 
-uint8_t rom_db_match_save_type(uint16_t id, uint32_t crc);
+
+//Rom Info
+// CheckCode 0x10, 8 bytes (sometimes refered to as CRC Hi and CRC Lo)
+// GameTitle 0x20, 14 bytes
+// GameCode ->
+//    CategoryCode 0x3b
+//    UniqueCode 0x3c and 0x3d
+//    DestinationCode 0x3e
+// RomVersion 0x3f
+
+typedef struct {
+    char category_code;
+    uint16_t unique_code;
+    char destination_code;
+} game_code_t;
+
+typedef struct {
+    uint64_t check_code;
+    char game_title[14];
+    game_code_t game_code;
+    char version;
+} rom_header_t;
+
+
+uint8_t rom_db_match_save_type(rom_header_t rom_header);

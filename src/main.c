@@ -17,11 +17,17 @@ static void init (void) {
     assertf(error != FLASHCART_ERROR_OUTDATED, "Outdated flashcart firmware");
     assertf(error != FLASHCART_ERROR_UNSUPPORTED, "Unsupported flashcart");
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
-    
-    display_init(RESOLUTION_512x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+
+    controller_init();
+
+    display_close();
+    display_init(RESOLUTION_640x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+    graphics_set_color(0xFFFFFFFF, 0x00000000);
+    graphics_set_default_font();
 }
 
 static void deinit (void) {
+    display_close();
     flashcart_deinit();
     rdpq_close();
     rspq_close();

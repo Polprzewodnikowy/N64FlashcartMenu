@@ -2,14 +2,14 @@
 #include "menu_info.h"
 #include "menu_res_setup.h"
 
-void menu_info_draw_header(display_context_t disp) {
+void menu_info_draw_header(surface_t *disp) {
 	
 	graphics_draw_text(disp, (disp->width / 2) - 64, vertical_start_position, "MENU INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
 	graphics_draw_line(disp,0,30,disp->width,30, 0xff);
 	
 }
 
-void menu_info_draw_footer(display_context_t disp) {
+void menu_info_draw_footer(surface_t *disp) {
 	
 	graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
 	graphics_draw_text(disp, (disp->width / 2) - 80,disp->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
@@ -18,7 +18,7 @@ void menu_info_draw_footer(display_context_t disp) {
 
 void menu_info(void) {
 	
-	display_context_t disp = display_try_get();
+	surface_t *disp = display_try_get();
 	graphics_fill_screen(disp, 0x00);
 	menu_info_draw_header(disp);
 

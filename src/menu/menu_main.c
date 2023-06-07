@@ -22,48 +22,38 @@ static int items_in_dir = 1;
 
 static FILINFO current_fileinfo;
 
-void file_read_rom_header(char *path) {
+rom_header_t file_read_rom_header(char *path) {
     FILE *fp = fopen(path, "rb");
     printf("loading path: %s\n", path);
 	if (!fp) {
         printf("Error loading rom file header\n");
     }
 
-    // rom_header_t header; // malloc(size);
-
-    uint64_t checksum;
-    char rom_title[14];
-    //char category_code[1];
-    uint16_t unique_id;
-    //char destination_code;
-    //char version;
+    rom_header_t rom_header; // malloc(size);
 
     fseek(fp, 0x10, SEEK_SET);
-    fread(&checksum, sizeof(uint64_t), 1, fp);
+    fread(&rom_header.checksum, sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
-	fread(&rom_title, sizeof(rom_title), 1, fp);
+	fread(&rom_header.title, sizeof(rom_header.title), 1, fp);
     //fseek(fp, 0x3b, SEEK_SET);
-    //fread(&category_code, sizeof(char), 1, fp);
+    //fread(&media_type, sizeof(char), 1, fp);
     fseek(fp, 0x3c, SEEK_SET);
-    fread(&unique_id, sizeof(uint16_t), 1, fp);
+    fread(&rom_header.metadata.unique_identifier, sizeof(rom_header.metadata.unique_identifier), 1, fp);
     //fseek(fp, 0x3e, SEEK_SET);
-    //fread(&destination_code, sizeof(char), 1, fp);
-    //fseek(fp, 0x3f, SEEK_SET);
-    //fread(&version, sizeof(char), 1, fp);
-
-	printf("ROM checksum: %llu\n", checksum);
-    printf("ROM title: %s\n", rom_title);
-    //printf("ROM cat type code: %c\n", category_code);
-    printf("ROM unique id: %hu\n", unique_id);
-    //printf("ROM dest market code: %c\n", destination_code);
-    //printf("ROM ver code: %c\n", version);
+    //fread(&destination_market, sizeof(char), 1, fp);
+    // fseek(fp, 0x3f, SEEK_SET);
+    // fread(&version, sizeof(uint8_t), 1, fp);
 
     fclose(fp);
 
-    // header.check_code = check_code;
-    // header.game_code.unique_code = unique_code;
+    printf("ROM checksum: %llu\n", rom_header.checksum);
+    printf("ROM title: %s\n", rom_header.title);
+    //printf("ROM media type code: %s\n", (char *) &media_type);
+    printf("ROM unique id: %s\n", (char *) &rom_header.metadata.unique_identifier);
+    //printf("ROM dest market code: %s\n", (char *) &rom_header.metadata.destination_market);
+    //printf("ROM version: %hu\n", rom_header.version);
 
-    // return header;
+    return rom_header;
 }
 
 // FIXME: use newlib rather than fatfs to do this!
@@ -204,21 +194,17 @@ void menu_main_init (settings_t *settings) {
                 printf("%s\n", current_fileinfo.fname);
                 char tmp_buffer[280];
                 sprintf(tmp_buffer, "sd:/%s", current_fileinfo.fname);
-                //rom_header_t temp_header = 
-                file_read_rom_header(tmp_buffer);
-                //printf("header: %d", temp_header.game_code.unique_code);
-                //uint8_t save_type = rom_db_match_save_type(temp_header);
+                rom_header_t temp_header = file_read_rom_header(tmp_buffer);
+                printf("uid as int: %d\n", temp_header.metadata.unique_identifier);
+                uint8_t save_type = rom_db_match_save_type(temp_header);
 
-                //printf("save type: %d", save_type);
-                wait_ms(5000);
-                // FIXME: we now need the header ID and CRC HI...
-                // f_read
-                // crc_high = (buff[0x10] << 24) | (buff[0x11] << 16) | (buff[0x12] << 8) | (buff[0x13] << 0);
-                // crc_low =  (buff[0x14] << 24) | (buff[0x15] << 16) | (buff[0x16] << 8) | (buff[0x17] << 0);
-                // id = (buff[0x3c] << 8) | buff[0x3d];
-                //assertf(flashcart_load_save("current_filename.sav", rom_db_match_save_type(id, crc), false) == FLASHCART_OK, "ROM load save error");
+                printf("save type: %d\n", save_type);
+                sprintf(tmp_buffer, "%s.%llu.sav", current_fileinfo.fname, temp_header.checksum);
+                wait_ms(1000);
 
-                //assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+                assertf(flashcart_load_save(tmp_buffer, (flashcart_save_type_t)save_type, true) == FLASHCART_OK, "ROM load save error");
+
+                assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
 
                 break; //required!
             }

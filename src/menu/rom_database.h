@@ -21,17 +21,56 @@
 //    DestinationCode 0x3e
 // RomVersion 0x3f
 
-typedef struct {
-    char category_code;
-    uint16_t unique_code;
-    char destination_code;
-} game_code_t;
+// typedef enum {
+//     N64_CART = 'N',
+//     N64_DISK  = 'D',
+//     N64_CART_EXPANDABLE = 'C',
+//     N64_DISK_EXPANDABLE = 'E',
+//     N64_ALECK64  = 'Z',
+//     //UNKNOWN = NULL
+// } rom_media_type_t;
+
+// typedef enum {
+//     MARKET_ALL = 'A',
+//     MARKET_BRAZIL  = 'B',
+//     MARKET_CHINA = 'C',
+//     MARKET_GERMANY = 'D',
+//     MARKET_USA  = 'E',
+//     MARKET_FRANCE = 'F',
+//     MARKET_GATEWAY64_NTSC = 'G',
+//     MARKET_NETHERLANDS = 'H',
+//     MARKET_ITALY = 'I',
+//     MARKET_JAPAN = 'J',
+//     MARKET_KOREA = 'K',
+//     MARKET_GATEWAY64_PAL = 'L',
+//     MARKET_UNKNOWN_M = 'M',
+//     MARKET_CANADA = 'N',
+//     MARKET_UNKNOWN_O = 'O',
+//     MARKET_EUROPE_P = 'P',
+//     MARKET_UNKNOWN_Q = 'Q',
+//     MARKET_UNKNOWN_R = 'R',
+//     MARKET_SPAIN = 'S',
+//     MARKET_UNKNOWN_T = 'T',
+//     MARKET_AUSTRAILA = 'U',
+//     MARKET_UNKNOWN_V = 'V',
+//     MARKET_SCANDINAVAIA = 'W',
+//     MARKET_EUROPE_X = 'X',
+//     MARKET_EUROPE_Y = 'Y',
+//     MARKET_EUROPE_Z = 'Z',
+//     //MARKET_UNKNOWN = NULL
+// } rom_destination_market_t;
 
 typedef struct {
-    uint64_t check_code;
-    char game_title[14];
-    game_code_t game_code;
-    char version;
+    // rom_media_type_t media_type;
+    uint16_t unique_identifier;
+    // char destination_market; //rom_destination_market_t
+} rom_metadata_t;
+
+typedef struct {
+    uint64_t checksum;
+    char title[14];
+    rom_metadata_t metadata;
+    // uint8_t version;
 } rom_header_t;
 
 

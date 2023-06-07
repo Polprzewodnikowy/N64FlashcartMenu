@@ -61,16 +61,16 @@
 // } rom_destination_market_t;
 
 typedef struct {
-    // rom_media_type_t media_type;
+    uint8_t media_type; // rom_media_type_t
     uint16_t unique_identifier;
-    // char destination_market; //rom_destination_market_t
+    uint8_t destination_market; //rom_destination_market_t
 } rom_metadata_t;
 
 typedef struct {
     uint64_t checksum;
-    char title[14];
+    uint8_t title[14];
     rom_metadata_t metadata;
-    // uint8_t version;
+    uint8_t version;
 } rom_header_t;
 
 

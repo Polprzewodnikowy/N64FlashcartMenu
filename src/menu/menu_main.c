@@ -29,31 +29,31 @@ rom_header_t file_read_rom_header(char *path) {
         printf("Error loading rom file header\n");
     }
 
-    rom_header_t rom_header; // malloc(size);
+    rom_header_t *rom_header = malloc(sizeof(rom_header_t));
 
     fseek(fp, 0x10, SEEK_SET);
-    fread(&rom_header.checksum, sizeof(uint64_t), 1, fp);
+    fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
-	fread(&rom_header.title, sizeof(rom_header.title), 1, fp);
-    //fseek(fp, 0x3b, SEEK_SET);
-    //fread(&media_type, sizeof(char), 1, fp);
+	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
+    fseek(fp, 0x3b, SEEK_SET);
+    //fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
     fseek(fp, 0x3c, SEEK_SET);
-    fread(&rom_header.metadata.unique_identifier, sizeof(rom_header.metadata.unique_identifier), 1, fp);
-    //fseek(fp, 0x3e, SEEK_SET);
-    //fread(&destination_market, sizeof(char), 1, fp);
-    // fseek(fp, 0x3f, SEEK_SET);
-    // fread(&version, sizeof(uint8_t), 1, fp);
+    fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
+    fseek(fp, 0x3e, SEEK_SET);
+    //fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
+    fseek(fp, 0x3f, SEEK_SET);
+    //fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
 
     fclose(fp);
 
-    printf("ROM checksum: %llu\n", rom_header.checksum);
-    printf("ROM title: %s\n", rom_header.title);
-    //printf("ROM media type code: %s\n", (char *) &media_type);
-    printf("ROM unique id: %s\n", (char *) &rom_header.metadata.unique_identifier);
-    //printf("ROM dest market code: %s\n", (char *) &rom_header.metadata.destination_market);
-    //printf("ROM version: %hu\n", rom_header.version);
+    printf("ROM checksum: %llu\n", rom_header->checksum);
+    printf("ROM title: %s\n", rom_header->title);
+    printf("ROM media type: %c\n", rom_header->metadata.media_type);
+    printf("ROM unique id: %.2s\n", (char*)&(rom_header->metadata.unique_identifier));
+    printf("ROM dest market: %c\n", rom_header->metadata.destination_market);
+    printf("ROM version: %hhu\n", rom_header->version);
 
-    return rom_header;
+    return *rom_header;
 }
 
 // FIXME: use newlib rather than fatfs to do this!

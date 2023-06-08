@@ -68,7 +68,7 @@ typedef struct {
 
 typedef struct {
     uint64_t checksum;
-    uint8_t title[14];
+    uint8_t title[21];
     rom_metadata_t metadata;
     uint8_t version;
 } rom_header_t;

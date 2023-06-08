@@ -35,6 +35,7 @@ rom_header_t file_read_rom_header(char *path) {
     fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
 	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
+    rom_header->title[20] = '\0';
     fseek(fp, 0x3b, SEEK_SET);
     fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
     //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).

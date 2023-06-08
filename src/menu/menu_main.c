@@ -37,11 +37,11 @@ rom_header_t file_read_rom_header(char *path) {
 	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
     fseek(fp, 0x3b, SEEK_SET);
     fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
-    fseek(fp, 0x3c, SEEK_SET);
+    //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
     fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
-    fseek(fp, 0x3e, SEEK_SET);
+    //fseek(fp, 0x3e, SEEK_SET);     // Consecutive read (no need to seek).
     fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
-    fseek(fp, 0x3f, SEEK_SET);
+    //fseek(fp, 0x3f, SEEK_SET);     // Consecutive read (no need to seek).
     fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
 
     fclose(fp);

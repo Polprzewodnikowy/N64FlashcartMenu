@@ -9,12 +9,12 @@
 #define DB_SAVE_TYPE_SRAM_BANKED    0x04
 #define DB_SAVE_TYPE_SRAM_128K      0x05
 #define DB_SAVE_TYPE_FLASHRAM       0x06
-#define DB_SAVE_TYPE_CART_SPECIFIED 0x0f
+#define DB_SAVE_TYPE_CART_SPECIFIED 0xff
 
 
 //Rom Info
 // CheckCode 0x10, 8 bytes (sometimes refered to as CRC Hi and CRC Lo)
-// GameTitle 0x20, 14 bytes
+// GameTitle 0x20, 20 bytes
 // GameCode ->
 //    CategoryCode 0x3b
 //    UniqueCode 0x3c and 0x3d
@@ -27,7 +27,7 @@
 //     N64_CART_EXPANDABLE = 'C',
 //     N64_DISK_EXPANDABLE = 'E',
 //     N64_ALECK64  = 'Z',
-//     //UNKNOWN = NULL
+//     //TYPE_UNKNOWN = '\0'
 // } rom_media_type_t;
 
 // typedef enum {
@@ -57,7 +57,7 @@
 //     MARKET_EUROPE_X = 'X',
 //     MARKET_EUROPE_Y = 'Y',
 //     MARKET_EUROPE_Z = 'Z',
-//     //MARKET_UNKNOWN = NULL
+//     //MARKET_UNKNOWN = '\0'
 // } rom_destination_market_t;
 
 typedef struct {

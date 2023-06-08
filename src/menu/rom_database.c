@@ -1,6 +1,32 @@
 #include "rom_database.h"
 #include <stdint.h>
 
+uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
+    return (setting & (1 << bit_position)) ? 1 : 0;
+}
+
+uint8_t extract_homebrew_save_type(uint8_t save_type) {
+    switch (save_type) {
+        case 0x00:
+            return DB_SAVE_TYPE_NONE;
+        case 0x01:
+            return DB_SAVE_TYPE_EEPROM_4K;
+        case 0x02:
+            return DB_SAVE_TYPE_EEPROM_16K;
+        case 0x03:
+            return DB_SAVE_TYPE_SRAM;
+        case 0x04:
+            return DB_SAVE_TYPE_SRAM_BANKED;
+        case 0x05:
+            return DB_SAVE_TYPE_FLASHRAM;
+        case 0x06:
+            return DB_SAVE_TYPE_SRAM_128K;
+        default:
+            return DB_SAVE_TYPE_CART_SPECIFIED; // Invalid save type, handle accordingly
+    }
+}
+
+
 // TODO: make sure this can also handle an external input file.
 
 uint8_t rom_db_match_save_type(rom_header_t rom_header) {
@@ -10,8 +36,14 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     // First: Match by the `ED` Developer ID
     // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
     if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED") {
-        // FIXME: should probably just return the specified save type.
-        return DB_SAVE_TYPE_CART_SPECIFIED;
+        
+        // uint8_t info = rom_header.version & 0x0F;
+        // uint8_t rtc_enabled = extract_homebrew_setting(info, 0); // Bit 0
+        // uint8_t region_free_enabled = extract_homebrew_setting(info, 1); // Bit 1
+
+        uint8_t save_type = (rom_header.version >> 4) & 0x0F;
+
+        return extract_homebrew_save_type(save_type);
     }
 
     // Second: Match the default entries for crc_high.
@@ -83,16 +115,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     for (int i = 0; save_types[i] != 0xff; i++) {
 
         if (rom_header.metadata.unique_identifier == *(uint16_t *) cart_ids[i]) {
-            i = save_types[i];
-            // i = i == 1 ? DB_SAVE_TYPE_EEPROM_4K : 
-            //     i == 2 ? DB_SAVE_TYPE_EEPROM_16K :
-            //     i == 3 ? DB_SAVE_TYPE_SRAM : 
-            //     i == 4 ? DB_SAVE_TYPE_SRAM_BANKED :
-            //     i == 5 ? DB_SAVE_TYPE_SRAM_128K : 
-            //     i == 6 ? DB_SAVE_TYPE_FLASHRAM : 
-            // //     i == 15 ? DB_SAVE_TYPE_CART_SPECIFIED : 
-            //     DB_SAVE_TYPE_NONE;
-            return i;
+            return save_types[i];
         }
 
     }

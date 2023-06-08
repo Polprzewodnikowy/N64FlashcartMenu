@@ -12,44 +12,38 @@
 #include "settings.h"
 
 
-void settings_load_from_file (settings_t *settings) {
-    FILE *fp = NULL;
+void settings_load_from_file(settings_t *settings) {
+    FILE *fp = fopen(SC64_SETTINGS_FILEPATH, "r");
+    if (!fp) {
+        printf("Error loading config file %s\n", SC64_SETTINGS_FILEPATH);
+        // Generate a default config file.
+        printf("Creating a new one!\n");
+        wait_ms(10000);
+        settings_load_default_state(settings);
+        return;
+    }
+
     char error_buffer[256];
-    
-    printf("Loading settings file %s\n", SC64_SETTINGS_FILEPATH);
-    wait_ms(1000);
-
-    fp = fopen(SC64_SETTINGS_FILEPATH, "r");
-	if (!fp) {
-		printf("Error loading config file %s\n", SC64_SETTINGS_FILEPATH);
-        // generate a default config file.
-        printf("Creating a new one!");
-        wait_ms(10000);
-        //assertf(!fp, "Couldn't open toml config file: %s", SC64_SETTINGS_FILEPATH);
-        settings_save_default_state();
-	}
-
     toml_table_t *conf = toml_parse_file(fp, error_buffer, sizeof(error_buffer));
-    if (!conf) {
-		printf("Error parsing config: %s\n", error_buffer);
-        wait_ms(10000);
-        printf("Attempt a repair!");
-        settings_validate();
-        printf("Creating a new one!");
-        settings_save_default_state();
-        //assertf(!conf, "Couldn't parse toml config: %s", error_buffer); // TODO: work out why and handle appropriately.
-	}
+    fclose(fp);
 
-    //fclose(fp);
-    assertf(!fclose(fp), "Couldn't close toml config file"); // TODO: work out why and handle appropriately.
-    fp = NULL;
+    if (!conf) {
+        printf("Error parsing config: %s\n", error_buffer);
+        wait_ms(10000);
+        printf("Attempt a repair!\n");
+        settings_validate();
+        printf("Creating a new one!\n");
+        settings_load_default_state(settings);
+        //assertf(!conf, "Couldn't parse toml config: %s", error_buffer); // TODO: work out why and handle appropriately.
+        return;
+    }
 
     // Handle last_rom
     toml_table_t *last_rom = toml_table_in(conf, "last_rom");
     if (!last_rom) {
-		printf("Missing '[last_rom]' header in config\n");
+        printf("Missing '[last_rom]' header in config\n");
         wait_ms(10000);
-	}
+    }
     else {
         toml_datum_t rom_path = toml_string_in(last_rom, "rom_path");
         if (!rom_path.ok) {
@@ -67,7 +61,7 @@ void settings_load_from_file (settings_t *settings) {
             wait_ms(10000);
         }
         else {
-            printf("Found save path: %s\n", save_path.u.s );
+            printf("Found save path: %s\n", save_path.u.s);
             settings->last_rom.save_path = save_path.u.s;
         }
 
@@ -78,7 +72,7 @@ void settings_load_from_file (settings_t *settings) {
         }
         else {
             assertf((int)tmp_save_type.u.i < __FLASHCART_SAVE_TYPE_END, "Invalid save type in config file");
-            printf("Found save type: %d\n", (int)tmp_save_type.u.i );
+            printf("Found save type: %d\n", (int)tmp_save_type.u.i);
             settings->last_rom.save_type = (int)tmp_save_type.u.i;
         }
     }
@@ -131,18 +125,26 @@ void settings_load_from_file (settings_t *settings) {
 
 }
 
-void settings_save(void) {
-    // TODO: if there is a failure, validate or write the default state.
-    FILE *fp = NULL;
-    printf("Saving settings file %s\n", SC64_SETTINGS_FILEPATH);
-    wait_ms(1000);
-    fp = fopen(SC64_SETTINGS_FILEPATH, "w");
+void settings_save(const char* filename, const settings_t* settings) {
+    // FILE* fp = fopen(filename, "wb");
+    // if (!fp) {
+    //     perror("Failed to open file for writing");
+    //     return 1;
+    // }
 
-    // TODO: convert and save the state to TOML
 
-    fclose(fp);
-    assertf(!fclose(fp), "Couldn't close toml settings file"); // TODO: work out why and handle appropriately.
-    fp = NULL;
+    // // Populate settings data...
+
+
+    // if (result != 0) {
+    //     fprintf(stderr, "Failed to write TOML data to file\n");
+    // }
+
+
+    // fclose(fp);
+
+    // return result;
+    return;
 }
 
 void settings_load_default_state(settings_t *settings) {
@@ -162,15 +164,17 @@ void settings_load_default_state(settings_t *settings) {
     settings->boot_params.reset_type = BOOT_RESET_TYPE_NMI;
     settings->boot_params.detect_tv_type = true;
     settings->boot_params.detect_cic_seed = true;
+
+    // Initialize other default settings...
 //#endif
 }
 
-void settings_save_default_state(void) {
+void settings_reset(void) {
 
 }
 
 void settings_validate(void) {
+    // Validate settings against a file schema...
     // TODO: should validate against a file schema.
     // Must take into account that the settings will change in future, so should be backwards compatible.
 }
-

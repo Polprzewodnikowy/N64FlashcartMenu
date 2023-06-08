@@ -34,10 +34,9 @@ typedef struct {
 } settings_t;
 
 void settings_load_from_file (settings_t *settings);
-void settings_save (void);
+void settings_save(const char* filename, const settings_t* settings);
 void settings_reset (void);
 void settings_load_default_state(settings_t *settings);
-void settings_save_default_state(void);
 void settings_validate (void);
 
 #endif

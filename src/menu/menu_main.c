@@ -22,6 +22,40 @@ static int items_in_dir = 1;
 
 static FILINFO current_fileinfo;
 
+
+void load_n64_rom() {
+
+    console_clear();
+
+    char tmp_buffer[280];
+    sprintf(tmp_buffer, "sd:/%s", current_fileinfo.fname);
+
+    rom_header_t temp_header = file_read_rom_header(tmp_buffer);
+
+    printf("ROM title: %s\n\n", temp_header.title);
+    
+    printf("ROM media type: %c\n", temp_header.metadata.media_type);
+    printf("ROM unique id: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
+    printf("uid as int: %d\n\n", temp_header.metadata.unique_identifier);
+
+    printf("ROM destination market: %c\n\n", temp_header.metadata.destination_market);
+    
+    printf("ROM version: %hhu\n", temp_header.version);
+    printf("ROM checksum: %llu\n\n", temp_header.checksum);
+
+    
+    uint8_t save_type = rom_db_match_save_type(temp_header);
+
+    printf("save type: %d\n", save_type);
+    sprintf(tmp_buffer, "%s.%llu.sav", current_fileinfo.fname, temp_header.checksum);
+    wait_ms(5000); // wait used for debugging. Can be removed later.
+
+    assertf(flashcart_load_save(tmp_buffer, (flashcart_save_type_t)save_type, true) == FLASHCART_OK, "ROM load save error");
+
+    assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+
+}
+
 // FIXME: use newlib rather than fatfs to do this!
 FRESULT scan_file_path (char *path) {
 
@@ -158,27 +192,8 @@ void menu_main_init (settings_t *settings) {
             if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
                 printf("Loading N64 ROM type...\n");
                 printf("%s\n", current_fileinfo.fname);
-                char tmp_buffer[280];
-                sprintf(tmp_buffer, "sd:/%s", current_fileinfo.fname);
-                rom_header_t temp_header = file_read_rom_header(tmp_buffer);
 
-                printf("ROM checksum: %llu\n", temp_header.checksum);
-                printf("ROM title: %s\n", temp_header.title);
-                printf("ROM media type: %c\n", temp_header.metadata.media_type);
-                printf("ROM unique id: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
-                printf("ROM dest market: %c\n", temp_header.metadata.destination_market);
-                printf("ROM version: %hhu\n", temp_header.version);
-
-                printf("uid as int: %d\n", temp_header.metadata.unique_identifier);
-                uint8_t save_type = rom_db_match_save_type(temp_header);
-
-                printf("save type: %d\n", save_type);
-                sprintf(tmp_buffer, "%s.%llu.sav", current_fileinfo.fname, temp_header.checksum);
-                wait_ms(5000); // wait used for debugging. Can be removed later.
-
-                assertf(flashcart_load_save(tmp_buffer, (flashcart_save_type_t)save_type, true) == FLASHCART_OK, "ROM load save error");
-
-                assertf(flashcart_load_rom(current_fileinfo.fname) == FLASHCART_OK, "ROM load error");
+                load_n64_rom();
 
                 break; //required!
             }
@@ -210,6 +225,10 @@ void menu_main_init (settings_t *settings) {
             menu_fileinfo(current_fileinfo);
             menu_main_refresh(current_dir, disp);
 		}
+        if (joypad.c[0].L) {
+            //load the new File list GUI
+            //menu_file_scroll(current_fileinfo);
+        }
     }
     // TODO: write menu state to SD card
 

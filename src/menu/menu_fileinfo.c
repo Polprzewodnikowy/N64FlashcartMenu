@@ -33,6 +33,17 @@ static char *get_file_type(FILINFO current_fileinfo) {
     }
 }
 
+void menu_fileinfo_draw_n64_rom_info(surface_t *disp) {
+    // rom_header_t temp_header = file_read_rom_header(tmp_buffer);
+
+    // sprintf(buff, "ROM checksum: %llu\n", temp_header.checksum);
+    // sprintf(buff, "ROM title: %s\n", temp_header.title);
+    // sprintf(buff, "ROM media type: %c\n", temp_header.metadata.media_type);
+    // sprintf(buff, "ROM unique id: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
+    // sprintf(buff, "ROM dest market: %c\n", temp_header.metadata.destination_market);
+    // sprintf(buff, "ROM version: %hhu\n", temp_header.version);
+}
+
 void menu_fileinfo_draw_header(surface_t *disp) {
 	
 	graphics_draw_text(disp, (disp->width / 2) - 64, vertical_start_position, "FILE INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
@@ -85,6 +96,8 @@ void menu_fileinfo(FILINFO current_fileinfo) {
 
     graphics_draw_text(disp, horizontal_start_position, vertical_position, "Type:");
     graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, get_file_type(current_fileinfo));
+
+    //menu_fileinfo_draw_n64_rom_info(disp);
 
 	menu_fileinfo_draw_footer(disp);
 

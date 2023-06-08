@@ -36,13 +36,13 @@ rom_header_t file_read_rom_header(char *path) {
     fseek(fp, 0x20, SEEK_SET);
 	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
     fseek(fp, 0x3b, SEEK_SET);
-    //fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
+    fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
     fseek(fp, 0x3c, SEEK_SET);
     fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
     fseek(fp, 0x3e, SEEK_SET);
-    //fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
+    fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
     fseek(fp, 0x3f, SEEK_SET);
-    //fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
+    fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
 
     fclose(fp);
 
@@ -200,7 +200,7 @@ void menu_main_init (settings_t *settings) {
 
                 printf("save type: %d\n", save_type);
                 sprintf(tmp_buffer, "%s.%llu.sav", current_fileinfo.fname, temp_header.checksum);
-                wait_ms(1000);
+                wait_ms(5000); // wait used for debugging. Can be removed later.
 
                 assertf(flashcart_load_save(tmp_buffer, (flashcart_save_type_t)save_type, true) == FLASHCART_OK, "ROM load save error");
 

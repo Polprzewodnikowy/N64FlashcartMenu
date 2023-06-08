@@ -22,41 +22,6 @@ static int items_in_dir = 1;
 
 static FILINFO current_fileinfo;
 
-rom_header_t file_read_rom_header(char *path) {
-    FILE *fp = fopen(path, "rb");
-    printf("loading path: %s\n", path);
-	if (!fp) {
-        printf("Error loading rom file header\n");
-    }
-
-    rom_header_t *rom_header = malloc(sizeof(rom_header_t));
-
-    fseek(fp, 0x10, SEEK_SET);
-    fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
-    fseek(fp, 0x20, SEEK_SET);
-	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
-    rom_header->title[20] = '\0';
-    fseek(fp, 0x3b, SEEK_SET);
-    fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
-    //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
-    fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
-    //fseek(fp, 0x3e, SEEK_SET);     // Consecutive read (no need to seek).
-    fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
-    //fseek(fp, 0x3f, SEEK_SET);     // Consecutive read (no need to seek).
-    fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
-
-    fclose(fp);
-
-    printf("ROM checksum: %llu\n", rom_header->checksum);
-    printf("ROM title: %s\n", rom_header->title);
-    printf("ROM media type: %c\n", rom_header->metadata.media_type);
-    printf("ROM unique id: %.2s\n", (char*)&(rom_header->metadata.unique_identifier));
-    printf("ROM dest market: %c\n", rom_header->metadata.destination_market);
-    printf("ROM version: %hhu\n", rom_header->version);
-
-    return *rom_header;
-}
-
 // FIXME: use newlib rather than fatfs to do this!
 FRESULT scan_file_path (char *path) {
 
@@ -196,6 +161,14 @@ void menu_main_init (settings_t *settings) {
                 char tmp_buffer[280];
                 sprintf(tmp_buffer, "sd:/%s", current_fileinfo.fname);
                 rom_header_t temp_header = file_read_rom_header(tmp_buffer);
+
+                printf("ROM checksum: %llu\n", temp_header.checksum);
+                printf("ROM title: %s\n", temp_header.title);
+                printf("ROM media type: %c\n", temp_header.metadata.media_type);
+                printf("ROM unique id: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
+                printf("ROM dest market: %c\n", temp_header.metadata.destination_market);
+                printf("ROM version: %hhu\n", temp_header.version);
+
                 printf("uid as int: %d\n", temp_header.metadata.unique_identifier);
                 uint8_t save_type = rom_db_match_save_type(temp_header);
 

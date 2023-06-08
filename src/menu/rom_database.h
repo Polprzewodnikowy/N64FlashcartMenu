@@ -73,5 +73,5 @@ typedef struct {
     uint8_t version;
 } rom_header_t;
 
-
+rom_header_t file_read_rom_header(char *path);
 uint8_t rom_db_match_save_type(rom_header_t rom_header);

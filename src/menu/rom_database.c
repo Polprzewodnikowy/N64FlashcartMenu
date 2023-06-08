@@ -1,5 +1,7 @@
 #include "rom_database.h"
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
     return (setting & (1 << bit_position)) ? 1 : 0;
@@ -26,6 +28,33 @@ uint8_t extract_homebrew_save_type(uint8_t save_type) {
     }
 }
 
+rom_header_t file_read_rom_header(char *path) {
+    FILE *fp = fopen(path, "rb");
+    printf("loading path: %s\n", path);
+	if (!fp) {
+        printf("Error loading rom file header\n");
+    }
+
+    rom_header_t *rom_header = malloc(sizeof(rom_header_t));
+
+    fseek(fp, 0x10, SEEK_SET);
+    fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
+    fseek(fp, 0x20, SEEK_SET);
+	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
+    rom_header->title[20] = '\0';
+    fseek(fp, 0x3b, SEEK_SET);
+    fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
+    //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
+    fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
+    //fseek(fp, 0x3e, SEEK_SET);     // Consecutive read (no need to seek).
+    fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
+    //fseek(fp, 0x3f, SEEK_SET);     // Consecutive read (no need to seek).
+    fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
+
+    fclose(fp);
+
+    return *rom_header;
+}
 
 // TODO: make sure this can also handle an external input file.
 
@@ -37,13 +66,13 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
     if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED") {
         
-        // uint8_t info = rom_header.version & 0x0F;
-        // uint8_t rtc_enabled = extract_homebrew_setting(info, 0); // Bit 0
-        // uint8_t region_free_enabled = extract_homebrew_setting(info, 1); // Bit 1
+        // uint8_t low_nibble = rom_header.version & 0x0F;
+        // uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
+        // uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
 
-        uint8_t save_type = (rom_header.version >> 4) & 0x0F;
+        uint8_t high_nibble = (rom_header.version >> 4) & 0x0F;
 
-        return extract_homebrew_save_type(save_type);
+        return extract_homebrew_save_type(high_nibble);
     }
 
     // Second: Match the default entries for crc_high.

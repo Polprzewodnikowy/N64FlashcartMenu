@@ -47,13 +47,13 @@ void menu_fileinfo_draw_n64_rom_info(surface_t *disp) {
 void menu_fileinfo_draw_header(surface_t *disp) {
 	
 	graphics_draw_text(disp, (disp->width / 2) - 64, vertical_start_position, "FILE INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
-	graphics_draw_line(disp,0,30,disp->width,30, 0xff);
+	graphics_draw_line(disp, 0, 30, disp->width, 30, 0xff);
 	
 }
 
 void menu_fileinfo_draw_footer(surface_t *disp) {
 	
-	graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
+	graphics_draw_line(disp, 0, disp->height - overscan_vertical_pixels - font_vertical_pixels, disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
 	graphics_draw_text(disp, (disp->width / 2) - 80,disp->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
 	
 }

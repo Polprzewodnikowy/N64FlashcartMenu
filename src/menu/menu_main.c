@@ -47,6 +47,7 @@ void load_n64_rom() {
     printf("ROM version: %hhu\n", temp_header.version);
     printf("ROM checksum: %llu\n\n", temp_header.checksum);
 
+    // FIXME: if the ROM header does not make sense, it is an invalid ROM.
     
     uint8_t save_type = rom_db_match_save_type(temp_header);
 
@@ -119,7 +120,7 @@ void menu_main_draw_header(surface_t *disp) {
 
 void menu_main_draw_footer(char *dir_path, surface_t *disp) {
 	
-    graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels,disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
+    graphics_draw_line(disp,0,disp->height - overscan_vertical_pixels - font_vertical_pixels, disp->width,disp->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
     
     char str_buffer[1024];
     sprintf(str_buffer, "Current Directory: SD:%s\nFile: %d of %d\n\n", dir_path, scroll_menu_position, items_in_dir);
@@ -218,11 +219,7 @@ void menu_main_init (settings_t *settings) {
                 }
                 else {
 
-                    console_init();
-                    console_clear();
-
-                    printf("Failed... Returning to menu...\n");
-                    wait_ms(1000);
+                    menu_fileinfo(current_fileinfo);
                     menu_main_refresh(current_dir);
                 }
             }            

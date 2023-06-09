@@ -1,3 +1,6 @@
+#ifndef ROM_DATABASE_H__
+#define ROM_DATABASE_H__
+
 #include <stdint.h>
 
 // NOTE: these values are independent of flashcart / OS
@@ -75,3 +78,5 @@ typedef struct {
 
 rom_header_t file_read_rom_header(char *path);
 uint8_t rom_db_match_save_type(rom_header_t rom_header);
+
+#endif

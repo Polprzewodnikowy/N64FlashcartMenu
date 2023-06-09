@@ -2,7 +2,6 @@
 #define SETTINGS_H__
 
 #include "flashcart/flashcart.h"
-#include "libs/toml/toml.h"
 #include "boot/boot.h"
 
 #define SC64_SETTINGS_FILEPATH "sd://config.sc64.toml.txt"

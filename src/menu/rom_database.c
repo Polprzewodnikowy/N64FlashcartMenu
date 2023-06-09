@@ -75,15 +75,15 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         return extract_homebrew_save_type(high_nibble);
     }
 
-    // Second: Match the default entries for crc_high.
-    // FIXME: use full check code, or pad.
-    if (rom_header.checksum == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
-    if (rom_header.checksum == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    if (rom_header.checksum == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    if (rom_header.checksum == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
-    if (rom_header.checksum == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
-    if (rom_header.checksum == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    if (rom_header.checksum == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    // // Second: Match the default entries for crc_high.
+    // // FIXME: use full check code, or pad.
+    // if (rom_header.checksum == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
+    // if (rom_header.checksum == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    // if (rom_header.checksum == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    // if (rom_header.checksum == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
+    // if (rom_header.checksum == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
+    // if (rom_header.checksum == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
+    // if (rom_header.checksum == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
     
 
     // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
@@ -122,8 +122,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
         // EEP16K
         0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
         0x02, 0x02, 0x02, 0x02, 0x02, 0x02,

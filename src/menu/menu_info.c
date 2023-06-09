@@ -25,7 +25,7 @@ void menu_info(void) {
 	int16_t vertical_position = 40;
 
 	graphics_draw_text(disp, horizontal_start_position, vertical_position, "Menu Version:");
-	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, "Vx.x.x.x"); // FIXME: use global setting.
+	graphics_draw_text(disp, horizontal_indent,vertical_position += font_vertical_pixels, MENU_VERSION);
 	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(disp, horizontal_start_position, vertical_position, "Authors:");
 	graphics_draw_text(disp, horizontal_indent, vertical_position += font_vertical_pixels, "JonesAlmighty / NetworkFusion");

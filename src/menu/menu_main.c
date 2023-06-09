@@ -16,7 +16,7 @@
 
 #include "../utils/str_utils.h"
 
-
+//const int max_files_on_screen = 16;
 static int scroll_menu_position = 1;
 static int items_in_dir = 1;
 
@@ -48,10 +48,15 @@ void load_n64_rom() {
     printf("ROM checksum: %llu\n\n", temp_header.checksum);
 
     // FIXME: if the ROM header does not make sense, it is an invalid ROM.
+    wait_ms(5000); // wait used for debugging. Can be removed later.
+
     
     uint8_t save_type = rom_db_match_save_type(temp_header);
 
     printf("save type: %d\n", save_type);
+
+    wait_ms(5000); // wait used for debugging. Can be removed later.
+
     sprintf(sd_path_buffer, "%s.%llu.sav", current_fileinfo.fname, temp_header.checksum);
     wait_ms(5000); // wait used for debugging. Can be removed later.
 
@@ -202,11 +207,29 @@ void menu_main_init (settings_t *settings) {
 
 		if (joypad.c[0].A) {
             // TODO: move this to a function and check that the ROM is valid by checking the header...
-            if (str_endswith(current_fileinfo.fname, ".z64") || str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
+            if (str_endswith(current_fileinfo.fname, ".z64")) {
 
                 load_n64_rom();
 
                 break; //required!
+            }
+            else if (str_endswith(current_fileinfo.fname, ".n64") || str_endswith(current_fileinfo.fname, ".v64") || str_endswith(current_fileinfo.fname, ".rom")) {
+                console_init();
+                console_clear();
+
+                printf("ROM : %s\n", current_fileinfo.fname);
+                printf("Not loading due to potential conversion issue.\n");
+                wait_ms(10000); // wait used for debugging. Can be removed later.
+                menu_main_refresh(current_dir);
+            }
+            else if (str_endswith(current_fileinfo.fname, ".zip")) {
+                console_init();
+                console_clear();
+
+                printf("ZIP : %s\n", current_fileinfo.fname);
+                printf("Not loading due to potential conversion issue.\n");
+                wait_ms(10000); // wait used for debugging. Can be removed later.
+                menu_main_refresh(current_dir);
             }
             else {
                 if (current_fileinfo.fattrib & AM_DIR) {

@@ -87,7 +87,12 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
-    size_t rom_size = ALIGN(f_size(&fil), FS_SECTOR_SIZE);
+    // HACK: Align file size to the SD sector size to prevent FatFs from doing partial sector load.
+    //       We are relying on direct transfer from SD to SDRAM without CPU intervention.
+    //       Sending some extra bytes isn't an issue here.
+    fil.obj.objsize = ALIGN(f_size(&fil), FS_SECTOR_SIZE);
+
+    size_t rom_size = f_size(&fil);
 
     if (rom_size > MiB(78)) {
         f_close(&fil);

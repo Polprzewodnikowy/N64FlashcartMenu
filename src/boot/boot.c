@@ -17,7 +17,7 @@ static const ipl3_crc32_t ipl3_crc32[] = {
     { .crc32 = 0x587BD543, .seed = 0xAC },  // 5101
     { .crc32 = 0x6170A4A1, .seed = 0x3F },  // 6101
     { .crc32 = 0x009E9EA3, .seed = 0x3F },  // 7102
-    { .crc32 = 0x90BB6CB5, .seed = 0x3F },  // x102
+    { .crc32 = 0x90BB6CB5, .seed = 0x3F },  // 6102/7101
     { .crc32 = 0x0B050EE0, .seed = 0x78 },  // x103
     { .crc32 = 0x98BC2C86, .seed = 0x91 },  // x105
     { .crc32 = 0xACC8580A, .seed = 0x85 },  // x106
@@ -36,33 +36,6 @@ static io32_t *boot_get_device_base (boot_params_t *params) {
         device_base_address = ROM_DDIPL;
     }
     return device_base_address;
-}
-
-static bool boot_detect_tv_type (boot_params_t *params) {
-    io32_t *base = boot_get_device_base(params);
-
-    char region = ((io_read((uint32_t) (&base[15])) >> 8) & 0xFF);
-
-    switch (region) {
-        case 'P':
-        case 'U':
-            params->tv_type = BOOT_TV_TYPE_PAL;
-            break;
-
-        case 'E':
-        case 'J':
-            params->tv_type = BOOT_TV_TYPE_NTSC;
-            break;
-
-        case 'B':
-            params->tv_type = BOOT_TV_TYPE_MPAL;
-            break;
-
-        default:
-            return false;
-    }
-
-    return true;
 }
 
 static bool boot_detect_cic_seed (boot_params_t *params) {
@@ -92,10 +65,8 @@ bool boot_is_warm (void) {
 }
 
 void boot (boot_params_t *params) {
-    if (params->detect_tv_type) {
-        if (!boot_detect_tv_type(params)) {
-            params->tv_type = OS_INFO->tv_type;
-        }
+    if (params->tv_type == BOOT_TV_TYPE_PASSTHROUGH) {
+        params->tv_type = OS_INFO->tv_type;
     }
 
     if (params->detect_cic_seed) {
@@ -103,6 +74,12 @@ void boot (boot_params_t *params) {
             params->cic_seed = 0x3F;
         }
     }
+
+    // asm volatile (
+    //     "li $t1, %[status] \n"
+    //     "mtc0 $t1, $12 \n" ::
+    //     [status] "i" (C0_SR_CU1 | C0_SR_CU0 | C0_SR_FR)
+    // );
 
     OS_INFO->mem_size_6105 = OS_INFO->mem_size;
 
@@ -119,8 +96,21 @@ void boot (boot_params_t *params) {
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
 
-    io32_t *base = boot_get_device_base(params);
+    while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 
+    uint32_t *ipl2_src = &ipl2;
+    io32_t *ipl2_dst = SP_MEM->IMEM;
+
+    for (int i = 0; i < 8; i++) {
+        cpu_io_write(&ipl2_dst[i], ipl2_src[i]);
+    }
+
+    cpu_io_write(&PI->DOM[0].LAT, 0xFF);
+    cpu_io_write(&PI->DOM[0].PWD, 0xFF);
+    cpu_io_write(&PI->DOM[0].PGS, 0x0F);
+    cpu_io_write(&PI->DOM[0].RLS, 0x03);
+
+    io32_t *base = boot_get_device_base(params);
     uint32_t pi_config = io_read((uint32_t) (base));
 
     cpu_io_write(&PI->DOM[0].LAT, pi_config & 0xFF);
@@ -130,13 +120,6 @@ void boot (boot_params_t *params) {
 
     if (cpu_io_read(&DPC->SR) & DPC_SR_XBUS_DMEM_DMA) {
         while (cpu_io_read(&DPC->SR) & DPC_SR_PIPE_BUSY);
-    }
-
-    uint32_t *ipl2_src = &ipl2;
-    io32_t *ipl2_dst = SP_MEM->IMEM;
-
-    for (int i = 0; i < 8; i++) {
-        cpu_io_write(&ipl2_dst[i], ipl2_src[i]);
     }
 
     io32_t *ipl3_src = base;
@@ -159,7 +142,7 @@ void boot (boot_params_t *params) {
     tv_type = (params->tv_type & 0x03);
     reset_type = (params->reset_type & 0x01);
     cic_seed = (params->cic_seed & 0xFF);
-    version = 1;
+    version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6 : 1;
     stack_pointer = (void *) UNCACHED(&SP_MEM->IMEM[1020]);
 
     asm volatile (

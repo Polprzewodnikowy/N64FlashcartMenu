@@ -1,7 +1,9 @@
+#include <libdragon.h>
 #include "rom_database.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
     return (setting & (1 << bit_position)) ? 1 : 0;
@@ -29,10 +31,14 @@ uint8_t extract_homebrew_save_type(uint8_t save_type) {
 }
 
 rom_header_t file_read_rom_header(char *path) {
-    FILE *fp = fopen(path, "rb");
-    printf("loading path: %s\n", path);
+    char *sd_path = calloc(4 + strlen(path) + 1, sizeof(char));
+    sprintf(sd_path, "sd:/%s", path);
+
+    FILE *fp = fopen(sd_path, "rb");
+
+    debugf("loading path: %s\n", sd_path);
 	if (!fp) {
-        printf("Error loading rom file header\n");
+        debugf("Error loading rom file header\n");
     }
 
     rom_header_t *rom_header = malloc(sizeof(rom_header_t));
@@ -52,6 +58,8 @@ rom_header_t file_read_rom_header(char *path) {
     fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
 
     fclose(fp);
+
+    free(sd_path);
 
     return *rom_header;
 }

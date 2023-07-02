@@ -162,7 +162,7 @@ void settings_load_default_state(settings_t *settings) {
 
     settings->boot_params.device_type = BOOT_DEVICE_TYPE_ROM;
     settings->boot_params.reset_type = BOOT_RESET_TYPE_NMI;
-    settings->boot_params.detect_tv_type = true;
+    settings->boot_params.tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     settings->boot_params.detect_cic_seed = true;
 
     // Initialize other default settings...

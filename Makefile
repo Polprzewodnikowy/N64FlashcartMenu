@@ -12,20 +12,26 @@ include $(N64_INST)/include/n64.mk
 N64_CFLAGS += -iquote $(SOURCE_DIR)
 
 SRCS = \
+	main.c \
 	boot/boot.c \
 	boot/crc32.c \
 	boot/ipl2.S \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \
-	menu/menu_main.c \
-	menu/menu_info.c \
-	menu/menu_fileinfo.c \
-	menu/settings.c \
-	menu/rom_database.c \
-	utils/fs.c \
 	libs/toml/toml.c \
-	main.c
+	menu/actions.c \
+	menu/menu.c \
+	menu/path.c \
+	menu/rom_database.c \
+	menu/settings.c \
+	menu/views/browser.c \
+	menu/views/credits.c \
+	menu/views/error.c \
+	menu/views/file_info.c \
+	menu/views/init.c \
+	menu/views/load.c \
+	utils/fs.c
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 

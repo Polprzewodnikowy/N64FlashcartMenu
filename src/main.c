@@ -5,8 +5,8 @@
 
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
+#include "menu/menu.h"
 #include "menu/settings.h"
-#include "menu/menu_main.h"
 
 
 static void init (void) {
@@ -19,15 +19,12 @@ static void init (void) {
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
 
     controller_init();
-
-    display_close();
-    display_init(RESOLUTION_640x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+    display_init(RESOLUTION_640x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     graphics_set_color(0xFFFFFFFF, 0x00000000);
     graphics_set_default_font();
 }
 
 static void deinit (void) {
-    display_close();
     flashcart_deinit();
     rdpq_close();
     rspq_close();
@@ -38,7 +35,6 @@ static void deinit (void) {
 
 
 int main (void) {
-
     init();
 
     settings_t settings;
@@ -49,7 +45,7 @@ int main (void) {
     //     menu_restore(&settings);
     // }
 
-    menu_main_init(&settings);
+    menu_run(&settings);
 
     deinit();
 

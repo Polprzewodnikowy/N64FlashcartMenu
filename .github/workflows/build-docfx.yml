@@ -20,10 +20,10 @@ jobs:
       - name: Run Doxygen
         uses: mattnotmitt/doxygen-action@1.9.5
         with:
-          doxyfile-path: './doxygen.conf'
+          doxyfile-path: './Doxyfile'
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs

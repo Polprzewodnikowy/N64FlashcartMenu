@@ -155,8 +155,8 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    int x = 24;
-    int y = 35;
+    int x = overscan_horizontal_pixels;
+    int y = 35; // this is the header size, plus the line.
 
     int starting_position = 0;
     int entries_drawn = 0;
@@ -186,7 +186,7 @@ static void draw (menu_t *menu, surface_t *d) {
                     color = graphics_make_color(64, 64, 64, 0);
                     break;
             }
-            graphics_draw_box(d, x, y, (640 - x * 2), font_vertical_pixels, color);
+            graphics_draw_box(d, x, y, (d->width - x + overscan_horizontal_pixels * 2), font_vertical_pixels, color);
         }
         snprintf(str_buffer, 1024, "%.74s", menu->browser.list[i].name);
         graphics_draw_text(d, x, y, str_buffer);

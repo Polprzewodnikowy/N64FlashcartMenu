@@ -80,27 +80,27 @@ jobs:
             ./output/sc64menu.n64
           if-no-files-found: ignore
 
-    generate-docs:
-      runs-on: ubuntu-latest
-      # needs: build-sc64-menu
+  generate-docs:
+    runs-on: ubuntu-latest
+    # needs: build-sc64-menu
 
-      steps:
+    steps:
 
-        - uses: actions/checkout@v3
-          with:
-            submodules: recursive
-            fetch-depth: 1 # we only require the last check-in, unless we want to create a changelog.
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 1 # we only require the last check-in, unless we want to create a changelog.
 
-        - name: Run Doxygen
-          uses: mattnotmitt/doxygen-action@1.9.5
-          with:
-            doxyfile-path: './Doxyfile'
+      - name: Run Doxygen
+        uses: mattnotmitt/doxygen-action@1.9.5
+        with:
+          doxyfile-path: './Doxyfile'
 
-        # - name: Deploy
-        #   uses: peaceiris/actions-gh-pages@v3
-        #   with:
-        #     github_token: ${{ secrets.GITHUB_TOKEN }}
-        #     publish_dir: ./docs
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs
 
 
   # release-sc64-menu:

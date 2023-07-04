@@ -1,12 +1,13 @@
 #include <libdragon.h>
 #include "../menu.h"
+#include "../menu_res_setup.h"
 #include "../rom_database.h"
 #include "../../flashcart/flashcart.h"
 
 
 static void draw (menu_t *menu, surface_t *d) {
-    int x = 24;
-    int y = 36;
+    int x = overscan_horizontal_pixels;
+    int y = overscan_vertical_pixels;
 
     graphics_fill_screen(d, graphics_make_color(0, 0, 0, 255));
 

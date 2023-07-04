@@ -1,5 +1,6 @@
 #include <libdragon.h>
 #include "../menu.h"
+#include "../menu_res_setup.h"
 
 
 static void process (menu_t *menu) {
@@ -11,7 +12,7 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
 	graphics_fill_screen(d, graphics_make_color(0, 0, 0, 255));
 
-    graphics_draw_text(d, 24, 36, "ERROR!");
+    graphics_draw_text(d, overscan_horizontal_pixels, overscan_vertical_pixels, "ERROR!");
 
     display_show(d);
 }

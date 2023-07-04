@@ -26,8 +26,11 @@ static char *get_file_type (void) {
     else if (str_endswith(info.fname, ".toml")) {
         return "TOML File";
     }
-    else if (str_endswith(info.fname, ".sav")) {
-        return "Save File";
+    else if (str_endswith(info.fname, ".sav") || str_endswith(info.fname, ".eep") || str_endswith(info.fname, ".sra") || str_endswith(info.fname, ".srm")|| str_endswith(info.fname, ".fla")) {
+        return "ROM Save File";
+    }
+    else if (str_endswith(info.fname, ".mpk")) {
+        return "ControllerPak Backup File";
     }
     else if (str_endswith(info.fname, ".emu")) {
         return "Emulator File";

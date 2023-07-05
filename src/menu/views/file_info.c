@@ -1,8 +1,12 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
-#include "../menu.h"
+
+#include "views.h"
+
 #include "../menu_res_setup.h"
 #include "../../utils/str_utils.h"
+
+#include "fragments/fragments.h"
 
 
 static FILINFO info;
@@ -44,6 +48,14 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
+    // const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
+
+    // rdpq_attach(d, NULL);
+    // rdpq_clear(bg_color);
+
+    // fragment_borders(d);
+
+
     char str_buffer[1024];
 
 	graphics_fill_screen(d, 0x00);
@@ -88,6 +100,8 @@ static void draw (menu_t *menu, surface_t *d) {
 	graphics_draw_text(d, (d->width / 2) - 80,d->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
 
     display_show(d);
+
+    // rdpq_detach_show();
 }
 
 

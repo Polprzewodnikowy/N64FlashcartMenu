@@ -29,11 +29,22 @@ typedef enum {
     CMD_ID_VERSION_GET          = 'V',
     CMD_ID_CONFIG_GET           = 'c',
     CMD_ID_CONFIG_SET           = 'C',
+    CMD_ID_SD_CARD_OP           = 'i',
+    CMD_ID_WRITEBACK_PENDING    = 'w',
     CMD_ID_WRITEBACK_SD_INFO    = 'W',
     CMD_ID_FLASH_PROGRAM        = 'K',
     CMD_ID_FLASH_WAIT_BUSY      = 'p',
     CMD_ID_FLASH_ERASE_BLOCK    = 'P',
 } sc64_cmd_id_t;
+
+typedef enum {
+    SD_CARD_OP_DEINIT           = 0,
+    SD_CARD_OP_INIT             = 1,
+    SD_CARD_OP_GET_STATUS       = 2,
+    SD_CARD_OP_GET_INFO         = 3,
+    SD_CARD_OP_BYTE_SWAP_ON     = 4,
+    SD_CARD_OP_BYTE_SWAP_OFF    = 5,
+} sc64_sd_card_op_t;
 
 typedef struct {
     sc64_cmd_id_t id;
@@ -108,6 +119,21 @@ sc64_error_t sc64_get_config (sc64_cfg_t id, void *value) {
 sc64_error_t sc64_set_config (sc64_cfg_t id, uint32_t value) {
     sc64_cmd_t cmd = { .id = CMD_ID_CONFIG_SET, .arg = { id, value } };
     return sc64_execute_cmd(&cmd);
+}
+
+sc64_error_t sc64_sd_set_byte_swap (bool enabled) {
+    sc64_cmd_t cmd = {
+        .id = CMD_ID_SD_CARD_OP,
+        .arg = { 0, enabled ? SD_CARD_OP_BYTE_SWAP_ON : SD_CARD_OP_BYTE_SWAP_OFF }
+    };
+    return sc64_execute_cmd(&cmd);
+}
+
+sc64_error_t sc64_writeback_pending (bool *pending) {
+    sc64_cmd_t cmd = { .id = CMD_ID_WRITEBACK_PENDING };
+    sc64_error_t error = sc64_execute_cmd(&cmd);
+    *pending = (cmd.rsp[0] != 0);
+    return error;
 }
 
 sc64_error_t sc64_writeback_enable (void *address) {

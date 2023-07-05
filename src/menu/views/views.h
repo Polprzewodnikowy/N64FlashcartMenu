@@ -4,16 +4,20 @@
 
 #include <surface.h>
 
-#include "menu.h"
+#include "../menu_state.h"
 
 
-void view_init_display (menu_t *menu, surface_t *display);
+void view_startup_init (menu_t *menu);
+void view_startup_display (menu_t *menu, surface_t *display);
 
 void view_browser_init (menu_t *menu);
 void view_browser_display (menu_t *menu, surface_t *display);
 
 void view_file_info_init (menu_t *menu);
 void view_file_info_display (menu_t *menu, surface_t *display);
+
+void view_player_init (menu_t *menu);
+void view_player_display (menu_t *menu, surface_t *display);
 
 void view_credits_init (menu_t *menu);
 void view_credits_display (menu_t *menu, surface_t *display);

@@ -52,6 +52,7 @@ typedef enum {
     SAVE_TYPE_SRAM,
     SAVE_TYPE_FLASHRAM,
     SAVE_TYPE_SRAM_BANKED,
+    SAVE_TYPE_SRAM_128K,
 } sc64_save_type_t;
 
 
@@ -63,6 +64,8 @@ void sc64_write_data (void *src, void *dst, size_t length);
 sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor);
 sc64_error_t sc64_get_config (sc64_cfg_t cfg, void *value);
 sc64_error_t sc64_set_config (sc64_cfg_t cfg, uint32_t value);
+sc64_error_t sc64_sd_set_byte_swap (bool enabled);
+sc64_error_t sc64_writeback_pending (bool *pending);
 sc64_error_t sc64_writeback_enable (void *address);
 sc64_error_t sc64_flash_program (void *address, size_t length);
 sc64_error_t sc64_flash_wait_busy (void);

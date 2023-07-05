@@ -1,7 +1,7 @@
-#include <libdragon.h>
-
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "path.h"
 
 
@@ -16,6 +16,7 @@ static void path_resize (path_t *path, size_t min_length) {
         path->capacity += PATH_CAPACITY_ALIGNMENT - alignment;
     }
     path->buffer = realloc(path->buffer, (path->capacity + 1) * sizeof(char));
+    assert(path->buffer != NULL);
 }
 
 path_t *path_init (char *string) {
@@ -23,6 +24,7 @@ path_t *path_init (char *string) {
         string = "";
     }
     path_t *path = calloc(1, sizeof(path_t));
+    assert(path != NULL);
     path_resize(path, strlen(string));
     memset(path->buffer, 0, path->capacity + 1);
     strcpy(path->buffer, string);
@@ -45,6 +47,10 @@ char *path_get (path_t *path) {
 char *path_last_get (path_t *path) {
     char *last_slash = strrchr(path->buffer, '/');
     return (last_slash == NULL) ? path->buffer : (last_slash + 1);
+}
+
+bool path_is_root (path_t *path) {
+    return (strcmp(path->buffer, "") == 0) || (strcmp(path->buffer, "/") == 0);
 }
 
 void path_append (path_t *path, char *string) {

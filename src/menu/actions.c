@@ -3,11 +3,11 @@
 #include "actions.h"
 
 
-#define ACTIONS_REPEAT_DELAY    20
+#define ACTIONS_REPEAT_DELAY    16
 #define ACTIONS_REPEAT_RATE     2
 
 
-void actions_update (menu_t *menu) {
+static void actions_clear (menu_t *menu) {
     menu->actions.go_up = false;
     menu->actions.go_down = false;
     menu->actions.fast = false;
@@ -15,14 +15,21 @@ void actions_update (menu_t *menu) {
     menu->actions.back = false;
     menu->actions.info = false;
     menu->actions.settings = false;
+    menu->actions.override = false;
+}
 
+
+void actions_update (menu_t *menu) {
     controller_scan();
+
     struct controller_data down = get_keys_down();
     struct controller_data held = get_keys_held();
 
-    if (down.c[0].err != 0) {
+    if (down.c[0].err != ERROR_NONE) {
         return;
     }
+
+    actions_clear(menu);
 
     if (down.c[0].up || down.c[0].C_up) {
         menu->actions.go_up = true;
@@ -60,7 +67,11 @@ void actions_update (menu_t *menu) {
         menu->actions.back = true;
     } else if (down.c[0].Z) {
         menu->actions.info = true;
-    } else if (down.c[0].start) {
+    } else if (down.c[0].R) {
         menu->actions.settings = true;
+    }
+
+    if (down.c[0].B || held.c[0].B) {
+        menu->actions.override = true;
     }
 }

@@ -17,7 +17,7 @@ typedef struct {
 
 typedef struct {
     bool auto_load_last_rom;
-    char* current_directory;
+    char* directory;
     // TODO:
     // Menu layout: list vs grid
     // Hide extensions

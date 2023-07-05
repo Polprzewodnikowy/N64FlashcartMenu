@@ -1,5 +1,7 @@
 #include <libdragon.h>
-#include "../menu.h"
+
+#include "views.h"
+
 #include "../menu_res_setup.h"
 
 

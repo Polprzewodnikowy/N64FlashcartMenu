@@ -71,9 +71,13 @@ static void load_directory (menu_t *menu) {
         if (info.fattrib & AM_DIR) {
             entry->type = ENTRY_TYPE_DIR;
         // TODO: use something like `ext_is_n64_rom(info.fname)` instead of `str_endswith(info.fname, ".xxx")`
-        } else if (str_endswith(info.fname, ".n64") || str_endswith(info.fname, ".z64") || str_endswith(info.fname, ".v64") || str_endswith(info.fname, ".N64")) {
+        } else if (str_endswith(info.fname, ".z64", false) ||
+                    str_endswith(info.fname, ".n64", false) ||
+                    str_endswith(info.fname, ".v64", false) ||
+                    str_endswith(info.fname, ".rom", false)
+                    ) {
             entry->type = ENTRY_TYPE_ROM;
-        } else if (str_endswith(info.fname, ".sav")) {
+        } else if (str_endswith(info.fname, ".sav", false)) {
             entry->type = ENTRY_TYPE_SAVE;
         } else {
             entry->type = ENTRY_TYPE_UNKNOWN;

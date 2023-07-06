@@ -85,35 +85,39 @@ static char *get_rom_savetype_s (uint8_t type) {
 
 static char *get_file_type_s (void) {
     // TODO: should be at least a switch statement!
-    if (str_endswith(info.fname, ".z64") || str_endswith(info.fname, ".n64") || str_endswith(info.fname, ".v64") || str_endswith(info.fname, ".rom")) {
+    if (str_endswith(info.fname, ".z64", false) ||
+        str_endswith(info.fname, ".n64", false) ||
+        str_endswith(info.fname, ".v64", false) ||
+        str_endswith(info.fname, ".rom", false)
+        ) {
         // TODO: check the necessary bytes in the header to ensure!
         return "N64 ROM";
     }
-    else if (str_endswith(info.fname, ".txt")) {
+    else if (str_endswith(info.fname, ".txt", false)) {
         return "Text File";
     }
-    else if (str_endswith(info.fname, ".ini")) {
+    else if (str_endswith(info.fname, ".ini", false)) {
         return "INI File";
     }
-    else if (str_endswith(info.fname, ".yml") || str_endswith(info.fname, ".yaml")) {
+    else if (str_endswith(info.fname, ".yml", false) || str_endswith(info.fname, ".yaml", false)) {
         return "YAML File";
     }
-    else if (str_endswith(info.fname, ".toml")) {
+    else if (str_endswith(info.fname, ".toml", false)) {
         return "TOML File";
     }
-    else if (str_endswith(info.fname, ".sav") || str_endswith(info.fname, ".eep") || str_endswith(info.fname, ".sra") || str_endswith(info.fname, ".srm")|| str_endswith(info.fname, ".fla")) {
+    else if (str_endswith(info.fname, ".sav", false) || str_endswith(info.fname, ".eep", false) || str_endswith(info.fname, ".sra", false) || str_endswith(info.fname, ".srm", false)|| str_endswith(info.fname, ".fla", false)) {
         return "ROM Save File";
     }
-    else if (str_endswith(info.fname, ".ips") || str_endswith(info.fname, ".aps") || str_endswith(info.fname, ".pps") || str_endswith(info.fname, ".xdelta")) {
+    else if (str_endswith(info.fname, ".ips", false) || str_endswith(info.fname, ".aps", false) || str_endswith(info.fname, ".pps", false) || str_endswith(info.fname, ".xdelta", false)) {
         return "ROM Patch File";
     }
-    else if (str_endswith(info.fname, ".zip")) {
+    else if (str_endswith(info.fname, ".zip", false)) {
         return "ZIP Archive";
     }
-    else if (str_endswith(info.fname, ".mpk")) {
+    else if (str_endswith(info.fname, ".mpk", false)) {
         return "DexDrive CPak Backup File";
     }
-    else if (str_endswith(info.fname, ".emu")) {
+    else if (str_endswith(info.fname, ".emu", false)) {
         return "Emulator File";
     }
     else {

@@ -43,6 +43,8 @@ rom_header_t file_read_rom_header(char *path) {
 
     rom_header_t *rom_header = malloc(sizeof(rom_header_t));
 
+    fseek(fp, 0x00, SEEK_SET);
+    fread(&(rom_header->endian), sizeof(uint32_t), 1, fp);
     fseek(fp, 0x10, SEEK_SET);
     fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
@@ -83,15 +85,15 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         return extract_homebrew_save_type(high_nibble);
     }
 
-    // // Second: Match the default entries for crc_high.
-    // // FIXME: use full check code, or pad.
-    // if (rom_header.checksum == 0xbcb1f89f) return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
-    // if (rom_header.checksum == 0x46039fb4) return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0x0d93ba11) return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;         // donkey kong f2
-    // if (rom_header.checksum == 0x4cbc3b56) return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
-    // if (rom_header.checksum == 0x0dd4abab) return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    // if (rom_header.checksum == 0xeb85ebc9) return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    // Second: Match the default entries for crc.
+    // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    if (rom_header.checksum == 16971230020836426415U) return DB_SAVE_TYPE_FLASHRAM;
+    // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
+    if (rom_header.checksum == 996610171530815774U) return DB_SAVE_TYPE_EEPROM_16K;
+    // donkey kong f2
+    // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;
+    // DMTJ 64DD game
+    // if (rom_header.checksum == 0x4cbc3b56) return DB_SAVE_TYPE_SRAM;
     
 
     // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
@@ -120,8 +122,8 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS",
 
-        // Controller Pak
-        "NS",
+        // Controller Pak only
+        "BX", "BQ", "NS",
 
         // Last entry
         "!!"
@@ -149,8 +151,8 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
 
-        // Controller Pak
-        0x10,
+        // Controller Pak only
+        0x10, 0x10, 0x10,
 
         // Last entry.
         0xff

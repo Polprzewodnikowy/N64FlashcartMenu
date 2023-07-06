@@ -215,7 +215,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     graphics_draw_text(d, horizontal_start_position, d->height - overscan_vertical_pixels, str_buffer);
 
-    graphics_draw_text(d, (d->width) - 168, d->height - overscan_vertical_pixels + 8, ctime( &current_time ));
+    graphics_draw_text(d, (d->width) - 168, d->height - overscan_vertical_pixels + font_vertical_pixels, ctime( &current_time ));
 
     display_show(d);
 }

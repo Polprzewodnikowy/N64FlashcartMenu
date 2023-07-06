@@ -8,6 +8,8 @@
 #include "menu/menu.h"
 #include "menu/settings.h"
 
+#include <malloc.h>
+
 
 static void init (void) {
     assertf(usb_initialize() != CART_NONE, "No flashcart was detected");
@@ -18,10 +20,19 @@ static void init (void) {
     assertf(error != FLASHCART_ERROR_UNSUPPORTED, "Unsupported flashcart");
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
 
+    dfs_init(DFS_DEFAULT_LOCATION);
     controller_init();
     display_init(RESOLUTION_640x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     graphics_set_color(0xFFFFFFFF, 0x00000000);
-    graphics_set_default_font();
+
+    // TODO: this should use a real custom font or switch to rdp fonts.
+    /* Read in the custom font */
+    int fp = dfs_open("libdragon-font.sprite");
+    sprite_t *custom_font = malloc( dfs_size( fp ) );
+    dfs_read( custom_font, 1, dfs_size( fp ), fp );
+    dfs_close( fp );
+    graphics_set_font_sprite(custom_font);
+
 }
 
 static void deinit (void) {

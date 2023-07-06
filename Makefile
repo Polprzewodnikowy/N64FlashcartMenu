@@ -36,12 +36,15 @@ SRCS = \
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
+$(BUILD_DIR)/$(PROJECT_NAME).dfs: $(wildcard rom_dfs/*)
 
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
 
 $(PROJECT_NAME): $(PROJECT_NAME).z64
 	$(shell mkdir -p $(OUTPUT_DIR))
-	$(shell mv $(PROJECT_NAME).z64 $(OUTPUT_DIR)) 
+	$(shell mv $(PROJECT_NAME).z64 $(OUTPUT_DIR))
+
+$(PROJECT_NAME).z64: $(BUILD_DIR)/$(PROJECT_NAME).dfs
 
 sc64_minify: $(PROJECT_NAME)
 	$(shell python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(PROJECT_NAME).elf $(OUTPUT_DIR)/$(PROJECT_NAME).z64 $(OUTPUT_DIR)/sc64menu.n64)

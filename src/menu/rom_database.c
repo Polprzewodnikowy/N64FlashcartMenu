@@ -70,13 +70,13 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     // These are ordered to ensure they are handled correctly...
 
-    // First: Match by the `ED` Developer ID
-    // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
-    if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED") {
-        
-        // uint8_t low_nibble = rom_header.version & 0x0F;
-        // uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
-        // uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
+    // First: Match by the `ED` or `HB` Developer ID
+    if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED" || rom_header.metadata.unique_identifier == *(uint16_t *)"HB") {
+// #ifdef ED64_COMPATIBLE        
+//         uint8_t low_nibble = rom_header.version & 0x0F;
+//         uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
+//         uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
+// #endif
 
         uint8_t high_nibble = (rom_header.version >> 4) & 0x0F;
 
@@ -85,13 +85,13 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     // // Second: Match the default entries for crc_high.
     // // FIXME: use full check code, or pad.
-    // if (rom_header.checksum == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
-    // if (rom_header.checksum == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
-    // if (rom_header.checksum == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
-    // if (rom_header.checksum == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    // if (rom_header.checksum == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    // if (rom_header.checksum == 0xbcb1f89f) return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
+    // if (rom_header.checksum == 0x46039fb4) return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    // if (rom_header.checksum == 0x0d93ba11) return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
+    // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;         // donkey kong f2
+    // if (rom_header.checksum == 0x4cbc3b56) return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
+    // if (rom_header.checksum == 0x0dd4abab) return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
+    // if (rom_header.checksum == 0xeb85ebc9) return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
     
 
     // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
@@ -119,6 +119,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // FLASHRAM
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS",
+
+        // Controller Pak
+        "NS",
+
         // Last entry
         "!!"
 
@@ -144,6 +148,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // FLASHRAM
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+
+        // Controller Pak
+        0x10,
+
         // Last entry.
         0xff
     };

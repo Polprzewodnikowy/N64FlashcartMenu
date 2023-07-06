@@ -104,8 +104,14 @@ static char *get_file_type_s (void) {
     else if (str_endswith(info.fname, ".sav") || str_endswith(info.fname, ".eep") || str_endswith(info.fname, ".sra") || str_endswith(info.fname, ".srm")|| str_endswith(info.fname, ".fla")) {
         return "ROM Save File";
     }
+    else if (str_endswith(info.fname, ".ips") || str_endswith(info.fname, ".aps") || str_endswith(info.fname, ".pps") || str_endswith(info.fname, ".xdelta") {
+        return "ROM Patch File";
+    }
+    else if (str_endswith(info.fname, ".zip"))) {
+        return "ZIP Archive";
+    }
     else if (str_endswith(info.fname, ".mpk")) {
-        return "ControllerPak Backup File";
+        return "DexDrive CPak Backup File";
     }
     else if (str_endswith(info.fname, ".emu")) {
         return "Emulator File";

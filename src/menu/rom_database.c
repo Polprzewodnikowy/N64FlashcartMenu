@@ -45,6 +45,7 @@ rom_header_t file_read_rom_header(char *path) {
 
     fseek(fp, 0x00, SEEK_SET);
     fread(&(rom_header->endian), sizeof(uint32_t), 1, fp);
+    // FIXME: handle endian appropriately, perhaps: cart_card_byteswap
     fseek(fp, 0x10, SEEK_SET);
     fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);

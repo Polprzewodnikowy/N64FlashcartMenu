@@ -39,10 +39,10 @@ static char *get_rom_mediatype_s (uint8_t type) {
         return "D - Disk";
         break;
     case N64_CART_EXPANDABLE:
-        return "C - Cartridge Exp";
+        return "C - Cart Expandable";
         break;
     case N64_DISK_EXPANDABLE:
-        return "E - Disk Exp";
+        return "E - Disk Expandable";
         break;
     case N64_ALECK64:
         return "Z - Aleck64";

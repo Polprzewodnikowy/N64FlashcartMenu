@@ -5,6 +5,7 @@
 
 #define ACTIONS_REPEAT_DELAY    20
 #define ACTIONS_REPEAT_RATE     2
+#define JOYSTICK_DEADZONE       32
 
 
 void actions_update (menu_t *menu) {
@@ -19,6 +20,7 @@ void actions_update (menu_t *menu) {
     controller_scan();
     struct controller_data down = get_keys_down();
     struct controller_data held = get_keys_held();
+    struct controller_data pressed = get_keys_pressed();
 
     if (down.c[0].err != 0) {
         return;
@@ -50,6 +52,22 @@ void actions_update (menu_t *menu) {
             menu->actions.go_down = true;
             if (held.c[0].C_down) {
                 menu->actions.fast = true;
+            }
+        }
+    } else if (pressed.c[0].y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
+        menu->actions.held_counter += 1;
+        if ((menu->actions.held_counter >= ACTIONS_REPEAT_DELAY / 2) && (menu->actions.held_counter % ACTIONS_REPEAT_RATE)) {
+            menu->actions.go_up = true;
+            if (pressed.c[0].y < +75) {
+                menu->actions.held_counter = 0;
+            }
+        }
+    } else if (pressed.c[0].y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
+        menu->actions.held_counter += 1;
+        if ((menu->actions.held_counter >= ACTIONS_REPEAT_DELAY / 2) && (menu->actions.held_counter % ACTIONS_REPEAT_RATE)) {
+            menu->actions.go_down = true;
+            if (pressed.c[0].y > -75) {
+                menu->actions.held_counter = 0;
             }
         }
     }

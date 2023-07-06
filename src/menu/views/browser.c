@@ -181,7 +181,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
     time_t current_time = current_time = time( NULL );
     graphics_draw_text(d, (d->width / 2) - 36, vertical_start_position, "FILE MENU\n");
-    graphics_draw_text(d, (d->width) - 168, vertical_start_position, ctime( &current_time ));
     graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
 
 
@@ -214,7 +213,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
     sprintf(str_buffer, "Current Directory: SD:%s\nFile: %d of %d\n\n", path_get(menu->browser.directory), menu->browser.selected + 1, menu->browser.entries);
 
-    graphics_draw_text(d, (d->width / 2) - 160, d->height - overscan_vertical_pixels, str_buffer);
+    graphics_draw_text(d, horizontal_start_position, d->height - overscan_vertical_pixels, str_buffer);
+
+    graphics_draw_text(d, (d->width) - 168, d->height - overscan_vertical_pixels + 8, ctime( &current_time ));
 
     display_show(d);
 }

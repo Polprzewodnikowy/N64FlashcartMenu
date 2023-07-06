@@ -9,13 +9,15 @@ char *accessory_type_s( int accessory )
     switch( accessory )
     {
         case ACCESSORY_RUMBLEPAK:
-            return "(rumble)";
+            return "[RumblePak]";
         case ACCESSORY_MEMPAK:
-            return "(memory)";
+            return "[ControllerPak]";
         case ACCESSORY_VRU:
-            return "(vru)";
+            return "[VRU]";
+        case ACCESSORY_TRANSFERPAK:
+            return "[TransferPak]"; 
         default:
-            return "(none)";
+            return "Unknown";
     }
 }
 
@@ -49,13 +51,13 @@ static void draw (menu_t *menu, surface_t *d) {
 
     int controllers = get_controllers_present();
 
-    sprintf(str_buffer, "Controller 1 %sconnected\n", (controllers & CONTROLLER_1_INSERTED) ? "" : "not " );
+    sprintf(str_buffer, "JoyPad 1 is %sconnected\n", (controllers & CONTROLLER_1_INSERTED) ? "" : "not " );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller 2 %sconnected\n", (controllers & CONTROLLER_2_INSERTED) ? "" : "not " );
+    sprintf(str_buffer, "JoyPad 2 is %sconnected\n", (controllers & CONTROLLER_2_INSERTED) ? "" : "not " );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller 3 %sconnected\n", (controllers & CONTROLLER_3_INSERTED) ? "" : "not " );
+    sprintf(str_buffer, "JoyPad 3 is %sconnected\n", (controllers & CONTROLLER_3_INSERTED) ? "" : "not " );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller 4 %sconnected\n", (controllers & CONTROLLER_4_INSERTED) ? "" : "not " );
+    sprintf(str_buffer, "JoyPad 4 is %sconnected\n", (controllers & CONTROLLER_4_INSERTED) ? "" : "not " );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
 
     vertical_position += font_vertical_pixels;
@@ -63,16 +65,16 @@ static void draw (menu_t *menu, surface_t *d) {
     struct controller_data output;
     int accessories = get_accessories_present( &output );
 
-    sprintf(str_buffer, "Controller Accessory 1 %spresent %s\n", (accessories & CONTROLLER_1_INSERTED) ? "" : "not ", 
+    sprintf(str_buffer, "JoyPad 1 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_1_INSERTED) ? "" : "not ", 
                                             (accessories & CONTROLLER_1_INSERTED) ? accessory_type_s( identify_accessory( 0 ) ) : "" );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller Accessory 2 %spresent %s\n", (accessories & CONTROLLER_2_INSERTED) ? "" : "not ",
+    sprintf(str_buffer, "JoyPad 2 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_2_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_2_INSERTED) ? accessory_type_s( identify_accessory( 1 ) ) : "" );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller Accessory 3 %spresent %s\n", (accessories & CONTROLLER_3_INSERTED) ? "" : "not ",
+    sprintf(str_buffer, "JoyPad 3 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_3_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_3_INSERTED) ? accessory_type_s( identify_accessory( 2 ) ) : "" );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "Controller Accessory 4 %spresent %s\n", (accessories & CONTROLLER_4_INSERTED) ? "" : "not ",
+    sprintf(str_buffer, "JoyPad 4 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_4_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_4_INSERTED) ? accessory_type_s( identify_accessory( 3 ) ) : "" );
     graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
 

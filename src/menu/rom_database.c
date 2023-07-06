@@ -11,22 +11,22 @@ uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
 
 uint8_t extract_homebrew_save_type(uint8_t save_type) {
     switch (save_type) {
-        case 0x00:
+        case HB_SAVE_TYPE_NONE:
             return DB_SAVE_TYPE_NONE;
-        case 0x01:
+        case HB_SAVE_TYPE_EEPROM_4K:
             return DB_SAVE_TYPE_EEPROM_4K;
-        case 0x02:
+        case HB_SAVE_TYPE_EEPROM_16K:
             return DB_SAVE_TYPE_EEPROM_16K;
-        case 0x03:
+        case HB_SAVE_TYPE_SRAM:
             return DB_SAVE_TYPE_SRAM;
-        case 0x04:
+        case HB_SAVE_TYPE_SRAM_BANKED:
             return DB_SAVE_TYPE_SRAM_BANKED;
-        case 0x05:
+        case HB_SAVE_TYPE_FLASHRAM:
             return DB_SAVE_TYPE_FLASHRAM;
-        case 0x06:
+        case HB_SAVE_TYPE_SRAM_128K:
             return DB_SAVE_TYPE_SRAM_128K;
         default:
-            return DB_SAVE_TYPE_CART_SPECIFIED; // Invalid save type, handle accordingly
+            return DB_SAVE_TYPE_INVALID; // Invalid save type, handle accordingly
     }
 }
 

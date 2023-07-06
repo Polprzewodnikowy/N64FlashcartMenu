@@ -14,7 +14,17 @@
 #define DB_SAVE_TYPE_FLASHRAM       0x06
 #define DB_SAVE_TYPE_CPAK           0x10
 #define DB_SAVE_TYPE_DD             0x20
-#define DB_SAVE_TYPE_CART_SPECIFIED 0xff
+#define DB_SAVE_TYPE_INVALID        0xff
+
+typedef enum {
+    HB_SAVE_TYPE_NONE = 0x00,
+    HB_SAVE_TYPE_EEPROM_4K = 0x01,
+    HB_SAVE_TYPE_EEPROM_16K = 0x02,
+    HB_SAVE_TYPE_SRAM = 0x03,
+    HB_SAVE_TYPE_SRAM_BANKED = 0x04,
+    HB_SAVE_TYPE_FLASHRAM = 0x05,
+    HB_SAVE_TYPE_SRAM_128K = 0x06,
+} homebrew_savetype_t;
 
 typedef enum {
     ROM_BIG_ENDIAN = 2151092800U,

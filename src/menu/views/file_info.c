@@ -29,6 +29,30 @@ static char *get_rom_endian_s (uint32_t endian) {
     }
 }
 
+static char *get_rom_mediatype_s (uint8_t type) {
+    switch (type)
+    {
+    case N64_CART:
+        return "N - Cartridge";
+        break;
+    case N64_DISK:
+        return "D - Disk";
+        break;
+    case N64_CART_EXPANDABLE:
+        return "C - Cartridge Exp";
+        break;
+    case N64_DISK_EXPANDABLE:
+        return "E - Disk Exp";
+        break;
+    case N64_ALECK64:
+        return "Z - Aleck64";
+        break;
+    default:
+        return "Unknown";
+        break;
+    }
+}
+
 static char *get_rom_savetype_s (uint8_t type) {
     switch (type)
     {
@@ -152,7 +176,7 @@ static void draw (menu_t *menu, surface_t *d) {
         y_position += (font_vertical_pixels * 2);
         sprintf(str_buffer,"Title: %s\n", temp_header.title);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %c\n", temp_header.metadata.media_type);
+        sprintf(str_buffer,"Media Type: %s\n", get_rom_mediatype_s(temp_header.metadata.media_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);

@@ -168,8 +168,10 @@ static void draw (menu_t *menu, surface_t *d) {
         graphics_draw_text(d, x_start_position, y_position, "N64 ROM Information:\n\n");
         y_position += (font_vertical_pixels * 2);
 
-        // FIXME: issues with non root path as mix of stdio and fatfs!
-        rom_header_t temp_header = file_read_rom_header(info.fname);
+        path_t *path = path_clone(menu->browser.directory);
+        path_push(path, menu->browser.list[menu->browser.selected].name);
+
+        rom_header_t temp_header = file_read_rom_header(path_get(path));
 
         sprintf(str_buffer,"File Endian: %s\n", get_rom_endian_s(temp_header.endian));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);

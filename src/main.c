@@ -20,6 +20,8 @@ static void init (void) {
     assertf(error != FLASHCART_ERROR_UNSUPPORTED, "Unsupported flashcart");
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
 
+    timer_init();
+    rtc_init();
     dfs_init(DFS_DEFAULT_LOCATION);
     controller_init();
     display_init(RESOLUTION_640x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
@@ -37,6 +39,7 @@ static void init (void) {
 
 static void deinit (void) {
     flashcart_deinit();
+    rtc_close();
     rdpq_close();
     rspq_close();
     audio_close();

@@ -1,5 +1,6 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
+#include <time.h>
 #include <stdlib.h>
 #include "../menu.h"
 #include "../menu_res_setup.h"
@@ -147,8 +148,10 @@ static void process (menu_t *menu) {
         }
     } else if (menu->actions.back) {
         pop_directory(menu);
-    } else if (menu->actions.info) {
+    } else if (menu->actions.fileinfo) {
         menu->next_mode = MENU_MODE_FILE_INFO;
+    } else if (menu->actions.sysinfo) {
+        menu->next_mode = MENU_MODE_SYSTEM_INFO;
     } else if (menu->actions.settings) {
         menu->next_mode = MENU_MODE_CREDITS;
     }
@@ -170,10 +173,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     graphics_fill_screen(d, graphics_make_color(0, 0, 0, 255));
 
-    graphics_draw_text(d, (d->width / 2) - 36, vertical_start_position, "FILE MENU");
+    char str_buffer[1024];
+
+    time_t current_time = current_time = time( NULL );
+    graphics_draw_text(d, (d->width / 2) - 36, vertical_start_position, "FILE MENU\n");
+    graphics_draw_text(d, (d->width) - 168, vertical_start_position, ctime( &current_time ));
     graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
 
-    char str_buffer[1024];
+
 
     for (int i = starting_position; i < menu->browser.entries; i++) {
         if (i == menu->browser.selected) {

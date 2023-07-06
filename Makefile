@@ -29,6 +29,7 @@ SRCS = \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/file_info.c \
+	menu/views/system_info.c \
 	menu/views/init.c \
 	menu/views/load.c \
 	utils/fs.c

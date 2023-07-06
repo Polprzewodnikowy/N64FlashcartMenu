@@ -14,7 +14,8 @@ void actions_update (menu_t *menu) {
     menu->actions.fast = false;
     menu->actions.enter = false;
     menu->actions.back = false;
-    menu->actions.info = false;
+    menu->actions.fileinfo = false;
+    menu->actions.sysinfo = false;
     menu->actions.settings = false;
 
     controller_scan();
@@ -77,7 +78,9 @@ void actions_update (menu_t *menu) {
     } else if (down.c[0].B) {
         menu->actions.back = true;
     } else if (down.c[0].Z) {
-        menu->actions.info = true;
+        menu->actions.fileinfo = true;
+    } else if (down.c[0].L) {
+        menu->actions.sysinfo = true;
     } else if (down.c[0].start) {
         menu->actions.settings = true;
     }

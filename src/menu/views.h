@@ -15,6 +15,9 @@ void view_browser_display (menu_t *menu, surface_t *display);
 void view_file_info_init (menu_t *menu);
 void view_file_info_display (menu_t *menu, surface_t *display);
 
+void view_system_info_init (menu_t *menu);
+void view_system_info_display (menu_t *menu, surface_t *display);
+
 void view_credits_init (menu_t *menu);
 void view_credits_display (menu_t *menu, surface_t *display);
 

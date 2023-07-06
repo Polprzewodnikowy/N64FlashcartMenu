@@ -49,6 +49,10 @@ void menu_run (settings_t *settings) {
                     view_file_info_display(menu, display);
                     break;
 
+                case MENU_MODE_SYSTEM_INFO:
+                    view_system_info_display(menu, display);
+                    break;
+
                 case MENU_MODE_CREDITS:
                     view_credits_display(menu, display);
                     break;
@@ -75,6 +79,10 @@ void menu_run (settings_t *settings) {
 
                     case MENU_MODE_FILE_INFO:
                         view_file_info_init(menu);
+                        break;
+
+                    case MENU_MODE_SYSTEM_INFO:
+                        view_system_info_init(menu);
                         break;
 
                     case MENU_MODE_CREDITS:

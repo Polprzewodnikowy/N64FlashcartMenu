@@ -89,7 +89,7 @@ typedef struct {
 typedef struct {
     uint32_t endian; // rom_endian_type_t
     uint64_t checksum;
-    uint8_t title[21]; // 20 chars + null
+    char title[21]; // 20 chars + null
     rom_metadata_t metadata;
     uint8_t version;
 } rom_header_t;

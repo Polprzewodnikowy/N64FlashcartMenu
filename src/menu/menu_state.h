@@ -48,13 +48,17 @@ typedef struct {
     struct {
         bool go_up;
         bool go_down;
+        bool go_left;
+        bool go_right;
         bool fast;
+        int vertical_held_counter;
+        int horizontal_held_counter;
+
         bool enter;
         bool back;
         bool info;
         bool settings;
         bool override;
-        int held_counter;
     } actions;
 
     struct {

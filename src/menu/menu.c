@@ -12,22 +12,17 @@
 
 static menu_t *menu;
 static bool boot_pending;
-static volatile bool reset_pending;
 
-
-static void menu_reset_handler (void) {
-    reset_pending = true;
-}
 
 static void menu_init (settings_t *settings) {
     controller_init();
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_OFF);
+    audio_init(44100, 2);
+    mixer_init(2);
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
     rspq_init();
     rdpq_init();
-    register_RESET_handler(menu_reset_handler);
 
     boot_pending = false;
-    reset_pending = false;
 
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
@@ -53,17 +48,20 @@ static void menu_deinit (menu_t *menu) {
     // rdpq_font_free(menu->assets.font);
     free(menu);
 
-    unregister_RESET_handler(menu_reset_handler);
     rdpq_close();
     rspq_close();
     display_close();
+    mixer_close();
+    audio_close();
 }
 
 
 void menu_run (settings_t *settings) {
     menu_init(settings);
 
-    while (!boot_pending && !reset_pending) {
+    int audio_buffer_length = audio_get_buffer_length();
+
+    while (!boot_pending && (exception_reset_time() == 0)) {
         surface_t *display = display_try_get();
 
         if (display != NULL) {
@@ -145,13 +143,17 @@ void menu_run (settings_t *settings) {
                 }
             }
         }
+
+        if (audio_can_write()) {
+            short *audio_buffer = audio_write_begin();
+            mixer_poll(audio_buffer, audio_buffer_length);
+            audio_write_end();
+        }
     }
 
     menu_deinit(menu);
 
-    if (reset_pending) {
-        while (true) {
-            // Do nothing if reset button was pressed
-        }
+    while (exception_reset_time() > 0) {
+        // Do nothing if reset button was pressed
     }
 }

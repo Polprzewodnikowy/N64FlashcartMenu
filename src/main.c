@@ -18,7 +18,10 @@ static void hw_init (void) {
     assertf(error == FLASHCART_OK, "Unknown error while initializing flashcart");
 
     assertf(debug_init_sdfs("sd:/", -1), "Couldn't initialize SD card");
+
+#ifdef DEBUG
     debug_init_usblog();
+#endif
 }
 
 static void hw_deinit (void) {

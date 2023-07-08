@@ -146,9 +146,9 @@ static bool pop_directory (menu_t *menu) {
 }
 
 static void format_size (char *buffer, int size) {
-    if (size < 1024) {
+    if (size < 10000) {
         sprintf(buffer, "%4d B ", size);
-    } else if (size < 1 * 1024 * 1024) {
+    } else if (size < 10000000) {
         sprintf(buffer, "%4d kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
         sprintf(buffer, "%4d MB", size / 1024 / 1024);
@@ -158,7 +158,7 @@ static void format_size (char *buffer, int size) {
 }
 
 static void format_entry (char *buffer, entry_t *entry, bool selected) {
-    int cutoff_length = (entry->type == ENTRY_TYPE_DIR ? 60 : 51);
+    int cutoff_length = (entry->type == ENTRY_TYPE_DIR ? 57 : 49);
     int name_length = strlen(entry->name);
     strcpy(buffer, "");
     if (entry->type == ENTRY_TYPE_DIR) {
@@ -174,7 +174,7 @@ static void format_entry (char *buffer, entry_t *entry, bool selected) {
 
 
 static void process (menu_t *menu) {
-    int scroll_speed = menu->actions.fast ? 9 : 1;
+    int scroll_speed = menu->actions.fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
@@ -231,17 +231,17 @@ static void draw (menu_t *menu, surface_t *d) {
 
     const int text_x = layout->offset_x + layout->offset_text_x;
     int text_y = layout->offset_y + layout->offset_text_y;
-    const int text_file_size_x = text_x + 502;
-    const int text_other_actions_x = text_x + 474;
+    const int text_file_size_x = text_x + 478;
+    const int text_other_actions_x = text_x + 450;
     const int highlight_offset = 2;
 
     const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
     const color_t highlight_color = RGBA32(0x3F, 0x3F, 0x3F, 0xFF);
     const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
-    const color_t directory_color = RGBA32(0xFF, 0xFF, 0x7F, 0xFF);
-    const color_t save_color = RGBA32(0xBF, 0xFF, 0xBF, 0xFF);
-    const color_t music_color = RGBA32(0x64, 0xB5, 0xF6, 0xFF);
-    const color_t other_color = RGBA32(0xBF, 0xBF, 0xBF, 0xFF);
+    const color_t directory_color = RGBA32(0xFF, 0xFF, 0x70, 0xFF);
+    const color_t save_color = RGBA32(0x70, 0xFF, 0x70, 0xFF);
+    const color_t music_color = RGBA32(0x70, 0xBC, 0xFF, 0xFF);
+    const color_t other_color = RGBA32(0xA0, 0xA0, 0xA0, 0xFF);
 
     int starting_position = 0;
 
@@ -259,7 +259,7 @@ static void draw (menu_t *menu, surface_t *d) {
     fragment_borders(d);
     fragment_scrollbar(d, menu->browser.selected, menu->browser.entries);
 
-    // List
+    // Main screen
     rdpq_font_begin(text_color);
     for (int i = starting_position; i < menu->browser.entries; i++) {
         if (i == (starting_position + layout->main_lines)) {
@@ -274,7 +274,7 @@ static void draw (menu_t *menu, surface_t *d) {
             rdpq_fill_rectangle(
                 layout->offset_x,
                 text_y + highlight_offset,
-                d->width - layout->offset_x - layout->scroll_width,
+                d->width - layout->offset_x - layout->scrollbar_width,
                 text_y + layout->line_height + highlight_offset
             );
             rdpq_font_begin(text_color);

@@ -5,9 +5,10 @@
 #include <surface.h>
 
 
-void widget_scrollbar (int x, int y, int width, int height, int position, int items, int visible_items);
 void widget_horizontal_line (int x1, int x2, int y, int thickness);
 void widget_border (int x1, int y1, int x2, int y2, int thickness);
+void widget_scrollbar (int x, int y, int width, int height, int position, int items, int visible_items);
+void widget_progressbar (int x, int y, int width, int height, float progress);
 
 
 typedef struct {
@@ -18,7 +19,8 @@ typedef struct {
     int offset_text_y;
 
     int line_height;
-    int scroll_width;
+    int scrollbar_width;
+    int progressbar_height;
 
     int border_thickness;
 
@@ -32,7 +34,8 @@ typedef struct {
 
 layout_t *get_layout(void);
 void fragment_borders (surface_t *d);
-void fragment_scrollbar (surface_t *d, int progress, int items);
+void fragment_scrollbar (surface_t *d, int position, int items);
+void fragment_progressbar (surface_t *d, float progress);
 
 
 #endif

@@ -1,3 +1,6 @@
+#include <string.h>
+#include <strings.h>
+
 #include <fatfs/ff.h>
 
 #include "fs.h"
@@ -87,4 +90,21 @@ bool file_get_sectors (char *path, uint32_t *sectors, size_t entries) {
     }
 
     return error;
+}
+
+bool file_has_extensions (char *path, const char *extensions[]) {
+    char *ext = strrchr(path, '.');
+
+    if (ext == NULL) {
+        return false;
+    }
+
+    while (*extensions != NULL) {
+        if (strcasecmp(ext + 1, *extensions) == 0) {
+            return true;
+        }
+        extensions++;
+    }
+
+    return false;
 }

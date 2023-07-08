@@ -1,19 +1,14 @@
 #include <libdragon.h>
-#include "../menu.h"
+
+#include "flashcart/flashcart.h"
+
+#include "fragments/fragments.h"
+#include "views.h"
 #include "../rom_database.h"
-#include "../../flashcart/flashcart.h"
 
 
-static void draw (menu_t *menu, surface_t *d) {
-    int x = 24;
-    int y = 36;
+static bool load_pending;
 
-    graphics_fill_screen(d, graphics_make_color(0, 0, 0, 255));
-
-    graphics_draw_text(d, x, y, "booting...");
-
-    display_show(d);
-}
 
 static void load (menu_t *menu) {
     menu->next_mode = MENU_MODE_BOOT;
@@ -26,7 +21,7 @@ static void load (menu_t *menu) {
     
     uint8_t save_type = rom_db_match_save_type(temp_header);
 
-    if (flashcart_load_rom(path_get(path)) != FLASHCART_OK) {
+    if (flashcart_load_rom(path_get(path), false) != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_ERROR;
         path_free(path);
         return;
@@ -43,11 +38,38 @@ static void load (menu_t *menu) {
 }
 
 
+static void process (menu_t *menu) {
+    if (menu->actions.enter) {
+        load_pending = true;
+    } else if (menu->actions.back) {
+        menu->next_mode = MENU_MODE_BROWSER;
+    }
+}
+
+static void draw (menu_t *menu, surface_t *d) {
+    // layout_t *layout = get_layout();
+
+    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
+
+    rdpq_attach(d, NULL);
+    rdpq_clear(bg_color);
+
+    // Layout
+    fragment_borders(d);
+
+    rdpq_detach_show();
+}
+
+
 void view_load_init (menu_t *menu) {
-    // Nothing to initialize (yet)
+    load_pending = false;
 }
 
 void view_load_display (menu_t *menu, surface_t *display) {
+    process(menu);
     draw(menu, display);
-    load(menu);
+    if (load_pending) {
+        load_pending = false;
+        load(menu);
+    }
 }

@@ -19,7 +19,7 @@
 #define EEPROM_ADDRESS              (0x1FFE2000)
 
 #define SUPPORTED_MAJOR_VERSION     (2)
-#define SUPPORTED_MINOR_VERSION     (12)
+#define SUPPORTED_MINOR_VERSION     (16)
 
 
 static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br) {
@@ -51,6 +51,11 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
     return FLASHCART_OK;
 }
 
+static void load_cleanup (FIL *fil) {
+    sc64_sd_set_byte_swap(false);
+    f_close(fil);
+}
+
 
 static flashcart_error_t sc64_init (void) {
     uint16_t major;
@@ -71,6 +76,13 @@ static flashcart_error_t sc64_init (void) {
         return FLASHCART_ERROR_OUTDATED;
     }
 
+    bool writeback_pending;
+    do {
+        if (sc64_writeback_pending(&writeback_pending) != SC64_OK) {
+            return FLASHCART_ERROR_INT;
+        }
+    } while (writeback_pending);
+
     return FLASHCART_OK;
 }
 
@@ -79,7 +91,7 @@ static flashcart_error_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_rom (char *rom_path) {
+static flashcart_error_t sc64_load_rom (char *rom_path, bool byte_swap) {
     FIL fil;
     UINT br;
 
@@ -99,6 +111,11 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
+    if (sc64_sd_set_byte_swap(byte_swap) != SC64_OK) {
+        load_cleanup(&fil);
+        return FLASHCART_ERROR_INT;
+    }
+
     bool shadow_enabled = (rom_size > (MiB(64) - KiB(128)));
     bool extended_enabled = (rom_size > MiB(64));
 
@@ -107,46 +124,51 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
     if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
-        f_close(&fil);
+        load_cleanup(&fil);
         return FLASHCART_ERROR_LOAD;
     }
     if (br != sdram_size) {
-        f_close(&fil);
+        load_cleanup(&fil);
         return FLASHCART_ERROR_LOAD;
     }
 
     if (sc64_set_config(CFG_ROM_SHADOW_ENABLE, shadow_enabled) != SC64_OK) {
-        f_close(&fil);
+        load_cleanup(&fil);
         return FLASHCART_ERROR_INT;
     }
 
     if (shadow_enabled) {
         flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br);
         if (error != FLASHCART_OK) {
-            f_close(&fil);
+            load_cleanup(&fil);
             return error;
         }
         if (br != shadow_size) {
-            f_close(&fil);
+            load_cleanup(&fil);
             return FLASHCART_ERROR_LOAD;
         }
     }
 
     if (sc64_set_config(CFG_ROM_EXTENDED_ENABLE, extended_enabled) != SC64_OK) {
-        f_close(&fil);
+        load_cleanup(&fil);
         return FLASHCART_ERROR_INT;
     }
 
     if (extended_enabled) {
         flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br);
         if (error != FLASHCART_OK) {
-            f_close(&fil);
+            load_cleanup(&fil);
             return error;
         }
         if (br != extended_size) {
-            f_close(&fil);
+            load_cleanup(&fil);
             return FLASHCART_ERROR_LOAD;
         }
+    }
+
+    if (sc64_sd_set_byte_swap(false) != SC64_OK) {
+        load_cleanup(&fil);
+        return FLASHCART_ERROR_INT;
     }
 
     if (f_close(&fil) != FR_OK) {
@@ -186,7 +208,7 @@ static flashcart_error_t sc64_load_save (char *save_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
-    size_t save_size = ALIGN(f_size(&fil), FS_SECTOR_SIZE);
+    size_t save_size = f_size(&fil);
 
     if (f_read(&fil, address, save_size, &br) != FR_OK) {
         f_close(&fil);
@@ -224,7 +246,7 @@ static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_SRAM_BANKED;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_128K:
-            type = SAVE_TYPE_SRAM;
+            type = SAVE_TYPE_SRAM_128K;
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM:
             type = SAVE_TYPE_FLASHRAM;

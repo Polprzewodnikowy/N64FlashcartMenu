@@ -1,5 +1,6 @@
 #include <libdragon.h>
-#include "../menu.h"
+
+#include "views.h"
 
 
 static void process (menu_t *menu) {

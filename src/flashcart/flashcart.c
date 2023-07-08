@@ -42,11 +42,11 @@ flashcart_error_t flashcart_deinit (void) {
     return flashcart->deinit();
 }
 
-flashcart_error_t flashcart_load_rom (char *rom_path) {
+flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
         return FLASHCART_ERROR_ARGS;
     }
-    return flashcart->load_rom(rom_path);
+    return flashcart->load_rom(rom_path, byte_swap);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type, bool save_writeback) {
@@ -57,7 +57,9 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
         return FLASHCART_ERROR_ARGS;
     }
 
-    flashcart->set_save_type(save_type);
+    if ((error = flashcart->set_save_type(save_type)) != FLASHCART_OK) {
+        return error;
+    }
 
     if ((save_path == NULL) || (save_type == FLASHCART_SAVE_TYPE_NONE)) {
         return FLASHCART_OK;

@@ -215,10 +215,12 @@ static void process (menu_t *menu) {
             menu->browser.valid = false;
             menu->next_mode = MENU_MODE_ERROR;
         }
-    } else if (menu->actions.info) {
+    } else if (menu->actions.file_info) {
         if (menu->browser.selected >= 0) {
             menu->next_mode = MENU_MODE_FILE_INFO;
         }
+    } else if (menu->actions.system_info) {
+        menu->next_mode = MENU_MODE_SYSTEM_INFO;
     } else if (menu->actions.settings) {
         menu->next_mode = MENU_MODE_CREDITS;
     }

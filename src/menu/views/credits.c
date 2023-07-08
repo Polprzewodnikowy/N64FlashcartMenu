@@ -4,8 +4,9 @@
 
 #include "../menu_res_setup.h"
 
-
-#define MENU_VERSION "V0.0.0.3"
+#ifndef MENU_VERSION
+#define MENU_VERSION "0.0.0.4"
+#endif
 
 
 static void process (menu_t *menu) {
@@ -22,17 +23,21 @@ static void draw (menu_t *menu, surface_t *d) {
 
 	int16_t vertical_position = 40;
 
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "Menu Version:");
-	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, MENU_VERSION);
+	graphics_draw_text(d, horizontal_start_position, vertical_position, "Menu Revision: V");
+	graphics_draw_text(d, horizontal_start_position + 16 * 8, vertical_position, MENU_VERSION);
 	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(d, horizontal_start_position, vertical_position, "Authors:");
 	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "JonesAlmighty / NetworkFusion");
 	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "korgeaux / Polprzewodnikowy");
 	vertical_position += (font_vertical_pixels * 2);
+	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Credits:");
+	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "N64Brew / libdragon contributors.");
+	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Github:");
 	// graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
 	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
 	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/NetworkFusion/N64FlashcartMenu");
+	//graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/dragonminded/libdragon");
 	vertical_position += (font_vertical_pixels * 2);
 	graphics_draw_text(d, horizontal_start_position, vertical_position, "OSS licenses used:");
 	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, "UNLICENSE");

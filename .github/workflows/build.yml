@@ -1,4 +1,4 @@
-name: build
+name: Build
 
 on:
   push:
@@ -9,13 +9,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-sc64-menu:
     runs-on: ubuntu-latest
 
     steps:
-
-      # - name: Check for dockerenv file
-      #   run: (ls /.dockerenv && echo Found dockerenv) || (echo No dockerenv)
 
       - uses: actions/checkout@v3
         with:
@@ -49,7 +46,7 @@ jobs:
 
   minify-sc64-menu:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-sc64-menu
 
     steps:
 
@@ -69,7 +66,7 @@ jobs:
           name: N64FlashcartMenu
           path: ./
 
-      - name: Finalize rom
+      - name: Finalize ROM
         run: |
           # make all
           python ./tools/sc64/minify.py ./build/N64FlashcartMenu.elf ./output/N64FlashcartMenu.z64 ./output/sc64menu.n64
@@ -82,6 +79,28 @@ jobs:
           path: |
             ./output/sc64menu.n64
           if-no-files-found: ignore
+
+  generate-docs:
+    runs-on: ubuntu-latest
+    # needs: build-sc64-menu
+
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 1 # we only require the last check-in, unless we want to create a changelog.
+
+      - name: Run Doxygen
+        uses: mattnotmitt/doxygen-action@1.9.5
+        with:
+          doxyfile-path: './Doxyfile'
+
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs
 
 
   # release-sc64-menu:

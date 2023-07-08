@@ -21,7 +21,7 @@ static void load (menu_t *menu) {
     
     uint8_t save_type = rom_db_match_save_type(temp_header);
 
-    if (flashcart_load_rom(path_get(path), false) != FLASHCART_OK) {
+    if (flashcart_load_rom(path_get(path), temp_header.endian == ROM_MID_BIG_ENDIAN) != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_ERROR;
         path_free(path);
         return;
@@ -56,6 +56,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
     // Layout
     fragment_borders(d);
+
+    // TODO: Display ROM information here
 
     rdpq_detach_show();
 }

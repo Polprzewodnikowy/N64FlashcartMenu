@@ -11,22 +11,22 @@ uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
 
 uint8_t extract_homebrew_save_type(uint8_t save_type) {
     switch (save_type) {
-        case 0x00:
+        case HB_SAVE_TYPE_NONE:
             return DB_SAVE_TYPE_NONE;
-        case 0x01:
+        case HB_SAVE_TYPE_EEPROM_4K:
             return DB_SAVE_TYPE_EEPROM_4K;
-        case 0x02:
+        case HB_SAVE_TYPE_EEPROM_16K:
             return DB_SAVE_TYPE_EEPROM_16K;
-        case 0x03:
+        case HB_SAVE_TYPE_SRAM:
             return DB_SAVE_TYPE_SRAM;
-        case 0x04:
+        case HB_SAVE_TYPE_SRAM_BANKED:
             return DB_SAVE_TYPE_SRAM_BANKED;
-        case 0x05:
+        case HB_SAVE_TYPE_FLASHRAM:
             return DB_SAVE_TYPE_FLASHRAM;
-        case 0x06:
+        case HB_SAVE_TYPE_SRAM_128K:
             return DB_SAVE_TYPE_SRAM_128K;
         default:
-            return DB_SAVE_TYPE_CART_SPECIFIED; // Invalid save type, handle accordingly
+            return DB_SAVE_TYPE_INVALID; // Invalid save type, handle accordingly
     }
 }
 
@@ -43,11 +43,13 @@ rom_header_t file_read_rom_header(char *path) {
 
     rom_header_t *rom_header = malloc(sizeof(rom_header_t));
 
+    fseek(fp, 0x00, SEEK_SET);
+    fread(&(rom_header->endian), sizeof(uint32_t), 1, fp);
+    // FIXME: handle endian appropriately, perhaps: cart_card_byteswap
     fseek(fp, 0x10, SEEK_SET);
     fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
-	fread(&(rom_header->title), sizeof(rom_header->title), 1, fp);
-    rom_header->title[20] = '\0';
+	fgets(rom_header->title, sizeof(rom_header->title), fp);
     fseek(fp, 0x3b, SEEK_SET);
     fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
     //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
@@ -70,28 +72,28 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     // These are ordered to ensure they are handled correctly...
 
-    // First: Match by the `ED` Developer ID
-    // TODO: if appropriate this can be improved with other unused codes... e.g. | `AA` | `ZZ` 
-    if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED") {
-        
-        // uint8_t low_nibble = rom_header.version & 0x0F;
-        // uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
-        // uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
+    // First: Match by the `ED` or `HB` Developer ID
+    if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED" || rom_header.metadata.unique_identifier == *(uint16_t *)"HB") {
+// #ifdef ED64_COMPATIBLE        
+//         uint8_t low_nibble = rom_header.version & 0x0F;
+//         uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
+//         uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
+// #endif
 
         uint8_t high_nibble = (rom_header.version >> 4) & 0x0F;
 
         return extract_homebrew_save_type(high_nibble);
     }
 
-    // // Second: Match the default entries for crc_high.
-    // // FIXME: use full check code, or pad.
-    // if (rom_header.checksum == 0xbcb1f89f)return DB_SAVE_TYPE_EEPROM_4K;    // kirby v1.3
-    // if (rom_header.checksum == 0x46039fb4)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0x0d93ba11)return DB_SAVE_TYPE_EEPROM_16K;   // kirby U
-    // if (rom_header.checksum == 0xce84793d)return DB_SAVE_TYPE_SRAM;         // donkey kong f2
-    // if (rom_header.checksum == 0x4cbc3b56)return DB_SAVE_TYPE_SRAM;         // DMTJ 64DD game
-    // if (rom_header.checksum == 0x0dd4abab)return DB_SAVE_TYPE_EEPROM_16K;   // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    // if (rom_header.checksum == 0xeb85ebc9)return DB_SAVE_TYPE_FLASHRAM;     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    // Second: Match the default entries for crc.
+    // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
+    if (rom_header.checksum == 16971230020836426415U) return DB_SAVE_TYPE_FLASHRAM;
+    // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
+    if (rom_header.checksum == 996610171530815774U) return DB_SAVE_TYPE_EEPROM_16K;
+    // donkey kong f2
+    // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;
+    // DMTJ 64DD game
+    // if (rom_header.checksum == 0x4cbc3b56) return DB_SAVE_TYPE_SRAM;
     
 
     // FIXME: we need to take into account the Category (first char) and the Region code (last char) before a general match of the ID.
@@ -119,6 +121,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // FLASHRAM
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS",
+
+        // Controller Pak only
+        "BX", "BQ", "NS",
+
         // Last entry
         "!!"
 
@@ -144,6 +150,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // FLASHRAM
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+
+        // Controller Pak only
+        0x10, 0x10, 0x10,
+
         // Last entry.
         0xff
     };

@@ -15,6 +15,7 @@ typedef enum {
     MENU_MODE_STARTUP,
     MENU_MODE_BROWSER,
     MENU_MODE_FILE_INFO,
+    MENU_MODE_SYSTEM_INFO,
     MENU_MODE_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_LOAD,
@@ -56,7 +57,8 @@ typedef struct {
 
         bool enter;
         bool back;
-        bool info;
+        bool file_info;
+        bool system_info;
         bool settings;
         bool override;
     } actions;

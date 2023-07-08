@@ -37,6 +37,7 @@ SRCS = \
 	menu/views/load.c \
 	menu/views/player.c \
 	menu/views/startup.c \
+	menu/views/system_info.c \
 	utils/fs.c
 
 ASSETS = \
@@ -70,12 +71,16 @@ clean:
 	$(shell rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR))
 .PHONY: clean
 
-# run:
-#   $(shell ./remotedeploy.sh -d)
+run: $(PROJECT_NAME)
+	./remotedeploy.sh
 #   FIXME: improve ability to deploy.
 #   if devcontainer, use remotedeploy.sh, else
 # 	  $(shell sc64deployer --boot direct-rom %~dp0$(OUTPUT_DIR))\$(PROJECT_NAME).z64)
-# .PHONY: run
+.PHONY: run
+
+run-debug: $(PROJECT_NAME)
+	./remotedeploy.sh -d
+.PHONY: run-debug
 
 # test:
 #   TODO: run tests

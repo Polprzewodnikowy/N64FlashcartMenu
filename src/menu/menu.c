@@ -16,6 +16,8 @@ static bool boot_pending;
 
 static void menu_init (settings_t *settings) {
     controller_init();
+    timer_init();
+    rtc_init();
     audio_init(44100, 2);
     mixer_init(2);
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
@@ -53,6 +55,8 @@ static void menu_deinit (menu_t *menu) {
     display_close();
     mixer_close();
     audio_close();
+    rtc_close();
+    timer_close();
 }
 
 
@@ -78,6 +82,10 @@ void menu_run (settings_t *settings) {
 
                 case MENU_MODE_FILE_INFO:
                     view_file_info_display(menu, display);
+                    break;
+
+                case MENU_MODE_SYSTEM_INFO:
+                    view_system_info_display(menu, display);
                     break;
 
                 case MENU_MODE_PLAYER:
@@ -116,6 +124,10 @@ void menu_run (settings_t *settings) {
 
                     case MENU_MODE_FILE_INFO:
                         view_file_info_init(menu);
+                        break;
+
+                    case MENU_MODE_SYSTEM_INFO:
+                        view_system_info_init(menu);
                         break;
 
                     case MENU_MODE_PLAYER:

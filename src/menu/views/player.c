@@ -6,6 +6,13 @@
 #include "../mp3player.h"
 
 
+#define SEEK_SECONDS            10
+#define SEEK_UNMUTE_TIMEOUT     17
+
+
+static int unmute_counter;
+
+
 static void format_name (char *buffer, char *name) {
     int cutoff_length = 57;
     int name_length = strlen(name);
@@ -18,8 +25,31 @@ static void format_name (char *buffer, char *name) {
     }
 }
 
+static void format_elapsed_duration (char *buffer, float elapsed, float duration) {
+    strcpy(buffer, " ");
+
+    if (duration >= 3600) {
+        sprintf(buffer + strlen(buffer), "%02d:", (int) (elapsed) / 3600);
+    }
+    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (elapsed) % 3600) / 60, (int) (elapsed) % 60);
+
+    strcat(buffer, " / ");
+
+    if (duration >= 3600) {
+        sprintf(buffer + strlen(buffer), "%02d:", (int) (duration) / 3600);
+    }
+    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (duration) % 3600) / 60, (int) (duration) % 60);
+}
+
 
 static void process (menu_t *menu) {
+    if (unmute_counter > 0) {
+        unmute_counter -= 1;
+        if (unmute_counter == 0) {
+            mp3player_mute(false);
+        }
+    }
+
     if (mp3player_process() != MP3PLAYER_OK) {
         menu->next_mode = MENU_MODE_ERROR;
     } else if (menu->actions.back) {
@@ -29,7 +59,9 @@ static void process (menu_t *menu) {
             menu->next_mode = MENU_MODE_ERROR;
         }
     } else if (menu->actions.go_left || menu->actions.go_right) {
-        int seconds = ((menu->actions.go_left ? -1 : 1) * 10);
+        mp3player_mute(true);
+        unmute_counter = SEEK_UNMUTE_TIMEOUT;
+        int seconds = (menu->actions.go_left ? -SEEK_SECONDS : SEEK_SECONDS);
         if (mp3player_seek(seconds) != MP3PLAYER_OK) {
             menu->next_mode = MENU_MODE_ERROR;
         }
@@ -65,6 +97,31 @@ static void draw (menu_t *menu, surface_t *d) {
     format_name(buffer, menu->browser.list[menu->browser.selected].name);
     rdpq_font_print(menu->assets.font, buffer);
 
+    text_y += layout->line_height * 2;
+    rdpq_font_begin(text_color);
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    rdpq_font_print(menu->assets.font, "Track elapsed / length:");
+    text_y += layout->line_height;
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    format_elapsed_duration(buffer, mp3player_get_duration() * mp3player_get_progress(), mp3player_get_duration());
+    rdpq_font_print(menu->assets.font, buffer);
+
+    text_y += layout->line_height * 2;
+    rdpq_font_begin(text_color);
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    rdpq_font_print(menu->assets.font, "Average bitrate:");
+    text_y += layout->line_height;
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    rdpq_font_printf(menu->assets.font, " %.0f kbps", mp3player_get_bitrate() / 1000);
+
+    text_y += layout->line_height * 2;
+    rdpq_font_begin(text_color);
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    rdpq_font_print(menu->assets.font, "Samplerate:");
+    text_y += layout->line_height;
+    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    rdpq_font_printf(menu->assets.font, " %d Hz", mp3player_get_samplerate());
+
     // Actions bar
     text_y = layout->actions_y + layout->offset_text_y;
     rdpq_font_position(text_x, text_y + menu->assets.font_height);
@@ -77,7 +134,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
     text_y += layout->line_height;
     rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "B: Exit | Left/Right: Rewind/Fast forward");
+    rdpq_font_print(menu->assets.font, "B: Exit | Left / Right: Rewind / Fast forward");
     rdpq_font_end();
 
     rdpq_detach_show();
@@ -86,6 +143,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_player_init (menu_t *menu) {
     mp3player_err_t error;
+
+    unmute_counter = 0;
 
     error = mp3player_init();
     if (error != MP3PLAYER_OK) {
@@ -102,6 +161,7 @@ void view_player_init (menu_t *menu) {
         menu->next_mode = MENU_MODE_ERROR;
         mp3player_deinit();
     } else {
+        mp3player_mute(false);
         mp3player_play();
     }
 

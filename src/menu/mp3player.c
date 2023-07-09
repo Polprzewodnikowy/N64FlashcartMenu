@@ -9,7 +9,6 @@
 #include "libs/minimp3/minimp3_ex.h"
 
 
-#define BUFFER_SIZE     (16 * 1024)
 #define MIXER_CHANNEL   (0)
 
 
@@ -17,19 +16,18 @@ typedef struct {
     bool loaded;
     bool io_error;
 
-    mp3dec_t dec;
-    mp3dec_frame_info_t info;
-
     FIL fil;
     FSIZE_t data_start;
 
-    uint8_t buffer[BUFFER_SIZE];
+    mp3dec_t dec;
+    mp3dec_frame_info_t info;
+
+    uint8_t buffer[24 * 1024];
     uint8_t *buffer_ptr;
     size_t buffer_left;
 
-    short samples[MINIMP3_MAX_SAMPLES_PER_FRAME];
-    short *samples_ptr;
-    int samples_left;
+    float duration;
+    float bitrate;
 
     waveform_t wave;
 } mp3player_t;
@@ -41,8 +39,6 @@ static void mp3player_reset_decoder (void) {
     mp3dec_init(&p->dec);
     p->buffer_ptr = p->buffer;
     p->buffer_left = 0;
-    p->samples_ptr = p->samples;
-    p->samples_left = 0;
 }
 
 static void mp3player_fill_buffer (void) {
@@ -61,58 +57,63 @@ static void mp3player_fill_buffer (void) {
         p->buffer_ptr = p->buffer;
     }
 
-    if (f_read(&p->fil, p->buffer + p->buffer_left, BUFFER_SIZE - p->buffer_left, &bytes_read) == FR_OK) {
+    if (f_read(&p->fil, p->buffer + p->buffer_left, sizeof(p->buffer) - p->buffer_left, &bytes_read) == FR_OK) {
         p->buffer_left += bytes_read;
     } else {
         p->io_error = true;
     }
 }
 
-static void mp3player_decode_samples (short *buffer, int buffer_samples) {
-    if (p->samples_left > 0) {
-        int samples_to_copy = MIN(p->samples_left, buffer_samples);
-
-        memcpy(buffer, p->samples_ptr, samples_to_copy * sizeof(short) * p->info.channels);
-
-        p->samples_ptr += samples_to_copy * p->info.channels;
-        p->samples_left -= samples_to_copy;
-
-        buffer += samples_to_copy * p->info.channels;
-        buffer_samples -= samples_to_copy;
-    }
-
-    while (buffer_samples > 0) {
+static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int wlen, bool seeking) {
+    while (wlen > 0) {
         mp3player_fill_buffer();
 
-        int samples = mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, p->samples, &p->info);
+        int samples = mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, NULL, &p->info);
+
+        if (samples > 0) {
+            short *buffer = (short *) (samplebuffer_append(sbuf, samples));
+
+            p->buffer_ptr += p->info.frame_offset;
+            p->buffer_left -= p->info.frame_offset;
+
+            mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, buffer, &p->info);
+
+            wlen -= samples;
+        }
 
         p->buffer_ptr += p->info.frame_bytes;
         p->buffer_left -= p->info.frame_bytes;
 
-        if (samples > 0) {
-            int samples_to_copy = MIN(samples, buffer_samples);
-
-            memcpy(buffer, p->samples, samples_to_copy * sizeof(short) * p->info.channels);
-
-            p->samples_ptr = p->samples + samples_to_copy * p->info.channels;
-            p->samples_left = samples - samples_to_copy;
-
-            buffer += samples_to_copy * p->info.channels;
-            buffer_samples -= samples_to_copy;
-        }
-
         if (p->info.frame_bytes == 0) {
-            memset(buffer, 0, buffer_samples * sizeof(short) * p->info.channels);
-            buffer_samples = 0;
+            short *buffer = (short *) (samplebuffer_append(sbuf, wlen));
+
+            memset(buffer, 0, wlen * sizeof(short) * p->info.channels);
+
+            wlen = 0;
         }
     }
 }
 
-static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int wlen, bool seeking) {
-    short *buf = (short *) (samplebuffer_append(sbuf, wlen));
-    mp3player_decode_samples(buf, wlen);
+static void mp3player_calculate_duration (int samples) {
+    uint32_t frames;
+    int delay, padding;
+
+    long data_size = (f_size(&p->fil) - p->data_start);
+    if (mp3dec_check_vbrtag((const uint8_t *) (p->buffer_ptr), p->info.frame_bytes, &frames, &delay, &padding) > 0) {
+        p->duration = (frames * samples) / (float) (p->info.hz);
+        p->bitrate = (data_size * 8) / p->duration;
+    } else {
+        p->bitrate = p->info.bitrate_kbps * 1000;
+        p->duration = data_size / (p->bitrate / 8);
+    }
 }
 
+
+void mp3player_mixer_init (void) {
+    // NOTE: Deliberately setting max_frequency to twice of actual maximum samplerate of mp3 file.
+    //       It's tricking mixer into creating buffer long enough for appending data created by mp3dec_decode_frame.
+    mixer_ch_set_limits(MIXER_CHANNEL, 16, 96000, 0);
+}
 
 mp3player_err_t mp3player_init (void) {
     p = calloc(1, sizeof(mp3player_t));
@@ -166,19 +167,25 @@ mp3player_err_t mp3player_load (char *path) {
 
         size_t id3v2_skip = mp3dec_skip_id3v2((const uint8_t *) (p->buffer_ptr), p->buffer_left);
         if (id3v2_skip > 0) {
-            f_lseek(&p->fil, f_tell(&p->fil) - p->buffer_left + id3v2_skip);
+            if (f_lseek(&p->fil, f_tell(&p->fil) - p->buffer_left + id3v2_skip) != FR_OK) {
+                return MP3PLAYER_ERR_IO;
+            }
             mp3player_reset_decoder();
             continue;
         }
 
-        if (mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, NULL, &p->info) > 0) {
-            mp3dec_init(&p->dec);
-
+        int samples = mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, NULL, &p->info);
+        if (samples > 0) {
             p->loaded = true;
             p->data_start = f_tell(&p->fil) - p->buffer_left + p->info.frame_offset;
 
+            p->buffer_ptr += p->info.frame_offset;
+            p->buffer_left -= p->info.frame_offset;
+
             p->wave.channels = p->info.channels;
             p->wave.frequency = p->info.hz;
+
+            mp3player_calculate_duration(samples);
 
             return MP3PLAYER_OK;
         }
@@ -220,7 +227,7 @@ bool mp3player_is_playing (void) {
 }
 
 bool mp3player_is_finished (void) {
-    return f_eof(&p->fil) && p->buffer_left == 0 && p->samples_left == 0;
+    return p->loaded && f_eof(&p->fil) && p->buffer_left == 0;
 }
 
 mp3player_err_t mp3player_play (void) {
@@ -255,15 +262,20 @@ mp3player_err_t mp3player_toggle (void) {
     return MP3PLAYER_OK;
 }
 
+void mp3player_mute (bool mute) {
+    float volume = mute ? 0.f : 1.f;
+    mixer_ch_set_vol(MIXER_CHANNEL, volume, volume);
+}
+
 mp3player_err_t mp3player_seek (int seconds) {
-    // NOTE: Rough approximation using last frame bitrate to calculate number of bytes to be skipped.
+    // NOTE: Rough approximation using average bitrate to calculate number of bytes to be skipped.
     //       Good enough but not very accurate for variable bitrate files.
 
     if (!p->loaded) {
         return MP3PLAYER_ERR_NO_FILE;
     }
 
-    long bytes_to_move = (long) (((p->info.bitrate_kbps * 1024) * seconds) / 8);
+    long bytes_to_move = (long) ((p->bitrate * seconds) / 8);
     if (bytes_to_move == 0) {
         return MP3PLAYER_OK;
     }
@@ -279,13 +291,46 @@ mp3player_err_t mp3player_seek (int seconds) {
     }
 
     mp3player_reset_decoder();
+    mp3player_fill_buffer();
+
+    if (p->io_error) {
+        return MP3PLAYER_ERR_IO;
+    }
 
     return MP3PLAYER_OK;
+}
+
+float mp3player_get_duration (void) {
+    if (!p->loaded) {
+        return 0.f;
+    }
+
+    return p->duration;
+}
+
+float mp3player_get_bitrate (void) {
+    if (!p->loaded) {
+        return 0.f;
+    }
+
+    return p->bitrate;
+}
+
+int mp3player_get_samplerate (void) {
+    if (!p->loaded) {
+        return 0;
+    }
+
+    return p->info.hz;
 }
 
 float mp3player_get_progress (void) {
     // NOTE: Rough approximation using file pointer instead of processed samples.
     //       Good enough but not very accurate for variable bitrate files.
+
+    if (!p->loaded) {
+        return 0.f;
+    }
 
     FSIZE_t data_size = f_size(&p->fil) - p->data_start;
     FSIZE_t data_consumed = f_tell(&p->fil) - p->buffer_left;

@@ -14,6 +14,7 @@ typedef enum {
 } mp3player_err_t;
 
 
+void mp3player_mixer_init (void);
 mp3player_err_t mp3player_init (void);
 void mp3player_deinit (void);
 mp3player_err_t mp3player_load (char *path);
@@ -24,7 +25,11 @@ bool mp3player_is_finished (void);
 mp3player_err_t mp3player_play (void);
 void mp3player_stop (void);
 mp3player_err_t mp3player_toggle (void);
+void mp3player_mute (bool mute);
 mp3player_err_t mp3player_seek (int seconds);
+float mp3player_get_duration (void);
+float mp3player_get_bitrate (void);
+int mp3player_get_samplerate (void);
 float mp3player_get_progress (void);
 
 

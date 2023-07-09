@@ -5,6 +5,7 @@
 #include "actions.h"
 #include "menu_state.h"
 #include "menu.h"
+#include "mp3player.h"
 #include "settings.h"
 #include "utils/fs.h"
 #include "views/views.h"
@@ -23,6 +24,8 @@ static void menu_init (settings_t *settings) {
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
     rspq_init();
     rdpq_init();
+
+    mp3player_mixer_init();
 
     boot_pending = false;
 

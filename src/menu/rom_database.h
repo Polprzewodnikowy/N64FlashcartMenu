@@ -17,20 +17,28 @@
 #define DB_SAVE_TYPE_INVALID        0xff
 
 typedef enum {
-    HB_SAVE_TYPE_NONE = 0x00,
-    HB_SAVE_TYPE_EEPROM_4K = 0x01,
-    HB_SAVE_TYPE_EEPROM_16K = 0x02,
-    HB_SAVE_TYPE_SRAM = 0x03,
-    HB_SAVE_TYPE_SRAM_BANKED = 0x04,
-    HB_SAVE_TYPE_FLASHRAM = 0x05,
-    HB_SAVE_TYPE_SRAM_128K = 0x06,
+    DB_MEMORY_EXPANSION_NONE =      0x00,
+    DB_MEMORY_EXPANSION_REQUIRED =  0x01,
+    DB_MEMORY_EXPANSION_SUGGESTED = 0x02,
+    DB_MEMORY_EXPANSION_ENHANCED =  0x03,
+} rom_memorytype_t;
+
+
+typedef enum {
+    HB_SAVE_TYPE_NONE =         0x00,
+    HB_SAVE_TYPE_EEPROM_4K =    0x01,
+    HB_SAVE_TYPE_EEPROM_16K =   0x02,
+    HB_SAVE_TYPE_SRAM =         0x03,
+    HB_SAVE_TYPE_SRAM_BANKED =  0x04,
+    HB_SAVE_TYPE_FLASHRAM =     0x05,
+    HB_SAVE_TYPE_SRAM_128K =    0x06,
 } homebrew_savetype_t;
 
 typedef enum {
-    ROM_BIG_ENDIAN = 2151092800U,
-    ROM_LITTLE_ENDIAN = 1074935680U,
-    ROM_MID_BIG_ENDIAN = 931151890U,
-    ROM_MID_LITTLE_ENDIAN = 306217015U
+    ROM_BIG_ENDIAN =        0x80371240,
+    ROM_LITTLE_ENDIAN =     0x40123780,
+    ROM_MID_BIG_ENDIAN =    0x37804012,
+    ROM_MID_LITTLE_ENDIAN = 0x12408037
 } rom_endian_type_t;
 
 //Rom Info
@@ -96,5 +104,6 @@ typedef struct {
 
 rom_header_t file_read_rom_header(char *path);
 uint8_t rom_db_match_save_type(rom_header_t rom_header);
+uint8_t rom_db_match_expansion_pak(rom_header_t rom_header);
 
 #endif

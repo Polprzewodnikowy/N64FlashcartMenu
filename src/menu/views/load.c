@@ -30,9 +30,9 @@ static char *format_rom_media_type (uint8_t media_type) {
         case N64_DISK:
             return "D - Disk";
         case N64_CART_EXPANDABLE:
-            return "C - Cart Expandable";
+            return "C - Cartridge (Expandable)";
         case N64_DISK_EXPANDABLE:
-            return "E - Disk Expandable";
+            return "E - Disk (Expandable)";
         case N64_ALECK64:
             return "Z - Aleck64";
         default:
@@ -60,6 +60,24 @@ static char *format_rom_save_type (uint8_t save_type) {
             return "Controller PAK";
         default:
             return "Unknown";
+    }
+}
+
+static char *format_rom_memory_type (uint8_t memory_type) {
+    switch (memory_type)
+    {
+    case DB_MEMORY_EXPANSION_REQUIRED:
+        return "Required";
+        break;
+    case DB_MEMORY_EXPANSION_SUGGESTED:
+        return "Suggested";
+        break;
+    case DB_MEMORY_EXPANSION_ENHANCED:
+        return "Enhanced";
+        break;
+    default:
+        return "Not Required";
+        break;
     }
 }
 
@@ -156,6 +174,7 @@ static void draw (menu_t *menu, surface_t *d) {
         text_y += fragment_textf(text_x, text_y, "Version: %hhu", rom_header.version);
         text_y += fragment_textf(text_x, text_y, "Checksum: 0x%016llX", rom_header.checksum);
         text_y += fragment_textf(text_x, text_y, "ROM endian: %s", format_rom_endian(rom_header.endian));
+        text_y += fragment_textf(text_x, text_y, "Expansion PAK: %s", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
 
         // Actions bar
         text_y = layout->actions_y + layout->offset_text_y;

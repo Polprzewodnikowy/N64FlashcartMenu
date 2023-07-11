@@ -21,6 +21,7 @@ typedef enum {
     DB_MEMORY_EXPANSION_REQUIRED =  0x01,
     DB_MEMORY_EXPANSION_SUGGESTED = 0x02,
     DB_MEMORY_EXPANSION_ENHANCED =  0x03,
+    DB_MEMORY_EXPANSION_FAULTY =    0x04,
 } rom_memorytype_t;
 
 
@@ -38,7 +39,8 @@ typedef enum {
     ROM_BIG_ENDIAN =        0x80371240,
     ROM_LITTLE_ENDIAN =     0x40123780,
     ROM_MID_BIG_ENDIAN =    0x37804012,
-    ROM_MID_LITTLE_ENDIAN = 0x12408037
+    ROM_MID_LITTLE_ENDIAN = 0x12408037,
+    IPL_BIG_ENDIAN =        0x80270740,
 } rom_endian_type_t;
 
 //Rom Info

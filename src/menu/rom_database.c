@@ -177,10 +177,13 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         "DO", "DP", "ZS", // Donkey Kong, Dino Planet, Majoras Mask
 
         // Expansion Pak Suggested
-        "PD", "SQ", // Perfect Dark, Starcraft
+         "IJ", "PD", "SQ", // Indiana Jones, Perfect Dark, Starcraft
 
         // Expansion Pak Enhanced
-        "32", "P3", "Y2", "TQ",
+        "32", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "Y2", "TQ", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
+
+        // Expansion Pak Known Faulty ( NTSC only )
+        "SV",
 
         // Last entry
         "!!"
@@ -192,10 +195,13 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         0x01, 0x01, 0x01,
 
         // Expansion Pak Suggested
-        0x02, 0x02,
+        0x02, 0x02, 0x02,
 
         // Expansion Pak Enhanced
-        0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+
+        // Expansion Pak Known Faulty ( NTSC only )
+        0x04,
 
         // Last entry.
         0xff

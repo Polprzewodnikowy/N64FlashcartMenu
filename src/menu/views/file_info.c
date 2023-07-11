@@ -14,6 +14,7 @@ static char *get_rom_endian_s (uint32_t endian) {
     switch (endian)
     {
     case ROM_BIG_ENDIAN:
+    case IPL_BIG_ENDIAN:
         return "Big (default)"; // expected
         break;
     case ROM_LITTLE_ENDIAN:
@@ -96,6 +97,9 @@ static char *get_rom_memorytype_s (uint8_t type) {
         break;
     case DB_MEMORY_EXPANSION_ENHANCED:
         return "Enhanced";
+        break;
+    case DB_MEMORY_EXPANSION_FAULTY:
+        return "May have issues";
         break;
     default:
         return "Not Required";

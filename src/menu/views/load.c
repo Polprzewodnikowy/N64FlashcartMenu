@@ -13,6 +13,7 @@ static rom_header_t rom_header;
 static char *format_rom_endian (uint32_t endian) {
     switch (endian) {
         case ROM_BIG_ENDIAN:
+        case IPL_BIG_ENDIAN:
             return "Big (native)";
         case ROM_LITTLE_ENDIAN:
             return "Little (unsupported)";
@@ -75,8 +76,11 @@ static char *format_rom_memory_type (uint8_t memory_type) {
     case DB_MEMORY_EXPANSION_ENHANCED:
         return "Enhanced";
         break;
+    case DB_MEMORY_EXPANSION_FAULTY:
+        return "May have issues";
+        break;
     default:
-        return "Not Required";
+        return "Not required";
         break;
     }
 }

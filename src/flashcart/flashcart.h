@@ -41,7 +41,7 @@ typedef struct {
 flashcart_error_t flashcart_init (void);
 flashcart_error_t flashcart_deinit (void);
 flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap);
-flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type, bool save_writeback);
+flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);
 
 
 #endif

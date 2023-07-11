@@ -1,10 +1,9 @@
 #include <libdragon.h>
 
+#include "../rom_database.h"
 #include "flashcart/flashcart.h"
-
 #include "fragments/fragments.h"
 #include "views.h"
-#include "../rom_database.h"
 
 
 static bool load_pending;
@@ -101,7 +100,7 @@ static void load (menu_t *menu) {
     uint8_t save_type = rom_db_match_save_type(rom_header);
 
     path_ext_replace(path, "sav");
-    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(save_type), true);
+    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(save_type));
     if (menu->flashcart_error != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
         path_free(path);

@@ -1,7 +1,7 @@
 #include <libdragon.h>
 
-#include "views.h"
 #include "../menu_res_setup.h"
+#include "views.h"
 
 
 static void process (menu_t *menu) {

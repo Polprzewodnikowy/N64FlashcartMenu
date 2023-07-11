@@ -61,6 +61,12 @@ static flashcart_error_t sc64_init (void) {
     uint16_t major;
     uint16_t minor;
 
+    // HACK: Because libcart reads PI config from address 0x10000000 when initializing
+    //       we need to write safe value before running any libcart function.
+    //       Data in SDRAM can be undefined at this point and result in setting incorrect PI config.
+    extern uint32_t cart_dom1;
+    cart_dom1 = 0x80371240;
+
     sc64_unlock();
 
     if (!sc64_check_presence()) {
@@ -87,6 +93,7 @@ static flashcart_error_t sc64_init (void) {
 }
 
 static flashcart_error_t sc64_deinit (void) {
+    sc64_set_config(CFG_ROM_WRITE_ENABLE, false);
     sc64_lock();
     return FLASHCART_OK;
 }

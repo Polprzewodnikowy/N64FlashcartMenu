@@ -1,9 +1,8 @@
 #include <libdragon.h>
 
+#include "../mp3player.h"
 #include "fragments/fragments.h"
 #include "views.h"
-
-#include "../mp3player.h"
 
 
 #define SEEK_SECONDS            10

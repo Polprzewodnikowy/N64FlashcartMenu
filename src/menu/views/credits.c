@@ -1,8 +1,8 @@
 #include <libdragon.h>
 
+#include "../menu_res_setup.h"
 #include "views.h"
 
-#include "../menu_res_setup.h"
 
 #ifndef MENU_VERSION
 #define MENU_VERSION "0.0.0.4"

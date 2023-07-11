@@ -38,16 +38,10 @@ static flashcart_t *flashcart = &((flashcart_t) {
 
 
 flashcart_error_t flashcart_init (void) {
+    flashcart_error_t error;
+
     if (usb_initialize() == CART_NONE) {
         return FLASHCART_ERROR_NOT_DETECTED;
-    }
-
-#ifndef NDEBUG
-    assertf(debug_init_usblog(), "Couldn't initialize USB debugging");
-#endif
-
-    if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_SD_CARD_ERROR;
     }
 
     switch (usb_getcart()) {
@@ -63,7 +57,19 @@ flashcart_error_t flashcart_init (void) {
             return FLASHCART_ERROR_UNSUPPORTED;
     }
 
-    return flashcart->init();
+    if ((error = flashcart->init()) != FLASHCART_OK) {
+        return error;
+    }
+
+    if (!debug_init_sdfs("sd:/", -1)) {
+        return FLASHCART_ERROR_SD_CARD_ERROR;
+    }
+
+#ifndef NDEBUG
+    assertf(debug_init_usblog(), "Couldn't initialize USB debugging");
+#endif
+
+    return FLASHCART_OK;
 }
 
 flashcart_error_t flashcart_deinit (void) {
@@ -80,7 +86,7 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
     return flashcart->load_rom(rom_path, byte_swap);
 }
 
-flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type, bool save_writeback) {
+flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
     flashcart_error_t error;
     uint32_t sectors[WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
@@ -110,7 +116,7 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
         return error;
     }
 
-    if (save_writeback) {
+    if (flashcart->set_save_writeback) {
         if (file_get_sectors(save_path, sectors, WRITEBACK_MAX_SECTORS)) {
             return FLASHCART_ERROR_LOAD;
         }

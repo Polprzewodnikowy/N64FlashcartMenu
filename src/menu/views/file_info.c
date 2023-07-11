@@ -1,13 +1,11 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
 
-#include "views.h"
-
 #include "../menu_res_setup.h"
-#include "../../utils/str_utils.h"
 #include "../rom_database.h"
-
 #include "fragments/fragments.h"
+#include "utils/str_utils.h"
+#include "views.h"
 
 
 static FILINFO info;

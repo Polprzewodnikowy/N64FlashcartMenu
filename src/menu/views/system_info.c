@@ -1,8 +1,9 @@
 #include <time.h>
+
 #include <libdragon.h>
 
-#include "views.h"
 #include "../menu_res_setup.h"
+#include "views.h"
 
 
 char *accessory_type_s( int accessory )

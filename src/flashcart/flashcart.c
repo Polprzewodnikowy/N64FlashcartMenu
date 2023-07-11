@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include <libdragon.h>
 #include <usb.h>
 
 #include "utils/fs.h"
@@ -22,11 +23,38 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(128),
 };
 
-static flashcart_t *flashcart;
+static flashcart_error_t dummy_init (void) {
+    return FLASHCART_OK;
+}
+
+static flashcart_t *flashcart = &((flashcart_t) {
+    .init = dummy_init,
+    .deinit = NULL,
+    .load_rom = NULL,
+    .load_save = NULL,
+    .set_save_type = NULL,
+    .set_save_writeback = NULL,
+});
 
 
 flashcart_error_t flashcart_init (void) {
+    if (usb_initialize() == CART_NONE) {
+        return FLASHCART_ERROR_NOT_DETECTED;
+    }
+
+#ifndef NDEBUG
+    assertf(debug_init_usblog(), "Couldn't initialize USB debugging");
+#endif
+
+    if (!debug_init_sdfs("sd:/", -1)) {
+        return FLASHCART_ERROR_SD_CARD_ERROR;
+    }
+
     switch (usb_getcart()) {
+        case CART_64DRIVE:
+        case CART_EVERDRIVE:
+            break;
+
         case CART_SC64:
             flashcart = sc64_get_flashcart();
             break;
@@ -39,7 +67,10 @@ flashcart_error_t flashcart_init (void) {
 }
 
 flashcart_error_t flashcart_deinit (void) {
-    return flashcart->deinit();
+    if (flashcart->deinit) {
+        return flashcart->deinit();
+    }
+    return FLASHCART_OK;
 }
 
 flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {

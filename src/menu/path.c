@@ -32,8 +32,10 @@ path_t *path_init (char *string) {
 }
 
 void path_free (path_t *path) {
-    free(path->buffer);
-    free(path);
+    if (path != NULL) {
+        free(path->buffer);
+        free(path);
+    }
 }
 
 path_t *path_clone (path_t *path) {

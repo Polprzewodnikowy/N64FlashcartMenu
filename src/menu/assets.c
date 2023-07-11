@@ -1,6 +1,10 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <libdragon.h>
+
+#include "assets.h"
+
 
 typedef struct {
     char *name;
@@ -17,7 +21,7 @@ typedef struct {
 
 ASSET_IMPORT(FiraMono_Bold_font64);
 
-static asset_t assets[] = {
+static asset_t assets_list[] = {
     ASSET("assets:/font", FiraMono_Bold_font64),
 };
 
@@ -25,8 +29,8 @@ static asset_t assets[] = {
 extern void *__real_asset_load (char *fn, int *sz);
 
 void *__wrap_asset_load (char *fn, int *sz) {
-    for (int i = 0; i < sizeof(assets) / sizeof(assets[0]); i++) {
-        asset_t *asset = &assets[i];
+    for (int i = 0; i < sizeof(assets_list) / sizeof(assets_list[0]); i++) {
+        asset_t *asset = &assets_list[i];
         if (strcmp(asset->name, fn) == 0) {
             *sz = asset->size;
             return asset->data;
@@ -34,4 +38,17 @@ void *__wrap_asset_load (char *fn, int *sz) {
     }
 
     return __real_asset_load(fn, sz);
+}
+
+
+static assets_t assets;
+
+
+void assets_init (void) {
+    assets.font = rdpq_font_load("assets:/font");
+    assets.font_height = 16;
+}
+
+assets_t *assets_get (void) {
+    return &assets;
 }

@@ -1,4 +1,9 @@
+#include <stdarg.h>
+
+#include <libdragon.h>
+
 #include "fragments.h"
+#include "../../assets.h"
 
 
 // TODO: Prepare layout for PAL display
@@ -13,17 +18,17 @@ static layout_t layout = {
     .scrollbar_width = 10,
     .progressbar_height = 16,
 
-    .border_thickness = 2,
+    .border_thickness = 5,
 
     .main_lines = 20,
 
     .actions_x = 20,
-    .actions_y = 404,
+    .actions_y = 405,
     .actions_lines = 2,
 };
 
 
-layout_t *get_layout(void) {
+layout_t *layout_get(void) {
     return &layout;
 }
 
@@ -58,9 +63,34 @@ void fragment_scrollbar (surface_t *d, int position, int items) {
 void fragment_progressbar (surface_t *d, float progress) {
     widget_progressbar (
         layout.offset_x,
-        layout.actions_y - layout.border_thickness - layout.progressbar_height,
+        layout.offset_y + ((layout.main_lines + 1) * layout.line_height) - layout.progressbar_height,
         d->width - (layout.offset_x * 2),
         layout.progressbar_height,
         progress
     );
+}
+
+void fragment_text_start (color_t color) {
+    rdpq_font_begin(color);
+}
+
+void fragment_text_set_color (color_t color) {
+    rdpq_set_prim_color(color);
+}
+
+int fragment_textf (int x, int y, char *fmt, ...) {
+    char buffer[64];
+
+    assets_t *assets = assets_get();
+
+    rdpq_font_position(x, y + assets->font_height);
+
+    va_list va;
+    va_start(va, fmt);
+    int n = vsnprintf(buffer, sizeof(buffer), fmt, va);
+    va_end(va);
+
+    rdpq_font_printn(assets->font, buffer, n);
+
+    return layout.line_height;
 }

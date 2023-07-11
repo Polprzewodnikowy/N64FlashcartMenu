@@ -71,7 +71,7 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     char buffer[64];
 
-    layout_t *layout = get_layout();
+    layout_t *layout = layout_get();
 
     const int text_x = layout->offset_x + layout->offset_text_x;
     int text_y = layout->offset_y + layout->offset_text_y;
@@ -88,54 +88,38 @@ static void draw (menu_t *menu, surface_t *d) {
     // Progressbar
     fragment_progressbar(d, mp3player_get_progress());
 
+    // Text start
+    fragment_text_start(text_color);
+
     // Main screen
-    rdpq_font_begin(text_color);
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "Now playing:");
-    text_y += layout->line_height;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    text_y += fragment_textf(text_x, text_y, "Now playing:");
     format_name(buffer, menu->browser.list[menu->browser.selected].name);
-    rdpq_font_print(menu->assets.font, buffer);
+    text_y += fragment_textf(text_x, text_y, buffer);
 
-    text_y += layout->line_height * 2;
-    rdpq_font_begin(text_color);
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "Track elapsed / length:");
     text_y += layout->line_height;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
+    text_y += fragment_textf(text_x, text_y, "Track elapsed / length:");
     format_elapsed_duration(buffer, mp3player_get_duration() * mp3player_get_progress(), mp3player_get_duration());
-    rdpq_font_print(menu->assets.font, buffer);
+    text_y += fragment_textf(text_x, text_y, buffer);
 
-    text_y += layout->line_height * 2;
-    rdpq_font_begin(text_color);
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "Average bitrate:");
     text_y += layout->line_height;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_printf(menu->assets.font, " %.0f kbps", mp3player_get_bitrate() / 1000);
+    text_y += fragment_textf(text_x, text_y, "Average bitrate:");
+    text_y += fragment_textf(text_x, text_y, " %.0f kbps", mp3player_get_bitrate() / 1000);
 
-    text_y += layout->line_height * 2;
-    rdpq_font_begin(text_color);
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "Samplerate:");
     text_y += layout->line_height;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_printf(menu->assets.font, " %d Hz", mp3player_get_samplerate());
+    text_y += fragment_textf(text_x, text_y, "Samplerate:");
+    text_y += fragment_textf(text_x, text_y, " %d Hz", mp3player_get_samplerate());
 
     // Actions bar
     text_y = layout->actions_y + layout->offset_text_y;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
     if (mp3player_is_playing()) {
-        rdpq_font_print(menu->assets.font, "A: Pause");
+        fragment_textf(text_x, text_y, "A: Pause");
     } else if (mp3player_is_finished()) {
-        rdpq_font_print(menu->assets.font, "A: Play again");
+        fragment_textf(text_x, text_y, "A: Play again");
     } else {
-        rdpq_font_print(menu->assets.font, "A: Play");
+        fragment_textf(text_x, text_y, "A: Play");
     }
     text_y += layout->line_height;
-    rdpq_font_position(text_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "B: Exit | Left / Right: Rewind / Fast forward");
-    rdpq_font_end();
+    fragment_textf(text_x, text_y, "B: Exit | Left / Right: Rewind / Fast forward");
 
     rdpq_detach_show();
 }

@@ -13,7 +13,6 @@
 
 
 void settings_load_from_file(settings_t *settings) {
-    return;
     FILE *fp = fopen(SC64_SETTINGS_FILEPATH, "r");
     if (!fp) {
         printf("Error loading config file %s\n", SC64_SETTINGS_FILEPATH);

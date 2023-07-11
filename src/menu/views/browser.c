@@ -229,7 +229,7 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     char buffer[64];
 
-    layout_t *layout = get_layout();
+    layout_t *layout = layout_get();
 
     const int text_x = layout->offset_x + layout->offset_text_x;
     int text_y = layout->offset_y + layout->offset_text_y;
@@ -261,94 +261,79 @@ static void draw (menu_t *menu, surface_t *d) {
     fragment_borders(d);
     fragment_scrollbar(d, menu->browser.selected, menu->browser.entries);
 
+    // Highlight
+    if (menu->browser.entries > 0) {
+        rdpq_set_mode_fill(highlight_color);
+        rdpq_fill_rectangle(
+            layout->offset_x,
+            text_y + highlight_offset + ((menu->browser.selected - starting_position) * layout->line_height),
+            d->width - layout->offset_x - layout->scrollbar_width,
+            text_y + layout->line_height + highlight_offset + ((menu->browser.selected - starting_position) * layout->line_height)
+        );
+    }
+
+    // Text start
+    fragment_text_start(text_color);
+
     // Main screen
-    rdpq_font_begin(text_color);
     for (int i = starting_position; i < menu->browser.entries; i++) {
         if (i == (starting_position + layout->main_lines)) {
             break;
         }
 
         entry_t *entry = &menu->browser.list[i];
-        bool selected = (i == menu->browser.selected);
-
-        if (selected) {
-            rdpq_set_mode_fill(highlight_color);
-            rdpq_fill_rectangle(
-                layout->offset_x,
-                text_y + highlight_offset,
-                d->width - layout->offset_x - layout->scrollbar_width,
-                text_y + layout->line_height + highlight_offset
-            );
-            rdpq_font_begin(text_color);
-        }
 
         switch (entry->type) {
-            case ENTRY_TYPE_DIR:
-                rdpq_set_prim_color(directory_color);
-                break;
-            case ENTRY_TYPE_SAVE:
-                rdpq_set_prim_color(save_color);
-                break;
-            case ENTRY_TYPE_OTHER:
-                rdpq_set_prim_color(other_color);
-                break;
-            case ENTRY_TYPE_MUSIC:
-                rdpq_set_prim_color(music_color);
-                break;
-            default:
-                rdpq_set_prim_color(text_color);
-                break;
+            case ENTRY_TYPE_DIR: fragment_text_set_color(directory_color); break;
+            case ENTRY_TYPE_SAVE: fragment_text_set_color(save_color); break;
+            case ENTRY_TYPE_OTHER: fragment_text_set_color(other_color); break;
+            case ENTRY_TYPE_MUSIC: fragment_text_set_color(music_color); break;
+            default: fragment_text_set_color(text_color); break;
         }
 
-        rdpq_font_position(text_x, text_y + menu->assets.font_height);
-        format_entry(buffer, entry, selected);
-        rdpq_font_print(menu->assets.font, buffer);
+        format_entry(buffer, entry, i == menu->browser.selected);
+        fragment_textf(text_x, text_y, buffer);
 
         if (entry->type != ENTRY_TYPE_DIR) {
-            rdpq_font_position(text_file_size_x, text_y + menu->assets.font_height);
             format_size(buffer, entry->size);
-            rdpq_font_print(menu->assets.font, buffer);
+            fragment_text_set_color(text_color);
+            fragment_textf(text_file_size_x, text_y, buffer);
         }
 
         text_y += layout->line_height;
     }
 
+
     if (menu->browser.entries == 0) {
-        rdpq_set_prim_color(other_color);
-        rdpq_font_position(text_x, text_y + menu->assets.font_height);
-        rdpq_font_print(menu->assets.font, "** empty directory **");
+        fragment_text_set_color(other_color);
+        fragment_textf(text_x, text_y, "** empty directory **");
     }
 
     // Actions bar
+    fragment_text_set_color(text_color);
     text_y = layout->actions_y + layout->offset_text_y;
-    rdpq_set_prim_color(text_color);
     if (menu->browser.entries > 0) {
-        rdpq_font_position(text_x, text_y + menu->assets.font_height);
         switch (menu->browser.list[menu->browser.selected].type) {
             case ENTRY_TYPE_DIR:
-                rdpq_font_print(menu->assets.font, "A: Enter");
+                fragment_textf(text_x, text_y, "A: Enter");
                 break;
             case ENTRY_TYPE_ROM:
-                rdpq_font_print(menu->assets.font, "A: Load");
+                fragment_textf(text_x, text_y, "A: Load");
                 break;
             case ENTRY_TYPE_MUSIC:
-                rdpq_font_print(menu->assets.font, "A: Play");
+                fragment_textf(text_x, text_y, "A: Play");
                 break;
             default:
-                rdpq_font_print(menu->assets.font, "A: Info");
+                fragment_textf(text_x, text_y, "A: Info");
                 break;
         }
-        rdpq_font_position(text_other_actions_x, text_y + menu->assets.font_height);
-        rdpq_font_print(menu->assets.font, "Z: Info");
+        fragment_textf(text_other_actions_x, text_y, "R: Info");
     }
     text_y += layout->line_height;
     if (!path_is_root(menu->browser.directory)) {
-        rdpq_font_position(text_x, text_y + menu->assets.font_height);
-        rdpq_font_print(menu->assets.font, "B: Back");
+        fragment_textf(text_x, text_y, "B: Back");
     }
-    rdpq_font_position(text_other_actions_x, text_y + menu->assets.font_height);
-    rdpq_font_print(menu->assets.font, "R: Settings");
-    rdpq_font_end();
+    fragment_textf(text_other_actions_x, text_y, "L: Settings");
 
     rdpq_detach_show();
 }

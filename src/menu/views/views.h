@@ -31,5 +31,8 @@ void view_load_display (menu_t *menu, surface_t *display);
 void view_error_init (menu_t *menu);
 void view_error_display (menu_t *menu, surface_t *display);
 
+void view_fault_init (menu_t *menu);
+void view_fault_display (menu_t *menu, surface_t *display);
+
 
 #endif

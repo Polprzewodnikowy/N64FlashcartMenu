@@ -32,10 +32,13 @@ typedef struct {
 } layout_t;
 
 
-layout_t *get_layout(void);
+layout_t *layout_get(void);
 void fragment_borders (surface_t *d);
 void fragment_scrollbar (surface_t *d, int position, int items);
 void fragment_progressbar (surface_t *d, float progress);
+void fragment_text_start (color_t color);
+void fragment_text_set_color (color_t color);
+int fragment_textf (int x, int y, char *fmt, ...);
 
 
 #endif

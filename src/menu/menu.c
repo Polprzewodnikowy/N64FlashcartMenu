@@ -3,6 +3,8 @@
 #include <libdragon.h>
 
 #include "actions.h"
+#include "assets.h"
+#include "flashcart/flashcart.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3player.h"
@@ -25,6 +27,7 @@ static void menu_init (settings_t *settings) {
     rspq_init();
     rdpq_init();
 
+    assets_init();
     mp3player_mixer_init();
 
     boot_pending = false;
@@ -35,8 +38,12 @@ static void menu_init (settings_t *settings) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->assets.font = rdpq_font_load("assets:/font");
-    menu->assets.font_height = 16;
+    menu->flashcart_error = flashcart_init();
+    if (menu->flashcart_error != FLASHCART_OK) {
+        menu->next_mode = MENU_MODE_FAULT;
+    } else {
+        // settings_load_from_file(settings);
+    }
 
     menu->browser.valid = false;
     if (file_exists(settings->last_state.directory)) {
@@ -48,9 +55,9 @@ static void menu_init (settings_t *settings) {
 }
 
 static void menu_deinit (menu_t *menu) {
+    flashcart_deinit();
+
     path_free(menu->browser.directory);
-    // NOTE: font is not loaded dynamically due to hack in assets.c, so there's no need to free it
-    // rdpq_font_free(menu->assets.font);
     free(menu);
 
     rdpq_close();
@@ -107,6 +114,10 @@ void menu_run (settings_t *settings) {
                     view_error_display(menu, display);
                     break;
 
+                case MENU_MODE_FAULT:
+                    view_fault_display(menu, display);
+                    break;
+
                 default:
                     rdpq_attach_clear(display, NULL);
                     rdpq_detach_show();
@@ -147,6 +158,10 @@ void menu_run (settings_t *settings) {
 
                     case MENU_MODE_ERROR:
                         view_error_init(menu);
+                        break;
+
+                    case MENU_MODE_FAULT:
+                        view_fault_init(menu);
                         break;
 
                     case MENU_MODE_BOOT:

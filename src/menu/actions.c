@@ -19,7 +19,6 @@ static void actions_clear (menu_t *menu) {
     menu->actions.file_info = false;
     menu->actions.system_info = false;
     menu->actions.settings = false;
-    menu->actions.override = false;
 }
 
 
@@ -110,9 +109,5 @@ void actions_update (menu_t *menu) {
         menu->actions.system_info = true;
     } else if (down.c[0].start) {
         menu->actions.settings = true;
-    }
-
-    if (down.c[0].B || held.c[0].B) {
-        menu->actions.override = true;
     }
 }

@@ -9,7 +9,7 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR)
+N64_CFLAGS += -iquote $(SOURCE_DIR) $(FLAGS)
 N64_LDFLAGS += --wrap asset_load
 
 SRCS = \
@@ -31,6 +31,7 @@ SRCS = \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
+	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/fragments/fragments.c \
 	menu/views/fragments/widgets.c \

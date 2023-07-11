@@ -2,8 +2,7 @@
 #define MENU_STRUCT_H__
 
 
-#include <rdpq_font.h>
-
+#include "flashcart/flashcart.h"
 #include "path.h"
 
 
@@ -20,6 +19,7 @@ typedef enum {
     MENU_MODE_CREDITS,
     MENU_MODE_LOAD,
     MENU_MODE_ERROR,
+    MENU_MODE_FAULT,
     MENU_MODE_BOOT,
 } menu_mode_t;
 
@@ -41,10 +41,7 @@ typedef struct {
     menu_mode_t mode;
     menu_mode_t next_mode;
 
-    struct {
-        rdpq_font_t *font;
-        int font_height;
-    } assets;
+    flashcart_error_t flashcart_error;
 
     struct {
         bool go_up;
@@ -60,7 +57,6 @@ typedef struct {
         bool file_info;
         bool system_info;
         bool settings;
-        bool override;
     } actions;
 
     struct {
@@ -71,10 +67,6 @@ typedef struct {
         int selected;
         bool show_hidden;
     } browser;
-
-    struct {
-        path_t *path;
-    } player;
 } menu_t;
 
 

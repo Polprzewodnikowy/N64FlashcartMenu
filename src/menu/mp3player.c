@@ -112,6 +112,7 @@ static void mp3player_calculate_duration (int samples) {
 void mp3player_mixer_init (void) {
     // NOTE: Deliberately setting max_frequency to twice of actual maximum samplerate of mp3 file.
     //       It's tricking mixer into creating buffer long enough for appending data created by mp3dec_decode_frame.
+
     mixer_ch_set_limits(MIXER_CHANNEL, 16, 96000, 0);
 }
 

@@ -2,10 +2,10 @@
 #define MENU_H__
 
 
-#include "settings.h"
+#include "boot/boot.h"
 
 
-void menu_run (settings_t *settings);
+void menu_run (boot_params_t *boot_params);
 
 
 #endif

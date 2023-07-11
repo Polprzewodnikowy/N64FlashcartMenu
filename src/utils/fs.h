@@ -11,6 +11,7 @@
 
 
 bool file_exists (char *path);
+bool directory_exists (char *path);
 size_t file_get_size (char *path);
 bool file_allocate (char *path, size_t size);
 bool file_get_sectors (char *path, uint32_t *sectors, size_t entries);

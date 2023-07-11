@@ -20,7 +20,7 @@ SRCS = \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \
-	libs/toml/toml.c \
+	libs/mini.c/src/mini.c \
 	menu/actions.c \
 	menu/assets.c \
 	menu/menu.c \

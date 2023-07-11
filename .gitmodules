@@ -2,3 +2,9 @@
 	path = libdragon
 	url = https://github.com/DragonMinded/libdragon
 	branch = unstable
+[submodule "src/libs/mini.c"]
+	path = src/libs/mini.c
+	url = https://github.com/univrsal/mini.c.git
+[submodule "src/libs/minimp3"]
+	path = src/libs/minimp3
+	url = https://github.com/lieff/minimp3.git

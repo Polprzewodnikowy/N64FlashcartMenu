@@ -2,19 +2,16 @@
 
 #include "boot/boot.h"
 #include "menu/menu.h"
-#include "menu/settings.h"
 
 
 int main (void) {
-    settings_t settings;
+    boot_params_t boot_params;
 
-    settings_load_default_state(&settings);
-
-    menu_run(&settings);
+    menu_run(&boot_params);
 
     disable_interrupts();
 
-    boot(&settings.boot_params);
+    boot(&boot_params);
 
     assertf(false, "Unexpected return from 'boot' function");
 

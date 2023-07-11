@@ -16,6 +16,15 @@ bool file_exists (char *path) {
     return (fr == FR_OK);
 }
 
+bool directory_exists (char *path) {
+    FRESULT fr;
+    FILINFO fno;
+
+    fr = f_stat(path, &fno);
+
+    return ((fr == FR_OK) && (fno.fattrib & AM_DIR));
+}
+
 size_t file_get_size (char *path) {
     FILINFO fno;
 

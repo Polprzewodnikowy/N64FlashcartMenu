@@ -1,6 +1,7 @@
 #include <libdragon.h>
 
 #include "../rom_database.h"
+#include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fragments/fragments.h"
 #include "views.h"
@@ -108,6 +109,11 @@ static void load (menu_t *menu) {
     }
 
     path_free(path);
+
+    menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
+    menu->boot_params->reset_type = BOOT_RESET_TYPE_COLD;
+    menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
+    menu->boot_params->detect_cic_seed = true;
 }
 
 

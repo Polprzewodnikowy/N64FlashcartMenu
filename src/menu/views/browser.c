@@ -69,14 +69,17 @@ static bool load_directory (menu_t *menu) {
         if (info.fattrib & AM_SYS) {
             continue;
         }
-        if (info.fattrib & AM_HID && !menu->browser.show_hidden) {
+        if ((info.fattrib & AM_HID) && !menu->settings.show_hidden_files) {
             continue;
         }
 
-        entry_t *entry = &menu->browser.list[menu->browser.entries++];
+        entry_t *entry = &menu->browser.list[menu->browser.entries];
 
         entry->name = strdup(info.fname);
-        assert(entry->name != NULL);
+        if (!entry->name) {
+            f_closedir(&dir);
+            return true;
+        }
 
         if (info.fattrib & AM_DIR) {
             entry->type = ENTRY_TYPE_DIR;
@@ -91,6 +94,8 @@ static bool load_directory (menu_t *menu) {
         }
 
         entry->size = info.fsize;
+
+        menu->browser.entries += 1;
     }
 
     if (f_closedir(&dir) != FR_OK) {
@@ -146,9 +151,9 @@ static bool pop_directory (menu_t *menu) {
 }
 
 static void format_size (char *buffer, int size) {
-    if (size < 10000) {
+    if (size < 8 * 1024) {
         sprintf(buffer, "%4d B ", size);
-    } else if (size < 10000000) {
+    } else if (size < 8 * 1024 * 1024) {
         sprintf(buffer, "%4d kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
         sprintf(buffer, "%4d MB", size / 1024 / 1024);
@@ -302,7 +307,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
         text_y += layout->line_height;
     }
-
 
     if (menu->browser.entries == 0) {
         fragment_text_set_color(other_color);

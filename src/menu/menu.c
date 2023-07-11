@@ -2,6 +2,7 @@
 
 #include <libdragon.h>
 
+#include "boot/boot.h"
 #include "actions.h"
 #include "assets.h"
 #include "flashcart/flashcart.h"
@@ -13,17 +14,19 @@
 #include "views/views.h"
 
 
+#define SETTINGS_FILE_PATH  "config.txt"
+
+
 static menu_t *menu;
 static bool boot_pending;
 
 
-static void menu_init (settings_t *settings) {
+static void menu_init (boot_params_t *boot_params) {
     controller_init();
     timer_init();
     rtc_init();
     audio_init(44100, 2);
     mixer_init(2);
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
     rspq_init();
     rdpq_init();
 
@@ -38,20 +41,28 @@ static void menu_init (settings_t *settings) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
+    settings_set_default_state(&menu->settings);
+
     menu->flashcart_error = flashcart_init();
     if (menu->flashcart_error != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     } else {
-        // settings_load_from_file(settings);
+        settings_load_from_file(SETTINGS_FILE_PATH, &menu->settings);
     }
 
+    menu->boot_params = boot_params;
+
+    bool default_directory_exists = directory_exists(menu->settings.default_directory);
+
     menu->browser.valid = false;
-    if (file_exists(settings->last_state.directory)) {
-        menu->browser.directory = path_init(settings->last_state.directory);
-    } else {
-        menu->browser.directory = path_init(NULL);
+    menu->browser.directory = path_init(default_directory_exists ? menu->settings.default_directory : NULL);
+
+    if ((get_tv_type() == TV_PAL) && menu->settings.pal60) {
+        // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
+        *((uint32_t *) (0x80000300)) = TV_NTSC;
     }
-    menu->browser.show_hidden = false;
+
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
 }
 
 static void menu_deinit (menu_t *menu) {
@@ -62,16 +73,16 @@ static void menu_deinit (menu_t *menu) {
 
     rdpq_close();
     rspq_close();
-    display_close();
     mixer_close();
     audio_close();
     rtc_close();
     timer_close();
+    display_close();
 }
 
 
-void menu_run (settings_t *settings) {
-    menu_init(settings);
+void menu_run (boot_params_t *boot_params) {
+    menu_init(boot_params);
 
     int audio_buffer_length = audio_get_buffer_length();
 

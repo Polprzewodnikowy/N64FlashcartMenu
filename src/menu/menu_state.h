@@ -2,8 +2,10 @@
 #define MENU_STRUCT_H__
 
 
+#include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
+#include "settings.h"
 
 
 #define BROWSER_LIST_SIZE   10000
@@ -41,6 +43,8 @@ typedef struct {
     menu_mode_t mode;
     menu_mode_t next_mode;
 
+    settings_t settings;
+    boot_params_t *boot_params;
     flashcart_error_t flashcart_error;
 
     struct {
@@ -65,7 +69,6 @@ typedef struct {
         entry_t list[BROWSER_LIST_SIZE];
         int entries;
         int selected;
-        bool show_hidden;
     } browser;
 } menu_t;
 

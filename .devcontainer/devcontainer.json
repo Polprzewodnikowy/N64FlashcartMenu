@@ -15,7 +15,9 @@
             ],
             "settings": {
                 "git.ignoredRepositories": [
-                    "libdragon"
+                    "libdragon",
+                    "src/libs/mini.c",
+                    "src/libs/minimp3"
                 ]
             }
         }

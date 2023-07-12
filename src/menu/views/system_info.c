@@ -51,6 +51,11 @@ static void draw (menu_t *menu, surface_t *d) {
 
     vertical_position += font_vertical_pixels;
 
+    sprintf(str_buffer, "Expansion PAK is %sinserted\n", is_memory_expanded() ? "" : "not " );
+    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
+
+    vertical_position += font_vertical_pixels;
+
     int controllers = get_controllers_present();
 
     sprintf(str_buffer, "JoyPad 1 is %sconnected\n", (controllers & CONTROLLER_1_INSERTED) ? "" : "not " );

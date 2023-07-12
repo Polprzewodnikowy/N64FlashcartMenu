@@ -14,6 +14,7 @@ static char *get_rom_endian_s (uint32_t endian) {
     switch (endian)
     {
     case ROM_BIG_ENDIAN:
+    case IPL_BIG_ENDIAN:
         return "Big (default)"; // expected
         break;
     case ROM_LITTLE_ENDIAN:
@@ -81,6 +82,27 @@ static char *get_rom_savetype_s (uint8_t type) {
         break;
     default:
         return "Unknown";
+        break;
+    }
+}
+
+static char *get_rom_memorytype_s (uint8_t type) {
+    switch (type)
+    {
+    case DB_MEMORY_EXPANSION_REQUIRED:
+        return "Required";
+        break;
+    case DB_MEMORY_EXPANSION_SUGGESTED:
+        return "Suggested";
+        break;
+    case DB_MEMORY_EXPANSION_ENHANCED:
+        return "Enhanced";
+        break;
+    case DB_MEMORY_EXPANSION_FAULTY:
+        return "May have issues";
+        break;
+    default:
+        return "Not Required";
         break;
     }
 }
@@ -212,7 +234,10 @@ static void draw (menu_t *menu, surface_t *d) {
         uint8_t save_type = rom_db_match_save_type(temp_header);
         sprintf(str_buffer,"Save Type: %s\n", get_rom_savetype_s(save_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-
+        y_position += (font_vertical_pixels * 2);
+        uint8_t memory_type = rom_db_match_expansion_pak(temp_header);
+        sprintf(str_buffer,"Expansion PAK: %s\n", get_rom_memorytype_s(memory_type));
+        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         //menu_fileinfo_draw_n64_rom_info(d);
     }
 

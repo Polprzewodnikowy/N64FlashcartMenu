@@ -168,3 +168,52 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     return DB_SAVE_TYPE_NONE; //Nothing matched.
 }
+
+uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
+
+    static char *cart_ids[] = {
+
+        // Expansion Pak Required
+        "DO", "DP", "ZS", // Donkey Kong, Dino Planet, Majoras Mask
+
+        // Expansion Pak Suggested
+         "IJ", "PD", "SQ", // Indiana Jones, Perfect Dark, Starcraft
+
+        // Expansion Pak Enhanced
+        "32", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "Y2", "TQ", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
+
+        // Expansion Pak Known Faulty ( NTSC only )
+        "SV",
+
+        // Last entry
+        "!!"
+
+    };
+    static int exp_types[] = {
+
+        // Expansion Pak Required
+        0x01, 0x01, 0x01,
+
+        // Expansion Pak Suggested
+        0x02, 0x02, 0x02,
+
+        // Expansion Pak Enhanced
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+
+        // Expansion Pak Known Faulty ( NTSC only )
+        0x04,
+
+        // Last entry.
+        0xff
+    };
+
+    for (int i = 0; exp_types[i] != 0xff; i++) {
+
+        if (rom_header.metadata.unique_identifier == *(uint16_t *) cart_ids[i]) {
+            return exp_types[i];
+        }
+
+    }
+
+    return DB_MEMORY_EXPANSION_NONE;
+}

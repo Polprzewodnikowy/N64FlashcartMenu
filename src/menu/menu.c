@@ -15,10 +15,12 @@
 
 
 #define SETTINGS_FILE_PATH  "config.txt"
+#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
 
 
 static menu_t *menu;
 static bool boot_pending;
+static tv_type_t tv_type;
 
 
 static void menu_init (boot_params_t *boot_params) {
@@ -57,15 +59,19 @@ static void menu_init (boot_params_t *boot_params) {
     menu->browser.valid = false;
     menu->browser.directory = path_init(default_directory_exists ? menu->settings.default_directory : NULL);
 
-    if ((get_tv_type() == TV_PAL) && menu->settings.pal60) {
+    tv_type = get_tv_type();
+    if ((tv_type == TV_PAL) && menu->settings.pal60) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-        *((uint32_t *) (0x80000300)) = TV_NTSC;
+        TV_TYPE_RAM = TV_NTSC;
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
 }
 
 static void menu_deinit (menu_t *menu) {
+    // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
+    TV_TYPE_RAM = tv_type;
+
     flashcart_deinit();
 
     path_free(menu->browser.directory);

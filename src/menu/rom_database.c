@@ -70,7 +70,7 @@ rom_header_t file_read_rom_header(char *path) {
 
 uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
-    // These are ordered to ensure they are handled correctly...
+    // These are ordered to ensure they are handled correctly... (presumes big endian)
 
     // First: Match by the `ED` or `HB` Developer ID
     if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED" || rom_header.metadata.unique_identifier == *(uint16_t *)"HB") {
@@ -87,9 +87,9 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
     // Second: Match the default entries for crc.
     // DOUBUTSU BANCHOU (ANIMAL LEADER, Cubivore) - Contains no game ID
-    if (rom_header.checksum == 16971230020836426415U) return DB_SAVE_TYPE_FLASHRAM;
+    if (rom_header.checksum == 0xEB85EBC9596682AF) return DB_SAVE_TYPE_FLASHRAM;
     // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
-    if (rom_header.checksum == 996610171530815774U) return DB_SAVE_TYPE_EEPROM_16K;
+    if (rom_header.checksum == 0xDD4ABABB5A2A91E) return DB_SAVE_TYPE_EEPROM_16K;
     // donkey kong f2
     // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;
     // DMTJ 64DD game
@@ -107,20 +107,21 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         "GF", "GU", "GV", "HA", "HF", "HP", "IC", "IJ", "IR", "JM", "K2", "KA", "KI", "KT", "LB", "LR",
         "MG", "MI", "ML", "MO", "MR", "MS", "MU", "MW", "N6", "NA", "OH", "PG", "PW", "PY", "RC", "RS",
         "S6", "SA", "SC", "SM", "SU", "SV", "SW", "TB", "TC", "TJ", "TM", "TN", "TP", "TR", "TX", "T6",
-        "VL", "VY", "WC", "WL", "WQ", "WR", "WU", "XO", "4W",        
+        "VL", "VY", "WC", "WL", "WQ", "WR", "WU", "XO", "4W", "GL", "O2", "OS", "PM", "PT", "SN", "SB",
+        "SS",  
         // EEP16K
         "B7", "CW", "CZ", "DO", "D2", "D6", "EP", "EV", "FU", "F2", "IM", "M8", "MV", "MX", "NB", "NX",
-        "PD", "RZ", "UB", "X7", "YS", "3D",
+        "PD", "RZ", "UB", "X7", "YS", "3D", "R7",
         // SRAM
         "AL", "AY", "A2", "DA", "FZ", "GP", "G6", "K4", "KG", "MF", "OB", "RE", "RI", "TE", "VB", "VP",
-        "WI", "W2", "WX", "WZ", "YW", "ZL",
+        "WI", "W2", "WX", "WZ", "YW", "ZL", "B5", "IB", "JG", "UT", "UM", "T3",
         // SRAM_BANKED
         "DZ",
         // SRAM_128K
 
         // FLASHRAM
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
-        "PS", "RH", "SI", "SQ", "T9", "W4", "ZS",
+        "PS", "RH", "SI", "SQ", "T9", "W4", "ZS", "DA",
 
         // Controller Pak only
         "BX", "BQ", "NS",
@@ -136,20 +137,21 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
         0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+        0x01,
         // EEP16K
         0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-        0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+        0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
         // SRAM
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
-        0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
         // SRAM_BANKED
         0x04,
         // SRAM_128K
 
         // FLASHRAM
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
-        0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+        0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
 
         // Controller Pak only
         0x10, 0x10, 0x10,

@@ -71,8 +71,8 @@ static char *format_rom_memory_type (uint8_t memory_type) {
     case DB_MEMORY_EXPANSION_REQUIRED:
         return "Required";
         break;
-    case DB_MEMORY_EXPANSION_SUGGESTED:
-        return "Suggested";
+    case DB_MEMORY_EXPANSION_RECOMMENDED:
+        return " Recommended";
         break;
     case DB_MEMORY_EXPANSION_ENHANCED:
         return "Enhanced";

@@ -122,7 +122,35 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS", "DA",
 
         // Controller Pak only
-        "BX", "BQ", "NS",
+        "2V", "32", "AC", "AM", "AR", "B4", "BF", "BL", "BO", "BP", "BQ", "BX", "BY", "CD", "CL", "DE",
+        "DH", "DM", "GA", "NS", "O7", "T4", "ZO",
+
+        // To work out
+        // "AH", "LC", "2V",
+
+        // Probably none
+        // "JQ" Batman Beyond: Return of the Joker 
+        // "CB" Charlie Blast's Territory (Password)
+        // "CF" Clayfighter 63 1/3 
+        // "C2" Clayfighter: Sculptor's Cut
+        // "DK" Dark Rift
+        // Elmo's Letter Adventure
+        // Elmo's Number Journey
+        // Jeopardy!
+        // Knife Edge: Nosegunner
+        // Mace: The Dark Age
+        // Magical Tetris Challenge
+        // Monster Truck Madness (Password)
+        // Mortal Kombat Trilogy
+        // Powerpuff Girls: Chemical X Traction (Password)
+        // Rugrats: Scavenger Hunt
+        // South Park: Chef's Luv Shack
+        // Transformers Beast Wars: Transmetals
+        // War Gods
+        // Wheel of Fortune
+
+
+
 
         // Last entry
         "!!"
@@ -152,7 +180,8 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
 
         // Controller Pak only
-        0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
 
         // Last entry.
         0xff
@@ -180,7 +209,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
          "IJ", "PD", "SQ", // Indiana Jones, Perfect Dark, Starcraft
 
         // Expansion Pak Enhanced
-        "32", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "Y2", "TQ", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
+        "32", "AC", "AM", "AR", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "T4", "Y2", "TQ", "ZO", "O7", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
 
         // Expansion Pak Known Faulty ( NTSC only )
         "SV",
@@ -194,11 +223,11 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         // Expansion Pak Required
         0x01, 0x01, 0x01,
 
-        // Expansion Pak Suggested
+        // Expansion Pak Recommended
         0x02, 0x02, 0x02,
 
         // Expansion Pak Enhanced
-        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
 
         // Expansion Pak Known Faulty ( NTSC only )
         0x04,

@@ -99,7 +99,7 @@ static char *get_rom_memorytype_s (uint8_t type) {
         return "Suggested";
         break;
     case DB_MEMORY_EXPANSION_FAULTY:
-        return "May have issues";
+        return "Ensure Patched";
         break;
     default:
         return "Not Required";

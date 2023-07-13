@@ -197,6 +197,12 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 
 uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
+    // Space Station Silicon Valley has known issues on NTSC.
+    // We only check for the known working market here.
+    if ( (rom_header.metadata.unique_identifier == *(uint16_t *) "SV") && (rom_header.metadata.destination_market != MARKET_EUROPE_P)) {
+        return DB_MEMORY_EXPANSION_FAULTY;
+    }
+
     static char *cart_ids[] = {
 
         // Expansion Pak Required
@@ -207,9 +213,6 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
         // Expansion Pak Enhanced (box art suggest improvements in some form)
         "32", "AC", "AM", "AR", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "T4", "Y2", "TQ", "ZO", "O7", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
-
-        // Expansion Pak Known Faulty ( NTSC only )
-        "SV",
 
         // Last entry
         "!!"
@@ -225,9 +228,6 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
         // Expansion Pak Enhanced
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
-
-        // Expansion Pak Known Faulty ( NTSC only )
-        0x04,
 
         // Last entry.
         0xff

@@ -78,7 +78,7 @@ static char *format_rom_memory_type (uint8_t memory_type) {
         return "Suggested";
         break;
     case DB_MEMORY_EXPANSION_FAULTY:
-        return "May have issues";
+        return "May require ROM patch";
         break;
     default:
         return "Not required";

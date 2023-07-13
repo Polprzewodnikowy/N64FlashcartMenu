@@ -78,7 +78,7 @@ typedef enum {
     // MARKET_UNKNOWN_M = 'M',
     MARKET_CANADA = 'N',
     // MARKET_UNKNOWN_O = 'O',
-    MARKET_EUROPE_P = 'P',
+    MARKET_PAL_GENERIC = 'P',
     // MARKET_UNKNOWN_Q = 'Q',
     // MARKET_UNKNOWN_R = 'R',
     MARKET_SPAIN = 'S',
@@ -86,9 +86,9 @@ typedef enum {
     MARKET_AUSTRAILA = 'U',
     // MARKET_UNKNOWN_V = 'V',
     MARKET_SCANDINAVAIA = 'W',
-    MARKET_EUROPE_X = 'X',
-    MARKET_EUROPE_Y = 'Y',
-    MARKET_EUROPE_Z = 'Z'
+    MARKET_PAL_X = 'X',
+    MARKET_PAL_Y = 'Y',
+    MARKET_PAL_Z = 'Z'
 } rom_destination_market_t;
 
 

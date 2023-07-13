@@ -199,7 +199,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
     // Space Station Silicon Valley has known issues on NTSC.
     // We only check for the known working market here.
-    if ( (rom_header.metadata.unique_identifier == *(uint16_t *) "SV") && (rom_header.metadata.destination_market != MARKET_EUROPE_P)) {
+    if ( (rom_header.metadata.unique_identifier == *(uint16_t *) "SV") && (rom_header.metadata.destination_market != MARKET_PAL_GENERIC)) {
         return DB_MEMORY_EXPANSION_FAULTY;
     }
 

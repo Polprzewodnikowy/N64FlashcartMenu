@@ -36,23 +36,70 @@ static char *get_rom_mediatype_s (uint8_t type) {
     switch (type)
     {
     case N64_CART:
-        return "N - Cartridge";
+        return "Cartridge";
         break;
     case N64_DISK:
-        return "D - Disk";
+        return "Disk";
         break;
     case N64_CART_EXPANDABLE:
-        return "C - Cart Expandable";
+        return "Cart Expandable";
         break;
     case N64_DISK_EXPANDABLE:
-        return "E - Disk Expandable";
+        return "Disk Expandable";
         break;
     case N64_ALECK64:
-        return "Z - Aleck64";
+        return "Aleck64";
         break;
     default:
         return "Unknown";
         break;
+    }
+}
+
+static char *get_rom_destination_market_s (uint8_t market_type) {
+    // TODO: These are all assumptions and should be corrected if required.
+    switch (market_type) {
+        case MARKET_ALL:
+            return "All";
+        case MARKET_BRAZIL:
+            return "BRA (MPAL)";
+        case MARKET_CHINA:
+            return "CHN";
+        case MARKET_GERMANY:
+            return "DEU (PAL)";
+        case MARKET_USA:
+            return "USA (NTSC)";
+        case MARKET_FRANCE:
+            return "FRA (PAL)";
+        case MARKET_NETHERLANDS:
+            return "NLD (PAL)";
+        case MARKET_ITALY:
+            return "ITA (PAL)";
+        case MARKET_JAPAN:
+            return "JPN (NTSC)";
+        case MARKET_KOREA:
+            return "KOR";
+        case MARKET_CANADA:
+            return "CAN";
+        case MARKET_SPAIN:
+            return "ESP (PAL)";
+        case MARKET_AUSTRAILA:
+            return "AUS (PAL)";
+        case MARKET_SCANDINAVAIA:
+            return "Scandinavaia";
+        case MARKET_GATEWAY64_NTSC:
+            return "GW64 (NTSC)";
+        case MARKET_GATEWAY64_PAL:
+            return "GW64 (PAL)";
+        case MARKET_PAL_GENERIC:
+            return "Generic (PAL)";
+        case MARKET_PAL_X: //FIXME: some AUS ROM's use this so not only EUR
+        case MARKET_PAL_Y:
+        case MARKET_PAL_Z:
+            return "??? (PAL)";
+
+        default:
+            return "Unknown";
     }
 }
 
@@ -220,15 +267,15 @@ static void draw (menu_t *menu, surface_t *d) {
         y_position += (font_vertical_pixels * 2);
         sprintf(str_buffer,"Title: %s\n", temp_header.title);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %s\n", get_rom_mediatype_s(temp_header.metadata.media_type));
+        sprintf(str_buffer,"Media Type: %c - %s\n", temp_header.metadata.media_type, get_rom_mediatype_s(temp_header.metadata.media_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Destination Market: %c\n", temp_header.metadata.destination_market);
+        sprintf(str_buffer,"Destination Market: %c - %s\n", temp_header.metadata.destination_market, get_rom_destination_market_s(temp_header.metadata.destination_market));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         sprintf(str_buffer,"Version: %hhu\n", temp_header.version);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Checksum: %llu\n", temp_header.checksum);
+        sprintf(str_buffer,"Checksum: 0x%016llX\n", temp_header.checksum);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
         uint8_t save_type = rom_db_match_save_type(temp_header);

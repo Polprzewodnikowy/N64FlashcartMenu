@@ -95,8 +95,8 @@ static char *get_rom_memorytype_s (uint8_t type) {
     case DB_MEMORY_EXPANSION_RECOMMENDED:
         return "Recommended";
         break;
-    case DB_MEMORY_EXPANSION_ENHANCED:
-        return "Enhanced";
+    case DB_MEMORY_EXPANSION_SUGGESTED:
+        return "Suggested";
         break;
     case DB_MEMORY_EXPANSION_FAULTY:
         return "May have issues";

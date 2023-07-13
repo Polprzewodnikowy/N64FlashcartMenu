@@ -121,9 +121,9 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS", "DA",
 
-        // Controller Pak only
+        // Controller Pak required
         "2V", "32", "AC", "AM", "AR", "B4", "BF", "BL", "BO", "BP", "BQ", "BX", "BY", "CD", "CL", "DE",
-        "DH", "DM", "GA", "NS", "O7", "T4", "ZO",
+        "DH", "DM", "DN", "GA", "NS", "O7", "T4", "ZO",
 
         // To work out
         // "AH", "LC", "2V",
@@ -179,9 +179,9 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
         0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
 
-        // Controller Pak only
+        // Controller Pak required
         0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
-        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
 
         // Last entry.
         0xff
@@ -205,10 +205,10 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         // Expansion Pak Required
         "DO", "DP", "ZS", // Donkey Kong, Dino Planet, Majoras Mask
 
-        // Expansion Pak Suggested
+        // Expansion Pak Recommended (games are pretty broken without it)
          "IJ", "PD", "SQ", // Indiana Jones, Perfect Dark, Starcraft
 
-        // Expansion Pak Enhanced
+        // Expansion Pak Enhanced (box art suggest improvements in some form)
         "32", "AC", "AM", "AR", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "T4", "Y2", "TQ", "ZO", "O7", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
 
         // Expansion Pak Known Faulty ( NTSC only )

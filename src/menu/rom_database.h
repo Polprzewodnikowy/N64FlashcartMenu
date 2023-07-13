@@ -5,16 +5,18 @@
 
 // NOTE: these values are independent of flashcart / OS
 // But by default align to SC64.
-#define DB_SAVE_TYPE_NONE           0x00
-#define DB_SAVE_TYPE_EEPROM_4K      0x01
-#define DB_SAVE_TYPE_EEPROM_16K     0x02
-#define DB_SAVE_TYPE_SRAM           0x03
-#define DB_SAVE_TYPE_SRAM_BANKED    0x04
-#define DB_SAVE_TYPE_SRAM_128K      0x05
-#define DB_SAVE_TYPE_FLASHRAM       0x06
-#define DB_SAVE_TYPE_CPAK           0x10
-#define DB_SAVE_TYPE_DD             0x20
-#define DB_SAVE_TYPE_INVALID        0xff
+typedef enum {
+    DB_SAVE_TYPE_NONE =          0x00,
+    DB_SAVE_TYPE_EEPROM_4K =     0x01,
+    DB_SAVE_TYPE_EEPROM_16K =    0x02,
+    DB_SAVE_TYPE_SRAM =          0x03,
+    DB_SAVE_TYPE_SRAM_BANKED =   0x04,
+    DB_SAVE_TYPE_SRAM_128K =     0x05,
+    DB_SAVE_TYPE_FLASHRAM =      0x06,
+    DB_SAVE_TYPE_CPAK =          0x10,
+    DB_SAVE_TYPE_DD =            0x20,
+    DB_SAVE_TYPE_INVALID =       0xff,
+ } db_savetype_t;
 
 typedef enum {
     DB_MEMORY_EXPANSION_NONE =      0x00,

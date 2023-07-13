@@ -90,8 +90,6 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     if (rom_header.checksum == 0xEB85EBC9596682AF) return DB_SAVE_TYPE_FLASHRAM;
     // DK Retail kiosk demo (shares ID with Dinosaur planet, but hacks are unlikely)!
     if (rom_header.checksum == 0x0DD4ABABB5A2A91E) return DB_SAVE_TYPE_EEPROM_16K;
-    // donkey kong f2
-    // if (rom_header.checksum == 0xce84793d) return DB_SAVE_TYPE_SRAM;
     // DMTJ 64DD game
     // if (rom_header.checksum == 0x4cbc3b56) return DB_SAVE_TYPE_SRAM;
     

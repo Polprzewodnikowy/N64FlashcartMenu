@@ -150,7 +150,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // "AH", "LC", "2V", "DW",
 
         // Last entry
-        "!!"
+        "\0\0"
 
     };
     static int save_types[] = {
@@ -215,7 +215,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         "32", "AC", "AM", "AR", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "T4", "Y2", "TQ", "ZO", "O7", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
 
         // Last entry
-        "!!"
+        "\0\0"
 
     };
     static int exp_types[] = {

@@ -36,6 +36,7 @@ SRCS = \
 	menu/views/fragments/fragments.c \
 	menu/views/fragments/widgets.c \
 	menu/views/load.c \
+	menu/views/load_emulator.c \
 	menu/views/music_player.c \
 	menu/views/startup.c \
 	menu/views/system_info.c \

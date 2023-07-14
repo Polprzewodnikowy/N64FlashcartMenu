@@ -124,6 +124,10 @@ void menu_run (boot_params_t *boot_params) {
                     view_load_display(menu, display);
                     break;
 
+                case MENU_MODE_EMULATOR_LOAD:
+                    view_load_emulator_display(menu, display);
+                    break;
+
                 case MENU_MODE_ERROR:
                     view_error_display(menu, display);
                     break;
@@ -168,6 +172,10 @@ void menu_run (boot_params_t *boot_params) {
 
                     case MENU_MODE_LOAD:
                         view_load_init(menu);
+                        break;
+
+                    case MENU_MODE_EMULATOR_LOAD:
+                        view_load_emulator_init(menu);
                         break;
 
                     case MENU_MODE_ERROR:

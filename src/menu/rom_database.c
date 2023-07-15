@@ -121,9 +121,13 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         "AF", "CC", "CK", "DL", "DP", "JD", "JF", "KJ", "M6", "MQ", "P2", "P3", "PF", "PH", "PN", "PO",
         "PS", "RH", "SI", "SQ", "T9", "W4", "ZS", "DA",
         // Controller Pak required
-        "2V", "32", "AC", "AM", "AR", "B4", "BF", "BL", "BO", "BP", "BQ", "BX", "BY", "CD", "CL", "CO",
-        "DE", "DH", "DM", "DN", "EG", "F9", "FD", "FF", "FO", "G2", "GA", "GM", "GN", "GX", "HC", "HT",
-        "HX", "HW", "HV", "KK", "LG", "NS", "O7", "T4", "WB", "X2", "X3", "ZO",
+        "2V", "32", "3P", "3T", "8W", "AC", "AM", "AR", "B4", "BF", "BL", "BO", "BP", "BQ", "BR", "BX",
+        "BY", "CD", "CE", "CL", "CO", "CS", "DE", "DH", "DM", "DN", "DT", "EG", "ET", "F9", "FD", "FF",
+        "FO", "FQ", "G2", "G5", "GA", "GM", "GN", "GR", "GX", "HC", "HT", "HX", "HW", "HV", "IV", "KK",
+        "L2", "LG", "M4", "MB", "MY", "NC", "NS", "O7", "OF", "2P", "PR", "PU", "PX", "R2", "R3", "R6",
+        "RK", "RO", "RP", "RR", "RT", "RU", "RV", "RX", "SD", "SF", "SG", "SK", "SL", "SP", "SX", "SY",
+        "T4", "TA", "TF", "TH", "TQ", "WB", "X2", "X3", "Y2", "V3", "V8", "VC", "VG", "VR", "WD", "WO",
+        "WP", "WT", "XF", "YP", "ZO",
 
         // Definitely none
         // "JQ", // Batman Beyond: Return of the Joker 
@@ -131,7 +135,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // "CF", // Clayfighter 63 1/3 
         // "C2", // Clayfighter: Sculptor's Cut
         // "DK", // Dark Rift
-        // Elmo's Letter Adventure
+        // "EL", // Elmo's Letter Adventure
         // Elmo's Number Journey
         // "JO", // Jeopardy!
         // "KE", // Knife Edge: Nosegunner
@@ -147,7 +151,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // "WF", //Wheel of Fortune
 
         // To work out
-        // "AH", "LC", "2V", "DW",
+        // "AH", "BW", "GB", "LC", "2V", "DW", "M3", "MK", "NC", "WA",
 
         // Last entry
         "\0\0"
@@ -178,7 +182,11 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         // Controller Pak required
         0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
         0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
-        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10,
+        0x10, 0x10, 0x10, 0x10, 0x10,
 
         // Last entry.
         0xff

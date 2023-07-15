@@ -1,3 +1,9 @@
+/**
+ * @file mp3player.h
+ * @brief MP3 Player
+ * @ingroup menu 
+ */
+
 #ifndef MP3PLAYER_H__
 #define MP3PLAYER_H__
 
@@ -5,6 +11,7 @@
 #include <stdbool.h>
 
 
+/** @brief MP3 file error enumeration */
 typedef enum {
     MP3PLAYER_OK,
     MP3PLAYER_ERR_MALLOC,

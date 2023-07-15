@@ -1,7 +1,14 @@
+/**
+ * @file settings.h
+ * @brief Menu Settings
+ * @ingroup menu 
+ */
+
 #ifndef SETTINGS_H__
 #define SETTINGS_H__
 
 
+/** @brief Settings Structure */
 typedef struct {
     bool pal60;
     bool show_hidden_files;

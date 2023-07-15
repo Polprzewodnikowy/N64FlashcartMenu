@@ -213,6 +213,8 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
     static char *cart_ids[] = {
 
+        // See: https://nintendo.fandom.com/wiki/Nintendo_64_Expansion_Pak
+        
         // Expansion Pak Required
         "DO", "DP", "ZS", // Donkey Kong, Dino Planet, Majoras Mask
 
@@ -220,7 +222,10 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
          "IJ", "PD", "SQ", // Indiana Jones, Perfect Dark, Starcraft
 
         // Expansion Pak Enhanced (box art suggest improvements in some form)
-        "32", "AC", "AM", "AR", "F2", "MX", "NA", "Q2", "RE", "SD", "P3", "T4", "Y2", "TQ", "ZO", "O7", // F-1 World Grand Prix II, Shadow Man, Excitebike 64, Rogue Squadron, Battle for Naboo, Quake 2, Resident Evil 2, etc.
+        "3T", "2M", "32", "4W", "9F", "AC", "AM", "AR", "AS", "AY", "BE", "CC", "CE", "CO", "D4", "DT",
+        "DQ", "DZ", "F2", "FL", "GB", "GX", "HT", "HV", "IC", "IS", "JA", "L2", "MD", "MX", "NA", "O7",
+        "Q2", "Q9", "QB", "RC", "RE", "RO", "RU", "RS", "RV", "RW", "SD", "SL", "P3", "T2", "T4", "TF",
+        "TK", "Y2", "TQ", "V8", "VG", "XF", "ZO",
 
         // Last entry
         "\0\0"
@@ -236,6 +241,9 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
         // Expansion Pak Enhanced
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+        0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
 
         // Last entry.
         0xff

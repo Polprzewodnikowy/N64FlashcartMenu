@@ -1,8 +1,19 @@
+/**
+ * @file fragments.h
+ * @brief Menu View Fragments
+ * @ingroup menu 
+ */
+
 #ifndef FRAGMENTS_H__
 #define FRAGMENTS_H__
 
 
 #include <surface.h>
+
+/**
+ * @addtogroup view_fragments
+ * @{
+ */
 
 
 void widget_horizontal_line (int x1, int x2, int y, int thickness);
@@ -11,6 +22,7 @@ void widget_scrollbar (int x, int y, int width, int height, int position, int it
 void widget_progressbar (int x, int y, int width, int height, float progress);
 
 
+/** @brief Layout Structure */
 typedef struct {
     int offset_x;
     int offset_y;
@@ -40,5 +52,7 @@ void fragment_text_start (color_t color);
 void fragment_text_set_color (color_t color);
 int fragment_textf (int x, int y, char *fmt, ...);
 
+
+/** @} */ /* view_fragments */
 
 #endif

@@ -1,3 +1,9 @@
+/**
+ * @file flashcart.h
+ * @brief Flashcart Subsystem
+ * @ingroup flashcart 
+ */
+
 #ifndef FLASHCART_H__
 #define FLASHCART_H__
 
@@ -6,6 +12,7 @@
 #include <stdint.h>
 
 
+/** @brief Flashcart error enumeration */
 typedef enum {
     FLASHCART_OK,
     FLASHCART_ERROR_NOT_DETECTED,
@@ -17,6 +24,7 @@ typedef enum {
     FLASHCART_ERROR_INT,
 } flashcart_error_t;
 
+/** @brief Flashcart save type enumeration */
 typedef enum {
     FLASHCART_SAVE_TYPE_NONE,
     FLASHCART_SAVE_TYPE_EEPROM_4K,
@@ -28,6 +36,7 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END
 } flashcart_save_type_t;
 
+/** @brief Flashcart Structure */
 typedef struct {
     flashcart_error_t (*init) (void);
     flashcart_error_t (*deinit) (void);

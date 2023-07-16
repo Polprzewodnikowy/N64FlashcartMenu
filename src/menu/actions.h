@@ -1,3 +1,9 @@
+/**
+ * @file actions.h
+ * @brief Menu Actions
+ * @ingroup menu 
+ */
+
 #ifndef ACTIONS_H__
 #define ACTIONS_H__
 

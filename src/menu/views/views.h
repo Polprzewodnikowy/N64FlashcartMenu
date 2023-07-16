@@ -1,3 +1,9 @@
+/**
+ * @file views.h
+ * @brief Menu Views
+ * @ingroup menu 
+ */
+
 #ifndef VIEWS_H__
 #define VIEWS_H__
 
@@ -6,6 +12,10 @@
 
 #include "../menu_state.h"
 
+/**
+ * @addtogroup view
+ * @{
+ */
 
 void view_startup_init (menu_t *menu);
 void view_startup_display (menu_t *menu, surface_t *display);
@@ -34,5 +44,6 @@ void view_error_display (menu_t *menu, surface_t *display);
 void view_fault_init (menu_t *menu);
 void view_fault_display (menu_t *menu, surface_t *display);
 
+/** @} */ /* view */
 
 #endif

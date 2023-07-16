@@ -1,3 +1,9 @@
+/**
+ * @file menu_state.h
+ * @brief Menu State
+ * @ingroup menu 
+ */
+
 #ifndef MENU_STRUCT_H__
 #define MENU_STRUCT_H__
 
@@ -11,6 +17,7 @@
 #define BROWSER_LIST_SIZE   10000
 
 
+/** @brief Menu mode enumeration */
 typedef enum {
     MENU_MODE_NONE,
     MENU_MODE_STARTUP,
@@ -25,6 +32,7 @@ typedef enum {
     MENU_MODE_BOOT,
 } menu_mode_t;
 
+/** @brief File entry type enumeration */
 typedef enum {
     ENTRY_TYPE_DIR,
     ENTRY_TYPE_ROM,
@@ -33,12 +41,14 @@ typedef enum {
     ENTRY_TYPE_OTHER,
 } entry_type_t;
 
+/** @brief File Entry Structure */
 typedef struct {
     char *name;
     entry_type_t type;
     int size;
 } entry_t;
 
+/** @brief Menu Structure */
 typedef struct {
     menu_mode_t mode;
     menu_mode_t next_mode;

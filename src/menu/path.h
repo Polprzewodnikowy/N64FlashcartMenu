@@ -1,10 +1,17 @@
-#ifndef PAHT_H__
+/**
+ * @file path.h
+ * @brief Menu Path
+ * @ingroup menu 
+ */
+
+#ifndef PATH_H__
 #define PATH_H__
 
 
 #include <stdbool.h>
 
 
+/** @brief Path Structure */
 typedef struct {
     char *buffer;
     size_t capacity;

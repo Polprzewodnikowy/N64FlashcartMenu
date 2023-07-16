@@ -1,3 +1,9 @@
+/**
+ * @file crc32.h
+ * @brief Flashcart Boot Checksum
+ * @ingroup boot
+ */
+
 #ifndef CRC32_H__
 #define CRC32_H__
 

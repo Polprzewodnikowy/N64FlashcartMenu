@@ -43,6 +43,15 @@ rom_header_t file_read_rom_header(char *path) {
 
     rom_header_t *rom_header = malloc(sizeof(rom_header_t));
 
+    //Rom File Info
+    // CheckCode 0x10, 8 bytes (sometimes refered to as CRC Hi and CRC Lo)
+    // GameTitle 0x20, 20 bytes
+    // GameCode ->
+    //    CategoryCode 0x3b
+    //    UniqueCode 0x3c and 0x3d
+    //    DestinationCode 0x3e
+    // RomVersion 0x3f
+
     fseek(fp, 0x00, SEEK_SET);
     fread(&(rom_header->endian), sizeof(uint32_t), 1, fp);
     // FIXME: handle endian appropriately, perhaps: cart_card_byteswap

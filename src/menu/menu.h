@@ -1,3 +1,9 @@
+/**
+ * @file menu.h
+ * @brief Menu Subsystem
+ * @ingroup menu 
+ */
+
 #ifndef MENU_H__
 #define MENU_H__
 

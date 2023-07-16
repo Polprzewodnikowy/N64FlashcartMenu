@@ -1,3 +1,9 @@
+/**
+ * @file menu_res_setup.h
+ * @brief Menu Resolution (non RDPQ)
+ * @ingroup menu 
+ */
+
 #ifndef MENU_RES_SETUP_H__
 #define MENU_RES_SETUP_H__
 

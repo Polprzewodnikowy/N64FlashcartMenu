@@ -1,3 +1,9 @@
+/**
+ * @file flashcart.h
+ * @brief SC64 Flashcart Internal Utilities
+ * @ingroup flashcart 
+ */
+
 #ifndef FLASHCART_SC64_INTERNAL_H__
 #define FLASHCART_SC64_INTERNAL_H__
 
@@ -5,6 +11,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/**
+ * @addtogroup sc64
+ * @{
+ */
 
 typedef struct {
     uint8_t BUFFER[8192];
@@ -72,5 +82,6 @@ sc64_error_t sc64_flash_wait_busy (void);
 sc64_error_t sc64_flash_get_erase_block_size (size_t *erase_block_size);
 sc64_error_t sc64_flash_erase_block (void *address);
 
+/** @} */ /* sc64 */
 
 #endif

@@ -1,3 +1,9 @@
+/**
+ * @file boot_io.h
+ * @brief Flashcart Boot IO
+ * @ingroup boot
+ */
+
 #ifndef BOOT_IO_H__
 #define BOOT_IO_H__
 
@@ -78,6 +84,7 @@ typedef struct {
 #define SP_SR_SET_SIG7              (1 << 24)
 
 
+/** @brief DPC Registers Structure */
 typedef struct {
     io32_t START;
     io32_t END;
@@ -115,6 +122,7 @@ typedef struct {
 #define DPC_SR_CLR_CLOCK_CTR        (1 << 9)
 
 
+/** @brief Video Interface Registers Structure */
 typedef struct {
     io32_t CR;
     io32_t MADDR;
@@ -167,6 +175,7 @@ typedef struct {
 #define AI_CR_DMA_ON                (1 << 0)
 
 
+/** @brief Parallel Interface Register Structure */
 typedef struct {
     io32_t MADDR;
     io32_t PADDR;

@@ -1,7 +1,14 @@
+/**
+ * @file rom_database.h
+ * @brief ROM Database
+ * @ingroup menu 
+ */
+
 #ifndef ROM_DATABASE_H__
 #define ROM_DATABASE_H__
 
 #include <stdint.h>
+
 
 // NOTE: these values are independent of flashcart / OS
 // But by default align to SC64.
@@ -18,15 +25,20 @@ typedef enum {
     DB_SAVE_TYPE_INVALID =       0xff,
  } db_savetype_t;
 
+/** @brief ROM System Memory requirements enumeration */
 typedef enum {
+    /** @brief The ROM is happy with 4MB of memory */
     DB_MEMORY_EXPANSION_NONE =        0x00,
+    /** @brief The ROM requires 8MB of memory */
     DB_MEMORY_EXPANSION_REQUIRED =    0x01,
     DB_MEMORY_EXPANSION_RECOMMENDED = 0x02,
     DB_MEMORY_EXPANSION_SUGGESTED =   0x03,
+    /** @brief The ROM is faulty when using 8MB of memory */
     DB_MEMORY_EXPANSION_FAULTY =      0x04,
 } rom_memorytype_t;
 
 
+/** @brief N64 ROM Homebrew save type enumeration */
 typedef enum {
     HB_SAVE_TYPE_NONE =         0x00,
     HB_SAVE_TYPE_EEPROM_4K =    0x01,
@@ -37,6 +49,7 @@ typedef enum {
     HB_SAVE_TYPE_SRAM_128K =    0x06,
 } homebrew_savetype_t;
 
+/** @brief N64 ROM endian enumeration */
 typedef enum {
     ROM_BIG_ENDIAN =        0x80371240,
     ROM_LITTLE_ENDIAN =     0x40123780,
@@ -45,15 +58,8 @@ typedef enum {
     IPL_BIG_ENDIAN =        0x80270740,
 } rom_endian_type_t;
 
-//Rom Info
-// CheckCode 0x10, 8 bytes (sometimes refered to as CRC Hi and CRC Lo)
-// GameTitle 0x20, 20 bytes
-// GameCode ->
-//    CategoryCode 0x3b
-//    UniqueCode 0x3c and 0x3d
-//    DestinationCode 0x3e
-// RomVersion 0x3f
 
+/** @brief N64 ROM media type enumeration */
 typedef enum {
     N64_CART = 'N',
     N64_DISK  = 'D',
@@ -62,6 +68,7 @@ typedef enum {
     N64_ALECK64  = 'Z'
 } rom_media_type_t;
 
+/** @brief N64 ROM market type enumeration */
 typedef enum {
     MARKET_ALL = 'A',
     MARKET_BRAZIL  = 'B',
@@ -92,17 +99,24 @@ typedef enum {
 } rom_destination_market_t;
 
 
+/** @brief N64 ROM Metadata Structure */
 typedef struct {
     uint8_t media_type; // rom_media_type_t
     uint16_t unique_identifier;
     uint8_t destination_market; // rom_destination_market_t
 } rom_metadata_t;
 
+/** @brief N64 ROM Header Structure */
 typedef struct {
+    /** @brief The N64 ROM file endian */
     uint32_t endian; // rom_endian_type_t
+    /** @brief The N64 ROM file checksum */
     uint64_t checksum;
+    /** @brief The N64 ROM file title */
     char title[21]; // 20 chars + null
+    /** @brief The N64 ROM file metadata */
     rom_metadata_t metadata;
+    /** @brief The N64 ROM file version */
     uint8_t version;
 } rom_header_t;
 

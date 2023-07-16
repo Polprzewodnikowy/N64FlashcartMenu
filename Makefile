@@ -44,7 +44,7 @@ SRCS = \
 ASSETS = \
 	FiraMono-Bold.ttf
 
-$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=--size 16 -r 20-7F -r 2000-206F -r 2190-21FF
+$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2000-206F -r 2190-21FF
 
 $(BUILD_DIR)/%.o: $(ASSETS_DIR)/%.ttf
 	@echo "    [FONT] $@"

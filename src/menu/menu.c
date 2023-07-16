@@ -14,8 +14,7 @@
 #include "views/views.h"
 
 
-#define SETTINGS_FILE_PATH  "config.txt"
-#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
+#define TV_TYPE_RAM     *((uint32_t *) (0x80000300))
 
 
 static menu_t *menu;
@@ -43,14 +42,12 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    settings_set_default_state(&menu->settings);
-
     menu->flashcart_error = flashcart_init();
     if (menu->flashcart_error != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
-    } else {
-        settings_load_from_file(SETTINGS_FILE_PATH, &menu->settings);
     }
+
+    settings_load(&menu->settings);
 
     menu->boot_params = boot_params;
 

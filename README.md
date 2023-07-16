@@ -15,28 +15,6 @@
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
-(Optional):
-Create a file called `config.sc64.toml.txt`
-Add the following content, replacing the comments.
-```
-[last_rom]
-    rom_path = "<!-- path to your ROM from the root of your SD card, note the quotes -->"
-    save_path = "<!-- path to a save file from the root of your SD card, note the quotes -->"
-    save_type = <!-- a number representing the save type (see save types) -->
-    auto_load = <!-- a boolean value of `true` or `false` -->
-    save_writeback = false
-
-[last_state]
-    auto_load_last_rom = false
-    current_directory = "sd://"
-
-[boot_params]
-    device_type = 0;
-    reset_type = 1;
-    detect_tv_type = true;
-    detect_cic_seed = true;
-```
-Save it to the root folder on your SD card.
 
 #### Save types
 `0` = NONE
@@ -50,7 +28,7 @@ Save it to the root folder on your SD card.
 
 
 ### ED64
-Not currently not supported, but there is an aim to do so.
+Currently not supported, but there is an aim to do so.
 The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 

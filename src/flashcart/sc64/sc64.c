@@ -89,12 +89,41 @@ static flashcart_error_t sc64_init (void) {
         }
     } while (writeback_pending);
 
+    const struct {
+        sc64_cfg_t id;
+        uint32_t value;
+    } default_config[] = {
+        { CFG_BOOTLOADER_SWITCH, false },
+        { CFG_ROM_WRITE_ENABLE, false },
+        { CFG_ROM_SHADOW_ENABLE, false },
+        { CFG_DD_MODE, DD_MODE_DISABLED },
+        { CFG_ISV_ADDRESS, 0x00000000 },
+        { CFG_BOOT_MODE, BOOT_MODE_MENU },
+        { CFG_SAVE_TYPE, SAVE_TYPE_NONE },
+        { CFG_CIC_SEED, CIC_SEED_AUTO },
+        { CFG_TV_TYPE, TV_TYPE_PASSTHROUGH },
+        { CFG_DD_SD_ENABLE, false },
+        { CFG_DD_DRIVE_TYPE, DRIVE_TYPE_RETAIL },
+        { CFG_DD_DISK_STATE, DISK_STATE_EJECTED },
+        { CFG_BUTTON_MODE, BUTTON_MODE_NONE },
+        { CFG_ROM_EXTENDED_ENABLE, false },
+    };
+
+    for (int i = 0; i < sizeof(default_config) / sizeof(default_config[0]); i++) {
+        if (sc64_set_config(default_config[i].id, default_config[i].value) != SC64_OK) {
+            return FLASHCART_ERROR_INT;
+        }
+    }
+
     return FLASHCART_OK;
 }
 
 static flashcart_error_t sc64_deinit (void) {
+    // NOTE: Necessary because libcart enables ROM write by default
     sc64_set_config(CFG_ROM_WRITE_ENABLE, false);
+
     sc64_lock();
+
     return FLASHCART_OK;
 }
 

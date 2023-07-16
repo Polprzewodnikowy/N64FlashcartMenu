@@ -1,22 +1,36 @@
 #include <libdragon.h>
 
 #include "libs/mini.c/src/mini.h"
-#include "path.h"
 #include "settings.h"
 #include "utils/fs.h"
 
 
-void settings_set_default_state (settings_t *settings) {
-    settings->pal60 = false;
-    settings->show_hidden_files = false;
-    settings->default_directory = "/";
+#define SETTINGS_FILE_PATH  "/config.ini"
+
+
+static settings_t init = {
+    .pal60 = false,
+    .show_hidden_files = false,
+    .default_directory = "/",
+};
+
+
+void settings_load (settings_t *settings) {
+    if (!file_exists(SETTINGS_FILE_PATH)) {
+        settings_save(&init);
+    }
+
+    mini_t *ini = mini_try_load("sd:/"SETTINGS_FILE_PATH);
+
+    settings->pal60 = mini_get_bool(ini, "menu", "pal60", init.pal60);
+    settings->show_hidden_files = mini_get_bool(ini, "menu", "show_hidden_files", init.show_hidden_files);
+    settings->default_directory = strdup(mini_get_string(ini, "menu", "default_directory", init.default_directory));
+
+    mini_free(ini);
 }
 
-void settings_save_to_file (char *path, settings_t *settings) {    
-    path_t *config_file_path = path_init("sd:/");
-    path_append(config_file_path, path);
-
-    mini_t *ini = mini_create(path_get(config_file_path));
+void settings_save (settings_t *settings) {
+    mini_t *ini = mini_create("sd:/"SETTINGS_FILE_PATH);
 
     mini_set_bool(ini, "menu", "pal60", settings->pal60);
     mini_set_bool(ini, "menu", "show_hidden_files", settings->show_hidden_files);
@@ -25,25 +39,4 @@ void settings_save_to_file (char *path, settings_t *settings) {
     mini_save(ini);
 
     mini_free(ini);
-
-    path_free(config_file_path);
-}
-
-void settings_load_from_file (char *path, settings_t *settings) {
-    if (!file_exists(path)) {
-        settings_save_to_file(path, settings);
-    }
-
-    path_t *config_file_path = path_init("sd:/");
-    path_append(config_file_path, path);
-
-    mini_t *ini = mini_try_load(path_get(config_file_path));
-
-    settings->pal60 = mini_get_bool(ini, "menu", "pal60", false);
-    settings->show_hidden_files = mini_get_bool(ini, "menu", "show_hidden_files", false);
-    settings->default_directory = strdup(mini_get_string(ini, "menu", "default_directory", "/"));
-
-    mini_free(ini);
-
-    path_free(config_file_path);
 }

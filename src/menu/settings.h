@@ -10,15 +10,19 @@
 
 /** @brief Settings Structure */
 typedef struct {
+    /** @brief Select 60 Hz refresh rate if running on PAL console */
     bool pal60;
+
+    /** @brief Show files marked as hidden in the browser */
     bool show_hidden_files;
+
+    /** @brief Default directory to navigate to when menu loads */
     char *default_directory;
 } settings_t;
 
 
-void settings_set_default_state (settings_t *settings);
-void settings_save_to_file (char *path, settings_t *settings);
-void settings_load_from_file (char *path, settings_t *settings);
+void settings_load (settings_t *settings);
+void settings_save (settings_t *settings);
 
 
 #endif

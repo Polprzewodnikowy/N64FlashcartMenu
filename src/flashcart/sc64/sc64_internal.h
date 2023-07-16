@@ -42,7 +42,7 @@ typedef enum {
     CFG_ROM_WRITE_ENABLE,
     CFG_ROM_SHADOW_ENABLE,
     CFG_DD_MODE,
-    CFG_ISV_ENABLE,
+    CFG_ISV_ADDRESS,
     CFG_BOOT_MODE,
     CFG_SAVE_TYPE,
     CFG_CIC_SEED,
@@ -56,6 +56,21 @@ typedef enum {
 } sc64_cfg_t;
 
 typedef enum {
+    DD_MODE_DISABLED = 0,
+    DD_MODE_REGS = 1,
+    DD_MODE_IPL = 2,
+    DD_MODE_FULL = 3
+} sc64_dd_mode_t;
+
+typedef enum {
+    BOOT_MODE_MENU = 0,
+    BOOT_MODE_ROM = 1,
+    BOOT_MODE_DDIPL = 2,
+    BOOT_MODE_DIRECT_ROM = 3,
+    BOOT_MODE_DIRECT_DDIPL = 4,
+} sc64_boot_mode_t;
+
+typedef enum {
     SAVE_TYPE_NONE,
     SAVE_TYPE_EEPROM_4K,
     SAVE_TYPE_EEPROM_16K,
@@ -64,6 +79,35 @@ typedef enum {
     SAVE_TYPE_SRAM_BANKED,
     SAVE_TYPE_SRAM_128K,
 } sc64_save_type_t;
+
+typedef enum {
+    CIC_SEED_AUTO = 0xFFFF
+} sc64_cic_seed_t;
+
+typedef enum {
+    TV_TYPE_PAL = 0,
+    TV_TYPE_NTSC = 1,
+    TV_TYPE_MPAL = 2,
+    TV_TYPE_PASSTHROUGH = 3
+} sc64_tv_type_t;
+
+typedef enum {
+    DRIVE_TYPE_RETAIL,
+    DRIVE_TYPE_DEVELOPMENT,
+} sc64_drive_type_t;
+
+typedef enum {
+    DISK_STATE_EJECTED,
+    DISK_STATE_INSERTED,
+    DISK_STATE_CHANGED,
+} sc64_disk_state_t;
+
+typedef enum {
+    BUTTON_MODE_NONE,
+    BUTTON_MODE_N64_IRQ,
+    BUTTON_MODE_USB_PACKET,
+    BUTTON_MODE_DD_DISK_SWAP,
+} sc64_button_mode_t;
 
 
 void sc64_unlock (void);

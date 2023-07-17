@@ -31,13 +31,13 @@ typedef enum {
 #define ROM_ADDR  0xB0000000
 #define SRAM_ADDR 0xA8000000
 
-#define EVD_ERROR_FIFO_TIMEOUT 0x90
+#define USB_ERROR_FIFO_TIMEOUT 0x90
 #define EVD_ERROR_MMC_TIMEOUT 0x91
 
-#define BOOT_UPD_ERR_WRONG_SIZE 0x95
-#define BOOT_UPD_ERR_HDR 0x96
-#define BOOT_UPD_ERR_CMP 0x97
-#define BOOT_UPD_ERR_CIC_DTCT 0x98
+// #define BOOT_UPD_ERR_WRONG_SIZE 0x95
+// #define BOOT_UPD_ERR_HDR 0x96
+// #define BOOT_UPD_ERR_CMP 0x97
+// #define BOOT_UPD_ERR_CIC_DTCT 0x98
 
 
 #define PI_BASE_REG		    0x04600000
@@ -75,8 +75,8 @@ typedef enum {
     BI_SPI_SPD_LO = 2,
 } ed64_spi_speed_t;
 
-#define SPI_CFG_SPD0 1
-#define SPI_CFG_SPD1 2
+// #define SPI_CFG_SPD0 1
+// #define SPI_CFG_SPD1 2
 #define SPI_CFG_SS 4
 #define SPI_CFG_RD 8
 #define SPI_CFG_DAT 16

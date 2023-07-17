@@ -222,7 +222,7 @@ uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen) {
     ed64_bios_reg_wr(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_wr(REG_DMA_CFG, DCFG_USB_TO_RAM);
 
-    if (bi_dma_busy() != 0)return EVD_ERROR_FIFO_TIMEOUT;
+    if (bi_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
     return 0;
 }
@@ -236,7 +236,7 @@ uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen) {
     ed64_bios_reg_wr(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_wr(REG_DMA_CFG, DCFG_RAM_TO_USB);
 
-    if (bi_dma_busy() != 0)return EVD_ERROR_FIFO_TIMEOUT;
+    if (bi_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
     return 0;
 }

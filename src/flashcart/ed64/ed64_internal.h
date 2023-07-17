@@ -96,8 +96,8 @@ void ed64_bios_load_firmware(uint8_t *firmware);
 
 /* USB functions */
 uint8_t ed64_bios_usb_read_busy();
-uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen);
-uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen);
+uint8_t ed64_bios_usb_read(uint32_t saddr, uint32_t slen);
+uint8_t ed64_bios_usb_write(uint32_t saddr, uint32_t slen);
 
 /* SPI functions */
 uint8_t ed64_bios_spi(uint8_t data);
@@ -141,8 +141,8 @@ uint8_t ed64_bios_gpio_read();
 void ed64_bios_64dd_ram_oe();
 void ed64_bios_64dd_ram_we();
 void ed64_bios_64dd_ram_off();
-void ed64_bios_64dd_ram_clr();
-uint8_t ed64_bios_64dd_ram_supported();
+void ed64_bios_64dd_ram_clear();
+uint8_t ed64_bios_get_64dd_ram_supported();
 
 /** @} */ /* ed64 */
 

@@ -25,10 +25,11 @@ typedef enum {
     REG_FPGA_VER = 11,
     REG_GPIO = 12,
 
+// FIXME: these are register values:
     REG_CFG_CNT = 16,
     REG_CFG_DAT = 17,
-    REG_MAX_MSG = 18,
-    REG_MAX_VER = 19,
+    REG_FPGA_FW_MSG = 18,
+    REG_FPGA_FW_VER = 19,
     REG_FL_ADDR = 20,
     REG_FL_DATA = 21,
 } ed64_registers_t;
@@ -66,13 +67,13 @@ typedef enum {
 } ed64_config_t;
 
 
-// #define MAX_MSG_SKIP_FW_INIT (1 << 8)
-// #define MAX_MSG_SKIP_TV_INIT (1 << 9)
-// #define MAX_MSG_TV_TYPE1 (1 << 10)
-// #define MAX_MSG_TV_TYPE2 (1 << 11)
-// #define MAX_MSG_SKIP_SD_INIT (1 << 12)
-// #define MAX_MSG_SD_TYPE (1 << 13)
-#define MAX_MSG_HOT_START (1 << 14)
+// #define FPGA_FW_MSG_SKIP_FW_INIT (1 << 8)
+// #define FPGA_FW_MSG_SKIP_TV_INIT (1 << 9)
+// #define FPGA_FW_MSG_TV_TYPE1 (1 << 10)
+// #define FPGA_FW_MSG_TV_TYPE2 (1 << 11)
+// #define FPGA_FW_MSG_SKIP_SD_INIT (1 << 12)
+// #define FPGA_FW_MSG_SD_TYPE (1 << 13)
+#define FPGA_FW_MSG_HOT_START (1 << 14)
 
 uint32_t ed64_bios_reg_read(uint32_t reg);
 void ed64_bios_reg_write(uint32_t reg, uint32_t data);
@@ -146,8 +147,8 @@ void ed64_bios_init_v3() {
 /* Initialize cart */
 uint8_t ed64_bios_init() {
 
-    uint16_t max_ver;
-    uint16_t max_msg;
+    uint16_t firmware_ver;
+    uint16_t firmware_msg;
     uint8_t cold_start;
 
 
@@ -159,15 +160,15 @@ uint8_t ed64_bios_init() {
     ed64_bios_reg_write(REG_CFG, 0x0000);
 
 
-    max_msg = ed64_bios_reg_read(REG_MAX_MSG);
-    cold_start = (max_msg & MAX_MSG_HOT_START) == 0 ? 1 : 0;
+    firmware_msg = ed64_bios_reg_read(REG_FPGA_FW_MSG);
+    cold_start = (firmware_msg & FPGA_FW_MSG_HOT_START) == 0 ? 1 : 0;
     if (cold_start) {
-        max_msg |= MAX_MSG_HOT_START;
-        ed64_bios_reg_write(REG_MAX_MSG, max_msg);
+        firmware_msg |= FPGA_FW_MSG_HOT_START;
+        ed64_bios_reg_write(REG_FPGA_FW_MSG, firmware_msg);
     }
 
-    max_ver = ed64_bios_reg_read(REG_MAX_VER);
-    if ((max_ver & 0xf000) >= 0x2000) {
+    firmware_ver = ed64_bios_reg_read(REG_FPGA_FW_VER);
+    if ((firmware_ver & 0xf000) >= 0x2000) {
         ed64_bios_init_v3();
     } else {
         ed64_bios_init_v2();
@@ -217,20 +218,23 @@ uint8_t ed64_bios_dma_busy() {
 
 /* USB functions */
 
-uint8_t ed64_bios_usb_rd_busy() {
+/* USB read is busy */
+uint8_t ed64_bios_usb_read_busy() {
 
     return ed64_bios_reg_read(REG_STATUS) & STATE_USB_RXF;
 }
 
-uint8_t ed64_bios_usb_wr_busy() {
+/* USB write is busy */
+uint8_t ed64_bios_usb_write_busy() {
 
     return ed64_bios_reg_read(REG_STATUS) & STATE_USB_TXE;
 }
 
-uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen) {
+/* USB read */
+uint8_t ed64_bios_usb_read(uint32_t saddr, uint32_t slen) {
 
     saddr /= 4;
-    while (ed64_bios_usb_rd_busy() != 0);
+    while (ed64_bios_usb_read_busy() != 0);
 
     ed64_bios_reg_write(REG_DMA_LEN, slen - 1);
     ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
@@ -241,10 +245,11 @@ uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen) {
     return 0;
 }
 
-uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen) {
+/* USB write */
+uint8_t ed64_bios_usb_write(uint32_t saddr, uint32_t slen) {
 
     saddr /= 4;
-    while (ed64_bios_usb_wr_busy() != 0);
+    while (ed64_bios_usb_write_busy() != 0);
 
     ed64_bios_reg_write(REG_DMA_LEN, slen - 1);
     ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
@@ -507,9 +512,23 @@ void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len) {
     ed64_bios_dma_w(ram, addr, len);
 }
 
+/** @brief Get the current FPGA version */
 uint16_t ed64_bios_get_fpga_version() {
 
     return ed64_bios_reg_read(REG_FPGA_VER);
+}
+
+/** @brief Get the current CPLD version */
+uint16_t ed64_bios_get_cpld_version() {
+
+    uint16_t cpld_version;
+    uint16_t cfg = ed64_bios_reg_read(REG_CFG);
+
+    ed64_bios_reg_write(REG_CFG, 0);
+    cpld_version = ed64_bios_reg_read(REG_FPGA_FW_VER);
+    ed64_bios_reg_write(REG_CFG, cfg);
+
+    return cpld_version;
 }
 
 void ed64_bios_load_firmware(uint8_t *firmware) {
@@ -558,18 +577,6 @@ void ed64_bios_unlock_regs() {
 }
 
 
-uint16_t ed64_bios_get_cpld_version() {
-
-    uint16_t cpld_version;
-    uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-
-    ed64_bios_reg_write(REG_CFG, 0);
-    cpld_version = ed64_bios_reg_read(REG_MAX_VER);
-    ed64_bios_reg_write(REG_CFG, cfg);
-
-    return cpld_version;
-}
-
 /* GPIO functions */
 
 /* GPIO mode RTC */
@@ -613,7 +620,7 @@ uint8_t ed64_bios_gpio_read() {
 
 /* 64DD functions */
 
-/* 64DD On and Dissabled?! */
+/* 64DD ON and Enabled?! */
 void ed64_bios_64dd_ram_oe() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -639,7 +646,7 @@ void ed64_bios_64dd_ram_off() {
 }
 
 /* 64DD Save RAM Clear */
-void ed64_bios_64dd_ram_clr() {
+void ed64_bios_64dd_ram_clear() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
     cfg |= ED_CFG_DD_WE;
@@ -649,7 +656,7 @@ void ed64_bios_64dd_ram_clr() {
 }
 
 /* 64DD Allowed on this cart?! */
-uint8_t ed64_bios_64dd_ram_supported() {
+uint8_t ed64_bios_get_64dd_ram_supported() {
 
     return (ed64_bios_reg_read(REG_STATUS) >> 15) & 1;
 

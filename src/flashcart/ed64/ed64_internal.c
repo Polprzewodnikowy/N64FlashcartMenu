@@ -18,7 +18,7 @@
 #define REG_KEY 8
 #define REG_SAV_CFG 9
 #define REG_SEC 10
-#define REG_VER 11
+#define REG_FPGA_VER 11
 #define REG_GPIO 12
 
 #define REG_CFG_CNT 16
@@ -448,7 +448,7 @@ typedef struct PI_regs_s {
     unsigned long status;
 } _PI_regs_s;
 
-static volatile struct PI_regs_s * const PI_regs = (struct PI_regs_s *) 0xa4600000;
+static volatile struct PI_regs_s * const PI_regs = (struct PI_regs_s *) PI_BASE_REG;
 
 void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len) {
 
@@ -496,9 +496,9 @@ void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len) {
     ed64_bios_dma_w(ram, addr, len);
 }
 
-uint16_t ed64_bios_get_fpga_ver() {
+uint16_t ed64_bios_get_fpga_version() {
 
-    return ed64_bios_reg_read(REG_VER);
+    return ed64_bios_reg_read(REG_FPGA_VER);
 }
 
 void ed64_bios_load_firmware(uint8_t *firmware) {
@@ -547,16 +547,16 @@ void ed64_bios_unlock_regs() {
 }
 
 
-uint16_t ed64_bios_get_cpld_ver() {
+uint16_t ed64_bios_get_cpld_version() {
 
-    uint16_t ver;
+    uint16_t cpld_version;
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
 
     ed64_bios_reg_write(REG_CFG, 0);
-    ver = ed64_bios_reg_read(REG_MAX_VER);
+    cpld_version = ed64_bios_reg_read(REG_MAX_VER);
     ed64_bios_reg_write(REG_CFG, cfg);
 
-    return ver;
+    return cpld_version;
 }
 
 /* GPIO functions */
@@ -583,12 +583,12 @@ void ed64_bios_gpio_off() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-void ed64_bios_gpio_wr(uint8_t data) {
+void ed64_bios_gpio_write(uint8_t data) {
 
     ed64_bios_reg_write(REG_GPIO, data);
 }
 
-uint8_t ed64_bios_gpio_rd() {
+uint8_t ed64_bios_gpio_read() {
 
     return ed64_bios_reg_read(REG_GPIO);
 }

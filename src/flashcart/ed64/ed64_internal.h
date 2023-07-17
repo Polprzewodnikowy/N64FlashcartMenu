@@ -88,8 +88,8 @@ void ed64_bios_init_v2();
 void ed64_bios_init_v3();
 
 /* Device information functions */
-uint16_t ed64_bios_get_fpga_ver();
-uint16_t ed64_bios_get_cpld_ver();
+uint16_t ed64_bios_get_fpga_version();
+uint16_t ed64_bios_get_cpld_version();
 
 /* Firmware update functions */
 void ed64_bios_load_firmware(uint8_t *firmware);
@@ -135,7 +135,7 @@ void ed64_bios_reset_spx();
 void ed64_bios_gpio_mode_rtc();
 void ed64_bios_gpio_mode_io();
 void ed64_bios_gpio_off();
-uint8_t ed64_bios_gpio_rd();
+uint8_t ed64_bios_gpio_read();
 
 /* 64DD functions */
 void ed64_bios_64dd_ram_oe();

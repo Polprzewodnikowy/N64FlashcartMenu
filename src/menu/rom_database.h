@@ -31,7 +31,9 @@ typedef enum {
     DB_MEMORY_EXPANSION_NONE =        0x00,
     /** @brief The ROM requires 8MB of memory */
     DB_MEMORY_EXPANSION_REQUIRED =    0x01,
+    /** @brief The ROM recommends 8MB of memory */
     DB_MEMORY_EXPANSION_RECOMMENDED = 0x02,
+    /** @brief The ROM suggests it uses 8MB of memory */
     DB_MEMORY_EXPANSION_SUGGESTED =   0x03,
     /** @brief The ROM is faulty when using 8MB of memory */
     DB_MEMORY_EXPANSION_FAULTY =      0x04,

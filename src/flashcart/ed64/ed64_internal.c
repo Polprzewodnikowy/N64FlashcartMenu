@@ -452,12 +452,12 @@ void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long
 
     disable_interrupts();
 
-    while (dma_busy());
+    dma_wait();
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->write_length = len - 1;
-    while (dma_busy());
+    dma_wait();
 
     enable_interrupts();
 }
@@ -466,12 +466,12 @@ void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long
 
 
     disable_interrupts();
-    while (dma_busy());
+    dma_wait();
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->read_length = len - 1;
-    while (dma_busy());
+    dma_wait();
     enable_interrupts();
 }
 

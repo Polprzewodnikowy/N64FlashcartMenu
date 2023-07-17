@@ -13,7 +13,7 @@
 typedef enum {
     REG_CFG = 0,
     REG_STATUS = 1,
-    REG_DMA_LEN = 2,
+    REG_DMA_LENGTH = 2,
     REG_DMA_RAM_ADDR = 3,
     REG_MSG = 4,
     REG_DMA_CFG = 5,
@@ -25,14 +25,18 @@ typedef enum {
     REG_FPGA_VER = 11,
     REG_GPIO = 12,
 
-// FIXME: these are register values:
-    REG_CFG_CNT = 16,
-    REG_CFG_DAT = 17,
-    REG_FPGA_FW_MSG = 18,
-    REG_FPGA_FW_VER = 19,
-    REG_FL_ADDR = 20,
-    REG_FL_DATA = 21,
 } ed64_registers_t;
+
+
+typedef enum {
+    REG_CFG_COUNT = 16,
+    REG_CFG_DATA = 17,
+    REG_FPGA_FW_DATA = 18,
+    REG_FPGA_FW_VER = 19,
+    REG_FLASHRAM_ADDR = 20,
+    REG_FLASHRAM_DATA = 21,
+    
+} ed64_register_values_t;
 
 
 #define STATE_DMA_BUSY 1
@@ -41,6 +45,7 @@ typedef enum {
 #define STATE_USB_RXF 8
 #define STATE_SPI 16
 
+// Default config?
 #define DCFG_SD_TO_RAM 1
 #define DCFG_RAM_TO_SD 2
 #define DCFG_USB_TO_RAM 3
@@ -57,23 +62,23 @@ typedef enum {
 
 typedef enum {
     ED_CFG_SDRAM_ON = 1,
-    ED_CFG_SWAP = 2,
-    ED_CFG_WR_MOD = 4,
-    ED_CFG_WR_ADDR_MASK = 8,
+    ED_CFG_BYTESWAP_ON = 2,
+    ED_CFG_WRITE_MODE_ON = 4,
+    ED_CFG_WRITE_ADDR_MASK = 8,
     ED_CFG_RTC_ON = 32,
     ED_CFG_GPIO_ON = 96,
-    ED_CFG_DD_ON = 256,
-    ED_CFG_DD_WE = 512,
+    ED_CFG_64DD_ON = 256,
+    ED_CFG_64DD_WRITE_ENABLED = 512,
 } ed64_config_t;
 
 
-// #define FPGA_FW_MSG_SKIP_FW_INIT (1 << 8)
-// #define FPGA_FW_MSG_SKIP_TV_INIT (1 << 9)
-// #define FPGA_FW_MSG_TV_TYPE1 (1 << 10)
-// #define FPGA_FW_MSG_TV_TYPE2 (1 << 11)
-// #define FPGA_FW_MSG_SKIP_SD_INIT (1 << 12)
-// #define FPGA_FW_MSG_SD_TYPE (1 << 13)
-#define FPGA_FW_MSG_HOT_START (1 << 14)
+// #define FPGA_FW_DATA_SKIP_FW_INIT (1 << 8)
+// #define FPGA_FW_DATA_SKIP_TV_INIT (1 << 9)
+// #define FPGA_FW_DATA_TV_TYPE1 (1 << 10)
+// #define FPGA_FW_DATA_TV_TYPE2 (1 << 11)
+// #define FPGA_FW_DATA_SKIP_SD_INIT (1 << 12)
+// #define FPGA_FW_DATA_SD_TYPE (1 << 13)
+#define FPGA_FW_DATA_HOT_START (1 << 14)
 
 uint32_t ed64_bios_reg_read(uint32_t reg);
 void ed64_bios_reg_write(uint32_t reg, uint32_t data);
@@ -104,8 +109,8 @@ void ed64_bios_io_reg_v2(uint32_t addr, uint32_t dat) {
 /* register functions for V3 */
 void ed64_bios_io_reg_v3(uint32_t addr, uint16_t dat) {
 
-    ed64_bios_reg_write(REG_FL_ADDR, addr);
-    ed64_bios_reg_write(REG_FL_DATA, dat);
+    ed64_bios_reg_write(REG_FLASHRAM_ADDR, addr);
+    ed64_bios_reg_write(REG_FLASHRAM_DATA, dat);
 }
 
 /* initialize functions (dependent on flashcart version) */
@@ -132,14 +137,14 @@ void ed64_bios_init_v3() {
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
 
     ed64_bios_reg_write(REG_CFG, 0);
-    ed64_bios_reg_write(REG_CFG_CNT, 161);
+    ed64_bios_reg_write(REG_CFG_COUNT, 161);
     ed64_bios_io_reg_v3(0x55, 0x98);
     ed64_bios_dma_read_rom(buff, 0, 2);
     ed64_bios_io_reg_v3(0x55, 0xF0);
     ed64_bios_dma_read_rom(buff, 0, 2);
     ed64_bios_dma_read_rom(buff, 1024, 2);
     ed64_bios_dma_read_rom(buff, 1024 + 256 - 2, 2);
-    ed64_bios_reg_write(REG_CFG_CNT, 1);
+    ed64_bios_reg_write(REG_CFG_COUNT, 1);
 
     ed64_bios_reg_write(REG_CFG, cfg);
 }
@@ -160,11 +165,11 @@ uint8_t ed64_bios_init() {
     ed64_bios_reg_write(REG_CFG, 0x0000);
 
 
-    firmware_msg = ed64_bios_reg_read(REG_FPGA_FW_MSG);
-    cold_start = (firmware_msg & FPGA_FW_MSG_HOT_START) == 0 ? 1 : 0;
+    firmware_msg = ed64_bios_reg_read(REG_FPGA_FW_DATA);
+    cold_start = (firmware_msg & FPGA_FW_DATA_HOT_START) == 0 ? 1 : 0;
     if (cold_start) {
-        firmware_msg |= FPGA_FW_MSG_HOT_START;
-        ed64_bios_reg_write(REG_FPGA_FW_MSG, firmware_msg);
+        firmware_msg |= FPGA_FW_DATA_HOT_START;
+        ed64_bios_reg_write(REG_FPGA_FW_DATA, firmware_msg);
     }
 
     firmware_ver = ed64_bios_reg_read(REG_FPGA_FW_VER);
@@ -236,7 +241,7 @@ uint8_t ed64_bios_usb_read(uint32_t saddr, uint32_t slen) {
     saddr /= 4;
     while (ed64_bios_usb_read_busy() != 0);
 
-    ed64_bios_reg_write(REG_DMA_LEN, slen - 1);
+    ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
     ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_USB_TO_RAM);
 
@@ -251,7 +256,7 @@ uint8_t ed64_bios_usb_write(uint32_t saddr, uint32_t slen) {
     saddr /= 4;
     while (ed64_bios_usb_write_busy() != 0);
 
-    ed64_bios_reg_write(REG_DMA_LEN, slen - 1);
+    ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
     ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_RAM_TO_USB);
 
@@ -299,7 +304,7 @@ uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen) {
 
     saddr /= 4;
 
-    ed64_bios_reg_write(REG_DMA_LEN, slen - 1);
+    ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
     ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_SD_TO_RAM);
 
@@ -310,13 +315,13 @@ uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen) {
 
 void ed64_bios_byteswap_on() {
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg |= ED_CFG_SWAP;
+    cfg |= ED_CFG_BYTESWAP_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
 void ed64_bios_byteswap_off() {
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg &= ~ED_CFG_SWAP;
+    cfg &= ~ED_CFG_BYTESWAP_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
@@ -372,6 +377,12 @@ void ed64_bios_set_save_type(uint8_t type) {
     save_cfg |= SAV_RAM_BANK_APPLY;
 
     ed64_bios_reg_write(REG_SAV_CFG, save_cfg);
+
+}
+
+void ed64_bios_set_ram_bank(uint8_t bank) {
+
+    ed64_bios_ram_bank = bank == 0 ? 0 : 1;
 
 }
 
@@ -540,16 +551,16 @@ void ed64_bios_load_firmware(uint8_t *firmware) {
     cfg &= ~ED_CFG_SDRAM_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 
-    ed64_bios_reg_write(REG_CFG_CNT, 0);
+    ed64_bios_reg_write(REG_CFG_COUNT, 0);
     wait_ms(10);
-    ed64_bios_reg_write(REG_CFG_CNT, 1);
+    ed64_bios_reg_write(REG_CFG_COUNT, 1);
     wait_ms(10);
 
     i = 0;
     for (;;) {
 
-        ed64_bios_reg_write(REG_CFG_DAT, *(uint16_t *) & firmware[i]);
-        while ((ed64_bios_reg_read(REG_CFG_CNT) & 8) != 0);
+        ed64_bios_reg_write(REG_CFG_DATA, *(uint16_t *) & firmware[i]);
+        while ((ed64_bios_reg_read(REG_CFG_COUNT) & 8) != 0);
 
         f_ctr = firmware[i++] == 0xff ? f_ctr + 1 : 0;
         if (f_ctr >= 47)break;
@@ -558,9 +569,9 @@ void ed64_bios_load_firmware(uint8_t *firmware) {
     }
 
 
-    while ((ed64_bios_reg_read(REG_CFG_CNT) & 4) == 0) {
-        ed64_bios_reg_write(REG_CFG_DAT, 0xffff);
-        while ((ed64_bios_reg_read(REG_CFG_CNT) & 8) != 0);
+    while ((ed64_bios_reg_read(REG_CFG_COUNT) & 4) == 0) {
+        ed64_bios_reg_write(REG_CFG_DATA, 0xffff);
+        while ((ed64_bios_reg_read(REG_CFG_COUNT) & 8) != 0);
     }
 
 
@@ -624,8 +635,8 @@ uint8_t ed64_bios_gpio_read() {
 void ed64_bios_64dd_ram_oe() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg &= ~ED_CFG_DD_WE;
-    cfg |= ED_CFG_DD_ON;
+    cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
+    cfg |= ED_CFG_64DD_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
@@ -633,7 +644,7 @@ void ed64_bios_64dd_ram_oe() {
 void ed64_bios_64dd_ram_we() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg |= ED_CFG_DD_ON | ED_CFG_DD_WE;
+    cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
@@ -641,7 +652,7 @@ void ed64_bios_64dd_ram_we() {
 void ed64_bios_64dd_ram_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg &= ~(ED_CFG_DD_ON | ED_CFG_DD_WE);
+    cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
@@ -649,8 +660,8 @@ void ed64_bios_64dd_ram_off() {
 void ed64_bios_64dd_ram_clear() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
-    cfg |= ED_CFG_DD_WE;
-    cfg &= ~ED_CFG_DD_ON;
+    cfg |= ED_CFG_64DD_WRITE_ENABLED;
+    cfg &= ~ED_CFG_64DD_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
     wait_ms(100);
 }
@@ -659,11 +670,5 @@ void ed64_bios_64dd_ram_clear() {
 uint8_t ed64_bios_get_64dd_ram_supported() {
 
     return (ed64_bios_reg_read(REG_STATUS) >> 15) & 1;
-
-}
-
-void ed64_bios_set_ram_bank(uint8_t bank) {
-
-    ed64_bios_ram_bank = bank == 0 ? 0 : 1;
 
 }

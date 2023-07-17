@@ -92,7 +92,7 @@ uint16_t ed64_bios_get_fpga_ver();
 uint16_t ed64_bios_get_cpld_ver();
 
 /* Firmware update functions */
-void ed64_bios_load_firmware(uint8_t *firm);
+void ed64_bios_load_firmware(uint8_t *firmware);
 
 /* USB functions */
 uint8_t ed64_bios_usb_rd_busy();

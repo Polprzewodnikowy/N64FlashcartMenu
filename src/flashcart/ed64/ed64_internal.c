@@ -64,7 +64,6 @@
 // #define MAX_MSG_SD_TYPE (1 << 13)
 #define MAX_MSG_HOT_START (1 << 14)
 
-void ed64_bios_sleep(uint32_t ms);
 uint32_t ed64_bios_reg_rd(uint32_t reg);
 void ed64_bios_reg_wr(uint32_t reg, uint32_t data);
 void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len);
@@ -176,9 +175,9 @@ void ed64_bios_reset_spx() {
     uint16_t cfg = ed64_bios_reg_rd(REG_CFG);
 
     ed64_bios_reg_wr(REG_CFG, 0x8000);
-    ed64_bios_sleep(100);
+    wait_ms(100);
     ed64_bios_reg_wr(REG_CFG, cfg);
-    ed64_bios_sleep(100);
+    wait_ms(100);
 }
 
 uint32_t ed64_bios_reg_rd(uint32_t reg) {
@@ -499,7 +498,7 @@ uint16_t ed64_bios_get_fpga_ver() {
     return ed64_bios_reg_rd(REG_VER);
 }
 
-void ed64_bios_load_firmware(uint8_t *firm) {
+void ed64_bios_load_firmware(uint8_t *firmware) {
 
     uint32_t i;
     uint16_t f_ctr = 0;
@@ -509,19 +508,19 @@ void ed64_bios_load_firmware(uint8_t *firm) {
     ed64_bios_reg_wr(REG_CFG, cfg);
 
     ed64_bios_reg_wr(REG_CFG_CNT, 0);
-    ed64_bios_sleep(10);
+    wait_ms(10);
     ed64_bios_reg_wr(REG_CFG_CNT, 1);
-    ed64_bios_sleep(10);
+    wait_ms(10);
 
     i = 0;
     for (;;) {
 
-        ed64_bios_reg_wr(REG_CFG_DAT, *(uint16_t *) & firm[i]);
+        ed64_bios_reg_wr(REG_CFG_DAT, *(uint16_t *) & firmware[i]);
         while ((ed64_bios_reg_rd(REG_CFG_CNT) & 8) != 0);
 
-        f_ctr = firm[i++] == 0xff ? f_ctr + 1 : 0;
+        f_ctr = firmware[i++] == 0xff ? f_ctr + 1 : 0;
         if (f_ctr >= 47)break;
-        f_ctr = firm[i++] == 0xff ? f_ctr + 1 : 0;
+        f_ctr = firmware[i++] == 0xff ? f_ctr + 1 : 0;
         if (f_ctr >= 47)break;
     }
 
@@ -532,16 +531,9 @@ void ed64_bios_load_firmware(uint8_t *firm) {
     }
 
 
-    ed64_bios_sleep(20);
+    wait_ms(20);
 }
 
-void ed64_bios_sleep(uint32_t ms) {
-
-    uint32_t current_ms = get_ticks_ms();
-
-    while (get_ticks_ms() - current_ms < ms);
-
-}
 
 void ed64_bios_lock_regs() {
     ed64_bios_reg_wr(REG_KEY, 0);
@@ -637,7 +629,7 @@ void ed64_bios_dd_ram_clr() {
     cfg |= ED_CFG_DD_WE;
     cfg &= ~ED_CFG_DD_ON;
     ed64_bios_reg_wr(REG_CFG, cfg);
-    ed64_bios_sleep(100);
+    wait_ms(100);
 }
 
 uint8_t ed64_bios_dd_ram_supported() {

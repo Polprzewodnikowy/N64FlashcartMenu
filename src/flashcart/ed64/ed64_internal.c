@@ -236,13 +236,13 @@ uint8_t ed64_bios_usb_write_busy() {
 }
 
 /* USB read */
-uint8_t ed64_bios_usb_read(uint32_t saddr, uint32_t slen) {
+uint8_t ed64_bios_usb_read(uint32_t start_address, uint32_t slen) {
 
-    saddr /= 4;
+    start_address /= 4;
     while (ed64_bios_usb_read_busy() != 0);
 
     ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
-    ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
+    ed64_bios_reg_write(REG_DMA_RAM_ADDR, start_address);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_USB_TO_RAM);
 
     if (ed64_bios_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
@@ -251,13 +251,13 @@ uint8_t ed64_bios_usb_read(uint32_t saddr, uint32_t slen) {
 }
 
 /* USB write */
-uint8_t ed64_bios_usb_write(uint32_t saddr, uint32_t slen) {
+uint8_t ed64_bios_usb_write(uint32_t start_address, uint32_t slen) {
 
-    saddr /= 4;
+    start_address /= 4;
     while (ed64_bios_usb_write_busy() != 0);
 
     ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
-    ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
+    ed64_bios_reg_write(REG_DMA_RAM_ADDR, start_address);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_RAM_TO_USB);
 
     if (ed64_bios_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
@@ -300,12 +300,12 @@ void ed64_bios_sd_mode(uint16_t mode) {
     ed64_bios_reg_write(REG_SPI_CFG, spi_cfg);
 }
 
-uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen) {
+uint8_t ed64_bios_spi_read_to_rom(uint32_t start_address, uint16_t slen) {
 
-    saddr /= 4;
+    start_address /= 4;
 
     ed64_bios_reg_write(REG_DMA_LENGTH, slen - 1);
-    ed64_bios_reg_write(REG_DMA_RAM_ADDR, saddr);
+    ed64_bios_reg_write(REG_DMA_RAM_ADDR, start_address);
     ed64_bios_reg_write(REG_DMA_CFG, DCFG_SD_TO_RAM);
 
     if (ed64_bios_dma_busy() != 0)return EVD_ERROR_MMC_TIMEOUT;
@@ -386,28 +386,28 @@ void ed64_bios_set_ram_bank(uint8_t bank) {
 
 }
 
-void ed64_bios_read_bios(void *dst, uint16_t saddr, uint16_t slen) {
+void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen) {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
 
     cfg &= ~ED_CFG_SDRAM_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 
-    ed64_bios_dma_read_rom(dst, saddr, slen);
+    ed64_bios_dma_read_rom(dst, start_address, slen);
 
     cfg |= ED_CFG_SDRAM_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-void ed64_bios_dma_read_rom(void *ram, uint32_t saddr, uint32_t slen) {
+void ed64_bios_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen) {
 
-    ed64_bios_dma_read(ram, ROM_ADDR + saddr * 512, slen * 512);
+    ed64_bios_dma_read(ram, ROM_ADDR + start_address * 512, slen * 512);
 
 }
 
-void ed64_bios_dma_write_rom(void *ram, uint32_t saddr, uint32_t slen) {
+void ed64_bios_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen) {
 
-    ed64_bios_dma_write(ram, ROM_ADDR + saddr * 512, slen * 512);
+    ed64_bios_dma_write(ram, ROM_ADDR + start_address * 512, slen * 512);
 }
 
 void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {

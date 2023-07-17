@@ -16,18 +16,21 @@
  * @{
  */
 
-#define SAVE_TYPE_OFF 0
-#define SAVE_TYPE_SRAM 1
-#define SAVE_TYPE_SRAM128 2
-#define SAVE_TYPE_EEP4k 3
-#define SAVE_TYPE_EEP16k 4
-#define SAVE_TYPE_FLASH 5
-#define SAVE_TYPE_MPAK 8
-#define SAVE_TYPE_DD64 16
 
-#define NON_CACHE_RAM 0x20000000
+typedef enum {
+    SAVE_TYPE_OFF = 0,
+    SAVE_TYPE_SRAM = 1,
+    SAVE_TYPE_SRAM128 = 2,
+    SAVE_TYPE_EEP4k = 3,
+    SAVE_TYPE_EEP16k = 4,
+    SAVE_TYPE_FLASH = 5,
+    SAVE_TYPE_CPAK = 8,
+    SAVE_TYPE_DD64 = 16,
+} ed64_save_type_t;
 
-#define ROM_LEN    0x4000000
+// #define NON_CACHE_RAM 0x20000000
+
+#define ROM_LEN   0x4000000
 #define ROM_ADDR  0xB0000000
 #define ROM_BUFF (ROM_LEN / 512 - 4)
 #define SRAM_ADDR 0xA8000000
@@ -40,6 +43,9 @@
 #define BOOT_UPD_ERR_CMP 0x97
 #define BOOT_UPD_ERR_CIC_DTCT 0x98
 
+
+#define PI_BASE_REG		    0x04600000
+#define PI_STATUS_REG		(PI_BASE_REG+0x10)
 #define PI_BSD_DOM1_LAT_REG	(PI_BASE_REG+0x14)
 
 /* PI dom1 pulse width (R/W): [7:0] domain 1 device R/W strobe pulse width */
@@ -50,6 +56,7 @@
 
 /* PI dom1 release (R/W): [1:0] domain 1 device R/W release duration */
 #define PI_BSD_DOM1_RLS_REG	(PI_BASE_REG+0x20)
+
 /* PI dom2 latency (R/W): [7:0] domain 2 device latency */
 #define PI_BSD_DOM2_LAT_REG	(PI_BASE_REG+0x24)    /* Domain 2 latency */
 
@@ -66,12 +73,11 @@
 #define	IO_WRITE(addr,data)	(*(volatile uint32_t *)PHYS_TO_K1(addr)=(uint32_t)(data))
 #define	IO_READ(addr)		(*(volatile uint32_t *)PHYS_TO_K1(addr))
 
-#define PI_STATUS_REG		(PI_BASE_REG+0x10)
-#define PI_BASE_REG		0x04600000
-
-#define BI_SPI_SPD_LO 2
-#define BI_SPI_SPD_25 1
-#define BI_SPI_SPD_50 0
+typedef enum {
+    BI_SPI_SPD_50 = 0,
+    BI_SPI_SPD_25 = 1,
+    BI_SPI_SPD_LO = 2,
+} ed64_spi_speed_t;
 
 #define SPI_CFG_SPD0 1
 #define SPI_CFG_SPD1 2
@@ -80,67 +86,78 @@
 #define SPI_CFG_DAT 16
 #define SPI_CFG_1BIT 32
 
-#define SPI_MODE_DAT_R1 (SPI_CFG_DAT | SPI_CFG_RD | SPI_CFG_1BIT)
-#define SPI_MODE_DAT_R4 (SPI_CFG_DAT | SPI_CFG_RD)
-#define SPI_MODE_DAT_W1 (SPI_CFG_DAT | SPI_CFG_1BIT)
-#define SPI_MODE_DAT_W4 (SPI_CFG_DAT)
+// #define SPI_MODE_DAT_R1 (SPI_CFG_DAT | SPI_CFG_RD | SPI_CFG_1BIT)
+// #define SPI_MODE_DAT_R4 (SPI_CFG_DAT | SPI_CFG_RD)
+// #define SPI_MODE_DAT_W1 (SPI_CFG_DAT | SPI_CFG_1BIT)
+// #define SPI_MODE_DAT_W4 (SPI_CFG_DAT)
 
-#define SPI_MODE_CMD_R1 (SPI_CFG_RD | SPI_CFG_1BIT)
-#define SPI_MODE_CMD_R4 (SPI_CFG_RD)
-#define SPI_MODE_CMD_W1 (SPI_CFG_1BIT)
-#define SPI_MODE_CMD_W4 (0)
+// #define SPI_MODE_CMD_R1 (SPI_CFG_RD | SPI_CFG_1BIT)
+// #define SPI_MODE_CMD_R4 (SPI_CFG_RD)
+// #define SPI_MODE_CMD_W1 (SPI_CFG_1BIT)
+// #define SPI_MODE_CMD_W4 (0)
 
-#define DD64_SAV_TBL_LEN 2048
-#define DD64_SAV_BLK_SIZ 64
-
-void bi_init_boot(uint8_t *firmware);
-uint8_t bi_init();
-uint8_t bi_usb_rd_busy();
-uint8_t bi_usb_rd(uint32_t saddr, uint32_t slen);
-uint8_t bi_usb_wr(uint32_t saddr, uint32_t slen);
-
-uint8_t bi_spi(uint8_t data);
-void bi_spi_nr(uint8_t data);
-void bi_set_spi_spd(uint16_t speed);
-void bi_ss_off();
-void bi_ss_on();
-void bi_sd_mode(uint16_t mode);
-uint8_t bi_spi_read_to_rom(uint32_t saddr, uint16_t slen);
-void bi_swap_on();
-void bi_swap_off();
-uint8_t bi_get_save_type();
-void bi_set_save_type(uint8_t type);
-uint16_t bi_fpga_ver();
-void bi_read_bios(void *dst, uint16_t saddr, uint16_t slen);
-uint16_t bi_msg_rd();
-void bi_msg_wr(uint16_t val);
+// #define DD64_SAV_TBL_LEN 2048
+// #define DD64_SAV_BLK_SIZ 64
 
 
-void bi_dma_read_rom(void *ram, uint32_t saddr, uint32_t slen);
-void bi_dma_write_rom(void *ram, uint32_t saddr, uint32_t slen);
-void bi_dma_read_sram(void *ram, uint32_t addr, uint32_t len);
-void bi_dma_write_sram(void *ram, uint32_t addr, uint32_t len);
-void bi_load_firmware(uint8_t *firm);
-void bi_sleep(uint32_t ms);
-void bi_lock_regs();
-void bi_unlock_regs();
-void bi_init_v2();
-void bi_init_v3();
-uint16_t bi_cpld_ver();
-void bi_gpio_mode_rtc();
-void bi_gpio_mode_io();
-void bi_gpio_off();
-uint8_t bi_gpio_rd();
-uint32_t bi_reg_rd(uint32_t reg);
-void bi_reg_wr(uint32_t reg, uint32_t data);
-void bi_reset_spx();
+void ed64_bios_init_boot(uint8_t *firmware);
+uint8_t ed64_bios_init();
+uint8_t ed64_bios_usb_rd_busy();
+uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen);
+uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen);
 
-void bi_dd_ram_oe();
-void bi_dd_ram_we();
-void bi_dd_ram_off();
-void bi_dd_ram_clr();
-uint8_t bi_dd_ram_supported();
+uint8_t ed64_bios_spi(uint8_t data);
+void ed64_bios_spi_nr(uint8_t data);
+void ed64_bios_set_spi_spd(uint16_t speed);
 
+// void ed64_bios_ss_off();
+// void ed64_bios_ss_on();
+
+void ed64_bios_sd_mode(uint16_t mode);
+uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen);
+void ed64_bios_swap_on();
+void ed64_bios_swap_off();
+
+uint8_t ed64_bios_get_save_type();
+void ed64_bios_set_save_type(uint8_t type);
+uint16_t ed64_bios_fpga_ver();
+void ed64_bios_read_bios(void *dst, uint16_t saddr, uint16_t slen);
+uint16_t ed64_bios_msg_rd();
+void ed64_bios_msg_wr(uint16_t val);
+
+
+void ed64_bios_dma_read_rom(void *ram, uint32_t saddr, uint32_t slen);
+void ed64_bios_dma_write_rom(void *ram, uint32_t saddr, uint32_t slen);
+void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len);
+void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len);
+
+
+
+void ed64_bios_sleep(uint32_t ms);
+void ed64_bios_lock_regs();
+void ed64_bios_unlock_regs();
+
+void ed64_bios_init_v2();
+void ed64_bios_init_v3();
+uint16_t ed64_bios_cpld_ver();
+void ed64_bios_load_firmware(uint8_t *firm);
+
+void ed64_bios_gpio_mode_rtc();
+void ed64_bios_gpio_mode_io();
+void ed64_bios_gpio_off();
+uint8_t ed64_bios_gpio_rd();
+
+uint32_t ed64_bios_reg_rd(uint32_t reg);
+void ed64_bios_reg_wr(uint32_t reg, uint32_t data);
+void ed64_bios_reset_spx();
+
+void ed64_bios_dd_ram_oe();
+void ed64_bios_dd_ram_we();
+void ed64_bios_dd_ram_off();
+void ed64_bios_dd_ram_clr();
+uint8_t ed64_bios_dd_ram_supported();
+
+/** @} */ /* ed64 */
 
 #endif
 

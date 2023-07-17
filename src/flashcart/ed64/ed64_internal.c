@@ -64,7 +64,7 @@
 // #define MAX_MSG_SD_TYPE (1 << 13)
 #define MAX_MSG_HOT_START (1 << 14)
 
-
+void ed64_bios_sleep(uint32_t ms);
 uint32_t ed64_bios_reg_rd(uint32_t reg);
 void ed64_bios_reg_wr(uint32_t reg, uint32_t data);
 void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len);
@@ -494,7 +494,7 @@ void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len) {
     ed64_bios_dma_w(ram, addr, len);
 }
 
-uint16_t ed64_bios_fpga_ver() {
+uint16_t ed64_bios_get_fpga_ver() {
 
     return ed64_bios_reg_rd(REG_VER);
 }
@@ -552,7 +552,7 @@ void ed64_bios_unlock_regs() {
 }
 
 
-uint16_t ed64_bios_cpld_ver() {
+uint16_t ed64_bios_get_cpld_ver() {
 
     uint16_t ver;
     uint16_t cfg = ed64_bios_reg_rd(REG_CFG);

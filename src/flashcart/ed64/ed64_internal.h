@@ -1,6 +1,6 @@
 /**
  * @file flashcart.h
- * @brief ED64 Flashcart Internal Utilities
+ * @brief ED64 V-Series Flashcart Internal Utilities
  * @ingroup flashcart 
  */
 
@@ -28,11 +28,7 @@ typedef enum {
     SAVE_TYPE_DD64 = 16,
 } ed64_save_type_t;
 
-// #define NON_CACHE_RAM 0x20000000
-
-#define ROM_LEN   0x4000000
 #define ROM_ADDR  0xB0000000
-#define ROM_BUFF (ROM_LEN / 512 - 4)
 #define SRAM_ADDR 0xA8000000
 
 #define EVD_ERROR_FIFO_TIMEOUT 0x90
@@ -86,41 +82,38 @@ typedef enum {
 #define SPI_CFG_DAT 16
 #define SPI_CFG_1BIT 32
 
-// #define SPI_MODE_DAT_R1 (SPI_CFG_DAT | SPI_CFG_RD | SPI_CFG_1BIT)
-// #define SPI_MODE_DAT_R4 (SPI_CFG_DAT | SPI_CFG_RD)
-// #define SPI_MODE_DAT_W1 (SPI_CFG_DAT | SPI_CFG_1BIT)
-// #define SPI_MODE_DAT_W4 (SPI_CFG_DAT)
-
-// #define SPI_MODE_CMD_R1 (SPI_CFG_RD | SPI_CFG_1BIT)
-// #define SPI_MODE_CMD_R4 (SPI_CFG_RD)
-// #define SPI_MODE_CMD_W1 (SPI_CFG_1BIT)
-// #define SPI_MODE_CMD_W4 (0)
-
-// #define DD64_SAV_TBL_LEN 2048
-// #define DD64_SAV_BLK_SIZ 64
-
-
-void ed64_bios_init_boot(uint8_t *firmware);
+/* Initialization functions */
 uint8_t ed64_bios_init();
+void ed64_bios_init_v2();
+void ed64_bios_init_v3();
+
+/* Device information functions */
+uint16_t ed64_bios_get_fpga_ver();
+uint16_t ed64_bios_get_cpld_ver();
+
+/* Firmware update functions */
+void ed64_bios_load_firmware(uint8_t *firm);
+
+/* USB functions */
 uint8_t ed64_bios_usb_rd_busy();
 uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen);
 uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen);
 
+/* SPI functions */
 uint8_t ed64_bios_spi(uint8_t data);
 void ed64_bios_spi_nr(uint8_t data);
 void ed64_bios_set_spi_spd(uint16_t speed);
 
-// void ed64_bios_ss_off();
-// void ed64_bios_ss_on();
-
+/* SD Card functions */
 void ed64_bios_sd_mode(uint16_t mode);
 uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen);
 void ed64_bios_swap_on();
 void ed64_bios_swap_off();
 
+/* Save functions */
 uint8_t ed64_bios_get_save_type();
 void ed64_bios_set_save_type(uint8_t type);
-uint16_t ed64_bios_fpga_ver();
+
 void ed64_bios_read_bios(void *dst, uint16_t saddr, uint16_t slen);
 uint16_t ed64_bios_msg_rd();
 void ed64_bios_msg_wr(uint16_t val);
@@ -131,26 +124,20 @@ void ed64_bios_dma_write_rom(void *ram, uint32_t saddr, uint32_t slen);
 void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len);
 void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len);
 
-
-
-void ed64_bios_sleep(uint32_t ms);
 void ed64_bios_lock_regs();
 void ed64_bios_unlock_regs();
-
-void ed64_bios_init_v2();
-void ed64_bios_init_v3();
-uint16_t ed64_bios_cpld_ver();
-void ed64_bios_load_firmware(uint8_t *firm);
-
-void ed64_bios_gpio_mode_rtc();
-void ed64_bios_gpio_mode_io();
-void ed64_bios_gpio_off();
-uint8_t ed64_bios_gpio_rd();
 
 uint32_t ed64_bios_reg_rd(uint32_t reg);
 void ed64_bios_reg_wr(uint32_t reg, uint32_t data);
 void ed64_bios_reset_spx();
 
+/* GPIO functions */
+void ed64_bios_gpio_mode_rtc();
+void ed64_bios_gpio_mode_io();
+void ed64_bios_gpio_off();
+uint8_t ed64_bios_gpio_rd();
+
+/* 64DD functions */
 void ed64_bios_dd_ram_oe();
 void ed64_bios_dd_ram_we();
 void ed64_bios_dd_ram_off();

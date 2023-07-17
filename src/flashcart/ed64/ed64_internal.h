@@ -95,20 +95,20 @@ uint16_t ed64_bios_get_cpld_version();
 void ed64_bios_load_firmware(uint8_t *firmware);
 
 /* USB functions */
-uint8_t ed64_bios_usb_rd_busy();
+uint8_t ed64_bios_usb_read_busy();
 uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen);
 uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen);
 
 /* SPI functions */
 uint8_t ed64_bios_spi(uint8_t data);
 void ed64_bios_spi_nr(uint8_t data);
-void ed64_bios_set_spi_spd(uint16_t speed);
+void ed64_bios_set_spi_speed(uint16_t speed);
 
 /* SD Card functions */
 void ed64_bios_sd_mode(uint16_t mode);
 uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen);
-void ed64_bios_swap_on();
-void ed64_bios_swap_off();
+void ed64_bios_byteswap_on();
+void ed64_bios_byteswap_off();
 
 /* Save functions */
 uint8_t ed64_bios_get_save_type();

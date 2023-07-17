@@ -7,26 +7,31 @@
 /* Unlocks the ED64 registers  */
 #define ED64_KEY_UNLOCK 0x1234
 
-#define REG_CFG 0
-#define REG_STATUS 1
-#define REG_DMA_LEN 2
-#define REG_DMA_RAM_ADDR 3
-#define REG_MSG 4
-#define REG_DMA_CFG 5
-#define REG_SPI 6
-#define REG_SPI_CFG 7
-#define REG_KEY 8
-#define REG_SAV_CFG 9
-#define REG_SEC 10
-#define REG_FPGA_VER 11
-#define REG_GPIO 12
+/* ED64 registers base address  */
+#define REGS_BASE 0xA8040000
 
-#define REG_CFG_CNT 16
-#define REG_CFG_DAT 17
-#define REG_MAX_MSG 18
-#define REG_MAX_VER 19
-#define REG_FL_ADDR 20
-#define REG_FL_DATA 21
+typedef enum {
+    REG_CFG = 0,
+    REG_STATUS = 1,
+    REG_DMA_LEN = 2,
+    REG_DMA_RAM_ADDR = 3,
+    REG_MSG = 4,
+    REG_DMA_CFG = 5,
+    REG_SPI = 6,
+    REG_SPI_CFG = 7,
+    REG_KEY = 8,
+    REG_SAV_CFG = 9,
+    REG_SEC = 10,
+    REG_FPGA_VER = 11,
+    REG_GPIO = 12,
+
+    REG_CFG_CNT = 16,
+    REG_CFG_DAT = 17,
+    REG_MAX_MSG = 18,
+    REG_MAX_VER = 19,
+    REG_FL_ADDR = 20,
+    REG_FL_DATA = 21,
+} ed64_registers_t;
 
 
 #define STATE_DMA_BUSY 1
@@ -45,19 +50,21 @@
 #define SAV_SRM_ON 2
 #define SAV_EEP_SIZE 4
 #define SAV_SRM_SIZE 8
+
 #define SAV_RAM_BANK 128
 #define SAV_RAM_BANK_APPLY 32768
 
-#define ED_CFG_SDRAM_ON 1
-#define ED_CFG_SWAP 2
-#define ED_CFG_WR_MOD 4
-#define ED_CFG_WR_ADDR_MASK 8
-#define ED_CFG_RTC_ON 32
-#define ED_CFG_GPIO_ON 96
-#define ED_CFG_DD_ON 256
-#define ED_CFG_DD_WE 512
+typedef enum {
+    ED_CFG_SDRAM_ON = 1,
+    ED_CFG_SWAP = 2,
+    ED_CFG_WR_MOD = 4,
+    ED_CFG_WR_ADDR_MASK = 8,
+    ED_CFG_RTC_ON = 32,
+    ED_CFG_GPIO_ON = 96,
+    ED_CFG_DD_ON = 256,
+    ED_CFG_DD_WE = 512,
+} ed64_config_t;
 
-#define REGS_BASE 0xA8040000
 
 // #define MAX_MSG_SKIP_FW_INIT (1 << 8)
 // #define MAX_MSG_SKIP_TV_INIT (1 << 9)
@@ -86,12 +93,14 @@ uint8_t ed64_bios_save_type;
 
 /* register functions (dependent on flashcart version) */
 
+/* register functions for V2 & V2.5 */
 void ed64_bios_io_reg_v2(uint32_t addr, uint32_t dat) {
 
     *(volatile uint32_t *) (ROM_ADDR);
     *(volatile uint32_t *) (ROM_ADDR + addr) = dat;
 }
 
+/* register functions for V3 */
 void ed64_bios_io_reg_v3(uint32_t addr, uint16_t dat) {
 
     ed64_bios_reg_write(REG_FL_ADDR, addr);
@@ -100,6 +109,7 @@ void ed64_bios_io_reg_v3(uint32_t addr, uint16_t dat) {
 
 /* initialize functions (dependent on flashcart version) */
 
+/* Initilize V2 & 2.5 cart */
 void ed64_bios_init_v2() {
 
     uint8_t buff[512];
@@ -114,6 +124,7 @@ void ed64_bios_init_v2() {
 
 }
 
+/* Initilize V3 cart */
 void ed64_bios_init_v3() {
 
     uint8_t buff[1024];
@@ -265,7 +276,7 @@ void ed64_bios_spi_nr(uint8_t data) {
     while (ed64_bios_spi_busy());
 }
 
-void ed64_bios_set_spi_spd(uint16_t speed) {
+void ed64_bios_set_spi_speed(uint16_t speed) {
 
     spi_cfg &= ~3;
     spi_cfg |= speed;
@@ -292,13 +303,13 @@ uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen) {
     return 0;
 }
 
-void ed64_bios_swap_on() {
+void ed64_bios_byteswap_on() {
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
     cfg |= ED_CFG_SWAP;
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-void ed64_bios_swap_off() {
+void ed64_bios_byteswap_off() {
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
     cfg &= ~ED_CFG_SWAP;
     ed64_bios_reg_write(REG_CFG, cfg);
@@ -561,6 +572,7 @@ uint16_t ed64_bios_get_cpld_version() {
 
 /* GPIO functions */
 
+/* GPIO mode RTC */
 void ed64_bios_gpio_mode_rtc() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -569,6 +581,7 @@ void ed64_bios_gpio_mode_rtc() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* GPIO mode ON */
 void ed64_bios_gpio_mode_io() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -576,6 +589,7 @@ void ed64_bios_gpio_mode_io() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* GPIO mode OFF */
 void ed64_bios_gpio_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -583,11 +597,13 @@ void ed64_bios_gpio_off() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* GPIO mode write */
 void ed64_bios_gpio_write(uint8_t data) {
 
     ed64_bios_reg_write(REG_GPIO, data);
 }
 
+/* GPIO mode read */
 uint8_t ed64_bios_gpio_read() {
 
     return ed64_bios_reg_read(REG_GPIO);
@@ -595,15 +611,9 @@ uint8_t ed64_bios_gpio_read() {
 
 
 
-void ed64_bios_set_ram_bank(uint8_t bank) {
-
-    ed64_bios_ram_bank = bank == 0 ? 0 : 1;
-
-}
-
-
 /* 64DD functions */
 
+/* 64DD On and Dissabled?! */
 void ed64_bios_64dd_ram_oe() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -612,6 +622,7 @@ void ed64_bios_64dd_ram_oe() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* 64DD Write Enable?? */
 void ed64_bios_64dd_ram_we() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -619,6 +630,7 @@ void ed64_bios_64dd_ram_we() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* 64DD Disabled?? */
 void ed64_bios_64dd_ram_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -626,6 +638,7 @@ void ed64_bios_64dd_ram_off() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
+/* 64DD Save RAM Clear */
 void ed64_bios_64dd_ram_clr() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -635,8 +648,15 @@ void ed64_bios_64dd_ram_clr() {
     wait_ms(100);
 }
 
+/* 64DD Allowed on this cart?! */
 uint8_t ed64_bios_64dd_ram_supported() {
 
     return (ed64_bios_reg_read(REG_STATUS) >> 15) & 1;
+
+}
+
+void ed64_bios_set_ram_bank(uint8_t bank) {
+
+    ed64_bios_ram_bank = bank == 0 ? 0 : 1;
 
 }

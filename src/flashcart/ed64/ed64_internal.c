@@ -216,13 +216,13 @@ uint8_t ed64_bios_usb_wr_busy() {
 uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen) {
 
     saddr /= 4;
-    while (bi_usb_rd_busy() != 0);
+    while (ed64_bios_usb_rd_busy() != 0);
 
     ed64_bios_reg_wr(REG_DMA_LEN, slen - 1);
     ed64_bios_reg_wr(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_wr(REG_DMA_CFG, DCFG_USB_TO_RAM);
 
-    if (bi_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+    if (ed64_bios_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
     return 0;
 }
@@ -230,13 +230,13 @@ uint8_t ed64_bios_usb_rd(uint32_t saddr, uint32_t slen) {
 uint8_t ed64_bios_usb_wr(uint32_t saddr, uint32_t slen) {
 
     saddr /= 4;
-    while (bi_usb_wr_busy() != 0);
+    while (ed64_bios_usb_wr_busy() != 0);
 
     ed64_bios_reg_wr(REG_DMA_LEN, slen - 1);
     ed64_bios_reg_wr(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_wr(REG_DMA_CFG, DCFG_RAM_TO_USB);
 
-    if (bi_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+    if (ed64_bios_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
     return 0;
 }
@@ -252,14 +252,14 @@ uint16_t ed64_bios_spi_busy() {
 uint8_t ed64_bios_spi(uint8_t data) {
 
     ed64_bios_reg_wr(REG_SPI, data);
-    while (bi_spi_busy());
+    while (ed64_bios_spi_busy());
     return ed64_bios_reg_rd(REG_SPI);
 }
 
 void ed64_bios_spi_nr(uint8_t data) {
 
     ed64_bios_reg_wr(REG_SPI, data);
-    while (bi_spi_busy());
+    while (ed64_bios_spi_busy());
 }
 
 void ed64_bios_set_spi_spd(uint16_t speed) {
@@ -284,7 +284,7 @@ uint8_t ed64_bios_spi_read_to_rom(uint32_t saddr, uint16_t slen) {
     ed64_bios_reg_wr(REG_DMA_RAM_ADDR, saddr);
     ed64_bios_reg_wr(REG_DMA_CFG, DCFG_SD_TO_RAM);
 
-    if (bi_dma_busy() != 0)return EVD_ERROR_MMC_TIMEOUT;
+    if (ed64_bios_dma_busy() != 0)return EVD_ERROR_MMC_TIMEOUT;
 
     return 0;
 }
@@ -455,7 +455,7 @@ void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long
     while (dma_busy());
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
-    PI_regs->pi_address = pi_address & 0x1FFFFFFF; // (pi_address | 0x10000000) & 0x1FFFFFFF;
+    PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->write_length = len - 1;
     while (dma_busy());
 
@@ -469,7 +469,7 @@ void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long
     while (dma_busy());
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
-    PI_regs->pi_address = pi_address & 0x1FFFFFFF; // (pi_address | 0x10000000) & 0x1FFFFFFF;
+    PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->read_length = len - 1;
     while (dma_busy());
     enable_interrupts();

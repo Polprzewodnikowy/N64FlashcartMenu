@@ -127,8 +127,8 @@ void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len);
 void ed64_bios_lock_regs();
 void ed64_bios_unlock_regs();
 
-uint32_t ed64_bios_reg_rd(uint32_t reg);
-void ed64_bios_reg_wr(uint32_t reg, uint32_t data);
+uint32_t ed64_bios_reg_read(uint32_t reg);
+void ed64_bios_reg_write(uint32_t reg, uint32_t data);
 void ed64_bios_reset_spx();
 
 /* GPIO functions */
@@ -138,11 +138,11 @@ void ed64_bios_gpio_off();
 uint8_t ed64_bios_gpio_rd();
 
 /* 64DD functions */
-void ed64_bios_dd_ram_oe();
-void ed64_bios_dd_ram_we();
-void ed64_bios_dd_ram_off();
-void ed64_bios_dd_ram_clr();
-uint8_t ed64_bios_dd_ram_supported();
+void ed64_bios_64dd_ram_oe();
+void ed64_bios_64dd_ram_we();
+void ed64_bios_64dd_ram_off();
+void ed64_bios_64dd_ram_clr();
+uint8_t ed64_bios_64dd_ram_supported();
 
 /** @} */ /* ed64 */
 

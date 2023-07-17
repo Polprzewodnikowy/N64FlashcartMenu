@@ -2,6 +2,9 @@
 
 #include "ed64_internal.h"
 
+/* Locks the ED64 registers  */
+#define ED64_KEY_LOCK   0x0000
+/* Unlocks the ED64 registers  */
 #define ED64_KEY_UNLOCK 0x1234
 
 #define REG_CFG 0
@@ -164,7 +167,7 @@ uint8_t ed64_bios_init() {
     spi_cfg = SPI_CFG_SS | BI_SPI_SPD_LO;
     ed64_bios_reg_write(REG_CFG, ED_CFG_SDRAM_ON);
     ed64_bios_reg_write(REG_SPI_CFG, spi_cfg);
-    ed64_bios_save_type = 0;
+    ed64_bios_save_type = SAVE_TYPE_OFF;
 
 
     return cold_start;
@@ -536,7 +539,7 @@ void ed64_bios_load_firmware(uint8_t *firmware) {
 
 
 void ed64_bios_lock_regs() {
-    ed64_bios_reg_write(REG_KEY, 0);
+    ed64_bios_reg_write(REG_KEY, ED64_KEY_LOCK);
 }
 
 void ed64_bios_unlock_regs() {

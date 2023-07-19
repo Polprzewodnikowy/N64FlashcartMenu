@@ -8,7 +8,7 @@
 #define ED64_KEY_UNLOCK 0x1234
 
 /* ED64 registers base address  */
-#define REGS_BASE 0xA8040000
+#define ED64_REGS_BASE (0xA8040000)
 
 typedef enum {
     REG_CFG = 0,
@@ -21,8 +21,8 @@ typedef enum {
     REG_SPI_CFG = 7,
     REG_KEY = 8,
     REG_SAV_CFG = 9,
-    REG_SEC = 10,
-    REG_FPGA_VER = 11,
+    REG_SEC = 10, /* Sectors?? */
+    REG_FPGA_VERSION = 11, /* Altera (Intel) MAX */
     REG_GPIO = 12,
 
 } ed64_registers_t;
@@ -36,20 +36,26 @@ typedef enum {
     REG_FLASHRAM_ADDR = 20,
     REG_FLASHRAM_DATA = 21,
     
-} ed64_register_values_t;
+} ed64_register_args_t;
 
 
-#define STATE_DMA_BUSY 1
-#define STATE_DMA_TOUT 2
-#define STATE_USB_TXE 4
-#define STATE_USB_RXF 8
-#define STATE_SPI 16
+typedef enum {
+    STATE_DMA_BUSY = 1,
+    STATE_DMA_TOUT = 2,
+    STATE_USB_TXE = 4,
+    STATE_USB_RXF = 8,
+    STATE_SPI = 16,
 
-// Default config?
-#define DCFG_SD_TO_RAM 1
-#define DCFG_RAM_TO_SD 2
-#define DCFG_USB_TO_RAM 3
-#define DCFG_RAM_TO_USB 4
+} ed64_dma_state_t;
+
+
+typedef enum {
+    DCFG_SD_TO_RAM = 1,
+    DCFG_RAM_TO_SD = 2,
+    DCFG_USB_TO_RAM = 3,
+    DCFG_RAM_TO_USB = 4,
+
+} ed64_disk_mode_t;
 
 
 #define SAV_EEP_ON 1
@@ -72,20 +78,20 @@ typedef enum {
 } ed64_config_t;
 
 
-// #define FPGA_FW_DATA_SKIP_FW_INIT (1 << 8)
-// #define FPGA_FW_DATA_SKIP_TV_INIT (1 << 9)
-// #define FPGA_FW_DATA_TV_TYPE1 (1 << 10)
-// #define FPGA_FW_DATA_TV_TYPE2 (1 << 11)
-// #define FPGA_FW_DATA_SKIP_SD_INIT (1 << 12)
-// #define FPGA_FW_DATA_SD_TYPE (1 << 13)
+#define FPGA_FW_DATA_SKIP_FW_INIT (1 << 8)
+#define FPGA_FW_DATA_SKIP_TV_INIT (1 << 9)
+#define FPGA_FW_DATA_TV_TYPE1 (1 << 10)
+#define FPGA_FW_DATA_TV_TYPE2 (1 << 11)
+#define FPGA_FW_DATA_SKIP_SD_INIT (1 << 12)
+#define FPGA_FW_DATA_SD_TYPE (1 << 13)
 #define FPGA_FW_DATA_HOT_START (1 << 14)
 
 uint32_t ed64_bios_reg_read(uint32_t reg);
 void ed64_bios_reg_write(uint32_t reg, uint32_t data);
 void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len);
 void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long len);
-void ed64_bios_dma_read(void *ram, uint32_t addr, uint32_t len);
-void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len);
+void ed64_bios_dma_read(void *ram, uint32_t address, uint32_t length);
+void ed64_bios_dma_write(void *ram, uint32_t address, uint32_t length);
 
 static uint16_t spi_cfg;
 uint8_t ed64_bios_ram_bank;
@@ -100,17 +106,17 @@ uint8_t ed64_bios_save_type;
 /* register functions (dependent on flashcart version) */
 
 /* register functions for V2 & V2.5 */
-void ed64_bios_io_reg_v2(uint32_t addr, uint32_t dat) {
+void ed64_bios_io_reg_v2(uint32_t address, uint32_t data) {
 
-    *(volatile uint32_t *) (ROM_ADDR);
-    *(volatile uint32_t *) (ROM_ADDR + addr) = dat;
+    *(volatile uint32_t *) (ROM_ADDRESS);
+    *(volatile uint32_t *) (ROM_ADDRESS + address) = data;
 }
 
 /* register functions for V3 */
-void ed64_bios_io_reg_v3(uint32_t addr, uint16_t dat) {
+void ed64_bios_io_reg_v3(uint32_t address, uint16_t data) {
 
-    ed64_bios_reg_write(REG_FLASHRAM_ADDR, addr);
-    ed64_bios_reg_write(REG_FLASHRAM_DATA, dat);
+    ed64_bios_reg_write(REG_FLASHRAM_ADDR, address);
+    ed64_bios_reg_write(REG_FLASHRAM_DATA, data);
 }
 
 /* initialize functions (dependent on flashcart version) */
@@ -202,18 +208,19 @@ void ed64_bios_reset_spx() {
 
 uint32_t ed64_bios_reg_read(uint32_t reg) {
 
-    *(volatile uint32_t *) (REGS_BASE);
-    return *(volatile uint32_t *) (REGS_BASE + reg * 4);
+    *(volatile uint32_t *) (ED64_REGS_BASE);
+    return *(volatile uint32_t *) (ED64_REGS_BASE + reg * 4);
 }
 
 void ed64_bios_reg_write(uint32_t reg, uint32_t data) {
 
-    *(volatile uint32_t *) (REGS_BASE);
-    *(volatile uint32_t *) (REGS_BASE + reg * 4) = data;
-    *(volatile uint32_t *) (ROM_ADDR);
+    *(volatile uint32_t *) (ED64_REGS_BASE);
+    *(volatile uint32_t *) (ED64_REGS_BASE + reg * 4) = data;
+    *(volatile uint32_t *) (ROM_ADDRESS);
 
 }
 
+/*  Used for USB and SPI functions */
 uint8_t ed64_bios_dma_busy() {
 
     while ((ed64_bios_reg_read(REG_STATUS) & STATE_DMA_BUSY) != 0);
@@ -401,15 +408,16 @@ void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen) {
 
 void ed64_bios_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen) {
 
-    ed64_bios_dma_read(ram, ROM_ADDR + start_address * 512, slen * 512);
+    ed64_bios_dma_read(ram, ROM_ADDRESS + start_address * 512, slen * 512);
 
 }
 
 void ed64_bios_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen) {
 
-    ed64_bios_dma_write(ram, ROM_ADDR + start_address * 512, slen * 512);
+    ed64_bios_dma_write(ram, ROM_ADDRESS + start_address * 512, slen * 512);
 }
 
+/* Read from SRAM over DMA */
 void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
 
     volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
@@ -422,7 +430,7 @@ void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_read(ram, SRAM_ADDR + addr, len);
+    ed64_bios_dma_read(ram, SRAM_FLASHRAM_ADDRESS + addr, len);
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, piPwdReg);
@@ -430,6 +438,7 @@ void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
     IO_WRITE(PI_BSD_DOM2_RLS_REG, piRlsReg);
 }
 
+/* Write to SRAM over DMA */
 void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len) {
 
     volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
@@ -442,7 +451,7 @@ void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_write(ram, SRAM_ADDR + addr, len);
+    ed64_bios_dma_write(ram, SRAM_FLASHRAM_ADDRESS + addr, len);
 
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
@@ -505,7 +514,7 @@ void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long
     enable_interrupts();
 }
 
-void ed64_bios_dma_read(void *ram, uint32_t addr, uint32_t len) {
+void ed64_bios_dma_read(void *ram, uint32_t address, uint32_t length) {
 
 
     if (((uint32_t) ram & 0xF0000000) == 0x80000000) {
@@ -517,7 +526,7 @@ void ed64_bios_dma_read(void *ram, uint32_t addr, uint32_t len) {
 
 }
 
-void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len) {
+void ed64_bios_dma_write(void *ram, uint32_t address, uint32_t length) {
 
     if (((uint32_t) ram & 0xF0000000) == 0x80000000)data_cache_hit_writeback(ram, len);
     ed64_bios_dma_w(ram, addr, len);
@@ -526,7 +535,7 @@ void ed64_bios_dma_write(void *ram, uint32_t addr, uint32_t len) {
 /** @brief Get the current FPGA version */
 uint16_t ed64_bios_get_fpga_version() {
 
-    return ed64_bios_reg_read(REG_FPGA_VER);
+    return ed64_bios_reg_read(REG_FPGA_VERSION);
 }
 
 /** @brief Get the current CPLD version */
@@ -542,6 +551,7 @@ uint16_t ed64_bios_get_cpld_version() {
     return cpld_version;
 }
 
+/* Load the specified FPGA firmware */
 void ed64_bios_load_firmware(uint8_t *firmware) {
 
     uint32_t i;
@@ -590,7 +600,7 @@ void ed64_bios_unlock_regs() {
 
 /* GPIO functions */
 
-/* GPIO mode RTC */
+/* Set GPIO mode RTC */
 void ed64_bios_gpio_mode_rtc() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -599,7 +609,7 @@ void ed64_bios_gpio_mode_rtc() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-/* GPIO mode ON */
+/* Set GPIO mode ON */
 void ed64_bios_gpio_mode_io() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -607,7 +617,7 @@ void ed64_bios_gpio_mode_io() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-/* GPIO mode OFF */
+/* Set GPIO mode OFF */
 void ed64_bios_gpio_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -631,7 +641,7 @@ uint8_t ed64_bios_gpio_read() {
 
 /* 64DD functions */
 
-/* 64DD ON and Enabled?! */
+/* Set 64DD ON and Enabled?! */
 void ed64_bios_64dd_ram_oe() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -640,7 +650,7 @@ void ed64_bios_64dd_ram_oe() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-/* 64DD Write Enable?? */
+/* Set 64DD Write Enable?? */
 void ed64_bios_64dd_ram_we() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
@@ -648,7 +658,7 @@ void ed64_bios_64dd_ram_we() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-/* 64DD Disabled?? */
+/* Set 64DD Disabled?? */
 void ed64_bios_64dd_ram_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);

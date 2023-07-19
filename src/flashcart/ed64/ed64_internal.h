@@ -28,8 +28,9 @@ typedef enum {
     SAVE_TYPE_DD64 = 16,
 } ed64_save_type_t;
 
-#define ROM_ADDR  0xB0000000
-#define SRAM_ADDR 0xA8000000
+
+#define SRAM_FLASHRAM_ADDRESS (0xA8000000)
+#define ROM_ADDRESS           (0xB0000000)
 
 #define USB_ERROR_FIFO_TIMEOUT 0x90
 #define EVD_ERROR_MMC_TIMEOUT 0x91
@@ -40,7 +41,7 @@ typedef enum {
 // #define BOOT_UPD_ERR_CIC_DTCT 0x98
 
 
-#define PI_BASE_REG		    0x04600000
+#define PI_BASE_REG		    (0x04600000)
 #define PI_STATUS_REG		(PI_BASE_REG+0x10)
 #define PI_BSD_DOM1_LAT_REG	(PI_BASE_REG+0x14)
 

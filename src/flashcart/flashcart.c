@@ -8,6 +8,7 @@
 
 #include "flashcart.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 
 #define WRITEBACK_MAX_SECTORS   (256)
@@ -49,7 +50,7 @@ flashcart_error_t flashcart_init (void) {
             break;
 
         case CART_EVERDRIVE:
-            // flashcart = ed64_get_flashcart();
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC64:

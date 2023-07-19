@@ -21,6 +21,7 @@ SRCS = \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/ed64/ed64_internal.c \
 	flashcart/sc64/sc64.c \
+	flashcart/ed64/ed64.c \
 	libs/mini.c/src/mini.c \
 	menu/actions.c \
 	menu/assets.c \

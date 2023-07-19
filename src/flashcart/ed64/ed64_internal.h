@@ -35,10 +35,10 @@ typedef enum {
 #define USB_ERROR_FIFO_TIMEOUT 0x90
 #define EVD_ERROR_MMC_TIMEOUT 0x91
 
-// #define BOOT_UPD_ERR_WRONG_SIZE 0x95
-// #define BOOT_UPD_ERR_HDR 0x96
-// #define BOOT_UPD_ERR_CMP 0x97
-// #define BOOT_UPD_ERR_CIC_DTCT 0x98
+#define BOOT_UPD_ERR_WRONG_SIZE 0x95
+#define BOOT_UPD_ERR_HDR 0x96
+#define BOOT_UPD_ERR_CMP 0x97
+#define BOOT_UPD_ERR_CIC_DTCT 0x98
 
 
 #define PI_BASE_REG		    (0x04600000)
@@ -76,8 +76,8 @@ typedef enum {
     BI_SPI_SPD_LO = 2,
 } ed64_spi_speed_t;
 
-// #define SPI_CFG_SPD0 1
-// #define SPI_CFG_SPD1 2
+#define SPI_CFG_SPD0 1
+#define SPI_CFG_SPD1 2
 #define SPI_CFG_SS 4
 #define SPI_CFG_RD 8
 #define SPI_CFG_DAT 16
@@ -119,11 +119,11 @@ void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen);
 uint16_t ed64_bios_msg_rd();
 void ed64_bios_msg_wr(uint16_t val);
 
-
+/* DMA functions */
 void ed64_bios_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen);
 void ed64_bios_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen);
-void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len);
-void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len);
+void ed64_bios_dma_read_sram(void *ram, uint32_t address, uint32_t length);
+void ed64_bios_dma_write_sram(void *ram, uint32_t address, uint32_t length);
 
 void ed64_bios_lock_regs();
 void ed64_bios_unlock_regs();

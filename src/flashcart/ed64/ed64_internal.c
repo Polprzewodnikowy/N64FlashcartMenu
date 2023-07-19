@@ -88,8 +88,8 @@ typedef enum {
 
 uint32_t ed64_bios_reg_read(uint32_t reg);
 void ed64_bios_reg_write(uint32_t reg, uint32_t data);
-void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len);
-void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long len);
+void ed64_bios_dma_pi_read(void * ram_address, unsigned long pi_address, unsigned long length);
+void ed64_bios_dma_pi_write(void * ram_address, unsigned long pi_address, unsigned long length);
 void ed64_bios_dma_read(void *ram, uint32_t address, uint32_t length);
 void ed64_bios_dma_write(void *ram, uint32_t address, uint32_t length);
 
@@ -105,7 +105,8 @@ uint8_t ed64_bios_save_type;
 
 /* register functions (dependent on flashcart version) */
 
-/* register functions for V2 & V2.5 */
+/* register functions for V2 & V2.5  (These carts do not support FLASHRAM)*/
+/* The end of SDRAM is used for SRAM or FlashRAM save types */
 void ed64_bios_io_reg_v2(uint32_t address, uint32_t data) {
 
     *(volatile uint32_t *) (ROM_ADDRESS);
@@ -287,6 +288,7 @@ uint8_t ed64_bios_spi(uint8_t data) {
     return ed64_bios_reg_read(REG_SPI);
 }
 
+/* never returns (or is it never reads???) */
 void ed64_bios_spi_nr(uint8_t data) {
 
     ed64_bios_reg_write(REG_SPI, data);
@@ -418,7 +420,7 @@ void ed64_bios_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen) {
 }
 
 /* Read from SRAM over DMA */
-void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
+void ed64_bios_dma_read_sram(void *ram, uint32_t address, uint32_t length) {
 
     volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
     volatile uint32_t piPwdReg = IO_READ(PI_BSD_DOM2_PWD_REG);
@@ -430,7 +432,7 @@ void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_read(ram, SRAM_FLASHRAM_ADDRESS + addr, len);
+    ed64_bios_dma_read(ram, SRAM_FLASHRAM_ADDRESS + address, length);
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, piPwdReg);
@@ -439,7 +441,7 @@ void ed64_bios_dma_read_sram(void *ram, uint32_t addr, uint32_t len) {
 }
 
 /* Write to SRAM over DMA */
-void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len) {
+void ed64_bios_dma_write_sram(void *ram, uint32_t address, uint32_t length) {
 
     volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
     volatile uint32_t piPwdReg = IO_READ(PI_BSD_DOM2_PWD_REG);
@@ -451,7 +453,7 @@ void ed64_bios_dma_write_sram(void *ram, uint32_t addr, uint32_t len) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_write(ram, SRAM_FLASHRAM_ADDRESS + addr, len);
+    ed64_bios_dma_write(ram, SRAM_FLASHRAM_ADDRESS + address, length);
 
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
@@ -486,30 +488,27 @@ typedef struct PI_regs_s {
 
 static volatile struct PI_regs_s * const PI_regs = (struct PI_regs_s *) PI_BASE_REG;
 
-void ed64_bios_dma_r(void * ram_address, unsigned long pi_address, unsigned long len) {
-
+void ed64_bios_dma_pi_read(void * ram_address, unsigned long pi_address, unsigned long length) {
 
     disable_interrupts();
-
     dma_wait();
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
-    PI_regs->write_length = len - 1;
+    PI_regs->write_length = length - 1;
     dma_wait();
 
     enable_interrupts();
 }
 
-void ed64_bios_dma_w(void * ram_address, unsigned long pi_address, unsigned long len) {
-
+void ed64_bios_dma_pi_write(void * ram_address, unsigned long pi_address, unsigned long length) {
 
     disable_interrupts();
     dma_wait();
     IO_WRITE(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
-    PI_regs->read_length = len - 1;
+    PI_regs->read_length = length - 1;
     dma_wait();
     enable_interrupts();
 }
@@ -518,18 +517,18 @@ void ed64_bios_dma_read(void *ram, uint32_t address, uint32_t length) {
 
 
     if (((uint32_t) ram & 0xF0000000) == 0x80000000) {
-        data_cache_hit_writeback_invalidate(ram, len);
-        ed64_bios_dma_r(ram, addr, len);
+        data_cache_hit_writeback_invalidate(ram, length);
+        ed64_bios_dma_pi_read(ram, address, length);
     } else {
-        ed64_bios_dma_r(ram, addr, len);
+        ed64_bios_dma_pi_read(ram, address, length);
     }
 
 }
 
 void ed64_bios_dma_write(void *ram, uint32_t address, uint32_t length) {
 
-    if (((uint32_t) ram & 0xF0000000) == 0x80000000)data_cache_hit_writeback(ram, len);
-    ed64_bios_dma_w(ram, addr, len);
+    if (((uint32_t) ram & 0xF0000000) == 0x80000000)data_cache_hit_writeback(ram, length);
+    ed64_bios_dma_pi_write(ram, address, length);
 }
 
 /** @brief Get the current FPGA version */

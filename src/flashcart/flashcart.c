@@ -46,7 +46,10 @@ flashcart_error_t flashcart_init (void) {
 
     switch (usb_getcart()) {
         case CART_64DRIVE:
+            break;
+
         case CART_EVERDRIVE:
+            // flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC64:

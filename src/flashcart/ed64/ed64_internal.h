@@ -112,8 +112,8 @@ void ed64_bios_byteswap_on();
 void ed64_bios_byteswap_off();
 
 /* Save functions */
-uint8_t ed64_bios_get_save_type();
-void ed64_bios_set_save_type(uint8_t type);
+ed64_save_type_t ed64_bios_get_save_type();
+void ed64_bios_set_save_type(ed64_save_type_t type);
 
 void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen);
 uint16_t ed64_bios_msg_rd();

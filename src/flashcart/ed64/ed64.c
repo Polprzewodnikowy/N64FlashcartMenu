@@ -14,9 +14,6 @@
 
 // #define SRAM_FLASHRAM_ADDRESS       (0x08000000)
 // #define ROM_ADDRESS                 (0x10000000)
-// #define EXTENDED_ADDRESS            (0x14000000)
-// #define SHADOW_ADDRESS              (0x1FFC0000)
-// #define EEPROM_ADDRESS              (0x1FFE2000)
 
 // #define SUPPORTED_MAJOR_VERSION     (2)
 // #define SUPPORTED_MINOR_VERSION     (12)
@@ -154,12 +151,8 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
     //     return FLASHCART_ERROR_INT;
     // }
 
-    // bool shadow_enabled = (rom_size > (MiB(64) - KiB(128)));
-    // bool extended_enabled = (rom_size > MiB(64));
 
-    // size_t sdram_size = shadow_enabled ? (MiB(64) - KiB(128)) : rom_size;
-    // size_t shadow_size = shadow_enabled ? MIN(rom_size - sdram_size, KiB(128)) : 0;
-    // size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
+    // size_t sdram_size = rom_size;
 
     // if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
     //     load_cleanup(&fil);
@@ -170,38 +163,9 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
     //     return FLASHCART_ERROR_LOAD;
     // }
 
-    // if (ed64_set_config(CFG_ROM_SHADOW_ENABLE, shadow_enabled) != ED64_OK) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_INT;
-    // }
-
-    // if (shadow_enabled) {
-    //     flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br);
-    //     if (error != FLASHCART_OK) {
-    //         load_cleanup(&fil);
-    //         return error;
-    //     }
-    //     if (br != shadow_size) {
-    //         load_cleanup(&fil);
-    //         return FLASHCART_ERROR_LOAD;
-    //     }
-    // }
-
     // if (ed64_set_config(CFG_ROM_EXTENDED_ENABLE, extended_enabled) != ED64_OK) {
     //     load_cleanup(&fil);
     //     return FLASHCART_ERROR_INT;
-    // }
-
-    // if (extended_enabled) {
-    //     flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br);
-    //     if (error != FLASHCART_OK) {
-    //         load_cleanup(&fil);
-    //         return error;
-    //     }
-    //     if (br != extended_size) {
-    //         load_cleanup(&fil);
-    //         return FLASHCART_ERROR_LOAD;
-    //     }
     // }
 
     // if (ed64_sd_set_byte_swap(false) != ED64_OK) {
@@ -218,26 +182,26 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
 
 static flashcart_error_t ed64_load_save (char *save_path) {
 //     void *address = NULL;
-//     ed64_save_type_t type;
+//     ed64_save_type_t type = ed64_bios_get_save_type();
 
-//     if (ed64_get_config(CFG_SAVE_TYPE, &type) != ED64_OK) {
-//         return FLASHCART_ERROR_INT;
-//     }
+// //     if (ed64_get_config(CFG_SAVE_TYPE, &type) != ED64_OK) {
+// //         return FLASHCART_ERROR_INT;
+// //     }
 
-//     switch (type) {
-//         case SAVE_TYPE_EEPROM_4K:
-//         case SAVE_TYPE_EEPROM_16K:
-//             address = (void *) (EEPROM_ADDRESS);
-//             break;
-//         case SAVE_TYPE_SRAM:
-//         case SAVE_TYPE_FLASHRAM:
-//         case SAVE_TYPE_SRAM_BANKED:
-//             address = (void *) (SRAM_FLASHRAM_ADDRESS);
-//             break;
-//         case SAVE_TYPE_NONE:
-//         default:
-//             return FLASHCART_ERROR_ARGS;
-//     }
+// //     switch (type) {
+// //         case SAVE_TYPE_EEPROM_4K:
+// //         case SAVE_TYPE_EEPROM_16K:
+// //             address = (void *) (EEPROM_ADDRESS);
+// //             break;
+// //         case SAVE_TYPE_SRAM:
+// //         case SAVE_TYPE_FLASHRAM:
+// //         case SAVE_TYPE_SRAM_BANKED:
+// //             address = (void *) (SRAM_FLASHRAM_ADDRESS);
+// //             break;
+// //         case SAVE_TYPE_NONE:
+// //         default:
+// //             return FLASHCART_ERROR_ARGS;
+// //     }
 
 //     FIL fil;
 //     UINT br;
@@ -265,7 +229,8 @@ static flashcart_error_t ed64_load_save (char *save_path) {
 }
 
 static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
-    ed64_save_type_t type;
+
+    ed64_save_type_t type = SAVE_TYPE_OFF;
 
     switch (save_type) {
         case FLASHCART_SAVE_TYPE_NONE:
@@ -281,8 +246,6 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_SRAM;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_BANKED:
-            type = SAVE_TYPE_SRAM128;
-            break;
         case FLASHCART_SAVE_TYPE_SRAM_128K:
             type = SAVE_TYPE_SRAM128;
             break;
@@ -302,15 +265,15 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t ed64_set_save_writeback (uint32_t *sectors) {
-//     ed64_write_data(sectors, ED64_BUFFERS->BUFFER, 1024);
+// static flashcart_error_t ed64_set_save_writeback (uint32_t *sectors) {
+// //     ed64_write_data(sectors, ED64_BUFFERS->BUFFER, 1024);
 
-//     if (ed64_writeback_enable(ED64_BUFFERS->BUFFER) != ED64_OK) {
-//         return FLASHCART_ERROR_INT;
-//     }
+// //     if (ed64_writeback_enable(ED64_BUFFERS->BUFFER) != ED64_OK) {
+// //         return FLASHCART_ERROR_INT;
+// //     }
 
-    return FLASHCART_OK;
-}
+//     return FLASHCART_OK;
+// }
 
 
 static flashcart_t flashcart_ed64 = {
@@ -319,7 +282,7 @@ static flashcart_t flashcart_ed64 = {
     .load_rom = ed64_load_rom,
     .load_save = ed64_load_save,
     .set_save_type = ed64_set_save_type,
-    .set_save_writeback = ed64_set_save_writeback,
+    //.set_save_writeback = ed64_set_save_writeback,
 };
 
 

@@ -95,7 +95,7 @@ void ed64_bios_dma_write(void *ram, uint32_t address, uint32_t length);
 
 static uint16_t spi_cfg;
 uint8_t ed64_bios_ram_bank;
-uint8_t ed64_bios_save_type;
+ed64_save_type_t ed64_bios_save_type;
 
 #define REG_LAT 0x04
 #define REG_PWD 0x04
@@ -334,12 +334,12 @@ void ed64_bios_byteswap_off() {
     ed64_bios_reg_write(REG_CFG, cfg);
 }
 
-uint8_t ed64_bios_get_save_type() {
+ed64_save_type_t ed64_bios_get_save_type() {
 
     return ed64_bios_save_type;
 }
 
-void ed64_bios_set_save_type(uint8_t type) {
+void ed64_bios_set_save_type(ed64_save_type_t type) {
 
     uint16_t save_cfg;
     uint8_t eeprom_on, sram_on, eeprom_size, sram_size, ram_bank;

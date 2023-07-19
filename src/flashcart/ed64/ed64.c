@@ -61,8 +61,8 @@ static flashcart_error_t ed64_init (void) {
     // HACK: Because libcart reads PI config from address 0x10000000 when initializing
     //       we need to write safe value before running any libcart function.
     //       Data in SDRAM can be undefined at this point and result in setting incorrect PI config.
-    // extern uint32_t cart_dom1;
-    // cart_dom1 = 0x80371240;
+    extern uint32_t cart_dom1;
+    cart_dom1 = 0x80371240;
 
     // ed64_bios_unlock_regs();
 
@@ -178,7 +178,7 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
 }
 
 static flashcart_error_t ed64_load_save (char *save_path) {
-//     void *address = NULL;
+    void *address = NULL;
 //     ed64_save_type_t type = ed64_bios_get_save_type();
 
 // //     if (ed64_get_config(CFG_SAVE_TYPE, &type) != ED64_OK) {
@@ -200,27 +200,27 @@ static flashcart_error_t ed64_load_save (char *save_path) {
 // //             return FLASHCART_ERROR_ARGS;
 // //     }
 
-//     FIL fil;
-//     UINT br;
+    FIL fil;
+    UINT br;
 
-//     if (f_open(&fil, save_path, FA_READ) != FR_OK) {
-//         return FLASHCART_ERROR_LOAD;
-//     }
+    if (f_open(&fil, save_path, FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-//     size_t save_size = f_size(&fil);
+    size_t save_size = f_size(&fil);
 
-//     if (f_read(&fil, address, save_size, &br) != FR_OK) {
-//         f_close(&fil);
-//         return FLASHCART_ERROR_LOAD;
-//     }
+    if (f_read(&fil, address, save_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
 
-//     if (f_close(&fil) != FR_OK) {
-//         return FLASHCART_ERROR_LOAD;
-//     }
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-//     if (br != save_size) {
-//         return FLASHCART_ERROR_LOAD;
-//     }
+    if (br != save_size) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
     return FLASHCART_OK;
 }

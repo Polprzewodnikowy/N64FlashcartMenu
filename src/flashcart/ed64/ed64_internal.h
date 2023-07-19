@@ -10,6 +10,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @addtogroup ed64
@@ -27,6 +28,17 @@ typedef enum {
     SAVE_TYPE_CPAK = 8,
     SAVE_TYPE_DD64 = 16,
 } ed64_save_type_t;
+
+
+typedef struct {
+    uint16_t assembily_date;  /* The Date that the ED64 was manufactured */
+    uint16_t assembily_time;  /* The Time that the ED64 was manufactured */
+    uint16_t serial_number;   /* The ED64 serial number (unique for each ED64) */
+    bool cic_6105_compatible; /* This returns whether the the cart CIC is 6105 compatible
+                                 as many were produced before Ultra CIC existed!
+                                 Carts that are not compatible will be unable to run certain ROMs */
+
+} ed64_cart_metadata_s;
 
 
 #define SRAM_FLASHRAM_ADDRESS (0xA8000000)
@@ -112,10 +124,13 @@ void ed64_bios_byteswap_on();
 void ed64_bios_byteswap_off();
 
 /* Save functions */
+void ed64_bios_set_ram_bank(uint8_t bank);
 ed64_save_type_t ed64_bios_get_save_type();
 void ed64_bios_set_save_type(ed64_save_type_t type);
 
-void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen);
+/* reads metadata related to the assembily date and cart capabilities */
+void ed64_bios_read_cart_metadata(void *dest);
+
 uint16_t ed64_bios_msg_rd();
 void ed64_bios_msg_wr(uint16_t val);
 
@@ -135,7 +150,7 @@ void ed64_bios_reset_spx();
 /* GPIO functions */
 void ed64_bios_gpio_mode_rtc();
 void ed64_bios_gpio_mode_io();
-void ed64_bios_gpio_off();
+void ed64_bios_gpio_mode_off();
 uint8_t ed64_bios_gpio_read();
 
 /* 64DD cart conversion save functions */

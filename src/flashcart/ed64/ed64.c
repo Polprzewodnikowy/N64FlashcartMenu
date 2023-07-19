@@ -67,6 +67,10 @@ static flashcart_error_t ed64_init (void) {
     // ed64_bios_unlock_regs();
 
     ed64_bios_init();
+    // ed64_bios_reset_spx(); // only required if V2+ FW is updating!
+
+    ed64_bios_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
+    ed64_bios_gpio_mode_io();
 
     // if (!ed64_check_presence()) {
     //     return FLASHCART_ERROR_UNSUPPORTED;
@@ -122,6 +126,7 @@ static flashcart_error_t ed64_deinit (void) {
     // ed64_set_config(CFG_ROM_WRITE_ENABLE, false);
 
     ed64_bios_lock_regs();
+    ed64_bios_gpio_mode_off();
 
     return FLASHCART_OK;
 }

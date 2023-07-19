@@ -46,10 +46,12 @@ flashcart_error_t flashcart_init (void) {
     }
 
     switch (usb_getcart()) {
+
         case CART_64DRIVE:
             break;
 
         case CART_EVERDRIVE:
+            /* Given that the ED64 uses a software implementation, this will likely fail unless running this menu?! */
             flashcart = ed64_get_flashcart();
             break;
 

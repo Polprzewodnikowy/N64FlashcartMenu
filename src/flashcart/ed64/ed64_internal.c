@@ -395,14 +395,21 @@ void ed64_bios_set_ram_bank(uint8_t bank) {
 
 }
 
-void ed64_bios_read_bios(void *dst, uint16_t start_address, uint16_t slen) {
+/* reads metadata related to the assembily date and cart capabilities */
+void ed64_bios_read_cart_metadata(void *dest) {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
 
     cfg &= ~ED_CFG_SDRAM_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
 
-    ed64_bios_dma_read_rom(dst, start_address, slen);
+    ed64_bios_dma_read_rom(dest, 0, 1);
+
+    // assembily_date = (buff[0x38] << 8) | buff[0x39];
+    // assembily_time = (buff[0x3A] << 8) | buff[0x3B];
+    // serial_number = (buff[0x3C] << 8) | buff[0x3D];
+    // cic_6105_compatible = buff[0x40] == 0x03 ? true : false; // CIC_6105 : CIC_6102;
+
 
     cfg |= ED_CFG_SDRAM_ON;
     ed64_bios_reg_write(REG_CFG, cfg);
@@ -617,7 +624,7 @@ void ed64_bios_gpio_mode_io() {
 }
 
 /* Set GPIO mode OFF */
-void ed64_bios_gpio_off() {
+void ed64_bios_gpio_mode_off() {
 
     uint16_t cfg = ed64_bios_reg_read(REG_CFG);
     cfg &= ~ED_CFG_GPIO_ON;

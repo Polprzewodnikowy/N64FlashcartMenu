@@ -265,37 +265,39 @@ static flashcart_error_t ed64_load_save (char *save_path) {
 }
 
 static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
-//     ed64_save_type_t type;
+    ed64_save_type_t type;
 
-//     switch (save_type) {
-//         case FLASHCART_SAVE_TYPE_NONE:
-//             type = SAVE_TYPE_NONE;
-//             break;
-//         case FLASHCART_SAVE_TYPE_EEPROM_4K:
-//             type = SAVE_TYPE_EEPROM_4K;
-//             break;
-//         case FLASHCART_SAVE_TYPE_EEPROM_16K:
-//             type = SAVE_TYPE_EEPROM_16K;
-//             break;
-//         case FLASHCART_SAVE_TYPE_SRAM:
-//             type = SAVE_TYPE_SRAM;
-//             break;
-//         case FLASHCART_SAVE_TYPE_SRAM_BANKED:
-//             type = SAVE_TYPE_SRAM_BANKED;
-//             break;
-//         case FLASHCART_SAVE_TYPE_SRAM_128K:
-//             type = SAVE_TYPE_SRAM_128K;
-//             break;
-//         case FLASHCART_SAVE_TYPE_FLASHRAM:
-//             type = SAVE_TYPE_FLASHRAM;
-//             break;
-//         default:
-//             return FLASHCART_ERROR_ARGS;
-//     }
+    switch (save_type) {
+        case FLASHCART_SAVE_TYPE_NONE:
+            type = SAVE_TYPE_OFF;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_4K:
+            type = SAVE_TYPE_EEP4k;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_16K:
+            type = SAVE_TYPE_EEP16k;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM:
+            type = SAVE_TYPE_SRAM;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM_BANKED:
+            type = SAVE_TYPE_SRAM128;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM_128K:
+            type = SAVE_TYPE_SRAM128;
+            break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM:
+            type = SAVE_TYPE_FLASH;
+            break;
+        default:
+            return FLASHCART_ERROR_ARGS;
+    }
 
-//     if (ed64_set_config(CFG_SAVE_TYPE, type) != ED64_OK) {
-//         return FLASHCART_ERROR_INT;
-//     }
+    // if (ed64_set_config(CFG_SAVE_TYPE, type) != ED64_OK) {
+    //     return FLASHCART_ERROR_INT;
+    // }
+
+    ed64_bios_set_save_type(type);
 
     return FLASHCART_OK;
 }

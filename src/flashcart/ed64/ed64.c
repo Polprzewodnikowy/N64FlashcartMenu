@@ -48,10 +48,10 @@
 //     return FLASHCART_OK;
 // }
 
-// static void load_cleanup (FIL *fil) {
-//     // ed64_sd_set_byte_swap(false);
-//     f_close(fil);
-// }
+static void load_cleanup (FIL *fil) {
+    ed64_bios_byteswap_off();
+    f_close(fil);
+}
 
 
 static flashcart_error_t ed64_init (void) {
@@ -133,7 +133,7 @@ static flashcart_error_t ed64_deinit (void) {
 
 static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
     FIL fil;
-    // UINT br;
+    UINT br;
 
     if (f_open(&fil, rom_path, FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
@@ -151,32 +151,24 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
         return FLASHCART_ERROR_LOAD;
     }
 
-    // if (ed64_sd_set_byte_swap(byte_swap) != ED64_OK) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_INT;
-    // }
+    if (byte_swap) {
+        ed64_bios_byteswap_on();
+    }
 
 
-    // size_t sdram_size = rom_size;
+    size_t sdram_size = rom_size;
 
-    // if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_LOAD;
-    // }
-    // if (br != sdram_size) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
+        load_cleanup(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+    if (br != sdram_size) {
+        load_cleanup(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // if (ed64_set_config(CFG_ROM_EXTENDED_ENABLE, extended_enabled) != ED64_OK) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_INT;
-    // }
 
-    // if (ed64_sd_set_byte_swap(false) != ED64_OK) {
-    //     load_cleanup(&fil);
-    //     return FLASHCART_ERROR_INT;
-    // }
+    ed64_bios_byteswap_off();
 
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERROR_LOAD;

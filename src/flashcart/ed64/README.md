@@ -6,7 +6,7 @@ It is based on OS 2.12.x as used in the "Unofficial Menu" (https://github.com/n6
 It may require further cleansing and updating to use the latest libdragon before it will probably work based on the fact that using the latest libdragon with `libcart` seems to have a detremental effect on the ability to load ROM's.
 
 
-Initially, this aims to work when loading the ED64 menu, selecting the N64FlashcartMenu and then loading a ROM from there. This works around needing to load the correct firmware. To automate this, it is possible to set the menu to autoload (at least in the unofficial menu). e.g. You can set this ROM to auto load by placing a file called `autoexec.v64` in the `ED64` folder with the content of the file pointing to the path of this ROM.
+Initially, this aims to work when loading the official ED64 OS menu, selecting the N64FlashcartMenu and then loading a ROM from there. This works around needing to load the correct firmware. To automate this, it is possible to set this menu to autoload (at least in the unofficial menu). i.e. You can set this ROM to auto load by placing a file called `autoexec.v64` in the `ED64` folder with the content of the file pointing to the path of this ROM.
 
 Notes: 
 

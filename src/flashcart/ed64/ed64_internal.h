@@ -41,8 +41,8 @@ typedef struct {
 } ed64_cart_metadata_s;
 
 
-#define SRAM_FLASHRAM_ADDRESS (0xA8000000)
-#define ROM_ADDRESS           (0xB0000000)
+#define SRAM_ADDRESS (0xA8000000)
+#define ROM_ADDRESS  (0xB0000000)
 
 #define USB_ERROR_FIFO_TIMEOUT 0x90
 #define EVD_ERROR_MMC_TIMEOUT 0x91

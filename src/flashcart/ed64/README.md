@@ -10,6 +10,6 @@ Initially, this aims to work when loading the ED64 menu, selecting the N64Flashc
 
 Notes: 
 
-`libcart`` seems to use a different base register address (0x08040000), but official implementation uses 0xA8040000
-
+* `libcart` seems to use a different base register address `0x08040000`, but official implementation uses `0xA8040000`
+* The ability to load/save `FLASHRAM` may not yet supported.
 

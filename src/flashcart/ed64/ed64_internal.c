@@ -439,7 +439,7 @@ void ed64_bios_dma_read_sram(void *ram, uint32_t address, uint32_t length) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_read(ram, SRAM_FLASHRAM_ADDRESS + address, length);
+    ed64_bios_dma_read(ram, SRAM_ADDRESS + address, length);
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, piPwdReg);
@@ -460,7 +460,7 @@ void ed64_bios_dma_write_sram(void *ram, uint32_t address, uint32_t length) {
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
 
-    ed64_bios_dma_write(ram, SRAM_FLASHRAM_ADDRESS + address, length);
+    ed64_bios_dma_write(ram, SRAM_ADDRESS + address, length);
 
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);

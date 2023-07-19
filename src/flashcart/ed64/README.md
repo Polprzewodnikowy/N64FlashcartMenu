@@ -11,5 +11,5 @@ Initially, this aims to work when loading the official ED64 OS menu, selecting t
 Notes: 
 
 * `libcart` seems to use a different base register address `0x08040000`, but official implementation uses `0xA8040000`
-* The ability to load/save `FLASHRAM` may not yet supported.
+* The ability to load/save `FLASHRAM` may not yet be supported.
 

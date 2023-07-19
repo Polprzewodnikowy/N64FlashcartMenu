@@ -138,7 +138,7 @@ void ed64_bios_gpio_mode_io();
 void ed64_bios_gpio_off();
 uint8_t ed64_bios_gpio_read();
 
-/* 64DD functions */
+/* 64DD cart conversion save functions */
 void ed64_bios_64dd_ram_oe();
 void ed64_bios_64dd_ram_we();
 void ed64_bios_64dd_ram_off();

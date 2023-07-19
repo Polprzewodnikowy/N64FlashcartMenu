@@ -638,7 +638,7 @@ uint8_t ed64_bios_gpio_read() {
 
 
 
-/* 64DD functions */
+/* 64DD cart conversion save functions */
 
 /* Set 64DD ON and Enabled?! */
 void ed64_bios_64dd_ram_oe() {

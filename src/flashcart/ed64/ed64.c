@@ -265,15 +265,15 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
-// static flashcart_error_t ed64_set_save_writeback (uint32_t *sectors) {
-// //     ed64_write_data(sectors, ED64_BUFFERS->BUFFER, 1024);
+static flashcart_error_t ed64_set_save_writeback (uint32_t *sectors) {
+//     ed64_write_data(sectors, ED64_BUFFERS->BUFFER, 1024);
 
-// //     if (ed64_writeback_enable(ED64_BUFFERS->BUFFER) != ED64_OK) {
-// //         return FLASHCART_ERROR_INT;
-// //     }
+//     if (ed64_writeback_enable(ED64_BUFFERS->BUFFER) != ED64_OK) {
+//         return FLASHCART_ERROR_INT;
+//     }
 
-//     return FLASHCART_OK;
-// }
+    return FLASHCART_OK;
+}
 
 
 static flashcart_t flashcart_ed64 = {
@@ -282,7 +282,7 @@ static flashcart_t flashcart_ed64 = {
     .load_rom = ed64_load_rom,
     .load_save = ed64_load_save,
     .set_save_type = ed64_set_save_type,
-    //.set_save_writeback = ed64_set_save_writeback,
+    .set_save_writeback = ed64_set_save_writeback,
 };
 
 

@@ -58,12 +58,6 @@ static flashcart_error_t ed64_init (void) {
     // uint16_t major;
     // uint16_t minor;
 
-    // HACK: Because libcart reads PI config from address 0x10000000 when initializing
-    //       we need to write safe value before running any libcart function.
-    //       Data in SDRAM can be undefined at this point and result in setting incorrect PI config.
-    extern uint32_t cart_dom1;
-    cart_dom1 = 0x80371240;
-
     // ed64_bios_unlock_regs();
 
     ed64_bios_init();
@@ -125,8 +119,8 @@ static flashcart_error_t ed64_deinit (void) {
     // // NOTE: Necessary because libcart enables ROM write by default
     // ed64_set_config(CFG_ROM_WRITE_ENABLE, false);
 
+    ed64_bios_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
     ed64_bios_lock_regs();
-    ed64_bios_gpio_mode_off();
 
     return FLASHCART_OK;
 }
@@ -146,7 +140,7 @@ static flashcart_error_t ed64_load_rom (char *rom_path, bool byte_swap) {
 
     size_t rom_size = f_size(&fil);
 
-    if (rom_size > MiB(78)) {
+    if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -262,16 +256,6 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t ed64_set_save_writeback (uint32_t *sectors) {
-//     ed64_write_data(sectors, ED64_BUFFERS->BUFFER, 1024);
-
-//     if (ed64_writeback_enable(ED64_BUFFERS->BUFFER) != ED64_OK) {
-//         return FLASHCART_ERROR_INT;
-//     }
-
-    return FLASHCART_OK;
-}
-
 
 static flashcart_t flashcart_ed64 = {
     .init = ed64_init,
@@ -279,7 +263,7 @@ static flashcart_t flashcart_ed64 = {
     .load_rom = ed64_load_rom,
     .load_save = ed64_load_save,
     .set_save_type = ed64_set_save_type,
-    .set_save_writeback = ed64_set_save_writeback,
+    .set_save_writeback = NULL,
 };
 
 

@@ -11,7 +11,7 @@
 static FILINFO info;
 
 /* loads a sprite for a given ROM ID from sd:/menu/boxart/<id>.sprite */
-static sprite_t *get_boxart(uint16_t id) {
+static sprite_t *boxart_sprite_load(uint16_t id) {
 
     char sd_boxart_path[26];
     sprintf(sd_boxart_path, "sd:/menu/boxart/%.2s.sprite", (char*)&(id));
@@ -311,11 +311,11 @@ static void draw (menu_t *menu, surface_t *d) {
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
 
-        sprite_t *temp_sprite = get_boxart(temp_header.metadata.unique_identifier);
-        if (temp_sprite != NULL)
+        sprite_t *boxart_sprite = boxart_sprite_load(temp_header.metadata.unique_identifier);
+        if (boxart_sprite != NULL)
         {
-            graphics_draw_sprite_trans(d, x_start_position, y_position, temp_sprite);
-            sprite_free(temp_sprite);
+            graphics_draw_sprite_trans(d, x_start_position, y_position, boxart_sprite);
+            sprite_free(boxart_sprite);
         }
         //menu_fileinfo_draw_n64_rom_info(d);
     }

@@ -10,6 +10,30 @@
 
 static FILINFO info;
 
+/* loads a sprite for a given ROM ID from sd:/menu/boxart/<id>.sprite */
+static sprite_t *get_boxart(uint16_t id) {
+
+    char sd_boxart_path[26];
+    sprintf(sd_boxart_path, "sd:/menu/boxart/%.2s.sprite", (char*)&(id));
+
+    FILE *fp = fopen(sd_boxart_path, "r");
+    debugf("loading boxart path: %s\n", sd_boxart_path);
+
+	if (fp) {
+        // the file exists so close it and load using the proper function.
+        fclose(fp);
+        return sprite_load(sd_boxart_path);
+    }
+
+    debugf("Error loading boxart sprite\n");
+
+    // In the case where there is no sprite available, we just return NULL.
+    sprite_t *sprite = NULL;
+    return sprite;
+    
+
+}
+
 static char *get_rom_endian_s (uint32_t endian) {
     switch (endian)
     {
@@ -285,6 +309,9 @@ static void draw (menu_t *menu, surface_t *d) {
         uint8_t memory_type = rom_db_match_expansion_pak(temp_header);
         sprintf(str_buffer,"Expansion PAK: %s\n", get_rom_memorytype_s(memory_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+        y_position += (font_vertical_pixels * 2);
+
+        graphics_draw_sprite_trans(d, x_start_position, y_position, get_boxart(temp_header.metadata.unique_identifier));
         //menu_fileinfo_draw_n64_rom_info(d);
     }
 

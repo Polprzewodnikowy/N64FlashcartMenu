@@ -20,7 +20,6 @@
 static menu_t *menu;
 static bool boot_pending;
 static tv_type_t tv_type;
-static sprite_t background_sprite;
 
 
 static void menu_init (boot_params_t *boot_params) {

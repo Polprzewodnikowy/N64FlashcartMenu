@@ -311,7 +311,12 @@ static void draw (menu_t *menu, surface_t *d) {
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
 
-        graphics_draw_sprite_trans(d, x_start_position, y_position, get_boxart(temp_header.metadata.unique_identifier));
+        sprite_t *temp_sprite = get_boxart(temp_header.metadata.unique_identifier);
+        if (temp_sprite != NULL)
+        {
+            graphics_draw_sprite_trans(d, x_start_position, y_position, temp_sprite);
+            sprite_free(temp_sprite);
+        }
         //menu_fileinfo_draw_n64_rom_info(d);
     }
 

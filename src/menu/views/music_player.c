@@ -124,7 +124,7 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 
-void view_player_init (menu_t *menu) {
+void view_music_player_init (menu_t *menu) {
     mp3player_err_t error;
 
     unmute_counter = 0;
@@ -151,10 +151,10 @@ void view_player_init (menu_t *menu) {
     path_free(path);
 }
 
-void view_player_display (menu_t *menu, surface_t *display) {
+void view_music_player_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);
-    if (menu->next_mode != MENU_MODE_PLAYER) {
+    if (menu->next_mode != MENU_MODE_MUSIC_PLAYER) {
         mp3player_deinit();
     }
 }

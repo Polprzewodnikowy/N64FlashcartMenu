@@ -20,6 +20,7 @@
 static menu_t *menu;
 static bool boot_pending;
 static tv_type_t tv_type;
+static sprite_t background_sprite;
 
 
 static void menu_init (boot_params_t *boot_params) {
@@ -57,7 +58,7 @@ static void menu_init (boot_params_t *boot_params) {
     menu->browser.directory = path_init(default_directory_exists ? menu->settings.default_directory : NULL);
 
     tv_type = get_tv_type();
-    if ((tv_type == TV_PAL) && menu->settings.pal60) {
+    if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
         TV_TYPE_RAM = TV_NTSC;
     }

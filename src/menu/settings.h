@@ -8,16 +8,23 @@
 #define SETTINGS_H__
 
 
-/** @brief Settings Structure */
+/** @brief Menu Settings Structure */
 typedef struct {
     /** @brief Select 60 Hz refresh rate if running on PAL console */
-    bool pal60;
+    bool pal60_enabled;
 
     /** @brief Show files marked as hidden in the browser */
     bool show_hidden_files;
 
     /** @brief Default directory to navigate to when menu loads */
     char *default_directory;
+
+    /** @brief Enable Sounds */
+    bool sounds_enabled;
+
+    /** @brief Enable rumble feedback */
+    bool rumble_enabled;
+
 } settings_t;
 
 

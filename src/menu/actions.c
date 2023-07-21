@@ -35,6 +35,19 @@ void actions_update (menu_t *menu) {
 
     actions_clear(menu);
 
+     if (menu->settings.rumble_enabled) {
+        if (pressed.c[0].A || pressed.c[0].B || pressed.c[0].L || pressed.c[0].R || pressed.c[0].C_up || pressed.c[0].C_down || pressed.c[0].up || pressed.c[0].down) {
+            rumble_start( 0 );
+            if ( pressed.c[0].C_up || pressed.c[0].C_down || pressed.c[0].up || pressed.c[0].down) {
+                wait_ms(5);
+            }
+            else {
+                wait_ms(10);
+            }
+            rumble_stop( 0 );
+        }
+    }
+
     if (down.c[0].up || down.c[0].C_up) {
         menu->actions.go_up = true;
         menu->actions.vertical_held_counter = 0;

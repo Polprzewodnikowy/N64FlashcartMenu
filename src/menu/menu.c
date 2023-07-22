@@ -112,8 +112,8 @@ void menu_run (boot_params_t *boot_params) {
                     view_system_info_display(menu, display);
                     break;
 
-                case MENU_MODE_PLAYER:
-                    view_player_display(menu, display);
+                case MENU_MODE_MUSIC_PLAYER:
+                    view_music_player_display(menu, display);
                     break;
 
                 case MENU_MODE_CREDITS:
@@ -158,8 +158,8 @@ void menu_run (boot_params_t *boot_params) {
                         view_system_info_init(menu);
                         break;
 
-                    case MENU_MODE_PLAYER:
-                        view_player_init(menu);
+                    case MENU_MODE_MUSIC_PLAYER:
+                        view_music_player_init(menu);
                         break;
 
                     case MENU_MODE_CREDITS:

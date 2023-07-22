@@ -209,7 +209,7 @@ static void process (menu_t *menu) {
                 menu->next_mode = MENU_MODE_LOAD;
                 break;
             case ENTRY_TYPE_MUSIC:
-                menu->next_mode = MENU_MODE_PLAYER;
+                menu->next_mode = MENU_MODE_MUSIC_PLAYER;
                 break;
             default:
                 menu->next_mode = MENU_MODE_FILE_INFO;

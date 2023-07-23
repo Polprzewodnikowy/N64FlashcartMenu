@@ -10,7 +10,7 @@
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", NULL };
-static const char *emulator_extensions[] = { "nes", NULL }; //  "gb", "gbc", "smc", "gen", "smd",
+static const char *emulator_extensions[] = { "nes", "gb", "gbc", "smc", "gen", "smd", NULL };
 static const char *save_extensions[] = { "sav", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 

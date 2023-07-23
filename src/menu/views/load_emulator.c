@@ -4,13 +4,45 @@
 #include "flashcart/flashcart.h"
 #include "fragments/fragments.h"
 #include "views.h"
+#include "utils/fs.h"
 
 #ifndef EMULATOR_FOLDER
 #define EMULATOR_FOLDER "/emulators/"
 #endif
 
+static const char *emu_nes_rom_extensions[] = { "nes", NULL };
+static const char *emu_gameboy_rom_extensions[] = { "gb", "gbc", NULL };
+static const char *emu_sega_rom_extensions[] = {"smc", "gen", "smd", NULL };
+
 static bool load_pending;
 
+
+static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
+
+    // TODO: this is only correct type for https://github.com/hcs64/neon64v2 NES emu!
+    
+    if (file_exists("sd:/emulators/emu.nes")) {
+ 
+        menu->flashcart_error = flashcart_load_rom("sd:/emulators/emu.nes", false);
+        // FIXME: Combine EMU and ROM before loading?!
+        //  menu->flashcart_error = flashcart_load_rom(path_get(path), false);
+        if (menu->flashcart_error != FLASHCART_OK) {
+            menu->next_mode = MENU_MODE_FAULT;
+            path_free(path);
+            return;
+        }
+
+        path_ext_replace(path, "sav");
+        menu->flashcart_error = flashcart_load_save(path_get(path), FLASHCART_SAVE_TYPE_SRAM_BANKED);
+        if (menu->flashcart_error != FLASHCART_OK) {
+            menu->next_mode = MENU_MODE_FAULT;
+            path_free(path);
+            return;
+        }
+
+    }
+
+}
 
 
 static void load (menu_t *menu) {
@@ -19,28 +51,14 @@ static void load (menu_t *menu) {
     path_t *path = path_clone(menu->browser.directory);
     path_push(path, menu->browser.list[menu->browser.selected].name);
 
-    // TODO: this is only correct type for https://github.com/hcs64/neon64v2 NES emu!
-
-    // FIXME: Check if the emulator exists in the folder...
-
-    // FIXME: Combine EMU and ROM before loading?!
-
-    // bool byte_swap = (rom_header.endian == ROM_MID_BIG_ENDIAN);
-    // menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap);
-    // if (menu->flashcart_error != FLASHCART_OK) {
-    //     menu->next_mode = MENU_MODE_FAULT;
-    //     path_free(path);
-    //     return;
-    // }
-
-    uint8_t emu_save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
-
-    path_ext_replace(path, "sav");
-    menu->flashcart_error = flashcart_load_save(path_get(path), emu_save_type);
-    if (menu->flashcart_error != FLASHCART_OK) {
-        menu->next_mode = MENU_MODE_FAULT;
-        path_free(path);
-        return;
+    if (file_has_extensions (path_get(path), emu_nes_rom_extensions)) {
+        load_emulator_nes_rom(path, menu);
+    }
+    else if (file_has_extensions (path_get(path), emu_gameboy_rom_extensions)) {
+        //load_emulator_gameboy_rom(path, menu);
+    }
+    if (file_has_extensions (path_get(path), emu_sega_rom_extensions)) {
+        //load_emulator_sega_rom(path, menu);
     }
 
     path_free(path);
@@ -88,13 +106,13 @@ static void draw (menu_t *menu, surface_t *d) {
         // Text start
         fragment_text_start(text_color);
 
-        // // Main screen
+        // Main screen
         text_y += fragment_textf(text_x, text_y, "ROM Type: %s", "Nintendo Entertainment System");
         text_y += fragment_textf(text_x, text_y, "Emulator: %s", "Neon64v2");
 
         // Actions bar
         text_y = layout->actions_y + layout->offset_text_y;
-        text_y += fragment_textf(text_x, text_y, "A: Load and run ROM");
+        text_y += fragment_textf(text_x, text_y, "A: Load and run EMU ROM");
         text_y += fragment_textf(text_x, text_y, "B: Exit");
     }
 
@@ -107,8 +125,6 @@ void view_load_emulator_init (menu_t *menu) {
 
     path_t *path = path_clone(menu->browser.directory);
     path_push(path, menu->browser.list[menu->browser.selected].name);
-
-    // rom_header = file_read_rom_header(path_get(path));
 
     path_free(path);
 }

@@ -7,7 +7,7 @@
 #include "utils/fs.h"
 
 #ifndef EMULATOR_FOLDER
-#define EMULATOR_FOLDER "sd:/emulators/"
+#define EMULATOR_FOLDER "/emulators/"
 #endif
 
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };
@@ -19,10 +19,10 @@ static bool load_pending;
 
 static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
     
-    if (file_exists("sd:/emulators/emu.nes")) { // || neon64bu.rom
+    if (file_exists(EMULATOR_FOLDER"emu.nes")) { // || neon64bu.rom
  
-        menu->flashcart_error = flashcart_load_rom("sd:/emulators/emu.nes", false);
-        // Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg
+        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.nes", false);
+        /* Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg */
          menu->flashcart_error = flashcart_load_emulator_rom(path_get(path));
         if (menu->flashcart_error != FLASHCART_OK) {
             menu->next_mode = MENU_MODE_FAULT;

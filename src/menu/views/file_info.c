@@ -228,6 +228,48 @@ static void process (menu_t *menu) {
     }
 }
 
+static void menu_fileinfo_draw_n64_rom_info(surface_t *d) {
+
+    char str_buffer[1024];
+
+    graphics_draw_line(d, d->width / 2, 67, d->width / 2, d->height - 45, 0xff);
+    int x_start_position = (d->width / 2) + horizontal_start_position;
+    int y_position = 67;
+    graphics_draw_text(d, x_start_position, y_position, "N64 ROM Information:\n\n");
+    y_position += (font_vertical_pixels * 2);
+
+    sprintf(str_buffer,"File Endian: %s\n", format_rom_endian(rom_header.endian));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    y_position += (font_vertical_pixels * 2);
+    sprintf(str_buffer,"Title: %s\n", rom_header.title);
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    sprintf(str_buffer,"Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    sprintf(str_buffer,"Destination Market: %c - %s\n", rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    sprintf(str_buffer,"Version: %hhu\n", rom_header.version);
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    sprintf(str_buffer,"Checksum: 0x%016llX\n", rom_header.checksum);
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    y_position += (font_vertical_pixels * 2);
+    uint8_t save_type = rom_db_match_save_type(rom_header);
+    sprintf(str_buffer,"Save Type: %s\n", format_rom_save_type(save_type));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    y_position += (font_vertical_pixels * 2);
+    uint8_t memory_type = rom_db_match_expansion_pak(rom_header);
+    sprintf(str_buffer,"Expansion PAK: %s\n", format_rom_memory_type(memory_type));
+    graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
+    y_position += (font_vertical_pixels * 2);
+
+    if (boxart_sprite != NULL)
+    {
+        graphics_draw_sprite_trans(d, x_start_position, y_position, boxart_sprite);
+    }
+
+}
+
 static void draw (menu_t *menu, surface_t *d) {
     // const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
 
@@ -275,47 +317,9 @@ static void draw (menu_t *menu, surface_t *d) {
     graphics_draw_text(d, horizontal_start_position, vertical_position, "Type:");
     graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, format_file_type());
 
-    // TODO: split into a seperate menu item.
     if (strcmp(format_file_type(), "N64 ROM") == 0) {
-        graphics_draw_line(d, d->width / 2, 67, d->width / 2, d->height - 45, 0xff);
-        int x_start_position = (d->width / 2) + horizontal_start_position;
-        int y_position = 67;
-        graphics_draw_text(d, x_start_position, y_position, "N64 ROM Information:\n\n");
-        y_position += (font_vertical_pixels * 2);
 
-        path_t *path = path_clone(menu->browser.directory);
-        path_push(path, menu->browser.list[menu->browser.selected].name);
-
-        sprintf(str_buffer,"File Endian: %s\n", format_rom_endian(rom_header.endian));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        sprintf(str_buffer,"Title: %s\n", rom_header.title);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Destination Market: %c - %s\n", rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Version: %hhu\n", rom_header.version);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Checksum: 0x%016llX\n", rom_header.checksum);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        uint8_t save_type = rom_db_match_save_type(rom_header);
-        sprintf(str_buffer,"Save Type: %s\n", format_rom_save_type(save_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        uint8_t memory_type = rom_db_match_expansion_pak(rom_header);
-        sprintf(str_buffer,"Expansion PAK: %s\n", format_rom_memory_type(memory_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-
-        if (boxart_sprite != NULL)
-        {
-            graphics_draw_sprite_trans(d, x_start_position, y_position, boxart_sprite);
-        }
-        //menu_fileinfo_draw_n64_rom_info(d);
+        menu_fileinfo_draw_n64_rom_info(d);
     }
 
 	graphics_draw_line(d, 0, d->height - overscan_vertical_pixels - font_vertical_pixels, d->width,d->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);

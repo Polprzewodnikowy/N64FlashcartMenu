@@ -32,6 +32,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
     .load_rom = NULL,
+    .load_emulator_rom = NULL,
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
@@ -106,6 +107,13 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
     }
 
     return error;
+}
+
+flashcart_error_t flashcart_load_emulator_rom (char *rom_path) {
+    if ((rom_path == NULL) || (!file_exists(rom_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+    return flashcart->load_emulator_rom(rom_path);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {

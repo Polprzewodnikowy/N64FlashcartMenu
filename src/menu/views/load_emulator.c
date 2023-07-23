@@ -7,7 +7,7 @@
 #include "utils/fs.h"
 
 #ifndef EMULATOR_FOLDER
-#define EMULATOR_FOLDER "/emulators/"
+#define EMULATOR_FOLDER "sd:/emulators/"
 #endif
 
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };
@@ -18,14 +18,12 @@ static bool load_pending;
 
 
 static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
-
-    // TODO: this is only correct type for https://github.com/hcs64/neon64v2 NES emu!
     
-    if (file_exists("sd:/emulators/emu.nes")) {
+    if (file_exists("sd:/emulators/emu.nes")) { // || neon64bu.rom
  
         menu->flashcart_error = flashcart_load_rom("sd:/emulators/emu.nes", false);
-        // FIXME: Combine EMU and ROM before loading?!
-        //  menu->flashcart_error = flashcart_load_rom(path_get(path), false);
+        // Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg
+         menu->flashcart_error = flashcart_load_emulator_rom(path_get(path));
         if (menu->flashcart_error != FLASHCART_OK) {
             menu->next_mode = MENU_MODE_FAULT;
             path_free(path);
@@ -57,7 +55,7 @@ static void load (menu_t *menu) {
     else if (file_has_extensions (path_get(path), emu_gameboy_rom_extensions)) {
         //load_emulator_gameboy_rom(path, menu);
     }
-    if (file_has_extensions (path_get(path), emu_sega_rom_extensions)) {
+    else if (file_has_extensions (path_get(path), emu_sega_rom_extensions)) {
         //load_emulator_sega_rom(path, menu);
     }
 

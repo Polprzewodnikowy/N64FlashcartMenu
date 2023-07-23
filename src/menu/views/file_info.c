@@ -9,6 +9,8 @@
 
 
 static FILINFO info;
+static rom_header_t rom_header;
+static sprite_t *boxart_sprite;
 
 /* loads a sprite for a given ROM ID from sd:/menu/boxart/<id>.sprite */
 static sprite_t *boxart_sprite_load(uint16_t id) {
@@ -284,38 +286,34 @@ static void draw (menu_t *menu, surface_t *d) {
         path_t *path = path_clone(menu->browser.directory);
         path_push(path, menu->browser.list[menu->browser.selected].name);
 
-        rom_header_t temp_header = file_read_rom_header(path_get(path));
-
-        sprintf(str_buffer,"File Endian: %s\n", get_rom_endian_s(temp_header.endian));
+        sprintf(str_buffer,"File Endian: %s\n", get_rom_endian_s(rom_header.endian));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
-        sprintf(str_buffer,"Title: %s\n", temp_header.title);
+        sprintf(str_buffer,"Title: %s\n", rom_header.title);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %c - %s\n", temp_header.metadata.media_type, get_rom_mediatype_s(temp_header.metadata.media_type));
+        sprintf(str_buffer,"Media Type: %c - %s\n", rom_header.metadata.media_type, get_rom_mediatype_s(rom_header.metadata.media_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
+        sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Destination Market: %c - %s\n", temp_header.metadata.destination_market, get_rom_destination_market_s(temp_header.metadata.destination_market));
+        sprintf(str_buffer,"Destination Market: %c - %s\n", rom_header.metadata.destination_market, get_rom_destination_market_s(rom_header.metadata.destination_market));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Version: %hhu\n", temp_header.version);
+        sprintf(str_buffer,"Version: %hhu\n", rom_header.version);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Checksum: 0x%016llX\n", temp_header.checksum);
+        sprintf(str_buffer,"Checksum: 0x%016llX\n", rom_header.checksum);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
-        uint8_t save_type = rom_db_match_save_type(temp_header);
+        uint8_t save_type = rom_db_match_save_type(rom_header);
         sprintf(str_buffer,"Save Type: %s\n", get_rom_savetype_s(save_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
-        uint8_t memory_type = rom_db_match_expansion_pak(temp_header);
+        uint8_t memory_type = rom_db_match_expansion_pak(rom_header);
         sprintf(str_buffer,"Expansion PAK: %s\n", get_rom_memorytype_s(memory_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
 
-        sprite_t *boxart_sprite = boxart_sprite_load(temp_header.metadata.unique_identifier);
         if (boxart_sprite != NULL)
         {
             graphics_draw_sprite_trans(d, x_start_position, y_position, boxart_sprite);
-            sprite_free(boxart_sprite);
         }
         //menu_fileinfo_draw_n64_rom_info(d);
     }
@@ -334,6 +332,10 @@ void view_file_info_init (menu_t *menu) {
     path_push(file, menu->browser.list[menu->browser.selected].name);
     if (f_stat(path_get(file), &info) != FR_OK) {
         menu->next_mode = MENU_MODE_ERROR;
+    }
+    if (strcmp(get_file_type_s(), "N64 ROM") == 0) {
+        rom_header = file_read_rom_header(path_get(file));
+        boxart_sprite = boxart_sprite_load(rom_header.metadata.unique_identifier);
     }
     path_free(file);
 }

@@ -36,7 +36,7 @@ static sprite_t *boxart_sprite_load(uint16_t id) {
 
 }
 
-static char *get_rom_endian_s (uint32_t endian) {
+static char *format_rom_endian (uint32_t endian) {
     switch (endian)
     {
     case ROM_BIG_ENDIAN:
@@ -58,7 +58,7 @@ static char *get_rom_endian_s (uint32_t endian) {
     }
 }
 
-static char *get_rom_mediatype_s (uint8_t type) {
+static char *format_rom_media_type (uint8_t type) {
     switch (type)
     {
     case N64_CART:
@@ -82,7 +82,7 @@ static char *get_rom_mediatype_s (uint8_t type) {
     }
 }
 
-static char *get_rom_destination_market_s (uint8_t market_type) {
+static char *format_rom_destination_market (uint8_t market_type) {
     // TODO: These are all assumptions and should be corrected if required.
     switch (market_type) {
         case MARKET_ALL:
@@ -129,7 +129,7 @@ static char *get_rom_destination_market_s (uint8_t market_type) {
     }
 }
 
-static char *get_rom_savetype_s (uint8_t type) {
+static char *format_rom_save_type (uint8_t type) {
     switch (type)
     {
     case DB_SAVE_TYPE_EEPROM_4K:
@@ -159,7 +159,7 @@ static char *get_rom_savetype_s (uint8_t type) {
     }
 }
 
-static char *get_rom_memorytype_s (uint8_t type) {
+static char *format_rom_memory_type (uint8_t type) {
     switch (type)
     {
     case DB_MEMORY_EXPANSION_REQUIRED:
@@ -180,7 +180,7 @@ static char *get_rom_memorytype_s (uint8_t type) {
     }
 }
 
-static char *get_file_type_s (void) {
+static char *format_file_type (void) {
     // TODO: should be at least a switch statement!
     if (str_endswith(info.fname, ".z64", false) ||
         str_endswith(info.fname, ".n64", false) ||
@@ -273,10 +273,10 @@ static void draw (menu_t *menu, surface_t *d) {
     vertical_position += (font_vertical_pixels * 2);
 
     graphics_draw_text(d, horizontal_start_position, vertical_position, "Type:");
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, get_file_type_s());
+    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, format_file_type());
 
     // TODO: split into a seperate menu item.
-    if (strcmp(get_file_type_s(), "N64 ROM") == 0) {
+    if (strcmp(format_file_type(), "N64 ROM") == 0) {
         graphics_draw_line(d, d->width / 2, 67, d->width / 2, d->height - 45, 0xff);
         int x_start_position = (d->width / 2) + horizontal_start_position;
         int y_position = 67;
@@ -286,16 +286,16 @@ static void draw (menu_t *menu, surface_t *d) {
         path_t *path = path_clone(menu->browser.directory);
         path_push(path, menu->browser.list[menu->browser.selected].name);
 
-        sprintf(str_buffer,"File Endian: %s\n", get_rom_endian_s(rom_header.endian));
+        sprintf(str_buffer,"File Endian: %s\n", format_rom_endian(rom_header.endian));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
         sprintf(str_buffer,"Title: %s\n", rom_header.title);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %c - %s\n", rom_header.metadata.media_type, get_rom_mediatype_s(rom_header.metadata.media_type));
+        sprintf(str_buffer,"Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Destination Market: %c - %s\n", rom_header.metadata.destination_market, get_rom_destination_market_s(rom_header.metadata.destination_market));
+        sprintf(str_buffer,"Destination Market: %c - %s\n", rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         sprintf(str_buffer,"Version: %hhu\n", rom_header.version);
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
@@ -303,11 +303,11 @@ static void draw (menu_t *menu, surface_t *d) {
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
         uint8_t save_type = rom_db_match_save_type(rom_header);
-        sprintf(str_buffer,"Save Type: %s\n", get_rom_savetype_s(save_type));
+        sprintf(str_buffer,"Save Type: %s\n", format_rom_save_type(save_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
         uint8_t memory_type = rom_db_match_expansion_pak(rom_header);
-        sprintf(str_buffer,"Expansion PAK: %s\n", get_rom_memorytype_s(memory_type));
+        sprintf(str_buffer,"Expansion PAK: %s\n", format_rom_memory_type(memory_type));
         graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
         y_position += (font_vertical_pixels * 2);
 
@@ -333,7 +333,7 @@ void view_file_info_init (menu_t *menu) {
     if (f_stat(path_get(file), &info) != FR_OK) {
         menu->next_mode = MENU_MODE_ERROR;
     }
-    if (strcmp(get_file_type_s(), "N64 ROM") == 0) {
+    if (strcmp(format_file_type(), "N64 ROM") == 0) {
         rom_header = file_read_rom_header(path_get(file));
         boxart_sprite = boxart_sprite_load(rom_header.metadata.unique_identifier);
     }

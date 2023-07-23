@@ -11,6 +11,13 @@
 
 ## Basic usage
 
+### Emulator support
+Emulators should be added to the `sd:/emulators/` folder
+
+The menu currently supports the following emulators and associated ROM's:
+* neon64v2 (https://github.com/hcs64/neon64v2) - emu.nes
+
+
 ### SC64
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.

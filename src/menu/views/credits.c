@@ -1,11 +1,11 @@
 #include <libdragon.h>
 
-#include "../menu_res_setup.h"
+#include "fragments/fragments.h"
 #include "views.h"
 
 
 #ifndef MENU_VERSION
-#define MENU_VERSION "0.0.0.4"
+#define MENU_VERSION "0.0.0.5.ALPHA"
 #endif
 
 
@@ -16,37 +16,48 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-	graphics_fill_screen(d, 0x00);
+    layout_t *layout = layout_get();
 
-	graphics_draw_text(d, (d->width / 2) - 64, vertical_start_position, "MENU INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
-	graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
+    const int text_x = layout->offset_x + layout->offset_text_x;
+    int text_y = layout->offset_y + layout->offset_text_y;
 
-	int16_t vertical_position = 40;
+    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
+    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
 
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "Menu Revision: V");
-	graphics_draw_text(d, horizontal_start_position + 16 * 8, vertical_position, MENU_VERSION);
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "Authors:");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "JonesAlmighty / NetworkFusion");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "korgeaux / Polprzewodnikowy");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Credits:");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "N64Brew / libdragon contributors.");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Github:");
-	// graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/NetworkFusion/N64FlashcartMenu");
-	//graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/dragonminded/libdragon");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "OSS licenses used:");
-	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, "UNLICENSE");
-	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, "MIT");
+    rdpq_attach(d, NULL);
+    rdpq_clear(bg_color);
 
-	graphics_draw_line(d, 0, d->height - overscan_vertical_pixels - font_vertical_pixels, d->width,d->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
-	graphics_draw_text(d, (d->width / 2) - 80,d->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
+    // Layout
+    fragment_borders(d);
 
-    display_show(d);
+    // Text start
+    fragment_text_start(text_color);
+
+	text_y += fragment_textf((d->width / 2) - 76, text_y, "MENU INFORMATION");
+
+	text_y += fragment_textf(text_x, text_y, "\n");
+
+	text_y += fragment_textf(text_x, text_y, "Menu Revision: V%s", MENU_VERSION);
+	text_y += fragment_textf(text_x, text_y, "\n");
+	text_y += fragment_textf(text_x, text_y, "Authors:");
+	text_y += fragment_textf(text_x, text_y, "  JonesAlmighty / NetworkFusion");
+	text_y += fragment_textf(text_x, text_y, "  korgeaux / Polprzewodnikowy");
+	text_y += fragment_textf(text_x, text_y, "\n");
+	text_y += fragment_textf(text_x, text_y, "Credits:");
+	text_y += fragment_textf(text_x, text_y, "  N64Brew / libdragon contributors.");
+	text_y += fragment_textf(text_x, text_y, "\n");
+	text_y += fragment_textf(text_x, text_y, "Github:");
+	text_y += fragment_textf(text_x, text_y, "  https://github.com/Polprzewodnikowy/N64FlashcartMenu");
+	text_y += fragment_textf(text_x, text_y, "\n");
+	text_y += fragment_textf(text_x, text_y, "OSS licenses used:");
+	text_y += fragment_textf(text_x, text_y, "  UNLICENSE");
+	text_y += fragment_textf(text_x, text_y, "  MIT");
+
+    // Actions bar
+    text_y = layout->actions_y + layout->offset_text_y;
+    text_y += fragment_textf(text_x, text_y, "B: Exit");
+
+    rdpq_detach_show();
 }
 
 

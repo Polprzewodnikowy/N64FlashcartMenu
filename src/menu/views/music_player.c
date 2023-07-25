@@ -1,6 +1,6 @@
 #include <libdragon.h>
 
-#include "../mp3player.h"
+#include "../mp3_player.h"
 #include "fragments/fragments.h"
 #include "views.h"
 

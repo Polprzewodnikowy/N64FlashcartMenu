@@ -9,7 +9,7 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -I $(SOURCE_DIR)/libs $(FLAGS)
 N64_LDFLAGS += --wrap asset_load
 
 SRCS = \
@@ -20,12 +20,18 @@ SRCS = \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \
+	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \
+	libs/miniz/miniz_tdef.c \
+	libs/miniz/miniz_tinfl.c \
+	libs/miniz/miniz_zip.c \
+	libs/miniz/miniz.c \
 	menu/actions.c \
 	menu/assets.c \
 	menu/menu.c \
-	menu/mp3player.c \
+	menu/mp3_player.c \
 	menu/path.c \
+	menu/png_decoder.c \
 	menu/rom_database.c \
 	menu/settings.c \
 	menu/views/browser.c \
@@ -44,15 +50,19 @@ SRCS = \
 ASSETS = \
 	FiraMono-Bold.ttf
 
-$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2000-206F -r 2190-21FF
+OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS) $(ASSETS))))
+MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
+SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
+
+$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
+$(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
+$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2000-206F
 
 $(BUILD_DIR)/%.o: $(ASSETS_DIR)/%.ttf
 	@echo "    [FONT] $@"
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(ASSETS_DIR) "$<"
 	@$(N64_OBJCOPY) -I binary -O elf32-bigmips -B mips4300 $(basename $<).font64 $@
 	@rm $(basename $<).font64
-
-OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS) $(ASSETS))))
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 

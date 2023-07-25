@@ -14,7 +14,7 @@
 #include "settings.h"
 
 
-#define BROWSER_LIST_SIZE   10000
+#define BROWSER_LIST_SIZE   2048
 
 
 /** @brief Menu mode enumeration */

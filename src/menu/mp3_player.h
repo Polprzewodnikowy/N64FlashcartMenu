@@ -4,8 +4,8 @@
  * @ingroup menu 
  */
 
-#ifndef MP3PLAYER_H__
-#define MP3PLAYER_H__
+#ifndef MP3_PLAYER_H__
+#define MP3_PLAYER_H__
 
 
 #include <stdbool.h>

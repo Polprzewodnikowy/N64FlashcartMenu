@@ -8,7 +8,7 @@
 #include "flashcart/flashcart.h"
 #include "menu_state.h"
 #include "menu.h"
-#include "mp3player.h"
+#include "mp3_player.h"
 #include "settings.h"
 #include "utils/fs.h"
 #include "views/views.h"
@@ -89,7 +89,7 @@ void menu_run (boot_params_t *boot_params) {
 
     int audio_buffer_length = audio_get_buffer_length();
 
-    while (!boot_pending && (exception_reset_time() == 0)) {
+    while (!boot_pending && (exception_reset_time() < RESET_TIME_LENGTH)) {
         surface_t *display = display_try_get();
 
         if (display != NULL) {
@@ -188,7 +188,7 @@ void menu_run (boot_params_t *boot_params) {
             }
         }
 
-        if (audio_can_write()) {
+        while (audio_can_write()) {
             short *audio_buffer = audio_write_begin();
             mixer_poll(audio_buffer, audio_buffer_length);
             audio_write_end();

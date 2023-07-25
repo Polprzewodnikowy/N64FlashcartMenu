@@ -1,12 +1,12 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
 
-#include "mp3player.h"
+#include "mp3_player.h"
 #include "utils/utils.h"
 
 #define MINIMP3_IMPLEMENTATION
-#include "libs/minimp3/minimp3.h"
-#include "libs/minimp3/minimp3_ex.h"
+#include <minimp3/minimp3_ex.h>
+#include <minimp3/minimp3.h>
 
 
 #define MIXER_CHANNEL   (0)
@@ -22,7 +22,7 @@ typedef struct {
     mp3dec_t dec;
     mp3dec_frame_info_t info;
 
-    uint8_t buffer[24 * 1024];
+    uint8_t buffer[16 * 1024];
     uint8_t *buffer_ptr;
     size_t buffer_left;
 

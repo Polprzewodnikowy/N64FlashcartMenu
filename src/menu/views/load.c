@@ -207,14 +207,7 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_clear(bg_color);
 
     if (load_pending) {
-        const int offset_x = 248;
-        const int offset_y = 212;
-        const int text_offset_x = -39;
-
-        // Loading screen
-        widget_border(offset_x, offset_y, d->width - offset_x, d->height - offset_y, layout->border_thickness);
-        fragment_text_start(text_color);
-        fragment_textf((d->width / 2) + text_offset_x, (d->height / 2) - (layout->line_height / 2), "Loading…");
+        fragment_loader(d);
     } else {
         // Layout
         fragment_borders(d);

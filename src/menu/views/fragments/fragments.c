@@ -94,3 +94,15 @@ int fragment_textf (int x, int y, char *fmt, ...) {
 
     return layout.line_height;
 }
+
+void fragment_loader (surface_t *d) {
+    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
+
+    const int offset_x = 248;
+    const int offset_y = 212;
+    const int text_offset_x = -39;
+
+    widget_border(offset_x, offset_y, d->width - offset_x, d->height - offset_y, layout.border_thickness);
+    fragment_text_start(text_color);
+    fragment_textf((d->width / 2) + text_offset_x, (d->height / 2) - (layout.line_height / 2), "Loading…");
+}

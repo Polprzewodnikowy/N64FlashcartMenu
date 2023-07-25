@@ -112,6 +112,10 @@ void menu_run (boot_params_t *boot_params) {
                     view_system_info_display(menu, display);
                     break;
 
+                case MENU_MODE_IMAGE_VIEWER:
+                    view_image_viewer_display(menu, display);
+                    break;
+
                 case MENU_MODE_MUSIC_PLAYER:
                     view_music_player_display(menu, display);
                     break;
@@ -156,6 +160,10 @@ void menu_run (boot_params_t *boot_params) {
 
                     case MENU_MODE_SYSTEM_INFO:
                         view_system_info_init(menu);
+                        break;
+
+                    case MENU_MODE_IMAGE_VIEWER:
+                        view_image_viewer_init(menu);
                         break;
 
                     case MENU_MODE_MUSIC_PLAYER:

@@ -51,6 +51,7 @@ void fragment_progressbar (surface_t *d, float progress);
 void fragment_text_start (color_t color);
 void fragment_text_set_color (color_t color);
 int fragment_textf (int x, int y, char *fmt, ...);
+void fragment_loader (surface_t *d);
 
 
 /** @} */ /* view_fragments */

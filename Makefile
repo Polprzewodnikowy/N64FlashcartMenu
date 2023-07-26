@@ -17,6 +17,7 @@ SRCS = \
 	boot/boot.c \
 	boot/crc32.c \
 	boot/ipl2.S \
+	flashcart/flashcart_utils.c \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \

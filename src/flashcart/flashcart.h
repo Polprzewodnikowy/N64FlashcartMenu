@@ -16,7 +16,6 @@
 typedef enum {
     FLASHCART_OK,
     FLASHCART_ERROR_NOT_DETECTED,
-    FLASHCART_ERROR_SD_CARD_ERROR,
     FLASHCART_ERROR_UNSUPPORTED,
     FLASHCART_ERROR_OUTDATED,
     FLASHCART_ERROR_ARGS,
@@ -40,7 +39,7 @@ typedef enum {
 typedef struct {
     flashcart_error_t (*init) (void);
     flashcart_error_t (*deinit) (void);
-    flashcart_error_t (*load_rom) (char *rom_path, bool byte_swap);
+    flashcart_error_t (*load_rom) (char *rom_path);
     flashcart_error_t (*load_save) (char *save_path);
     flashcart_error_t (*set_save_type) (flashcart_save_type_t save_type);
     flashcart_error_t (*set_save_writeback) (uint32_t *sectors);

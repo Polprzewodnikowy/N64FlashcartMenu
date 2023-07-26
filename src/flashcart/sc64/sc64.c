@@ -8,6 +8,7 @@
 #include "utils/fs.h"
 #include "utils/utils.h"
 
+#include "../flashcart_utils.h"
 #include "sc64_internal.h"
 #include "sc64.h"
 
@@ -51,21 +52,9 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
     return FLASHCART_OK;
 }
 
-static void load_cleanup (FIL *fil) {
-    sc64_sd_set_byte_swap(false);
-    f_close(fil);
-}
-
-
 static flashcart_error_t sc64_init (void) {
     uint16_t major;
     uint16_t minor;
-
-    // HACK: Because libcart reads PI config from address 0x10000000 when initializing
-    //       we need to write safe value before running any libcart function.
-    //       Data in SDRAM can be undefined at this point and result in setting incorrect PI config.
-    extern uint32_t cart_dom1;
-    cart_dom1 = 0x80371240;
 
     sc64_unlock();
 
@@ -127,7 +116,7 @@ static flashcart_error_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_rom (char *rom_path, bool byte_swap) {
+static flashcart_error_t sc64_load_rom (char *rom_path) {
     FIL fil;
     UINT br;
 
@@ -135,21 +124,13 @@ static flashcart_error_t sc64_load_rom (char *rom_path, bool byte_swap) {
         return FLASHCART_ERROR_LOAD;
     }
 
-    // HACK: Align file size to the SD sector size to prevent FatFs from doing partial sector load.
-    //       We are relying on direct transfer from SD to SDRAM without CPU intervention.
-    //       Sending some extra bytes isn't an issue here.
-    fil.obj.objsize = ALIGN(f_size(&fil), FS_SECTOR_SIZE);
+    fix_file_size(&fil);
 
     size_t rom_size = f_size(&fil);
 
     if (rom_size > MiB(78)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
-    }
-
-    if (sc64_sd_set_byte_swap(byte_swap) != SC64_OK) {
-        load_cleanup(&fil);
-        return FLASHCART_ERROR_INT;
     }
 
     bool shadow_enabled = (rom_size > (MiB(64) - KiB(128)));
@@ -160,51 +141,46 @@ static flashcart_error_t sc64_load_rom (char *rom_path, bool byte_swap) {
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
     if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
-        load_cleanup(&fil);
+        f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
     if (br != sdram_size) {
-        load_cleanup(&fil);
+        f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
 
     if (sc64_set_config(CFG_ROM_SHADOW_ENABLE, shadow_enabled) != SC64_OK) {
-        load_cleanup(&fil);
+        f_close(&fil);
         return FLASHCART_ERROR_INT;
     }
 
     if (shadow_enabled) {
         flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br);
         if (error != FLASHCART_OK) {
-            load_cleanup(&fil);
+            f_close(&fil);
             return error;
         }
         if (br != shadow_size) {
-            load_cleanup(&fil);
+            f_close(&fil);
             return FLASHCART_ERROR_LOAD;
         }
     }
 
     if (sc64_set_config(CFG_ROM_EXTENDED_ENABLE, extended_enabled) != SC64_OK) {
-        load_cleanup(&fil);
+        f_close(&fil);
         return FLASHCART_ERROR_INT;
     }
 
     if (extended_enabled) {
         flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br);
         if (error != FLASHCART_OK) {
-            load_cleanup(&fil);
+            f_close(&fil);
             return error;
         }
         if (br != extended_size) {
-            load_cleanup(&fil);
+            f_close(&fil);
             return FLASHCART_ERROR_LOAD;
         }
-    }
-
-    if (sc64_sd_set_byte_swap(false) != SC64_OK) {
-        load_cleanup(&fil);
-        return FLASHCART_ERROR_INT;
     }
 
     if (f_close(&fil) != FR_OK) {

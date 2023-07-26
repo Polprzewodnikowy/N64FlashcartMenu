@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include <libcart/cart.h>
 #include <libdragon.h>
 #include <usb.h>
 
@@ -40,16 +41,27 @@ static flashcart_t *flashcart = &((flashcart_t) {
 flashcart_error_t flashcart_init (void) {
     flashcart_error_t error;
 
-    if (usb_initialize() == CART_NONE) {
+    // HACK: Because libcart reads PI config from address 0x10000000 when initializing
+    //       we need to write safe value before running any libcart function.
+    //       Data in SDRAM can be undefined on some flashcarts at this point
+    //       and might result in setting incorrect PI config.
+    extern uint32_t cart_dom1;
+    cart_dom1 = 0x80371240;
+
+    if (!debug_init_sdfs("sd:/", -1)) {
         return FLASHCART_ERROR_NOT_DETECTED;
     }
 
-    switch (usb_getcart()) {
-        case CART_64DRIVE:
-        case CART_EVERDRIVE:
+    // NOTE: Flashcart model is extracted from libcart after debug_init_sdfs call is made
+    extern int cart_type;
+
+    switch (cart_type) {
+        case CART_CI: // 64drive
+        case CART_ED: // Original EverDrive-64
+        case CART_EDX: // Series X EverDrive-64
             break;
 
-        case CART_SC64:
+        case CART_SC: // SC64
             flashcart = sc64_get_flashcart();
             break;
 
@@ -61,12 +73,9 @@ flashcart_error_t flashcart_init (void) {
         return error;
     }
 
-    if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_SD_CARD_ERROR;
-    }
-
-#ifndef NDEBUG
-    assertf(debug_init_usblog(), "Couldn't initialize USB debugging");
+#ifndef MENU_NO_USB_LOG
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
 #endif
 
     return FLASHCART_OK;
@@ -80,10 +89,23 @@ flashcart_error_t flashcart_deinit (void) {
 }
 
 flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
+    flashcart_error_t error;
+
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
         return FLASHCART_ERROR_ARGS;
     }
-    return flashcart->load_rom(rom_path, byte_swap);
+
+    if (cart_card_byteswap(byte_swap)) {
+        return FLASHCART_ERROR_INT;
+    }
+
+    error = flashcart->load_rom(rom_path);
+
+    if (cart_card_byteswap(false)) {
+        return FLASHCART_ERROR_INT;
+    }
+
+    return error;
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {

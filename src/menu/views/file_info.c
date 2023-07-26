@@ -1,16 +1,50 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
+#include <stdlib.h>
 
-#include "../menu_res_setup.h"
+#include "../png_decoder.h"
 #include "../rom_database.h"
 #include "fragments/fragments.h"
 #include "utils/str_utils.h"
 #include "views.h"
 
+#ifndef ROM_BOXART_PATH
+#define ROM_BOXART_PATH "/menu/boxart/"
+#endif
+
 
 static FILINFO info;
+static rom_header_t rom_header;
+static surface_t *boxart_image;
+static rspq_block_t *cached_boxart_image_dl;
 
-static char *get_rom_endian_s (uint32_t endian) {
+/* loads a PNG image for a given ROM ID from ROM_BOXART_PATH. e.g. sd:/menu/boxart/<id>.png */
+static void boxart_image_load (uint16_t id) {
+    char sd_boxart_path[26];
+    sprintf(sd_boxart_path, ROM_BOXART_PATH"%.2s.png", (char*)&(id));
+
+    boxart_image = calloc(1, sizeof(surface_t));
+
+    if (png_decode(sd_boxart_path, boxart_image, 158, 112) == PNG_OK) {
+        debugf("Found and decoded boxart image: %s\n", sd_boxart_path);
+
+        // FIXME: use relative layout.
+
+        uint16_t x = (640 - 150) - (boxart_image->width / 2);
+        uint16_t y = (480 - 150) - (boxart_image->height / 2);
+
+        rspq_block_begin();
+
+        rdpq_set_mode_copy(false);
+        rdpq_tex_blit(boxart_image, x, y, NULL);
+
+        cached_boxart_image_dl = rspq_block_end();
+    } else {
+        debugf("Error loading boxart image\n");
+    }
+}
+
+static char *format_rom_endian (uint32_t endian) {
     switch (endian)
     {
     case ROM_BIG_ENDIAN:
@@ -32,7 +66,7 @@ static char *get_rom_endian_s (uint32_t endian) {
     }
 }
 
-static char *get_rom_mediatype_s (uint8_t type) {
+static char *format_rom_media_type (uint8_t type) {
     switch (type)
     {
     case N64_CART:
@@ -56,54 +90,54 @@ static char *get_rom_mediatype_s (uint8_t type) {
     }
 }
 
-static char *get_rom_destination_market_s (uint8_t market_type) {
+static char *format_rom_destination_market (uint8_t market_type) {
     // TODO: These are all assumptions and should be corrected if required.
     switch (market_type) {
         case MARKET_ALL:
             return "All";
         case MARKET_BRAZIL:
-            return "BRA (MPAL)";
+            return "Brazil (MPAL)";
         case MARKET_CHINA:
-            return "CHN";
+            return "China";
         case MARKET_GERMANY:
-            return "DEU (PAL)";
+            return "Germany (PAL)";
         case MARKET_USA:
             return "USA (NTSC)";
         case MARKET_FRANCE:
-            return "FRA (PAL)";
+            return "France (PAL)";
         case MARKET_NETHERLANDS:
-            return "NLD (PAL)";
+            return "Netherlands (PAL)";
         case MARKET_ITALY:
-            return "ITA (PAL)";
+            return "Italy (PAL)";
         case MARKET_JAPAN:
-            return "JPN (NTSC)";
+            return "Japan (NTSC)";
         case MARKET_KOREA:
-            return "KOR";
+            return "Korea";
         case MARKET_CANADA:
-            return "CAN";
+            return "Canada";
         case MARKET_SPAIN:
-            return "ESP (PAL)";
+            return "Spain (PAL)";
         case MARKET_AUSTRAILA:
-            return "AUS (PAL)";
+            return "Austraila (PAL)";
         case MARKET_SCANDINAVAIA:
             return "Scandinavaia";
         case MARKET_GATEWAY64_NTSC:
-            return "GW64 (NTSC)";
+            return "Gateway (NTSC)";
         case MARKET_GATEWAY64_PAL:
-            return "GW64 (PAL)";
+            return "Gateway (PAL)";
         case MARKET_PAL_GENERIC:
             return "Generic (PAL)";
         case MARKET_PAL_X: //FIXME: some AUS ROM's use this so not only EUR
         case MARKET_PAL_Y:
         case MARKET_PAL_Z:
-            return "??? (PAL)";
+            return "Unknown (PAL)";
 
         default:
             return "Unknown";
     }
 }
 
-static char *get_rom_savetype_s (uint8_t type) {
+static char *format_rom_save_type (uint8_t type) {
     switch (type)
     {
     case DB_SAVE_TYPE_EEPROM_4K:
@@ -133,7 +167,7 @@ static char *get_rom_savetype_s (uint8_t type) {
     }
 }
 
-static char *get_rom_memorytype_s (uint8_t type) {
+static char *format_rom_memory_type (uint8_t type) {
     switch (type)
     {
     case DB_MEMORY_EXPANSION_REQUIRED:
@@ -154,7 +188,8 @@ static char *get_rom_memorytype_s (uint8_t type) {
     }
 }
 
-static char *get_file_type_s (void) {
+
+static char *format_file_type (void) {
     // TODO: should be at least a switch statement!
     if (str_endswith(info.fname, ".z64", false) ||
         str_endswith(info.fname, ".n64", false) ||
@@ -202,106 +237,132 @@ static void process (menu_t *menu) {
     }
 }
 
-static void draw (menu_t *menu, surface_t *d) {
-    // const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
-
-    // rdpq_attach(d, NULL);
-    // rdpq_clear(bg_color);
-
-    // fragment_borders(d);
-
-
-    char str_buffer[1024];
-
-	graphics_fill_screen(d, 0x00);
-
-    graphics_draw_text(d, (d->width / 2) - 64, vertical_start_position, "FILE INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
-	graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
-
-    int16_t vertical_position = 40;
-
-    graphics_draw_text(d, horizontal_start_position, vertical_position, "Name:");
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, info.fname);
-    vertical_position += (font_vertical_pixels * 2);
-
-    graphics_draw_text(d, horizontal_start_position, vertical_position, "Size:");
-    sprintf(str_buffer, "%d %s", (int)info.fsize, "Bytes");
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
-    vertical_position += (font_vertical_pixels * 2);
-
-    graphics_draw_text(d, horizontal_start_position, vertical_position, "Attributes:");
-    sprintf(str_buffer, "%s%s%s%s%s\n",
-                ((info.fattrib & AM_DIR) ? "Directory" : "File"),
+static void menu_fileinfo_draw_unknown_info(surface_t *d, layout_t *layout) {
+    const int text_x = layout->offset_x + layout->offset_text_x;
+    int text_y = layout->offset_y + layout->offset_text_y;
+    text_y += fragment_textf(text_x, text_y, "File Information:\n\n");
+    text_y += fragment_textf(text_x, text_y, "  Name:\n\n  %s\n", info.fname);
+    text_y += fragment_textf(text_x, text_y, "  Size:\n\n  %d Bytes\n", (int)info.fsize);           
+    text_y += fragment_textf(text_x, text_y, "  Attributes:\n\n  %s%s%s%s%s\n",
+                ((info.fattrib & AM_DIR) ? "  Directory" : "File"),
                 ((info.fattrib & AM_RDO) ? " | ReadOnly" : ""),
                 ((info.fattrib & AM_SYS) ? " | System" : ""),
                 ((info.fattrib & AM_ARC) ? " | Archive" : ""),
                 ((info.fattrib & AM_HID) ? " | Hidden" : "")
                 );
-           
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
-    vertical_position += (font_vertical_pixels * 2);
 
-    graphics_draw_text(d, horizontal_start_position, vertical_position, "Modified Timestamp:");
-    sprintf(str_buffer, "%u-%02u-%02u, %02u:%02u", (info.fdate >> 9) + 1980, info.fdate >> 5 & 15, info.fdate & 31, info.ftime >> 11, info.ftime >> 5 & 63);
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, str_buffer);
-    vertical_position += (font_vertical_pixels * 2);
+    text_y += fragment_textf(text_x, text_y, "  Modified Timestamp:\n\n  %u-%02u-%02u, %02u:%02u\n", 
+                (info.fdate >> 9) + 1980,
+                info.fdate >> 5 & 15,
+                info.fdate & 31,
+                info.ftime >> 11,
+                info.ftime >> 5 & 63
+                );
 
-    graphics_draw_text(d, horizontal_start_position, vertical_position, "Type:");
-    graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, get_file_type_s());
+    text_y += fragment_textf(text_x, text_y, "  Type:\n\n  %s\n", format_file_type());
+}
 
-    // TODO: split into a seperate menu item.
-    if (strcmp(get_file_type_s(), "N64 ROM") == 0) {
-        graphics_draw_line(d, d->width / 2, 67, d->width / 2, d->height - 45, 0xff);
-        int x_start_position = (d->width / 2) + horizontal_start_position;
-        int y_position = 67;
-        graphics_draw_text(d, x_start_position, y_position, "N64 ROM Information:\n\n");
-        y_position += (font_vertical_pixels * 2);
+static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
 
-        path_t *path = path_clone(menu->browser.directory);
-        path_push(path, menu->browser.list[menu->browser.selected].name);
+    const int text_x = layout->offset_x + layout->offset_text_x;
+    int text_y = layout->offset_y + layout->offset_text_y;
+    text_y += fragment_textf(text_x, text_y, "File Information:\n\n");
+    text_y += fragment_textf(text_x, text_y, "  Name:\n\n  %s\n", info.fname);
+    text_y += fragment_textf(text_x, text_y, "  Size:\n\n  %d Bytes\n", (int)info.fsize);
+    text_y += fragment_textf(text_x, text_y, "  Modified Timestamp:\n\n  %u-%02u-%02u, %02u:%02u\n", 
+            (info.fdate >> 9) + 1980,
+            info.fdate >> 5 & 15,
+            info.fdate & 31,
+            info.ftime >> 11,
+            info.ftime >> 5 & 63
+            );
 
-        rom_header_t temp_header = file_read_rom_header(path_get(path));
+    text_y += fragment_textf(text_x, text_y, "\n");
+    text_y += fragment_textf(text_x, text_y, "N64 ROM Information:\n\n");
+    text_y += fragment_textf(text_x, text_y, "  Endian: %s\n", format_rom_endian(rom_header.endian));
+    text_y += fragment_textf(text_x, text_y, "  Title: %s\n", rom_header.title);
+    text_y += fragment_textf(text_x, text_y, "  Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
+    text_y += fragment_textf(text_x, text_y, "  Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));
+    text_y += fragment_textf(text_x, text_y, "  Destination Market: %c - %s\n", rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market));
+    text_y += fragment_textf(text_x, text_y, "  Version: %hhu\n", rom_header.version);
+    text_y += fragment_textf(text_x, text_y, "  Checksum: 0x%016llX\n", rom_header.checksum);
+    text_y += fragment_textf(text_x, text_y, "  Save Type: %s\n", format_rom_save_type(rom_db_match_save_type(rom_header)));
+    text_y += fragment_textf(text_x, text_y, "  Expansion PAK: %s\n\n", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
 
-        sprintf(str_buffer,"File Endian: %s\n", get_rom_endian_s(temp_header.endian));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        sprintf(str_buffer,"Title: %s\n", temp_header.title);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Media Type: %c - %s\n", temp_header.metadata.media_type, get_rom_mediatype_s(temp_header.metadata.media_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Unique ID: %.2s\n", (char*)&(temp_header.metadata.unique_identifier));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Destination Market: %c - %s\n", temp_header.metadata.destination_market, get_rom_destination_market_s(temp_header.metadata.destination_market));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Version: %hhu\n", temp_header.version);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        sprintf(str_buffer,"Checksum: 0x%016llX\n", temp_header.checksum);
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        uint8_t save_type = rom_db_match_save_type(temp_header);
-        sprintf(str_buffer,"Save Type: %s\n", get_rom_savetype_s(save_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        y_position += (font_vertical_pixels * 2);
-        uint8_t memory_type = rom_db_match_expansion_pak(temp_header);
-        sprintf(str_buffer,"Expansion PAK: %s\n", get_rom_memorytype_s(memory_type));
-        graphics_draw_text(d, x_start_position, y_position += font_vertical_pixels, str_buffer);
-        //menu_fileinfo_draw_n64_rom_info(d);
+    if (boxart_image != NULL && cached_boxart_image_dl != NULL)
+    {
+        rspq_block_run(cached_boxart_image_dl);
     }
 
-	graphics_draw_line(d, 0, d->height - overscan_vertical_pixels - font_vertical_pixels, d->width,d->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
-	graphics_draw_text(d, (d->width / 2) - 80,d->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
+}
 
-    display_show(d);
+static void draw (menu_t *menu, surface_t *d) {
 
-    // rdpq_detach_show();
+    layout_t *layout = layout_get();
+
+    const int text_x = layout->offset_x + layout->offset_text_x;
+    int text_y = layout->offset_y + layout->offset_text_y;
+
+    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
+    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
+
+    rdpq_attach(d, NULL);
+    rdpq_clear(bg_color);
+
+    // Layout
+    fragment_borders(d);
+
+    // Text start
+    fragment_text_start(text_color);
+
+
+    if (strcmp(format_file_type(), "N64 ROM") == 0) {
+
+        menu_fileinfo_draw_n64_rom_info(d, layout);
+    }
+    else {
+        menu_fileinfo_draw_unknown_info(d, layout);
+    }
+
+    /* Ensure RDP mode and loaded texture dont mess up font drawing. */
+    fragment_text_start(text_color);
+    
+    // Actions bar
+    text_y = layout->actions_y + layout->offset_text_y;
+    text_y += fragment_textf(text_x, text_y, "B: Exit");
+
+    rdpq_detach_show();
+}
+
+
+static void dl_free (void *arg) {
+    if (cached_boxart_image_dl != NULL) {
+        rspq_block_free((rspq_block_t *) (arg));
+    }
+}
+
+static void deinit (menu_t *menu) {
+    if (boxart_image != NULL) {
+        rdpq_call_deferred(dl_free, cached_boxart_image_dl);
+        surface_free(boxart_image);
+        free(boxart_image);
+    }
 }
 
 
 void view_file_info_init (menu_t *menu) {
+    boxart_image = NULL;
+    cached_boxart_image_dl = NULL;
+
     path_t *file = path_clone(menu->browser.directory);
     path_push(file, menu->browser.list[menu->browser.selected].name);
     if (f_stat(path_get(file), &info) != FR_OK) {
         menu->next_mode = MENU_MODE_ERROR;
+    }
+    if (strcmp(format_file_type(), "N64 ROM") == 0) {
+        rom_header = file_read_rom_header(path_get(file));
+
+        boxart_image_load(rom_header.metadata.unique_identifier);
     }
     path_free(file);
 }
@@ -309,4 +370,8 @@ void view_file_info_init (menu_t *menu) {
 void view_file_info_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);
+
+    if (menu->next_mode != MENU_MODE_FILE_INFO) {
+        deinit(menu);
+    }
 }

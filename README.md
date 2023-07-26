@@ -15,6 +15,11 @@
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
+#### ROM Boxart
+To use boxart, you need to place png files of size 158x112 in the folder `sd://menu/boxart/`
+Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`
+A known set of PNG files can be downloaded from https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w
+
 
 #### Save types
 `0` = NONE

@@ -50,8 +50,12 @@ static void draw (menu_t *menu, surface_t *d) {
 	text_y += fragment_textf(text_x, text_y, "  https://github.com/Polprzewodnikowy/N64FlashcartMenu");
 	text_y += fragment_textf(text_x, text_y, "\n");
 	text_y += fragment_textf(text_x, text_y, "OSS licenses used:");
-	text_y += fragment_textf(text_x, text_y, "  UNLICENSE");
+	text_y += fragment_textf(text_x, text_y, "  UNLICENSE"); /* libdragon license */
 	text_y += fragment_textf(text_x, text_y, "  MIT");
+    text_y += fragment_textf(text_x, text_y, "  BSD 2-Clause"); /* libspng license */
+    text_y += fragment_textf(text_x, text_y, "  CC0 1.0 Universal"); /* minimp3 license */
+    // text_y += fragment_textf(text_x, text_y, "  Permissive, unspecific"); /* miniz license */
+
 
     // Actions bar
     text_y = layout->actions_y + layout->offset_text_y;

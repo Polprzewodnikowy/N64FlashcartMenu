@@ -188,6 +188,7 @@ static char *format_rom_memory_type (uint8_t type) {
     }
 }
 
+
 static char *format_file_type (void) {
     // TODO: should be at least a switch statement!
     if (str_endswith(info.fname, ".z64", false) ||

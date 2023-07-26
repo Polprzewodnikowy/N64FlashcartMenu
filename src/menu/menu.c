@@ -2,13 +2,14 @@
 
 #include <libdragon.h>
 
-#include "boot/boot.h"
 #include "actions.h"
 #include "assets.h"
+#include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
+#include "png_decoder.h"
 #include "settings.h"
 #include "utils/fs.h"
 #include "views/views.h"
@@ -201,6 +202,8 @@ void menu_run (boot_params_t *boot_params) {
             mixer_poll(audio_buffer, audio_buffer_length);
             audio_write_end();
         }
+
+        png_poll();
     }
 
     menu_deinit(menu);

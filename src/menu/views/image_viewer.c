@@ -6,8 +6,8 @@
 #include "views.h"
 
 
+static bool image_loading;
 static surface_t *image;
-static rspq_block_t *cached_image_dl;
 
 
 static void process (menu_t *menu) {
@@ -19,50 +19,35 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach_clear(d, NULL);
 
-    if (image == NULL) {
+    if (!image) {
         fragment_loader(d);
     } else {
-        rspq_block_run(cached_image_dl);
+        uint16_t x = (d->width / 2) - (image->width / 2);
+        uint16_t y = (d->height / 2) - (image->height / 2);
+
+        rdpq_set_mode_copy(false);
+        rdpq_tex_blit(image, x, y, NULL);
     }
 
     rdpq_detach_show();
 }
 
-static void deffered_image_load (menu_t *menu, surface_t *d) {
-    image = calloc(1, sizeof(surface_t));
+static void image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
+    image_loading = false;
+    image = decoded_image;
 
-    if (image == NULL) {
-        menu->next_mode = MENU_MODE_ERROR;
-        return;
-    }
-
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
-
-    if (png_decode(path_get(path), image, 640, 480) == PNG_OK) {
-        uint16_t x = (d->width / 2) - (image->width / 2);
-        uint16_t y = (d->height / 2) - (image->height / 2);
-
-        rspq_block_begin();
-
-        rdpq_set_mode_copy(false);
-        rdpq_tex_blit(image, x, y, NULL);
-
-        cached_image_dl = rspq_block_end();
-    } else {
+    if (err != PNG_OK) {
+        menu_t *menu = (menu_t *) (callback_data);
         menu->next_mode = MENU_MODE_ERROR;
     }
-
-    path_free(path);
-}
-
-static void dl_free (void *arg) {
-    rspq_block_free((rspq_block_t *) (arg));
 }
 
 static void deinit (menu_t *menu) {
-    if (image != NULL) {
-        rdpq_call_deferred(dl_free, cached_image_dl);
+    if (image_loading) {
+        png_decode_abort();
+    }
+
+    if (image) {
         surface_free(image);
         free(image);
     }
@@ -70,18 +55,25 @@ static void deinit (menu_t *menu) {
 
 
 void view_image_viewer_init (menu_t *menu) {
+    image_loading = false;
     image = NULL;
-    cached_image_dl = NULL;
+
+    path_t *path = path_clone(menu->browser.directory);
+    path_push(path, menu->browser.list[menu->browser.selected].name);
+
+    if (png_decode_start(path_get(path), 640, 480, image_callback, menu) == PNG_OK) {
+        image_loading = true;
+    } else {
+        menu->next_mode = MENU_MODE_ERROR;
+    }
+
+    path_free(path);
 }
 
 void view_image_viewer_display (menu_t *menu, surface_t *display) {
     process(menu);
 
     draw(menu, display);
-
-    if (image == NULL) {
-        deffered_image_load(menu, display);
-    }
 
     if (menu->next_mode != MENU_MODE_IMAGE_VIEWER) {
         deinit(menu);

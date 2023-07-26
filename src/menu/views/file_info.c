@@ -9,42 +9,19 @@
 #include "utils/str_utils.h"
 #include "views.h"
 
+
 #ifndef ROM_BOXART_PATH
-#define ROM_BOXART_PATH "/menu/boxart/"
+#define ROM_BOXART_PATH "/menu/boxart"
 #endif
 
 
 static FILINFO info;
 static const char *n64_rom_extensions[] = { "z64", "n64", "v64", NULL };
 static rom_header_t rom_header;
+
+static bool boxart_image_loading;
 static surface_t *boxart_image;
-static rspq_block_t *cached_boxart_image_dl;
 
-/* loads a PNG image for a given ROM ID from ROM_BOXART_PATH. e.g. sd:/menu/boxart/<id>.png */
-static void boxart_image_load (uint16_t id) {
-    char sd_boxart_path[26];
-    sprintf(sd_boxart_path, ROM_BOXART_PATH"%.2s.png", (char*)&(id));
-
-    boxart_image = calloc(1, sizeof(surface_t));
-
-    if (png_decode(sd_boxart_path, boxart_image, 158, 112) == PNG_OK) {
-        debugf("Found and decoded boxart image: %s\n", sd_boxart_path);
-
-        // FIXME: use relative layout.
-
-        uint16_t x = (640 - 150) - (boxart_image->width / 2);
-        uint16_t y = (480 - 150) - (boxart_image->height / 2);
-
-        rspq_block_begin();
-
-        rdpq_set_mode_copy(false);
-        rdpq_tex_blit(boxart_image, x, y, NULL);
-
-        cached_boxart_image_dl = rspq_block_end();
-    } else {
-        debugf("Error loading boxart image\n");
-    }
-}
 
 static char *format_rom_endian (uint32_t endian) {
     switch (endian)
@@ -291,15 +268,15 @@ static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
     text_y += fragment_textf(text_x, text_y, "  Save Type: %s\n", format_rom_save_type(rom_db_match_save_type(rom_header)));
     text_y += fragment_textf(text_x, text_y, "  Expansion PAK: %s\n\n", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
 
-    if (boxart_image != NULL && cached_boxart_image_dl != NULL)
-    {
-        rspq_block_run(cached_boxart_image_dl);
+    if (boxart_image) {
+        uint16_t x = (640 - 150) - (boxart_image->width / 2);
+        uint16_t y = (480 - 150) - (boxart_image->height / 2);
+        rdpq_set_mode_copy(false);
+        rdpq_tex_blit(boxart_image, x, y, NULL);
     }
-
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-
     layout_t *layout = layout_get();
 
     const int text_x = layout->offset_x + layout->offset_text_x;
@@ -317,17 +294,15 @@ static void draw (menu_t *menu, surface_t *d) {
     // Text start
     fragment_text_start(text_color);
 
-
     if (file_has_extensions(info.fname, n64_rom_extensions)) {
         menu_fileinfo_draw_n64_rom_info(d, layout);
-    }
-    else {
+    } else {
         menu_fileinfo_draw_unknown_info(d, layout);
     }
 
-    /* Ensure RDP mode and loaded texture dont mess up font drawing. */
+    // Ensure RDP mode and loaded texture dont mess up font drawing.
     fragment_text_start(text_color);
-    
+
     // Actions bar
     text_y = layout->actions_y + layout->offset_text_y;
     text_y += fragment_textf(text_x, text_y, "B: Exit");
@@ -335,16 +310,27 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+static void boxart_image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
+    boxart_image_loading = false;
+    boxart_image = decoded_image;
+}
 
-static void dl_free (void *arg) {
-    if (cached_boxart_image_dl != NULL) {
-        rspq_block_free((rspq_block_t *) (arg));
+/* loads a PNG image for a given ROM ID from ROM_BOXART_PATH. e.g. sd:/menu/boxart/<id>.png */
+static void boxart_image_load (uint16_t id) {
+    char sd_boxart_path[32];
+    sprintf(sd_boxart_path, "%s/%.2s.png", ROM_BOXART_PATH, (char *) (&id));
+
+    if (png_decode_start(sd_boxart_path, 158, 112, boxart_image_callback, NULL) != PNG_OK) {
+        debugf("Error loading boxart image\n");
     }
 }
 
 static void deinit (menu_t *menu) {
-    if (boxart_image != NULL) {
-        rdpq_call_deferred(dl_free, cached_boxart_image_dl);
+    if (boxart_image_loading) {
+        png_decode_abort();
+    }
+
+    if (boxart_image) {
         surface_free(boxart_image);
         free(boxart_image);
     }
@@ -352,24 +338,30 @@ static void deinit (menu_t *menu) {
 
 
 void view_file_info_init (menu_t *menu) {
+    boxart_image_loading = true;
     boxart_image = NULL;
-    cached_boxart_image_dl = NULL;
+
+    char *file_name = menu->browser.list[menu->browser.selected].name;
 
     path_t *file = path_clone(menu->browser.directory);
-    path_push(file, menu->browser.list[menu->browser.selected].name);
+    path_push(file, file_name);
+
     if (f_stat(path_get(file), &info) != FR_OK) {
         menu->next_mode = MENU_MODE_ERROR;
     }
-    if (file_has_extensions(info.fname, n64_rom_extensions)) {
+
+    if (file_has_extensions(file_name, n64_rom_extensions)) {
         rom_header = file_read_rom_header(path_get(file));
 
         boxart_image_load(rom_header.metadata.unique_identifier);
     }
+
     path_free(file);
 }
 
 void view_file_info_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
 
     if (menu->next_mode != MENU_MODE_FILE_INFO) {

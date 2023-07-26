@@ -16,12 +16,9 @@ Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
 #### ROM Boxart
-To generate the boxart, you need to use the latest version of libdragon mksprite from the unstable branch.
-Due to active development, it might be required to regenerate them from time to time.
+To use boxart, you need to place png files of size 158x112 in the folder `sd://menu/boxart/`
+Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`
 A known set of PNG files can be downloaded from https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w
-
-Example to generate Goldeneye Boxart `$N64_INST/bin/mksprite -v GE.png`
-Then copy the `GE.sprite` file to the SD card in the folder `menu/boxart/`
 
 
 #### Save types

@@ -1,39 +1,47 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
+#include <stdlib.h>
 
-#include "../menu_res_setup.h"
+#include "../png_decoder.h"
 #include "../rom_database.h"
 #include "fragments/fragments.h"
 #include "utils/str_utils.h"
 #include "views.h"
 
+#ifndef ROM_BOXART_PATH
+#define ROM_BOXART_PATH "/menu/boxart/"
+#endif
+
 
 static FILINFO info;
 static rom_header_t rom_header;
-static sprite_t *boxart_sprite;
+static surface_t *boxart_image;
+static rspq_block_t *cached_boxart_image_dl;
 
-/* loads a sprite for a given ROM ID from sd:/menu/boxart/<id>.sprite */
-static sprite_t *boxart_sprite_load(uint16_t id) {
-
+/* loads a PNG image for a given ROM ID from ROM_BOXART_PATH. e.g. sd:/menu/boxart/<id>.png */
+static void boxart_image_load (uint16_t id) {
     char sd_boxart_path[26];
-    sprintf(sd_boxart_path, "sd:/menu/boxart/%.2s.sprite", (char*)&(id));
+    sprintf(sd_boxart_path, ROM_BOXART_PATH"%.2s.png", (char*)&(id));
 
-    FILE *fp = fopen(sd_boxart_path, "r");
-    debugf("loading boxart path: %s\n", sd_boxart_path);
+    boxart_image = calloc(1, sizeof(surface_t));
 
-	if (fp) {
-        // the file exists so close it and load using the proper function.
-        fclose(fp);
-        return sprite_load(sd_boxart_path);
+    if (png_decode(sd_boxart_path, boxart_image, 158, 112) == PNG_OK) {
+        debugf("Found and decoded boxart image: %s\n", sd_boxart_path);
+
+        // FIXME: use relative layout.
+
+        uint16_t x = (640 - 150) - (boxart_image->width / 2);
+        uint16_t y = (480 - 150) - (boxart_image->height / 2);
+
+        rspq_block_begin();
+
+        rdpq_set_mode_copy(false);
+        rdpq_tex_blit(boxart_image, x, y, NULL);
+
+        cached_boxart_image_dl = rspq_block_end();
+    } else {
+        debugf("Error loading boxart image\n");
     }
-
-    debugf("Error loading boxart sprite\n");
-
-    // In the case where there is no sprite available, we just return NULL.
-    sprite_t *sprite = NULL;
-    return sprite;
-    
-
 }
 
 static char *format_rom_endian (uint32_t endian) {
@@ -280,9 +288,9 @@ static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
     text_y += fragment_textf(text_x, text_y, "  Save Type: %s\n", format_rom_save_type(rom_db_match_save_type(rom_header)));
     text_y += fragment_textf(text_x, text_y, "  Expansion PAK: %s\n\n", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
 
-    if (boxart_sprite != NULL)
+    if (boxart_image != NULL && cached_boxart_image_dl != NULL)
     {
-        graphics_draw_sprite_trans(d, text_x + 400, text_y - 16, boxart_sprite); //FIXME: dont used fixed value for x and y
+        rspq_block_run(cached_boxart_image_dl);
     }
 
 }
@@ -324,7 +332,25 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 
+static void dl_free (void *arg) {
+    if (cached_boxart_image_dl != NULL) {
+        rspq_block_free((rspq_block_t *) (arg));
+    }
+}
+
+static void deinit (menu_t *menu) {
+    if (boxart_image != NULL) {
+        rdpq_call_deferred(dl_free, cached_boxart_image_dl);
+        surface_free(boxart_image);
+        free(boxart_image);
+    }
+}
+
+
 void view_file_info_init (menu_t *menu) {
+    boxart_image = NULL;
+    cached_boxart_image_dl = NULL;
+
     path_t *file = path_clone(menu->browser.directory);
     path_push(file, menu->browser.list[menu->browser.selected].name);
     if (f_stat(path_get(file), &info) != FR_OK) {
@@ -332,7 +358,8 @@ void view_file_info_init (menu_t *menu) {
     }
     if (strcmp(format_file_type(), "N64 ROM") == 0) {
         rom_header = file_read_rom_header(path_get(file));
-        boxart_sprite = boxart_sprite_load(rom_header.metadata.unique_identifier);
+
+        boxart_image_load(rom_header.metadata.unique_identifier);
     }
     path_free(file);
 }
@@ -340,4 +367,8 @@ void view_file_info_init (menu_t *menu) {
 void view_file_info_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);
+
+    if (menu->next_mode != MENU_MODE_FILE_INFO) {
+        deinit(menu);
+    }
 }

@@ -5,6 +5,7 @@
 #include "../png_decoder.h"
 #include "../rom_database.h"
 #include "fragments/fragments.h"
+#include "utils/fs.h"
 #include "utils/str_utils.h"
 #include "views.h"
 
@@ -14,6 +15,7 @@
 
 
 static FILINFO info;
+static const char *n64_rom_extensions[] = { "z64", "n64", "v64", NULL };
 static rom_header_t rom_header;
 static surface_t *boxart_image;
 static rspq_block_t *cached_boxart_image_dl;
@@ -316,8 +318,7 @@ static void draw (menu_t *menu, surface_t *d) {
     fragment_text_start(text_color);
 
 
-    if (strcmp(format_file_type(), "N64 ROM") == 0) {
-
+    if (file_has_extensions(info.fname, n64_rom_extensions)) {
         menu_fileinfo_draw_n64_rom_info(d, layout);
     }
     else {
@@ -359,7 +360,7 @@ void view_file_info_init (menu_t *menu) {
     if (f_stat(path_get(file), &info) != FR_OK) {
         menu->next_mode = MENU_MODE_ERROR;
     }
-    if (strcmp(format_file_type(), "N64 ROM") == 0) {
+    if (file_has_extensions(info.fname, n64_rom_extensions)) {
         rom_header = file_read_rom_header(path_get(file));
 
         boxart_image_load(rom_header.metadata.unique_identifier);

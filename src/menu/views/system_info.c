@@ -1,8 +1,7 @@
 #include <time.h>
-
 #include <libdragon.h>
 
-#include "../menu_res_setup.h"
+#include "fragments/fragments.h"
 #include "views.h"
 
 
@@ -30,66 +29,70 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    char str_buffer[512];
 
-	graphics_fill_screen(d, 0x00);
+    layout_t *layout = layout_get();
 
-	graphics_draw_text(d, (d->width / 2) - 64, vertical_start_position, "N64 SYSTEM INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
-	graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
+    const int text_x = layout->offset_x + layout->offset_text_x;
+    int text_y = layout->offset_y + layout->offset_text_y;
 
-	int16_t vertical_position = 40;
+    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
+    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
+
+    rdpq_attach(d, NULL);
+    rdpq_clear(bg_color);
+
+    // Layout
+    fragment_borders(d);
+
+    // Text start
+    fragment_text_start(text_color);
+
+    text_y += fragment_textf((d->width / 2) - 108, text_y, "N64 SYSTEM INFORMATION\n\n");
+
+    text_y += fragment_textf(text_x, text_y, "\n");
+
 
     time_t current_time = -1;
     current_time = time( NULL );
     if( current_time != -1 )
     {
-        sprintf(str_buffer, "Current date & time: %s\n\n", ctime( &current_time ));
-        graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-
-        graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "To change the time, use USB App...");
+        text_y += fragment_textf(text_x, text_y, "Current date & time: %s\n\n", ctime( &current_time ));
+        text_y += fragment_textf(text_x, text_y, "To change the time, use USB App...");
     }
 
-    vertical_position += font_vertical_pixels;
+    text_y += fragment_textf(text_x, text_y, "\n");
 
-    sprintf(str_buffer, "Expansion PAK is %sinserted\n", is_memory_expanded() ? "" : "not " );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
+    text_y += fragment_textf(text_x, text_y, "Expansion PAK is %sinserted\n", is_memory_expanded() ? "" : "not " );
 
-    vertical_position += font_vertical_pixels;
+    text_y += fragment_textf(text_x, text_y, "\n");
 
     int controllers = get_controllers_present();
 
-    sprintf(str_buffer, "JoyPad 1 is %sconnected\n", (controllers & CONTROLLER_1_INSERTED) ? "" : "not " );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 2 is %sconnected\n", (controllers & CONTROLLER_2_INSERTED) ? "" : "not " );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 3 is %sconnected\n", (controllers & CONTROLLER_3_INSERTED) ? "" : "not " );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 4 is %sconnected\n", (controllers & CONTROLLER_4_INSERTED) ? "" : "not " );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
+    text_y += fragment_textf(text_x, text_y, "JoyPad 1 is %sconnected\n", (controllers & CONTROLLER_1_INSERTED) ? "" : "not " );
+    text_y += fragment_textf(text_x, text_y, "JoyPad 2 is %sconnected\n", (controllers & CONTROLLER_2_INSERTED) ? "" : "not " );
+    text_y += fragment_textf(text_x, text_y, "JoyPad 3 is %sconnected\n", (controllers & CONTROLLER_3_INSERTED) ? "" : "not " );
+    text_y += fragment_textf(text_x, text_y, "JoyPad 4 is %sconnected\n", (controllers & CONTROLLER_4_INSERTED) ? "" : "not " );
 
-    vertical_position += font_vertical_pixels;
+    text_y += fragment_textf(text_x, text_y, "\n");
 
     struct controller_data output;
     int accessories = get_accessories_present( &output );
 
-    sprintf(str_buffer, "JoyPad 1 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_1_INSERTED) ? "" : "not ", 
+    text_y += fragment_textf(text_x, text_y, "JoyPad 1 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_1_INSERTED) ? "" : "not ", 
                                             (accessories & CONTROLLER_1_INSERTED) ? accessory_type_s( identify_accessory( 0 ) ) : "" );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 2 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_2_INSERTED) ? "" : "not ",
+    text_y += fragment_textf(text_x, text_y, "JoyPad 2 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_2_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_2_INSERTED) ? accessory_type_s( identify_accessory( 1 ) ) : "" );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 3 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_3_INSERTED) ? "" : "not ",
+    text_y += fragment_textf(text_x, text_y, "JoyPad 3 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_3_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_3_INSERTED) ? accessory_type_s( identify_accessory( 2 ) ) : "" );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
-    sprintf(str_buffer, "JoyPad 4 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_4_INSERTED) ? "" : "not ",
+    text_y += fragment_textf(text_x, text_y, "JoyPad 4 Accessory Pak is %sinserted %s\n", (accessories & CONTROLLER_4_INSERTED) ? "" : "not ",
                                             (accessories & CONTROLLER_4_INSERTED) ? accessory_type_s( identify_accessory( 3 ) ) : "" );
-    graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, str_buffer);
 
 
-	graphics_draw_line(d, 0, d->height - overscan_vertical_pixels - font_vertical_pixels, d->width,d->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
-	graphics_draw_text(d, (d->width / 2) - 80,d->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
+    // Actions bar
+    text_y = layout->actions_y + layout->offset_text_y;
+    text_y += fragment_textf(text_x, text_y, "B: Exit");
 
-    display_show(d);
+    rdpq_detach_show();
 }
 
 

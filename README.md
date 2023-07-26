@@ -82,3 +82,10 @@ To update to the latest version, use `git submodule update --remote ` from the t
 # Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
+
+
+# OSS licenses used for libraries
+* UNLICENSE (libdragon)
+* BSD 2-Clause (libspng)
+* CC0 1.0 Universal (minimp3)
+* Permissive, unspecific (miniz)

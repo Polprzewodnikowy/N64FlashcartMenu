@@ -11,6 +11,7 @@ png_err_t png_decode (char *path, surface_t *image, int max_width, int max_heigh
     FILE *file;
     size_t image_size;
     struct spng_ihdr ihdr;
+    struct spng_row_info row_info;
     uint8_t *row_buffer;
     uint16_t *image_buffer;
 
@@ -64,8 +65,7 @@ png_err_t png_decode (char *path, surface_t *image, int max_width, int max_heigh
     }
 
     *image = surface_alloc(FMT_RGBA16, ihdr.width, ihdr.height);
-    image_buffer = image->buffer;
-    if (image_buffer == NULL) {
+    if (image->buffer == NULL) {
         spng_ctx_free(ctx);
         fclose(file);
         return PNG_ERR_OUT_OF_MEM;
@@ -78,20 +78,28 @@ png_err_t png_decode (char *path, surface_t *image, int max_width, int max_heigh
         return PNG_ERR_OUT_OF_MEM;
     }
 
-    while ((err = spng_decode_row(ctx, row_buffer, ihdr.width * 3)) == SPNG_OK) {
-        for (int i = 0; i < ihdr.width * 3; i += 3) {
-            uint8_t r = row_buffer[i + 0] >> 3;
-            uint8_t g = row_buffer[i + 1] >> 3;
-            uint8_t b = row_buffer[i + 2] >> 3;
-            *image_buffer++ = (r << 11) | (g << 6) | (b << 1) | 1;
+    do {
+        if ((err = spng_get_row_info(ctx, &row_info)) != SPNG_OK) {
+            break;
         }
-    }
+
+        err = spng_decode_row(ctx, row_buffer, ihdr.width * 3);
+        if (err == SPNG_OK || err == SPNG_EOI) {
+            image_buffer = image->buffer + (row_info.row_num * image->stride);
+            for (int i = 0; i < ihdr.width * 3; i += 3) {
+                uint8_t r = row_buffer[i + 0] >> 3;
+                uint8_t g = row_buffer[i + 1] >> 3;
+                uint8_t b = row_buffer[i + 2] >> 3;
+                *image_buffer++ = (r << 11) | (g << 6) | (b << 1) | 1;
+            }
+        }
+    } while (err == SPNG_OK);
 
     spng_ctx_free(ctx);
     free(row_buffer);
     fclose(file);
 
-    if ((err != SPNG_OK) && (err != SPNG_EOI)) {
+    if (err != SPNG_EOI) {
         surface_free(image);
         return PNG_ERR_BAD_FILE;
     }

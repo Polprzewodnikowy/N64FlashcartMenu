@@ -188,6 +188,7 @@ static char *format_rom_memory_type (uint8_t type) {
     }
 }
 
+
 static char *format_file_type (void) {
     // TODO: should be at least a switch statement!
     if (str_endswith(info.fname, ".z64", false) ||
@@ -323,7 +324,9 @@ static void draw (menu_t *menu, surface_t *d) {
         menu_fileinfo_draw_unknown_info(d, layout);
     }
 
-
+    /* Ensure RDP mode and loaded texture dont mess up font drawing. */
+    fragment_text_start(text_color);
+    
     // Actions bar
     text_y = layout->actions_y + layout->offset_text_y;
     text_y += fragment_textf(text_x, text_y, "B: Exit");

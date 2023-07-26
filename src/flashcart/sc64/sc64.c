@@ -212,7 +212,7 @@ static flashcart_error_t sc64_load_emulator_rom (char *rom_path) {
     }
 
     if (f_read(&fil, (void *) (ROM_ADDRESS + EMULATOR_ROM_OFFSET), rom_size, &br) != FR_OK) {
-        load_cleanup(&fil);
+        f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
 

@@ -40,6 +40,7 @@ typedef struct {
     flashcart_error_t (*init) (void);
     flashcart_error_t (*deinit) (void);
     flashcart_error_t (*load_rom) (char *rom_path);
+    flashcart_error_t (*load_emulator_rom) (char *rom_path);
     flashcart_error_t (*load_save) (char *save_path);
     flashcart_error_t (*set_save_type) (flashcart_save_type_t save_type);
     flashcart_error_t (*set_save_writeback) (uint32_t *sectors);

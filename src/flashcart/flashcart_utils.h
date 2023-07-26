@@ -12,6 +12,8 @@
 
 
 void fix_file_size (FIL *fil);
+void pi_dma_read_data (void *src, void *dst, size_t length);
+void pi_dma_write_data (void *src, void *dst, size_t length);
 
 
 #endif

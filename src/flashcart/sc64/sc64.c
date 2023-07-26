@@ -55,13 +55,9 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
 static flashcart_error_t sc64_init (void) {
     uint16_t major;
     uint16_t minor;
+    uint32_t revision;
 
-    sc64_unlock();
-
-    if (!sc64_check_presence()) {
-        return FLASHCART_ERROR_UNSUPPORTED;
-    }
-    if (sc64_get_version(&major, &minor) != SC64_OK) {
+    if (sc64_get_version(&major, &minor, &revision) != SC64_OK) {
         return FLASHCART_ERROR_OUTDATED;
     }
     if (major != SUPPORTED_MAJOR_VERSION) {
@@ -192,11 +188,13 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
 
 static flashcart_error_t sc64_load_save (char *save_path) {
     void *address = NULL;
-    sc64_save_type_t type;
+    uint32_t value;
 
-    if (sc64_get_config(CFG_SAVE_TYPE, &type) != SC64_OK) {
+    if (sc64_get_config(CFG_SAVE_TYPE, &value) != SC64_OK) {
         return FLASHCART_ERROR_INT;
     }
+
+    sc64_save_type_t type = (sc64_save_type_t) (value);
 
     switch (type) {
         case SAVE_TYPE_EEPROM_4K:
@@ -275,7 +273,7 @@ static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
 }
 
 static flashcart_error_t sc64_set_save_writeback (uint32_t *sectors) {
-    sc64_write_data(sectors, SC64_BUFFERS->BUFFER, 1024);
+    pi_dma_write_data(sectors, SC64_BUFFERS->BUFFER, 1024);
 
     if (sc64_writeback_enable(SC64_BUFFERS->BUFFER) != SC64_OK) {
         return FLASHCART_ERROR_INT;

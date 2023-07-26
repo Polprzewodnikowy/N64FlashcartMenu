@@ -110,18 +110,12 @@ typedef enum {
 } sc64_button_mode_t;
 
 
-void sc64_unlock (void);
 void sc64_lock (void);
-bool sc64_check_presence (void);
-void sc64_read_data (void *src, void *dst, size_t length);
-void sc64_write_data (void *src, void *dst, size_t length);
-sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor);
-sc64_error_t sc64_get_config (sc64_cfg_t cfg, void *value);
+sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);
+sc64_error_t sc64_get_config (sc64_cfg_t cfg, uint32_t *value);
 sc64_error_t sc64_set_config (sc64_cfg_t cfg, uint32_t value);
-sc64_error_t sc64_sd_set_byte_swap (bool enabled);
 sc64_error_t sc64_writeback_pending (bool *pending);
 sc64_error_t sc64_writeback_enable (void *address);
-sc64_error_t sc64_flash_program (void *address, size_t length);
 sc64_error_t sc64_flash_wait_busy (void);
 sc64_error_t sc64_flash_get_erase_block_size (size_t *erase_block_size);
 sc64_error_t sc64_flash_erase_block (void *address);

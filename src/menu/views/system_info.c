@@ -1,6 +1,7 @@
 #include <time.h>
 #include <libdragon.h>
 
+#include "../components/components.h"
 #include "fragments/fragments.h"
 #include "views.h"
 
@@ -35,11 +36,12 @@ static void draw (menu_t *menu, surface_t *d) {
     const int text_x = layout->offset_x + layout->offset_text_x;
     int text_y = layout->offset_y + layout->offset_text_y;
 
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
     const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
 
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
+
+    // Background
+    component_background_draw(menu->components.background);
 
     // Layout
     fragment_borders(d);

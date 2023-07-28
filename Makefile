@@ -29,6 +29,7 @@ SRCS = \
 	libs/miniz/miniz.c \
 	menu/actions.c \
 	menu/assets.c \
+	menu/components/background.c \
 	menu/menu.c \
 	menu/mp3_player.c \
 	menu/path.c \

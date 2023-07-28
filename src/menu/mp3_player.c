@@ -2,6 +2,7 @@
 #include <libdragon.h>
 
 #include "mp3_player.h"
+#include "utils/fs.h"
 #include "utils/utils.h"
 
 #define MINIMP3_IMPLEMENTATION
@@ -153,7 +154,7 @@ mp3player_err_t mp3player_load (char *path) {
         mp3player_unload();
     }
 
-    if (f_open(&p->fil, path, FA_READ) != FR_OK) {
+    if (f_open(&p->fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
         return MP3PLAYER_ERR_IO;
     }
 

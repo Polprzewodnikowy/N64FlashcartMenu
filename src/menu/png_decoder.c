@@ -1,11 +1,12 @@
+#include <fatfs/ff.h>
 #include <libspng/spng/spng.h>
 
-#include "path.h"
 #include "png_decoder.h"
+#include "utils/fs.h"
 
 
 typedef struct {
-    FILE *file;
+    FIL fil;
 
     spng_ctx *ctx;
     struct spng_ihdr ihdr;
@@ -22,9 +23,7 @@ static png_decoder_t *decoder;
 
 static void png_decoder_deinit (bool free_image) {
     if (decoder != NULL) {
-        if (decoder->file != NULL) {
-            fclose(decoder->file);
-        }
+        f_close(&decoder->fil);
         if (decoder->ctx != NULL) {
             spng_ctx_free(decoder->ctx);
         }
@@ -40,11 +39,23 @@ static void png_decoder_deinit (bool free_image) {
     }
 }
 
+static int png_file_read (spng_ctx *ctx, void *user, void *dst_src, size_t length) {
+    UINT bytes_read = 0;
+    png_decoder_t *d = (png_decoder_t *) (user);
+
+    if (f_read(&d->fil, dst_src, length, &bytes_read) != FR_OK) {
+        return SPNG_IO_ERROR;
+    }
+
+    if (bytes_read != length) {
+        return SPNG_EOF;
+    }
+
+    return SPNG_OK;
+}
+
 
 png_err_t png_decode_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data) {
-    path_t *file_path;
-    size_t image_size;
-
     if (decoder != NULL) {
         return PNG_ERR_BUSY;
     }
@@ -54,11 +65,7 @@ png_err_t png_decode_start (char *path, int max_width, int max_height, png_callb
         return PNG_ERR_OUT_OF_MEM;
     }
 
-    file_path = path_init("sd:/");
-    path_append(file_path, path);
-    decoder->file = fopen(path_get(file_path), "r");
-    path_free(file_path);
-    if (decoder->file == NULL) {
+    if (f_open(&decoder->fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_NO_FILE;
     }
@@ -78,10 +85,12 @@ png_err_t png_decode_start (char *path, int max_width, int max_height, png_callb
         return PNG_ERR_INT;
     }
 
-    if (spng_set_png_file(decoder->ctx, decoder->file) != SPNG_OK) {
+    if (spng_set_png_stream(decoder->ctx, png_file_read, decoder) != SPNG_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_INT;
     }
+
+    size_t image_size;
 
     if (spng_decoded_image_size(decoder->ctx, SPNG_FMT_RGB8, &image_size) != SPNG_OK) {
         png_decoder_deinit(false);
@@ -126,7 +135,7 @@ void png_decode_abort (void) {
 }
 
 void png_poll (void) {
-    if (decoder) {        
+    if (decoder) {
         enum spng_errno err;
         struct spng_row_info row_info;
 

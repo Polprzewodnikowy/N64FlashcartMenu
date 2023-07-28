@@ -1,9 +1,11 @@
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <fatfs/ff.h>
 #include <libdragon.h>
 
+#include "../components/components.h"
 #include "fragments/fragments.h"
 #include "utils/fs.h"
 #include "views.h"
@@ -11,7 +13,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", NULL };
 static const char *emulator_extensions[] = { "nes", "gb", "gbc", "smc", "gen", "smd", NULL };
-static const char *save_extensions[] = { "sav", NULL };
+static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
@@ -262,7 +264,6 @@ static void draw (menu_t *menu, surface_t *d) {
     const int text_other_actions_x = text_x + 450;
     const int highlight_offset = 2;
 
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
     const color_t highlight_color = RGBA32(0x3F, 0x3F, 0x3F, 0xFF);
     const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
     const color_t directory_color = RGBA32(0xFF, 0xFF, 0x70, 0xFF);
@@ -280,7 +281,9 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
+
+    // Background
+    component_background_draw(menu->components.background);
 
     // Layout
     fragment_borders(d);
@@ -362,6 +365,13 @@ static void draw (menu_t *menu, surface_t *d) {
         fragment_textf(text_x, text_y, "B: Back");
     }
     fragment_textf(text_other_actions_x, text_y, "L: Settings");
+
+    time_t current_time = -1;
+    current_time = time( NULL );
+    if( current_time != -1 )
+    {
+        fragment_textf(text_other_actions_x - 288, text_y, ctime( &current_time ));
+    }
 
     rdpq_detach_show();
 }

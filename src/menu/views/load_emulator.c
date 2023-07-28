@@ -23,7 +23,7 @@ static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
  
         menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.nes", false);
         /* Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg */
-         menu->flashcart_error = flashcart_load_emulator_rom(path_get(path));
+         menu->flashcart_error = flashcart_load_file(path_get(path), 0x200000);
         if (menu->flashcart_error != FLASHCART_OK) {
             menu->next_mode = MENU_MODE_FAULT;
             path_free(path);

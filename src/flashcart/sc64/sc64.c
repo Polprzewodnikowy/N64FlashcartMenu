@@ -190,12 +190,12 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_emulator_rom (char *rom_path) {
+
+static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_address) {
     FIL fil;
     UINT br;
-    const int EMULATOR_ROM_OFFSET = 0x200000;
 
-    if (f_open(&fil, rom_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, file_path, FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -206,46 +206,13 @@ static flashcart_error_t sc64_load_emulator_rom (char *rom_path) {
 
     size_t rom_size = f_size(&fil);
 
-    if (rom_size > MiB(8)) {
+    if (rom_size > MiB(8)) { // FIXME: should be checked with the start offset address.
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS + EMULATOR_ROM_OFFSET), rom_size, &br) != FR_OK) {
+    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), rom_size, &br) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
-    }
-
-    if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
-    }
-
-    return FLASHCART_OK;
-}
-
-static flashcart_error_t sc64_load_emulator_rom (char *rom_path) {
-    FIL fil;
-    UINT br;
-    const int EMULATOR_ROM_OFFSET = 0x200000;
-
-    if (f_open(&fil, rom_path, FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
-    }
-
-    // HACK: Align file size to the SD sector size to prevent FatFs from doing partial sector load.
-    //       We are relying on direct transfer from SD to SDRAM without CPU intervention.
-    //       Sending some extra bytes isn't an issue here.
-    fil.obj.objsize = ALIGN(f_size(&fil), FS_SECTOR_SIZE);
-
-    size_t rom_size = f_size(&fil);
-
-    if (rom_size > MiB(8)) {
-        f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
-    }
-
-    if (f_read(&fil, (void *) (ROM_ADDRESS + EMULATOR_ROM_OFFSET), rom_size, &br) != FR_OK) {
-        load_cleanup(&fil);
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -355,7 +322,7 @@ static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
     .load_rom = sc64_load_rom,
-    .load_emulator_rom = sc64_load_emulator_rom,
+    .load_file = sc64_load_file,
     .load_save = sc64_load_save,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,

@@ -28,6 +28,7 @@ typedef enum {
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_LOAD,
+    MENU_MODE_SETTINGS_EDITOR,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
@@ -70,9 +71,11 @@ typedef struct {
 
         bool enter;
         bool back;
+        
         bool file_info;
         bool system_info;
         bool settings;
+        bool credits;
     } actions;
 
     struct {

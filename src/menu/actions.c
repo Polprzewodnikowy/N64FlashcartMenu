@@ -18,6 +18,7 @@ static void actions_clear (menu_t *menu) {
     menu->actions.back = false;
     menu->actions.file_info = false;
     menu->actions.system_info = false;
+    menu->actions.credits = false;
     menu->actions.settings = false;
 }
 
@@ -108,6 +109,8 @@ void actions_update (menu_t *menu) {
     } else if (down.c[0].L) {
         menu->actions.system_info = true;
     } else if (down.c[0].start) {
+        menu->actions.credits = true;
+    } else if (down.c[0].Z) {
         menu->actions.settings = true;
     }
 }

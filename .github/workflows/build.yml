@@ -26,6 +26,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install pinned version of devcontainers cli (https://github.com/devcontainers/ci/issues/252#issuecomment-1654523080)
+        shell: bash
+        run: |
+          npm install --global @devcontainers/cli@0.50.0
+
       - name: Build N64FlashcartMenu ROM
         uses: devcontainers/ci@v0.3
         with:

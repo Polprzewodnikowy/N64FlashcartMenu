@@ -9,6 +9,7 @@
 
 
 #include "boot/boot.h"
+#include "components/components.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
 #include "settings.h"
@@ -82,6 +83,10 @@ typedef struct {
         int entries;
         int selected;
     } browser;
+
+    struct {
+        component_background_t *background;
+    } components;
 } menu_t;
 
 

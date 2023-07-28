@@ -4,6 +4,7 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
 
+#include "../components/components.h"
 #include "fragments/fragments.h"
 #include "utils/fs.h"
 #include "views.h"
@@ -252,7 +253,6 @@ static void draw (menu_t *menu, surface_t *d) {
     const int text_other_actions_x = text_x + 450;
     const int highlight_offset = 2;
 
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
     const color_t highlight_color = RGBA32(0x3F, 0x3F, 0x3F, 0xFF);
     const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
     const color_t directory_color = RGBA32(0xFF, 0xFF, 0x70, 0xFF);
@@ -270,7 +270,9 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
+
+    // Background
+    component_background_draw(menu->components.background);
 
     // Layout
     fragment_borders(d);

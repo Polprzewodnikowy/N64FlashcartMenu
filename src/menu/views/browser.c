@@ -1,3 +1,4 @@
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,7 +12,7 @@
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", NULL };
-static const char *save_extensions[] = { "sav", NULL };
+static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
@@ -353,6 +354,13 @@ static void draw (menu_t *menu, surface_t *d) {
         fragment_textf(text_x, text_y, "B: Back");
     }
     fragment_textf(text_other_actions_x, text_y, "L: Settings");
+
+    time_t current_time = -1;
+    current_time = time( NULL );
+    if( current_time != -1 )
+    {
+        fragment_textf(text_other_actions_x - 288, text_y, ctime( &current_time ));
+    }
 
     rdpq_detach_show();
 }

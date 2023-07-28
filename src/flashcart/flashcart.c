@@ -116,6 +116,13 @@ flashcart_error_t flashcart_load_emulator_rom (char *rom_path) {
     return flashcart->load_emulator_rom(rom_path);
 }
 
+flashcart_error_t flashcart_load_emulator_rom (char *rom_path) {
+    if ((rom_path == NULL) || (!file_exists(rom_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+    return flashcart->load_emulator_rom(rom_path);
+}
+
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
     flashcart_error_t error;
     uint32_t sectors[WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));

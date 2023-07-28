@@ -104,9 +104,6 @@ static flashcart_error_t sc64_init (void) {
 }
 
 static flashcart_error_t sc64_deinit (void) {
-    // NOTE: Necessary because libcart enables ROM write by default
-    sc64_set_config(CFG_ROM_WRITE_ENABLE, false);
-
     sc64_lock();
 
     return FLASHCART_OK;
@@ -116,7 +113,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, rom_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -214,7 +211,7 @@ static flashcart_error_t sc64_load_save (char *save_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, save_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 

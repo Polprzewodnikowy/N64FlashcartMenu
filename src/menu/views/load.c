@@ -181,7 +181,7 @@ static void load (menu_t *menu) {
     path_free(path);
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-    menu->boot_params->reset_type = BOOT_RESET_TYPE_COLD;
+    menu->boot_params->reset_type = BOOT_RESET_TYPE_NMI;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
 }

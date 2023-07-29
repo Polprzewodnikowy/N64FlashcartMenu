@@ -5,6 +5,11 @@
 #include "crc32.h"
 
 
+#define C0_STATUS_FR    (1 << 26)
+#define C0_STATUS_CU0   (1 << 28)
+#define C0_STATUS_CU1   (1 << 29)
+
+
 extern uint32_t ipl2 __attribute__((section(".data")));
 
 
@@ -75,13 +80,9 @@ void boot (boot_params_t *params) {
         }
     }
 
-    // asm volatile (
-    //     "li $t1, %[status] \n"
-    //     "mtc0 $t1, $12 \n" ::
-    //     [status] "i" (C0_SR_CU1 | C0_SR_CU0 | C0_SR_FR)
-    // );
-
     OS_INFO->mem_size_6105 = OS_INFO->mem_size;
+
+    C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
 
     while (!(cpu_io_read(&SP->SR) & SP_SR_HALT));
 

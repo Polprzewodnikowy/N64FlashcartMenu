@@ -11,10 +11,10 @@ static char *format_flashcart_error (flashcart_error_t error) {
             return "No error";
         case FLASHCART_ERROR_NOT_DETECTED:
             return "No flashcart hardware was detected";
-        case FLASHCART_ERROR_UNSUPPORTED:
-            return "Unsupported flashcart";
         case FLASHCART_ERROR_OUTDATED:
             return "Outdated flashcart firmware";
+        case FLASHCART_ERROR_SD_CARD:
+            return "Error during SD card initialization";
         case FLASHCART_ERROR_ARGS:
             return "Invalid argument passed to flashcart function";
         case FLASHCART_ERROR_LOAD:

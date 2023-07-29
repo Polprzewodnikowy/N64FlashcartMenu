@@ -39,6 +39,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
 
 
 flashcart_error_t flashcart_init (void) {
+    bool sd_initialized;
     flashcart_error_t error;
 
     // HACK: Because libcart reads PI config from address 0x10000000 when initializing
@@ -48,9 +49,7 @@ flashcart_error_t flashcart_init (void) {
     extern uint32_t cart_dom1;
     cart_dom1 = 0x80371240;
 
-    if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_NOT_DETECTED;
-    }
+    sd_initialized = debug_init_sdfs("sd:/", -1);
 
     // NOTE: Flashcart model is extracted from libcart after debug_init_sdfs call is made
     extern int cart_type;
@@ -66,11 +65,15 @@ flashcart_error_t flashcart_init (void) {
             break;
 
         default:
-            return FLASHCART_ERROR_UNSUPPORTED;
+            return FLASHCART_ERROR_NOT_DETECTED;
     }
 
     if ((error = flashcart->init()) != FLASHCART_OK) {
         return error;
+    }
+
+    if (!sd_initialized) {
+        return FLASHCART_ERROR_SD_CARD;
     }
 
 #ifndef MENU_NO_USB_LOG

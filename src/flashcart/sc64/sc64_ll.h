@@ -1,15 +1,16 @@
 /**
- * @file flashcart.h
- * @brief SC64 Flashcart Internal Utilities
- * @ingroup flashcart 
+ * @file sc64_ll.h
+ * @brief SC64 flashcart low level access
+ * @ingroup flashcart
  */
 
-#ifndef FLASHCART_SC64_INTERNAL_H__
-#define FLASHCART_SC64_INTERNAL_H__
+#ifndef FLASHCART_SC64_LL_H__
+#define FLASHCART_SC64_LL_H__
 
 
 #include <stddef.h>
 #include <stdint.h>
+
 
 /**
  * @addtogroup sc64
@@ -110,16 +111,17 @@ typedef enum {
 } sc64_button_mode_t;
 
 
-void sc64_lock (void);
-sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);
-sc64_error_t sc64_get_config (sc64_cfg_t cfg, uint32_t *value);
-sc64_error_t sc64_set_config (sc64_cfg_t cfg, uint32_t value);
-sc64_error_t sc64_writeback_pending (bool *pending);
-sc64_error_t sc64_writeback_enable (void *address);
-sc64_error_t sc64_flash_wait_busy (void);
-sc64_error_t sc64_flash_get_erase_block_size (size_t *erase_block_size);
-sc64_error_t sc64_flash_erase_block (void *address);
+void sc64_ll_lock (void);
+sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);
+sc64_error_t sc64_ll_get_config (sc64_cfg_t cfg, uint32_t *value);
+sc64_error_t sc64_ll_set_config (sc64_cfg_t cfg, uint32_t value);
+sc64_error_t sc64_ll_writeback_pending (bool *pending);
+sc64_error_t sc64_ll_writeback_enable (void *address);
+sc64_error_t sc64_ll_flash_wait_busy (void);
+sc64_error_t sc64_ll_flash_get_erase_block_size (size_t *erase_block_size);
+sc64_error_t sc64_ll_flash_erase_block (void *address);
 
 /** @} */ /* sc64 */
+
 
 #endif

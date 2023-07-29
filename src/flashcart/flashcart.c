@@ -8,6 +8,8 @@
 #include "utils/utils.h"
 
 #include "flashcart.h"
+
+#include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
 
@@ -56,6 +58,9 @@ flashcart_error_t flashcart_init (void) {
 
     switch (cart_type) {
         case CART_CI: // 64drive
+            flashcart = d64_get_flashcart();
+            break;
+
         case CART_ED: // Original EverDrive-64
         case CART_EDX: // Series X EverDrive-64
             break;

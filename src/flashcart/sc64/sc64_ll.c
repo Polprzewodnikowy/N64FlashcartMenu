@@ -1,6 +1,6 @@
 #include <libdragon.h>
 
-#include "sc64_internal.h"
+#include "sc64_ll.h"
 
 
 typedef struct {
@@ -36,7 +36,7 @@ typedef struct {
 } sc64_cmd_t;
 
 
-static sc64_error_t sc64_execute_cmd (sc64_cmd_t *cmd) {
+static sc64_error_t sc64_ll_execute_cmd (sc64_cmd_t *cmd) {
     io_write((uint32_t) (&SC64_REGS->DATA[0]), cmd->arg[0]);
     io_write((uint32_t) (&SC64_REGS->DATA[1]), cmd->arg[1]);
 
@@ -58,78 +58,78 @@ static sc64_error_t sc64_execute_cmd (sc64_cmd_t *cmd) {
 }
 
 
-void sc64_lock (void) {
+void sc64_ll_lock (void) {
     io_write((uint32_t) (&SC64_REGS->KEY), SC64_KEY_LOCK);
 }
 
-sc64_error_t sc64_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision) {
+sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_VERSION_GET
     };
-    sc64_error_t error = sc64_execute_cmd(&cmd);
+    sc64_error_t error = sc64_ll_execute_cmd(&cmd);
     *major = ((cmd.rsp[0] >> 16) & 0xFFFF);
     *minor = (cmd.rsp[0] & 0xFFFF);
     *revision = cmd.rsp[1];
     return error;
 }
 
-sc64_error_t sc64_get_config (sc64_cfg_t id, uint32_t *value) {
+sc64_error_t sc64_ll_get_config (sc64_cfg_t id, uint32_t *value) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_CONFIG_GET,
         .arg = { id }
     };
-    sc64_error_t error = sc64_execute_cmd(&cmd);
+    sc64_error_t error = sc64_ll_execute_cmd(&cmd);
     *value = cmd.rsp[1];
     return error;
 }
 
-sc64_error_t sc64_set_config (sc64_cfg_t id, uint32_t value) {
+sc64_error_t sc64_ll_set_config (sc64_cfg_t id, uint32_t value) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_CONFIG_SET,
         .arg = { id, value }
     };
-    return sc64_execute_cmd(&cmd);
+    return sc64_ll_execute_cmd(&cmd);
 }
 
-sc64_error_t sc64_writeback_pending (bool *pending) {
+sc64_error_t sc64_ll_writeback_pending (bool *pending) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_WRITEBACK_PENDING
     };
-    sc64_error_t error = sc64_execute_cmd(&cmd);
+    sc64_error_t error = sc64_ll_execute_cmd(&cmd);
     *pending = (cmd.rsp[0] != 0);
     return error;
 }
 
-sc64_error_t sc64_writeback_enable (void *address) {
+sc64_error_t sc64_ll_writeback_enable (void *address) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_WRITEBACK_SD_INFO,
         .arg = { (uint32_t) (address) }
     };
-    return sc64_execute_cmd(&cmd);
+    return sc64_ll_execute_cmd(&cmd);
 }
 
-sc64_error_t sc64_flash_wait_busy (void) {
+sc64_error_t sc64_ll_flash_wait_busy (void) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_FLASH_WAIT_BUSY,
         .arg = { true }
     };
-    return sc64_execute_cmd(&cmd);
+    return sc64_ll_execute_cmd(&cmd);
 }
 
-sc64_error_t sc64_flash_get_erase_block_size (size_t *erase_block_size) {
+sc64_error_t sc64_ll_flash_get_erase_block_size (size_t *erase_block_size) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_FLASH_WAIT_BUSY,
         .arg = { false }
     };
-    sc64_error_t error = sc64_execute_cmd(&cmd);
+    sc64_error_t error = sc64_ll_execute_cmd(&cmd);
     *erase_block_size = (size_t) (cmd.rsp[0]);
     return error;
 }
 
-sc64_error_t sc64_flash_erase_block (void *address) {
+sc64_error_t sc64_ll_flash_erase_block (void *address) {
     sc64_cmd_t cmd = {
         .id = CMD_ID_FLASH_ERASE_BLOCK,
         .arg = { (uint32_t) (address) }
     };
-    return sc64_execute_cmd(&cmd);
+    return sc64_ll_execute_cmd(&cmd);
 }

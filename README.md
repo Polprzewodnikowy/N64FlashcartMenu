@@ -47,7 +47,7 @@ It is not currently possible to directly communicate with USB devices.
 BUT, as a work around you can use a proxy TCP/IP connection
 Set up a proxy: open a terminal window, `cd ./tools/sc64` and then `./sc64deployer.exe server`
 
-Then in the dev container, use `./remotedeploy.sh`
+Then in the dev container, use `make run` or `make run-debug`
 
 
 #### From your host (Windows) OS

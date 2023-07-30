@@ -258,7 +258,7 @@ static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
             );
 
     text_y += fragment_textf(text_x, text_y, "\n");
-    text_y += fragment_textf(text_x, text_y, "N64 ROM Information:\n\n");
+    text_y += fragment_textf(text_x, text_y, "N64 ROM Information:\n");
     text_y += fragment_textf(text_x, text_y, "  Endian: %s\n", format_rom_endian(rom_header.config_flags));
     text_y += fragment_textf(text_x, text_y, "  Title: %s\n", rom_header.title);
     text_y += fragment_textf(text_x, text_y, "  Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
@@ -267,7 +267,14 @@ static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
     text_y += fragment_textf(text_x, text_y, "  Version: %hhu\n", rom_header.version);
     text_y += fragment_textf(text_x, text_y, "  Checksum: 0x%016llX\n", rom_header.checksum);
     text_y += fragment_textf(text_x, text_y, "  Save Type: %s\n", format_rom_save_type(rom_db_match_save_type(rom_header)));
-    text_y += fragment_textf(text_x, text_y, "  Expansion PAK: %s\n\n", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
+    text_y += fragment_textf(text_x, text_y, "  Expansion PAK: %s\n", format_rom_memory_type(rom_db_match_expansion_pak(rom_header)));
+    // TODO: Should Extra Info be optional.
+    text_y += fragment_textf(text_x, text_y, "  Extra Info:");
+    if ((rom_header.clock_rate & 0xFFFFFFF0) != 0) {
+        text_y += fragment_textf(text_x, text_y, "    Clock Rate?!: %d.%02dMHz\n", (rom_header.clock_rate & 0xFFFFFFF0) /1000000, (rom_header.clock_rate & 0xFFFFFFF0) % 1000000);
+    }
+    text_y += fragment_textf(text_x, text_y, "    Boot address: 0x%08lX\n", rom_header.boot_address);
+    text_y += fragment_textf(text_x, text_y, "    SDK Version: %d\n", rom_header.sdk_version);
 
     if (boxart_image) {
         uint16_t x = (640 - 150) - (boxart_image->width / 2);

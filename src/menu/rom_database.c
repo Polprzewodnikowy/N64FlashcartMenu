@@ -52,33 +52,33 @@ rom_header_t file_read_rom_header(char *path) {
 
     fseek(fp, 0x00, SEEK_SET);
     fread(&(rom_header->config_flags), sizeof(rom_header->config_flags), 1, fp);
-    
+
     // FIXME: handle endian appropriately, perhaps: cart_card_byteswap
 
-    //fseek(fp, 0x04, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->clock_rate), sizeof(rom_header->clock_rate), 1, fp);
-    //fseek(fp, 0x08, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->boot_address), sizeof(rom_header->boot_address), 1, fp);
-    //fseek(fp, 0x0c, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->sdk_version), sizeof(rom_header->sdk_version), 1, fp);
+    fseek(fp, 0x04, SEEK_SET);
+    fread(&(rom_header->clock_rate), sizeof(rom_header->clock_rate), 1, fp);
+    fseek(fp, 0x08, SEEK_SET);
+    fread(&(rom_header->boot_address), sizeof(rom_header->boot_address), 1, fp);
+    fseek(fp, 0x0C, SEEK_SET);
+    fread(&(rom_header->sdk_version), sizeof(rom_header->sdk_version), 1, fp);
     fseek(fp, 0x10, SEEK_SET);
     fread(&(rom_header->checksum), sizeof(rom_header->checksum), 1, fp);
-    //fseek(fp, 0x18, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->unknown_reserved_1), sizeof(rom_header->unknown_reserved_1), 1, fp);
+    fseek(fp, 0x18, SEEK_SET);
+    fread(&(rom_header->unknown_reserved_1), sizeof(rom_header->unknown_reserved_1), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
-	fgets(rom_header->title, sizeof(rom_header->title), fp);
-    //fseek(fp, 0x34, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->unknown_reserved_2), sizeof(rom_header->unknown_reserved_2), 1, fp);
-    fseek(fp, 0x3b, SEEK_SET);
+    fgets(rom_header->title, sizeof(rom_header->title), fp);
+    fseek(fp, 0x34, SEEK_SET);
+    fread(&(rom_header->unknown_reserved_2), sizeof(rom_header->unknown_reserved_2), 1, fp);
+    fseek(fp, 0x3B, SEEK_SET);
     fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
-    //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
+    fseek(fp, 0x3C, SEEK_SET);
     fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
-    //fseek(fp, 0x3e, SEEK_SET);     // Consecutive read (no need to seek).
+    fseek(fp, 0x3E, SEEK_SET);
     fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
-    //fseek(fp, 0x3f, SEEK_SET);     // Consecutive read (no need to seek).
+    fseek(fp, 0x3F, SEEK_SET);
     fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
-    //fseek(fp, 0x40, SEEK_SET);     // Consecutive read (no need to seek).
-    //fread(&(rom_header->ipl3_boot_code), sizeof(rom_header->ipl3_boot_code), 1, fp);
+    fseek(fp, 0x40, SEEK_SET);
+    fread(&(rom_header->ipl3_boot_code), sizeof(rom_header->ipl3_boot_code), 1, fp);
 
     fclose(fp);
 
@@ -210,10 +210,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x10, 0x10, 0x10, 0x10, 0x10,
 
         // Last entry.
-        0xff
+        0xFF
     };
 
-    for (int i = 0; save_types[i] != 0xff; i++) {
+    for (int i = 0; save_types[i] != 0xFF; i++) {
 
         if (rom_header.metadata.unique_identifier == *(uint16_t *) cart_ids[i]) {
             return save_types[i];
@@ -267,7 +267,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
 
         // Last entry.
-        0xff
+        0xFF
     };
 
     for (int i = 0; exp_types[i] != 0xff; i++) {

@@ -38,7 +38,7 @@ typedef enum {
     /** @brief The ROM uses Disk Drive conversion saves @note This must be handled by user code. */
     DB_SAVE_TYPE_DD_CONVERSION = 0x30,
     /** @brief The ROM uses a save type that was not recognised */
-    DB_SAVE_TYPE_INVALID =       0xff,
+    DB_SAVE_TYPE_INVALID =       0xFF,
  } db_savetype_t;
 
 
@@ -123,6 +123,7 @@ typedef enum {
     MARKET_USA  = 'E',
     /** @brief The ROM is designed for France */
     MARKET_FRANCE = 'F',
+    /** @brief The ROM is designed for a NTSC Gateway 64 */
     MARKET_GATEWAY64_NTSC = 'G',
     /** @brief The ROM is designed for Netherlands */
     MARKET_NETHERLANDS = 'H',
@@ -132,11 +133,13 @@ typedef enum {
     MARKET_JAPAN = 'J',
     /** @brief The ROM is designed for Korea */
     MARKET_KOREA = 'K',
+    /** @brief The ROM is designed for a PAL Gateway 64 */
     MARKET_GATEWAY64_PAL = 'L',
     // MARKET_UNKNOWN_M = 'M',
     /** @brief The ROM is designed for Canada */
     MARKET_CANADA = 'N',
     // MARKET_UNKNOWN_O = 'O',
+    /** @brief The ROM is designed for all PAL regions */
     MARKET_PAL_GENERIC = 'P',
     // MARKET_UNKNOWN_Q = 'Q',
     // MARKET_UNKNOWN_R = 'R',
@@ -175,27 +178,32 @@ typedef struct {
     /** @brief The ROM configuration flags @note we currently use this to work out the endian @see rom_endian_type_t. */
     uint32_t config_flags;
 
-    // uint32_t clock_rate;
-    // uint32_t boot_address;
-    // uint32_t sdk_version;
+    /** @brief The ROM file clock rate */
+    uint32_t clock_rate;
+    /** @brief The ROM file boot address */
+    uint32_t boot_address;
+    /** @brief The ROM file SDK version */
+    uint32_t sdk_version;
 
     /** @brief The ROM file checksum */
     uint64_t checksum;
 
-    // uint64_t unknown_reserved_1;
+    /** @brief The ROM file unknown reserved region at 0x18 */
+    uint64_t unknown_reserved_1;
 
     /** @brief The ROM file title */
     char title[21]; // 20 chars + null
     /** @brief The ROM file metadata */
 
-    // char unknown_reserved_2[7];
+    /** @brief The ROM file unknown reserved region at 0x34 */
+    char unknown_reserved_2[7];
 
     /** @brief The ROM file metadata @see rom_metadata_t */
     rom_metadata_t metadata;
     /** @brief The ROM file release version */
     uint8_t version;
 
-    // char ipl3_boot_code[0xFC0];
+    char ipl3_boot_code[0xFC0];
 
 } rom_header_t;
 

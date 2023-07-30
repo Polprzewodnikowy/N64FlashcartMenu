@@ -259,7 +259,7 @@ static void menu_fileinfo_draw_n64_rom_info(surface_t *d, layout_t *layout) {
 
     text_y += fragment_textf(text_x, text_y, "\n");
     text_y += fragment_textf(text_x, text_y, "N64 ROM Information:\n\n");
-    text_y += fragment_textf(text_x, text_y, "  Endian: %s\n", format_rom_endian(rom_header.endian));
+    text_y += fragment_textf(text_x, text_y, "  Endian: %s\n", format_rom_endian(rom_header.config_flags));
     text_y += fragment_textf(text_x, text_y, "  Title: %s\n", rom_header.title);
     text_y += fragment_textf(text_x, text_y, "  Media Type: %c - %s\n", rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type));
     text_y += fragment_textf(text_x, text_y, "  Unique ID: %.2s\n", (char*)&(rom_header.metadata.unique_identifier));

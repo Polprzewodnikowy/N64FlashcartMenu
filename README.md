@@ -1,40 +1,30 @@
-# N64FlashcartMenu
+# N64 Flashcart Menu
 **This repo and its documentation is currently experimental and subject to change without notice.**
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
-* Be open source using preferably MIT licensed third party licensed libraries where possible.
-* Be testable, where possible using CTest, but if not, in an emulated environment.
+* Be open source, using permissive licensed third party licensed libraries.
+* Be testable, using unit and smoke tests in ares emulated environment.
 * Encourage active development from community members and N64 FlashCart owners.
-* Support [PixelFX N64Digital](https://gitlab.com/pixelfx-public/n64-game-id)
+* Support as many common mods and features as possible.
 
 
-## Basic usage
+## Getting started
 
 ### SC64
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
+### ED64
+Currently not supported, but there is an aim to do so.
+The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+
+
+### Common to all
 #### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `sd://menu/boxart/`
 Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`
 A known set of PNG files can be downloaded from https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w
-
-
-#### Save types
-`0` = NONE
-`1` = EEPROM_4K
-`2` = EEPROM_16K
-`3` = SRAM
-`4` = SRAM_BANKED
-`5` = SRAM_128K
-`6` = FLASHRAM
-~~`15` = CART_HEADER~~
-
-
-### ED64
-Currently not supported, but there is an aim to do so.
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 
 # Developer documentation
@@ -44,7 +34,7 @@ You can use a dev container in VSCode to ease development.
 
 
 ## To deploy:
-
+### SC64
 * Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.16.0/sc64-deployer-windows-v2.16.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
@@ -52,16 +42,15 @@ Make sure that your firmware is compatible (currently v2.16.0+)
 See: https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.16.0/docs/00_quick_startup_guide.md#firmware-backupupdate
 
 
-
-### From the devcontainer
+#### From the devcontainer
 It is not currently possible to directly communicate with USB devices.
 BUT, as a work around you can use a proxy TCP/IP connection
 Set up a proxy: open a terminal window, `cd ./tools/sc64` and then `./sc64deployer.exe server`
 
-Then in the dev container, use `./remotedeploy.sh`
+Then in the dev container, use `make run` or `make run-debug`
 
 
-### From your host (Windows) OS
+#### From your host (Windows) OS
 
 * Run `./localdeploy.bat` from the terminal
 

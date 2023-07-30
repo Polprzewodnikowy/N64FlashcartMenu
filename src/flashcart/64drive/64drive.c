@@ -13,16 +13,21 @@
 #include "64drive.h"
 
 
-#define ROM_ADDRESS             (0x10000000)
+#define ROM_ADDRESS                 (0x10000000)
+#define SAVE_ADDRESS_DEV_A          (0x11FF0000)
+#define SAVE_ADDRESS_DEV_A_PKST2    (0x10B032B0)
+#define SAVE_ADDRESS_DEV_B          (0x17FE0000)
 
-#define SUPPORTED_FPGA_REVISION (205)
+#define SUPPORTED_FPGA_REVISION     (205)
 
 
-static d64_save_type_t current_save_type;
+static size_t sdram_size = 0;
+static d64_device_variant_t device_variant = DEVICE_VARIANT_UNKNOWN;
+static d64_save_type_t current_save_type = SAVE_TYPE_NONE;
+static bool enable_extended_mode_on_exit = false;
 
 
 static flashcart_error_t d64_init (void) {
-    uint16_t device_variant;
     uint16_t fpga_revision;
     uint32_t bootloader_version;
 
@@ -35,6 +40,8 @@ static flashcart_error_t d64_init (void) {
     if (fpga_revision < SUPPORTED_FPGA_REVISION) {
         return FLASHCART_ERROR_OUTDATED;
     }
+
+    sdram_size = d64_ll_get_sdram_size();
 
     if (d64_ll_enable_save_writeback(false)) {
         return FLASHCART_ERROR_INT;
@@ -54,6 +61,10 @@ static flashcart_error_t d64_init (void) {
 }
 
 static flashcart_error_t d64_deinit (void) {
+    if (enable_extended_mode_on_exit) {
+        d64_ll_enable_extended_mode(true);
+    }
+
     return FLASHCART_OK;
 }
 
@@ -69,7 +80,7 @@ static flashcart_error_t d64_load_rom (char *rom_path) {
 
     size_t rom_size = f_size(&fil);
 
-    if (rom_size > MiB(64)) {
+    if (rom_size > sdram_size) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -87,55 +98,52 @@ static flashcart_error_t d64_load_rom (char *rom_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
+    if (rom_size > MiB(64)) {
+        enable_extended_mode_on_exit = true;
+    }
+
     return FLASHCART_OK;
 }
 
 static flashcart_error_t d64_load_save (char *save_path) {
-    // void *address = NULL;
-    // uint32_t value;
+    uint8_t eeprom_buffer[2048] __attribute__((aligned(8)));
+    FIL fil;
+    UINT br;
 
-    // if (sc64_get_config(CFG_SAVE_TYPE, &value) != SC64_OK) {
-    //     return FLASHCART_ERROR_INT;
-    // }
+    bool is_eeprom_save = (current_save_type == SAVE_TYPE_EEPROM_4K || current_save_type == SAVE_TYPE_EEPROM_16K);
 
-    // sc64_save_type_t type = (sc64_save_type_t) (value);
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // switch (type) {
-    //     case SAVE_TYPE_EEPROM_4K:
-    //     case SAVE_TYPE_EEPROM_16K:
-    //         address = (void *) (EEPROM_ADDRESS);
-    //         break;
-    //     case SAVE_TYPE_SRAM:
-    //     case SAVE_TYPE_FLASHRAM:
-    //     case SAVE_TYPE_SRAM_BANKED:
-    //         address = (void *) (SRAM_FLASHRAM_ADDRESS);
-    //         break;
-    //     case SAVE_TYPE_NONE:
-    //     default:
-    //         return FLASHCART_ERROR_ARGS;
-    // }
+    size_t save_size = f_size(&fil);
 
-    // FIL fil;
-    // UINT br;
+    void *address = (void *) (SAVE_ADDRESS_DEV_B);
+    if (is_eeprom_save) {
+        address = eeprom_buffer;
+    } else if (device_variant == DEVICE_VARIANT_A) {
+        address = (void *) (SAVE_ADDRESS_DEV_A);
+        if (current_save_type == SAVE_TYPE_FLASHRAM_PKST2) {
+            address = (void *) (SAVE_ADDRESS_DEV_A_PKST2);
+        }
+    }
 
-    // if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (f_read(&fil, address, save_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // size_t save_size = f_size(&fil);
+    if (is_eeprom_save) {
+        pi_dma_write_data(eeprom_buffer, &D64_REGS->EEPROM, sizeof(eeprom_buffer));
+    }
 
-    // if (f_read(&fil, address, save_size, &br) != FR_OK) {
-    //     f_close(&fil);
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // if (f_close(&fil) != FR_OK) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
-
-    // if (br != save_size) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (br != save_size) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
     return FLASHCART_OK;
 }
@@ -179,11 +187,15 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
 }
 
 static flashcart_error_t d64_set_save_writeback (uint32_t *sectors) {
-    // pi_dma_write_data(sectors, D64_REGS->WRITEBACK, 1024);
+    if (d64_ll_enable_save_writeback(false)) {
+        return FLASHCART_ERROR_INT;
+    }
 
-    // if (d64_ll_enable_save_writeback(true)) {
-    //     return FLASHCART_ERROR_INT;
-    // }
+    pi_dma_write_data(sectors, D64_REGS->WRITEBACK, 1024);
+
+    if (d64_ll_enable_save_writeback(true)) {
+        return FLASHCART_ERROR_INT;
+    }
 
     return FLASHCART_OK;
 }

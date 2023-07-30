@@ -58,8 +58,11 @@ typedef struct {
 #define D64_REGS            ((d64_regs_t *) D64_REGS_BASE)
 
 
-#define DEVICE_VARIANT_A    (0x4100)
-#define DEVICE_VARIANT_B    (0x4200)
+typedef enum {
+    DEVICE_VARIANT_UNKNOWN  = 0x0000,
+    DEVICE_VARIANT_A        = 0x4100,
+    DEVICE_VARIANT_B        = 0x4200,
+} d64_device_variant_t;
 
 
 typedef enum {
@@ -73,10 +76,12 @@ typedef enum {
 } d64_save_type_t;
 
 
-void d64_ll_get_version (uint16_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version);
+size_t d64_ll_get_sdram_size (void);
+void d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version);
 bool d64_ll_set_save_type (d64_save_type_t save_type);
 bool d64_ll_enable_save_writeback (bool enabled);
 bool d64_ll_enable_cartrom_writes (bool enabled);
+bool d64_ll_enable_extended_mode (bool enabled);
 
 /** @} */ /* 64drive */
 

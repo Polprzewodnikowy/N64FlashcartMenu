@@ -11,6 +11,11 @@
 
 ## Basic usage
 
+### 64drive
+Download the `N64FlashcartMenu.n64` ROM from the latest action run assets.
+Add it to the root folder on your SD card and run it from default 64drive menu like any other ROM file.
+In the future this menu will replace `menu.bin` file.
+
 ### SC64
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.

@@ -9,7 +9,7 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -I $(SOURCE_DIR)/libs $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -I $(SOURCE_DIR)/libs $(FLAGS) -flto=auto
 N64_LDFLAGS += --wrap asset_load
 
 SRCS = \

@@ -55,7 +55,9 @@ typedef struct {
 } d64_regs_t;
 
 #define D64_REGS_BASE       (0x18000000UL)
+#define D64_REGS_BASE_EXT   (0x1F800000UL)
 #define D64_REGS            ((d64_regs_t *) D64_REGS_BASE)
+#define D64_REGS_EXT        ((d64_regs_t *) D64_REGS_BASE_EXT)
 
 
 typedef enum {
@@ -76,12 +78,16 @@ typedef enum {
 } d64_save_type_t;
 
 
-size_t d64_ll_get_sdram_size (void);
-void d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version);
+bool d64_ll_get_sdram_size (size_t *sdram_size);
+bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version);
+bool d64_ll_set_persistent_variable_storage (bool quick_reboot, tv_type_t force_tv_type, uint8_t cic_seed);
 bool d64_ll_set_save_type (d64_save_type_t save_type);
 bool d64_ll_enable_save_writeback (bool enabled);
+bool d64_ll_enable_byteswap_on_load (bool enabled);
 bool d64_ll_enable_cartrom_writes (bool enabled);
 bool d64_ll_enable_extended_mode (bool enabled);
+bool d64_ll_write_eeprom_contents (void *contents);
+bool d64_ll_write_save_writeback_lba_list (void *list);
 
 /** @} */ /* 64drive */
 

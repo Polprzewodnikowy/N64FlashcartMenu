@@ -91,6 +91,7 @@ void boot (boot_params_t *params) {
     while (cpu_io_read(&SP->DMA_BUSY));
 
     cpu_io_write(&PI->SR, PI_SR_CLR_INTR | PI_SR_RESET);
+    while (cpu_io_read(&VI->CURR_LINE) > 10);
     cpu_io_write(&VI->V_INTR, 0x3FF);
     cpu_io_write(&VI->H_LIMITS, 0);
     cpu_io_write(&VI->CURR_LINE, 0);
@@ -143,7 +144,10 @@ void boot (boot_params_t *params) {
     tv_type = (params->tv_type & 0x03);
     reset_type = (params->reset_type & 0x01);
     cic_seed = (params->cic_seed & 0xFF);
-    version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6 : 1;
+    version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6
+            : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1
+            : (params->tv_type == BOOT_TV_TYPE_MPAL) ? 4
+            : 0;
     stack_pointer = (void *) UNCACHED(&SP_MEM->IMEM[1020]);
 
     asm volatile (

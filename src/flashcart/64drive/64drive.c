@@ -31,17 +31,21 @@ static flashcart_error_t d64_init (void) {
     uint16_t fpga_revision;
     uint32_t bootloader_version;
 
-    d64_ll_get_version(&device_variant, &fpga_revision, &bootloader_version);
+    if (d64_ll_enable_extended_mode(false)) {
+        return FLASHCART_ERROR_INT;
+    }
 
-    debugf("device_variant: 0x%04X\n", device_variant);
-    debugf("fpga_revision: 0x%04X\n", fpga_revision);
-    debugf("bootloader_version: 0x%08lX\n", bootloader_version);
+    if (d64_ll_get_version(&device_variant, &fpga_revision, &bootloader_version)) {
+        return FLASHCART_ERROR_INT;
+    }
 
     if (fpga_revision < SUPPORTED_FPGA_REVISION) {
         return FLASHCART_ERROR_OUTDATED;
     }
 
-    sdram_size = d64_ll_get_sdram_size();
+    if (d64_ll_get_sdram_size(&sdram_size)) {
+        return FLASHCART_ERROR_INT;
+    }
 
     if (d64_ll_enable_save_writeback(false)) {
         return FLASHCART_ERROR_INT;
@@ -62,7 +66,9 @@ static flashcart_error_t d64_init (void) {
 
 static flashcart_error_t d64_deinit (void) {
     if (enable_extended_mode_on_exit) {
-        d64_ll_enable_extended_mode(true);
+        if (d64_ll_enable_extended_mode(true)) {
+            return FLASHCART_ERROR_INT;
+        }
     }
 
     return FLASHCART_OK;
@@ -106,11 +112,9 @@ static flashcart_error_t d64_load_rom (char *rom_path) {
 }
 
 static flashcart_error_t d64_load_save (char *save_path) {
-    uint8_t eeprom_buffer[2048] __attribute__((aligned(8)));
+    uint8_t eeprom_contents[2048] __attribute__((aligned(8)));
     FIL fil;
     UINT br;
-
-    bool is_eeprom_save = (current_save_type == SAVE_TYPE_EEPROM_4K || current_save_type == SAVE_TYPE_EEPROM_16K);
 
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
@@ -118,9 +122,11 @@ static flashcart_error_t d64_load_save (char *save_path) {
 
     size_t save_size = f_size(&fil);
 
+    bool is_eeprom_save = (current_save_type == SAVE_TYPE_EEPROM_4K || current_save_type == SAVE_TYPE_EEPROM_16K);
+
     void *address = (void *) (SAVE_ADDRESS_DEV_B);
     if (is_eeprom_save) {
-        address = eeprom_buffer;
+        address = eeprom_contents;
     } else if (device_variant == DEVICE_VARIANT_A) {
         address = (void *) (SAVE_ADDRESS_DEV_A);
         if (current_save_type == SAVE_TYPE_FLASHRAM_PKST2) {
@@ -134,7 +140,10 @@ static flashcart_error_t d64_load_save (char *save_path) {
     }
 
     if (is_eeprom_save) {
-        pi_dma_write_data(eeprom_buffer, &D64_REGS->EEPROM, sizeof(eeprom_buffer));
+        if (d64_ll_write_eeprom_contents(eeprom_contents)) {
+            f_close(&fil);
+            return FLASHCART_ERROR_LOAD;
+        }
     }
 
     if (f_close(&fil) != FR_OK) {
@@ -173,8 +182,15 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_FLASHRAM:
             type = SAVE_TYPE_FLASHRAM;
             break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
+            type = (device_variant == DEVICE_VARIANT_A) ? SAVE_TYPE_FLASHRAM_PKST2 : SAVE_TYPE_FLASHRAM;
+            break;
         default:
             return FLASHCART_ERROR_ARGS;
+    }
+
+    if (d64_ll_enable_save_writeback(false)) {
+        return FLASHCART_ERROR_INT;
     }
 
     if (d64_ll_set_save_type(type)) {
@@ -187,11 +203,9 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
 }
 
 static flashcart_error_t d64_set_save_writeback (uint32_t *sectors) {
-    if (d64_ll_enable_save_writeback(false)) {
+    if (d64_ll_write_save_writeback_lba_list(sectors)) {
         return FLASHCART_ERROR_INT;
     }
-
-    pi_dma_write_data(sectors, D64_REGS->WRITEBACK, 1024);
 
     if (d64_ll_enable_save_writeback(true)) {
         return FLASHCART_ERROR_INT;

@@ -24,6 +24,7 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(96),
     KiB(128),
     KiB(128),
+    KiB(128),
 };
 
 static flashcart_error_t dummy_init (void) {

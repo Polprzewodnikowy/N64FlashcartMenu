@@ -41,12 +41,12 @@ static void draw (menu_t *menu, surface_t *d) {
 
     fragment_text_start(text_color);
     text_y += fragment_textf(text_x, text_y, "Unrecoverable error:");
-    text_y += fragment_textf(text_x, text_y, "  %s", format_flashcart_error(menu->flashcart_error));
+    text_y += fragment_textf(text_x, text_y, " %s", format_flashcart_error(menu->flashcart_error));
     if (menu->flashcart_error == FLASHCART_ERROR_OUTDATED) {
-        text_y += fragment_textf(text_x, text_y, "  Minimum supported versions:");
-        text_y += fragment_textf(text_x, text_y, "    EverDrive-64: ?");
-        text_y += fragment_textf(text_x, text_y, "    64drive:      ?");
-        text_y += fragment_textf(text_x, text_y, "    SC64:         2.16.0");
+        text_y += fragment_textf(text_x, text_y, " Minimum supported firmware versions:");
+        text_y += fragment_textf(text_x, text_y, "  - 64drive:      2.05");
+        text_y += fragment_textf(text_x, text_y, "  - EverDrive-64: ?");
+        text_y += fragment_textf(text_x, text_y, "  - SC64:         2.16.0");
     }
 
     rdpq_detach_show();

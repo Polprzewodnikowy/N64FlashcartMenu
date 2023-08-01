@@ -5,15 +5,14 @@
 http://64drive.retroactive.be/64drive_hardware_spec.pdf
 
 
-### Save load address as seen from N64 perspective (PI physical address)
+### Save location offset in SDRAM
 
-| Type                         | HW1          | HW2                          |
-| ---------------------------- | ------------ | ---------------------------- |
-| EEPROM 4kbit and 16kbit      | `0x18001000` | `0x18001000` or `0x1F801000` |
-| SRAM                         | `0x11FF0000` | `0x17FE0000`                 |
-| FlashRAM                     | `0x11FF0000` | `0x17FE0000`                 |
-| SRAM banked                  | `0x11FF0000` | `0x17FE0000`                 |
-| FlashRAM (Pokemon Stadium 2) | `0x10B032B0` | `0x17FE0000`                 |
+| Type                         | HW1          | HW2          |
+| ---------------------------- | ------------ | ------------ |
+| SRAM                         | `0x03FE0000` | `0x0FFC0000` |
+| FlashRAM                     | `0x03FE0000` | `0x0FFC0000` |
+| SRAM banked                  | `0x03FE0000` | `0x0FFC0000` |
+| FlashRAM (Pokemon Stadium 2) | `0x01606560` | `0x0FFC0000` |
 
 EEPROM save types are stored in separate memory inside FPGA, rest of the save types are stored inside SDRAM memory.
 EEPROM save types need manual load as this memory space can't be written with "Read multiple sectors to SDRAM" command.

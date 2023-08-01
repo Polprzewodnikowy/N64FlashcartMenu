@@ -14,9 +14,9 @@
 
 
 #define ROM_ADDRESS                 (0x10000000)
-#define SAVE_ADDRESS_DEV_A          (0x11FF0000)
-#define SAVE_ADDRESS_DEV_A_PKST2    (0x10B032B0)
-#define SAVE_ADDRESS_DEV_B          (0x17FE0000)
+#define SAVE_ADDRESS_DEV_A          (0x13FE0000)
+#define SAVE_ADDRESS_DEV_A_PKST2    (0x11606560)
+#define SAVE_ADDRESS_DEV_B          (0x1FFC0000)
 
 #define SUPPORTED_FPGA_REVISION     (205)
 

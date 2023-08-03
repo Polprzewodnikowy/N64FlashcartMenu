@@ -218,13 +218,13 @@ typedef struct {
     /** @brief The ROM file checksum. */
     uint64_t checksum;
 
-    /** @brief The ROM file unknown reserved region at 0x18. */
+    /** @brief The ROM file unknown reserved region at 0x18. for 8 bytes */
     uint64_t unknown_reserved_1;
 
     /** @brief The ROM file title */
     char title[21]; // 20 chars + null char
 
-    /** @brief The ROM file unknown reserved region at 0x34. */
+    /** @brief The ROM file unknown reserved region at 0x34. for 7 bytes */
     char unknown_reserved_2[7];
 
     /** @brief The ROM file metadata @see rom_metadata_t. */

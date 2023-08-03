@@ -96,7 +96,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     // First: Match by the `ED` or `HB` Developer ID
     if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED" || rom_header.metadata.unique_identifier == *(uint16_t *)"HB") {
 // #ifdef ED64_COMPATIBLE        
-//         uint8_t low_nibble = rom_header.version & 0x0F;
+//         uint8_t low_nibble = rom_header.metadata.version & 0x0F;
 //         uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
 //         uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
 // #endif

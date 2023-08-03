@@ -124,6 +124,16 @@ static char *format_rom_expansion_pak_info (rom_memorytype_t expansion_pak_info)
     }
 }
 
+static float format_rom_clockrate (uint32_t clockrate) {
+    /* Generally ROMs have a clock rate of 0x0000000F which signifies they used the default 62.5MHz clock. */
+    if (clockrate == 0x0F) {
+        return 62.5;
+    }
+
+    /* If it did not, we need to show the different value. */
+    return (float) clockrate / 1000000;
+}
+
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
@@ -167,9 +177,10 @@ static void draw (menu_t *menu, surface_t *d) {
             " Save type: %s\n"
             " Expansion PAK: %s\n"
             "\n"
-            " Extra info:\n"
+            " Extra information:\n"
             "  Boot address: 0x%08lX\n"
-            "  SDK version: %.1f%c",
+            "  SDK version: %.1f%c\n"
+            "  Clock Rate: %.2fMHz\n",
             format_rom_endian(rom_header.config_flags),
             rom_header.title,
             rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type),
@@ -180,7 +191,8 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_save_type(rom_db_match_save_type(rom_header)),
             format_rom_expansion_pak_info(rom_db_match_expansion_pak(rom_header)),
             rom_header.boot_address,
-            (float) ((rom_header.sdk_version >> 8) & 0xFF) / 10.0f, (char) (rom_header.sdk_version & 0xFF)
+            (float) ((rom_header.sdk_version >> 8) & 0xFF) / 10.0f, (char) (rom_header.sdk_version & 0xFF),
+            format_rom_clockrate(rom_header.clock_rate)
         );
 
         component_actions_bar_text_draw(

@@ -175,7 +175,7 @@ static void draw (menu_t *menu, surface_t *d) {
             rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type),
             (char *) (&rom_header.metadata.unique_identifier),
             rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market),
-            rom_header.version,
+            rom_header.metadata.version,
             rom_header.checksum,
             format_rom_save_type(rom_db_match_save_type(rom_header)),
             format_rom_expansion_pak_info(rom_db_match_expansion_pak(rom_header)),

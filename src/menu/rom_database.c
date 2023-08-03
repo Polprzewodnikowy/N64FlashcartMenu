@@ -76,9 +76,9 @@ rom_header_t file_read_rom_header(char *path) {
     fseek(fp, 0x3E, SEEK_SET);
     fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
     fseek(fp, 0x3F, SEEK_SET);
-    fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
+    fread(&(rom_header->metadata.version), sizeof(rom_header->metadata.version), 1, fp);
     fseek(fp, 0x40, SEEK_SET);
-    fread(&(rom_header->ipl3_boot_code), sizeof(rom_header->ipl3_boot_code), 1, fp);
+    fread(&(rom_header->ipl_boot_code), sizeof(rom_header->ipl_boot_code), 1, fp);
 
     fclose(fp);
 
@@ -101,7 +101,7 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
 //         uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
 // #endif
 
-        uint8_t high_nibble = (rom_header.version >> 4) & 0x0F;
+        uint8_t high_nibble = (rom_header.metadata.version >> 4) & 0x0F;
 
         return extract_homebrew_save_type(high_nibble);
     }

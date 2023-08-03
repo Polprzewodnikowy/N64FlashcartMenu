@@ -76,8 +76,6 @@ static void menu_init (boot_params_t *boot_params) {
 }
 
 static void menu_deinit (menu_t *menu) {
-    display_close();
-
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
 
@@ -94,6 +92,8 @@ static void menu_deinit (menu_t *menu) {
     audio_close();
     rtc_close();
     timer_close();
+
+    display_close();
 }
 
 

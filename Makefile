@@ -10,13 +10,12 @@ OUTPUT_DIR = output
 include $(N64_INST)/include/n64.mk
 
 N64_CFLAGS += -iquote $(SOURCE_DIR) -I $(SOURCE_DIR)/libs $(FLAGS) -flto=auto
-N64_LDFLAGS += --wrap asset_load
 
 SRCS = \
 	main.c \
 	boot/boot.c \
 	boot/crc32.c \
-	boot/ipl2.S \
+	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
@@ -30,8 +29,11 @@ SRCS = \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
 	menu/actions.c \
-	menu/assets.c \
 	menu/components/background.c \
+	menu/components/boxart.c \
+	menu/components/common.c \
+	menu/components/file_list.c \
+	menu/fonts.c \
 	menu/menu.c \
 	menu/mp3_player.c \
 	menu/path.c \
@@ -43,8 +45,6 @@ SRCS = \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
-	menu/views/fragments/fragments.c \
-	menu/views/fragments/widgets.c \
 	menu/views/image_viewer.c \
 	menu/views/load.c \
 	menu/views/music_player.c \
@@ -61,7 +61,7 @@ SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2000-206F
+$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
 
 $(BUILD_DIR)/%.o: $(ASSETS_DIR)/%.ttf
 	@echo "    [FONT] $@"

@@ -97,7 +97,7 @@ flashcart_error_t flashcart_deinit (void) {
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
+flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
     flashcart_error_t error;
 
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
@@ -108,7 +108,7 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
         return FLASHCART_ERROR_INT;
     }
 
-    error = flashcart->load_rom(rom_path);
+    error = flashcart->load_rom(rom_path, progress);
 
     if (cart_card_byteswap(false)) {
         return FLASHCART_ERROR_INT;

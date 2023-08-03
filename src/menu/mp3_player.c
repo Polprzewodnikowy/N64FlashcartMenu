@@ -121,7 +121,7 @@ mp3player_err_t mp3player_init (void) {
     p = calloc(1, sizeof(mp3player_t));
 
     if (p == NULL) {
-        return MP3PLAYER_ERR_MALLOC;
+        return MP3PLAYER_ERR_OUT_OF_MEM;
     }
 
     mp3player_reset_decoder();

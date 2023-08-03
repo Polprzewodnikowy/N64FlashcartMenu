@@ -10,7 +10,9 @@
 #define C0_STATUS_CU1   (1 << 29)
 
 
-extern uint32_t ipl2 __attribute__((section(".data")));
+extern uint32_t reboot_start __attribute__((section(".text")));
+extern size_t reboot_size __attribute__((section(".text")));
+extern int reboot_entry_offset __attribute__((section(".text")));
 
 
 typedef struct {
@@ -100,11 +102,12 @@ void boot (boot_params_t *params) {
 
     while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 
-    uint32_t *ipl2_src = &ipl2;
-    io32_t *ipl2_dst = SP_MEM->IMEM;
+    uint32_t *reboot_src = &reboot_start;
+    io32_t *reboot_dst = SP_MEM->IMEM;
+    size_t reboot_instructions = (size_t) (&reboot_size) / sizeof(uint32_t);
 
-    for (int i = 0; i < 8; i++) {
-        cpu_io_write(&ipl2_dst[i], ipl2_src[i]);
+    for (int i = 0; i < reboot_instructions; i++) {
+        cpu_io_write(&reboot_dst[i], reboot_src[i]);
     }
 
     cpu_io_write(&PI->DOM[0].LAT, 0xFF);
@@ -139,10 +142,10 @@ void boot (boot_params_t *params) {
     register uint32_t version asm ("s7");
     void *stack_pointer;
 
-    entry_point = (void (*)(void)) UNCACHED(&SP_MEM->DMEM[16]);
+    entry_point = (void (*)(void)) UNCACHED(&SP_MEM->IMEM[(int) (&reboot_entry_offset)]);
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
-    reset_type = (params->reset_type & 0x01);
+    reset_type = BOOT_RESET_TYPE_COLD;
     cic_seed = (params->cic_seed & 0xFF);
     version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6
             : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1

@@ -1,7 +1,8 @@
 #include <fatfs/ff.h>
 #include <stdlib.h>
 
-#include "components.h"
+#include "../components.h"
+#include "constants.h"
 #include "utils/fs.h"
 
 
@@ -9,11 +10,20 @@
 
 
 typedef struct {
+    char *cache_location;
+    surface_t *image;
+    rspq_block_t *image_display_list;
+} component_background_t;
+
+typedef struct {
     uint32_t magic;
     uint32_t width;
     uint32_t height;
     uint32_t size;
 } cache_metadata_t;
+
+
+static component_background_t *background = NULL;
 
 
 static void load_from_cache (component_background_t *c) {
@@ -35,10 +45,7 @@ static void load_from_cache (component_background_t *c) {
         return;
     }
 
-    uint32_t display_width = display_get_width();
-    uint32_t display_height = display_get_height();
-
-    if (cache_metadata.magic != CACHE_METADATA_MAGIC || cache_metadata.width > display_width || cache_metadata.height > display_height) {
+    if (cache_metadata.magic != CACHE_METADATA_MAGIC || cache_metadata.width > DISPLAY_WIDTH || cache_metadata.height > DISPLAY_HEIGHT) {
         f_close(&fil);
         return;
     }
@@ -92,62 +99,61 @@ static void prepare_background (component_background_t *c) {
         return;
     }
 
-    uint32_t display_width = display_get_width();
-    uint32_t display_height = display_get_height();
-
-    int16_t display_center_x = (display_width / 2);
-    int16_t display_center_y = (display_height / 2);
-
-    int16_t image_center_x = (c->image->width / 2);
-    int16_t image_center_y = (c->image->height / 2);
+    uint16_t image_center_x = (c->image->width / 2);
+    uint16_t image_center_y = (c->image->height / 2);
 
     // Darken the image
     rdpq_attach(c->image, NULL);
     rdpq_mode_push();
         rdpq_set_mode_standard();
-        rdpq_set_prim_color(RGBA32(0x00, 0x00, 0x00, 0xA0));
+        rdpq_set_prim_color(BACKGROUND_OVERLAY_COLOR);
         rdpq_mode_combiner(RDPQ_COMBINER_FLAT);
         rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
-        rdpq_fill_rectangle(0, 0, c->image->width, c->image->height);
+        rdpq_fill_rectangle(
+            0 - (DISPLAY_CENTER_X - image_center_x),
+            0 - (DISPLAY_CENTER_Y - image_center_y),
+            DISPLAY_WIDTH - (DISPLAY_CENTER_X - image_center_x),
+            DISPLAY_HEIGHT - (DISPLAY_CENTER_Y - image_center_y)
+        );
     rdpq_mode_pop();
     rdpq_detach();
 
     // Prepare display list
     rspq_block_begin();
     rdpq_mode_push();
-        if ((c->image->width != display_width) || (c->image->height != display_height)) {
-            rdpq_set_mode_fill(RGBA32(0x00, 0x00, 0x00, 0xFF));
+        if ((c->image->width != DISPLAY_WIDTH) || (c->image->height != DISPLAY_HEIGHT)) {
+            rdpq_set_mode_fill(BACKGROUND_EMPTY_COLOR);
         }
-        if (c->image->width != display_width) {
+        if (c->image->width != DISPLAY_WIDTH) {
             rdpq_fill_rectangle(
                 0,
-                display_center_y - image_center_y,
-                display_center_x - image_center_x,
-                display_center_y + image_center_y
+                DISPLAY_CENTER_Y - image_center_y,
+                DISPLAY_CENTER_X - image_center_x,
+                DISPLAY_CENTER_Y + image_center_y
             );
             rdpq_fill_rectangle(
-                display_center_x + image_center_x - (c->image->width % 2),
-                display_center_y - image_center_y,
-                display_width,
-                display_center_y + image_center_y
+                DISPLAY_CENTER_X + image_center_x - (c->image->width % 2),
+                DISPLAY_CENTER_Y - image_center_y,
+                DISPLAY_WIDTH,
+                DISPLAY_CENTER_Y + image_center_y
             );
         }
-        if (c->image->height != display_height) {
+        if (c->image->height != DISPLAY_HEIGHT) {
             rdpq_fill_rectangle(
                 0,
                 0,
-                display_width,
-                display_center_y - image_center_y
+                DISPLAY_WIDTH,
+                DISPLAY_CENTER_Y - image_center_y
             );
             rdpq_fill_rectangle(
                 0,
-                display_center_y + image_center_y - (c->image->height % 2),
-                display_width,
-                display_height
+                DISPLAY_CENTER_Y + image_center_y - (c->image->height % 2),
+                DISPLAY_WIDTH,
+                DISPLAY_HEIGHT
             );
         }
         rdpq_set_mode_copy(false);
-        rdpq_tex_blit(c->image, display_center_x - image_center_x, display_center_y - image_center_y, NULL);
+        rdpq_tex_blit(c->image, DISPLAY_CENTER_X - image_center_x, DISPLAY_CENTER_Y - image_center_y, NULL);
     rdpq_mode_pop();
     c->image_display_list = rspq_block_end();
 }
@@ -157,46 +163,56 @@ static void display_list_free (void *arg) {
 }
 
 
-component_background_t *component_background_create (char *cache_location) {
-    component_background_t *c = calloc(1, sizeof(component_background_t));
-
-    c->cache_location = cache_location;
-
-    load_from_cache(c);
-
-    prepare_background(c);
-
-    return c;
+void component_background_init (char *cache_location) {
+    if (!background) {
+        background = calloc(1, sizeof(component_background_t));
+        background->cache_location = cache_location;
+        load_from_cache(background);
+        prepare_background(background);
+    }
 }
 
-void component_background_replace_image (component_background_t *c, surface_t *image) {
-    if (!c) {
+void component_background_free (void) {
+    if (background) {
+        if (background->image) {
+            surface_free(background->image);
+            free(background->image);
+            background->image = NULL;
+        }
+        if (background->image_display_list) {
+            rdpq_call_deferred(display_list_free, background->image_display_list);
+            background->image_display_list = NULL;
+        }
+        free(background);
+        background = NULL;
+    }
+}
+
+void component_background_replace_image (surface_t *image) {
+    if (!background) {
         return;
     }
 
-    if (c->image) {
-        surface_free(c->image);
-        free(c->image);
-        c->image = NULL;
+    if (background->image) {
+        surface_free(background->image);
+        free(background->image);
+        background->image = NULL;
     }
 
-    if (c->image_display_list) {
-        rdpq_call_deferred(display_list_free, c->image_display_list);
-        c->image_display_list = NULL;
+    if (background->image_display_list) {
+        rdpq_call_deferred(display_list_free, background->image_display_list);
+        background->image_display_list = NULL;
     }
 
-    c->image = image;
-
-    save_to_cache(c);
-
-    prepare_background(c);
+    background->image = image;
+    save_to_cache(background);
+    prepare_background(background);
 }
 
-void component_background_draw (component_background_t *c) {
-    if (!c || !c->image_display_list) {
-        rdpq_clear(RGBA32(0x00, 0x00, 0x00, 0xFF));
-        return;
+void component_background_draw (void) {
+    if (background && background->image_display_list) {
+        rspq_block_run(background->image_display_list);
+    } else {
+        rdpq_clear(BACKGROUND_EMPTY_COLOR);
     }
-
-    rspq_block_run(c->image_display_list);
 }

@@ -14,7 +14,7 @@
 /** @brief MP3 file error enumeration */
 typedef enum {
     MP3PLAYER_OK,
-    MP3PLAYER_ERR_MALLOC,
+    MP3PLAYER_ERR_OUT_OF_MEM,
     MP3PLAYER_ERR_IO,
     MP3PLAYER_ERR_NO_FILE,
     MP3PLAYER_ERR_INVALID_FILE,

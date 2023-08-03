@@ -23,7 +23,7 @@
 #define SUPPORTED_MINOR_VERSION     (16)
 
 
-static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br) {
+static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
     size_t erase_block_size;
     UINT bp;
 
@@ -43,6 +43,9 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
         }
         if (sc64_flash_wait_busy() != SC64_OK) {
             return FLASHCART_ERROR_INT;
+        }
+        if (progress) {
+            progress(f_tell(fil) / (float) (f_size(fil)));
         }
         address += program_size;
         size -= program_size;
@@ -109,7 +112,7 @@ static flashcart_error_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_rom (char *rom_path) {
+static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
@@ -133,11 +136,18 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     size_t shadow_size = shadow_enabled ? MIN(rom_size - sdram_size, KiB(128)) : 0;
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
-        f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+    size_t chunk_size = MiB(1);
+    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+        size_t block_size = MIN(sdram_size - offset, chunk_size);
+        if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
+            f_close(&fil);
+            return FLASHCART_ERROR_LOAD;
+        }
+        if (progress) {
+            progress(f_tell(&fil) / (float) (f_size(&fil)));
+        }
     }
-    if (br != sdram_size) {
+    if (f_tell(&fil) != sdram_size) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -148,7 +158,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     }
 
     if (shadow_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br);
+        flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br, progress);
         if (error != FLASHCART_OK) {
             f_close(&fil);
             return error;
@@ -165,7 +175,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     }
 
     if (extended_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br);
+        flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br, progress);
         if (error != FLASHCART_OK) {
             f_close(&fil);
             return error;

@@ -74,7 +74,7 @@ static flashcart_error_t d64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_load_rom (char *rom_path) {
+static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
@@ -91,11 +91,18 @@ static flashcart_error_t d64_load_rom (char *rom_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS), rom_size, &br) != FR_OK) {
-        f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+    size_t chunk_size = MiB(1);
+    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+        size_t block_size = MIN(sdram_size - offset, chunk_size);
+        if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
+            f_close(&fil);
+            return FLASHCART_ERROR_LOAD;
+        }
+        if (progress) {
+            progress(f_tell(&fil) / (float) (f_size(&fil)));
+        }
     }
-    if (br != rom_size) {
+    if (f_tell(&fil) != rom_size) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }

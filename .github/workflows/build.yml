@@ -30,7 +30,11 @@ jobs:
           imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           push: always
-          runCmd: make all
+          runCmd: |
+            pushd libdragon
+            ./build.sh
+            popd
+            make all
         env:
           FLAGS: -DMENU_RELEASE
 

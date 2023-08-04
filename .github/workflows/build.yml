@@ -27,8 +27,8 @@ jobs:
       - name: Build N64FlashcartMenu ROM
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/Polprzewodnikowy/n64flashcartmenu-devcontainer
-          cacheFrom: ghcr.io/Polprzewodnikowy/n64flashcartmenu-devcontainer
+          imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
+          cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           push: always
           runCmd: make all
         env:

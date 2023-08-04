@@ -2,7 +2,7 @@
 
 set -e
 
-REMOTE="--remote host.docker.internal:9064"
+REMOTE="--remote ${REMOTE:-host.docker.internal:9064}"
 
 ## FIXME: this does not work!
 # Make sure we are connected
@@ -17,7 +17,7 @@ echo
 
 # Load the ROM
 echo Loading ROM...:
-sc64deployer $REMOTE upload ./output/N64FlashcartMenu.z64
+sc64deployer $REMOTE upload ./output/N64FlashcartMenu.n64
 
 echo
 echo
@@ -27,5 +27,5 @@ echo
 echo
 
 if [ "$1" = "-d" ]; then
-    sc64deployer $REMOTE debug
+    sc64deployer $REMOTE debug --no-writeback
 fi

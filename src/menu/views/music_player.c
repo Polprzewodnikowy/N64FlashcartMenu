@@ -1,7 +1,4 @@
-#include <libdragon.h>
-
 #include "../mp3_player.h"
-#include "fragments/fragments.h"
 #include "views.h"
 
 
@@ -12,20 +9,18 @@
 static int unmute_counter;
 
 
-static void format_name (char *buffer, char *name) {
-    int cutoff_length = 57;
-    int name_length = strlen(name);
-    strcpy(buffer, " ");
-    if (name_length > cutoff_length) {
-        strncat(buffer, name, cutoff_length - 1);
-        strcat(buffer, "…");
-    } else {
-        strcat(buffer, name);
+static char *convert_error_message (mp3player_err_t err) {
+    switch (err) {
+        case MP3PLAYER_ERR_OUT_OF_MEM: return "MP3 player failed due to insufficient memory";
+        case MP3PLAYER_ERR_IO: return "I/O error during MP3 playback";
+        case MP3PLAYER_ERR_NO_FILE: return "No MP3 file is loaded";
+        case MP3PLAYER_ERR_INVALID_FILE: return "Invalid MP3 file";
+        default: return "Unknown MP3 player error";
     }
 }
 
 static void format_elapsed_duration (char *buffer, float elapsed, float duration) {
-    strcpy(buffer, " ");
+    strcpy(buffer, "");
 
     if (duration >= 3600) {
         sprintf(buffer + strlen(buffer), "%02d:", (int) (elapsed) / 3600);
@@ -42,6 +37,8 @@ static void format_elapsed_duration (char *buffer, float elapsed, float duration
 
 
 static void process (menu_t *menu) {
+    mp3player_err_t err;
+
     if (unmute_counter > 0) {
         unmute_counter -= 1;
         if (unmute_counter == 0) {
@@ -49,89 +46,94 @@ static void process (menu_t *menu) {
         }
     }
 
-    if (mp3player_process() != MP3PLAYER_OK) {
-        menu->next_mode = MENU_MODE_ERROR;
+    err = mp3player_process();
+    if (err != MP3PLAYER_OK) {
+        menu_show_error(menu, convert_error_message(err));
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.enter) {
-        if (mp3player_toggle() != MP3PLAYER_OK) {
-            menu->next_mode = MENU_MODE_ERROR;
+        err = mp3player_toggle();
+        if (err != MP3PLAYER_OK) {
+            menu_show_error(menu, convert_error_message(err));
         }
     } else if (menu->actions.go_left || menu->actions.go_right) {
         mp3player_mute(true);
         unmute_counter = SEEK_UNMUTE_TIMEOUT;
         int seconds = (menu->actions.go_left ? -SEEK_SECONDS : SEEK_SECONDS);
-        if (mp3player_seek(seconds) != MP3PLAYER_OK) {
-            menu->next_mode = MENU_MODE_ERROR;
+        err = mp3player_seek(seconds);
+        if (err != MP3PLAYER_OK) {
+            menu_show_error(menu, convert_error_message(err));
         }
     }
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    char buffer[64];
-
-    layout_t *layout = layout_get();
-
-    const int text_x = layout->offset_x + layout->offset_text_x;
-    int text_y = layout->offset_y + layout->offset_text_y;
-
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
-    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
-
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
 
-    // Layout
-    fragment_borders(d);
+    component_background_draw();
 
-    // Progressbar
-    fragment_progressbar(d, mp3player_get_progress());
+    component_layout_draw();
 
-    // Text start
-    fragment_text_start(text_color);
+    component_seekbar_draw(mp3player_get_progress());
 
-    // Main screen
-    text_y += fragment_textf(text_x, text_y, "Now playing:");
-    format_name(buffer, menu->browser.list[menu->browser.selected].name);
-    text_y += fragment_textf(text_x, text_y, buffer);
+    component_main_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "MUSIC PLAYER\n"
+        "\n"
+        "%s",
+        menu->browser.list[menu->browser.selected].name
+    );
 
-    text_y += layout->line_height;
-    text_y += fragment_textf(text_x, text_y, "Track elapsed / length:");
-    format_elapsed_duration(buffer, mp3player_get_duration() * mp3player_get_progress(), mp3player_get_duration());
-    text_y += fragment_textf(text_x, text_y, buffer);
+    char formatted_track_elapsed_length[64];
 
-    text_y += layout->line_height;
-    text_y += fragment_textf(text_x, text_y, "Average bitrate:");
-    text_y += fragment_textf(text_x, text_y, " %.0f kbps", mp3player_get_bitrate() / 1000);
+    format_elapsed_duration(
+        formatted_track_elapsed_length,
+        mp3player_get_duration() * mp3player_get_progress(),
+        mp3player_get_duration()
+    );
 
-    text_y += layout->line_height;
-    text_y += fragment_textf(text_x, text_y, "Samplerate:");
-    text_y += fragment_textf(text_x, text_y, " %d Hz", mp3player_get_samplerate());
+    component_main_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "\n"
+        "\n"
+        "\n"
+        " Track elapsed / length:\n"
+        "  %s\n"
+        "\n"
+        " Average bitrate:\n"
+        "  %.0f kbps\n"
+        "\n"
+        " Samplerate:\n"
+        "  %d Hz",
+        formatted_track_elapsed_length,
+        mp3player_get_bitrate() / 1000,
+        mp3player_get_samplerate()
+    );
 
-    // Actions bar
-    text_y = layout->actions_y + layout->offset_text_y;
-    if (mp3player_is_playing()) {
-        fragment_textf(text_x, text_y, "A: Pause");
-    } else if (mp3player_is_finished()) {
-        fragment_textf(text_x, text_y, "A: Play again");
-    } else {
-        fragment_textf(text_x, text_y, "A: Play");
-    }
-    text_y += layout->line_height;
-    fragment_textf(text_x, text_y, "B: Exit | Left / Right: Rewind / Fast forward");
+    component_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "A: %s\n"
+        "B: Exit | Left / Right: Rewind / Fast forward",
+        mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
+    );
 
     rdpq_detach_show();
 }
 
+static void deinit (void) {
+    mp3player_deinit();
+}
+
 
 void view_music_player_init (menu_t *menu) {
-    mp3player_err_t error;
+    mp3player_err_t err;
 
     unmute_counter = 0;
 
-    error = mp3player_init();
-    if (error != MP3PLAYER_OK) {
-        menu->next_mode = MENU_MODE_ERROR;
+    err = mp3player_init();
+    if (err != MP3PLAYER_OK) {
+        menu_show_error(menu, convert_error_message(err));
         mp3player_deinit();
         return;
     }
@@ -139,9 +141,9 @@ void view_music_player_init (menu_t *menu) {
     path_t *path = path_clone(menu->browser.directory);
     path_push(path, menu->browser.list[menu->browser.selected].name);
 
-    error = mp3player_load(path_get(path));
-    if (error != MP3PLAYER_OK) {
-        menu->next_mode = MENU_MODE_ERROR;
+    err = mp3player_load(path_get(path));
+    if (err != MP3PLAYER_OK) {
+        menu_show_error(menu, convert_error_message(err));
         mp3player_deinit();
     } else {
         mp3player_mute(false);
@@ -153,8 +155,10 @@ void view_music_player_init (menu_t *menu) {
 
 void view_music_player_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
+
     if (menu->next_mode != MENU_MODE_MUSIC_PLAYER) {
-        mp3player_deinit();
+        deinit();
     }
 }

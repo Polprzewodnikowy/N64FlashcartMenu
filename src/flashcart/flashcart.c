@@ -32,6 +32,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
     .load_rom = NULL,
+    .load_file = NULL,
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
@@ -39,6 +40,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
 
 
 flashcart_error_t flashcart_init (void) {
+    bool sd_initialized;
     flashcart_error_t error;
 
     // HACK: Because libcart reads PI config from address 0x10000000 when initializing
@@ -48,9 +50,7 @@ flashcart_error_t flashcart_init (void) {
     extern uint32_t cart_dom1;
     cart_dom1 = 0x80371240;
 
-    if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_NOT_DETECTED;
-    }
+    sd_initialized = debug_init_sdfs("sd:/", -1);
 
     // NOTE: Flashcart model is extracted from libcart after debug_init_sdfs call is made
     extern int cart_type;
@@ -66,14 +66,18 @@ flashcart_error_t flashcart_init (void) {
             break;
 
         default:
-            return FLASHCART_ERROR_UNSUPPORTED;
+            return FLASHCART_ERROR_NOT_DETECTED;
     }
 
     if ((error = flashcart->init()) != FLASHCART_OK) {
         return error;
     }
 
-#ifndef MENU_NO_USB_LOG
+    if (!sd_initialized) {
+        return FLASHCART_ERROR_SD_CARD;
+    }
+
+#ifndef MENU_RELEASE
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif
@@ -88,7 +92,7 @@ flashcart_error_t flashcart_deinit (void) {
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
+flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
     flashcart_error_t error;
 
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
@@ -99,13 +103,20 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
         return FLASHCART_ERROR_INT;
     }
 
-    error = flashcart->load_rom(rom_path);
+    error = flashcart->load_rom(rom_path, progress);
 
     if (cart_card_byteswap(false)) {
         return FLASHCART_ERROR_INT;
     }
 
     return error;
+}
+
+flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_address) {
+    if ((file_path == NULL) || (!file_exists(file_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+    return flashcart->load_file(file_path, start_offset_address);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {

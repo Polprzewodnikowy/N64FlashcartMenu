@@ -12,7 +12,7 @@ echo:
 echo:
 :: Load the ROM
 echo Loading ROM...
-%~dp0tools\sc64\sc64deployer upload %~dp0output\N64FlashcartMenu.z64
+%~dp0tools\sc64\sc64deployer upload %~dp0output\N64FlashcartMenu.n64
 
 echo:
 echo:
@@ -20,6 +20,9 @@ echo:
 echo !!! Now toggle power to the N64 !!!
 echo:
 echo:
-::pause
 
-::%~dp0tools\sc64\sc64deployer debug
+if not "%1" == "/d" goto :exit
+
+%~dp0tools\sc64\sc64deployer debug --no-writeback
+
+:exit

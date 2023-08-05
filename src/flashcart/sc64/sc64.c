@@ -23,7 +23,7 @@
 #define SUPPORTED_MINOR_VERSION     (16)
 
 
-static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br) {
+static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
     size_t erase_block_size;
     UINT bp;
 
@@ -43,6 +43,9 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
         }
         if (sc64_flash_wait_busy() != SC64_OK) {
             return FLASHCART_ERROR_INT;
+        }
+        if (progress) {
+            progress(f_tell(fil) / (float) (f_size(fil)));
         }
         address += program_size;
         size -= program_size;
@@ -104,19 +107,16 @@ static flashcart_error_t sc64_init (void) {
 }
 
 static flashcart_error_t sc64_deinit (void) {
-    // NOTE: Necessary because libcart enables ROM write by default
-    sc64_set_config(CFG_ROM_WRITE_ENABLE, false);
-
     sc64_lock();
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_rom (char *rom_path) {
+static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, rom_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -136,11 +136,18 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     size_t shadow_size = shadow_enabled ? MIN(rom_size - sdram_size, KiB(128)) : 0;
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS), sdram_size, &br) != FR_OK) {
-        f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+    size_t chunk_size = MiB(1);
+    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+        size_t block_size = MIN(sdram_size - offset, chunk_size);
+        if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
+            f_close(&fil);
+            return FLASHCART_ERROR_LOAD;
+        }
+        if (progress) {
+            progress(f_tell(&fil) / (float) (f_size(&fil)));
+        }
     }
-    if (br != sdram_size) {
+    if (f_tell(&fil) != sdram_size) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -151,7 +158,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     }
 
     if (shadow_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br);
+        flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br, progress);
         if (error != FLASHCART_OK) {
             f_close(&fil);
             return error;
@@ -168,7 +175,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
     }
 
     if (extended_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br);
+        flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br, progress);
         if (error != FLASHCART_OK) {
             f_close(&fil);
             return error;
@@ -183,6 +190,34 @@ static flashcart_error_t sc64_load_rom (char *rom_path) {
         return FLASHCART_ERROR_LOAD;
     }
 
+    return FLASHCART_OK;
+}
+
+static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_address) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, file_path, FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    fix_file_size(&fil);
+
+    size_t file_size = f_size(&fil);
+
+    if (file_size > MiB(8)) { // FIXME: should be checked with the start offset address.
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
     return FLASHCART_OK;
 }
 
@@ -214,7 +249,7 @@ static flashcart_error_t sc64_load_save (char *save_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, save_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -287,6 +322,7 @@ static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
     .load_rom = sc64_load_rom,
+    .load_file = sc64_load_file,
     .load_save = sc64_load_save,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,

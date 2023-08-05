@@ -1,5 +1,4 @@
-#include <libdragon.h>
-
+#include "utils/fs.h"
 #include "views.h"
 
 
@@ -19,5 +18,6 @@ void view_startup_init (menu_t *menu) {
 
 void view_startup_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
 }

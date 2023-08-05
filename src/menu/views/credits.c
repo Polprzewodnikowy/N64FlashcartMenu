@@ -1,6 +1,3 @@
-#include <libdragon.h>
-
-#include "fragments/fragments.h"
 #include "views.h"
 
 
@@ -16,50 +13,45 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    layout_t *layout = layout_get();
-
-    const int text_x = layout->offset_x + layout->offset_text_x;
-    int text_y = layout->offset_y + layout->offset_text_y;
-
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
-    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
-
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
 
-    // Layout
-    fragment_borders(d);
+    component_background_draw();
 
-    // Text start
-    fragment_text_start(text_color);
+    component_layout_draw();
 
-	text_y += fragment_textf((d->width / 2) - 76, text_y, "MENU INFORMATION");
+    component_main_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "MENU INFORMATION"
+    );
 
-	text_y += fragment_textf(text_x, text_y, "\n");
+    component_main_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "\n"
+        "Menu Revision: V%s\n"
+        "\n"
+        "Github:\n"
+        " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
+        "Authors:\n"
+        " JonesAlmighty / NetworkFusion\n"
+        " Mateusz Faderewski / Polprzewodnikowy\n"
+        "Credits:\n"
+        " N64Brew / libdragon contributors\n"
+        "\n"
+        "OSS software used:\n"
+        " libdragon (UNLICENSE License)\n"
+        " libspng (BSD 2-Clause License)\n"
+        " mini.c (BSD 2-Clause License)\n"
+        " minimp3 (CC0 1.0 Universal)\n"
+        " miniz (MIT License)",
+        MENU_VERSION
+    );
 
-	text_y += fragment_textf(text_x, text_y, "Menu Revision: V%s", MENU_VERSION);
-	text_y += fragment_textf(text_x, text_y, "\n");
-	text_y += fragment_textf(text_x, text_y, "Authors:");
-	text_y += fragment_textf(text_x, text_y, "  JonesAlmighty / NetworkFusion");
-	text_y += fragment_textf(text_x, text_y, "  korgeaux / Polprzewodnikowy");
-	text_y += fragment_textf(text_x, text_y, "\n");
-	text_y += fragment_textf(text_x, text_y, "Credits:");
-	text_y += fragment_textf(text_x, text_y, "  N64Brew / libdragon contributors.");
-	text_y += fragment_textf(text_x, text_y, "\n");
-	text_y += fragment_textf(text_x, text_y, "Github:");
-	text_y += fragment_textf(text_x, text_y, "  https://github.com/Polprzewodnikowy/N64FlashcartMenu");
-	text_y += fragment_textf(text_x, text_y, "\n");
-	text_y += fragment_textf(text_x, text_y, "OSS licenses used:");
-	text_y += fragment_textf(text_x, text_y, "  UNLICENSE"); /* libdragon license */
-	text_y += fragment_textf(text_x, text_y, "  MIT");
-    text_y += fragment_textf(text_x, text_y, "  BSD 2-Clause"); /* libspng license */
-    text_y += fragment_textf(text_x, text_y, "  CC0 1.0 Universal"); /* minimp3 license */
-    // text_y += fragment_textf(text_x, text_y, "  Permissive, unspecific"); /* miniz license */
-
-
-    // Actions bar
-    text_y = layout->actions_y + layout->offset_text_y;
-    text_y += fragment_textf(text_x, text_y, "B: Exit");
+    component_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "B: Exit"
+    );
 
     rdpq_detach_show();
 }
@@ -71,5 +63,6 @@ void view_credits_init (menu_t *menu) {
 
 void view_credits_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
 }

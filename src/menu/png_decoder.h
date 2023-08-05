@@ -24,9 +24,10 @@ typedef enum {
 typedef void png_callback_t (png_err_t err, surface_t *decoded_image, void *callback_data);
 
 
-png_err_t png_decode_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data);
-void png_decode_abort (void);
-void png_poll (void);
+png_err_t png_decoder_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data);
+void png_decoder_abort (void);
+float png_decoder_get_progress (void);
+void png_decoder_poll (void);
 
 
 #endif

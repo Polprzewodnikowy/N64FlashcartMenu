@@ -1,17 +1,19 @@
+#include <fatfs/ff.h>
 #include <libspng/spng/spng.h>
 
-#include "path.h"
 #include "png_decoder.h"
+#include "utils/fs.h"
 
 
 typedef struct {
-    FILE *file;
+    FIL fil;
 
     spng_ctx *ctx;
     struct spng_ihdr ihdr;
 
     surface_t *image;
     uint8_t *row_buffer;
+    int decoded_rows;
 
     png_callback_t *callback;
     void *callback_data;
@@ -22,9 +24,7 @@ static png_decoder_t *decoder;
 
 static void png_decoder_deinit (bool free_image) {
     if (decoder != NULL) {
-        if (decoder->file != NULL) {
-            fclose(decoder->file);
-        }
+        f_close(&decoder->fil);
         if (decoder->ctx != NULL) {
             spng_ctx_free(decoder->ctx);
         }
@@ -40,11 +40,23 @@ static void png_decoder_deinit (bool free_image) {
     }
 }
 
+static int png_file_read (spng_ctx *ctx, void *user, void *dst_src, size_t length) {
+    UINT bytes_read = 0;
+    png_decoder_t *d = (png_decoder_t *) (user);
 
-png_err_t png_decode_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data) {
-    path_t *file_path;
-    size_t image_size;
+    if (f_read(&d->fil, dst_src, length, &bytes_read) != FR_OK) {
+        return SPNG_IO_ERROR;
+    }
 
+    if (bytes_read != length) {
+        return SPNG_EOF;
+    }
+
+    return SPNG_OK;
+}
+
+
+png_err_t png_decoder_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data) {
     if (decoder != NULL) {
         return PNG_ERR_BUSY;
     }
@@ -54,11 +66,7 @@ png_err_t png_decode_start (char *path, int max_width, int max_height, png_callb
         return PNG_ERR_OUT_OF_MEM;
     }
 
-    file_path = path_init("sd:/");
-    path_append(file_path, path);
-    decoder->file = fopen(path_get(file_path), "r");
-    path_free(file_path);
-    if (decoder->file == NULL) {
+    if (f_open(&decoder->fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_NO_FILE;
     }
@@ -78,10 +86,12 @@ png_err_t png_decode_start (char *path, int max_width, int max_height, png_callb
         return PNG_ERR_INT;
     }
 
-    if (spng_set_png_file(decoder->ctx, decoder->file) != SPNG_OK) {
+    if (spng_set_png_stream(decoder->ctx, png_file_read, decoder) != SPNG_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_INT;
     }
+
+    size_t image_size;
 
     if (spng_decoded_image_size(decoder->ctx, SPNG_FMT_RGB8, &image_size) != SPNG_OK) {
         png_decoder_deinit(false);
@@ -115,45 +125,58 @@ png_err_t png_decode_start (char *path, int max_width, int max_height, png_callb
         return PNG_ERR_OUT_OF_MEM;
     }
 
+    decoder->decoded_rows = 0;
+
     decoder->callback = callback;
     decoder->callback_data = callback_data;
 
     return PNG_OK;
 }
 
-void png_decode_abort (void) {
+void png_decoder_abort (void) {
     png_decoder_deinit(true);
 }
 
-void png_poll (void) {
-    if (decoder) {        
-        enum spng_errno err;
-        struct spng_row_info row_info;
+float png_decoder_get_progress (void) {
+    if (!decoder) {
+        return 0.0f;
+    }
 
-        if ((err = spng_get_row_info(decoder->ctx, &row_info)) != SPNG_OK) {
-            decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
-            png_decoder_deinit(true);
-            return;
+    return (float) (decoder->decoded_rows) / (decoder->ihdr.height);
+}
+
+void png_decoder_poll (void) {
+    if (!decoder) {
+        return;
+    }
+
+    enum spng_errno err;
+    struct spng_row_info row_info;
+
+    if ((err = spng_get_row_info(decoder->ctx, &row_info)) != SPNG_OK) {
+        decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
+        png_decoder_deinit(true);
+        return;
+    }
+
+    err = spng_decode_row(decoder->ctx, decoder->row_buffer, decoder->ihdr.width * 3);
+
+    if (err == SPNG_OK || err == SPNG_EOI) {
+        decoder->decoded_rows += 1;
+        uint16_t *image_buffer = decoder->image->buffer + (row_info.row_num * decoder->image->stride);
+        for (int i = 0; i < decoder->ihdr.width * 3; i += 3) {
+            uint8_t r = decoder->row_buffer[i + 0] >> 3;
+            uint8_t g = decoder->row_buffer[i + 1] >> 3;
+            uint8_t b = decoder->row_buffer[i + 2] >> 3;
+            *image_buffer++ = (r << 11) | (g << 6) | (b << 1) | 1;
         }
+    }
 
-        err = spng_decode_row(decoder->ctx, decoder->row_buffer, decoder->ihdr.width * 3);
-
-        if (err == SPNG_OK || err == SPNG_EOI) {
-            uint16_t *image_buffer = decoder->image->buffer + (row_info.row_num * decoder->image->stride);
-            for (int i = 0; i < decoder->ihdr.width * 3; i += 3) {
-                uint8_t r = decoder->row_buffer[i + 0] >> 3;
-                uint8_t g = decoder->row_buffer[i + 1] >> 3;
-                uint8_t b = decoder->row_buffer[i + 2] >> 3;
-                *image_buffer++ = (r << 11) | (g << 6) | (b << 1) | 1;
-            }
-        }
-
-        if (err == SPNG_EOI) {
-            decoder->callback(PNG_OK, decoder->image, decoder->callback_data);
-            png_decoder_deinit(false);
-        } else if (err != SPNG_OK) {
-            decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
-            png_decoder_deinit(true);
-        }
+    if (err == SPNG_EOI) {
+        decoder->callback(PNG_OK, decoder->image, decoder->callback_data);
+        png_decoder_deinit(false);
+    } else if (err != SPNG_OK) {
+        decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
+        png_decoder_deinit(true);
     }
 }

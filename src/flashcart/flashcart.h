@@ -16,8 +16,8 @@
 typedef enum {
     FLASHCART_OK,
     FLASHCART_ERROR_NOT_DETECTED,
-    FLASHCART_ERROR_UNSUPPORTED,
     FLASHCART_ERROR_OUTDATED,
+    FLASHCART_ERROR_SD_CARD,
     FLASHCART_ERROR_ARGS,
     FLASHCART_ERROR_LOAD,
     FLASHCART_ERROR_INT,
@@ -35,11 +35,13 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END
 } flashcart_save_type_t;
 
+typedef void flashcart_progress_callback_t (float progress);
+
 /** @brief Flashcart Structure */
 typedef struct {
     flashcart_error_t (*init) (void);
     flashcart_error_t (*deinit) (void);
-    flashcart_error_t (*load_rom) (char *rom_path);
+    flashcart_error_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
     flashcart_error_t (*load_file) (char *file_path, uint32_t start_offset_address);
     flashcart_error_t (*load_save) (char *save_path);
     flashcart_error_t (*set_save_type) (flashcart_save_type_t save_type);
@@ -49,7 +51,7 @@ typedef struct {
 
 flashcart_error_t flashcart_init (void);
 flashcart_error_t flashcart_deinit (void);
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap);
+flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
 flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_address);
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);
 

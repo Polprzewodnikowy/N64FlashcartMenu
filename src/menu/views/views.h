@@ -8,9 +8,9 @@
 #define VIEWS_H__
 
 
-#include <surface.h>
-
+#include "../components.h"
 #include "../menu_state.h"
+
 
 /**
  * @addtogroup view
@@ -50,6 +50,9 @@ void view_error_display (menu_t *menu, surface_t *display);
 void view_fault_init (menu_t *menu);
 void view_fault_display (menu_t *menu, surface_t *display);
 
+void menu_show_error (menu_t *menu, char *error_message);
+
 /** @} */ /* view */
+
 
 #endif

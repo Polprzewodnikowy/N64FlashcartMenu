@@ -9,7 +9,6 @@
 
 
 #include "boot/boot.h"
-#include "components/components.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
 #include "settings.h"
@@ -62,6 +61,8 @@ typedef struct {
     boot_params_t *boot_params;
     flashcart_error_t flashcart_error;
 
+    char *error_message;
+
     struct {
         bool go_up;
         bool go_down;
@@ -85,10 +86,6 @@ typedef struct {
         int entries;
         int selected;
     } browser;
-
-    struct {
-        component_background_t *background;
-    } components;
 } menu_t;
 
 

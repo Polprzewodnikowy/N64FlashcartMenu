@@ -59,6 +59,12 @@ jobs:
           name: ED64
           path: ./output/OS64.v64
 
+      - name: Upload artifact (ED64P version)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ED64P
+          path: ./output/OS64P.v64
+
       - name: Upload artifact (SC64 version)
         uses: actions/upload-artifact@v3
         with:

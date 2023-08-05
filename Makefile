@@ -94,6 +94,10 @@ ed64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
 	$(shell cp $< $(OUTPUT_DIR)/OS64.v64)
 .PHONY: ed64
 
+ed64-clone: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+	$(shell cp $< $(OUTPUT_DIR)/OS64P.v64)
+.PHONY: ed64-clone
+
 sc64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
 	$(shell cp $< $(OUTPUT_DIR)/sc64menu.n64)
 .PHONY: sc64

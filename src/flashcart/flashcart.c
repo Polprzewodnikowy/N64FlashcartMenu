@@ -45,7 +45,7 @@ flashcart_error_t flashcart_init (void) {
     bool sd_initialized;
     flashcart_error_t error;
 
-#ifndef MENU_NO_USB_LOG
+#ifndef MENU_RELEASE
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif

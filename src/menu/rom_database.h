@@ -124,7 +124,7 @@ typedef enum {
     MARKET_CHINA = 'C',
     /** @brief The ROM is designed for Germany (probably PAL). */
     MARKET_GERMANY = 'D',
-    /** @brief The ROM is designed for USA. */
+    /** @brief The ROM is designed for USA. (probably NTSC-M) */
     MARKET_USA  = 'E',
     /** @brief The ROM is designed for France (probably PAL). */
     MARKET_FRANCE = 'F',
@@ -134,7 +134,7 @@ typedef enum {
     MARKET_NETHERLANDS = 'H',
     /** @brief The ROM is designed for Italy (probably PAL). */
     MARKET_ITALY = 'I',
-    /** @brief The ROM is designed for Japan. */
+    /** @brief The ROM is designed for Japan. (probably NTSC-J) */
     MARKET_JAPAN = 'J',
     /** @brief The ROM is designed for Korea. */
     MARKET_KOREA = 'K',
@@ -166,6 +166,27 @@ typedef enum {
 
 
 /**
+ * @brief ROM Config Flags Structure
+ * @note This information is derived from the ROM header. 
+ * @see https://n64brew.dev/wiki/Peripheral_Interface#Domains
+ * i.e.
+ * 0x00 = PI BSD Domain 1 Release register
+ * 0x01 = PI BSD Domain 1 Page Size register
+ * 0x02 = PI BSD Domain 1 Pulse Width register
+ * 0x03 = PI BSD Domain 1 Latch register
+ */
+typedef struct {
+    /* PI BSD Domain 1 Release register value */
+    uint8_t domain1_release;
+    /* PI BSD Domain 1 Page Size register value */
+    uint8_t domain1_page_size;
+    /* PI BSD Domain 1 Pulse Width register value */
+    uint8_t domain1_latency;
+    /* PI BSD Domain 1 Latch register value */
+    uint8_t domain1_pulse_width;
+} rom_config_flags_t;
+
+/**
  * @brief ROM Metadata Structure
  * @note This information is derived from the ROM header. i.e.
  * 0x3B = Media Type
@@ -173,9 +194,10 @@ typedef enum {
  * 0x3E = Destination Market
  */
 typedef struct {
-    rom_media_type_t media_type;
+    uint8_t media_type; // rom_media_type_t
     uint16_t unique_identifier;
     uint8_t destination_market; // rom_destination_market_t
+    uint8_t version;
 } rom_metadata_t;
 
 /** 
@@ -184,7 +206,7 @@ typedef struct {
  */
 typedef struct {
     /** @brief The ROM configuration flags @note we currently use this to work out the endian @see rom_endian_type_t. */
-    uint32_t config_flags;
+    uint32_t config_flags; // TODO: use rom_config_flags_t
 
     /** @brief The ROM file clock rate. */
     uint32_t clock_rate;
@@ -196,21 +218,20 @@ typedef struct {
     /** @brief The ROM file checksum. */
     uint64_t checksum;
 
-    /** @brief The ROM file unknown reserved region at 0x18. */
+    /** @brief The ROM file unknown reserved region at 0x18. for 8 bytes */
     uint64_t unknown_reserved_1;
 
     /** @brief The ROM file title */
-    char title[21]; // 20 chars + null
+    char title[21]; // 20 chars + null char
 
-    /** @brief The ROM file unknown reserved region at 0x34. */
+    /** @brief The ROM file unknown reserved region at 0x34. for 7 bytes */
     char unknown_reserved_2[7];
 
     /** @brief The ROM file metadata @see rom_metadata_t. */
     rom_metadata_t metadata;
     /** @brief The ROM file release version. */
-    uint8_t version;
 
-    char ipl3_boot_code[0xFC0];
+    char ipl_boot_code[0x0FC0];
 
 } rom_header_t;
 

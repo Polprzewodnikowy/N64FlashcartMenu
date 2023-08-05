@@ -102,7 +102,7 @@ sc64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
 	$(shell cp $< $(OUTPUT_DIR)/sc64menu.n64)
 .PHONY: sc64
 
-all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 sc64
+all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:

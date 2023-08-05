@@ -2,7 +2,6 @@
 
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
-#include "fragments/fragments.h"
 #include "views.h"
 #include "utils/fs.h"
 
@@ -19,12 +18,26 @@ const uint32_t eum_rom_start_address = 0x200000;
 
 static bool load_pending;
 
+static void draw_progress (float progress) {
+    surface_t *d = display_try_get();
+
+    if (d) {
+        rdpq_attach(d, NULL);
+
+        component_background_draw();
+
+        component_loader_draw(progress);
+
+        rdpq_detach_show();
+    }
+}
+
 
 static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
 
     if (file_exists(EMULATOR_FOLDER"emu.nes")) { // || neon64bu.rom
 
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.nes", false);
+        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.nes", false, draw_progress);
         /* Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg */
          menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
         if (menu->flashcart_error != FLASHCART_OK) {
@@ -49,7 +62,7 @@ static void load_emulator_gameboy_rom (path_t *path, menu_t *menu) {
 
     if (file_exists(EMULATOR_FOLDER"emu.gb")) { // || gb.v64
 
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gb", false);
+        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gb", false, draw_progress);
         /* Combine EMU and ROM before loading. */
          menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
         if (menu->flashcart_error != FLASHCART_OK) {
@@ -74,7 +87,7 @@ static void load_emulator_gameboy_color_rom (path_t *path, menu_t *menu) {
 
     if (file_exists(EMULATOR_FOLDER"emu.gbc")) { // || gbc.v64
 
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gbc", false);
+        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gbc", false, draw_progress);
         /* Combine EMU and ROM before loading. */
          menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
         if (menu->flashcart_error != FLASHCART_OK) {
@@ -118,7 +131,6 @@ static void load (menu_t *menu) {
     path_free(path);
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-    menu->boot_params->reset_type = BOOT_RESET_TYPE_COLD;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
 }
@@ -133,42 +145,33 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    layout_t *layout = layout_get();
-
-    const int text_x = layout->offset_x + layout->offset_text_x;
-    int text_y = layout->offset_y + layout->offset_text_y;
-
-    const color_t bg_color = RGBA32(0x00, 0x00, 0x00, 0xFF);
-    const color_t text_color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF);
-
     rdpq_attach(d, NULL);
-    rdpq_clear(bg_color);
+
+    component_background_draw();
 
     if (load_pending) {
-        const int offset_x = 248;
-        const int offset_y = 212;
-        const int text_offset_x = -39;
-
-        // Loading screen
-        widget_border(offset_x, offset_y, d->width - offset_x, d->height - offset_y, layout->border_thickness);
-        fragment_text_start(text_color);
-        fragment_textf((d->width / 2) + text_offset_x, (d->height / 2) - (layout->line_height / 2), "Loading…");
+        component_loader_draw(0.0f);
     } else {
-        // Layout
-        fragment_borders(d);
+        component_layout_draw();
 
-        // Text start
-        fragment_text_start(text_color);
+        component_main_text_draw(
+            ALIGN_CENTER, VALIGN_TOP,
+            "Emulator information\n"
+            "THE EMULATOR\n"
+            "Rom Name\n"
+            "\n"
+            "%s",
+            menu->browser.list[menu->browser.selected].name
+        );
 
-        // Main screen
-        // FIXME: shows wrong text if loading other emulators.
-        text_y += fragment_textf(text_x, text_y, "ROM Type: %s", "Nintendo Entertainment System");
-        text_y += fragment_textf(text_x, text_y, "Emulator: %s", "Neon64v2");
+        
 
-        // Actions bar
-        text_y = layout->actions_y + layout->offset_text_y;
-        text_y += fragment_textf(text_x, text_y, "A: Load and run EMU ROM");
-        text_y += fragment_textf(text_x, text_y, "B: Exit");
+        component_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Load and run Emulator ROM\n"
+            "B: Exit"
+        );
+
     }
 
     rdpq_detach_show();

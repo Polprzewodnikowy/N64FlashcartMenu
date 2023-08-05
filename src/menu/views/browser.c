@@ -264,8 +264,8 @@ static void draw (menu_t *menu, surface_t *d) {
     component_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "%s\n"
-        "L: Settings",
-        menu->browser.entries == 0 ? "" : "R: Info"
+        "L:  N64 Info",
+        menu->browser.entries == 0 ? "" : "R: File Info"
     );
 
     time_t current_time = time(NULL);
@@ -273,7 +273,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "START: Menu Info\n"
             "%s",
             ctime(&current_time)
         );

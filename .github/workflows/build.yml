@@ -34,7 +34,7 @@ jobs:
             pushd libdragon
             ./build.sh
             popd
-            make all
+            make all -j
         env:
           FLAGS: -DMENU_RELEASE
 

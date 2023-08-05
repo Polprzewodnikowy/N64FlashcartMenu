@@ -30,7 +30,7 @@ jobs:
           imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
-          refFilterForPush: 'ref/heads/main'
+          refFilterForPush: refs/heads/main
           runCmd: |
             pushd libdragon
             ./build.sh

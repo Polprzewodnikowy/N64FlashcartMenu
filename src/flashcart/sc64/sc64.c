@@ -193,6 +193,34 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
     return FLASHCART_OK;
 }
 
+static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_address) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, file_path, FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    fix_file_size(&fil);
+
+    size_t file_size = f_size(&fil);
+
+    if (file_size > MiB(8)) { // FIXME: should be checked with the start offset address.
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
+    return FLASHCART_OK;
+}
+
 static flashcart_error_t sc64_load_save (char *save_path) {
     void *address = NULL;
     uint32_t value;
@@ -294,6 +322,7 @@ static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
     .load_rom = sc64_load_rom,
+    .load_file = sc64_load_file,
     .load_save = sc64_load_save,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,

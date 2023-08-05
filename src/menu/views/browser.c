@@ -10,6 +10,7 @@
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", NULL };
+static const char *emulator_extensions[] = { "nes", "gb", "gbc", "smc", "gen", "smd", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
@@ -27,6 +28,10 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_ROM) {
             return -1;
         } else if (b->type == ENTRY_TYPE_ROM) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_EMULATOR) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_EMULATOR) {
             return 1;
         } else if (a->type == ENTRY_TYPE_SAVE) {
             return -1;
@@ -90,6 +95,8 @@ static bool load_directory (menu_t *menu) {
             entry->type = ENTRY_TYPE_DIR;
         } else if (file_has_extensions(info.fname, rom_extensions)) {
             entry->type = ENTRY_TYPE_ROM;
+        }else if (file_has_extensions(info.fname, emulator_extensions)) {
+            entry->type = ENTRY_TYPE_EMULATOR;
         } else if (file_has_extensions(info.fname, save_extensions)) {
             entry->type = ENTRY_TYPE_SAVE;
         } else if (file_has_extensions(info.fname, image_extensions)) {
@@ -187,6 +194,9 @@ static void process (menu_t *menu) {
                 break;
             case ENTRY_TYPE_ROM:
                 menu->next_mode = MENU_MODE_LOAD;
+                break;
+            case ENTRY_TYPE_EMULATOR:
+                menu->next_mode = MENU_MODE_EMULATOR_LOAD;
                 break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;

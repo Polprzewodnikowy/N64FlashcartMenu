@@ -32,6 +32,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
     .load_rom = NULL,
+    .load_file = NULL,
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
@@ -109,6 +110,13 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_
     }
 
     return error;
+}
+
+flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_address) {
+    if ((file_path == NULL) || (!file_exists(file_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+    return flashcart->load_file(file_path, start_offset_address);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {

@@ -247,7 +247,8 @@ static void draw (menu_t *menu, surface_t *d) {
     switch (menu->browser.list[menu->browser.selected].type) {
         case ENTRY_TYPE_DIR: action = "A: Enter"; break;
         case ENTRY_TYPE_ROM: action = "A: Load"; break;
-        case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
+        case ENTRY_TYPE_TEXT:
+        case ENTRY_TYPE_IMAGE: action = "A: View"; break;
         case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
         default: action = "A: Info"; break;
     }

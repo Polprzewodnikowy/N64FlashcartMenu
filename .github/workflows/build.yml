@@ -111,3 +111,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output/docs
           cname: menu.summercart64.dev
+
+  Run-Rom-Tests:
+    name: "Run ROM smoke tests"
+    needs: build-menu
+    uses: ./.github/workflows/smoke-tests.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}

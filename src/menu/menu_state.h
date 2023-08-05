@@ -29,6 +29,7 @@ typedef enum {
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_LOAD,
+    MENU_MODE_EMULATOR_LOAD,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
@@ -38,6 +39,7 @@ typedef enum {
 typedef enum {
     ENTRY_TYPE_DIR,
     ENTRY_TYPE_ROM,
+    ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
     ENTRY_TYPE_TEXT,
@@ -60,6 +62,8 @@ typedef struct {
     settings_t settings;
     boot_params_t *boot_params;
     flashcart_error_t flashcart_error;
+
+    char *error_message;
 
     struct {
         bool go_up;

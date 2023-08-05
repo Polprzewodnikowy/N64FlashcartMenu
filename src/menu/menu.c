@@ -3,9 +3,9 @@
 #include <libdragon.h>
 
 #include "actions.h"
-#include "assets.h"
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
+#include "fonts.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
@@ -17,6 +17,9 @@
 
 #define TV_TYPE_RAM     *((uint32_t *) (0x80000300))
 
+#define CACHE_DIRECTORY     "sd:/menu/cache"
+#define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
+
 
 static menu_t *menu;
 static bool boot_pending;
@@ -27,12 +30,12 @@ static void menu_init (boot_params_t *boot_params) {
     controller_init();
     timer_init();
     rtc_init();
-    audio_init(44100, 2);
+    audio_init(44100, 3);
     mixer_init(2);
     rspq_init();
     rdpq_init();
 
-    assets_init();
+    fonts_init();
     mp3player_mixer_init();
 
     boot_pending = false;
@@ -48,7 +51,13 @@ static void menu_init (boot_params_t *boot_params) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
+    menu->error_message = NULL;
+
     settings_load(&menu->settings);
+
+    directory_create(CACHE_DIRECTORY);
+
+    component_background_init(BACKGROUND_CACHE);
 
     menu->boot_params = boot_params;
 
@@ -70,10 +79,12 @@ static void menu_deinit (menu_t *menu) {
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
 
-    flashcart_deinit();
-
     path_free(menu->browser.directory);
     free(menu);
+
+    component_background_free();
+
+    flashcart_deinit();
 
     rdpq_close();
     rspq_close();
@@ -81,6 +92,7 @@ static void menu_deinit (menu_t *menu) {
     audio_close();
     rtc_close();
     timer_close();
+
     display_close();
 }
 
@@ -131,6 +143,10 @@ void menu_run (boot_params_t *boot_params) {
 
                 case MENU_MODE_LOAD:
                     view_load_display(menu, display);
+                    break;
+
+                case MENU_MODE_EMULATOR_LOAD:
+                    view_load_emulator_display(menu, display);
                     break;
 
                 case MENU_MODE_ERROR:
@@ -187,6 +203,10 @@ void menu_run (boot_params_t *boot_params) {
                         view_load_init(menu);
                         break;
 
+                    case MENU_MODE_EMULATOR_LOAD:
+                        view_load_emulator_init(menu);
+                        break;
+
                     case MENU_MODE_ERROR:
                         view_error_init(menu);
                         break;
@@ -211,7 +231,7 @@ void menu_run (boot_params_t *boot_params) {
             audio_write_end();
         }
 
-        png_poll();
+        png_decoder_poll();
     }
 
     menu_deinit(menu);

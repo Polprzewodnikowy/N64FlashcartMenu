@@ -32,9 +32,6 @@ jobs:
           push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
           refFilterForPush: refs/heads/main
           runCmd: |
-            pushd libdragon
-            ./build.sh
-            popd
             make all -j
         env:
           FLAGS: -DMENU_RELEASE

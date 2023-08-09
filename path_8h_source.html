@@ -86,18 +86,18 @@ $(function() {
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="path_8h.html">   15</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keywordtype">char</span> *buffer;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">size_t</span> capacity;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>} <a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">char</span> *root;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">size_t</span> capacity;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>} <a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a>;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path_init (<span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keywordtype">void</span> path_free (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path_clone (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *<span class="keywordtype">string</span>);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keywordtype">char</span> *path_get (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keywordtype">char</span> *path_last_get (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keywordtype">bool</span> path_is_root (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keywordtype">void</span> path_append (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keywordtype">void</span> path_concat (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *dst, <a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *str);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path_init (<span class="keywordtype">char</span> *prefix, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keywordtype">void</span> path_free (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path_clone (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path_clone_push (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keywordtype">char</span> *path_get (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keywordtype">char</span> *path_last_get (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keywordtype">bool</span> path_is_root (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keywordtype">void</span> path_push (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path, <span class="keywordtype">char</span> *<span class="keywordtype">string</span>);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keywordtype">void</span> path_pop (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">char</span> *path_ext_get (<a class="code hl_struct" href="path_8h.html#structpath__t">path_t</a> *path);</div>
@@ -110,7 +110,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 7 2023 22:15:55 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Aug 9 2023 18:44:41 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

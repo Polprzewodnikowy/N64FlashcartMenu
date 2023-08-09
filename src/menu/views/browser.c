@@ -58,10 +58,12 @@ static bool load_directory (menu_t *menu) {
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
+
     menu->browser.entries = 0;
     menu->browser.selected = -1;
+    menu->browser.entry = NULL;
 
-    if (f_opendir(&dir, path_get(menu->browser.directory)) != FR_OK) {
+    if (f_opendir(&dir, strip_sd_prefix(path_get(menu->browser.directory))) != FR_OK) {
         return true;
     }
 
@@ -118,6 +120,7 @@ static bool load_directory (menu_t *menu) {
 
     if (menu->browser.entries > 0) {
         menu->browser.selected = 0;
+        menu->browser.entry = &menu->browser.list[menu->browser.selected];
     }
 
     qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
@@ -155,6 +158,7 @@ static bool pop_directory (menu_t *menu) {
     for (int i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
             menu->browser.selected = i;
+            menu->browser.entry = &menu->browser.list[menu->browser.selected];
             break;
         }
     }
@@ -180,14 +184,13 @@ static void process (menu_t *menu) {
                 menu->browser.selected = menu->browser.entries - 1;
             }
         }
+        menu->browser.entry = &menu->browser.list[menu->browser.selected];
     }
 
-    if (menu->actions.enter && menu->browser.selected >= 0) {
-        entry_t *entry = &menu->browser.list[menu->browser.selected];
-
-        switch (entry->type) {
+    if (menu->actions.enter && menu->browser.entry) {
+        switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR:
-                if (push_directory(menu, entry->name)) {
+                if (push_directory(menu, menu->browser.entry->name)) {
                     menu->browser.valid = false;
                     menu_show_error(menu, "Couldn't open next directory");
                 }
@@ -213,7 +216,7 @@ static void process (menu_t *menu) {
             menu->browser.valid = false;
             menu_show_error(menu, "Couldn't open last directory");
         }
-    } else if (menu->actions.file_info && menu->browser.selected >= 0) {
+    } else if (menu->actions.file_info && menu->browser.entry) {
         menu->next_mode = MENU_MODE_FILE_INFO;
     } else if (menu->actions.system_info) {
         menu->next_mode = MENU_MODE_SYSTEM_INFO;
@@ -234,12 +237,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     const char *action = NULL;
 
-    switch (menu->browser.list[menu->browser.selected].type) {
-        case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-        case ENTRY_TYPE_ROM: action = "A: Load"; break;
-        case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
-        case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
-        default: action = "A: Info"; break;
+    if (menu->browser.entry) {
+        switch (menu->browser.entry->type) {
+            case ENTRY_TYPE_DIR: action = "A: Enter"; break;
+            case ENTRY_TYPE_ROM: action = "A: Load"; break;
+            case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
+            case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
+            default: action = "A: Info"; break;
+        }
     }
 
     component_actions_bar_text_draw(
@@ -276,7 +281,7 @@ void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
-            menu->browser.directory = path_init(NULL);
+            menu->browser.directory = path_init("sd:/", "");
             menu_show_error(menu, "Error while opening initial directory");
         } else {
             menu->browser.valid = true;

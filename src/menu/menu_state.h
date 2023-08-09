@@ -84,6 +84,7 @@ typedef struct {
         path_t *directory;
         entry_t list[BROWSER_LIST_SIZE];
         int entries;
+        entry_t *entry;
         int selected;
     } browser;
 } menu_t;

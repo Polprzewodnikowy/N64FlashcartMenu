@@ -38,12 +38,9 @@ uint8_t extract_homebrew_save_type(uint8_t save_type) {
  * @brief Reads the N64 ROM header from a file. @see https://n64brew.dev/wiki/ROM_Header
  */
 rom_header_t file_read_rom_header(char *path) {
-    char *sd_path = calloc(4 + strlen(path) + 1, sizeof(char));
-    sprintf(sd_path, "sd:/%s", path);
+    FILE *fp = fopen(path, "rb");
 
-    FILE *fp = fopen(sd_path, "rb");
-
-    debugf("loading path: %s\n", sd_path);
+    debugf("loading path: %s\n", path);
 	if (!fp) {
         debugf("Error loading rom file header\n");
     }
@@ -82,8 +79,7 @@ rom_header_t file_read_rom_header(char *path) {
 
     fclose(fp);
 
-    free(sd_path);
-
+    // FIXME: memory leak, rom header is copied, pointer should be returned instead or data freed before returning
     return *rom_header;
 }
 

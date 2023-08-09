@@ -81,7 +81,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "MUSIC PLAYER\n"
         "\n"
         "%s",
-        menu->browser.list[menu->browser.selected].name
+        menu->browser.entry->name
     );
 
     char formatted_track_elapsed_length[64];
@@ -138,8 +138,7 @@ void view_music_player_init (menu_t *menu) {
         return;
     }
 
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     err = mp3player_load(path_get(path));
     if (err != MP3PLAYER_OK) {

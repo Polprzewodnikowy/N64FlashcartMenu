@@ -9,7 +9,7 @@
 #include "utils/utils.h"
 
 #include "../flashcart_utils.h"
-#include "sc64_internal.h"
+#include "sc64_ll.h"
 #include "sc64.h"
 
 
@@ -21,6 +21,7 @@
 
 #define SUPPORTED_MAJOR_VERSION     (2)
 #define SUPPORTED_MINOR_VERSION     (16)
+#define SUPPORTED_REVISION          (0)
 
 
 static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
@@ -29,19 +30,19 @@ static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UI
 
     *br = 0;
 
-    if (sc64_flash_get_erase_block_size(&erase_block_size) != SC64_OK) {
+    if (sc64_ll_flash_get_erase_block_size(&erase_block_size) != SC64_OK) {
         return FLASHCART_ERROR_INT;
     }
 
     while (size > 0) {
         size_t program_size = MIN(size, erase_block_size);
-        if (sc64_flash_erase_block(address) != SC64_OK) {
+        if (sc64_ll_flash_erase_block(address) != SC64_OK) {
             return FLASHCART_ERROR_INT;
         }
         if (f_read(fil, address, program_size, &bp) != FR_OK) {
             return FLASHCART_ERROR_LOAD;
         }
-        if (sc64_flash_wait_busy() != SC64_OK) {
+        if (sc64_ll_flash_wait_busy() != SC64_OK) {
             return FLASHCART_ERROR_INT;
         }
         if (progress) {
@@ -60,7 +61,7 @@ static flashcart_error_t sc64_init (void) {
     uint16_t minor;
     uint32_t revision;
 
-    if (sc64_get_version(&major, &minor, &revision) != SC64_OK) {
+    if (sc64_ll_get_version(&major, &minor, &revision) != SC64_OK) {
         return FLASHCART_ERROR_OUTDATED;
     }
     if (major != SUPPORTED_MAJOR_VERSION) {
@@ -68,37 +69,39 @@ static flashcart_error_t sc64_init (void) {
     }
     if (minor < SUPPORTED_MINOR_VERSION) {
         return FLASHCART_ERROR_OUTDATED;
+    } else if (minor == SUPPORTED_MINOR_VERSION && revision < SUPPORTED_REVISION) {
+        return FLASHCART_ERROR_OUTDATED;
     }
 
     bool writeback_pending;
     do {
-        if (sc64_writeback_pending(&writeback_pending) != SC64_OK) {
+        if (sc64_ll_writeback_pending(&writeback_pending) != SC64_OK) {
             return FLASHCART_ERROR_INT;
         }
     } while (writeback_pending);
 
     const struct {
-        sc64_cfg_t id;
+        sc64_cfg_id_t id;
         uint32_t value;
     } default_config[] = {
-        { CFG_BOOTLOADER_SWITCH, false },
-        { CFG_ROM_WRITE_ENABLE, false },
-        { CFG_ROM_SHADOW_ENABLE, false },
-        { CFG_DD_MODE, DD_MODE_DISABLED },
-        { CFG_ISV_ADDRESS, 0x00000000 },
-        { CFG_BOOT_MODE, BOOT_MODE_MENU },
-        { CFG_SAVE_TYPE, SAVE_TYPE_NONE },
-        { CFG_CIC_SEED, CIC_SEED_AUTO },
-        { CFG_TV_TYPE, TV_TYPE_PASSTHROUGH },
-        { CFG_DD_SD_ENABLE, false },
-        { CFG_DD_DRIVE_TYPE, DRIVE_TYPE_RETAIL },
-        { CFG_DD_DISK_STATE, DISK_STATE_EJECTED },
-        { CFG_BUTTON_MODE, BUTTON_MODE_NONE },
-        { CFG_ROM_EXTENDED_ENABLE, false },
+        { CFG_ID_BOOTLOADER_SWITCH, false },
+        { CFG_ID_ROM_WRITE_ENABLE, false },
+        { CFG_ID_ROM_SHADOW_ENABLE, false },
+        { CFG_ID_DD_MODE, DD_MODE_DISABLED },
+        { CFG_ID_ISV_ADDRESS, 0x00000000 },
+        { CFG_ID_BOOT_MODE, BOOT_MODE_MENU },
+        { CFG_ID_SAVE_TYPE, SAVE_TYPE_NONE },
+        { CFG_ID_CIC_SEED, CIC_SEED_AUTO },
+        { CFG_ID_TV_TYPE, TV_TYPE_PASSTHROUGH },
+        { CFG_ID_DD_SD_ENABLE, false },
+        { CFG_ID_DD_DRIVE_TYPE, DRIVE_TYPE_RETAIL },
+        { CFG_ID_DD_DISK_STATE, DISK_STATE_EJECTED },
+        { CFG_ID_BUTTON_MODE, BUTTON_MODE_NONE },
+        { CFG_ID_ROM_EXTENDED_ENABLE, false },
     };
 
     for (int i = 0; i < sizeof(default_config) / sizeof(default_config[0]); i++) {
-        if (sc64_set_config(default_config[i].id, default_config[i].value) != SC64_OK) {
+        if (sc64_ll_set_config(default_config[i].id, default_config[i].value) != SC64_OK) {
             return FLASHCART_ERROR_INT;
         }
     }
@@ -107,7 +110,7 @@ static flashcart_error_t sc64_init (void) {
 }
 
 static flashcart_error_t sc64_deinit (void) {
-    sc64_lock();
+    sc64_ll_lock();
 
     return FLASHCART_OK;
 }
@@ -152,7 +155,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
         return FLASHCART_ERROR_LOAD;
     }
 
-    if (sc64_set_config(CFG_ROM_SHADOW_ENABLE, shadow_enabled) != SC64_OK) {
+    if (sc64_ll_set_config(CFG_ID_ROM_SHADOW_ENABLE, shadow_enabled) != SC64_OK) {
         f_close(&fil);
         return FLASHCART_ERROR_INT;
     }
@@ -169,7 +172,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
         }
     }
 
-    if (sc64_set_config(CFG_ROM_EXTENDED_ENABLE, extended_enabled) != SC64_OK) {
+    if (sc64_ll_set_config(CFG_ID_ROM_EXTENDED_ENABLE, extended_enabled) != SC64_OK) {
         f_close(&fil);
         return FLASHCART_ERROR_INT;
     }
@@ -197,7 +200,7 @@ static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, file_path, FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
 
@@ -205,12 +208,16 @@ static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_
 
     size_t file_size = f_size(&fil);
 
-    if (file_size > MiB(8)) { // FIXME: should be checked with the start offset address.
+    if (file_size > (MiB(64) - start_offset_address)) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERROR_ARGS;
     }
 
     if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+    if (br != file_size) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -218,6 +225,7 @@ static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERROR_LOAD;
     }
+
     return FLASHCART_OK;
 }
 
@@ -225,7 +233,7 @@ static flashcart_error_t sc64_load_save (char *save_path) {
     void *address = NULL;
     uint32_t value;
 
-    if (sc64_get_config(CFG_SAVE_TYPE, &value) != SC64_OK) {
+    if (sc64_ll_get_config(CFG_ID_SAVE_TYPE, &value) != SC64_OK) {
         return FLASHCART_ERROR_INT;
     }
 
@@ -300,7 +308,7 @@ static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
             return FLASHCART_ERROR_ARGS;
     }
 
-    if (sc64_set_config(CFG_SAVE_TYPE, type) != SC64_OK) {
+    if (sc64_ll_set_config(CFG_ID_SAVE_TYPE, type) != SC64_OK) {
         return FLASHCART_ERROR_INT;
     }
 
@@ -310,7 +318,7 @@ static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
 static flashcart_error_t sc64_set_save_writeback (uint32_t *sectors) {
     pi_dma_write_data(sectors, SC64_BUFFERS->BUFFER, 1024);
 
-    if (sc64_writeback_enable(SC64_BUFFERS->BUFFER) != SC64_OK) {
+    if (sc64_ll_writeback_enable(SC64_BUFFERS->BUFFER) != SC64_OK) {
         return FLASHCART_ERROR_INT;
     }
 

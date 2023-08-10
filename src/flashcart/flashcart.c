@@ -43,6 +43,11 @@ flashcart_error_t flashcart_init (void) {
     bool sd_initialized;
     flashcart_error_t error;
 
+#ifndef MENU_RELEASE
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
+#endif
+
     // HACK: Because libcart reads PI config from address 0x10000000 when initializing
     //       we need to write safe value before running any libcart function.
     //       Data in SDRAM can be undefined on some flashcarts at this point
@@ -76,11 +81,6 @@ flashcart_error_t flashcart_init (void) {
     if (!sd_initialized) {
         return FLASHCART_ERROR_SD_CARD;
     }
-
-#ifndef MENU_RELEASE
-    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
-    debug_init_usblog();
-#endif
 
     return FLASHCART_OK;
 }

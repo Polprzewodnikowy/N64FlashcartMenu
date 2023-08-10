@@ -20,7 +20,7 @@ SRCS = \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
 	flashcart/flashcart.c \
-	flashcart/sc64/sc64_ll.c \
+	flashcart/sc64/sc64_internal.c \
 	flashcart/sc64/sc64.c \
 	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \

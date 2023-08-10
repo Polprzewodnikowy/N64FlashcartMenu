@@ -118,6 +118,39 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
     return FLASHCART_OK;
 }
 
+static flashcart_error_t d64_load_file (char *file_path, uint32_t start_offset_address) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    fix_file_size(&fil);
+
+    size_t file_size = f_size(&fil);
+
+    if (file_size > (MiB(64) - start_offset_address)) {
+        f_close(&fil);
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+    if (br != file_size) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    return FLASHCART_OK;
+}
+
 static flashcart_error_t d64_load_save (char *save_path) {
     uint8_t eeprom_contents[2048] __attribute__((aligned(8)));
     FIL fil;
@@ -184,7 +217,7 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_SRAM_BANKED;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_128K:
-            type = SAVE_TYPE_SRAM;
+            type = SAVE_TYPE_SRAM; // NOTE: 64drive doesn't support 128 kiB SRAM save type, fallback to 32 kiB SRAM save type
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM:
             type = SAVE_TYPE_FLASHRAM;
@@ -226,6 +259,7 @@ static flashcart_t flashcart_d64 = {
     .init = d64_init,
     .deinit = d64_deinit,
     .load_rom = d64_load_rom,
+    .load_file = d64_load_file,
     .load_save = d64_load_save,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,

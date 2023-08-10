@@ -19,7 +19,7 @@ static void path_resize (path_t *path, size_t min_length) {
     assert(path->buffer != NULL);
 }
 
-path_t *path_init (char *string) {
+static path_t *path_create (char *string) {
     if (string == NULL) {
         string = "";
     }
@@ -28,6 +28,31 @@ path_t *path_init (char *string) {
     path_resize(path, strlen(string));
     memset(path->buffer, 0, path->capacity + 1);
     strcpy(path->buffer, string);
+    path->root = path->buffer;
+    return path;
+}
+
+static void path_append (path_t *path, char *string) {
+    size_t buffer_length = strlen(path->buffer);
+    size_t string_length = strlen(string);
+    size_t new_path_length = buffer_length + string_length;
+    if (new_path_length > path->capacity) {
+        path_resize(path, new_path_length);
+    }
+    strcat(path->buffer, string);
+}
+
+
+path_t *path_init (char *prefix, char *string) {
+    path_t *path = path_create(prefix);
+    size_t prefix_length = strlen(prefix);
+    if ((prefix_length > 0) && (prefix[prefix_length - 1] == '/')) {
+        path->root = path->buffer + prefix_length - 1;
+    } else {
+        path->root = path->buffer + prefix_length;
+        path_append(path, "/");
+    }
+    path_push(path, string);
     return path;
 }
 
@@ -39,7 +64,15 @@ void path_free (path_t *path) {
 }
 
 path_t *path_clone (path_t *path) {
-    return path_init(path->buffer);
+    path_t *cloned = path_create(path->buffer);
+    cloned->root = cloned->buffer + (path->root - path->buffer);
+    return cloned;
+}
+
+path_t *path_clone_push (path_t *path, char *string) {
+    path_t *cloned = path_clone(path);
+    path_push(cloned, string);
+    return cloned;
 }
 
 char *path_get (path_t *path) {
@@ -47,26 +80,12 @@ char *path_get (path_t *path) {
 }
 
 char *path_last_get (path_t *path) {
-    char *last_slash = strrchr(path->buffer, '/');
-    return (last_slash == NULL) ? path->buffer : (last_slash + 1);
+    char *last_slash = strrchr(path->root, '/');
+    return (last_slash == NULL) ? path->root : (last_slash + 1);
 }
 
 bool path_is_root (path_t *path) {
-    return (strcmp(path->buffer, "") == 0) || (strcmp(path->buffer, "/") == 0);
-}
-
-void path_append (path_t *path, char *string) {
-    size_t buffer_length = strlen(path->buffer);
-    size_t string_length = strlen(string);
-    size_t new_path_length = buffer_length + string_length;
-    if (new_path_length > path->capacity) {
-        path_resize(path, new_path_length);
-    }
-    strcat(path->buffer, string);
-}
-
-void path_concat (path_t *dst, path_t *src) {
-    path_append(dst, src->buffer);
+    return (strcmp(path->root, "/") == 0);
 }
 
 void path_push (path_t *path, char *string) {
@@ -80,8 +99,13 @@ void path_push (path_t *path, char *string) {
 }
 
 void path_pop (path_t *path) {
-    char *last_slash = strrchr(path->buffer, '/');
-    if (last_slash != NULL) {
+    if (path_is_root(path)) {
+        return;
+    }
+    char *last_slash = strrchr(path->root, '/');
+    if (last_slash == path->root) {
+        *(last_slash + 1) = '\0';
+    } else if (last_slash != NULL) {
         *last_slash = '\0';
     }
 }

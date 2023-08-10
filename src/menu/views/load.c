@@ -158,7 +158,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s",
-            menu->browser.list[menu->browser.selected].name
+            menu->browser.entry->name
         );
 
         component_main_text_draw(
@@ -243,8 +243,7 @@ static flashcart_save_type_t convert_save_type (db_savetype_t save_type) {
 static void load (menu_t *menu) {
     menu->next_mode = MENU_MODE_BOOT;
 
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     bool byte_swap = (rom_header.config_flags == ROM_MID_BIG_ENDIAN);
     menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, draw_progress);
@@ -279,8 +278,7 @@ static void deinit (void) {
 void view_load_init (menu_t *menu) {
     load_pending = false;
 
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     rom_header = file_read_rom_header(path_get(path));
 

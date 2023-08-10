@@ -29,11 +29,9 @@ jobs:
         with:
           imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
-          push: always
+          push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
+          refFilterForPush: refs/heads/main
           runCmd: |
-            pushd libdragon
-            ./build.sh
-            popd
             make all -j
         env:
           FLAGS: -DMENU_RELEASE
@@ -57,6 +55,12 @@ jobs:
         with:
           name: ED64
           path: ./output/OS64.v64
+
+      - name: Upload artifact (ED64P version)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ED64P
+          path: ./output/OS64P.v64
 
       - name: Upload artifact (SC64 version)
         uses: actions/upload-artifact@v3

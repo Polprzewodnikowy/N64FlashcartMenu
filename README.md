@@ -26,10 +26,18 @@ The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [E
 
 
 ### Common to all
+
 #### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `sd://menu/boxart/`
 Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`
 A known set of PNG files can be downloaded from https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w
+
+#### Emulator support
+Emulators should be added to the `sd:/emulators/` folder
+
+The menu currently supports the following emulators and associated ROM's:
+* neon64v2 (https://github.com/hcs64/neon64v2) - emu.nes
+* gb64 (https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) - emu.gb, emu.gbc
 
 
 # Developer documentation

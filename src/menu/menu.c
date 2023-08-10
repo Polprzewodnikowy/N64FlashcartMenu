@@ -15,7 +15,7 @@
 #include "views/views.h"
 
 
-#define TV_TYPE_RAM     *((uint32_t *) (0x80000300))
+#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
 
 #define CACHE_DIRECTORY     "sd:/menu/cache"
 #define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
@@ -62,9 +62,10 @@ static void menu_init (boot_params_t *boot_params) {
     menu->boot_params = boot_params;
 
     bool default_directory_exists = directory_exists(menu->settings.default_directory);
+    char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
 
     menu->browser.valid = false;
-    menu->browser.directory = path_init(default_directory_exists ? menu->settings.default_directory : NULL);
+    menu->browser.directory = path_init("sd:/", init_directory);
 
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60) {
@@ -141,6 +142,10 @@ void menu_run (boot_params_t *boot_params) {
                     view_load_display(menu, display);
                     break;
 
+                case MENU_MODE_EMULATOR_LOAD:
+                    view_load_emulator_display(menu, display);
+                    break;
+
                 case MENU_MODE_ERROR:
                     view_error_display(menu, display);
                     break;
@@ -189,6 +194,10 @@ void menu_run (boot_params_t *boot_params) {
 
                     case MENU_MODE_LOAD:
                         view_load_init(menu);
+                        break;
+
+                    case MENU_MODE_EMULATOR_LOAD:
+                        view_load_emulator_init(menu);
                         break;
 
                     case MENU_MODE_ERROR:

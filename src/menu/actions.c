@@ -3,8 +3,7 @@
 #include "actions.h"
 
 
-#define ACTIONS_REPEAT_DELAY    16
-#define ACTIONS_REPEAT_RATE     2
+#define ACTIONS_REPEAT_DELAY    10
 #define JOYSTICK_DEADZONE       32
 
 
@@ -49,7 +48,7 @@ void actions_update (menu_t *menu) {
         }
     } else if (held.c[0].up || held.c[0].C_up) {
         menu->actions.vertical_held_counter += 1;
-        if ((menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) && (menu->actions.vertical_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_up = true;
             if (held.c[0].C_up) {
                 menu->actions.fast = true;
@@ -57,7 +56,7 @@ void actions_update (menu_t *menu) {
         }
     } else if (held.c[0].down || held.c[0].C_down) {
         menu->actions.vertical_held_counter += 1;
-        if ((menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) && (menu->actions.vertical_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_down = true;
             if (held.c[0].C_down) {
                 menu->actions.fast = true;
@@ -65,7 +64,7 @@ void actions_update (menu_t *menu) {
         }
     } else if (pressed.c[0].y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
         menu->actions.vertical_held_counter += 1;
-        if ((menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) && (menu->actions.vertical_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
             menu->actions.go_up = true;
             if (pressed.c[0].y < +75) {
                 menu->actions.vertical_held_counter = 0;
@@ -73,7 +72,7 @@ void actions_update (menu_t *menu) {
         }
     } else if (pressed.c[0].y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
         menu->actions.vertical_held_counter += 1;
-        if ((menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) && (menu->actions.vertical_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
             menu->actions.go_down = true;
             if (pressed.c[0].y > -75) {
                 menu->actions.vertical_held_counter = 0;
@@ -89,12 +88,12 @@ void actions_update (menu_t *menu) {
         menu->actions.horizontal_held_counter = 0;
     } else if (held.c[0].left) {
         menu->actions.horizontal_held_counter += 1;
-        if ((menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) && (menu->actions.horizontal_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_left = true;
         }
     } else if (held.c[0].right) {
         menu->actions.horizontal_held_counter += 1;
-        if ((menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) && (menu->actions.horizontal_held_counter % ACTIONS_REPEAT_RATE)) {
+        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_right = true;
         }
     }

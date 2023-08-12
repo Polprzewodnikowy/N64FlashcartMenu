@@ -67,6 +67,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
+        "\n"
         "B: Exit"
     );
 

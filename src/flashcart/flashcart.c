@@ -38,12 +38,19 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .set_save_writeback = NULL,
 });
 
+#ifdef NDEBUG
+    // HACK: libdragon mocks every debug function if NDEBUG flag is enabled.
+    //       Code below reverts that and point to real function instead.
+    #undef debug_init_sdfs
+    bool debug_init_sdfs (const char *prefix, int npart);
+#endif
+
 
 flashcart_error_t flashcart_init (void) {
     bool sd_initialized;
     flashcart_error_t error;
 
-#ifndef MENU_RELEASE
+#ifndef NDEBUG
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif
@@ -116,6 +123,7 @@ flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_ad
     if ((file_path == NULL) || (!file_exists(file_path))) {
         return FLASHCART_ERROR_ARGS;
     }
+
     return flashcart->load_file(file_path, start_offset_address);
 }
 

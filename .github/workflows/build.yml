@@ -34,7 +34,7 @@ jobs:
           runCmd: |
             make all -j
         env:
-          FLAGS: -DMENU_RELEASE
+          FLAGS: -DNDEBUG
 
       - name: Upload artifact (Standard ROM)
         uses: actions/upload-artifact@v3

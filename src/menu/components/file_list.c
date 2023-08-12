@@ -8,15 +8,15 @@
 static const char *dir_prefix = "/";
 
 
-static void format_file_size (char *buffer, int size) {
+static int format_file_size (char *buffer, int size) {
     if (size < 8 * 1024) {
-        sprintf(buffer, "%d B", size);
+        return sprintf(buffer, "%d B", size);
     } else if (size < 8 * 1024 * 1024) {
-        sprintf(buffer, "%d kB", size / 1024);
+        return sprintf(buffer, "%d kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
-        sprintf(buffer, "%d MB", size / 1024 / 1024);
+        return sprintf(buffer, "%d MB", size / 1024 / 1024);
     } else {
-        sprintf(buffer, "%d GB", size / 1024 / 1024 / 1024);
+        return sprintf(buffer, "%d GB", size / 1024 / 1024 / 1024);
     }
 }
 
@@ -40,11 +40,27 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             STL_UNKNOWN
         );
     } else {
-        const int list_max_characters = (256 + strlen(dir_prefix)) * FILE_LIST_ENTRIES;
-        const int paragraph_size = sizeof(rdpq_paragraph_t) + sizeof(rdpq_paragraph_char_t) * list_max_characters;
+        rdpq_paragraph_t *file_list_layout;
+        rdpq_paragraph_t *layout;
 
-        rdpq_paragraph_t *paragraph = calloc(1, paragraph_size);
-        paragraph->capacity = list_max_characters;
+        size_t name_lengths[FILE_LIST_ENTRIES];
+        size_t total_length = 1;
+
+        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+            int entry_index = starting_position + i;
+
+            if (entry_index >= entries) {
+                name_lengths[i] = 0;
+            } else {
+                size_t length = strlen(list[entry_index].name);
+                name_lengths[i] = length;
+                total_length += length + (list[entry_index].type == ENTRY_TYPE_DIR ? strlen(dir_prefix) : 0);
+            }
+        }
+
+        file_list_layout = malloc(sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * total_length));
+        memset(file_list_layout, 0, sizeof(rdpq_paragraph_t));
+        file_list_layout->capacity = total_length;
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
@@ -53,15 +69,13 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 .wrap = WRAP_ELLIPSES,
             },
             FNT_DEFAULT,
-            paragraph
+            file_list_layout
         );
 
-        for (int i = starting_position; i < entries; i++) {
-            if (i == (starting_position + FILE_LIST_ENTRIES)) {
-                break;
-            }
+        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+            int entry_index = starting_position + i;
 
-            entry_t *entry = &list[i];
+            entry_t *entry = &list[entry_index];
 
             menu_font_style_t style;
 
@@ -80,14 +94,18 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 rdpq_paragraph_builder_span(dir_prefix, strlen(dir_prefix));
             }
 
-            rdpq_paragraph_builder_span(entry->name, strlen(entry->name));
+            rdpq_paragraph_builder_span(entry->name, name_lengths[i]);
+
+            if ((entry_index + 1) >= entries) {
+                break;
+            }
 
             rdpq_paragraph_builder_newline();
         }
 
-        rdpq_paragraph_builder_end();
+        layout = rdpq_paragraph_builder_end();
 
-        int highlight_height = (paragraph->bbox[3] - paragraph->bbox[1]) / paragraph->nlines;
+        int highlight_height = (layout->bbox[3] - layout->bbox[1]) / layout->nlines;
         int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + ((selected - starting_position) * highlight_height);
 
         component_box_draw(
@@ -99,12 +117,12 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         );
 
         rdpq_paragraph_render(
-            paragraph,
+            layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
             VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL
         );
 
-        memset(paragraph, 0, paragraph_size);
+        rdpq_paragraph_free(layout);
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
@@ -114,32 +132,33 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 .wrap = WRAP_ELLIPSES,
             },
             FNT_DEFAULT,
-            paragraph
+            NULL
         );
 
-        char file_size[16];
+        char file_size[8];
 
         for (int i = starting_position; i < entries; i++) {
-            if (i == (starting_position + FILE_LIST_ENTRIES)) {
-                break;
-            }
-
             entry_t *entry = &list[i];
 
             if (entry->type != ENTRY_TYPE_DIR) {
-                format_file_size(file_size, entry->size);
-                rdpq_paragraph_builder_span(file_size, strlen(file_size));
+                rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
+            }
+
+            if ((i + 1) == (starting_position + FILE_LIST_ENTRIES)) {
+                break;
             }
 
             rdpq_paragraph_builder_newline();
         }
 
+        layout = rdpq_paragraph_builder_end();
+
         rdpq_paragraph_render(
-            paragraph,
+            layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
             VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL
         );
 
-        rdpq_paragraph_free(paragraph);
+        rdpq_paragraph_free(layout);
     }
 }

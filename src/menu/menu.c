@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include <libdragon.h>
 
@@ -162,6 +163,8 @@ void menu_run (boot_params_t *boot_params) {
                     boot_pending = true;
                 }
             }
+
+            time(&menu->current_time);
         }
 
         while (audio_can_write()) {

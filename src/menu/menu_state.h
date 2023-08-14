@@ -8,6 +8,7 @@
 #define MENU_STRUCT_H__
 
 
+#include <time.h>
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
@@ -63,6 +64,8 @@ typedef struct {
     flashcart_error_t flashcart_error;
 
     char *error_message;
+
+    time_t current_time;
 
     struct {
         bool go_up;

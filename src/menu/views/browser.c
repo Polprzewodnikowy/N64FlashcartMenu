@@ -262,14 +262,12 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->browser.entries == 0 ? "" : "R: Info"
     );
 
-    time_t current_time = time(NULL);
-
-    if (current_time >= 0) {
+    if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "\n"
             "%s",
-            ctime(&current_time)
+            ctime(&menu->current_time)
         );
     }
 

@@ -6,11 +6,13 @@
 #include "utils/utils.h"
 
 #define MINIMP3_IMPLEMENTATION
+#define MINIMP3_ONLY_MP3
 #include <minimp3/minimp3_ex.h>
 #include <minimp3/minimp3.h>
 
 
-#define MIXER_CHANNEL   (0)
+#define MIXER_CHANNEL           (0)
+#define SEEK_PREDECODE_FRAMES   (5)
 
 
 typedef struct {
@@ -19,11 +21,12 @@ typedef struct {
 
     FIL fil;
     FSIZE_t data_start;
+    int seek_predecode_frames;
 
     mp3dec_t dec;
     mp3dec_frame_info_t info;
 
-    uint8_t buffer[16 * 1024];
+    uint8_t buffer[MAX_FREE_FORMAT_FRAME_SIZE];
     uint8_t *buffer_ptr;
     size_t buffer_left;
 
@@ -38,6 +41,7 @@ static mp3player_t *p = NULL;
 
 static void mp3player_reset_decoder (void) {
     mp3dec_init(&p->dec);
+    p->seek_predecode_frames = 0;
     p->buffer_ptr = p->buffer;
     p->buffer_left = 0;
 }
@@ -46,10 +50,6 @@ static void mp3player_fill_buffer (void) {
     UINT bytes_read;
 
     if (f_eof(&p->fil)) {
-        return;
-    }
-
-    if (p->buffer_left >= (MAX_FREE_FORMAT_FRAME_SIZE * 3)) {
         return;
     }
 
@@ -78,6 +78,11 @@ static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int 
             p->buffer_left -= p->info.frame_offset;
 
             mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, buffer, &p->info);
+
+            if (p->seek_predecode_frames > 0) {
+                p->seek_predecode_frames -= 1;
+                memset(buffer, 0, samples * sizeof(short) * p->info.channels);
+            }
 
             wlen -= samples;
         }
@@ -229,7 +234,7 @@ bool mp3player_is_playing (void) {
 }
 
 bool mp3player_is_finished (void) {
-    return p->loaded && f_eof(&p->fil) && p->buffer_left == 0;
+    return p->loaded && f_eof(&p->fil) && (p->buffer_left == 0);
 }
 
 mp3player_err_t mp3player_play (void) {
@@ -265,7 +270,7 @@ mp3player_err_t mp3player_toggle (void) {
 }
 
 void mp3player_mute (bool mute) {
-    float volume = mute ? 0.f : 1.f;
+    float volume = mute ? 0.0f : 1.0f;
     mixer_ch_set_vol(MIXER_CHANNEL, volume, volume);
 }
 
@@ -295,6 +300,8 @@ mp3player_err_t mp3player_seek (int seconds) {
     mp3player_reset_decoder();
     mp3player_fill_buffer();
 
+    p->seek_predecode_frames = (position == p->data_start) ? 0 : SEEK_PREDECODE_FRAMES;
+
     if (p->io_error) {
         return MP3PLAYER_ERR_IO;
     }
@@ -304,7 +311,7 @@ mp3player_err_t mp3player_seek (int seconds) {
 
 float mp3player_get_duration (void) {
     if (!p->loaded) {
-        return 0.f;
+        return 0.0f;
     }
 
     return p->duration;
@@ -312,7 +319,7 @@ float mp3player_get_duration (void) {
 
 float mp3player_get_bitrate (void) {
     if (!p->loaded) {
-        return 0.f;
+        return 0.0f;
     }
 
     return p->bitrate;
@@ -331,7 +338,7 @@ float mp3player_get_progress (void) {
     //       Good enough but not very accurate for variable bitrate files.
 
     if (!p->loaded) {
-        return 0.f;
+        return 0.0f;
     }
 
     FSIZE_t data_size = f_size(&p->fil) - p->data_start;

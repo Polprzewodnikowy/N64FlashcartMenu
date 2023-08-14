@@ -40,7 +40,7 @@ static void menu_init (boot_params_t *boot_params) {
     controller_init();
     timer_init();
     rtc_init();
-    audio_init(44100, 3);
+    audio_init(44100, 2);
     mixer_init(2);
     rspq_init();
     rdpq_init();

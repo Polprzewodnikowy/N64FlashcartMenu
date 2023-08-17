@@ -7,8 +7,6 @@ on:
     types:
       - created
   workflow_dispatch:
-  paths-ignore:
-    - '**.md'
 
 jobs:
   build-menu:

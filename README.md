@@ -24,6 +24,7 @@ An open source menu for N64 flashcarts.
 ## Getting started
 
 ### SC64
+Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest)
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 

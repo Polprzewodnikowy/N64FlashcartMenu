@@ -42,45 +42,48 @@ static char *format_rom_media_type (rom_media_type_t media_type) {
 
 static char *format_rom_destination_market (rom_destination_market_t market_type) {
     // TODO: These are all assumptions and should be corrected if required.
+    // From http://n64devkit.square7.ch/info/submission/pal/01-01.html
     switch (market_type) {
-        case MARKET_ALL:
-            return "All";
-        case MARKET_BRAZIL:
-            return "Brazil (MPAL)";
-        case MARKET_CHINA:
-            return "China";
-        case MARKET_GERMANY:
-            return "Germany (PAL)";
-        case MARKET_USA:
-            return "USA (NTSC)";
-        case MARKET_FRANCE:
-            return "France (PAL)";
-        case MARKET_NETHERLANDS:
-            return "Netherlands (PAL)";
-        case MARKET_ITALY:
-            return "Italy (PAL)";
-        case MARKET_JAPAN:
-            return "Japan (NTSC)";
-        case MARKET_KOREA:
-            return "Korea";
-        case MARKET_CANADA:
-            return "Canada";
-        case MARKET_SPAIN:
-            return "Spain (PAL)";
-        case MARKET_AUSTRAILA:
-            return "Austraila (PAL)";
-        case MARKET_SCANDINAVAIA:
-            return "Scandinavaia";
+        case MARKET_JAPANESE_MULTI:
+            return "Japanese & English"; // 1080 Snowboarding JPN
+        case MARKET_BRAZILIAN:
+            return "Brazilian (Portuguese)";
+        case MARKET_CHINESE:
+            return "Chinese";
+        case MARKET_GERMAN:
+            return "German";
+        case MARKET_NORTH_AMERICA:
+            return "American English";
+        case MARKET_FRENCH:
+            return "French";
+        case MARKET_DUTCH:
+            return "Dutch";
+        case MARKET_ITALIAN:
+            return "Italian";
+        case MARKET_JAPANESE:
+            return "Japanese";
+        case MARKET_KOREAN:
+            return "Korean";
+        case MARKET_CANADIAN:
+            return "Canadaian (English & French)";
+        case MARKET_SPANISH:
+            return "Spanish";
+        case MARKET_AUSTRALIAN:
+            return "Australian (English)";
+        case MARKET_SCANDINAVIAN:
+            return "Scandinavian";
         case MARKET_GATEWAY64_NTSC:
-            return "Gateway (NTSC)";
+            return "LodgeNet/Gateway (NTSC)";
         case MARKET_GATEWAY64_PAL:
-            return "Gateway (PAL)";
-        case MARKET_PAL_GENERIC:
-            return "Generic (PAL)";
-        case MARKET_PAL_X: // FIXME: some AUS ROM's use this so not only EUR
-        case MARKET_PAL_Y:
-        case MARKET_PAL_Z:
-            return "Unknown (PAL)";
+            return "LodgeNet/Gateway (PAL)";
+        case MARKET_EUROPEAN_BASIC:
+            return "PAL (includes English)"; // Mostly EU but is used on some Australian ROMs
+        case MARKET_OTHER_X: // FIXME: AUS HSV Racing ROM's and Asia Top Gear Rally use this so not only EUR
+            return "Regional (non specific)";
+        case MARKET_OTHER_Y:
+            return "European (non specific)";
+        case MARKET_OTHER_Z:
+            return "Regional (unknown)";
         default:
             return "Unknown";
     }

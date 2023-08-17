@@ -114,54 +114,48 @@ typedef enum {
     N64_ALECK64  = 'Z'
 } rom_media_type_t;
 
-/** @brief ROM market type enumeration. */
+/** @brief ROM market region & language type enumeration. */
 typedef enum {
-    /** @brief The ROM is designed for all regions. */
-    MARKET_ALL = 'A',
-    /** @brief The ROM is designed for Brazil (probably PAL-M). */
-    MARKET_BRAZIL  = 'B',
-    /** @brief The ROM is designed for China (probably PAL-D). */
-    MARKET_CHINA = 'C',
-    /** @brief The ROM is designed for Germany (probably PAL). */
-    MARKET_GERMANY = 'D',
-    /** @brief The ROM is designed for USA. (probably NTSC-M) */
-    MARKET_USA  = 'E',
-    /** @brief The ROM is designed for France (probably PAL). */
-    MARKET_FRANCE = 'F',
+    /** @brief The ROM is designed for Japanese and "English" languages. */
+    MARKET_JAPANESE_MULTI = 'A', // 1080 Snowboarding JPN is the only ROM that uses this? possibily a mistake, or the fact it also includes American English!.
+    /** @brief The ROM is designed for Brazil (Portuguese) language. */
+    MARKET_BRAZILIAN  = 'B',
+    /** @brief The ROM is designed for Chinese language. */
+    MARKET_CHINESE = 'C',
+    /** @brief The ROM is designed for German language. */
+    MARKET_GERMAN = 'D',
+    /** @brief The ROM is designed for North American "English" language. */
+    MARKET_NORTH_AMERICA  = 'E',
+    /** @brief The ROM is designed for French language. */
+    MARKET_FRENCH = 'F',
     /** @brief The ROM is designed for a NTSC Gateway 64. */
     MARKET_GATEWAY64_NTSC = 'G',
-    /** @brief The ROM is designed for Netherlands (probably PAL). */
-    MARKET_NETHERLANDS = 'H',
-    /** @brief The ROM is designed for Italy (probably PAL). */
-    MARKET_ITALY = 'I',
-    /** @brief The ROM is designed for Japan. (probably NTSC-J) */
-    MARKET_JAPAN = 'J',
-    /** @brief The ROM is designed for Korea. */
-    MARKET_KOREA = 'K',
+    /** @brief The ROM is designed for Dutch language. */
+    MARKET_DUTCH = 'H',
+    /** @brief The ROM is designed for Italian language. */
+    MARKET_ITALIAN = 'I',
+    /** @brief The ROM is designed for Japanese language. */
+    MARKET_JAPANESE = 'J',
+    /** @brief The ROM is designed for Korean language. */
+    MARKET_KOREAN = 'K',
     /** @brief The ROM is designed for a PAL Gateway 64. */
     MARKET_GATEWAY64_PAL = 'L',
-    // MARKET_UNKNOWN_M = 'M',
-    /** @brief The ROM is designed for Canada. */
-    MARKET_CANADA = 'N',
-    // MARKET_UNKNOWN_O = 'O',
-    /** @brief The ROM is designed for all PAL regions. */
-    MARKET_PAL_GENERIC = 'P',
-    // MARKET_UNKNOWN_Q = 'Q',
-    // MARKET_UNKNOWN_R = 'R',
-    /** @brief The ROM is designed for Spain (probably PAL). */
-    MARKET_SPAIN = 'S',
-    // MARKET_UNKNOWN_T = 'T',
-    /** @brief The ROM is designed for Australia (probably PAL). */
-    MARKET_AUSTRAILA = 'U',
-    // MARKET_UNKNOWN_V = 'V',
-    /** @brief The ROM is designed for Scandinavia. */
-    MARKET_SCANDINAVAIA = 'W',
-    /** @brief The ROM is designed for a PAL market (just unsure which and why). */
-    MARKET_PAL_X = 'X',
-    /** @brief The ROM is designed for a PAL market (just unsure which and why). */
-    MARKET_PAL_Y = 'Y',
-    /** @brief The ROM is designed for a PAL market (just unsure which and why). */
-    MARKET_PAL_Z = 'Z'
+    /** @brief The ROM is designed for Canada region (English and French) language. */
+    MARKET_CANADIAN = 'N',
+    /** @brief The ROM is designed for European market and languages (must at minimum include English). */
+    MARKET_EUROPEAN_BASIC = 'P', // Sometimes used for Australian region ROMs as well.
+    /** @brief The ROM is designed for Spanish language */
+    MARKET_SPANISH = 'S',
+    /** @brief The ROM is designed for Australia (English) language. */
+    MARKET_AUSTRALIAN = 'U',
+    /** @brief The ROM is designed for Scandinavian (Swedish, Norwegian, Finnish, etc.) languages. */
+    MARKET_SCANDINAVIAN = 'W',
+    /** @brief The ROM is designed for an undefined region and TBD language(s). */
+    MARKET_OTHER_X = 'X', // many EU ROM's, Top Gear Rally (Asia) and HSV Racing (AUS) ROM uses this.
+    /** @brief The ROM is designed for a European region and language(s). */
+    MARKET_OTHER_Y = 'Y', // many EU ROM's uses this.
+    /** @brief The ROM is designed for an undefined region and TBD language(s). */
+    MARKET_OTHER_Z = 'Z' // no known ROM's use this.
 } rom_destination_market_t;
 
 

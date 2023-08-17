@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -21,6 +22,9 @@
 #define CACHE_DIRECTORY     "sd:/menu/cache"
 #define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
 
+#define FRAMERATE_DIVIDER   (2)
+#define LAG_REPORT          (false)
+
 
 static menu_t *menu;
 static bool boot_pending;
@@ -33,6 +37,17 @@ static void frame_counter_handler (void) {
 }
 
 static void frame_counter_reset (void) {
+#if LAG_REPORT
+    static int accumulated = 0;
+    if (frame_counter > FRAMERATE_DIVIDER) {
+        accumulated += frame_counter - FRAMERATE_DIVIDER;
+        debugf(
+            "LAG: %d additional frame(s) displayed since last draw (accumulated: %d)\n",
+            frame_counter - FRAMERATE_DIVIDER,
+            accumulated
+        );
+    }
+#endif
     frame_counter = 0;
 }
 
@@ -138,7 +153,7 @@ void menu_run (boot_params_t *boot_params) {
     int audio_buffer_length = audio_get_buffer_length();
 
     while (!boot_pending && (exception_reset_time() < RESET_TIME_LENGTH)) {
-        surface_t *display = (frame_counter >= 2) ? display_try_get() : NULL;
+        surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
         if (display != NULL) {
             frame_counter_reset();

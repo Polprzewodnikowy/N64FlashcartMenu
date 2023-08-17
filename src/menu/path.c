@@ -88,16 +88,6 @@ bool path_is_root (path_t *path) {
     return (strcmp(path->root, "/") == 0);
 }
 
-void path_push (path_t *path, char *string) {
-    if (path->buffer[strlen(path->buffer) - 1] != '/') {
-        path_append(path, "/");
-    }
-    if (string[0] == '/') {
-        string += 1;
-    }
-    path_append(path, string);
-}
-
 void path_pop (path_t *path) {
     if (path_is_root(path)) {
         return;
@@ -108,6 +98,25 @@ void path_pop (path_t *path) {
     } else if (last_slash != NULL) {
         *last_slash = '\0';
     }
+}
+
+void path_push (path_t *path, char *string) {
+    if (path->buffer[strlen(path->buffer) - 1] != '/') {
+        path_append(path, "/");
+    }
+    if (string[0] == '/') {
+        string += 1;
+    }
+    path_append(path, string);
+}
+
+void path_push_subdir (path_t *path, char *string) {
+    char *file = path_last_get(path);
+    char *tmp = alloca(strlen(file) + 1);
+    strcpy(tmp, file);
+    path_pop(path);
+    path_push(path, string);
+    path_push(path, tmp);
 }
 
 char *path_ext_get (path_t *path) {

@@ -9,6 +9,7 @@
 
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 
 /** @brief Path Structure */
@@ -26,8 +27,9 @@ path_t *path_clone_push (path_t *path, char *string);
 char *path_get (path_t *path);
 char *path_last_get (path_t *path);
 bool path_is_root (path_t *path);
-void path_push (path_t *path, char *string);
 void path_pop (path_t *path);
+void path_push (path_t *path, char *string);
+void path_push_subdir (path_t *path, char *string);
 char *path_ext_get (path_t *path);
 void path_ext_remove (path_t *path);
 void path_ext_replace (path_t *path, char *ext);

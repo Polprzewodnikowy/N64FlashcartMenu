@@ -13,21 +13,7 @@
 static bool sound_initialized = false;
 
 
-void sound_init_default (void) {
-    if (audio_get_frequency() != DEFAULT_FREQUENCY) {
-        if (sound_initialized) {
-            mixer_close();
-            audio_close();
-        }
-        audio_init(DEFAULT_FREQUENCY, NUM_BUFFERS);
-        mixer_init(NUM_CHANNELS);
-        mp3player_mixer_init();
-        sound_initialized = true;
-    }
-}
-
-void sound_init_mp3_playback (void) {
-    int frequency = mp3player_get_samplerate();
+static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
         if (sound_initialized) {
             mixer_close();
@@ -38,6 +24,15 @@ void sound_init_mp3_playback (void) {
         mp3player_mixer_init();
         sound_initialized = true;
     }
+}
+
+
+void sound_init_default (void) {
+    sound_reconfigure(DEFAULT_FREQUENCY);
+}
+
+void sound_init_mp3_playback (void) {
+    sound_reconfigure(mp3player_get_samplerate());
 }
 
 void sound_poll (void) {

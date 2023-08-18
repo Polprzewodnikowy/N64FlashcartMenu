@@ -2,6 +2,7 @@
 #include <libdragon.h>
 
 #include "mp3_player.h"
+#include "sound.h"
 #include "utils/fs.h"
 #include "utils/utils.h"
 
@@ -11,7 +12,6 @@
 #include <minimp3/minimp3.h>
 
 
-#define MIXER_CHANNEL           (0)
 #define SEEK_PREDECODE_FRAMES   (5)
 
 
@@ -119,7 +119,7 @@ void mp3player_mixer_init (void) {
     // NOTE: Deliberately setting max_frequency to twice of actual maximum samplerate of mp3 file.
     //       It's tricking mixer into creating buffer long enough for appending data created by mp3dec_decode_frame.
 
-    mixer_ch_set_limits(MIXER_CHANNEL, 16, 96000, 0);
+    mixer_ch_set_limits(SOUND_MP3_PLAYER_CHANNEL, 16, 96000, 0);
 }
 
 mp3player_err_t mp3player_init (void) {
@@ -230,7 +230,7 @@ mp3player_err_t mp3player_process (void) {
 }
 
 bool mp3player_is_playing (void) {
-    return mixer_ch_playing(MIXER_CHANNEL);
+    return mixer_ch_playing(SOUND_MP3_PLAYER_CHANNEL);
 }
 
 bool mp3player_is_finished (void) {
@@ -249,14 +249,14 @@ mp3player_err_t mp3player_play (void) {
             }
             mp3player_reset_decoder();
         }
-        mixer_ch_play(MIXER_CHANNEL, &p->wave);
+        mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
     }
     return MP3PLAYER_OK;
 }
 
 void mp3player_stop (void) {
     if (mp3player_is_playing()) {
-        mixer_ch_stop(MIXER_CHANNEL);
+        mixer_ch_stop(SOUND_MP3_PLAYER_CHANNEL);
     }
 }
 
@@ -271,7 +271,7 @@ mp3player_err_t mp3player_toggle (void) {
 
 void mp3player_mute (bool mute) {
     float volume = mute ? 0.0f : 1.0f;
-    mixer_ch_set_vol(MIXER_CHANNEL, volume, volume);
+    mixer_ch_set_vol(SOUND_MP3_PLAYER_CHANNEL, volume, volume);
 }
 
 mp3player_err_t mp3player_seek (int seconds) {

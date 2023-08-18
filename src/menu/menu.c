@@ -13,6 +13,7 @@
 #include "mp3_player.h"
 #include "png_decoder.h"
 #include "settings.h"
+#include "sound.h"
 #include "utils/fs.h"
 #include "views/views.h"
 
@@ -55,13 +56,10 @@ static void menu_init (boot_params_t *boot_params) {
     controller_init();
     timer_init();
     rtc_init();
-    audio_init(44100, 2);
-    mixer_init(2);
     rspq_init();
     rdpq_init();
-
     fonts_init();
-    mp3player_mixer_init();
+    sound_init_default();
 
     boot_pending = false;
 
@@ -114,10 +112,9 @@ static void menu_deinit (menu_t *menu) {
 
     flashcart_deinit();
 
+    sound_close();
     rdpq_close();
     rspq_close();
-    mixer_close();
-    audio_close();
     rtc_close();
     timer_close();
 
@@ -150,8 +147,6 @@ static struct views_s {
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
-    int audio_buffer_length = audio_get_buffer_length();
-
     while (!boot_pending && (exception_reset_time() < RESET_TIME_LENGTH)) {
         surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
@@ -182,11 +177,7 @@ void menu_run (boot_params_t *boot_params) {
             time(&menu->current_time);
         }
 
-        while (audio_can_write()) {
-            short *audio_buffer = audio_write_begin();
-            mixer_poll(audio_buffer, audio_buffer_length);
-            audio_write_end();
-        }
+        sound_poll();
 
         png_decoder_poll();
     }

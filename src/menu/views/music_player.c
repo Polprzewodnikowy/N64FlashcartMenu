@@ -1,4 +1,5 @@
 #include "../mp3_player.h"
+#include "../sound.h"
 #include "views.h"
 
 
@@ -109,6 +110,7 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 static void deinit (void) {
+    sound_init_default();
     mp3player_deinit();
 }
 
@@ -130,8 +132,13 @@ void view_music_player_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
         mp3player_deinit();
     } else {
+        sound_init_mp3_playback();
         mp3player_mute(false);
-        mp3player_play();
+        err = mp3player_play();
+        if (err != MP3PLAYER_OK) {
+            menu_show_error(menu, convert_error_message(err));
+            mp3player_deinit();
+        }
     }
 
     path_free(path);

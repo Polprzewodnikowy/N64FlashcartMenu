@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>N64FlashcartMenu: sc64.h File Reference</title>
+<title>N64FlashcartMenu: sound.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,30 +69,29 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_abdc04f88b2866c1353f358c089205e4.html">flashcart</a></li><li class="navelem"><a class="el" href="dir_4ad298de6e9dc10146d0378a1888b2cb.html">sc64</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1a56cc8cdc1689899910be5fa4716ee4.html">menu</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">sc64.h File Reference</div></div>
+  <div class="headertitle"><div class="title">sound.h</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>SC64 flashcart support.  
-<a href="#details">More...</a></p>
-
-<p><a href="sc64_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:gadf820e8e073fca1c48141276c58b69e2"><td class="memItemLeft" align="right" valign="top">
-<a class="el" href="structflashcart__t.html">flashcart_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>sc64_get_flashcart</b> (void)</td></tr>
-<tr class="separator:gadf820e8e073fca1c48141276c58b69e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >SC64 flashcart support. </p>
-</div></div><!-- contents -->
+<a href="sound_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#ifndef SOUND_H__</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define SOUND_H__</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#define SOUND_MP3_PLAYER_CHANNEL    (0)</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> sound_init_default (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> sound_init_mp3_playback (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keywordtype">void</span> sound_poll (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keywordtype">void</span> sound_close (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
+</div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Fri Aug 18 2023 13:39:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5

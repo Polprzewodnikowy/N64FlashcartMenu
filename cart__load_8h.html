@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>N64FlashcartMenu: menu.h File Reference</title>
+<title>N64FlashcartMenu: cart_load.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,24 +74,51 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">menu.h File Reference</div></div>
+  <div class="headertitle"><div class="title">cart_load.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Menu Subsystem.  
+<p>ROM/save loading functions.  
 <a href="#details">More...</a></p>
 
-<p><a href="menu_8h_source.html">Go to the source code of this file.</a></p>
+<p><a href="cart__load_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a8fdf9a69cab967a2d76e575338b1c2e1"><td class="memItemLeft" align="right" valign="top"><a id="a8fdf9a69cab967a2d76e575338b1c2e1" name="a8fdf9a69cab967a2d76e575338b1c2e1"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_err_t</b> { <br />
+&#160;&#160;<b>CART_LOAD_OK</b>
+, <b>CART_LOAD_ERR_SAVES_SUBDIR</b>
+, <b>CART_LOAD_ERR_ROM</b>
+, <b>CART_LOAD_ERR_SAVE</b>
+, <br />
+&#160;&#160;<b>CART_LOAD_ERR_EMU_NOT_FOUND</b>
+, <b>CART_LOAD_ERR_EMU</b>
+, <b>CART_LOAD_ERR_EMU_ROM</b>
+<br />
+ }</td></tr>
+<tr class="separator:a8fdf9a69cab967a2d76e575338b1c2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe82a7d601e4b10ab65184b8aebde2bf"><td class="memItemLeft" align="right" valign="top"><a id="abe82a7d601e4b10ab65184b8aebde2bf" name="abe82a7d601e4b10ab65184b8aebde2bf"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_emu_type_t</b> { <b>CART_LOAD_EMU_TYPE_NES</b>
+, <b>CART_LOAD_EMU_TYPE_GAMEBOY</b>
+, <b>CART_LOAD_EMU_TYPE_GAMEBOY_COLOR</b>
+ }</td></tr>
+<tr class="separator:abe82a7d601e4b10ab65184b8aebde2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a568c890531fbe0571e87377f8b9ce68d"><td class="memItemLeft" align="right" valign="top"><a id="a568c890531fbe0571e87377f8b9ce68d" name="a568c890531fbe0571e87377f8b9ce68d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>menu_run</b> (<a class="el" href="boot_8h.html#structboot__params__t">boot_params_t</a> *boot_params)</td></tr>
-<tr class="separator:a568c890531fbe0571e87377f8b9ce68d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15473e486e1aa6e4568c45040ae74426"><td class="memItemLeft" align="right" valign="top"><a id="a15473e486e1aa6e4568c45040ae74426" name="a15473e486e1aa6e4568c45040ae74426"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_convert_error_message</b> (cart_load_err_t err)</td></tr>
+<tr class="separator:a15473e486e1aa6e4568c45040ae74426"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff405987e9ae1c49b1c780d519bd8e10"><td class="memItemLeft" align="right" valign="top"><a id="aff405987e9ae1c49b1c780d519bd8e10" name="aff405987e9ae1c49b1c780d519bd8e10"></a>
+cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_n64_rom_and_save</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, <a class="el" href="rom__database_8h.html#structrom__header__t">rom_header_t</a> *header, flashcart_progress_callback_t progress)</td></tr>
+<tr class="separator:aff405987e9ae1c49b1c780d519bd8e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7ab3db0eb827664ec5251ced149615f"><td class="memItemLeft" align="right" valign="top"><a id="ae7ab3db0eb827664ec5251ced149615f" name="ae7ab3db0eb827664ec5251ced149615f"></a>
+cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_emulator</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress)</td></tr>
+<tr class="separator:ae7ab3db0eb827664ec5251ced149615f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Menu Subsystem. </p>
+<div class="textblock"><p >ROM/save loading functions. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

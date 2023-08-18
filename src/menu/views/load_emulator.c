@@ -1,22 +1,16 @@
-#include <libdragon.h>
-
+#include "../cart_load.h"
 #include "boot/boot.h"
-#include "flashcart/flashcart.h"
 #include "utils/fs.h"
 #include "views.h"
 
-#ifndef EMULATOR_FOLDER
-#define EMULATOR_FOLDER "/emulators/"
-#endif
 
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };
 static const char *emu_gameboy_rom_extensions[] = { "gb", NULL };
 static const char *emu_gameboy_color_rom_extensions[] = { "gbc", NULL };
-static const char *emu_sega_rom_extensions[] = {"smc", "gen", "smd", NULL };
-
-static const uint32_t eum_rom_start_address = 0x200000;
+// static const char *emu_sega_rom_extensions[] = {"smc", "gen", "smd", NULL };
 
 static bool load_pending;
+static cart_load_emu_type_t emu_type;
 
 
 static void process (menu_t *menu) {
@@ -71,86 +65,15 @@ static void draw_progress (float progress) {
     }
 }
 
-static void load_emulator_nes_rom (path_t *path, menu_t *menu) {
-    if (file_exists(EMULATOR_FOLDER"emu.nes")) { // || neon64bu.rom
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.nes", false, draw_progress);
-        /* Combine EMU and ROM before loading. See https://github.com/hcs64/neon64v2/tree/master/pkg */
-         menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-
-        path_ext_replace(path, "sav");
-        menu->flashcart_error = flashcart_load_save(path_get(path), FLASHCART_SAVE_TYPE_SRAM_BANKED);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-    }
-}
-
-static void load_emulator_gameboy_rom (path_t *path, menu_t *menu) {
-    if (file_exists(EMULATOR_FOLDER"emu.gb")) { // || gb.v64
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gb", false, draw_progress);
-        /* Combine EMU and ROM before loading. */
-         menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-
-        path_ext_replace(path, "sav");
-        menu->flashcart_error = flashcart_load_save(path_get(path), FLASHCART_SAVE_TYPE_FLASHRAM);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-    }
-}
-
-static void load_emulator_gameboy_color_rom (path_t *path, menu_t *menu) {
-    if (file_exists(EMULATOR_FOLDER"emu.gbc")) { // || gbc.v64
-        menu->flashcart_error = flashcart_load_rom(EMULATOR_FOLDER"emu.gbc", false, draw_progress);
-        /* Combine EMU and ROM before loading. */
-         menu->flashcart_error = flashcart_load_file(path_get(path), eum_rom_start_address);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-
-        path_ext_replace(path, "sav");
-        menu->flashcart_error = flashcart_load_save(path_get(path), FLASHCART_SAVE_TYPE_FLASHRAM);
-        if (menu->flashcart_error != FLASHCART_OK) {
-            menu->next_mode = MENU_MODE_FAULT;
-            path_free(path);
-            return;
-        }
-    }
-}
-
 static void load (menu_t *menu) {
-    menu->next_mode = MENU_MODE_BOOT;
+    cart_load_err_t err = cart_load_emulator(menu, emu_type, draw_progress);
 
-    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
-    if (file_has_extensions(path_get(path), emu_nes_rom_extensions)) {
-        load_emulator_nes_rom(path, menu);
-    } else if (file_has_extensions(path_get(path), emu_gameboy_rom_extensions)) {
-        load_emulator_gameboy_rom(path, menu);
-    } else if (file_has_extensions(path_get(path), emu_gameboy_color_rom_extensions)) {
-        load_emulator_gameboy_color_rom(path, menu);
-    } else if (file_has_extensions(path_get(path), emu_sega_rom_extensions)) {
-        //load_emulator_sega_rom(path, menu);
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
     }
 
-    path_free(path);
-
+    menu->next_mode = MENU_MODE_BOOT;
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
@@ -159,6 +82,22 @@ static void load (menu_t *menu) {
 
 void view_load_emulator_init (menu_t *menu) {
     load_pending = false;
+
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+
+    if (file_has_extensions(path_get(path), emu_nes_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_NES;
+    } else if (file_has_extensions(path_get(path), emu_gameboy_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_GAMEBOY;
+    } else if (file_has_extensions(path_get(path), emu_gameboy_color_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_GAMEBOY_COLOR;
+    // } else if (file_has_extensions(path_get(path), emu_sega_rom_extensions)) {
+    //     emu_type = CART_LOAD_EMU_TYPE_SEGA;
+    } else {
+        menu_show_error(menu, "Unsupported ROM");
+    }
+
+    path_free(path);
 }
 
 void view_load_emulator_display (menu_t *menu, surface_t *display) {

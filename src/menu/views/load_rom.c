@@ -1,6 +1,6 @@
+#include "../cart_load.h"
 #include "../rom_database.h"
 #include "boot/boot.h"
-#include "flashcart/flashcart.h"
 #include "views.h"
 
 
@@ -224,50 +224,15 @@ static void draw_progress (float progress) {
     }
 }
 
-static flashcart_save_type_t convert_save_type (db_savetype_t save_type) {
-    switch (save_type) {
-        case DB_SAVE_TYPE_EEPROM_4K:
-            return FLASHCART_SAVE_TYPE_EEPROM_4K;
-        case DB_SAVE_TYPE_EEPROM_16K:
-            return FLASHCART_SAVE_TYPE_EEPROM_16K;
-        case DB_SAVE_TYPE_SRAM:
-            return FLASHCART_SAVE_TYPE_SRAM;
-        case DB_SAVE_TYPE_SRAM_BANKED:
-            return FLASHCART_SAVE_TYPE_SRAM_BANKED;
-        case DB_SAVE_TYPE_SRAM_128K:
-            return FLASHCART_SAVE_TYPE_SRAM_128K;
-        case DB_SAVE_TYPE_FLASHRAM:
-            return FLASHCART_SAVE_TYPE_FLASHRAM;
-        default:
-            return FLASHCART_SAVE_TYPE_NONE;
-    }
-}
-
 static void load (menu_t *menu) {
+    cart_load_err_t err = cart_load_n64_rom_and_save(menu, &rom_header, draw_progress);
+
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
+    }
+
     menu->next_mode = MENU_MODE_BOOT;
-
-    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
-    bool byte_swap = (rom_header.config_flags == ROM_MID_BIG_ENDIAN);
-    menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, draw_progress);
-    if (menu->flashcart_error != FLASHCART_OK) {
-        menu->next_mode = MENU_MODE_FAULT;
-        path_free(path);
-        return;
-    }
-
-    uint8_t save_type = rom_db_match_save_type(rom_header);
-
-    path_ext_replace(path, "sav");
-    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(save_type));
-    if (menu->flashcart_error != FLASHCART_OK) {
-        menu->next_mode = MENU_MODE_FAULT;
-        path_free(path);
-        return;
-    }
-
-    path_free(path);
-
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
@@ -278,7 +243,7 @@ static void deinit (void) {
 }
 
 
-void view_load_init (menu_t *menu) {
+void view_load_rom_init (menu_t *menu) {
     load_pending = false;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -290,7 +255,7 @@ void view_load_init (menu_t *menu) {
     path_free(path);
 }
 
-void view_load_display (menu_t *menu, surface_t *display) {
+void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
 
     draw(menu, display);
@@ -300,7 +265,7 @@ void view_load_display (menu_t *menu, surface_t *display) {
         load(menu);
     }
 
-    if (menu->next_mode != MENU_MODE_LOAD) {
+    if (menu->next_mode != MENU_MODE_LOAD_ROM) {
         deinit();
     }
 }

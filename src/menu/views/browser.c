@@ -196,10 +196,10 @@ static void process (menu_t *menu) {
                 }
                 break;
             case ENTRY_TYPE_ROM:
-                menu->next_mode = MENU_MODE_LOAD;
+                menu->next_mode = MENU_MODE_LOAD_ROM;
                 break;
             case ENTRY_TYPE_EMULATOR:
-                menu->next_mode = MENU_MODE_EMULATOR_LOAD;
+                menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;

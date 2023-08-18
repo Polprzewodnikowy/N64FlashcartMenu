@@ -137,8 +137,8 @@ static struct views_s {
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
-    { view_load_init, view_load_display }, // MENU_MODE_LOAD
-    { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_EMULATOR_LOAD
+    { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
+    { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
     { view_error_init, view_error_display }, // MENU_MODE_ERROR
     { view_fault_init, view_fault_display }, // MENU_MODE_FAULT
     { NULL, NULL }, // MENU_MODE_BOOT

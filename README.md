@@ -1,5 +1,5 @@
 # N64 Flashcart Menu
-**This repo and its documentation is currently experimental and subject to change without notice.**
+An open source menu for N64 flashcarts.
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
@@ -7,6 +7,18 @@
 * Be testable, using unit and smoke tests in ares emulated environment.
 * Encourage active development from community members and N64 FlashCart owners.
 * Support as many common mods and features as possible.
+
+
+## Current (notable) menu features
+* Fully Open Source.
+* Loads all known N64 games (including iQue and byteswapped ROMs).
+* Emulator support (GB, GBC, NES) ROMs.
+* N64 ROM box image support.
+* Background image (PNG) support.
+* Comprehensive ROM save database (including HomeBrew headers).
+* Comprehensive ROM information display.
+* Real Time Clock support.
+* Music playback (MP3).
 
 
 ## Getting started
@@ -17,10 +29,11 @@ Add it to the root folder on your SD card and run it from default 64drive menu l
 In the future this menu will replace `menu.bin` file.
 
 ### SC64
+Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest)
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
-### ED64
+### ED64 & ED64P
 Currently not supported, but there is an aim to do so.
 The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 

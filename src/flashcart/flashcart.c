@@ -41,50 +41,53 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .set_save_writeback = NULL,
 });
 
+#ifdef NDEBUG
+    // HACK: libdragon mocks every debug function if NDEBUG flag is enabled.
+    //       Code below reverts that and point to real function instead.
+    #undef debug_init_sdfs
+    bool debug_init_sdfs (const char *prefix, int npart);
+#endif
+
 
 flashcart_error_t flashcart_init (void) {
-    bool sd_initialized;
     flashcart_error_t error;
 
-#ifndef MENU_RELEASE
+    // NOTE: Explicitly support only these flashcarts in this specific initialization order.
+    struct {
+        int type;
+        int (* libcart_init) (void);
+        flashcart_t *(* get) (void);
+    } flashcarts[CART_MAX] = {
+        { CART_CI, ci_init, d64_get_flashcart },    // 64drive
+        { CART_SC, sc_init, sc64_get_flashcart },   // SC64
+        { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
+        { CART_ED, ed_init, NULL },                 // Original EverDrive-64
+    };
+
+    for (int i = 0; i < CART_MAX; i++) {
+        if (flashcarts[i].libcart_init() >= 0) {
+            cart_type = flashcarts[i].type;
+            if (flashcarts[i].get) {
+                flashcart = flashcarts[i].get();
+            }
+            break;
+        }
+    }
+
+    if (cart_type == CART_NULL) {
+        return FLASHCART_ERROR_NOT_DETECTED;    
+    }
+
+#ifndef NDEBUG
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif
-
-    // HACK: Because libcart reads PI config from address 0x10000000 when initializing
-    //       we need to write safe value before running any libcart function.
-    //       Data in SDRAM can be undefined on some flashcarts at this point
-    //       and might result in setting incorrect PI config.
-    extern uint32_t cart_dom1;
-    cart_dom1 = 0x80371240;
-
-    sd_initialized = debug_init_sdfs("sd:/", -1);
-
-    // NOTE: Flashcart model is extracted from libcart after debug_init_sdfs call is made
-    extern int cart_type;
-
-    switch (cart_type) {
-        case CART_CI: // 64drive
-            flashcart = d64_get_flashcart();
-            break;
-
-        case CART_ED: // Original EverDrive-64
-        case CART_EDX: // Series X EverDrive-64
-            break;
-
-        case CART_SC: // SC64
-            flashcart = sc64_get_flashcart();
-            break;
-
-        default:
-            return FLASHCART_ERROR_NOT_DETECTED;
-    }
 
     if ((error = flashcart->init()) != FLASHCART_OK) {
         return error;
     }
 
-    if (!sd_initialized) {
+    if (!debug_init_sdfs("sd:/", -1)) {
         return FLASHCART_ERROR_SD_CARD;
     }
 
@@ -105,15 +108,9 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_
         return FLASHCART_ERROR_ARGS;
     }
 
-    if (cart_card_byteswap(byte_swap)) {
-        return FLASHCART_ERROR_INT;
-    }
-
+    cart_card_byteswap = byte_swap;
     error = flashcart->load_rom(rom_path, progress);
-
-    if (cart_card_byteswap(false)) {
-        return FLASHCART_ERROR_INT;
-    }
+    cart_card_byteswap = false;
 
     return error;
 }
@@ -122,6 +119,7 @@ flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_ad
     if ((file_path == NULL) || (!file_exists(file_path))) {
         return FLASHCART_ERROR_ARGS;
     }
+
     return flashcart->load_file(file_path, start_offset_address);
 }
 

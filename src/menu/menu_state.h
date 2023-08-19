@@ -8,6 +8,7 @@
 #define MENU_STRUCT_H__
 
 
+#include <time.h>
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
@@ -27,11 +28,12 @@ typedef enum {
     MENU_MODE_IMAGE_VIEWER,
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
-    MENU_MODE_LOAD,
-    MENU_MODE_EMULATOR_LOAD,
+    MENU_MODE_LOAD_ROM,
+    MENU_MODE_LOAD_EMULATOR,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
+    __MENU_MODE_COUNT,
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -62,6 +64,8 @@ typedef struct {
     flashcart_error_t flashcart_error;
 
     char *error_message;
+
+    time_t current_time;
 
     struct {
         bool go_up;

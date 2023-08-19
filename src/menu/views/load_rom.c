@@ -1,6 +1,6 @@
+#include "../cart_load.h"
 #include "../rom_database.h"
 #include "boot/boot.h"
-#include "flashcart/flashcart.h"
 #include "views.h"
 
 
@@ -42,45 +42,48 @@ static char *format_rom_media_type (rom_media_type_t media_type) {
 
 static char *format_rom_destination_market (rom_destination_market_t market_type) {
     // TODO: These are all assumptions and should be corrected if required.
+    // From http://n64devkit.square7.ch/info/submission/pal/01-01.html
     switch (market_type) {
-        case MARKET_ALL:
-            return "All";
-        case MARKET_BRAZIL:
-            return "Brazil (MPAL)";
-        case MARKET_CHINA:
-            return "China";
-        case MARKET_GERMANY:
-            return "Germany (PAL)";
-        case MARKET_USA:
-            return "USA (NTSC)";
-        case MARKET_FRANCE:
-            return "France (PAL)";
-        case MARKET_NETHERLANDS:
-            return "Netherlands (PAL)";
-        case MARKET_ITALY:
-            return "Italy (PAL)";
-        case MARKET_JAPAN:
-            return "Japan (NTSC)";
-        case MARKET_KOREA:
-            return "Korea";
-        case MARKET_CANADA:
-            return "Canada";
-        case MARKET_SPAIN:
-            return "Spain (PAL)";
-        case MARKET_AUSTRAILA:
-            return "Austraila (PAL)";
-        case MARKET_SCANDINAVAIA:
-            return "Scandinavaia";
+        case MARKET_JAPANESE_MULTI:
+            return "Japanese & English"; // 1080 Snowboarding JPN
+        case MARKET_BRAZILIAN:
+            return "Brazilian (Portuguese)";
+        case MARKET_CHINESE:
+            return "Chinese";
+        case MARKET_GERMAN:
+            return "German";
+        case MARKET_NORTH_AMERICA:
+            return "American English";
+        case MARKET_FRENCH:
+            return "French";
+        case MARKET_DUTCH:
+            return "Dutch";
+        case MARKET_ITALIAN:
+            return "Italian";
+        case MARKET_JAPANESE:
+            return "Japanese";
+        case MARKET_KOREAN:
+            return "Korean";
+        case MARKET_CANADIAN:
+            return "Canadaian (English & French)";
+        case MARKET_SPANISH:
+            return "Spanish";
+        case MARKET_AUSTRALIAN:
+            return "Australian (English)";
+        case MARKET_SCANDINAVIAN:
+            return "Scandinavian";
         case MARKET_GATEWAY64_NTSC:
-            return "Gateway (NTSC)";
+            return "LodgeNet/Gateway (NTSC)";
         case MARKET_GATEWAY64_PAL:
-            return "Gateway (PAL)";
-        case MARKET_PAL_GENERIC:
-            return "Generic (PAL)";
-        case MARKET_PAL_X: // FIXME: some AUS ROM's use this so not only EUR
-        case MARKET_PAL_Y:
-        case MARKET_PAL_Z:
-            return "Unknown (PAL)";
+            return "LodgeNet/Gateway (PAL)";
+        case MARKET_EUROPEAN_BASIC:
+            return "PAL (includes English)"; // Mostly EU but is used on some Australian ROMs
+        case MARKET_OTHER_X: // FIXME: AUS HSV Racing ROM's and Asia Top Gear Rally use this so not only EUR
+            return "Regional (non specific)";
+        case MARKET_OTHER_Y:
+            return "European (non specific)";
+        case MARKET_OTHER_Z:
+            return "Regional (unknown)";
         default:
             return "Unknown";
     }
@@ -221,50 +224,15 @@ static void draw_progress (float progress) {
     }
 }
 
-static flashcart_save_type_t convert_save_type (db_savetype_t save_type) {
-    switch (save_type) {
-        case DB_SAVE_TYPE_EEPROM_4K:
-            return FLASHCART_SAVE_TYPE_EEPROM_4K;
-        case DB_SAVE_TYPE_EEPROM_16K:
-            return FLASHCART_SAVE_TYPE_EEPROM_16K;
-        case DB_SAVE_TYPE_SRAM:
-            return FLASHCART_SAVE_TYPE_SRAM;
-        case DB_SAVE_TYPE_SRAM_BANKED:
-            return FLASHCART_SAVE_TYPE_SRAM_BANKED;
-        case DB_SAVE_TYPE_SRAM_128K:
-            return FLASHCART_SAVE_TYPE_SRAM_128K;
-        case DB_SAVE_TYPE_FLASHRAM:
-            return FLASHCART_SAVE_TYPE_FLASHRAM;
-        default:
-            return FLASHCART_SAVE_TYPE_NONE;
-    }
-}
-
 static void load (menu_t *menu) {
+    cart_load_err_t err = cart_load_n64_rom_and_save(menu, &rom_header, draw_progress);
+
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
+    }
+
     menu->next_mode = MENU_MODE_BOOT;
-
-    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
-    bool byte_swap = (rom_header.config_flags == ROM_MID_BIG_ENDIAN);
-    menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, draw_progress);
-    if (menu->flashcart_error != FLASHCART_OK) {
-        menu->next_mode = MENU_MODE_FAULT;
-        path_free(path);
-        return;
-    }
-
-    uint8_t save_type = rom_db_match_save_type(rom_header);
-
-    path_ext_replace(path, "sav");
-    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(save_type));
-    if (menu->flashcart_error != FLASHCART_OK) {
-        menu->next_mode = MENU_MODE_FAULT;
-        path_free(path);
-        return;
-    }
-
-    path_free(path);
-
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
@@ -275,7 +243,7 @@ static void deinit (void) {
 }
 
 
-void view_load_init (menu_t *menu) {
+void view_load_rom_init (menu_t *menu) {
     load_pending = false;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -287,7 +255,7 @@ void view_load_init (menu_t *menu) {
     path_free(path);
 }
 
-void view_load_display (menu_t *menu, surface_t *display) {
+void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
 
     draw(menu, display);
@@ -297,7 +265,7 @@ void view_load_display (menu_t *menu, surface_t *display) {
         load(menu);
     }
 
-    if (menu->next_mode != MENU_MODE_LOAD) {
+    if (menu->next_mode != MENU_MODE_LOAD_ROM) {
         deinit();
     }
 }

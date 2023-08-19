@@ -196,10 +196,10 @@ static void process (menu_t *menu) {
                 }
                 break;
             case ENTRY_TYPE_ROM:
-                menu->next_mode = MENU_MODE_LOAD;
+                menu->next_mode = MENU_MODE_LOAD_ROM;
                 break;
             case ENTRY_TYPE_EMULATOR:
-                menu->next_mode = MENU_MODE_EMULATOR_LOAD;
+                menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;
@@ -262,14 +262,12 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->browser.entries == 0 ? "" : "R: Info"
     );
 
-    time_t current_time = time(NULL);
-
-    if (current_time >= 0) {
+    if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "\n"
             "%s",
-            ctime(&current_time)
+            ctime(&menu->current_time)
         );
     }
 

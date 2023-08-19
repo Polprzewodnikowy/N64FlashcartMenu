@@ -30,6 +30,7 @@ SRCS = \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
 	menu/actions.c \
+	menu/cart_load.c \
 	menu/components/background.c \
 	menu/components/boxart.c \
 	menu/components/common.c \
@@ -41,6 +42,7 @@ SRCS = \
 	menu/png_decoder.c \
 	menu/rom_database.c \
 	menu/settings.c \
+	menu/sound.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
@@ -48,7 +50,7 @@ SRCS = \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
 	menu/views/load_emulator.c \
-	menu/views/load.c \
+	menu/views/load_rom.c \
 	menu/views/music_player.c \
 	menu/views/startup.c \
 	menu/views/system_info.c \

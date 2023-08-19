@@ -19,7 +19,7 @@
                     "src/libs/libspng",
                     "src/libs/mini.c",
                     "src/libs/minimp3",
-                    "src/libs/miniz.c"
+                    "src/libs/miniz"
                 ]
             }
         }

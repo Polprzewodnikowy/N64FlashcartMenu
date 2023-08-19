@@ -41,3 +41,9 @@ Curiously, official 64drive menu never calls this command, save writeback might 
 ### "Enable/disable byteswap on load" command
 
 Annoyingly, this command affects both loading single sector into the buffer and loading multiple sectors to the SDRAM.
+
+
+### "Enable/disable extended address mode" command
+
+As of latest available firmware version 2.05 this command is not implemented.
+Documentation specifies it's supported on firmwares 2.06+ but this version (or anything newer) was never published.

@@ -24,6 +24,7 @@
 static size_t sdram_size = 0;
 static d64_device_variant_t device_variant = DEVICE_VARIANT_UNKNOWN;
 static d64_save_type_t current_save_type = SAVE_TYPE_NONE;
+// NOTE: This doesn't work on latest firmware (2.05)
 static bool enable_extended_mode_on_exit = false;
 
 
@@ -217,7 +218,8 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_SRAM_BANKED;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_128K:
-            type = SAVE_TYPE_SRAM; // NOTE: 64drive doesn't support 128 kiB SRAM save type, fallback to 32 kiB SRAM save type
+            // NOTE: 64drive doesn't support 128 kiB SRAM save type, fallback to 32 kiB SRAM save type
+            type = SAVE_TYPE_SRAM;
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM:
             type = SAVE_TYPE_FLASHRAM;

@@ -70,6 +70,42 @@ bool file_allocate (char *path, size_t size) {
     return error;
 }
 
+bool file_fill (char *path, uint8_t value) {
+    FIL fil;
+    bool error = false;
+    uint8_t buffer[FS_SECTOR_SIZE * 8];
+    FRESULT res;
+    UINT bytes_to_write;
+    UINT bytes_written;
+
+    for (int i = 0; i < sizeof(buffer); i++) {
+        buffer[i] = value;
+    }
+
+    if (f_open(&fil, strip_sd_prefix(path), FA_WRITE) != FR_OK) {
+        return true;
+    }
+
+    for (int i = 0; i < f_size(&fil); i += sizeof(buffer)) {
+        bytes_to_write = MIN(f_size(&fil) - f_tell(&fil), sizeof(buffer));
+        res = f_write(&fil, buffer, bytes_to_write, &bytes_written);
+        if ((res != FR_OK) || (bytes_to_write != bytes_written)) {
+            error = true;
+            break;
+        }
+    }
+
+    if (f_tell(&fil) != f_size(&fil)) {
+        error = true;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        error = true;
+    }
+
+    return error;
+}
+
 bool file_get_sectors (char *path, uint32_t *sectors, size_t entries) {
     FATFS *fs;
     FIL fil;

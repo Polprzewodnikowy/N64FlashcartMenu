@@ -16,6 +16,7 @@ bool file_exists (char *path);
 size_t file_get_size (char *path);
 bool file_delete (char *path);
 bool file_allocate (char *path, size_t size);
+bool file_fill (char *path, uint8_t value);
 bool file_get_sectors (char *path, uint32_t *sectors, size_t entries);
 bool file_has_extensions (char *path, const char *extensions[]);
 

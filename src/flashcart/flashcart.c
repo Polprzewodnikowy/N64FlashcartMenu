@@ -140,6 +140,9 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
         if (file_allocate(save_path, SAVE_SIZE[save_type])) {
             return FLASHCART_ERROR_LOAD;
         }
+        if (file_fill(save_path, 0xFF)) {
+            return FLASHCART_ERROR_LOAD;
+        }
     }
 
     if (file_get_size(save_path) != SAVE_SIZE[save_type]) {

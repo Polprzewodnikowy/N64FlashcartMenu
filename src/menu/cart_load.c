@@ -102,6 +102,19 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_push(path, "emu.gbc");
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
             break;
+        case CART_LOAD_EMU_TYPE_SEGA_MASTER_SYSTEM:
+            path_push(path, "emu.sms");
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+        case CART_LOAD_EMU_TYPE_SNES:
+            path_push(path, "emu.sfc");
+            emulated_rom_offset = 0x104000;
+            save_type = FLASHCART_SAVE_TYPE_SRAM;
+            break;
+        // case CART_LOAD_EMU_TYPE_MSX:
+        //     path_push(path, "emu.msx");
+        //     save_type = FLASHCART_SAVE_TYPE_NONE;
+        //     break;
     }
 
     if (!file_exists(path_get(path))) {

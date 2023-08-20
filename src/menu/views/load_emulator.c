@@ -7,7 +7,9 @@
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };
 static const char *emu_gameboy_rom_extensions[] = { "gb", NULL };
 static const char *emu_gameboy_color_rom_extensions[] = { "gbc", NULL };
-// static const char *emu_sega_rom_extensions[] = {"smc", "gen", "smd", NULL };
+static const char *emu_sega_rom_extensions[] = {"sms", "gg", NULL }; // "gen", "smd",
+static const char *emu_snes_rom_extensions[] = {"sfc", "smc", NULL };
+// static const char *emu_msx_rom_extensions[] = {"msx", "msx2", NULL };
 
 static bool load_pending;
 static cart_load_emu_type_t emu_type;
@@ -91,8 +93,12 @@ void view_load_emulator_init (menu_t *menu) {
         emu_type = CART_LOAD_EMU_TYPE_GAMEBOY;
     } else if (file_has_extensions(path_get(path), emu_gameboy_color_rom_extensions)) {
         emu_type = CART_LOAD_EMU_TYPE_GAMEBOY_COLOR;
-    // } else if (file_has_extensions(path_get(path), emu_sega_rom_extensions)) {
-    //     emu_type = CART_LOAD_EMU_TYPE_SEGA;
+    } else if (file_has_extensions(path_get(path), emu_sega_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_SEGA_MASTER_SYSTEM;
+    } else if (file_has_extensions(path_get(path), emu_snes_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_SNES;
+    // } else if (file_has_extensions(path_get(path), emu_msx_rom_extensions)) {
+    //     emu_type = CART_LOAD_EMU_TYPE_MSX;
     } else {
         menu_show_error(menu, "Unsupported ROM");
     }

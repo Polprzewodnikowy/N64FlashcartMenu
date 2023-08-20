@@ -70,7 +70,7 @@ $(BUILD_DIR)/FiraMonoBold.asset: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2
 $(BUILD_DIR)/%.asset: $(ASSETS_DIR)/%.ttf 
 	@echo "    [FONT] $(basename $@).font64"
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(BUILD_DIR) "$<"
-	@$(shell mv $(basename $@).font64 $@)
+	@mv $(basename $@).font64 $@
 
 $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.asset $(ASSETS_DIR)/assets.S
 	@sed -e "s,@sym@,$*,g" -e "s,@file@,$(basename $<).asset," < $(ASSETS_DIR)/assets.S | \
@@ -87,33 +87,33 @@ $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
 $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))
 
 $(OUTPUT_DIR)/$(PROJECT_NAME).n64: $(PROJECT_NAME).z64
-	$(shell mv $< $@)
+	@mv $< $@
 
 $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
-	$(shell python3 ./tools/strip_debug_data.py $(BUILD_DIR)/$(PROJECT_NAME).elf $< $@)
+	python3 ./tools/strip_debug_data.py $(BUILD_DIR)/$(PROJECT_NAME).elf $< $@
 	@$(N64_CHKSUM) $@ > /dev/null
 
 64drive: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
-	$(shell cp $< $(OUTPUT_DIR)/menu.bin)
+	@cp $< $(OUTPUT_DIR)/menu.bin
 .PHONY: 64drive
 
 ed64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
-	$(shell cp $< $(OUTPUT_DIR)/OS64.v64)
+	@cp $< $(OUTPUT_DIR)/OS64.v64
 .PHONY: ed64
 
 ed64-clone: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
-	$(shell cp $< $(OUTPUT_DIR)/OS64P.v64)
+	@cp $< $(OUTPUT_DIR)/OS64P.v64
 .PHONY: ed64-clone
 
 sc64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
-	$(shell cp $< $(OUTPUT_DIR)/sc64menu.n64)
+	@cp $< $(OUTPUT_DIR)/sc64menu.n64
 .PHONY: sc64
 
 all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	$(shell rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR))
+	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64

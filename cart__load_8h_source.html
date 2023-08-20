@@ -98,17 +98,18 @@ $(function() {
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    CART_LOAD_EMU_TYPE_NES,</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    CART_LOAD_EMU_TYPE_GAMEBOY,</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    CART_LOAD_EMU_TYPE_GAMEBOY_COLOR,</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>} cart_load_emu_type_t;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    CART_LOAD_EMU_TYPE_SNES,</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    CART_LOAD_EMU_TYPE_GAMEBOY,</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    CART_LOAD_EMU_TYPE_GAMEBOY_COLOR,</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>} cart_load_emu_type_t;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">char</span> *cart_load_convert_error_message (cart_load_err_t err);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>cart_load_err_t cart_load_n64_rom_and_save (<a class="code hl_struct" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, <a class="code hl_struct" href="rom__database_8h.html#structrom__header__t">rom_header_t</a> *header, flashcart_progress_callback_t progress);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>cart_load_err_t cart_load_emulator (<a class="code hl_struct" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">char</span> *cart_load_convert_error_message (cart_load_err_t err);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>cart_load_err_t cart_load_n64_rom_and_save (<a class="code hl_struct" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, <a class="code hl_struct" href="rom__database_8h.html#structrom__header__t">rom_header_t</a> *header, flashcart_progress_callback_t progress);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>cart_load_err_t cart_load_emulator (<a class="code hl_struct" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aflashcart_8h_html"><div class="ttname"><a href="flashcart_8h.html">flashcart.h</a></div><div class="ttdoc">Flashcart Subsystem.</div></div>
 <div class="ttc" id="amenu__state_8h_html"><div class="ttname"><a href="menu__state_8h.html">menu_state.h</a></div><div class="ttdoc">Menu State.</div></div>
 <div class="ttc" id="amenu__state_8h_html_structmenu__t"><div class="ttname"><a href="menu__state_8h.html#structmenu__t">menu_t</a></div><div class="ttdoc">Menu Structure.</div><div class="ttdef"><b>Definition:</b> menu_state.h:58</div></div>
@@ -117,7 +118,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 20 2023 18:27:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Aug 20 2023 18:58:59 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

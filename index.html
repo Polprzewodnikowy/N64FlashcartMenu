@@ -87,7 +87,7 @@ Current (notable) menu features</h1>
 <ul>
 <li>Fully Open Source.</li>
 <li>Loads all known N64 games (including iQue and byteswapped ROMs).</li>
-<li>Emulator support (GB, GBC, NES) ROMs.</li>
+<li>Emulator support (NES, SNES, GB, GBC) ROMs.</li>
 <li>N64 ROM box image support.</li>
 <li>Background image (PNG) support.</li>
 <li>Comprehensive ROM save database (including HomeBrew headers).</li>
@@ -99,7 +99,7 @@ Current (notable) menu features</h1>
 Getting started</h1>
 <h2><a class="anchor" id="autotoc_md4"></a>
 SC64</h2>
-<p >Ensure the cart is running the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a> Download the <code>sc64menu.n64</code> ROM from the latest action run assets. Add it to the root folder on your SD card.</p>
+<p >Ensure the cart is running the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a>. Download the <code>sc64menu.n64</code> ROM from the latest action run assets. Add it to the root folder on your SD card.</p>
 <h2><a class="anchor" id="autotoc_md5"></a>
 ED64 &amp; ED64P</h2>
 <p >Currently not supported, but there is an aim to do so. The aim is to replace <a href="https://github.com/networkfusion/altra64">Altra64</a> and <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a>.</p>
@@ -107,13 +107,14 @@ ED64 &amp; ED64P</h2>
 Common to all</h2>
 <h3><a class="anchor" id="autotoc_md7"></a>
 ROM Boxart</h3>
-<p >To use boxart, you need to place png files of size 158x112 in the folder <code>sd://menu/boxart/</code> Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be <code>GE.png</code> A known set of PNG files can be downloaded from <a href="https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w">https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w</a></p>
+<p >To use boxart, you need to place png files of size 158x112 in the folder <code>/menu/boxart</code> on the SD card. Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be <code>GE.png</code>. A known set of PNG files can be downloaded <a href="https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w">here</a>.</p>
 <h3><a class="anchor" id="autotoc_md8"></a>
 Emulator support</h3>
-<p >Emulators should be added to the <code>sd:/emulators/</code> folder</p>
-<p >The menu currently supports the following emulators and associated ROM's:</p><ul>
-<li>neon64v2 (<a href="https://github.com/hcs64/neon64v2">https://github.com/hcs64/neon64v2</a>) - emu.nes</li>
-<li>gb64 (<a href="https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html">https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html</a>) - emu.gb, emu.gbc</li>
+<p >Emulators should be added to the <code>/emulators</code> directory on the SD card.</p>
+<p >Menu currently supports the following emulators and associated ROM file names:</p><ul>
+<li><b>NES</b>: <a href="https://github.com/hcs64/neon64v2">neon64v2</a> by <em>hcs64</em> - <code>neon64bu.rom</code></li>
+<li><b>SNES</b>: <a href="https://github.com/Hydr8gon/sodium64">sodium64</a> by <em>Hydr8gon</em> - <code>sodium64.z64</code></li>
+<li><b>Game Boy</b> / <b>GB Color</b>: <a href="https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html">gb64</a> by <em>lambertjamesd</em> - <code>gb.v64</code> / <code>gbc.v64</code></li>
 </ul>
 <h1><a class="anchor" id="autotoc_md9"></a>
 Developer documentation</h1>
@@ -147,18 +148,19 @@ Update Libdragon submodule</h1>
 Generate documentation</h1>
 <p >Run <code>doxygen</code> from the dev container terminal. Make sure you fix the warnings before creating a PR! Generated documentation is located in <code>output/docs</code> folder.</p>
 <h1><a class="anchor" id="autotoc_md16"></a>
-OSS licenses used for libraries</h1>
+Open source software and licenses used</h1>
 <ul>
-<li>UNLICENSE (libdragon)</li>
-<li>BSD 2-Clause (libspng)</li>
-<li>CC0 1.0 Universal (minimp3)</li>
-<li>Permissive, unspecific (miniz) </li>
+<li><a href="https://github.com/DragonMinded/libdragon">libdragon</a> (UNLICENSE License)</li>
+<li><a href="https://github.com/randy408/libspng">libspng</a> (BSD 2-Clause License)</li>
+<li><a href="https://github.com/univrsal/mini.c">mini.c</a> (BSD 2-Clause License)</li>
+<li><a href="https://github.com/lieff/minimp3">minimp3</a> (CC0 1.0 Universal)</li>
+<li><a href="https://github.com/richgel999/miniz">miniz</a> (MIT License) </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 20 2023 18:27:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Aug 20 2023 18:59:00 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

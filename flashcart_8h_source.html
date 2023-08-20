@@ -112,7 +112,7 @@ $(function() {
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*init) (void);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*deinit) (void);</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*load_rom) (<span class="keywordtype">char</span> *rom_path, flashcart_progress_callback_t *progress);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*load_file) (<span class="keywordtype">char</span> *file_path, uint32_t start_offset_address);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*load_file) (<span class="keywordtype">char</span> *file_path, uint32_t rom_offset, uint32_t file_offset);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*load_save) (<span class="keywordtype">char</span> *save_path);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*set_save_type) (<a class="code hl_enumeration" href="flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2">flashcart_save_type_t</a> save_type);</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> (*set_save_writeback) (uint32_t *sectors);</div>
@@ -122,7 +122,7 @@ $(function() {
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_init (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_deinit (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_load_rom (<span class="keywordtype">char</span> *rom_path, <span class="keywordtype">bool</span> byte_swap, flashcart_progress_callback_t *progress);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_load_file (<span class="keywordtype">char</span> *file_path, uint32_t start_offset_address);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_load_file (<span class="keywordtype">char</span> *file_path, uint32_t rom_offset, uint32_t file_offset);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><a class="code hl_enumeration" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> flashcart_load_save (<span class="keywordtype">char</span> *save_path, <a class="code hl_enumeration" href="flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2">flashcart_save_type_t</a> save_type);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
@@ -133,7 +133,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 20 2023 18:16:42 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Sun Aug 20 2023 18:27:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

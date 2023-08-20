@@ -6,6 +6,7 @@
 void component_context_menu_init (component_context_menu_t *cm) {
     cm->selected = -1;
     cm->count = 0;
+    cm->hide_pending = false;
     for (int i = 0; (cm->list[i].text) != NULL; i++) {
         cm->count += 1;
     }
@@ -21,11 +22,11 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
     }
 
     if (menu->actions.back) {
-        cm->selected = -1;
+        cm->hide_pending = true;
     } else if (menu->actions.enter) {
         if (cm->list[cm->selected].action) {
             cm->list[cm->selected].action(menu);
-            cm->selected = -1;
+            cm->hide_pending = true;
         }
     } else if (menu->actions.go_up) {
         cm->selected -= 1;
@@ -89,4 +90,9 @@ void component_context_menu_draw (component_context_menu_t *cm) {
     rdpq_paragraph_render(layout, VISIBLE_AREA_X0, VISIBLE_AREA_Y0);
 
     rdpq_paragraph_free(layout);
+
+    if (cm->hide_pending) {
+        cm->hide_pending = false;
+        cm->selected = -1;
+    }
 }

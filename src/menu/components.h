@@ -40,6 +40,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected);
 typedef struct {
     int count;
     int selected;
+    bool hide_pending;
     struct {
         const char *text;
         void (*action) (menu_t *menu);

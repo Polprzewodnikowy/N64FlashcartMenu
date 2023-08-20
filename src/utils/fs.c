@@ -165,8 +165,9 @@ bool directory_create (char *path) {
             *separator++ = '\0';
         }
 
-        if ((strlen(directory) > 0) && (!directory_exists(directory))) {
-            if (f_mkdir(directory) != FR_OK) {
+        if (directory[0] != '\0') {
+            FRESULT res = f_mkdir(directory);
+            if ((res != FR_OK) && (res != FR_EXIST)) {
                 error = true;
                 break;
             }

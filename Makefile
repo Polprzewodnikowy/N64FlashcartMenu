@@ -32,6 +32,7 @@ SRCS = \
 	menu/components/background.c \
 	menu/components/boxart.c \
 	menu/components/common.c \
+	menu/components/context_menu.c \
 	menu/components/file_list.c \
 	menu/fonts.c \
 	menu/menu.c \

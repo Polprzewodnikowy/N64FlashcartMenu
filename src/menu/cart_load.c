@@ -47,15 +47,10 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
 }
 
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, flashcart_progress_callback_t progress) {
-    if (menu->settings.use_saves_folder) {
-        if (create_saves_subdirectory(menu)) {
-            return CART_LOAD_ERR_SAVES_SUBDIR;
-        }
-    }
-
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
     bool byte_swap = (header->config_flags == ROM_MID_BIG_ENDIAN);
+    flashcart_save_type_t save_type = convert_save_type(header);
+
     menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, progress);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
@@ -65,9 +60,13 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, 
     path_ext_replace(path, "sav");
     if (menu->settings.use_saves_folder) {
         path_push_subdir(path, SAVES_SUBDIRECTORY);
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(menu)) {
+            path_free(path);
+            return CART_LOAD_ERR_SAVES_SUBDIR;
+        }
     }
 
-    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(header));
+    menu->flashcart_error = flashcart_load_save(path_get(path), save_type);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_SAVE;
@@ -79,12 +78,6 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, 
 }
 
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress) {
-    if (menu->settings.use_saves_folder) {
-        if (create_saves_subdirectory(menu)) {
-            return CART_LOAD_ERR_SAVES_SUBDIR;
-        }
-    }
-
     path_t *path = path_init("sd:/", EMU_LOCATION);
     flashcart_save_type_t save_type = FLASHCART_SAVE_TYPE_NONE;
     uint32_t emulated_rom_offset = 0x200000;
@@ -128,6 +121,10 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     path_ext_replace(path, "sav");
     if (menu->settings.use_saves_folder) {
         path_push_subdir(path, SAVES_SUBDIRECTORY);
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(menu)) {
+            path_free(path);
+            return CART_LOAD_ERR_SAVES_SUBDIR;
+        }
     }
 
     menu->flashcart_error = flashcart_load_save(path_get(path), save_type);

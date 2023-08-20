@@ -168,8 +168,57 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
+void show_properties (menu_t *menu) {
+    menu->next_mode = MENU_MODE_FILE_INFO;
+}
+
+void delete_entry (menu_t *menu) {
+    int selected = menu->browser.selected;
+
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+
+    if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
+        if (directory_delete(path_get(path))) {
+            menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
+            path_free(path);
+            return;
+        }
+    } else {
+        if (file_delete(path_get(path))) {
+            menu_show_error(menu, "Couldn't delete file");
+            path_free(path);
+            return;
+        }
+    }
+
+    path_free(path);
+
+    if (load_directory(menu)) {
+        menu->browser.valid = false;
+        menu_show_error(menu, "Couldn't refresh directory contents after delete operation");
+        return;
+    }
+
+    menu->browser.selected = selected;
+    if (menu->browser.selected >= menu->browser.entries) {
+        menu->browser.selected = menu->browser.entries - 1;
+    }
+    menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
+}
+
+static component_context_menu_t entry_context_menu = {
+    .list = {
+        { .text = "Properties", .action = show_properties },
+        { .text = "Delete", .action = delete_entry },
+        COMPONENT_CONTEXT_MENU_LIST_END,
+    }
+};
 
 static void process (menu_t *menu) {
+    if (component_context_menu_process(menu, &entry_context_menu)) {
+        return;
+    }
+
     int scroll_speed = menu->actions.fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
@@ -216,8 +265,8 @@ static void process (menu_t *menu) {
             menu->browser.valid = false;
             menu_show_error(menu, "Couldn't open last directory");
         }
-    } else if (menu->actions.file_info && menu->browser.entry) {
-        menu->next_mode = MENU_MODE_FILE_INFO;
+    } else if (menu->actions.options && menu->browser.entry) {
+        component_context_menu_show(&entry_context_menu);
     } else if (menu->actions.system_info) {
         menu->next_mode = MENU_MODE_SYSTEM_INFO;
     } else if (menu->actions.settings) {
@@ -259,7 +308,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_RIGHT, VALIGN_TOP,
         "%s\n"
         "L: Settings",
-        menu->browser.entries == 0 ? "" : "R: Info"
+        menu->browser.entries == 0 ? "" : "R: Options"
     );
 
     if (menu->current_time >= 0) {
@@ -271,12 +320,15 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
+    component_context_menu_draw(&entry_context_menu);
+
     rdpq_detach_show();
 }
 
 
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
+        component_context_menu_init(&entry_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init("sd:/", "");

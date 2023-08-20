@@ -25,6 +25,7 @@ typedef enum {
 
 typedef enum {
     CART_LOAD_EMU_TYPE_NES,
+    CART_LOAD_EMU_TYPE_SNES,
     CART_LOAD_EMU_TYPE_GAMEBOY,
     CART_LOAD_EMU_TYPE_GAMEBOY_COLOR,
 } cart_load_emu_type_t;

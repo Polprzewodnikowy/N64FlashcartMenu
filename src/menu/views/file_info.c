@@ -4,7 +4,7 @@
 #include "views.h"
 
 
-static const char *n64_rom_extensions[] = { "z64", "n64", "v64", NULL };
+static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *text_extensions[] = { "txt", NULL };
 static const char *config_extensions[] = { "ini", "cfg", "yml", "yaml", "toml", NULL };
 static const char *save_extensions[] = { "sav", "eep", "eeprom", "sra", "srm", "ram", "fla", "flashram", NULL };

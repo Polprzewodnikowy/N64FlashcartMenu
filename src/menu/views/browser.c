@@ -9,7 +9,7 @@
 #include "views.h"
 
 
-static const char *rom_extensions[] = { "z64", "n64", "v64", NULL };
+static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *emulator_extensions[] = { "nes", "gb", "gbc", "smc", "gen", "smd", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };

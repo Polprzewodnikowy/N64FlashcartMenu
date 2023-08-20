@@ -9,7 +9,7 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \
@@ -56,7 +56,7 @@ SRCS = \
 	utils/fs.c
 
 ASSETS = \
-	FiraMono-Bold.ttf
+	FiraMonoBold.ttf
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS) $(ASSETS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -65,13 +65,16 @@ DEPS = $(OBJS:.o=.d)
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
+$(BUILD_DIR)/FiraMonoBold.asset: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
 
-$(BUILD_DIR)/%.o: $(ASSETS_DIR)/%.ttf
-	@echo "    [FONT] $@"
-	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(ASSETS_DIR) "$<"
-	@$(N64_OBJCOPY) -I binary -O elf32-bigmips -B mips4300 $(basename $<).font64 $@
-	@rm $(basename $<).font64
+$(BUILD_DIR)/%.asset: $(ASSETS_DIR)/%.ttf 
+	@echo "    [FONT] $(basename $@).font64"
+	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(BUILD_DIR) "$<"
+	@$(shell mv $(basename $@).font64 $@)
+
+$(BUILD_DIR)/%.o: $(BUILD_DIR)/%.asset $(ASSETS_DIR)/assets.S
+	@sed -e "s,@sym@,$*,g" -e "s,@file@,$(basename $<).asset," < $(ASSETS_DIR)/assets.S | \
+		$(CC) -x assembler-with-cpp $(ASFLAGS) -c - -o $@
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 

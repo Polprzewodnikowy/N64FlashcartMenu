@@ -6,10 +6,11 @@
 #define RI_SELECT           0x0C
 #define RI_REFRESH          0x10
 #define RI_LATENCY          0x14
-#define RI_RERROR           0x18
-#define RI_WERROR           0x1C
 
-#define RI_MODE_RESET       0x0000000E
+#define RI_MODE_RESET       0x0000000C
+#define RI_MODE_STANDBY     0x0000000E
+
+#define RDRAM_RESET_DELAY   1024
 
 #define IPL3_ENTRY          0xA4000040
 
@@ -48,6 +49,14 @@ reset_rdram:
     sw $zero, RI_CURRENT_LOAD($t0)
     sw $zero, RI_SELECT($t0)
     sw $zero, RI_REFRESH($t0)
+
+    li $t2, RDRAM_RESET_DELAY
+delay:
+    addiu $t2, $t2, (-1)
+    bnez $t2, delay
+
+    li $t1, RI_MODE_STANDBY
+    sw $t1, RI_MODE($t0)
 
 run_ipl3:
     li $t3, IPL3_ENTRY

@@ -196,7 +196,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_address) {
+static flashcart_error_t sc64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
@@ -206,14 +206,19 @@ static flashcart_error_t sc64_load_file (char *file_path, uint32_t start_offset_
 
     fix_file_size(&fil);
 
-    size_t file_size = f_size(&fil);
+    size_t file_size = f_size(&fil) - file_offset;
 
-    if (file_size > (MiB(64) - start_offset_address)) {
+    if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERROR_ARGS;
     }
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+    if (f_lseek(&fil, file_offset) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + rom_offset), file_size, &br) != FR_OK) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }

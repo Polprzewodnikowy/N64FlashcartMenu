@@ -81,6 +81,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     path_t *path = path_init("sd:/", EMU_LOCATION);
     flashcart_save_type_t save_type = FLASHCART_SAVE_TYPE_NONE;
     uint32_t emulated_rom_offset = 0x200000;
+    uint32_t emulated_file_offset = 0;
 
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
@@ -112,7 +113,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
 
     path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    menu->flashcart_error = flashcart_load_file(path_get(path), emulated_rom_offset);
+    menu->flashcart_error = flashcart_load_file(path_get(path), emulated_rom_offset, emulated_file_offset);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_EMU_ROM;

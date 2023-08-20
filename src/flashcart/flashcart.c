@@ -112,12 +112,16 @@ flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_
     return error;
 }
 
-flashcart_error_t flashcart_load_file (char *file_path, uint32_t start_offset_address) {
+flashcart_error_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     if ((file_path == NULL) || (!file_exists(file_path))) {
         return FLASHCART_ERROR_ARGS;
     }
 
-    return flashcart->load_file(file_path, start_offset_address);
+    if ((file_offset % FS_SECTOR_SIZE) != 0) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    return flashcart->load_file(file_path, rom_offset, file_offset);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {

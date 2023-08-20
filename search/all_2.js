@@ -6,8 +6,10 @@ var searchData=
   ['clock_5frate_3',['clock_rate',['../rom__database_8h.html#ae541531dc9e7ae139f3c88716ab303c0',1,'rom_header_t']]],
   ['component_5fbackground_5ft_4',['component_background_t',['../structcomponent__background__t.html',1,'']]],
   ['component_5fboxart_5ft_5',['component_boxart_t',['../components_8h.html#structcomponent__boxart__t',1,'']]],
-  ['components_2eh_6',['components.h',['../components_8h.html',1,'']]],
-  ['config_5fflags_7',['config_flags',['../rom__database_8h.html#a36b8274c051911b8739c732d4290d17c',1,'rom_header_t']]],
-  ['constants_2eh_8',['constants.h',['../constants_8h.html',1,'']]],
-  ['crc32_2eh_9',['crc32.h',['../crc32_8h.html',1,'']]]
+  ['component_5fcontext_5fmenu_5ft_6',['component_context_menu_t',['../components_8h.html#structcomponent__context__menu__t',1,'']]],
+  ['component_5fcontext_5fmenu_5ft_2elist_7',['component_context_menu_t.list',['../structcomponent__context__menu__t_8list.html',1,'']]],
+  ['components_2eh_8',['components.h',['../components_8h.html',1,'']]],
+  ['config_5fflags_9',['config_flags',['../rom__database_8h.html#a36b8274c051911b8739c732d4290d17c',1,'rom_header_t']]],
+  ['constants_2eh_10',['constants.h',['../constants_8h.html',1,'']]],
+  ['crc32_2eh_11',['crc32.h',['../crc32_8h.html',1,'']]]
 ];

@@ -57,7 +57,7 @@ static flashcart_error_t ed64_load_rom (char *rom_path, flashcart_progress_callb
     size_t rom_size = f_size(&fil);
 
     // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (rom_size > MiB(64)) {
+    if (rom_size > MiB(64) - KiB(128)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
@@ -102,7 +102,7 @@ static flashcart_error_t ed64_load_file (char *file_path, uint32_t rom_offset, u
     size_t file_size = f_size(&fil) - file_offset;
 
     // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (file_size > (MiB(64) - rom_offset)) {
+    if (file_size > (MiB(64) - KiB(128) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERROR_ARGS;
     }

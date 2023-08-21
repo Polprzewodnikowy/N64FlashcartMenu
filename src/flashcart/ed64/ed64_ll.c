@@ -136,7 +136,7 @@ void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length);
 void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length);
 
 // static uint16_t spi_cfg;
-uint8_t ed64_ll_ram_bank;
+uint8_t ed64_ll_sram_bank;
 ed64_save_type_t ed64_ll_save_type;
 
 #define REG_LAT 0x04
@@ -330,7 +330,7 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
     sram_on = 0;
     eeprom_size = 0;
     sram_size = 0;
-    ram_bank = ed64_ll_ram_bank;
+    ram_bank = ed64_ll_sram_bank;
 
 
     switch (type) {
@@ -371,9 +371,9 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
 
 }
 
-void ed64_ll_set_ram_bank(uint8_t bank) {
+void ed64_ll_set_sram_bank(uint8_t bank) {
 
-    ed64_ll_ram_bank = bank == 0 ? 0 : 1;
+    ed64_ll_sram_bank = bank == 0 ? 0 : 1;
 
 }
 

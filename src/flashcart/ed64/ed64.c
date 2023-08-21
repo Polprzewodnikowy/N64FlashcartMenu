@@ -12,11 +12,11 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
-
 static flashcart_error_t ed64_init (void) {
 
+    // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
 
-    ed64_ll_unlock_regs();
+    //ed64_ll_unlock_regs();
 
     // ed64_ll_init(); // FIXME: this causes a crash!
     // ed64_ll_reset_spx(); // only required if V2+ FW is updating!
@@ -33,11 +33,10 @@ static flashcart_error_t ed64_init (void) {
 }
 
 static flashcart_error_t ed64_deinit (void) {
-    // // NOTE: Necessary because libcart enables ROM write by default
-    // ed64_ll_set_config(CFG_ROM_WRITE_ENABLE, false);
 
-    ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
-    ed64_ll_lock_regs();
+    // ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
+
+    ed_exit();
 
     return FLASHCART_OK;
 }
@@ -54,6 +53,7 @@ static flashcart_error_t ed64_load_rom (char *rom_path, flashcart_progress_callb
 
     size_t rom_size = f_size(&fil);
 
+    // FIXME: if the cart is not V3, we need to - 128KiB
     if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;

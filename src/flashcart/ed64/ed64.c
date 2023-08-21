@@ -12,6 +12,8 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
+#define EEPROM_ADDRESS              (0x1FFE2000)
+
 extern int ed_exit(void);
 
 static flashcart_error_t ed64_init (void) {
@@ -129,49 +131,45 @@ static flashcart_error_t ed64_load_file (char *file_path, uint32_t rom_offset, u
 }
 
 static flashcart_error_t ed64_load_save (char *save_path) {
-//     void *address =  0x08000000;
-//     ed64_save_type_t type = ed64_ll_get_save_type();
+    void *address =  NULL;
+    ed64_save_type_t type = ed64_ll_get_save_type();
 
-// //     if (ed64_get_config(CFG_SAVE_TYPE, &type) != ED64_OK) {
-// //         return FLASHCART_ERROR_INT;
-// //     }
+    switch (type) {
+        case SAVE_TYPE_EEPROM_4K:
+        case SAVE_TYPE_EEPROM_16K:
+            address = (void *) (EEPROM_ADDRESS);
+            break;
+        case SAVE_TYPE_SRAM:
+        case SAVE_TYPE_SRAM_128K:
+        case SAVE_TYPE_FLASHRAM:
+            address = (void *) (SRAM_ADDRESS);
+            break;
+        case SAVE_TYPE_NONE:
+        default:
+            return FLASHCART_ERROR_ARGS;
+    }
 
-// //     switch (type) {
-// //         case SAVE_TYPE_EEPROM_4K:
-// //         case SAVE_TYPE_EEPROM_16K:
-// //             address = (void *) (EEPROM_ADDRESS);
-// //             break;
-// //         case SAVE_TYPE_SRAM:
-// //         case SAVE_TYPE_FLASHRAM:
-// //         case SAVE_TYPE_SRAM_BANKED:
-// //             address = (void *) (SRAM_FLASHRAM_ADDRESS);
-// //             break;
-// //         case SAVE_TYPE_NONE:
-// //         default:
-// //             return FLASHCART_ERROR_ARGS;
-// //     }
+    FIL fil;
+    UINT br;
 
-    // FIL fil;
-    // UINT br;
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    size_t save_size = f_size(&fil);
 
-    // size_t save_size = f_size(&fil);
+    if (f_read(&fil, address, save_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // if (f_read(&fil, address, save_size, &br) != FR_OK) {
-    //     f_close(&fil);
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
-    // if (f_close(&fil) != FR_OK) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
-
-    // if (br != save_size) {
-    //     return FLASHCART_ERROR_LOAD;
-    // }
+    if (br != save_size) {
+        return FLASHCART_ERROR_LOAD;
+    }
 
     return FLASHCART_OK;
 }

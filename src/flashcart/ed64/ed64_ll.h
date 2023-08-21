@@ -54,7 +54,7 @@ typedef enum {
 
 
 /* Initialization functions */
-uint8_t ed64_ll_init();
+int ed64_ll_init();
 void ed64_ll_init_v2();
 void ed64_ll_init_v3();
 
@@ -81,17 +81,9 @@ void ed64_ll_read_cart_metadata(void *dest);
 uint16_t ed64_ll_msg_rd();
 void ed64_ll_msg_wr(uint16_t val);
 
-/* DMA functions */
-void ed64_ll_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen);
-void ed64_ll_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen);
-void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length);
-void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length);
-
 void ed64_ll_lock_regs();
 void ed64_ll_unlock_regs();
 
-uint32_t ed64_ll_reg_read(uint32_t reg);
-void ed64_ll_reg_write(uint32_t reg, uint32_t data);
 void ed64_ll_reset_spx();
 
 /* GPIO functions */

@@ -12,6 +12,8 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
+extern int ed_exit(void);
+
 static flashcart_error_t ed64_init (void) {
 
     // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
@@ -36,6 +38,7 @@ static flashcart_error_t ed64_deinit (void) {
 
     // ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
 
+    // For the moment, just use libCart exit.
     ed_exit();
 
     return FLASHCART_OK;
@@ -53,7 +56,7 @@ static flashcart_error_t ed64_load_rom (char *rom_path, flashcart_progress_callb
 
     size_t rom_size = f_size(&fil);
 
-    // FIXME: if the cart is not V3, we need to - 128KiB
+    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
     if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
@@ -98,6 +101,7 @@ static flashcart_error_t ed64_load_file (char *file_path, uint32_t rom_offset, u
 
     size_t file_size = f_size(&fil) - file_offset;
 
+    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
     if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERROR_ARGS;
@@ -198,10 +202,6 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
         default:
             return FLASHCART_ERROR_ARGS;
     }
-
-    // if (ed64_set_config(CFG_SAVE_TYPE, type) != ED64_OK) {
-    //     return FLASHCART_ERROR_INT;
-    // }
 
     ed64_ll_set_save_type(type);
 

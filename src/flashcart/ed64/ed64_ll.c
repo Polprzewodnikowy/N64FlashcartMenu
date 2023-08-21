@@ -129,6 +129,12 @@ void ed64_ll_dma_pi_write(void * ram_address, unsigned long pi_address, unsigned
 void ed64_ll_dma_read(void *ram, uint32_t address, uint32_t length);
 void ed64_ll_dma_write(void *ram, uint32_t address, uint32_t length);
 
+/* DMA functions */
+void ed64_ll_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen);
+void ed64_ll_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen);
+void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length);
+void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length);
+
 // static uint16_t spi_cfg;
 uint8_t ed64_ll_ram_bank;
 ed64_save_type_t ed64_ll_save_type;
@@ -193,13 +199,13 @@ void ed64_ll_init_v3() {
 }
 
 /* Initialize cart */
-uint8_t ed64_ll_init() {
+int ed64_ll_init() {
 
     uint16_t firmware_ver;
     uint16_t firmware_msg;
     uint8_t cold_start;
 
-
+    // TODO: take into account libCart!
     IO_WRITE(PI_BSD_DOM2_LAT_REG, REG_LAT);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, REG_PWD);
 

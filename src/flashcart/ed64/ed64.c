@@ -25,7 +25,7 @@ static flashcart_error_t ed64_init (void) {
 
     // ed64_ll_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
     
-    // If a V3 cart is detected (has a battery?), enable RTC, 
+    // If a V3 or X7 cart is detected (has a battery?), enable RTC, 
     // ed64_ll_gpio_mode_rtc();
     // otherwise:
     // ed64_ll_gpio_mode_io();
@@ -36,7 +36,7 @@ static flashcart_error_t ed64_init (void) {
 
 static flashcart_error_t ed64_deinit (void) {
 
-    // ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
+    // ed64_ll_gpio_mode_off(); // On V3 or X7, this should be ed64_bios_gpio_mode_rtc() if it is required.
 
     // For the moment, just use libCart exit.
     ed_exit();

@@ -16,12 +16,16 @@
 static flashcart_error_t ed64_init (void) {
 
 
-    // ed64_ll_unlock_regs();
+    ed64_ll_unlock_regs();
 
-    // ed64_ll_init();
+    // ed64_ll_init(); // FIXME: this causes a crash!
     // ed64_ll_reset_spx(); // only required if V2+ FW is updating!
 
     // ed64_ll_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
+    
+    // If a V3 cart is detected (has a battery?), enable RTC, 
+    // ed64_ll_gpio_mode_rtc();
+    // otherwise:
     // ed64_ll_gpio_mode_io();
 
 
@@ -32,7 +36,7 @@ static flashcart_error_t ed64_deinit (void) {
     // // NOTE: Necessary because libcart enables ROM write by default
     // ed64_ll_set_config(CFG_ROM_WRITE_ENABLE, false);
 
-    // ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
+    ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
     ed64_ll_lock_regs();
 
     return FLASHCART_OK;
@@ -169,37 +173,37 @@ static flashcart_error_t ed64_load_save (char *save_path) {
 }
 
 static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
-    // ed64_save_type_t type;
+    ed64_save_type_t type;
 
-    // switch (save_type) {
-    //     case FLASHCART_SAVE_TYPE_NONE:
-    //         type = SAVE_TYPE_NONE;
-    //         break;
-    //     case FLASHCART_SAVE_TYPE_EEPROM_4K:
-    //         type = SAVE_TYPE_EEPROM_4K;
-    //         break;
-    //     case FLASHCART_SAVE_TYPE_EEPROM_16K:
-    //         type = SAVE_TYPE_EEPROM_16K;
-    //         break;
-    //     case FLASHCART_SAVE_TYPE_SRAM:
-    //         type = SAVE_TYPE_SRAM;
-    //         break;
-    //     case FLASHCART_SAVE_TYPE_SRAM_BANKED:
-    //     case FLASHCART_SAVE_TYPE_SRAM_128K:
-    //         type = SAVE_TYPE_SRAM_128K;
-    //         break;
-    //     case FLASHCART_SAVE_TYPE_FLASHRAM:
-    //         type = SAVE_TYPE_FLASHRAM;
-    //         break;
-    //     default:
-    //         return FLASHCART_ERROR_ARGS;
-    // }
+    switch (save_type) {
+        case FLASHCART_SAVE_TYPE_NONE:
+            type = SAVE_TYPE_NONE;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_4K:
+            type = SAVE_TYPE_EEPROM_4K;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_16K:
+            type = SAVE_TYPE_EEPROM_16K;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM:
+            type = SAVE_TYPE_SRAM;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM_BANKED:
+        case FLASHCART_SAVE_TYPE_SRAM_128K:
+            type = SAVE_TYPE_SRAM_128K;
+            break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM:
+            type = SAVE_TYPE_FLASHRAM;
+            break;
+        default:
+            return FLASHCART_ERROR_ARGS;
+    }
 
     // if (ed64_set_config(CFG_SAVE_TYPE, type) != ED64_OK) {
     //     return FLASHCART_ERROR_INT;
     // }
 
-    // ed64_ll_set_save_type(type);
+    ed64_ll_set_save_type(type);
 
     return FLASHCART_OK;
 }

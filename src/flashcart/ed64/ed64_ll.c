@@ -221,57 +221,57 @@ void ed64_ll_reg_write(uint32_t reg, uint32_t data) {
 
 }
 
-/*  Used for USB and SPI functions */
-uint8_t ed64_ll_dma_busy() {
+// /*  Used for USB and SPI functions */
+// uint8_t ed64_ll_dma_busy() {
 
-    while ((ed64_ll_reg_read(REG_STATUS) & STATE_DMA_BUSY) != 0);
-    return ed64_ll_reg_read(REG_STATUS) & STATE_DMA_TOUT;
-}
+//     while ((ed64_ll_reg_read(REG_STATUS) & STATE_DMA_BUSY) != 0);
+//     return ed64_ll_reg_read(REG_STATUS) & STATE_DMA_TOUT;
+// }
 
 
-/* USB functions */
+// /* USB functions */
 
-/* USB read is busy */
-uint8_t ed64_ll_usb_read_busy() {
+// /* USB read is busy */
+// uint8_t ed64_ll_usb_read_busy() {
 
-    return ed64_ll_reg_read(REG_STATUS) & STATE_USB_RXF;
-}
+//     return ed64_ll_reg_read(REG_STATUS) & STATE_USB_RXF;
+// }
 
-/* USB write is busy */
-uint8_t ed64_ll_usb_write_busy() {
+// /* USB write is busy */
+// uint8_t ed64_ll_usb_write_busy() {
 
-    return ed64_ll_reg_read(REG_STATUS) & STATE_USB_TXE;
-}
+//     return ed64_ll_reg_read(REG_STATUS) & STATE_USB_TXE;
+// }
 
-/* USB read */
-uint8_t ed64_ll_usb_read(uint32_t start_address, uint32_t slen) {
+// /* USB read */
+// uint8_t ed64_ll_usb_read(uint32_t start_address, uint32_t slen) {
 
-    start_address /= 4;
-    while (ed64_ll_usb_read_busy() != 0);
+//     start_address /= 4;
+//     while (ed64_ll_usb_read_busy() != 0);
 
-    ed64_ll_reg_write(REG_DMA_LENGTH, slen - 1);
-    ed64_ll_reg_write(REG_DMA_RAM_ADDR, start_address);
-    ed64_ll_reg_write(REG_DMA_CFG, DCFG_USB_TO_RAM);
+//     ed64_ll_reg_write(REG_DMA_LENGTH, slen - 1);
+//     ed64_ll_reg_write(REG_DMA_RAM_ADDR, start_address);
+//     ed64_ll_reg_write(REG_DMA_CFG, DCFG_USB_TO_RAM);
 
-    if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+//     if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
-    return 0;
-}
+//     return 0;
+// }
 
-/* USB write */
-uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen) {
+// /* USB write */
+// uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen) {
 
-    start_address /= 4;
-    while (ed64_ll_usb_write_busy() != 0);
+//     start_address /= 4;
+//     while (ed64_ll_usb_write_busy() != 0);
 
-    ed64_ll_reg_write(REG_DMA_LENGTH, slen - 1);
-    ed64_ll_reg_write(REG_DMA_RAM_ADDR, start_address);
-    ed64_ll_reg_write(REG_DMA_CFG, DCFG_RAM_TO_USB);
+//     ed64_ll_reg_write(REG_DMA_LENGTH, slen - 1);
+//     ed64_ll_reg_write(REG_DMA_RAM_ADDR, start_address);
+//     ed64_ll_reg_write(REG_DMA_CFG, DCFG_RAM_TO_USB);
 
-    if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+//     if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 ed64_save_type_t ed64_ll_get_save_type() {
@@ -585,46 +585,46 @@ uint8_t ed64_ll_gpio_read() {
 
 
 
-/* 64DD cart conversion save functions */
+// /* 64DD cart conversion save functions */
 
-/* Set 64DD ON and Enabled?! */
-void ed64_ll_64dd_ram_oe() {
+// /* Set 64DD ON and Enabled?! */
+// void ed64_ll_64dd_ram_oe() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
-    cfg |= ED_CFG_64DD_ON;
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
+//     cfg |= ED_CFG_64DD_ON;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* Set 64DD Write Enable?? */
-void ed64_ll_64dd_ram_we() {
+// /* Set 64DD Write Enable?? */
+// void ed64_ll_64dd_ram_we() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* Set 64DD Disabled?? */
-void ed64_ll_64dd_ram_off() {
+// /* Set 64DD Disabled?? */
+// void ed64_ll_64dd_ram_off() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* 64DD Save RAM Clear */
-void ed64_ll_64dd_ram_clear() {
+// /* 64DD Save RAM Clear */
+// void ed64_ll_64dd_ram_clear() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg |= ED_CFG_64DD_WRITE_ENABLED;
-    cfg &= ~ED_CFG_64DD_ON;
-    ed64_ll_reg_write(REG_CFG, cfg);
-    wait_ms(100);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg |= ED_CFG_64DD_WRITE_ENABLED;
+//     cfg &= ~ED_CFG_64DD_ON;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+//     wait_ms(100);
+// }
 
-/* 64DD Allowed on this cart?! */
-uint8_t ed64_ll_get_64dd_ram_supported() {
+// /* 64DD Allowed on this cart?! */
+// uint8_t ed64_ll_get_64dd_ram_supported() {
 
-    return (ed64_ll_reg_read(REG_STATUS) >> 15) & 1;
+//     return (ed64_ll_reg_read(REG_STATUS) >> 15) & 1;
 
-}
+// }

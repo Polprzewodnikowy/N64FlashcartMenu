@@ -10,14 +10,15 @@
 
 #include "../flashcart.h"
 
+
 /**
  * @addtogroup ed64
  * @{
  */
 
-
 flashcart_t *ed64_get_flashcart (void);
 
 /** @} */ /* ed64 */
+
 
 #endif

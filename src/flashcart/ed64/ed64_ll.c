@@ -1,6 +1,6 @@
 #include <libdragon.h>
 
-#include "ed64_internal.h"
+#include "ed64_ll.h"
 
 /* Locks the ED64 registers  */
 #define ED64_KEY_LOCK   0x0000
@@ -191,7 +191,7 @@ uint8_t ed64_bios_init() {
     spi_cfg = SPI_CFG_SS | BI_SPI_SPD_LO;
     ed64_bios_reg_write(REG_CFG, ED_CFG_SDRAM_ON);
     ed64_bios_reg_write(REG_SPI_CFG, spi_cfg);
-    ed64_bios_save_type = SAVE_TYPE_OFF;
+    ed64_bios_save_type = SAVE_TYPE_NONE;
 
 
     return cold_start;
@@ -352,21 +352,21 @@ void ed64_bios_set_save_type(ed64_save_type_t type) {
 
 
     switch (type) {
-        case SAVE_TYPE_EEP16k:
+        case SAVE_TYPE_EEPROM_16K:
             eeprom_on = 1;
             eeprom_size = 1;
             break;
-        case SAVE_TYPE_EEP4k:
+        case SAVE_TYPE_EEPROM_4K:
             eeprom_on = 1;
             break;
         case SAVE_TYPE_SRAM:
             sram_on = 1;
             break;
-        case SAVE_TYPE_SRAM128:
+        case SAVE_TYPE_SRAM_128K:
             sram_on = 1;
             sram_size = 1;
             break;
-        case SAVE_TYPE_FLASH:
+        case SAVE_TYPE_FLASHRAM:
             sram_on = 0;
             sram_size = 1;
             break;

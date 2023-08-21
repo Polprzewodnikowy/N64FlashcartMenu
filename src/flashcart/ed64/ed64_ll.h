@@ -4,8 +4,8 @@
  * @ingroup flashcart 
  */
 
-#ifndef FLASHCART_ED64_INTERNAL_H__
-#define FLASHCART_ED64_INTERNAL_H__
+#ifndef FLASHCART_ED64_LL_H__
+#define FLASHCART_ED64_LL_H__
 
 
 #include <stddef.h>
@@ -19,12 +19,12 @@
 
 
 typedef enum {
-    SAVE_TYPE_OFF = 0,
+    SAVE_TYPE_NONE = 0,
     SAVE_TYPE_SRAM = 1,
-    SAVE_TYPE_SRAM128 = 2,
-    SAVE_TYPE_EEP4k = 3,
-    SAVE_TYPE_EEP16k = 4,
-    SAVE_TYPE_FLASH = 5,
+    SAVE_TYPE_SRAM_128K = 2,
+    SAVE_TYPE_EEPROM_4K = 3,
+    SAVE_TYPE_EEPROM_16K = 4,
+    SAVE_TYPE_FLASHRAM = 5,
     SAVE_TYPE_CPAK = 8,
     SAVE_TYPE_DD64 = 16,
 } ed64_save_type_t;

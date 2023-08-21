@@ -9,6 +9,7 @@
 
 #include "flashcart.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 
 #define WRITEBACK_MAX_SECTORS   (256)
@@ -58,7 +59,7 @@ flashcart_error_t flashcart_init (void) {
         { CART_CI, ci_init, NULL },                 // 64drive
         { CART_SC, sc_init, sc64_get_flashcart },   // SC64
         { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
-        { CART_ED, ed_init, NULL },                 // Original EverDrive-64
+        { CART_ED, ed_init, ed64_get_flashcart },   // Original EverDrive-64
     };
 
     for (int i = 0; i < CART_MAX; i++) {

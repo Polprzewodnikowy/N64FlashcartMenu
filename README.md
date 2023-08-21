@@ -28,9 +28,11 @@ Ensure the cart is running the latest [firmware](https://github.com/Polprzewodni
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
-### ED64 & ED64P
-Currently not supported, but there is an aim to do so.
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+### ED64
+Download the `ED64.v64` ROM from the latest action run assets and place it in the `/ED64` folder.
+
+### ED64P
+Download the `ED64P.v64` ROM from the latest action run assets and place it in the `/ED64P` folder.
 
 
 ### Common to all

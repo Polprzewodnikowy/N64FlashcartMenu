@@ -20,6 +20,8 @@ SRCS = \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
+	flashcart/ed64/ed64_ll.c \
+	flashcart/ed64/ed64.c \
 	hdmi/hdmi.c \
 	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \

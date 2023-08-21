@@ -16,13 +16,13 @@
 static flashcart_error_t ed64_init (void) {
 
 
-    // ed64_bios_unlock_regs();
+    // ed64_ll_unlock_regs();
 
-    // ed64_bios_init();
-    // ed64_bios_reset_spx(); // only required if V2+ FW is updating!
+    // ed64_ll_init();
+    // ed64_ll_reset_spx(); // only required if V2+ FW is updating!
 
-    // ed64_bios_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
-    // ed64_bios_gpio_mode_io();
+    // ed64_ll_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
+    // ed64_ll_gpio_mode_io();
 
 
     return FLASHCART_OK;
@@ -30,10 +30,10 @@ static flashcart_error_t ed64_init (void) {
 
 static flashcart_error_t ed64_deinit (void) {
     // // NOTE: Necessary because libcart enables ROM write by default
-    // ed64_set_config(CFG_ROM_WRITE_ENABLE, false);
+    // ed64_ll_set_config(CFG_ROM_WRITE_ENABLE, false);
 
-    // ed64_bios_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
-    // ed64_bios_lock_regs();
+    // ed64_ll_gpio_mode_off(); // On V3, this should be ed64_bios_gpio_mode_rtc() if it is required.
+    ed64_ll_lock_regs();
 
     return FLASHCART_OK;
 }
@@ -122,7 +122,7 @@ static flashcart_error_t ed64_load_file (char *file_path, uint32_t rom_offset, u
 
 static flashcart_error_t ed64_load_save (char *save_path) {
     void *address = NULL;
-//     ed64_save_type_t type = ed64_bios_get_save_type();
+//     ed64_save_type_t type = ed64_ll_get_save_type();
 
 // //     if (ed64_get_config(CFG_SAVE_TYPE, &type) != ED64_OK) {
 // //         return FLASHCART_ERROR_INT;
@@ -199,7 +199,7 @@ static flashcart_error_t ed64_set_save_type (flashcart_save_type_t save_type) {
     //     return FLASHCART_ERROR_INT;
     // }
 
-    // ed64_bios_set_save_type(type);
+    // ed64_ll_set_save_type(type);
 
     return FLASHCART_OK;
 }

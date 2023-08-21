@@ -82,11 +82,6 @@ typedef struct {
 #define	IO_WRITE(addr,data)	(*(volatile uint32_t *)PHYS_TO_K1(addr)=(uint32_t)(data))
 #define	IO_READ(addr)		(*(volatile uint32_t *)PHYS_TO_K1(addr))
 
-typedef enum {
-    BI_SPI_SPD_50 = 0,
-    BI_SPI_SPD_25 = 1,
-    BI_SPI_SPD_LO = 2,
-} ed64_spi_speed_t;
 
 #define SPI_CFG_SPD0 1
 #define SPI_CFG_SPD1 2
@@ -96,69 +91,58 @@ typedef enum {
 #define SPI_CFG_1BIT 32
 
 /* Initialization functions */
-uint8_t ed64_bios_init();
-void ed64_bios_init_v2();
-void ed64_bios_init_v3();
+uint8_t ed64_ll_init();
+void ed64_ll_init_v2();
+void ed64_ll_init_v3();
 
 /* Device information functions */
-uint16_t ed64_bios_get_fpga_version();
-uint16_t ed64_bios_get_cpld_version();
+uint16_t ed64_ll_get_fpga_version();
+uint16_t ed64_ll_get_cpld_version();
 
 /* Firmware update functions */
-void ed64_bios_load_firmware(uint8_t *firmware);
+void ed64_ll_load_firmware(uint8_t *firmware);
 
 /* USB functions */
-uint8_t ed64_bios_usb_read_busy();
-uint8_t ed64_bios_usb_read(uint32_t start_address, uint32_t slen);
-uint8_t ed64_bios_usb_write(uint32_t start_address, uint32_t slen);
-
-/* SPI functions */
-uint8_t ed64_bios_spi(uint8_t data);
-void ed64_bios_spi_nr(uint8_t data);
-void ed64_bios_set_spi_speed(uint16_t speed);
-
-/* SD Card functions */
-void ed64_bios_sd_mode(uint16_t mode);
-uint8_t ed64_bios_spi_read_to_rom(uint32_t start_address, uint16_t slen);
-void ed64_bios_byteswap_on();
-void ed64_bios_byteswap_off();
+uint8_t ed64_ll_usb_read_busy();
+uint8_t ed64_ll_usb_read(uint32_t start_address, uint32_t slen);
+uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen);
 
 /* Save functions */
-void ed64_bios_set_ram_bank(uint8_t bank);
-ed64_save_type_t ed64_bios_get_save_type();
-void ed64_bios_set_save_type(ed64_save_type_t type);
+void ed64_ll_set_ram_bank(uint8_t bank);
+ed64_save_type_t ed64_ll_get_save_type();
+void ed64_ll_set_save_type(ed64_save_type_t type);
 
 /* reads metadata related to the assembily date and cart capabilities */
-void ed64_bios_read_cart_metadata(void *dest);
+void ed64_ll_read_cart_metadata(void *dest);
 
-uint16_t ed64_bios_msg_rd();
-void ed64_bios_msg_wr(uint16_t val);
+uint16_t ed64_ll_msg_rd();
+void ed64_ll_msg_wr(uint16_t val);
 
 /* DMA functions */
-void ed64_bios_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen);
-void ed64_bios_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen);
-void ed64_bios_dma_read_sram(void *ram, uint32_t address, uint32_t length);
-void ed64_bios_dma_write_sram(void *ram, uint32_t address, uint32_t length);
+void ed64_ll_dma_read_rom(void *ram, uint32_t start_address, uint32_t slen);
+void ed64_ll_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen);
+void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length);
+void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length);
 
-void ed64_bios_lock_regs();
-void ed64_bios_unlock_regs();
+void ed64_ll_lock_regs();
+void ed64_ll_unlock_regs();
 
-uint32_t ed64_bios_reg_read(uint32_t reg);
-void ed64_bios_reg_write(uint32_t reg, uint32_t data);
-void ed64_bios_reset_spx();
+uint32_t ed64_ll_reg_read(uint32_t reg);
+void ed64_ll_reg_write(uint32_t reg, uint32_t data);
+void ed64_ll_reset_spx();
 
 /* GPIO functions */
-void ed64_bios_gpio_mode_rtc();
-void ed64_bios_gpio_mode_io();
-void ed64_bios_gpio_mode_off();
-uint8_t ed64_bios_gpio_read();
+void ed64_ll_gpio_mode_rtc();
+void ed64_ll_gpio_mode_io();
+void ed64_ll_gpio_mode_off();
+uint8_t ed64_ll_gpio_read();
 
 /* 64DD cart conversion save functions */
-void ed64_bios_64dd_ram_oe();
-void ed64_bios_64dd_ram_we();
-void ed64_bios_64dd_ram_off();
-void ed64_bios_64dd_ram_clear();
-uint8_t ed64_bios_get_64dd_ram_supported();
+void ed64_ll_64dd_ram_oe();
+void ed64_ll_64dd_ram_we();
+void ed64_ll_64dd_ram_off();
+void ed64_ll_64dd_ram_clear();
+uint8_t ed64_ll_get_64dd_ram_supported();
 
 /** @} */ /* ed64 */
 

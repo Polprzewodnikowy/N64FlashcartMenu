@@ -1,6 +1,6 @@
 PROJECT_NAME = N64FlashcartMenu
 
-.DEFAULT_GOAL := $(PROJECT_NAME)
+.DEFAULT_GOAL := all
 
 SOURCE_DIR = src
 ASSETS_DIR = assets
@@ -9,83 +9,132 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) $(FLAGS)
-N64_LDFLAGS += --wrap asset_load
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \
 	boot/boot.c \
 	boot/crc32.c \
-	boot/ipl2.S \
+	boot/reboot.S \
+	flashcart/flashcart_utils.c \
 	flashcart/flashcart.c \
-	flashcart/sc64/sc64_internal.c \
-	flashcart/ed64/ed64_internal.c \
+	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
-	flashcart/ed64/ed64.c \
+	flashcart/ed64/ed64_internal.c \
+	flashcart/sc64/ed64.c \
+	hdmi/hdmi.c \
+	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \
+	libs/miniz/miniz_tdef.c \
+	libs/miniz/miniz_tinfl.c \
+	libs/miniz/miniz_zip.c \
+	libs/miniz/miniz.c \
 	menu/actions.c \
-	menu/assets.c \
+	menu/cart_load.c \
+	menu/components/background.c \
+	menu/components/boxart.c \
+	menu/components/common.c \
+	menu/components/context_menu.c \
+	menu/components/file_list.c \
+	menu/fonts.c \
 	menu/menu.c \
-	menu/mp3player.c \
+	menu/mp3_player.c \
 	menu/path.c \
+	menu/png_decoder.c \
 	menu/rom_database.c \
 	menu/settings.c \
+	menu/sound.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
-	menu/views/fragments/fragments.c \
-	menu/views/fragments/widgets.c \
-	menu/views/load.c \
-	menu/views/player.c \
+	menu/views/image_viewer.c \
+	menu/views/load_emulator.c \
+	menu/views/load_rom.c \
+	menu/views/music_player.c \
 	menu/views/startup.c \
 	menu/views/system_info.c \
 	utils/fs.c
 
 ASSETS = \
-	FiraMono-Bold.ttf
-
-$(BUILD_DIR)/FiraMono-Bold.o: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2000-206F -r 2190-21FF
-
-$(BUILD_DIR)/%.o: $(ASSETS_DIR)/%.ttf
-	@echo "    [FONT] $@"
-	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(ASSETS_DIR) "$<"
-	@$(N64_OBJCOPY) -I binary -O elf32-bigmips -B mips4300 $(basename $<).font64 $@
-	@rm $(basename $<).font64
+	FiraMonoBold.ttf
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS) $(ASSETS))))
+MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
+SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
+DEPS = $(OBJS:.o=.d)
+
+$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
+$(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
+$(BUILD_DIR)/FiraMonoBold.asset: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
+
+$(BUILD_DIR)/%.asset: $(ASSETS_DIR)/%.ttf 
+	@echo "    [FONT] $(basename $@).font64"
+	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(BUILD_DIR) "$<"
+	@mv $(basename $@).font64 $@
+
+$(BUILD_DIR)/%.o: $(BUILD_DIR)/%.asset $(ASSETS_DIR)/assets.S
+	@sed -e "s,@sym@,$*,g" -e "s,@file@,$(basename $<).asset," < $(ASSETS_DIR)/assets.S | \
+		$(CC) -x assembler-with-cpp $(ASFLAGS) -c - -o $@
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
+disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
+	@$(N64_OBJDUMP) -S $< > $(BUILD_DIR)/$(PROJECT_NAME).lst
+.PHONY: disassembly
+
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
 
-$(PROJECT_NAME): $(PROJECT_NAME).z64
-	$(shell mkdir -p $(OUTPUT_DIR))
-	$(shell mv $(PROJECT_NAME).z64 $(OUTPUT_DIR))
+$(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))
 
-sc64_minify: $(PROJECT_NAME)
-	$(shell python3 ./tools/sc64/minify.py $(BUILD_DIR)/$(PROJECT_NAME).elf $(OUTPUT_DIR)/$(PROJECT_NAME).z64 $(OUTPUT_DIR)/sc64menu.n64)
+$(OUTPUT_DIR)/$(PROJECT_NAME).n64: $(PROJECT_NAME).z64
+	@mv $< $@
 
-all: sc64_minify
+$(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+	python3 ./tools/strip_debug_data.py $(BUILD_DIR)/$(PROJECT_NAME).elf $< $@
+	@$(N64_CHKSUM) $@ > /dev/null
+
+64drive: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+	@cp $< $(OUTPUT_DIR)/menu.bin
+.PHONY: 64drive
+
+ed64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+	@cp $< $(OUTPUT_DIR)/OS64.v64
+.PHONY: ed64
+
+ed64-clone: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+	@cp $< $(OUTPUT_DIR)/OS64P.v64
+.PHONY: ed64-clone
+
+sc64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+	@cp $< $(OUTPUT_DIR)/sc64menu.n64
+.PHONY: sc64
+
+all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	$(shell rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR))
+	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
-run: $(PROJECT_NAME)
+run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat
+else
 	./remotedeploy.sh
-#   FIXME: improve ability to deploy.
-#   if devcontainer, use remotedeploy.sh, else
-# 	  $(shell sc64deployer --boot direct-rom %~dp0$(OUTPUT_DIR))\$(PROJECT_NAME).z64)
+endif
 .PHONY: run
 
-run-debug: $(PROJECT_NAME)
+run-debug: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /d
+else
 	./remotedeploy.sh -d
+endif
 .PHONY: run-debug
 
 # test:
 #   TODO: run tests
 
--include $(wildcard $(BUILD_DIR)/*.d)
+-include $(DEPS)

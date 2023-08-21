@@ -5,7 +5,14 @@
 #include "crc32.h"
 
 
-extern uint32_t ipl2 __attribute__((section(".data")));
+#define C0_STATUS_FR    (1 << 26)
+#define C0_STATUS_CU0   (1 << 28)
+#define C0_STATUS_CU1   (1 << 29)
+
+
+extern uint32_t reboot_start __attribute__((section(".text")));
+extern size_t reboot_size __attribute__((section(".text")));
+extern int reboot_entry_offset __attribute__((section(".text")));
 
 
 typedef struct {
@@ -75,13 +82,9 @@ void boot (boot_params_t *params) {
         }
     }
 
-    // asm volatile (
-    //     "li $t1, %[status] \n"
-    //     "mtc0 $t1, $12 \n" ::
-    //     [status] "i" (C0_SR_CU1 | C0_SR_CU0 | C0_SR_FR)
-    // );
-
     OS_INFO->mem_size_6105 = OS_INFO->mem_size;
+
+    C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
 
     while (!(cpu_io_read(&SP->SR) & SP_SR_HALT));
 
@@ -90,6 +93,7 @@ void boot (boot_params_t *params) {
     while (cpu_io_read(&SP->DMA_BUSY));
 
     cpu_io_write(&PI->SR, PI_SR_CLR_INTR | PI_SR_RESET);
+    while (cpu_io_read(&VI->CURR_LINE) != 2);
     cpu_io_write(&VI->V_INTR, 0x3FF);
     cpu_io_write(&VI->H_LIMITS, 0);
     cpu_io_write(&VI->CURR_LINE, 0);
@@ -98,11 +102,12 @@ void boot (boot_params_t *params) {
 
     while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 
-    uint32_t *ipl2_src = &ipl2;
-    io32_t *ipl2_dst = SP_MEM->IMEM;
+    uint32_t *reboot_src = &reboot_start;
+    io32_t *reboot_dst = SP_MEM->IMEM;
+    size_t reboot_instructions = (size_t) (&reboot_size) / sizeof(uint32_t);
 
-    for (int i = 0; i < 8; i++) {
-        cpu_io_write(&ipl2_dst[i], ipl2_src[i]);
+    for (int i = 0; i < reboot_instructions; i++) {
+        cpu_io_write(&reboot_dst[i], reboot_src[i]);
     }
 
     cpu_io_write(&PI->DOM[0].LAT, 0xFF);
@@ -137,12 +142,15 @@ void boot (boot_params_t *params) {
     register uint32_t version asm ("s7");
     void *stack_pointer;
 
-    entry_point = (void (*)(void)) UNCACHED(&SP_MEM->DMEM[16]);
+    entry_point = (void (*)(void)) UNCACHED(&SP_MEM->IMEM[(int) (&reboot_entry_offset)]);
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
-    reset_type = (params->reset_type & 0x01);
+    reset_type = BOOT_RESET_TYPE_COLD;
     cic_seed = (params->cic_seed & 0xFF);
-    version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6 : 1;
+    version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6
+            : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1
+            : (params->tv_type == BOOT_TV_TYPE_MPAL) ? 4
+            : 0;
     stack_pointer = (void *) UNCACHED(&SP_MEM->IMEM[1020]);
 
     asm volatile (

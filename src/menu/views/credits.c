@@ -1,11 +1,8 @@
-#include <libdragon.h>
-
-#include "../menu_res_setup.h"
 #include "views.h"
 
 
 #ifndef MENU_VERSION
-#define MENU_VERSION "0.0.0.4"
+#define MENU_VERSION "0.0.0.5.ALPHA"
 #endif
 
 
@@ -16,37 +13,47 @@ static void process (menu_t *menu) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-	graphics_fill_screen(d, 0x00);
+    rdpq_attach(d, NULL);
 
-	graphics_draw_text(d, (d->width / 2) - 64, vertical_start_position, "MENU INFORMATION"); // centre = numchars * font_horizontal_pixels / 2
-	graphics_draw_line(d, 0, 30, d->width, 30, 0xff);
+    component_background_draw();
 
-	int16_t vertical_position = 40;
+    component_layout_draw();
 
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "Menu Revision: V");
-	graphics_draw_text(d, horizontal_start_position + 16 * 8, vertical_position, MENU_VERSION);
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "Authors:");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "JonesAlmighty / NetworkFusion");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "korgeaux / Polprzewodnikowy");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Credits:");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "N64Brew / libdragon contributors.");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position += font_vertical_pixels, "Github:");
-	// graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/SummerCart64");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/Polprzewodnikowy/N64FlashcartMenu");
-	graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/NetworkFusion/N64FlashcartMenu");
-	//graphics_draw_text(d, horizontal_indent, vertical_position += font_vertical_pixels, "https://github.com/dragonminded/libdragon");
-	vertical_position += (font_vertical_pixels * 2);
-	graphics_draw_text(d, horizontal_start_position, vertical_position, "OSS licenses used:");
-	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, "UNLICENSE");
-	graphics_draw_text(d, horizontal_indent,vertical_position += font_vertical_pixels, "MIT");
+    component_main_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "MENU INFORMATION"
+    );
 
-	graphics_draw_line(d, 0, d->height - overscan_vertical_pixels - font_vertical_pixels, d->width,d->height - overscan_vertical_pixels - font_vertical_pixels, 0xff);
-	graphics_draw_text(d, (d->width / 2) - 80,d->height - overscan_vertical_pixels, "Press (B) to return!"); // centre = numchars * font_horizontal_pixels / 2
+    component_main_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "\n"
+        "Menu Revision: V%s\n"
+        "\n"
+        "Github:\n"
+        " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
+        "Authors:\n"
+        " JonesAlmighty / NetworkFusion\n"
+        " Mateusz Faderewski / Polprzewodnikowy\n"
+        "Credits:\n"
+        " N64Brew / libdragon contributors\n"
+        "\n"
+        "OSS software used:\n"
+        " libdragon (UNLICENSE License)\n"
+        " libspng (BSD 2-Clause License)\n"
+        " mini.c (BSD 2-Clause License)\n"
+        " minimp3 (CC0 1.0 Universal)\n"
+        " miniz (MIT License)",
+        MENU_VERSION
+    );
 
-    display_show(d);
+    component_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "B: Exit"
+    );
+
+    rdpq_detach_show();
 }
 
 
@@ -56,5 +63,6 @@ void view_credits_init (menu_t *menu) {
 
 void view_credits_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
 }

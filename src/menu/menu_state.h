@@ -8,13 +8,14 @@
 #define MENU_STRUCT_H__
 
 
+#include <time.h>
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
 #include "settings.h"
 
 
-#define BROWSER_LIST_SIZE   10000
+#define BROWSER_LIST_SIZE   2048
 
 
 /** @brief Menu mode enumeration */
@@ -24,19 +25,24 @@ typedef enum {
     MENU_MODE_BROWSER,
     MENU_MODE_FILE_INFO,
     MENU_MODE_SYSTEM_INFO,
-    MENU_MODE_PLAYER,
+    MENU_MODE_IMAGE_VIEWER,
+    MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
-    MENU_MODE_LOAD,
+    MENU_MODE_LOAD_ROM,
+    MENU_MODE_LOAD_EMULATOR,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
+    __MENU_MODE_COUNT,
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
 typedef enum {
     ENTRY_TYPE_DIR,
     ENTRY_TYPE_ROM,
+    ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
+    ENTRY_TYPE_IMAGE,
     ENTRY_TYPE_MUSIC,
     ENTRY_TYPE_OTHER,
 } entry_type_t;
@@ -57,6 +63,10 @@ typedef struct {
     boot_params_t *boot_params;
     flashcart_error_t flashcart_error;
 
+    char *error_message;
+
+    time_t current_time;
+
     struct {
         bool go_up;
         bool go_down;
@@ -68,7 +78,7 @@ typedef struct {
 
         bool enter;
         bool back;
-        bool file_info;
+        bool options;
         bool system_info;
         bool settings;
     } actions;
@@ -78,6 +88,7 @@ typedef struct {
         path_t *directory;
         entry_t list[BROWSER_LIST_SIZE];
         int entries;
+        entry_t *entry;
         int selected;
     } browser;
 } menu_t;

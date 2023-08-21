@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include <libcart/cart.h>
 #include <libdragon.h>
 #include <usb.h>
 
@@ -8,7 +9,6 @@
 
 #include "flashcart.h"
 #include "sc64/sc64.h"
-#include "ed64/ed64.h"
 
 
 #define WRITEBACK_MAX_SECTORS   (256)
@@ -32,48 +32,61 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
     .load_rom = NULL,
+    .load_file = NULL,
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
 });
 
+#ifdef NDEBUG
+    // HACK: libdragon mocks every debug function if NDEBUG flag is enabled.
+    //       Code below reverts that and point to real function instead.
+    #undef debug_init_sdfs
+    bool debug_init_sdfs (const char *prefix, int npart);
+#endif
+
 
 flashcart_error_t flashcart_init (void) {
     flashcart_error_t error;
 
-    if (usb_initialize() == CART_NONE) {
-        return FLASHCART_ERROR_NOT_DETECTED;
+    // NOTE: Explicitly support only these flashcarts in this specific initialization order.
+    struct {
+        int type;
+        int (* libcart_init) (void);
+        flashcart_t *(* get) (void);
+    } flashcarts[CART_MAX] = {
+        { CART_CI, ci_init, NULL },                 // 64drive
+        { CART_SC, sc_init, sc64_get_flashcart },   // SC64
+        { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
+        { CART_ED, ed_init, NULL },                 // Original EverDrive-64
+    };
+
+    for (int i = 0; i < CART_MAX; i++) {
+        if (flashcarts[i].libcart_init() >= 0) {
+            cart_type = flashcarts[i].type;
+            if (flashcarts[i].get) {
+                flashcart = flashcarts[i].get();
+            }
+            break;
+        }
     }
 
-    switch (usb_getcart()) {
-
-        case CART_64DRIVE:
-            break;
-
-        case CART_EVERDRIVE:
-            /* Given that the ED64 uses a software implementation, this will likely fail unless running this menu?! */
-            flashcart = ed64_get_flashcart();
-            break;
-
-        case CART_SC64:
-            flashcart = sc64_get_flashcart();
-            break;
-
-        default:
-            return FLASHCART_ERROR_UNSUPPORTED;
+    if (cart_type == CART_NULL) {
+        return FLASHCART_ERROR_NOT_DETECTED;    
     }
+
+#ifndef NDEBUG
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
+#endif
 
     if ((error = flashcart->init()) != FLASHCART_OK) {
         return error;
     }
 
     if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_SD_CARD_ERROR;
+        return FLASHCART_ERROR_SD_CARD;
     }
-
-#ifndef NDEBUG
-    assertf(debug_init_usblog(), "Couldn't initialize USB debugging");
-#endif
 
     return FLASHCART_OK;
 }
@@ -85,11 +98,30 @@ flashcart_error_t flashcart_deinit (void) {
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap) {
+flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
+    flashcart_error_t error;
+
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
         return FLASHCART_ERROR_ARGS;
     }
-    return flashcart->load_rom(rom_path, byte_swap);
+
+    cart_card_byteswap = byte_swap;
+    error = flashcart->load_rom(rom_path, progress);
+    cart_card_byteswap = false;
+
+    return error;
+}
+
+flashcart_error_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+    if ((file_path == NULL) || (!file_exists(file_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    if ((file_offset % FS_SECTOR_SIZE) != 0) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    return flashcart->load_file(file_path, rom_offset, file_offset);
 }
 
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
@@ -110,6 +142,9 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
 
     if (!file_exists(save_path)) {
         if (file_allocate(save_path, SAVE_SIZE[save_type])) {
+            return FLASHCART_ERROR_LOAD;
+        }
+        if (file_fill(save_path, 0xFF)) {
             return FLASHCART_ERROR_LOAD;
         }
     }

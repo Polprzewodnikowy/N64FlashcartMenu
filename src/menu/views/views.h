@@ -8,9 +8,9 @@
 #define VIEWS_H__
 
 
-#include <surface.h>
-
+#include "../components.h"
 #include "../menu_state.h"
+
 
 /**
  * @addtogroup view
@@ -29,14 +29,20 @@ void view_system_info_display (menu_t *menu, surface_t *display);
 void view_file_info_init (menu_t *menu);
 void view_file_info_display (menu_t *menu, surface_t *display);
 
-void view_player_init (menu_t *menu);
-void view_player_display (menu_t *menu, surface_t *display);
+void view_image_viewer_init (menu_t *menu);
+void view_image_viewer_display (menu_t *menu, surface_t *display);
+
+void view_music_player_init (menu_t *menu);
+void view_music_player_display (menu_t *menu, surface_t *display);
 
 void view_credits_init (menu_t *menu);
 void view_credits_display (menu_t *menu, surface_t *display);
 
-void view_load_init (menu_t *menu);
-void view_load_display (menu_t *menu, surface_t *display);
+void view_load_rom_init (menu_t *menu);
+void view_load_rom_display (menu_t *menu, surface_t *display);
+
+void view_load_emulator_init (menu_t *menu);
+void view_load_emulator_display (menu_t *menu, surface_t *display);
 
 void view_error_init (menu_t *menu);
 void view_error_display (menu_t *menu, surface_t *display);
@@ -44,6 +50,9 @@ void view_error_display (menu_t *menu, surface_t *display);
 void view_fault_init (menu_t *menu);
 void view_fault_display (menu_t *menu, surface_t *display);
 
+void menu_show_error (menu_t *menu, char *error_message);
+
 /** @} */ /* view */
+
 
 #endif

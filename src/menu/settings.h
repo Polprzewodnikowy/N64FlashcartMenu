@@ -18,6 +18,9 @@ typedef struct {
 
     /** @brief Default directory to navigate to when menu loads */
     char *default_directory;
+
+    /** @brief Put saves into separate directory */
+    bool use_saves_folder;
 } settings_t;
 
 

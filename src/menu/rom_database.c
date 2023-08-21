@@ -9,6 +9,9 @@ uint8_t extract_homebrew_setting(uint8_t setting, uint8_t bit_position) {
     return (setting & (1 << bit_position)) ? 1 : 0;
 }
 
+/**
+ * @brief Normalize the Homebrew save type.
+ */
 uint8_t extract_homebrew_save_type(uint8_t save_type) {
     switch (save_type) {
         case HB_SAVE_TYPE_NONE:
@@ -30,48 +33,53 @@ uint8_t extract_homebrew_save_type(uint8_t save_type) {
     }
 }
 
+
+/**
+ * @brief Reads the N64 ROM header from a file. @see https://n64brew.dev/wiki/ROM_Header
+ */
 rom_header_t file_read_rom_header(char *path) {
-    char *sd_path = calloc(4 + strlen(path) + 1, sizeof(char));
-    sprintf(sd_path, "sd:/%s", path);
+    FILE *fp = fopen(path, "rb");
 
-    FILE *fp = fopen(sd_path, "rb");
-
-    debugf("loading path: %s\n", sd_path);
+    debugf("loading path: %s\n", path);
 	if (!fp) {
         debugf("Error loading rom file header\n");
     }
 
     rom_header_t *rom_header = malloc(sizeof(rom_header_t));
 
-    //Rom File Info
-    // CheckCode 0x10, 8 bytes (sometimes refered to as CRC Hi and CRC Lo)
-    // GameTitle 0x20, 20 bytes
-    // GameCode ->
-    //    CategoryCode 0x3b
-    //    UniqueCode 0x3c and 0x3d
-    //    DestinationCode 0x3e
-    // RomVersion 0x3f
-
     fseek(fp, 0x00, SEEK_SET);
-    fread(&(rom_header->endian), sizeof(uint32_t), 1, fp);
+    fread(&(rom_header->config_flags), sizeof(rom_header->config_flags), 1, fp);
+
     // FIXME: handle endian appropriately, perhaps: cart_card_byteswap
+
+    fseek(fp, 0x04, SEEK_SET);
+    fread(&(rom_header->clock_rate), sizeof(rom_header->clock_rate), 1, fp);
+    fseek(fp, 0x08, SEEK_SET);
+    fread(&(rom_header->boot_address), sizeof(rom_header->boot_address), 1, fp);
+    fseek(fp, 0x0C, SEEK_SET);
+    fread(&(rom_header->sdk_version), sizeof(rom_header->sdk_version), 1, fp);
     fseek(fp, 0x10, SEEK_SET);
-    fread(&(rom_header->checksum), sizeof(uint64_t), 1, fp);
+    fread(&(rom_header->checksum), sizeof(rom_header->checksum), 1, fp);
+    fseek(fp, 0x18, SEEK_SET);
+    fread(&(rom_header->unknown_reserved_1), sizeof(rom_header->unknown_reserved_1), 1, fp);
     fseek(fp, 0x20, SEEK_SET);
-	fgets(rom_header->title, sizeof(rom_header->title), fp);
-    fseek(fp, 0x3b, SEEK_SET);
+    fgets(rom_header->title, sizeof(rom_header->title), fp);
+    fseek(fp, 0x34, SEEK_SET);
+    fread(&(rom_header->unknown_reserved_2), sizeof(rom_header->unknown_reserved_2), 1, fp);
+    fseek(fp, 0x3B, SEEK_SET);
     fread(&(rom_header->metadata.media_type), sizeof(rom_header->metadata.media_type), 1, fp);
-    //fseek(fp, 0x3c, SEEK_SET);     // Consecutive read (no need to seek).
+    fseek(fp, 0x3C, SEEK_SET);
     fread(&(rom_header->metadata.unique_identifier), sizeof(rom_header->metadata.unique_identifier), 1, fp);
-    //fseek(fp, 0x3e, SEEK_SET);     // Consecutive read (no need to seek).
+    fseek(fp, 0x3E, SEEK_SET);
     fread(&(rom_header->metadata.destination_market), sizeof(rom_header->metadata.destination_market), 1, fp);
-    //fseek(fp, 0x3f, SEEK_SET);     // Consecutive read (no need to seek).
-    fread(&(rom_header->version), sizeof(rom_header->version), 1, fp);
+    fseek(fp, 0x3F, SEEK_SET);
+    fread(&(rom_header->metadata.version), sizeof(rom_header->metadata.version), 1, fp);
+    fseek(fp, 0x40, SEEK_SET);
+    fread(&(rom_header->ipl_boot_code), sizeof(rom_header->ipl_boot_code), 1, fp);
 
     fclose(fp);
 
-    free(sd_path);
-
+    // FIXME: memory leak, rom header is copied, pointer should be returned instead or data freed before returning
     return *rom_header;
 }
 
@@ -84,12 +92,12 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
     // First: Match by the `ED` or `HB` Developer ID
     if (rom_header.metadata.unique_identifier == *(uint16_t *)"ED" || rom_header.metadata.unique_identifier == *(uint16_t *)"HB") {
 // #ifdef ED64_COMPATIBLE        
-//         uint8_t low_nibble = rom_header.version & 0x0F;
+//         uint8_t low_nibble = rom_header.metadata.version & 0x0F;
 //         uint8_t rtc_enabled = extract_homebrew_setting(low_nibble, 0); // Bit 0
 //         uint8_t region_free_enabled = extract_homebrew_setting(low_nibble, 1); // Bit 1
 // #endif
 
-        uint8_t high_nibble = (rom_header.version >> 4) & 0x0F;
+        uint8_t high_nibble = (rom_header.metadata.version >> 4) & 0x0F;
 
         return extract_homebrew_save_type(high_nibble);
     }
@@ -198,10 +206,10 @@ uint8_t rom_db_match_save_type(rom_header_t rom_header) {
         0x10, 0x10, 0x10, 0x10, 0x10,
 
         // Last entry.
-        0xff
+        0xFF
     };
 
-    for (int i = 0; save_types[i] != 0xff; i++) {
+    for (int i = 0; save_types[i] != 0xFF; i++) {
 
         if (rom_header.metadata.unique_identifier == *(uint16_t *) cart_ids[i]) {
             return save_types[i];
@@ -216,7 +224,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
 
     // Space Station Silicon Valley has known issues on NTSC.
     // We only check for the known working market here.
-    if ( (rom_header.metadata.unique_identifier == *(uint16_t *) "SV") && (rom_header.metadata.destination_market != MARKET_PAL_GENERIC)) {
+    if ( (rom_header.metadata.unique_identifier == *(uint16_t *) "SV") && (rom_header.metadata.destination_market != MARKET_EUROPEAN_BASIC)) {
         return DB_MEMORY_EXPANSION_FAULTY;
     }
 
@@ -255,7 +263,7 @@ uint8_t rom_db_match_expansion_pak(rom_header_t rom_header) {
         0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
 
         // Last entry.
-        0xff
+        0xFF
     };
 
     for (int i = 0; exp_types[i] != 0xff; i++) {

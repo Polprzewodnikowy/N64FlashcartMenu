@@ -69,12 +69,13 @@ jobs:
           path: ./output/sc64menu.n64
 
       - name: Upload rolling release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: marvinpinto/action-automatic-releases@v1.2.1
         if: github.ref == 'refs/heads/main'
         with:
-          name: Rolling release
-          body: Latest rolling release built from latest commit on `main` branch.
-          tag_name: rolling-release
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: rolling-release
+          prerelease: false
+          title: Rolling release
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin

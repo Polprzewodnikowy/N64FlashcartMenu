@@ -75,8 +75,8 @@ jobs:
           name: Rolling release
           body: Latest rolling release built from latest commit on `main` branch.
           tag_name: rolling-release
-          prerelease: true
           files: |
+            ./output/N64FlashcartMenu.n64
             ./output/menu.bin
             ./output/OS64.v64
             ./output/OS64P.v64

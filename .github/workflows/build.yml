@@ -76,6 +76,7 @@ jobs:
         with:
           name: Rolling release
           body: Latest rolling release built from latest commit on `main` branch.
+          tag_name: rolling-release
           prerelease: true
           files: |
             ./output/menu.bin

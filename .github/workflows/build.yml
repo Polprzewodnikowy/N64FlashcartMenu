@@ -68,14 +68,20 @@ jobs:
           name: SC64
           path: ./output/sc64menu.n64
 
-      - name: Upload rolling release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+      - name: Delete rolling-release tag and release
+        uses: dev-drprasad/delete-tag-and-release@v1.0
         if: github.ref == 'refs/heads/main'
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: rolling-release
-          prerelease: false
-          title: Rolling release
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: rolling-release
+
+      - name: Upload rolling release
+        uses: softprops/action-gh-release@v0.1.15
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: Rolling release
+          body: Rolling release built from latest commit on `main` branch.
+          tag_name: rolling-release
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin

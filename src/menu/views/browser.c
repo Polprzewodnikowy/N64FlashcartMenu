@@ -168,11 +168,11 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
-void show_properties (menu_t *menu) {
+static void show_properties (menu_t *menu) {
     menu->next_mode = MENU_MODE_FILE_INFO;
 }
 
-void delete_entry (menu_t *menu) {
+static void delete_entry (menu_t *menu) {
     int selected = menu->browser.selected;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -206,10 +206,17 @@ void delete_entry (menu_t *menu) {
     menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
 }
 
+static void set_default_directory (menu_t *menu) {
+    free(menu->settings.default_directory);
+    menu->settings.default_directory = strdup(strip_sd_prefix(path_get(menu->browser.directory)));
+    settings_save(&menu->settings);
+}
+
 static component_context_menu_t entry_context_menu = {
     .list = {
-        { .text = "Properties", .action = show_properties },
-        { .text = "Delete", .action = delete_entry },
+        { .text = "Show entry properties", .action = show_properties },
+        { .text = "Delete selected entry", .action = delete_entry },
+        { .text = "Set current directory as default", .action = set_default_directory },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

@@ -11,7 +11,7 @@ An open source menu for N64 flashcarts.
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and byteswapped ROMs).
+* Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
 * Emulator support (NES, SNES, GB, GBC) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.

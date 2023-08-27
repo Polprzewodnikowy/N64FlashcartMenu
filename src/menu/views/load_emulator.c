@@ -8,9 +8,27 @@ static const char *emu_nes_rom_extensions[] = { "nes", NULL };
 static const char *emu_snes_rom_extensions[] = { "sfc", "smc", NULL };
 static const char *emu_gameboy_rom_extensions[] = { "gb", NULL };
 static const char *emu_gameboy_color_rom_extensions[] = { "gbc", NULL };
+static const char *emu_sega_8bit_rom_extensions[] = { "sms", "gg", "sg", NULL };
 
 static bool load_pending;
 static cart_load_emu_type_t emu_type;
+
+static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
+    switch (emulator_info) {
+        case CART_LOAD_EMU_TYPE_NES:
+            return "Nintendo Famicom (NES)";
+        case CART_LOAD_EMU_TYPE_SNES:
+            return "Nintendo Super Famicom (SNES)";
+        case CART_LOAD_EMU_TYPE_GAMEBOY:
+            return "Nintendo GAMEBOY";
+        case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
+            return "Nintendo GAMEBOY Color";
+        case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
+            return "SEGA 8bit system";
+        default:
+            return "Unknown";
+    }
+}
 
 
 static void process (menu_t *menu) {
@@ -33,17 +51,22 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "Emulator information\n"
-            "THE EMULATOR\n"
-            "Rom Name\n"
+            "Load Emulated ROM\n"
+        );
+
+        component_main_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
             "\n"
-            "%s",
+            "\n"
+            "Emulated System: %s\n"
+            "Rom Name: %s",
+            format_emulator_name(emu_type),
             menu->browser.entry->name
         );
 
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run Emulator ROM\n"
+            "A: Load and run Emulated ROM\n"
             "B: Exit"
         );
     }
@@ -93,6 +116,8 @@ void view_load_emulator_init (menu_t *menu) {
         emu_type = CART_LOAD_EMU_TYPE_GAMEBOY;
     } else if (file_has_extensions(path_get(path), emu_gameboy_color_rom_extensions)) {
         emu_type = CART_LOAD_EMU_TYPE_GAMEBOY_COLOR;
+    } else if (file_has_extensions(path_get(path), emu_sega_8bit_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT;
     } else {
         menu_show_error(menu, "Unsupported ROM");
     }

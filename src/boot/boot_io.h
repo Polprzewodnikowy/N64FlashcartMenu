@@ -157,6 +157,8 @@ typedef struct {
 #define VI_CR_PIXEL_ADVANCE_3       (1 << 15)
 #define VI_CR_DITHER_FILTER_ON      (1 << 16)
 
+#define VI_CURR_LINE_FIELD          (1 << 0)
+
 
 typedef struct {
     io32_t MADDR;

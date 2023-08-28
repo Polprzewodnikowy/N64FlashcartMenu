@@ -101,6 +101,10 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_push(path, "gbc.v64");
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
             break;
+        case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
+            path_push(path, "TotalSMS.z64");
+            save_type = FLASHCART_SAVE_TYPE_SRAM;
+            break;
     }
 
     if (!file_exists(path_get(path))) {

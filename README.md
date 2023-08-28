@@ -47,6 +47,7 @@ Menu currently supports the following emulators and associated ROM file names:
  - **NES**: [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - `neon64bu.rom`
  - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - `sodium64.z64`
  - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64`
+ - **Sega Master System ** / **Sega Game Gear** / ** Sg1000 **: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64`
 
 
 # Developer documentation

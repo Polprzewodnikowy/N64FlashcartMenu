@@ -37,8 +37,10 @@ The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [E
 
 #### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
-Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`.
-A known set of PNG files can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
+Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
+i.e. for GoldenEye 2 letters, this would be `GE.png`.
+i.e. for GoldenEye 3 letters, this would be `NGE.png`.
+A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
 #### Emulator support
 Emulators should be added to the `/emulators` directory on the SD card.

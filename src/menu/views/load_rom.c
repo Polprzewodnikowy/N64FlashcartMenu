@@ -250,7 +250,7 @@ void view_load_rom_init (menu_t *menu) {
 
     rom_header = file_read_rom_header(path_get(path));
 
-    boxart = component_boxart_init(rom_header.metadata.unique_identifier);
+    boxart = component_boxart_init(rom_header.metadata.media_type, rom_header.metadata.unique_identifier);
 
     path_free(path);
 }

@@ -59,7 +59,7 @@ typedef struct {
     surface_t *image;
 } component_boxart_t;
 
-component_boxart_t *component_boxart_init (uint16_t id);
+component_boxart_t *component_boxart_init (uint8_t media_type, uint16_t id);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
 

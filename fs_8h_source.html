@@ -95,7 +95,7 @@ $(function() {
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keywordtype">bool</span> file_delete (<span class="keywordtype">char</span> *path);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keywordtype">bool</span> file_allocate (<span class="keywordtype">char</span> *path, <span class="keywordtype">size_t</span> size);</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keywordtype">bool</span> file_fill (<span class="keywordtype">char</span> *path, uint8_t value);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keywordtype">bool</span> file_get_sectors (<span class="keywordtype">char</span> *path, uint32_t *sectors, <span class="keywordtype">size_t</span> entries);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keywordtype">bool</span> file_get_sectors (<span class="keywordtype">char</span> *path, <span class="keywordtype">void</span> (*callback) (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size));</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keywordtype">bool</span> file_has_extensions (<span class="keywordtype">char</span> *path, <span class="keyword">const</span> <span class="keywordtype">char</span> *extensions[]);</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keywordtype">bool</span> directory_exists (<span class="keywordtype">char</span> *path);</div>
@@ -107,7 +107,7 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 28 2023 15:20:10 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Mon Sep 4 2023 19:10:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

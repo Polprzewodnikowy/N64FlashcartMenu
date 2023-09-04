@@ -12,7 +12,6 @@
 
 extern uint32_t reboot_start __attribute__((section(".text")));
 extern size_t reboot_size __attribute__((section(".text")));
-extern int reboot_entry_offset __attribute__((section(".text")));
 
 
 typedef struct {
@@ -134,15 +133,12 @@ void boot (boot_params_t *params) {
         cpu_io_write(&ipl3_dst[i], io_read((uint32_t) (&ipl3_src[i])));
     }
 
-    register void (*entry_point)(void) asm ("t3");
     register uint32_t boot_device asm ("s3");
     register uint32_t tv_type asm ("s4");
     register uint32_t reset_type asm ("s5");
     register uint32_t cic_seed asm ("s6");
     register uint32_t version asm ("s7");
-    void *stack_pointer;
 
-    entry_point = (void (*)(void)) UNCACHED(&SP_MEM->IMEM[(int) (&reboot_entry_offset)]);
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
     reset_type = BOOT_RESET_TYPE_COLD;
@@ -151,18 +147,16 @@ void boot (boot_params_t *params) {
             : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1
             : (params->tv_type == BOOT_TV_TYPE_MPAL) ? 4
             : 0;
-    stack_pointer = (void *) UNCACHED(&SP_MEM->IMEM[1020]);
 
     asm volatile (
-        "move $sp, %[stack_pointer] \n"
-        "jr %[entry_point] \n" ::
-        [entry_point] "r" (entry_point),
+        "la $t3, reboot \n"
+        "jr $t3 \n" ::
         [boot_device] "r" (boot_device),
         [tv_type] "r" (tv_type),
         [reset_type] "r" (reset_type),
         [cic_seed] "r" (cic_seed),
-        [version] "r" (version),
-        [stack_pointer] "r" (stack_pointer)
+        [version] "r" (version) :
+        "t3"
     );
 
     while (1);

@@ -14,6 +14,7 @@
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
+#include "usb_comm.h"
 #include "utils/fs.h"
 #include "views/views.h"
 
@@ -180,6 +181,8 @@ void menu_run (boot_params_t *boot_params) {
         sound_poll();
 
         png_decoder_poll();
+
+        usb_comm_poll(menu);
     }
 
     menu_deinit(menu);

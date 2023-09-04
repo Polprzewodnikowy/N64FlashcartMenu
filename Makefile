@@ -42,6 +42,7 @@ SRCS = \
 	menu/rom_database.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \

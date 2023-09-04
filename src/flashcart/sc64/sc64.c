@@ -85,7 +85,7 @@ static flashcart_error_t sc64_init (void) {
         uint32_t value;
     } default_config[] = {
         { CFG_ID_BOOTLOADER_SWITCH, false },
-        { CFG_ID_ROM_WRITE_ENABLE, false },
+        { CFG_ID_ROM_WRITE_ENABLE, true },
         { CFG_ID_ROM_SHADOW_ENABLE, false },
         { CFG_ID_DD_MODE, DD_MODE_DISABLED },
         { CFG_ID_ISV_ADDRESS, 0x00000000 },
@@ -110,6 +110,8 @@ static flashcart_error_t sc64_init (void) {
 }
 
 static flashcart_error_t sc64_deinit (void) {
+    sc64_ll_set_config(CFG_ID_ROM_WRITE_ENABLE, false);
+
     sc64_ll_lock();
 
     return FLASHCART_OK;

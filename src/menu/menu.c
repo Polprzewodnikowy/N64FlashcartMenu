@@ -29,7 +29,6 @@
 
 
 static menu_t *menu;
-static bool boot_pending;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
 
@@ -61,8 +60,6 @@ static void menu_init (boot_params_t *boot_params) {
     rdpq_init();
     fonts_init();
     sound_init_default();
-
-    boot_pending = false;
 
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
@@ -148,7 +145,7 @@ static struct views_s {
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
-    while (!boot_pending && (exception_reset_time() < RESET_TIME_LENGTH)) {
+    while (exception_reset_time() < RESET_TIME_LENGTH) {
         surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
         if (display != NULL) {
@@ -160,7 +157,12 @@ void menu_run (boot_params_t *boot_params) {
                 views[menu->mode].show(menu, display);
             } else {
                 rdpq_attach_clear(display, NULL);
-                rdpq_detach_show();
+                rdpq_detach_wait();
+                display_show(display);
+            }
+
+            if (menu->mode == MENU_MODE_BOOT) {
+                break;
             }
 
             while (menu->mode != menu->next_mode) {
@@ -168,10 +170,6 @@ void menu_run (boot_params_t *boot_params) {
 
                 if (views[menu->mode].init) {
                     views[menu->mode].init(menu);
-                }
-
-                if (menu->mode == MENU_MODE_BOOT) {
-                    boot_pending = true;
                 }
             }
 

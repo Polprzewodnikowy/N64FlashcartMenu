@@ -68,8 +68,6 @@ reset_rdram:
 1:
     addiu $t2, (-1)
     bnez $t2, 1b
-
-    mtc0 $zero, $9
 reset_rdram_skip:
 
 prepare_registers:
@@ -110,7 +108,7 @@ ra_values:
     .set ra_table, REBOOT_ADDRESS + (. - reboot_start)
     .word 0xA4001554
     .word 0xA4001550
-    .word 0xA4001550 # TODO: Figure out address for MPAL console
+    .word 0xA4001554
 
     .set reboot_size, (. - reboot_start)
     .global reboot_size

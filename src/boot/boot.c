@@ -87,7 +87,23 @@ void boot (boot_params_t *params) {
 
     while (!(cpu_io_read(&SP->SR) & SP_SR_HALT));
 
-    cpu_io_write(&SP->SR, SP_SR_CLR_INTR | SP_SR_SET_HALT);
+    cpu_io_write(&SP->SR,
+        SP_SR_CLR_SIG7 |
+        SP_SR_CLR_SIG6 |
+        SP_SR_CLR_SIG5 |
+        SP_SR_CLR_SIG4 |
+        SP_SR_CLR_SIG3 |
+        SP_SR_CLR_SIG2 |
+        SP_SR_CLR_SIG1 |
+        SP_SR_CLR_SIG0 |
+        SP_SR_CLR_INTR_BREAK |
+        SP_SR_CLR_SSTEP |
+        SP_SR_CLR_INTR |
+        SP_SR_CLR_BROKE |
+        SP_SR_SET_HALT
+    );
+    cpu_io_write(&SP->SEMAPHORE, 0);
+    cpu_io_write(&SP->PC, 0);
 
     while (cpu_io_read(&SP->DMA_BUSY));
 

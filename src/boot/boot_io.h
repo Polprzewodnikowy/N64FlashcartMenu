@@ -37,6 +37,8 @@ typedef struct {
     io32_t DMA_FULL;
     io32_t DMA_BUSY;
     io32_t SEMAPHORE;
+    io32_t __reserved[0xFFF8];
+    io32_t PC;
 } sp_regs_t;
 
 #define SP_BASE                     (0x04040000UL)

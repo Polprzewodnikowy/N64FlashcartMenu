@@ -24,12 +24,12 @@ An open source menu for N64 flashcarts.
 ## Getting started
 
 ### 64drive
-Ensure the cart is has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
-Download the latest `menu.bin` file from the releases page then put it in the root directory of your SD card.
+Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
+Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
 
 ### SC64
-Ensure the cart is has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-Download the latest `sc64menu.n64` file from the releases page then put it in the root directory of your SD card.
+Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
+Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
 ### ED64 & ED64P
 Currently not supported, but there is an aim to do so.

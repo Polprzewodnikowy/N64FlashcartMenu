@@ -98,17 +98,20 @@ Current (notable) menu features</h1>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Getting started</h1>
 <h2><a class="anchor" id="autotoc_md4"></a>
-SC64</h2>
-<p >Ensure the cart is running the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a>. Download the <code>sc64menu.n64</code> ROM from the latest action run assets. Add it to the root folder on your SD card.</p>
+64drive</h2>
+<p >Ensure the cart has the latest <a href="https://64drive.retroactive.be/support.php">firmware</a> installed. Download the latest <code>menu.bin</code> file from the releases page, then put it in the root directory of your SD card.</p>
 <h2><a class="anchor" id="autotoc_md5"></a>
+SC64</h2>
+<p >Ensure the cart has the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a> installed. Download the latest <code>sc64menu.n64</code> file from the releases page, then put it in the root directory of your SD card.</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
 ED64 &amp; ED64P</h2>
 <p >Currently not supported, but there is an aim to do so. The aim is to replace <a href="https://github.com/networkfusion/altra64">Altra64</a> and <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a>.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Common to all</h2>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md8"></a>
 ROM Boxart</h3>
 <p >To use boxart, you need to place png files of size 158x112 in the folder <code>/menu/boxart</code> on the SD card. Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be <code>GE.png</code>. A known set of PNG files can be downloaded <a href="https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w">here</a>.</p>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Emulator support</h3>
 <p >Emulators should be added to the <code>/emulators</code> directory on the SD card.</p>
 <p >Menu currently supports the following emulators and associated ROM file names:</p><ul>
@@ -117,24 +120,24 @@ Emulator support</h3>
 <li><b>Game Boy</b> / <b>GB Color</b>: <a href="https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html">gb64</a> by <em>lambertjamesd</em> - <code>gb.v64</code> / <code>gbc.v64</code></li>
 <li><b>Sega Master System ** / **Sega Game Gear</b> / ** Sg1000 **: <a href="https://github.com/ITotalJustice/TotalSMS">TotalSMS</a> - <code>TotalSMS.z64</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Developer documentation</h1>
 <p ><b>Work in progress!</b></p>
 <p >You can use a dev container in VSCode to ease development.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 To deploy:</h2>
-<h3><a class="anchor" id="autotoc_md11"></a>
+<h3><a class="anchor" id="autotoc_md12"></a>
 SC64</h3>
 <ul>
 <li>Download the deployer <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.16.0/sc64-deployer-windows-v2.16.0.zip">here</a></li>
 <li>Extract and place <code>sc64deployer.exe</code> in the <code>tools/sc64</code> directory.</li>
 </ul>
 <p >Make sure that your firmware is compatible (currently v2.16.0+) See: <a href="https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.16.0/docs/00_quick_startup_guide.md#firmware-backupupdate">https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.16.0/docs/00_quick_startup_guide.md#firmware-backupupdate</a></p>
-<h4><a class="anchor" id="autotoc_md12"></a>
+<h4><a class="anchor" id="autotoc_md13"></a>
 From the devcontainer</h4>
 <p >It is not currently possible to directly communicate with USB devices. BUT, as a work around you can use a proxy TCP/IP connection Set up a proxy: open a terminal window, <code>cd ./tools/sc64</code> and then <code>./sc64deployer.exe server</code></p>
 <p >Then in the dev container, use <code>make run</code> or <code>make run-debug</code></p>
-<h4><a class="anchor" id="autotoc_md13"></a>
+<h4><a class="anchor" id="autotoc_md14"></a>
 From your host (Windows) OS</h4>
 <ul>
 <li>Run <code>./localdeploy.bat</code> from the terminal</li>
@@ -142,13 +145,13 @@ From your host (Windows) OS</h4>
 <p >Toggle the N64 power switch to load the ROM.</p>
 <p ><code>ms-vscode.makefile-tools</code> will help (installed automatically in dev container). TODO: it does not yet work with <code>F5</code>: see <a href="https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/">https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/</a> WORKAROUND: in the dev container terminal, use make directly, i.e.: <code>make</code> The ROM can be found in the <code>output</code> directory.</p>
 <p >NOTE: a "release" version of the SC64 menu is called <code>sc64menu.n64</code> and can be created for when you want to add it directly to the SDCard. This is generated by running <code>make all</code> or running <code>make sc64</code>.</p>
-<h1><a class="anchor" id="autotoc_md14"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Update Libdragon submodule</h1>
 <p >This repo currently uses the <code>unstable</code> branch as a submodule at a specific commit. To update to the latest version, use <code>git submodule update --remote</code> from the terminal.</p>
-<h1><a class="anchor" id="autotoc_md15"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Generate documentation</h1>
 <p >Run <code>doxygen</code> from the dev container terminal. Make sure you fix the warnings before creating a PR! Generated documentation is located in <code>output/docs</code> folder.</p>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md17"></a>
 Open source software and licenses used</h1>
 <ul>
 <li><a href="https://github.com/DragonMinded/libdragon">libdragon</a> (UNLICENSE License)</li>
@@ -161,7 +164,7 @@ Open source software and licenses used</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2023 22:49:25 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Sep 8 2023 19:50:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

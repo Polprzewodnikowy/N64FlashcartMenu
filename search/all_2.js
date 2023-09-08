@@ -1,15 +1,10 @@
 var searchData=
 [
-  ['cache_5fmetadata_5ft_0',['cache_metadata_t',['../structcache__metadata__t.html',1,'']]],
-  ['cart_5fload_2eh_1',['cart_load.h',['../cart__load_8h.html',1,'']]],
-  ['checksum_2',['checksum',['../rom__database_8h.html#ade2251d6099a8fb44460f206d79faf62',1,'rom_header_t']]],
-  ['clock_5frate_3',['clock_rate',['../rom__database_8h.html#ae541531dc9e7ae139f3c88716ab303c0',1,'rom_header_t']]],
-  ['component_5fbackground_5ft_4',['component_background_t',['../structcomponent__background__t.html',1,'']]],
-  ['component_5fboxart_5ft_5',['component_boxart_t',['../components_8h.html#structcomponent__boxart__t',1,'']]],
-  ['component_5fcontext_5fmenu_5ft_6',['component_context_menu_t',['../components_8h.html#structcomponent__context__menu__t',1,'']]],
-  ['component_5fcontext_5fmenu_5ft_2elist_7',['component_context_menu_t.list',['../structcomponent__context__menu__t_8list.html',1,'']]],
-  ['components_2eh_8',['components.h',['../components_8h.html',1,'']]],
-  ['config_5fflags_9',['config_flags',['../rom__database_8h.html#a36b8274c051911b8739c732d4290d17c',1,'rom_header_t']]],
-  ['constants_2eh_10',['constants.h',['../constants_8h.html',1,'']]],
-  ['crc32_2eh_11',['crc32.h',['../crc32_8h.html',1,'']]]
+  ['boot_2eh_0',['boot.h',['../boot_8h.html',1,'']]],
+  ['boot_5faddress_1',['boot_address',['../rom__database_8h.html#aa48b8e6299791b00d3050c8b426ea7c0',1,'rom_header_t']]],
+  ['boot_5fdevice_5ftype_5ft_2',['boot_device_type_t',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbd',1,'boot.h']]],
+  ['boot_5fio_2eh_3',['boot_io.h',['../boot__io_8h.html',1,'']]],
+  ['boot_5fparams_5ft_4',['boot_params_t',['../boot_8h.html#structboot__params__t',1,'']]],
+  ['boot_5freset_5ftype_5ft_5',['boot_reset_type_t',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5ft_6',['boot_tv_type_t',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353',1,'boot.h']]]
 ];

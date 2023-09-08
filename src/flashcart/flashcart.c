@@ -8,6 +8,8 @@
 #include "utils/utils.h"
 
 #include "flashcart.h"
+
+#include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
 
@@ -20,6 +22,7 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(2),
     KiB(32),
     KiB(96),
+    KiB(128),
     KiB(128),
     KiB(128),
 };
@@ -58,7 +61,7 @@ flashcart_error_t flashcart_init (void) {
         int (* libcart_init) (void);
         flashcart_t *(* get) (void);
     } flashcarts[CART_MAX] = {
-        { CART_CI, ci_init, NULL },                 // 64drive
+        { CART_CI, ci_init, d64_get_flashcart },    // 64drive
         { CART_SC, sc_init, sc64_get_flashcart },   // SC64
         { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
         { CART_ED, ed_init, NULL },                 // Original EverDrive-64

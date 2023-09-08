@@ -11,8 +11,8 @@ An open source menu for N64 flashcarts.
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and byteswapped ROMs).
-* Emulator support (GB, GBC, NES) ROMs.
+* Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
+* Emulator support (NES, SNES, GB, GBC) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
 * Comprehensive ROM save database (including HomeBrew headers).
@@ -29,7 +29,7 @@ Add it to the root folder on your SD card and run it from default 64drive menu l
 In the future this menu will replace `menu.bin` file.
 
 ### SC64
-Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest)
+Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest).
 Download the `sc64menu.n64` ROM from the latest action run assets.
 Add it to the root folder on your SD card.
 
@@ -41,16 +41,18 @@ The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [E
 ### Common to all
 
 #### ROM Boxart
-To use boxart, you need to place png files of size 158x112 in the folder `sd://menu/boxart/`
-Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`
-A known set of PNG files can be downloaded from https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w
+To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
+Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`.
+A known set of PNG files can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
 #### Emulator support
-Emulators should be added to the `sd:/emulators/` folder
+Emulators should be added to the `/emulators` directory on the SD card.
 
-The menu currently supports the following emulators and associated ROM's:
-* neon64v2 (https://github.com/hcs64/neon64v2) - emu.nes
-* gb64 (https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) - emu.gb, emu.gbc
+Menu currently supports the following emulators and associated ROM file names:
+ - **NES**: [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - `neon64bu.rom`
+ - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - `sodium64.z64`
+ - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64`
+ - **Sega Master System ** / **Sega Game Gear** / ** Sg1000 **: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64`
 
 
 # Developer documentation
@@ -99,9 +101,9 @@ Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
 Generated documentation is located in `output/docs` folder.
 
-
-# OSS licenses used for libraries
-* UNLICENSE (libdragon)
-* BSD 2-Clause (libspng)
-* CC0 1.0 Universal (minimp3)
-* Permissive, unspecific (miniz)
+# Open source software and licenses used
+ - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
+ - [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
+ - [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
+ - [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
+ - [miniz](https://github.com/richgel999/miniz) (MIT License)

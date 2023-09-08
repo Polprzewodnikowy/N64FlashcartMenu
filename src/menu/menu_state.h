@@ -78,7 +78,7 @@ typedef struct {
 
         bool enter;
         bool back;
-        bool file_info;
+        bool options;
         bool system_info;
         bool settings;
     } actions;

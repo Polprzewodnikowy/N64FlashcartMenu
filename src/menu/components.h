@@ -38,6 +38,23 @@ void component_background_draw (void);
 void component_file_list_draw (entry_t *list, int entries, int selected);
 
 typedef struct {
+    int count;
+    int selected;
+    bool hide_pending;
+    struct {
+        const char *text;
+        void (*action) (menu_t *menu);
+    } list[];
+} component_context_menu_t;
+
+#define COMPONENT_CONTEXT_MENU_LIST_END     { .text = NULL }
+
+void component_context_menu_init (component_context_menu_t *cm);
+void component_context_menu_show (component_context_menu_t *cm);
+bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm);
+void component_context_menu_draw (component_context_menu_t *cm);
+
+typedef struct {
     bool loading;
     surface_t *image;
 } component_boxart_t;

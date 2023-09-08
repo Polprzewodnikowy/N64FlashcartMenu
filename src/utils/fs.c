@@ -13,7 +13,7 @@ char *strip_sd_prefix (char *path) {
 
     char *found = strstr(path, prefix);
     if (found) {
-        return found + strlen(prefix);
+        return found + strlen(prefix) - 1;
     }
 
     return path;
@@ -70,13 +70,49 @@ bool file_allocate (char *path, size_t size) {
     return error;
 }
 
-bool file_get_sectors (char *path, uint32_t *sectors, size_t entries) {
+bool file_fill (char *path, uint8_t value) {
+    FIL fil;
+    bool error = false;
+    uint8_t buffer[FS_SECTOR_SIZE * 8];
+    FRESULT res;
+    UINT bytes_to_write;
+    UINT bytes_written;
+
+    for (int i = 0; i < sizeof(buffer); i++) {
+        buffer[i] = value;
+    }
+
+    if (f_open(&fil, strip_sd_prefix(path), FA_WRITE) != FR_OK) {
+        return true;
+    }
+
+    for (int i = 0; i < f_size(&fil); i += sizeof(buffer)) {
+        bytes_to_write = MIN(f_size(&fil) - f_tell(&fil), sizeof(buffer));
+        res = f_write(&fil, buffer, bytes_to_write, &bytes_written);
+        if ((res != FR_OK) || (bytes_to_write != bytes_written)) {
+            error = true;
+            break;
+        }
+    }
+
+    if (f_tell(&fil) != f_size(&fil)) {
+        error = true;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        error = true;
+    }
+
+    return error;
+}
+
+bool file_get_sectors (char *path, void (*callback) (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size)) {
     FATFS *fs;
     FIL fil;
     bool error = false;
 
-    for (int i = 0; i < entries; i++) {
-        sectors[i] = 0;
+    if (!callback) {
+        return true;
     }
 
     if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
@@ -85,25 +121,22 @@ bool file_get_sectors (char *path, uint32_t *sectors, size_t entries) {
 
     fs = fil.obj.fs;
 
-    uint32_t file_sector_entries = (ALIGN(f_size(&fil), FS_SECTOR_SIZE) / FS_SECTOR_SIZE);
-    file_sector_entries = (file_sector_entries > entries) ? entries : file_sector_entries;
+    uint32_t sector_count = (ALIGN(f_size(&fil), FS_SECTOR_SIZE) / FS_SECTOR_SIZE);
 
     uint32_t cluster_sector = 0;
 
-    for (int file_sector = 0; file_sector < file_sector_entries; file_sector++) {
-        if ((file_sector % fs->csize) == 0) {
-            if ((f_lseek(&fil, (file_sector * FS_SECTOR_SIZE) + (FS_SECTOR_SIZE / 2))) != FR_OK) {
-                error = true;
-                break;
-            }
-            uint32_t cluster = fil.clust;
-            if (cluster >= fs->n_fatent) {
-                error = true;
-                break;
-            }
-            cluster_sector = (fs->database + ((LBA_t) (fs->csize) * (cluster - 2)));
+    for (int file_sector = 0; file_sector < sector_count; file_sector += fs->csize) {
+        if ((f_lseek(&fil, (file_sector * FS_SECTOR_SIZE) + (FS_SECTOR_SIZE / 2))) != FR_OK) {
+            error = true;
+            break;
         }
-        *sectors++ = (cluster_sector + (file_sector % fs->csize));
+        uint32_t cluster = fil.clust;
+        if (cluster >= fs->n_fatent) {
+            error = true;
+            break;
+        }
+        cluster_sector = (fs->database + ((LBA_t) (fs->csize) * (cluster - 2)));
+        callback(sector_count, file_sector, cluster_sector, fs->csize);
     }
 
     if (f_close(&fil) != FR_OK) {
@@ -165,8 +198,9 @@ bool directory_create (char *path) {
             *separator++ = '\0';
         }
 
-        if ((strlen(directory) > 0) && (!directory_exists(directory))) {
-            if (f_mkdir(directory) != FR_OK) {
+        if (directory[0] != '\0') {
+            FRESULT res = f_mkdir(directory);
+            if ((res != FR_OK) && (res != FR_EXIST)) {
                 error = true;
                 break;
             }

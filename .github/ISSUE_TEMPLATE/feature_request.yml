@@ -29,7 +29,7 @@ body:
       description: Describe the solution you'd like
       placeholder: A clear and concise description of what you would like to happen/exist.
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: alternatives

@@ -47,15 +47,10 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
 }
 
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, flashcart_progress_callback_t progress) {
-    if (menu->settings.use_saves_folder) {
-        if (create_saves_subdirectory(menu)) {
-            return CART_LOAD_ERR_SAVES_SUBDIR;
-        }
-    }
-
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
     bool byte_swap = (header->config_flags == ROM_MID_BIG_ENDIAN);
+    flashcart_save_type_t save_type = convert_save_type(header);
+
     menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, progress);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
@@ -65,9 +60,13 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, 
     path_ext_replace(path, "sav");
     if (menu->settings.use_saves_folder) {
         path_push_subdir(path, SAVES_SUBDIRECTORY);
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(menu)) {
+            path_free(path);
+            return CART_LOAD_ERR_SAVES_SUBDIR;
+        }
     }
 
-    menu->flashcart_error = flashcart_load_save(path_get(path), convert_save_type(header));
+    menu->flashcart_error = flashcart_load_save(path_get(path), save_type);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_SAVE;
@@ -79,28 +78,32 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, rom_header_t *header, 
 }
 
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress) {
-    if (menu->settings.use_saves_folder) {
-        if (create_saves_subdirectory(menu)) {
-            return CART_LOAD_ERR_SAVES_SUBDIR;
-        }
-    }
-
     path_t *path = path_init("sd:/", EMU_LOCATION);
     flashcart_save_type_t save_type = FLASHCART_SAVE_TYPE_NONE;
     uint32_t emulated_rom_offset = 0x200000;
+    uint32_t emulated_file_offset = 0;
 
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
-            path_push(path, "emu.nes");
+            path_push(path, "neon64bu.rom");
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
+        case CART_LOAD_EMU_TYPE_SNES:
+            path_push(path, "sodium64.z64");
+            save_type = FLASHCART_SAVE_TYPE_SRAM;
+            emulated_rom_offset = 0x104000;
+            break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
-            path_push(path, "emu.gb");
+            path_push(path, "gb.v64");
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
-            path_push(path, "emu.gbc");
+            path_push(path, "gbc.v64");
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
+            break;
+        case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
+            path_push(path, "TotalSMS.z64");
+            save_type = FLASHCART_SAVE_TYPE_SRAM;
             break;
     }
 
@@ -119,7 +122,15 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
 
     path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    menu->flashcart_error = flashcart_load_file(path_get(path), emulated_rom_offset);
+    switch (emu_type) {
+        case CART_LOAD_EMU_TYPE_SNES:
+            emulated_file_offset = ((file_get_size(path_get(path)) & 0x3FF) == 0x200) ? 0x200 : 0;
+            break;
+        default:
+            break;
+    }
+
+    menu->flashcart_error = flashcart_load_file(path_get(path), emulated_rom_offset, emulated_file_offset);
     if (menu->flashcart_error != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_EMU_ROM;
@@ -128,6 +139,10 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     path_ext_replace(path, "sav");
     if (menu->settings.use_saves_folder) {
         path_push_subdir(path, SAVES_SUBDIRECTORY);
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(menu)) {
+            path_free(path);
+            return CART_LOAD_ERR_SAVES_SUBDIR;
+        }
     }
 
     menu->flashcart_error = flashcart_load_save(path_get(path), save_type);

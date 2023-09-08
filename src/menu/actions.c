@@ -15,7 +15,7 @@ static void actions_clear (menu_t *menu) {
     menu->actions.fast = false;
     menu->actions.enter = false;
     menu->actions.back = false;
-    menu->actions.file_info = false;
+    menu->actions.options = false;
     menu->actions.system_info = false;
     menu->actions.settings = false;
 }
@@ -103,7 +103,7 @@ void actions_update (menu_t *menu) {
     } else if (down.c[0].B) {
         menu->actions.back = true;
     } else if (down.c[0].R) {
-        menu->actions.file_info = true;
+        menu->actions.options = true;
     } else if (down.c[0].L) {
         menu->actions.system_info = true;
     } else if (down.c[0].start) {

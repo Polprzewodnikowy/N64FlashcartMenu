@@ -66,6 +66,12 @@ typedef enum {
     DEVICE_VARIANT_B        = 0x4200,
 } d64_device_variant_t;
 
+typedef enum {
+    TV_TYPE_PAL = 0,
+    TV_TYPE_NTSC = 1,
+    TV_TYPE_MPAL = 2,
+    TV_TYPE_UNKNOWN = 3,
+} d64_tv_type_t;
 
 typedef enum {
     SAVE_TYPE_NONE,
@@ -78,12 +84,10 @@ typedef enum {
 } d64_save_type_t;
 
 
-bool d64_ll_get_sdram_size (size_t *sdram_size);
 bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version);
-bool d64_ll_set_persistent_variable_storage (bool quick_reboot, tv_type_t force_tv_type, uint8_t cic_seed);
+bool d64_ll_set_persistent_variable_storage (bool quick_reboot, d64_tv_type_t force_tv_type, uint8_t cic_seed);
 bool d64_ll_set_save_type (d64_save_type_t save_type);
 bool d64_ll_enable_save_writeback (bool enabled);
-bool d64_ll_enable_byteswap_on_load (bool enabled);
 bool d64_ll_enable_cartrom_writes (bool enabled);
 bool d64_ll_enable_extended_mode (bool enabled);
 bool d64_ll_write_eeprom_contents (void *contents);

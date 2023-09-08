@@ -42,14 +42,6 @@ static bool d64_ll_ci_cmd (d64_ci_cmd_id_t id) {
 }
 
 
-bool d64_ll_get_sdram_size (size_t *sdram_size) {
-    if (d64_ll_ci_wait()) {
-        return true;
-    }
-    *sdram_size = (size_t) (io_read((uint32_t) (&d64_regs->SDRAM_SIZE)));
-    return d64_ll_ci_wait();
-}
-
 bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -60,7 +52,7 @@ bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_re
     return d64_ll_ci_wait();
 }
 
-bool d64_ll_set_persistent_variable_storage (bool quick_reboot, tv_type_t force_tv_type, uint8_t cic_seed) {
+bool d64_ll_set_persistent_variable_storage (bool quick_reboot, d64_tv_type_t force_tv_type, uint8_t cic_seed) {
     if (d64_ll_ci_wait()) {
         return true;
     }
@@ -81,13 +73,6 @@ bool d64_ll_enable_save_writeback (bool enabled) {
         return true;
     }
     return d64_ll_ci_cmd(enabled ? CMD_ID_ENABLE_SAVE_WRITEBACK : CMD_ID_DISABLE_SAVE_WRITEBACK);
-}
-
-bool d64_ll_enable_byteswap_on_load (bool enabled) {
-    if (d64_ll_ci_wait()) {
-        return true;
-    }
-    return d64_ll_ci_cmd(enabled ? CMD_ID_ENABLE_BYTESWAP_ON_LOAD : CMD_ID_DISABLE_BYTESWAP_ON_LOAD);
 }
 
 bool d64_ll_enable_cartrom_writes (bool enabled) {

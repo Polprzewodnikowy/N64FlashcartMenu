@@ -21,11 +21,8 @@
 #define SUPPORTED_FPGA_REVISION     (205)
 
 
-static size_t sdram_size = 0;
 static d64_device_variant_t device_variant = DEVICE_VARIANT_UNKNOWN;
 static d64_save_type_t current_save_type = SAVE_TYPE_NONE;
-// NOTE: This doesn't work on latest firmware (2.05)
-static bool enable_extended_mode_on_exit = false;
 
 
 static flashcart_error_t d64_init (void) {
@@ -44,10 +41,6 @@ static flashcart_error_t d64_init (void) {
         return FLASHCART_ERROR_OUTDATED;
     }
 
-    if (d64_ll_get_sdram_size(&sdram_size)) {
-        return FLASHCART_ERROR_INT;
-    }
-
     if (d64_ll_enable_save_writeback(false)) {
         return FLASHCART_ERROR_INT;
     }
@@ -58,7 +51,11 @@ static flashcart_error_t d64_init (void) {
 
     current_save_type = SAVE_TYPE_NONE;
 
-    if (d64_ll_enable_cartrom_writes(false)) {
+    if (d64_ll_enable_cartrom_writes(true)) {
+        return FLASHCART_ERROR_INT;
+    }
+
+    if (d64_ll_set_persistent_variable_storage(false, 0, 0)) {
         return FLASHCART_ERROR_INT;
     }
 
@@ -66,10 +63,8 @@ static flashcart_error_t d64_init (void) {
 }
 
 static flashcart_error_t d64_deinit (void) {
-    if (enable_extended_mode_on_exit) {
-        if (d64_ll_enable_extended_mode(true)) {
-            return FLASHCART_ERROR_INT;
-        }
+    if (d64_ll_enable_cartrom_writes(false)) {
+        return FLASHCART_ERROR_INT;
     }
 
     return FLASHCART_OK;
@@ -87,10 +82,12 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
 
     size_t rom_size = f_size(&fil);
 
-    if (rom_size > sdram_size) {
+    if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }
+
+    size_t sdram_size = MiB(64);
 
     size_t chunk_size = MiB(1);
     for (int offset = 0; offset < sdram_size; offset += chunk_size) {
@@ -112,14 +109,10 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
         return FLASHCART_ERROR_LOAD;
     }
 
-    if (rom_size > MiB(64)) {
-        enable_extended_mode_on_exit = true;
-    }
-
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_load_file (char *file_path, uint32_t start_offset_address) {
+static flashcart_error_t d64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
@@ -129,14 +122,19 @@ static flashcart_error_t d64_load_file (char *file_path, uint32_t start_offset_a
 
     fix_file_size(&fil);
 
-    size_t file_size = f_size(&fil);
+    size_t file_size = f_size(&fil) - file_offset;
 
-    if (file_size > (MiB(64) - start_offset_address)) {
+    if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERROR_ARGS;
     }
 
-    if (f_read(&fil, (void *) (ROM_ADDRESS + start_offset_address), file_size, &br) != FR_OK) {
+    if (f_lseek(&fil, file_offset) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERROR_LOAD;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + rom_offset), file_size, &br) != FR_OK) {
         f_close(&fil);
         return FLASHCART_ERROR_LOAD;
     }

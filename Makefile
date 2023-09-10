@@ -16,6 +16,8 @@ SRCS = \
 	boot/boot.c \
 	boot/crc32.c \
 	boot/reboot.S \
+	flashcart/64drive/64drive_ll.c \
+	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
@@ -42,6 +44,7 @@ SRCS = \
 	menu/rom_database.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \

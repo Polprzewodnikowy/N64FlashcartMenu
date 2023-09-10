@@ -31,7 +31,7 @@ static void draw (menu_t *menu, surface_t *d) {
     const char *firmware_message = (
         "Minimum supported versions:\n"
         "EverDrive-64: ?\n"
-        "64drive: ?\n"
+        "64drive: 2.05\n"
         "SC64: 2.16.0"
     );
 

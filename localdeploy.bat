@@ -21,8 +21,14 @@ echo !!! Now toggle power to the N64 !!!
 echo:
 echo:
 
-if not "%1" == "/d" goto :exit
+if not "%1" == "/d" goto :not_d
 
 %~dp0tools\sc64\sc64deployer debug --no-writeback
 
-:exit
+:not_d
+
+if not "%1" == "/du" goto :not_du
+
+%~dp0tools\sc64\sc64deployer debug --no-writeback --init "send-file /sc64menu.n64 @output/sc64menu.n64@;reboot"
+
+:not_du

@@ -8,10 +8,12 @@
 #include "utils/utils.h"
 
 #include "flashcart.h"
+
+#include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
 
-#define WRITEBACK_MAX_SECTORS   (256)
+#define SAVE_WRITEBACK_MAX_SECTORS  (256)
 
 
 static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
@@ -22,7 +24,11 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(96),
     KiB(128),
     KiB(128),
+    KiB(128),
 };
+
+static uint32_t save_writeback_sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
+
 
 static flashcart_error_t dummy_init (void) {
     return FLASHCART_OK;
@@ -55,7 +61,7 @@ flashcart_error_t flashcart_init (void) {
         int (* libcart_init) (void);
         flashcart_t *(* get) (void);
     } flashcarts[CART_MAX] = {
-        { CART_CI, ci_init, NULL },                 // 64drive
+        { CART_CI, ci_init, d64_get_flashcart },    // 64drive
         { CART_SC, sc_init, sc64_get_flashcart },   // SC64
         { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
         { CART_ED, ed_init, NULL },                 // Original EverDrive-64
@@ -95,6 +101,7 @@ flashcart_error_t flashcart_deinit (void) {
     if (flashcart->deinit) {
         return flashcart->deinit();
     }
+
     return FLASHCART_OK;
 }
 
@@ -124,9 +131,21 @@ flashcart_error_t flashcart_load_file (char *file_path, uint32_t rom_offset, uin
     return flashcart->load_file(file_path, rom_offset, file_offset);
 }
 
+static void save_writeback_sectors_callback (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size) {
+    for (uint32_t i = 0; i < cluster_size; i++) {
+        uint32_t offset = file_sector + i;
+        uint32_t sector = cluster_sector + i;
+
+        if ((offset > SAVE_WRITEBACK_MAX_SECTORS) || (offset > sector_count)) {
+            return;
+        }
+
+        save_writeback_sectors[offset] = sector;
+    }
+}
+
 flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
     flashcart_error_t error;
-    uint32_t sectors[WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
     if (save_type >= __FLASHCART_SAVE_TYPE_END) {
         return FLASHCART_ERROR_ARGS;
@@ -158,10 +177,13 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
     }
 
     if (flashcart->set_save_writeback) {
-        if (file_get_sectors(save_path, sectors, WRITEBACK_MAX_SECTORS)) {
+        for (int i = 0; i < SAVE_WRITEBACK_MAX_SECTORS; i++) {
+            save_writeback_sectors[i] = 0;
+        }
+        if (file_get_sectors(save_path, save_writeback_sectors_callback)) {
             return FLASHCART_ERROR_LOAD;
         }
-        if ((error = flashcart->set_save_writeback(sectors)) != FLASHCART_OK) {
+        if ((error = flashcart->set_save_writeback(save_writeback_sectors)) != FLASHCART_OK) {
             return error;
         }
     }

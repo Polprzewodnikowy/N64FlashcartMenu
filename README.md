@@ -61,11 +61,11 @@ You can use a dev container in VSCode to ease development.
 
 ## To deploy:
 ### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.16.0/sc64-deployer-windows-v2.16.0.zip)
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.17.0/sc64-deployer-windows-v2.17.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.16.0+)
-See: https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.16.0/docs/00_quick_startup_guide.md#firmware-backupupdate
+Make sure that your firmware is compatible (currently v2.17.0+)
+See: https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.17.0/docs/00_quick_startup_guide.md#firmware-backupupdate
 
 
 #### From the devcontainer

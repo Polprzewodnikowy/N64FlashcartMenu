@@ -31,7 +31,7 @@ void hdmi_broadcast_game_id (boot_params_t *boot_params) {
     uint8_t rom_header[0x40] __attribute__((aligned(8)));
     uint32_t pi_address = ROM_ADDRESS;
 
-    if (boot_params->device_type == BOOT_DEVICE_TYPE_DD) {
+    if (boot_params->device_type == BOOT_DEVICE_TYPE_64DD) {
         pi_address = DDIPL_ADDRESS;
     }
 

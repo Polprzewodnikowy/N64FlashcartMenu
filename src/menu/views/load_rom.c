@@ -5,7 +5,6 @@
 
 
 static bool load_pending;
-static rom_header_t rom_header;
 static component_boxart_t *boxart;
 
 
@@ -184,18 +183,18 @@ static void draw (menu_t *menu, surface_t *d) {
             "  Boot address: 0x%08lX\n"
             "  SDK version: %.1f%c\n"
             "  Clock Rate: %.2fMHz\n",
-            format_rom_endian(rom_header.config_flags),
-            rom_header.title,
-            rom_header.metadata.media_type, format_rom_media_type(rom_header.metadata.media_type),
-            (char *) (&rom_header.metadata.unique_identifier),
-            rom_header.metadata.destination_market, format_rom_destination_market(rom_header.metadata.destination_market),
-            rom_header.metadata.version,
-            rom_header.checksum,
-            format_rom_save_type(rom_db_match_save_type(rom_header)),
-            format_rom_expansion_pak_info(rom_db_match_expansion_pak(rom_header)),
-            rom_header.boot_address,
-            (float) ((rom_header.sdk_version >> 8) & 0xFF) / 10.0f, (char) (rom_header.sdk_version & 0xFF),
-            format_rom_clockrate(rom_header.clock_rate)
+            format_rom_endian(menu->load.rom_header.config_flags),
+            menu->load.rom_header.title,
+            menu->load.rom_header.metadata.media_type, format_rom_media_type(menu->load.rom_header.metadata.media_type),
+            (char *) (&menu->load.rom_header.metadata.unique_identifier),
+            menu->load.rom_header.metadata.destination_market, format_rom_destination_market(menu->load.rom_header.metadata.destination_market),
+            menu->load.rom_header.metadata.version,
+            menu->load.rom_header.checksum,
+            format_rom_save_type(rom_db_match_save_type(menu->load.rom_header)),
+            format_rom_expansion_pak_info(rom_db_match_expansion_pak(menu->load.rom_header)),
+            menu->load.rom_header.boot_address,
+            (float) ((menu->load.rom_header.sdk_version >> 8) & 0xFF) / 10.0f, (char) (menu->load.rom_header.sdk_version & 0xFF),
+            format_rom_clockrate(menu->load.rom_header.clock_rate)
         );
 
         component_actions_bar_text_draw(
@@ -211,7 +210,7 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 static void draw_progress (float progress) {
-    surface_t *d = display_try_get();
+    surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
 
     if (d) {
         rdpq_attach(d, NULL);
@@ -225,7 +224,7 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
-    cart_load_err_t err = cart_load_n64_rom_and_save(menu, &rom_header, draw_progress);
+    cart_load_err_t err = cart_load_n64_rom_and_save(menu, draw_progress);
 
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));
@@ -238,21 +237,24 @@ static void load (menu_t *menu) {
     menu->boot_params->detect_cic_seed = true;
 }
 
-static void deinit (void) {
+static void deinit (menu_t *menu) {
     component_boxart_free(boxart);
 }
 
 
 void view_load_rom_init (menu_t *menu) {
+    if (menu->load.rom_path) {
+        path_free(menu->load.rom_path);
+        menu->load.rom_path = NULL;
+    }
+
     load_pending = false;
 
-    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    rom_header = file_read_rom_header(path_get(path));
+    menu->load.rom_header = file_read_rom_header(path_get(menu->load.rom_path));
 
-    boxart = component_boxart_init(rom_header.metadata.unique_identifier);
-
-    path_free(path);
+    boxart = component_boxart_init(menu->load.rom_header.metadata.unique_identifier);
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
@@ -266,6 +268,6 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     }
 
     if (menu->next_mode != MENU_MODE_LOAD_ROM) {
-        deinit();
+        deinit(menu);
     }
 }

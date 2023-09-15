@@ -9,9 +9,12 @@
 
 
 #include <time.h>
+
 #include "boot/boot.h"
+#include "disk_info.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
+#include "rom_database.h"
 #include "settings.h"
 
 
@@ -29,6 +32,7 @@ typedef enum {
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_LOAD_ROM,
+    MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
@@ -40,6 +44,7 @@ typedef enum {
 typedef enum {
     ENTRY_TYPE_DIR,
     ENTRY_TYPE_ROM,
+    ENTRY_TYPE_DISK,
     ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
@@ -91,6 +96,12 @@ typedef struct {
         entry_t *entry;
         int selected;
     } browser;
+
+    struct {
+        path_t *rom_path;
+        rom_header_t rom_header;
+        disk_info_t disk_info;
+    } load;
 } menu_t;
 
 

@@ -38,7 +38,7 @@ static const ipl3_crc32_t ipl3_crc32[] = {
 
 static io32_t *boot_get_device_base (boot_params_t *params) {
     io32_t *device_base_address = ROM_CART;
-    if (params->device_type == BOOT_DEVICE_TYPE_DD) {
+    if (params->device_type == BOOT_DEVICE_TYPE_64DD) {
         device_base_address = ROM_DDIPL;
     }
     return device_base_address;

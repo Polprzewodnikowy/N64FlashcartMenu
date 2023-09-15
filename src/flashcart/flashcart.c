@@ -55,44 +55,37 @@ static flashcart_t *flashcart = &((flashcart_t) {
 flashcart_error_t flashcart_init (void) {
     flashcart_error_t error;
 
-    // NOTE: Explicitly support only these flashcarts in this specific initialization order.
-    struct {
-        int type;
-        int (* libcart_init) (void);
-        flashcart_t *(* get) (void);
-    } flashcarts[CART_MAX] = {
-        { CART_CI, ci_init, d64_get_flashcart },    // 64drive
-        { CART_SC, sc_init, sc64_get_flashcart },   // SC64
-        { CART_EDX, edx_init, NULL },               // Series X EverDrive-64
-        { CART_ED, ed_init, NULL },                 // Original EverDrive-64
-    };
+    bool sd_card_initialized = debug_init_sdfs("sd:/", -1);
 
-    for (int i = 0; i < CART_MAX; i++) {
-        if (flashcarts[i].libcart_init() >= 0) {
-            cart_type = flashcarts[i].type;
-            if (flashcarts[i].get) {
-                flashcart = flashcarts[i].get();
-            }
+    switch (cart_type) {
+        case CART_CI:   // 64drive
+            flashcart = d64_get_flashcart();
             break;
-        }
+
+        case CART_EDX:  // Series X EverDrive-64
+        case CART_ED:   // Original EverDrive-64
+            break;
+
+        case CART_SC:   // SummerCart64
+            flashcart = sc64_get_flashcart();
+            break;
+
+        default:
+            return FLASHCART_ERROR_NOT_DETECTED;
     }
 
-    if (cart_type == CART_NULL) {
-        return FLASHCART_ERROR_NOT_DETECTED;    
+    if ((error = flashcart->init()) != FLASHCART_OK) {
+        return error;
+    }
+
+    if (!sd_card_initialized) {
+        return FLASHCART_ERROR_SD_CARD;
     }
 
 #ifndef NDEBUG
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif
-
-    if ((error = flashcart->init()) != FLASHCART_OK) {
-        return error;
-    }
-
-    if (!debug_init_sdfs("sd:/", -1)) {
-        return FLASHCART_ERROR_SD_CARD;
-    }
 
     return FLASHCART_OK;
 }
@@ -189,4 +182,32 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
     }
 
     return FLASHCART_OK;
+}
+
+flashcart_error_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
+    if (!flashcart->load_64dd_ipl) {
+        return FLASHCART_ERROR_FUNCTION_UNSUPPORTED;
+    }
+
+    if ((ipl_path == NULL) || (!file_exists(ipl_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    return flashcart->load_64dd_ipl(ipl_path, progress);
+}
+
+flashcart_error_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
+    if (!flashcart->load_64dd_disk) {
+        return FLASHCART_ERROR_FUNCTION_UNSUPPORTED;
+    }
+
+    if ((disk_path == NULL) || (!file_exists(disk_path))) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    if (!disk_parameters) {
+        return FLASHCART_ERROR_ARGS;
+    }
+
+    return flashcart->load_64dd_disk(disk_path, disk_parameters);
 }

@@ -261,6 +261,8 @@ static flashcart_t flashcart_d64 = {
     .load_rom = d64_load_rom,
     .load_file = d64_load_file,
     .load_save = d64_load_save,
+    .load_64dd_ipl = NULL,
+    .load_64dd_disk = NULL,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,
 };

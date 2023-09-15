@@ -5,7 +5,7 @@
 #include "utils/fs.h"
 
 
-#define SETTINGS_FILE_PATH  "sd:/config.ini"
+#define SETTINGS_FILE_PATH  "sd:/menu/config.ini"
 
 
 static settings_t init = {

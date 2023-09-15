@@ -1,5 +1,6 @@
 #include <libdragon.h>
 
+#include "../flashcart_utils.h"
 #include "sc64_ll.h"
 
 
@@ -23,6 +24,7 @@ typedef enum {
     CMD_ID_VERSION_GET          = 'V',
     CMD_ID_CONFIG_GET           = 'c',
     CMD_ID_CONFIG_SET           = 'C',
+    CMD_ID_DISK_MAPPING_SET     = 'D',
     CMD_ID_WRITEBACK_PENDING    = 'w',
     CMD_ID_WRITEBACK_SD_INFO    = 'W',
     CMD_ID_FLASH_WAIT_BUSY      = 'p',
@@ -88,6 +90,32 @@ sc64_error_t sc64_ll_set_config (sc64_cfg_id_t id, uint32_t value) {
         .id = CMD_ID_CONFIG_SET,
         .arg = { id, value }
     };
+    return sc64_ll_execute_cmd(&cmd);
+}
+
+sc64_error_t sc64_ll_set_disk_mapping (sc64_disk_mapping_t *disk_mapping) {
+    int disk_count = disk_mapping->count;
+
+    if (disk_count <= 0 || disk_count > 4) {
+        return SC64_ERROR_BAD_ARGUMENT;
+    }
+
+    uint32_t info[8] __attribute__((aligned(8)));
+
+    for (int i = 0; i < disk_count; i++) {
+        info[i * 2] = disk_mapping->disks[i].thb_table;
+        info[(i * 2) + 1] = disk_mapping->disks[i].sector_table;
+    }
+
+    uint32_t length = (disk_mapping->count * 2 * sizeof(uint32_t));
+
+    pi_dma_write_data(info, SC64_BUFFERS->BUFFER, length);
+
+    sc64_cmd_t cmd = {
+        .id = CMD_ID_DISK_MAPPING_SET,
+        .arg = { (uint32_t) (SC64_BUFFERS->BUFFER), length }
+    };
+
     return sc64_ll_execute_cmd(&cmd);
 }
 

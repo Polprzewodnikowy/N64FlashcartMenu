@@ -88,6 +88,8 @@ static void menu_init (boot_params_t *boot_params) {
     menu->browser.valid = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
+    menu->load.rom_path = NULL;
+
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
@@ -136,6 +138,7 @@ static struct views_s {
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
+    { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
     { view_error_init, view_error_display }, // MENU_MODE_ERROR
     { view_fault_init, view_fault_display }, // MENU_MODE_FAULT

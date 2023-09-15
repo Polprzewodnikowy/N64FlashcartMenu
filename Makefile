@@ -36,6 +36,7 @@ SRCS = \
 	menu/components/common.c \
 	menu/components/context_menu.c \
 	menu/components/file_list.c \
+	menu/disk_info.c \
 	menu/fonts.c \
 	menu/menu.c \
 	menu/mp3_player.c \
@@ -51,6 +52,7 @@ SRCS = \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
+	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
 	menu/views/load_rom.c \
 	menu/views/music_player.c \

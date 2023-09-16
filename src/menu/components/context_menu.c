@@ -69,15 +69,15 @@ void component_context_menu_draw (component_context_menu_t *cm) {
 
     rdpq_paragraph_t *layout = rdpq_paragraph_builder_end();
 
-    int width = layout->bbox[2] - layout->bbox[0] + MESSAGEBOX_MARGIN;
-    int height = layout->bbox[3] - layout->bbox[1] + MESSAGEBOX_MARGIN;
+    int width = layout->bbox.x1 - layout->bbox.x0 + MESSAGEBOX_MARGIN;
+    int height = layout->bbox.y1 - layout->bbox.y0 + MESSAGEBOX_MARGIN;
 
     component_dialog_draw(width, height);
 
     int highlight_x0 = DISPLAY_CENTER_X - (width / 2);
     int highlight_x1 = DISPLAY_CENTER_X + (width / 2);
-    int highlight_height = (layout->bbox[3] - layout->bbox[1]) / layout->nlines;
-    int highlight_y = VISIBLE_AREA_Y0 + layout->bbox[1] + ((cm->selected) * highlight_height);
+    int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
+    int highlight_y = VISIBLE_AREA_Y0 + layout->bbox.y0 + ((cm->selected) * highlight_height);
 
     component_box_draw(
         highlight_x0,

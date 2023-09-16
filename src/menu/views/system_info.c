@@ -78,11 +78,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_system_info_init (menu_t *menu) {
-    for (int i = 0; i < 4; i++) {
-        joypad[i] = joypad_is_connected(i);
-        if (joypad[i]) {
-            accessory[i] = joypad_get_accessory_type(i);
-        }
+    JOYPAD_PORT_FOREACH (port) {
+        joypad[port] = (joypad_get_style(port) != JOYPAD_STYLE_NONE);
+        accessory[port] = joypad_get_accessory_type(port);
     }
 }
 

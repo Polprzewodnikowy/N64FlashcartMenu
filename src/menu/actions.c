@@ -1,5 +1,4 @@
 #include <libdragon.h>
-
 #include "actions.h"
 
 
@@ -27,10 +26,6 @@ void actions_update (menu_t *menu) {
     joypad_buttons_t btn_pressed = joypad_get_buttons_pressed(0);
     joypad_buttons_t btn_held = joypad_get_buttons_held(0);
     joypad_inputs_t joypad_inputs = joypad_get_inputs(0);
-
-    // if (btn_pressed.err != ERROR_NONE) {
-    //     return;
-    // }
 
     actions_clear(menu);
 

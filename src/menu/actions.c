@@ -24,89 +24,89 @@ static void actions_clear (menu_t *menu) {
 void actions_update (menu_t *menu) {
     joypad_poll();
 
-    joypad_buttons_t down = joypad_get_buttons_pressed(0);
-    joypad_buttons_t held = joypad_get_buttons_held(0);
-    //joypad_buttons_t pressed = joypad_get_buttons_released(0);
+    joypad_buttons_t btn_pressed = joypad_get_buttons_pressed(0);
+    joypad_buttons_t btn_held = joypad_get_buttons_held(0);
+    joypad_inputs_t joypad_inputs = joypad_get_inputs(0);
 
-    // if (down.err != ERROR_NONE) {
+    // if (btn_pressed.err != ERROR_NONE) {
     //     return;
     // }
 
     actions_clear(menu);
 
-    if (down.d_up || down.c_up) {
+    if (btn_pressed.d_up || btn_pressed.c_up) {
         menu->actions.go_up = true;
         menu->actions.vertical_held_counter = 0;
-        if (down.c_up) {
+        if (btn_pressed.c_up) {
             menu->actions.fast = true;
         }
-    } else if (down.d_down || down.c_down) {
+    } else if (btn_pressed.d_down || btn_pressed.c_down) {
         menu->actions.go_down = true;
         menu->actions.vertical_held_counter = 0;
-        if (down.c_down) {
+        if (btn_pressed.c_down) {
             menu->actions.fast = true;
         }
-    } else if (held.d_up || held.c_up) {
+    } else if (btn_held.d_up || btn_held.c_up) {
         menu->actions.vertical_held_counter += 1;
         if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_up = true;
-            if (held.c_up) {
+            if (btn_held.c_up) {
                 menu->actions.fast = true;
             }
         }
-    } else if (held.d_down || held.c_down) {
+    } else if (btn_held.d_down || btn_held.c_down) {
         menu->actions.vertical_held_counter += 1;
         if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_down = true;
-            if (held.c_down) {
+            if (btn_held.c_down) {
                 menu->actions.fast = true;
             }
         }
-    // } else if (down.y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-    //     menu->actions.vertical_held_counter += 1;
-    //     if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-    //         menu->actions.go_up = true;
-    //         if (held.y < +75) {
-    //             menu->actions.vertical_held_counter = 0;
-    //         }
-    //     }
-    // } else if (down.y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-    //     menu->actions.vertical_held_counter += 1;
-    //     if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-    //         menu->actions.go_down = true;
-    //         if (held.y > -75) {
-    //             menu->actions.vertical_held_counter = 0;
-    //         }
-    //     }
+    } else if (joypad_inputs.stick_y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
+        menu->actions.vertical_held_counter += 1;
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
+            menu->actions.go_up = true;
+            if (joypad_inputs.stick_y < +75) {
+                menu->actions.vertical_held_counter = 0;
+            }
+        }
+    } else if (joypad_inputs.stick_y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
+        menu->actions.vertical_held_counter += 1;
+        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
+            menu->actions.go_down = true;
+            if (joypad_inputs.stick_y > -75) {
+                menu->actions.vertical_held_counter = 0;
+            }
+        }
     }
 
-    if (down.d_left) {
+    if (btn_pressed.d_left) {
         menu->actions.go_left = true;
         menu->actions.horizontal_held_counter = 0;
-    } else if (down.d_right) {
+    } else if (btn_pressed.d_right) {
         menu->actions.go_right = true;
         menu->actions.horizontal_held_counter = 0;
-    } else if (held.d_left) {
+    } else if (btn_held.d_left) {
         menu->actions.horizontal_held_counter += 1;
         if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_left = true;
         }
-    } else if (held.d_right) {
+    } else if (btn_held.d_right) {
         menu->actions.horizontal_held_counter += 1;
         if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
             menu->actions.go_right = true;
         }
     }
 
-    if (down.a) {
+    if (btn_pressed.a) {
         menu->actions.enter = true;
-    } else if (down.b) {
+    } else if (btn_pressed.b) {
         menu->actions.back = true;
-    } else if (down.r) {
+    } else if (btn_pressed.r) {
         menu->actions.options = true;
-    } else if (down.l) {
+    } else if (btn_pressed.l) {
         menu->actions.system_info = true;
-    } else if (down.start) {
+    } else if (btn_pressed.start) {
         menu->actions.settings = true;
     }
 }

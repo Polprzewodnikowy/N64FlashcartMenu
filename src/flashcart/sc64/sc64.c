@@ -78,26 +78,26 @@ static const uint8_t rom_zones[DISK_TYPES] = { 5, 7, 9, 11, 13, 15, 16 };
 static uint32_t disk_sectors_start_offset;
 
 
-static flashcart_error_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
+static flashcart_err_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
     size_t erase_block_size;
     UINT bp;
 
     *br = 0;
 
     if (sc64_ll_flash_get_erase_block_size(&erase_block_size) != SC64_OK) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     while (size > 0) {
         size_t program_size = MIN(size, erase_block_size);
         if (sc64_ll_flash_erase_block(address) != SC64_OK) {
-            return FLASHCART_ERROR_INT;
+            return FLASHCART_ERR_INT;
         }
         if (f_read(fil, address, program_size, &bp) != FR_OK) {
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         if (sc64_ll_flash_wait_busy() != SC64_OK) {
-            return FLASHCART_ERROR_INT;
+            return FLASHCART_ERR_INT;
         }
         if (progress) {
             progress(f_tell(fil) / (float) (f_size(fil)));
@@ -196,27 +196,27 @@ static uint32_t disk_load_thb_table (uint32_t offset, flashcart_disk_parameters_
 }
 
 
-static flashcart_error_t sc64_init (void) {
+static flashcart_err_t sc64_init (void) {
     uint16_t major;
     uint16_t minor;
     uint32_t revision;
 
     if (sc64_ll_get_version(&major, &minor, &revision) != SC64_OK) {
-        return FLASHCART_ERROR_OUTDATED;
+        return FLASHCART_ERR_OUTDATED;
     }
     if (major != SUPPORTED_MAJOR_VERSION) {
-        return FLASHCART_ERROR_OUTDATED;
+        return FLASHCART_ERR_OUTDATED;
     }
     if (minor < SUPPORTED_MINOR_VERSION) {
-        return FLASHCART_ERROR_OUTDATED;
+        return FLASHCART_ERR_OUTDATED;
     } else if (minor == SUPPORTED_MINOR_VERSION && revision < SUPPORTED_REVISION) {
-        return FLASHCART_ERROR_OUTDATED;
+        return FLASHCART_ERR_OUTDATED;
     }
 
     bool writeback_pending;
     do {
         if (sc64_ll_writeback_pending(&writeback_pending) != SC64_OK) {
-            return FLASHCART_ERROR_INT;
+            return FLASHCART_ERR_INT;
         }
     } while (writeback_pending);
 
@@ -242,14 +242,14 @@ static flashcart_error_t sc64_init (void) {
 
     for (int i = 0; i < sizeof(default_config) / sizeof(default_config[0]); i++) {
         if (sc64_ll_set_config(default_config[i].id, default_config[i].value) != SC64_OK) {
-            return FLASHCART_ERROR_INT;
+            return FLASHCART_ERR_INT;
         }
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_deinit (void) {
+static flashcart_err_t sc64_deinit (void) {
     sc64_ll_set_config(CFG_ID_ROM_WRITE_ENABLE, false);
 
     sc64_ll_lock();
@@ -257,12 +257,19 @@ static flashcart_error_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+static bool sc64_has_feature (flashcart_features_t feature) {
+    switch (feature) {
+        case FLASHCART_FEATURE_64DD: return true;
+        default: return false;
+    }
+}
+
+static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     fix_file_size(&fil);
@@ -271,7 +278,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
 
     if (rom_size > MiB(78)) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     bool shadow_enabled = (rom_size > (MiB(64) - KiB(128)));
@@ -286,7 +293,7 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         if (progress) {
             progress(f_tell(&fil) / (float) (f_size(&fil)));
@@ -294,56 +301,56 @@ static flashcart_error_t sc64_load_rom (char *rom_path, flashcart_progress_callb
     }
     if (f_tell(&fil) != sdram_size) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (sc64_ll_set_config(CFG_ID_ROM_SHADOW_ENABLE, shadow_enabled) != SC64_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (shadow_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br, progress);
-        if (error != FLASHCART_OK) {
+        flashcart_err_t err = load_to_flash(&fil, (void *) (SHADOW_ADDRESS), shadow_size, &br, progress);
+        if (err != FLASHCART_OK) {
             f_close(&fil);
-            return error;
+            return err;
         }
         if (br != shadow_size) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
     }
 
     if (sc64_ll_set_config(CFG_ID_ROM_EXTENDED_ENABLE, extended_enabled) != SC64_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (extended_enabled) {
-        flashcart_error_t error = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br, progress);
-        if (error != FLASHCART_OK) {
+        flashcart_err_t err = load_to_flash(&fil, (void *) (EXTENDED_ADDRESS), extended_size, &br, progress);
+        if (err != FLASHCART_OK) {
             f_close(&fil);
-            return error;
+            return err;
         }
         if (br != extended_size) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+static flashcart_err_t sc64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     fix_file_size(&fil);
@@ -352,36 +359,36 @@ static flashcart_error_t sc64_load_file (char *file_path, uint32_t rom_offset, u
 
     if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     if (f_lseek(&fil, file_offset) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_read(&fil, (void *) (ROM_ADDRESS + rom_offset), file_size, &br) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
     if (br != file_size) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_save (char *save_path) {
+static flashcart_err_t sc64_load_save (char *save_path) {
     void *address = NULL;
     uint32_t value;
 
     if (sc64_ll_get_config(CFG_ID_SAVE_TYPE, &value) != SC64_OK) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     sc64_save_type_t type = (sc64_save_type_t) (value);
@@ -398,40 +405,40 @@ static flashcart_error_t sc64_load_save (char *save_path) {
             break;
         case SAVE_TYPE_NONE:
         default:
-            return FLASHCART_ERROR_ARGS;
+            return FLASHCART_ERR_ARGS;
     }
 
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     size_t save_size = f_size(&fil);
 
     if (f_read(&fil, address, save_size, &br) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (br != save_size) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
+static flashcart_err_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(ipl_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     fix_file_size(&fil);
@@ -440,7 +447,7 @@ static flashcart_error_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_
 
     if (ipl_size > MiB(4)) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     size_t chunk_size = KiB(256);
@@ -448,7 +455,7 @@ static flashcart_error_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_
         size_t block_size = MIN(ipl_size - offset, chunk_size);
         if (f_read(&fil, (void *) (IPL_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         if (progress) {
             progress(f_tell(&fil) / (float) (f_size(&fil)));
@@ -456,17 +463,17 @@ static flashcart_error_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_
     }
     if (f_tell(&fil) != ipl_size) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
+static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
     sc64_disk_mapping_t mapping = { .count = 0 };
     uint32_t next_mapping_offset = DISK_MAPPING_ROM_OFFSET;
 
@@ -476,17 +483,17 @@ static flashcart_error_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_pa
         mapping.disks[mapping.count].sector_table = disk_load_thb_table(mapping.disks[mapping.count].thb_table, disk_parameters);
         next_mapping_offset = disk_sectors_start(mapping.disks[mapping.count].sector_table);
         if (file_get_sectors(disk_path, disk_sectors_callback)) {
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         mapping.count += 1;
     // LOOP END
 
     if (mapping.count == 0) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     if (sc64_ll_set_disk_mapping(&mapping) != SC64_OK) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     sc64_drive_type_t drive_type = disk_parameters->development_drive ? DRIVE_TYPE_DEVELOPMENT : DRIVE_TYPE_RETAIL;
@@ -504,14 +511,14 @@ static flashcart_error_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_pa
 
     for (int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
         if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
-            return FLASHCART_ERROR_INT;
+            return FLASHCART_ERR_INT;
         }
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
+static flashcart_err_t sc64_set_save_type (flashcart_save_type_t save_type) {
     sc64_save_type_t type;
 
     switch (save_type) {
@@ -540,21 +547,21 @@ static flashcart_error_t sc64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_FLASHRAM;
             break;
         default:
-            return FLASHCART_ERROR_ARGS;
+            return FLASHCART_ERR_ARGS;
     }
 
     if (sc64_ll_set_config(CFG_ID_SAVE_TYPE, type) != SC64_OK) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t sc64_set_save_writeback (uint32_t *sectors) {
+static flashcart_err_t sc64_set_save_writeback (uint32_t *sectors) {
     pi_dma_write_data(sectors, SC64_BUFFERS->BUFFER, 1024);
 
     if (sc64_ll_writeback_enable(SC64_BUFFERS->BUFFER) != SC64_OK) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     return FLASHCART_OK;
@@ -564,6 +571,7 @@ static flashcart_error_t sc64_set_save_writeback (uint32_t *sectors) {
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
+    .has_feature = sc64_has_feature,
     .load_rom = sc64_load_rom,
     .load_file = sc64_load_file,
     .load_save = sc64_load_save,

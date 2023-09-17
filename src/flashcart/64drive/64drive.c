@@ -25,57 +25,64 @@ static d64_device_variant_t device_variant = DEVICE_VARIANT_UNKNOWN;
 static d64_save_type_t current_save_type = SAVE_TYPE_NONE;
 
 
-static flashcart_error_t d64_init (void) {
+static flashcart_err_t d64_init (void) {
     uint16_t fpga_revision;
     uint32_t bootloader_version;
 
     if (d64_ll_enable_extended_mode(false)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (d64_ll_get_version(&device_variant, &fpga_revision, &bootloader_version)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (fpga_revision < SUPPORTED_FPGA_REVISION) {
-        return FLASHCART_ERROR_OUTDATED;
+        return FLASHCART_ERR_OUTDATED;
     }
 
     if (d64_ll_enable_save_writeback(false)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (d64_ll_set_save_type(SAVE_TYPE_NONE)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     current_save_type = SAVE_TYPE_NONE;
 
     if (d64_ll_enable_cartrom_writes(true)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (d64_ll_set_persistent_variable_storage(false, 0, 0)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_deinit (void) {
+static flashcart_err_t d64_deinit (void) {
     if (d64_ll_enable_cartrom_writes(false)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+static bool d64_has_feature (flashcart_features_t feature) {
+    switch (feature) {
+        case FLASHCART_FEATURE_64DD: return false;
+        default: return false;
+    }
+}
+
+static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     fix_file_size(&fil);
@@ -84,7 +91,7 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
 
     if (rom_size > MiB(64)) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     size_t sdram_size = MiB(64);
@@ -94,7 +101,7 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         if (progress) {
             progress(f_tell(&fil) / (float) (f_size(&fil)));
@@ -102,22 +109,22 @@ static flashcart_error_t d64_load_rom (char *rom_path, flashcart_progress_callba
     }
     if (f_tell(&fil) != rom_size) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+static flashcart_err_t d64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     fix_file_size(&fil);
@@ -126,37 +133,37 @@ static flashcart_error_t d64_load_file (char *file_path, uint32_t rom_offset, ui
 
     if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     if (f_lseek(&fil, file_offset) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_read(&fil, (void *) (ROM_ADDRESS + rom_offset), file_size, &br) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
     if (br != file_size) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_load_save (char *save_path) {
+static flashcart_err_t d64_load_save (char *save_path) {
     uint8_t eeprom_contents[2048] __attribute__((aligned(8)));
     FIL fil;
     UINT br;
 
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     size_t save_size = f_size(&fil);
@@ -175,28 +182,28 @@ static flashcart_error_t d64_load_save (char *save_path) {
 
     if (f_read(&fil, address, save_size, &br) != FR_OK) {
         f_close(&fil);
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (is_eeprom_save) {
         if (d64_ll_write_eeprom_contents(eeprom_contents)) {
             f_close(&fil);
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
     }
 
     if (f_close(&fil) != FR_OK) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (br != save_size) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
+static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
     d64_save_type_t type;
 
     switch (save_type) {
@@ -226,15 +233,15 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
             type = (device_variant == DEVICE_VARIANT_A) ? SAVE_TYPE_FLASHRAM_PKST2 : SAVE_TYPE_FLASHRAM;
             break;
         default:
-            return FLASHCART_ERROR_ARGS;
+            return FLASHCART_ERR_ARGS;
     }
 
     if (d64_ll_enable_save_writeback(false)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (d64_ll_set_save_type(type)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     current_save_type = type;
@@ -242,13 +249,13 @@ static flashcart_error_t d64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
-static flashcart_error_t d64_set_save_writeback (uint32_t *sectors) {
+static flashcart_err_t d64_set_save_writeback (uint32_t *sectors) {
     if (d64_ll_write_save_writeback_lba_list(sectors)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     if (d64_ll_enable_save_writeback(true)) {
-        return FLASHCART_ERROR_INT;
+        return FLASHCART_ERR_INT;
     }
 
     return FLASHCART_OK;
@@ -258,6 +265,7 @@ static flashcart_error_t d64_set_save_writeback (uint32_t *sectors) {
 static flashcart_t flashcart_d64 = {
     .init = d64_init,
     .deinit = d64_deinit,
+    .has_feature = d64_has_feature,
     .load_rom = d64_load_rom,
     .load_file = d64_load_file,
     .load_save = d64_load_save,

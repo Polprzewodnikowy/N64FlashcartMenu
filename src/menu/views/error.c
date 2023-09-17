@@ -23,6 +23,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 static void deinit (menu_t *menu) {
     menu->error_message = NULL;
+    menu->flashcart_err = FLASHCART_OK;
 }
 
 
@@ -44,4 +45,12 @@ void menu_show_error (menu_t *menu, char *error_message) {
     menu->next_mode = MENU_MODE_ERROR;
     menu->error_message = error_message;
     menu->browser.valid = false;
+
+    if (menu->flashcart_err != FLASHCART_OK) {
+        debugf(
+            "Flashcart error %d: %s\n",
+            menu->flashcart_err,
+            flashcart_convert_error_message(menu->flashcart_err)
+        );
+    }
 }

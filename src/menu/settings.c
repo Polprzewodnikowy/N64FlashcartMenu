@@ -12,7 +12,7 @@ static settings_t init = {
     .pal60 = false,
     .show_hidden_files = false,
     .default_directory = "/",
-    .use_saves_folder = false,
+    .use_saves_folder = true,
 };
 
 

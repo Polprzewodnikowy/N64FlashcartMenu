@@ -15,14 +15,19 @@
 /** @brief Flashcart error enumeration */
 typedef enum {
     FLASHCART_OK,
-    FLASHCART_ERROR_NOT_DETECTED,
-    FLASHCART_ERROR_OUTDATED,
-    FLASHCART_ERROR_SD_CARD,
-    FLASHCART_ERROR_ARGS,
-    FLASHCART_ERROR_LOAD,
-    FLASHCART_ERROR_INT,
-    FLASHCART_ERROR_FUNCTION_UNSUPPORTED,
-} flashcart_error_t;
+    FLASHCART_ERR_NOT_DETECTED,
+    FLASHCART_ERR_OUTDATED,
+    FLASHCART_ERR_SD_CARD,
+    FLASHCART_ERR_ARGS,
+    FLASHCART_ERR_LOAD,
+    FLASHCART_ERR_INT,
+    FLASHCART_ERR_FUNCTION_NOT_SUPPORTED,
+} flashcart_err_t;
+
+/** @brief List of optional supported flashcart features */
+typedef enum {
+    FLASHCART_FEATURE_64DD,
+} flashcart_features_t;
 
 /** @brief Flashcart save type enumeration */
 typedef enum {
@@ -48,25 +53,28 @@ typedef void flashcart_progress_callback_t (float progress);
 
 /** @brief Flashcart Structure */
 typedef struct {
-    flashcart_error_t (*init) (void);
-    flashcart_error_t (*deinit) (void);
-    flashcart_error_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
-    flashcart_error_t (*load_file) (char *file_path, uint32_t rom_offset, uint32_t file_offset);
-    flashcart_error_t (*load_save) (char *save_path);
-    flashcart_error_t (*load_64dd_ipl) (char *ipl_path, flashcart_progress_callback_t *progress);
-    flashcart_error_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
-    flashcart_error_t (*set_save_type) (flashcart_save_type_t save_type);
-    flashcart_error_t (*set_save_writeback) (uint32_t *sectors);
+    flashcart_err_t (*init) (void);
+    flashcart_err_t (*deinit) (void);
+    bool (*has_feature) (flashcart_features_t feature);
+    flashcart_err_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
+    flashcart_err_t (*load_file) (char *file_path, uint32_t rom_offset, uint32_t file_offset);
+    flashcart_err_t (*load_save) (char *save_path);
+    flashcart_err_t (*load_64dd_ipl) (char *ipl_path, flashcart_progress_callback_t *progress);
+    flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+    flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
+    flashcart_err_t (*set_save_writeback) (uint32_t *sectors);
 } flashcart_t;
 
 
-flashcart_error_t flashcart_init (void);
-flashcart_error_t flashcart_deinit (void);
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
-flashcart_error_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset);
-flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);
-flashcart_error_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress);
-flashcart_error_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+char *flashcart_convert_error_message (flashcart_err_t err);
+flashcart_err_t flashcart_init (void);
+flashcart_err_t flashcart_deinit (void);
+bool flashcart_has_feature (flashcart_features_t feature);
+flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
+flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset);
+flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);
+flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress);
+flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
 
 
 #endif

@@ -68,8 +68,8 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_error = flashcart_init();
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_init();
+    if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 

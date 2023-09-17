@@ -45,8 +45,6 @@ static void draw (menu_t *menu, surface_t *d) {
         "N64 SYSTEM INFORMATION"
     );
 
-    time_t current_time = time(NULL);
-
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
@@ -59,7 +57,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "JoyPad 2 is %sconnected %s\n"
         "JoyPad 3 is %sconnected %s\n"
         "JoyPad 4 is %sconnected %s\n",
-        current_time >= 0 ? ctime(&current_time) : "Unknown\n",
+        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n",
         is_memory_expanded() ? "" : "not ",
         (joypad[0]) ? "" : "not ", format_accessory(0),
         (joypad[1]) ? "" : "not ", format_accessory(1),

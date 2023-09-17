@@ -1,28 +1,6 @@
 #include "views.h"
 
 
-static char *convert_error_message (flashcart_error_t error) {
-    switch (error) {
-        case FLASHCART_OK:
-            return "No error";
-        case FLASHCART_ERROR_NOT_DETECTED:
-            return "No flashcart hardware was detected";
-        case FLASHCART_ERROR_OUTDATED:
-            return "Outdated flashcart firmware";
-        case FLASHCART_ERROR_SD_CARD:
-            return "Error during SD card initialization";
-        case FLASHCART_ERROR_ARGS:
-            return "Invalid argument passed to flashcart function";
-        case FLASHCART_ERROR_LOAD:
-            return "Error during loading data into flashcart";
-        case FLASHCART_ERROR_INT:
-            return "Internal flashcart error";
-        default:
-            return "Unknown flashcart error";
-    }
-}
-
-
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -32,7 +10,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Minimum supported versions:\n"
         "EverDrive-64: ?\n"
         "64drive: 2.05\n"
-        "SC64: 2.16.0"
+        "SC64: v2.17.0"
     );
 
     component_messagebox_draw(
@@ -41,8 +19,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "%s\n"
         "\n"
         "%s",
-        convert_error_message(menu->flashcart_error),
-        menu->flashcart_error == FLASHCART_ERROR_OUTDATED ? firmware_message : ""
+        flashcart_convert_error_message(menu->flashcart_err),
+        menu->flashcart_err == FLASHCART_ERR_OUTDATED ? firmware_message : ""
     );
 
     rdpq_detach_show();

@@ -30,7 +30,7 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
 static uint32_t save_writeback_sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
 
-static flashcart_error_t dummy_init (void) {
+static flashcart_err_t dummy_init (void) {
     return FLASHCART_OK;
 }
 
@@ -52,8 +52,22 @@ static flashcart_t *flashcart = &((flashcart_t) {
 #endif
 
 
-flashcart_error_t flashcart_init (void) {
-    flashcart_error_t error;
+char *flashcart_convert_error_message (flashcart_err_t err) {
+    switch (err) {
+        case FLASHCART_OK: return "No error";
+        case FLASHCART_ERR_NOT_DETECTED: return "No flashcart hardware was detected";
+        case FLASHCART_ERR_OUTDATED: return "Outdated flashcart firmware";
+        case FLASHCART_ERR_SD_CARD: return "Error during SD card initialization";
+        case FLASHCART_ERR_ARGS: return "Invalid argument passed to flashcart function";
+        case FLASHCART_ERR_LOAD: return "Error during loading data into flashcart";
+        case FLASHCART_ERR_INT: return "Internal flashcart error";
+        case FLASHCART_ERR_FUNCTION_NOT_SUPPORTED: return "Flashcart doesn't support this function";
+        default: return "Unknown flashcart error";
+    }
+}
+
+flashcart_err_t flashcart_init (void) {
+    flashcart_err_t err;
 
     bool sd_card_initialized = debug_init_sdfs("sd:/", -1);
 
@@ -71,15 +85,15 @@ flashcart_error_t flashcart_init (void) {
             break;
 
         default:
-            return FLASHCART_ERROR_NOT_DETECTED;
+            return FLASHCART_ERR_NOT_DETECTED;
     }
 
-    if ((error = flashcart->init()) != FLASHCART_OK) {
-        return error;
+    if ((err = flashcart->init()) != FLASHCART_OK) {
+        return err;
     }
 
     if (!sd_card_initialized) {
-        return FLASHCART_ERROR_SD_CARD;
+        return FLASHCART_ERR_SD_CARD;
     }
 
 #ifndef NDEBUG
@@ -90,7 +104,7 @@ flashcart_error_t flashcart_init (void) {
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_deinit (void) {
+flashcart_err_t flashcart_deinit (void) {
     if (flashcart->deinit) {
         return flashcart->deinit();
     }
@@ -98,27 +112,31 @@ flashcart_error_t flashcart_deinit (void) {
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
-    flashcart_error_t error;
+bool flashcart_has_feature (flashcart_features_t feature) {
+    return flashcart->has_feature(feature);
+}
+
+flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
+    flashcart_err_t err;
 
     if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     cart_card_byteswap = byte_swap;
-    error = flashcart->load_rom(rom_path, progress);
+    err = flashcart->load_rom(rom_path, progress);
     cart_card_byteswap = false;
 
-    return error;
+    return err;
 }
 
-flashcart_error_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     if ((file_path == NULL) || (!file_exists(file_path))) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     if ((file_offset % FS_SECTOR_SIZE) != 0) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     return flashcart->load_file(file_path, rom_offset, file_offset);
@@ -137,15 +155,15 @@ static void save_writeback_sectors_callback (uint32_t sector_count, uint32_t fil
     }
 }
 
-flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
-    flashcart_error_t error;
+flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
+    flashcart_err_t err;
 
     if (save_type >= __FLASHCART_SAVE_TYPE_END) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
-    if ((error = flashcart->set_save_type(save_type)) != FLASHCART_OK) {
-        return error;
+    if ((err = flashcart->set_save_type(save_type)) != FLASHCART_OK) {
+        return err;
     }
 
     if ((save_path == NULL) || (save_type == FLASHCART_SAVE_TYPE_NONE)) {
@@ -154,19 +172,19 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
 
     if (!file_exists(save_path)) {
         if (file_allocate(save_path, SAVE_SIZE[save_type])) {
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
         if (file_fill(save_path, 0xFF)) {
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
     }
 
     if (file_get_size(save_path) != SAVE_SIZE[save_type]) {
-        return FLASHCART_ERROR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
-    if ((error = flashcart->load_save(save_path)) != FLASHCART_OK) {
-        return error;
+    if ((err = flashcart->load_save(save_path)) != FLASHCART_OK) {
+        return err;
     }
 
     if (flashcart->set_save_writeback) {
@@ -174,39 +192,39 @@ flashcart_error_t flashcart_load_save (char *save_path, flashcart_save_type_t sa
             save_writeback_sectors[i] = 0;
         }
         if (file_get_sectors(save_path, save_writeback_sectors_callback)) {
-            return FLASHCART_ERROR_LOAD;
+            return FLASHCART_ERR_LOAD;
         }
-        if ((error = flashcart->set_save_writeback(save_writeback_sectors)) != FLASHCART_OK) {
-            return error;
+        if ((err = flashcart->set_save_writeback(save_writeback_sectors)) != FLASHCART_OK) {
+            return err;
         }
     }
 
     return FLASHCART_OK;
 }
 
-flashcart_error_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
+flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
     if (!flashcart->load_64dd_ipl) {
-        return FLASHCART_ERROR_FUNCTION_UNSUPPORTED;
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
     if ((ipl_path == NULL) || (!file_exists(ipl_path))) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     return flashcart->load_64dd_ipl(ipl_path, progress);
 }
 
-flashcart_error_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
+flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
     if (!flashcart->load_64dd_disk) {
-        return FLASHCART_ERROR_FUNCTION_UNSUPPORTED;
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
     if ((disk_path == NULL) || (!file_exists(disk_path))) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     if (!disk_parameters) {
-        return FLASHCART_ERROR_ARGS;
+        return FLASHCART_ERR_ARGS;
     }
 
     return flashcart->load_64dd_disk(disk_path, disk_parameters);

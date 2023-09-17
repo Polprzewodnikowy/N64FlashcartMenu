@@ -66,9 +66,9 @@ typedef struct {
 
     settings_t settings;
     boot_params_t *boot_params;
-    flashcart_error_t flashcart_error;
 
     char *error_message;
+    flashcart_err_t flashcart_err;
 
     time_t current_time;
 

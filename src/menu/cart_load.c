@@ -13,11 +13,7 @@
 #define EMU_LOCATION            "/menu/emulators"
 
 
-static bool detect_expansion_pak (void) {
-    return get_memory_size() >= MiB(8);
-}
-
-static bool detect_64dd (void) {
+static bool is_64dd_connected (void) {
     return (
         ((io_read(0x05000540) & 0x0000FFFF) == 0x0000) ||
         (io_read(0x06001010) == 0x2129FFF8)
@@ -67,6 +63,7 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
         case CART_LOAD_ERR_EMU_ROM_LOAD_FAIL: return "Error occured during emulated ROM loading";
         case CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL: return "Couldn't create saves subdirectory";
         case CART_LOAD_ERR_EXP_PAK_NOT_FOUND: return "Mandatory Expansion Pak accessory was not found";
+        case CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED: return "Your flashcart doesn't support required functionality";
         default: return "Unknown error [CART_LOAD]";
     }
 }
@@ -77,8 +74,8 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     bool byte_swap = (menu->load.rom_header.config_flags == ROM_MID_BIG_ENDIAN);
     flashcart_save_type_t save_type = convert_save_type(&menu->load.rom_header);
 
-    menu->flashcart_error = flashcart_load_rom(path_get(path), byte_swap, progress);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_rom(path_get(path), byte_swap, progress);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_ROM_LOAD_FAIL;
     }
@@ -92,8 +89,8 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
         path_push_subdir(path, SAVES_SUBDIRECTORY);
     }
 
-    menu->flashcart_error = flashcart_load_save(path_get(path), save_type);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }
@@ -104,11 +101,15 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
 }
 
 cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
-    if (detect_64dd()) {
+    if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
+        return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    if (is_64dd_connected()) {
         return CART_LOAD_ERR_64DD_PRESENT;
     }
 
-    if (!detect_expansion_pak()) {
+    if (!is_memory_expanded()) {
         return CART_LOAD_ERR_EXP_PAK_NOT_FOUND;
     }
 
@@ -137,8 +138,8 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
         return CART_LOAD_ERR_64DD_IPL_NOT_FOUND;
     }
 
-    menu->flashcart_error = flashcart_load_64dd_ipl(path_get(path), progress);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_64dd_ipl(path_get(path), progress);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_64DD_IPL_LOAD_FAIL;
     }
@@ -147,8 +148,8 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    menu->flashcart_error = flashcart_load_64dd_disk(path_get(path), &disk_parameters);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_64dd_disk(path_get(path), &disk_parameters);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }
@@ -193,8 +194,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         return CART_LOAD_ERR_EMU_NOT_FOUND;
     }
 
-    menu->flashcart_error = flashcart_load_rom(path_get(path), false, progress);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_rom(path_get(path), false, progress);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_EMU_LOAD_FAIL;
     }
@@ -205,15 +206,15 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
 
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_SNES:
-            // The emulator expects the header to be removed from the ROM being uploaded.
+            // NOTE: The emulator expects the header to be removed from the ROM being uploaded.
             emulated_file_offset = ((file_get_size(path_get(path)) & 0x3FF) == 0x200) ? 0x200 : 0;
             break;
         default:
             break;
     }
 
-    menu->flashcart_error = flashcart_load_file(path_get(path), emulated_rom_offset, emulated_file_offset);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_file(path_get(path), emulated_rom_offset, emulated_file_offset);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_EMU_ROM_LOAD_FAIL;
     }
@@ -227,8 +228,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         path_push_subdir(path, SAVES_SUBDIRECTORY);
     }
 
-    menu->flashcart_error = flashcart_load_save(path_get(path), save_type);
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
+    if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }

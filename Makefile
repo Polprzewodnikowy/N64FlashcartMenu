@@ -22,7 +22,6 @@ SRCS = \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
-	hdmi/hdmi.c \
 	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \
 	libs/miniz/miniz_tdef.c \
@@ -38,6 +37,7 @@ SRCS = \
 	menu/components/file_list.c \
 	menu/disk_info.c \
 	menu/fonts.c \
+	menu/hdmi.c \
 	menu/menu.c \
 	menu/mp3_player.c \
 	menu/path.c \

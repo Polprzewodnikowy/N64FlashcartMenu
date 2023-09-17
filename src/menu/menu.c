@@ -8,6 +8,7 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
+#include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
@@ -58,7 +59,7 @@ static void menu_init (boot_params_t *boot_params) {
     rtc_init();
     rspq_init();
     rdpq_init();
-    fonts_init();
+
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -90,20 +91,30 @@ static void menu_init (boot_params_t *boot_params) {
 
     menu->load.rom_path = NULL;
 
+    hdmi_clear_game_id();
+
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
         TV_TYPE_RAM = TV_NTSC;
     }
 
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
 
     register_VI_handler(frame_counter_handler);
+    
+    fonts_init();
 }
 
 static void menu_deinit (menu_t *menu) {
+    unregister_VI_handler(frame_counter_handler);
+
+    display_close();
+
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
+
+    hdmi_send_game_id(menu->boot_params);
 
     path_free(menu->browser.directory);
     free(menu);
@@ -112,15 +123,13 @@ static void menu_deinit (menu_t *menu) {
 
     flashcart_deinit();
 
-    sound_close();
+    sound_deinit();
+
     rdpq_close();
     rspq_close();
     rtc_close();
     timer_close();
-
-    unregister_VI_handler(frame_counter_handler);
-
-    display_close();
+    joypad_close();
 }
 
 

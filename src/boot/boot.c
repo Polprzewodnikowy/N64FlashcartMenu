@@ -157,7 +157,7 @@ void boot (boot_params_t *params) {
 
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
-    reset_type = BOOT_RESET_TYPE_COLD;
+    reset_type = BOOT_RESET_TYPE_NMI;
     cic_seed = (params->cic_seed & 0xFF);
     version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6
             : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1

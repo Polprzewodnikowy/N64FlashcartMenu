@@ -2,20 +2,6 @@
 #define REBOOT_ADDRESS      0xA4001000
 #define STACK_ADDRESS       0xA4001FF0
 
-#define RI_ADDRESS          0xA4700000
-
-#define RI_MODE             0x00
-#define RI_CONFIG           0x04
-#define RI_CURRENT_LOAD     0x08
-#define RI_SELECT           0x0C
-#define RI_REFRESH          0x10
-#define RI_LATENCY          0x14
-
-#define RI_MODE_RESET       0x00000000
-#define RI_MODE_STANDBY     0x0000000E
-
-#define RDRAM_RESET_DELAY   1024
-#define RDRAM_STANDBY_DELAY 512
 
 .set noat
 .section .text.reboot, "ax", %progbits
@@ -43,39 +29,24 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
-    bnez $s5, reset_rdram_skip
+detect_console_region:
+    li $t0, 1
+    beq $s4, $zero, pal_console
+    beq $s4, $t0, ntsc_console
+    b mpal_console
 
-reset_rdram:
-    li $t0, RI_ADDRESS
+pal_console:
+    li $ra, 0xA4001554
+    b reset_registers
 
-    li $t1, RI_MODE_RESET
-    sw $t1, RI_MODE($t0)
+ntsc_console:
+    li $ra, 0xA4001550
+    b reset_registers
 
-    li $t2, RDRAM_RESET_DELAY
-1:
-    addiu $t2, (-1)
-    bnez $t2, 1b
+mpal_console:
+    li $ra, 0xA4001554
 
-    sw $zero, RI_CONFIG($t0)
-    sw $zero, RI_CURRENT_LOAD($t0)
-    sw $zero, RI_SELECT($t0)
-    sw $zero, RI_REFRESH($t0)
-
-    li $t1, RI_MODE_STANDBY
-    sw $t1, RI_MODE($t0)
-
-    li $t2, RDRAM_STANDBY_DELAY
-1:
-    addiu $t2, (-1)
-    bnez $t2, 1b
-reset_rdram_skip:
-
-prepare_registers:
-    la $t0, ra_table
-    sll $t1, $s4, 2
-    add $t0, $t1
-    lw $ra, ($t0)
-
+reset_registers:
     move $at, $zero
     move $v0, $zero
     move $v1, $zero
@@ -98,17 +69,11 @@ prepare_registers:
     move $k0, $zero
     move $k1, $zero
     move $gp, $zero
-    move $s8, $zero
+    move $fp, $zero
 
 run_ipl3:
     li $t3, IPL3_ENTRY
     jr $t3
-
-ra_values:
-    .set ra_table, REBOOT_ADDRESS + (. - reboot_start)
-    .word 0xA4001554
-    .word 0xA4001550
-    .word 0xA4001554
 
     .set reboot_size, (. - reboot_start)
     .global reboot_size

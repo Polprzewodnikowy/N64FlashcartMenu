@@ -233,7 +233,7 @@ static void process (menu_t *menu) {
         return;
     }
 
-    int scroll_speed = menu->actions.fast ? 10 : 1;
+    int scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {

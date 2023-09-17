@@ -77,9 +77,7 @@ typedef struct {
         bool go_down;
         bool go_left;
         bool go_right;
-        bool fast;
-        int vertical_held_counter;
-        int horizontal_held_counter;
+        bool go_fast;
 
         bool enter;
         bool back;

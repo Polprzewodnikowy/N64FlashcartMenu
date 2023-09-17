@@ -1,9 +1,13 @@
 #include <libdragon.h>
+
 #include "actions.h"
 
 
-#define ACTIONS_REPEAT_DELAY    10
-#define JOYSTICK_DEADZONE       32
+#define ACTIONS_REPEAT_DELAY    (8)
+
+
+static int dir_repeat_delay;
+static joypad_8way_t last_dir = JOYPAD_8WAY_NONE;
 
 
 static void actions_clear (menu_t *menu) {
@@ -11,7 +15,8 @@ static void actions_clear (menu_t *menu) {
     menu->actions.go_down = false;
     menu->actions.go_left = false;
     menu->actions.go_right = false;
-    menu->actions.fast = false;
+    menu->actions.go_fast = false;
+
     menu->actions.enter = false;
     menu->actions.back = false;
     menu->actions.options = false;
@@ -19,89 +24,91 @@ static void actions_clear (menu_t *menu) {
     menu->actions.settings = false;
 }
 
+static void actions_update_direction (menu_t *menu) {
+    joypad_8way_t c_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_C);
+    joypad_8way_t dpad_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_DPAD);
+    joypad_8way_t stick_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_STICK);
+
+    joypad_8way_t held_dir = JOYPAD_8WAY_NONE;
+
+    if (c_dir != JOYPAD_8WAY_NONE) {
+        held_dir = c_dir;
+        menu->actions.go_fast = true;
+    } else if (dpad_dir != JOYPAD_8WAY_NONE) {
+        held_dir = dpad_dir;
+    } else if (stick_dir != JOYPAD_8WAY_NONE) {
+        held_dir = stick_dir;
+    }
+
+    joypad_8way_t final_dir = held_dir;
+
+    if ((last_dir != held_dir) && (last_dir == JOYPAD_8WAY_NONE)) {
+        dir_repeat_delay = ACTIONS_REPEAT_DELAY;
+    } else if (dir_repeat_delay > 0) {
+        final_dir = JOYPAD_8WAY_NONE;
+    }
+
+    switch (final_dir) {
+        case JOYPAD_8WAY_NONE:
+            break;
+        case JOYPAD_8WAY_RIGHT:
+            menu->actions.go_right = true;
+            break;
+        case JOYPAD_8WAY_UP_RIGHT:
+            menu->actions.go_up = true;
+            menu->actions.go_right = true;
+            break;
+        case JOYPAD_8WAY_UP:
+            menu->actions.go_up = true;
+            break;
+        case JOYPAD_8WAY_UP_LEFT:
+            menu->actions.go_up = true;
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_LEFT:
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_DOWN_LEFT:
+            menu->actions.go_down = true;
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_DOWN:
+            menu->actions.go_down = true;
+            break;
+        case JOYPAD_8WAY_DOWN_RIGHT:
+            menu->actions.go_down = true;
+            menu->actions.go_right = true;
+            break;
+    }
+
+    if (dir_repeat_delay > 0) {
+        dir_repeat_delay -= 1;
+    }
+
+    last_dir = held_dir;
+}
+
+static void actions_update_buttons (menu_t *menu) {    
+    joypad_buttons_t pressed = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+
+    if (pressed.a) {
+        menu->actions.enter = true;
+    } else if (pressed.b) {
+        menu->actions.back = true;
+    } else if (pressed.r) {
+        menu->actions.options = true;
+    } else if (pressed.l) {
+        menu->actions.system_info = true;
+    } else if (pressed.start) {
+        menu->actions.settings = true;
+    }
+}
+
 
 void actions_update (menu_t *menu) {
     joypad_poll();
 
-    joypad_buttons_t btn_pressed = joypad_get_buttons_pressed(0);
-    joypad_buttons_t btn_held = joypad_get_buttons_held(0);
-    joypad_inputs_t joypad_inputs = joypad_get_inputs(0);
-
     actions_clear(menu);
-
-    if (btn_pressed.d_up || btn_pressed.c_up) {
-        menu->actions.go_up = true;
-        menu->actions.vertical_held_counter = 0;
-        if (btn_pressed.c_up) {
-            menu->actions.fast = true;
-        }
-    } else if (btn_pressed.d_down || btn_pressed.c_down) {
-        menu->actions.go_down = true;
-        menu->actions.vertical_held_counter = 0;
-        if (btn_pressed.c_down) {
-            menu->actions.fast = true;
-        }
-    } else if (btn_held.d_up || btn_held.c_up) {
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_up = true;
-            if (btn_held.c_up) {
-                menu->actions.fast = true;
-            }
-        }
-    } else if (btn_held.d_down || btn_held.c_down) {
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_down = true;
-            if (btn_held.c_down) {
-                menu->actions.fast = true;
-            }
-        }
-    } else if (joypad_inputs.stick_y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-            menu->actions.go_up = true;
-            if (joypad_inputs.stick_y < +75) {
-                menu->actions.vertical_held_counter = 0;
-            }
-        }
-    } else if (joypad_inputs.stick_y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-            menu->actions.go_down = true;
-            if (joypad_inputs.stick_y > -75) {
-                menu->actions.vertical_held_counter = 0;
-            }
-        }
-    }
-
-    if (btn_pressed.d_left) {
-        menu->actions.go_left = true;
-        menu->actions.horizontal_held_counter = 0;
-    } else if (btn_pressed.d_right) {
-        menu->actions.go_right = true;
-        menu->actions.horizontal_held_counter = 0;
-    } else if (btn_held.d_left) {
-        menu->actions.horizontal_held_counter += 1;
-        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_left = true;
-        }
-    } else if (btn_held.d_right) {
-        menu->actions.horizontal_held_counter += 1;
-        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_right = true;
-        }
-    }
-
-    if (btn_pressed.a) {
-        menu->actions.enter = true;
-    } else if (btn_pressed.b) {
-        menu->actions.back = true;
-    } else if (btn_pressed.r) {
-        menu->actions.options = true;
-    } else if (btn_pressed.l) {
-        menu->actions.system_info = true;
-    } else if (btn_pressed.start) {
-        menu->actions.settings = true;
-    }
+    actions_update_direction(menu);
+    actions_update_buttons(menu);
 }

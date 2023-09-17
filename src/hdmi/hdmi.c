@@ -12,19 +12,7 @@
 
 
 void hdmi_reset_game_id (void) {
-    uint8_t joybus_tx[10];
-    uint8_t joybus_rx[1];
-
-    memset(joybus_tx, 0, sizeof(joybus_tx));
-
-    execute_raw_command(
-        CONTROLLER_PORT,
-        GAME_ID_COMMAND,
-        sizeof(joybus_tx),
-        sizeof(joybus_rx),
-        joybus_tx,
-        joybus_rx
-    );
+    pixelfx_clear_game_id();
 }
 
 void hdmi_broadcast_game_id (boot_params_t *boot_params) {

@@ -53,7 +53,7 @@ static void frame_counter_reset (void) {
 }
 
 static void menu_init (boot_params_t *boot_params) {
-    controller_init();
+    joypad_init();
     timer_init();
     rtc_init();
     rspq_init();

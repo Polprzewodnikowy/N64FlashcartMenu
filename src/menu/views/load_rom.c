@@ -254,7 +254,9 @@ void view_load_rom_init (menu_t *menu) {
 
     menu->load.rom_header = file_read_rom_header(path_get(menu->load.rom_path));
 
-    boxart = component_boxart_init(menu->load.rom_header.metadata.unique_identifier);
+    uint8_t media_type = menu->load.rom_header.metadata.media_type;
+    uint16_t id = menu->load.rom_header.metadata.unique_identifier;
+    boxart = component_boxart_init(media_type, id);
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

@@ -12,6 +12,7 @@ An open source menu for N64 flashcarts.
 ## Current (notable) menu features
 * Fully Open Source.
 * Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
+* Fully emulates the 64DD and loads 64dd disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
@@ -31,12 +32,19 @@ Download the latest `menu.bin` file from the releases page, then put it in the r
 Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
+#### 64DD disk support
+For the ability to load and run 64DD disk images, you need to add the folder `/menu/64ddipl` on the SD card.
+Download and add the relevant ipl files and rename them before adding the folder:
+`NDDE0.n64` the US Prototype IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_US_MJR.n64)
+`NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
+`NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
+
 ### ED64 & ED64P
 Currently not supported, but there is an aim to do so.
 The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 
-### Common to all
+### Common to all flashcarts
 
 #### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
@@ -44,7 +52,7 @@ Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, th
 A known set of PNG files can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
 #### Emulator support
-Emulators should be added to the `/emulators` directory on the SD card.
+Emulators should be added to the `/menu/emulators` directory on the SD card.
 
 Menu currently supports the following emulators and associated ROM file names:
  - **NES**: [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - `neon64bu.rom`

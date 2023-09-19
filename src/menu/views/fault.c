@@ -7,10 +7,10 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_clear(RGBA32(0x7F, 0x00, 0x00, 0xFF));
 
     const char *firmware_message = (
-        "Minimum supported versions:\n"
-        "EverDrive-64: ?\n"
-        "64drive: 2.05\n"
-        "SC64: v2.17.0"
+        "Supported firmware versions:\n"
+        "64drive: 2.05+\n"
+        "EverDrive-64: ???+\n"
+        "SummerCart64: 2.17.0+"
     );
 
     component_messagebox_draw(
@@ -20,7 +20,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "%s",
         flashcart_convert_error_message(menu->flashcart_err),
-        menu->flashcart_err == FLASHCART_ERR_OUTDATED ? firmware_message : ""
+        (menu->flashcart_err == FLASHCART_ERR_OUTDATED) ? firmware_message : ""
     );
 
     rdpq_detach_show();

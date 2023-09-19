@@ -98,6 +98,7 @@ typedef struct {
     struct {
         path_t *rom_path;
         rom_header_t rom_header;
+        path_t *disk_path;
         disk_info_t disk_info;
     } load;
 } menu_t;

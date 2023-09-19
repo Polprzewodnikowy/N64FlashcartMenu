@@ -30,6 +30,20 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
 static uint32_t save_writeback_sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
 
+static void save_writeback_sectors_callback (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size) {
+    for (uint32_t i = 0; i < cluster_size; i++) {
+        uint32_t offset = file_sector + i;
+        uint32_t sector = cluster_sector + i;
+
+        if ((offset > SAVE_WRITEBACK_MAX_SECTORS) || (offset > sector_count)) {
+            return;
+        }
+
+        save_writeback_sectors[offset] = sector;
+    }
+}
+
+
 static flashcart_err_t dummy_init (void) {
     return FLASHCART_OK;
 }
@@ -71,6 +85,11 @@ flashcart_err_t flashcart_init (void) {
 
     bool sd_card_initialized = debug_init_sdfs("sd:/", -1);
 
+#ifndef NDEBUG
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
+#endif
+
     switch (cart_type) {
         case CART_CI:   // 64drive
             flashcart = d64_get_flashcart();
@@ -96,11 +115,6 @@ flashcart_err_t flashcart_init (void) {
         return FLASHCART_ERR_SD_CARD;
     }
 
-#ifndef NDEBUG
-    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
-    debug_init_usblog();
-#endif
-
     return FLASHCART_OK;
 }
 
@@ -119,7 +133,7 @@ bool flashcart_has_feature (flashcart_features_t feature) {
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
     flashcart_err_t err;
 
-    if ((rom_path == NULL) || (!file_exists(rom_path)) || (file_get_size(rom_path) < KiB(4))) {
+    if (rom_path == NULL) {
         return FLASHCART_ERR_ARGS;
     }
 
@@ -131,28 +145,11 @@ flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_pr
 }
 
 flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
-    if ((file_path == NULL) || (!file_exists(file_path))) {
-        return FLASHCART_ERR_ARGS;
-    }
-
-    if ((file_offset % FS_SECTOR_SIZE) != 0) {
+    if ((file_path == NULL) || ((file_offset % FS_SECTOR_SIZE) != 0)) {
         return FLASHCART_ERR_ARGS;
     }
 
     return flashcart->load_file(file_path, rom_offset, file_offset);
-}
-
-static void save_writeback_sectors_callback (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size) {
-    for (uint32_t i = 0; i < cluster_size; i++) {
-        uint32_t offset = file_sector + i;
-        uint32_t sector = cluster_sector + i;
-
-        if ((offset > SAVE_WRITEBACK_MAX_SECTORS) || (offset > sector_count)) {
-            return;
-        }
-
-        save_writeback_sectors[offset] = sector;
-    }
 }
 
 flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
@@ -207,7 +204,7 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
-    if ((ipl_path == NULL) || (!file_exists(ipl_path))) {
+    if (ipl_path == NULL) {
         return FLASHCART_ERR_ARGS;
     }
 
@@ -219,11 +216,7 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
-    if ((disk_path == NULL) || (!file_exists(disk_path))) {
-        return FLASHCART_ERR_ARGS;
-    }
-
-    if (!disk_parameters) {
+    if ((disk_path == NULL) || (disk_parameters == NULL)) {
         return FLASHCART_ERR_ARGS;
     }
 

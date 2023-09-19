@@ -237,7 +237,7 @@ static void load (menu_t *menu) {
     menu->boot_params->detect_cic_seed = true;
 }
 
-static void deinit (menu_t *menu) {
+static void deinit (void) {
     component_boxart_free(boxart);
 }
 
@@ -270,6 +270,6 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     }
 
     if (menu->next_mode != MENU_MODE_LOAD_ROM) {
-        deinit(menu);
+        deinit();
     }
 }

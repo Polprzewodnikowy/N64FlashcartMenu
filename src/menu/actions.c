@@ -25,19 +25,12 @@ static void actions_clear (menu_t *menu) {
 }
 
 static void actions_update_direction (menu_t *menu) {
-    joypad_8way_t c_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_C);
-    joypad_8way_t dpad_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_DPAD);
-    joypad_8way_t stick_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_STICK);
+    joypad_8way_t held_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_DPAD | JOYPAD_2D_STICK);
+    joypad_8way_t fast_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_C);
 
-    joypad_8way_t held_dir = JOYPAD_8WAY_NONE;
-
-    if (c_dir != JOYPAD_8WAY_NONE) {
-        held_dir = c_dir;
+    if (fast_dir != JOYPAD_8WAY_NONE) {
+        held_dir = fast_dir;
         menu->actions.go_fast = true;
-    } else if (dpad_dir != JOYPAD_8WAY_NONE) {
-        held_dir = dpad_dir;
-    } else if (stick_dir != JOYPAD_8WAY_NONE) {
-        held_dir = stick_dir;
     }
 
     joypad_8way_t final_dir = held_dir;

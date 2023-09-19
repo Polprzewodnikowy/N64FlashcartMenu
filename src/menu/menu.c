@@ -109,8 +109,6 @@ static void menu_init (boot_params_t *boot_params) {
 static void menu_deinit (menu_t *menu) {
     unregister_VI_handler(frame_counter_handler);
 
-    display_close();
-
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
 
@@ -130,6 +128,8 @@ static void menu_deinit (menu_t *menu) {
     rtc_close();
     timer_close();
     joypad_close();
+
+    display_close();
 }
 
 

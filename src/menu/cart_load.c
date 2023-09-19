@@ -146,15 +146,10 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
-    path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(path), &disk_parameters);
+    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_path), &disk_parameters);
     if (menu->flashcart_err != FLASHCART_OK) {
-        path_free(path);
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }
-
-    path_free(path);
 
     return CART_LOAD_OK;
 }

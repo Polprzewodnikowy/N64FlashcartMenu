@@ -14,7 +14,7 @@
 #include "disk_info.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
-#include "rom_database.h"
+#include "rom_info.h"
 #include "settings.h"
 
 
@@ -97,7 +97,7 @@ typedef struct {
 
     struct {
         path_t *rom_path;
-        rom_header_t rom_header;
+        rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
     } load;

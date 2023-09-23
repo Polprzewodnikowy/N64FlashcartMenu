@@ -13,7 +13,7 @@ static char *convert_error_message (disk_err_t err) {
         case DISK_ERR_IO: return "I/O error during loading 64DD disk information";
         case DISK_ERR_NO_FILE: return "Couldn't open 64DD disk file";
         case DISK_ERR_INVALID: return "Invalid 64DD disk file";
-        default: return "Unknown disk load error";
+        default: return "Unknown disk info load error";
     }
 }
 

@@ -7,10 +7,15 @@
 #include "utils/fs.h"
 #include "utils/utils.h"
 
-
+#ifndef SAVES_SUBDIRECTORY
 #define SAVES_SUBDIRECTORY      "saves"
+#endif
+#ifndef DDIPL_LOCATION
 #define DDIPL_LOCATION          "/menu/64ddipl"
+#endif
+#ifndef EMU_LOCATION
 #define EMU_LOCATION            "/menu/emulators"
+#endif
 
 
 static bool is_64dd_connected (void) {

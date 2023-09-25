@@ -86,7 +86,7 @@ static bool load_directory (menu_t *menu) {
         if (info.fattrib & AM_SYS) {
             continue;
         }
-        if ((info.fattrib & AM_HID) && !menu->settings.show_hidden_files) {
+        if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
             continue;
         }
 

@@ -30,7 +30,7 @@ typedef enum {
 } ed64_save_type_t;
 
 
-#define SRAM_ADDRESS (0xA8000000)
+#define SRAM_ADDRESS (0x1FFE2000)
 #define ROM_ADDRESS  (0xB0000000)
 
 /* Save functions */

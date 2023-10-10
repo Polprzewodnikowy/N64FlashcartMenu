@@ -91,7 +91,6 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");
             save_type = FLASHCART_SAVE_TYPE_SRAM;
-            emulated_rom_offset = 0x104000;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
@@ -100,6 +99,10 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
+            break;
+        case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
+            path_push(path, "TotalSMS.z64");
+            save_type = FLASHCART_SAVE_TYPE_SRAM;
             break;
     }
 
@@ -120,6 +123,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
 
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_SNES:
+            // The emulator expects the header to be removed from the ROM being uploaded.
             emulated_file_offset = ((file_get_size(path_get(path)) & 0x3FF) == 0x200) ? 0x200 : 0;
             break;
         default:

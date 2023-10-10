@@ -1,3 +1,7 @@
+#define IPL3_ENTRY          0xA4000040
+#define REBOOT_ADDRESS      0xA4001000
+#define STACK_ADDRESS       0xA4001FF0
+
 #define RI_ADDRESS          0xA4700000
 
 #define RI_MODE             0x00
@@ -12,8 +16,6 @@
 
 #define RDRAM_RESET_DELAY   1024
 #define RDRAM_STANDBY_DELAY 512
-
-#define IPL3_ENTRY          0xA4000040
 
 .set noat
 .section .text.reboot, "ax", %progbits
@@ -36,8 +38,10 @@ ipl2:
 .set reorder
 
 reboot_entry:
-    .equ reboot_entry_offset, ((. - reboot_start) / 4)
-    .global reboot_entry_offset
+    .set reboot, REBOOT_ADDRESS + (. - reboot_start)
+    .global reboot
+
+    li $sp, STACK_ADDRESS
 
     bnez $s5, reset_rdram_skip
 
@@ -66,6 +70,12 @@ reset_rdram:
     bnez $t2, 1b
 reset_rdram_skip:
 
+prepare_registers:
+    la $t0, ra_table
+    sll $t1, $s4, 2
+    add $t0, $t1
+    lw $ra, ($t0)
+
     move $at, $zero
     move $v0, $zero
     move $v1, $zero
@@ -76,7 +86,6 @@ reset_rdram_skip:
     move $t0, $zero
     move $t1, $zero
     move $t2, $zero
-    move $t3, $zero
     move $t4, $zero
     move $t5, $zero
     move $t6, $zero
@@ -90,13 +99,16 @@ reset_rdram_skip:
     move $k1, $zero
     move $gp, $zero
     move $s8, $zero
-    move $ra, $zero
-
-    mtc0 $zero, $9
 
 run_ipl3:
     li $t3, IPL3_ENTRY
     jr $t3
 
-    .equ reboot_size, (. - reboot_start)
+ra_values:
+    .set ra_table, REBOOT_ADDRESS + (. - reboot_start)
+    .word 0xA4001554
+    .word 0xA4001550
+    .word 0xA4001554
+
+    .set reboot_size, (. - reboot_start)
     .global reboot_size

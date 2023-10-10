@@ -23,10 +23,13 @@ An open source menu for N64 flashcarts.
 
 ## Getting started
 
+### 64drive
+Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
+Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
+
 ### SC64
-Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest).
-Download the `sc64menu.n64` ROM from the latest action run assets.
-Add it to the root folder on your SD card.
+Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
+Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
 ### ED64
 Download the `ED64.v64` ROM from the latest action run assets and place it in the `/ED64` folder.
@@ -39,8 +42,10 @@ Download the `ED64P.v64` ROM from the latest action run assets and place it in t
 
 #### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
-Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`.
-A known set of PNG files can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
+Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
+i.e. for GoldenEye 2 letters, this would be `GE.png`.
+i.e. for GoldenEye 3 letters, this would be `NGE.png`.
+A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
 #### Emulator support
 Emulators should be added to the `/emulators` directory on the SD card.
@@ -49,6 +54,7 @@ Menu currently supports the following emulators and associated ROM file names:
  - **NES**: [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - `neon64bu.rom`
  - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - `sodium64.z64`
  - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64`
+ - **Sega Master System** / **Sega Game Gear** / **Sg1000**: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64` (Currently broken)
 
 
 # Developer documentation

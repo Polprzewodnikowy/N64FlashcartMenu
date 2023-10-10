@@ -14,6 +14,7 @@ N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs 
 SRCS = \
 	main.c \
 	boot/boot.c \
+	boot/cic.c \
 	boot/crc32.c \
 	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \
@@ -42,7 +43,7 @@ SRCS = \
 	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
-	menu/rom_database.c \
+	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
 	menu/usb_comm.c \

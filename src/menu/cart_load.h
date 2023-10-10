@@ -11,7 +11,7 @@
 #include "disk_info.h"
 #include "flashcart/flashcart.h"
 #include "menu_state.h"
-#include "rom_database.h"
+#include "rom_info.h"
 
 
 typedef enum {

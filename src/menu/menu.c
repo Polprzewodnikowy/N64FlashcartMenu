@@ -8,6 +8,7 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
+#include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
@@ -53,12 +54,12 @@ static void frame_counter_reset (void) {
 }
 
 static void menu_init (boot_params_t *boot_params) {
-    controller_init();
+    joypad_init();
     timer_init();
     rtc_init();
     rspq_init();
     rdpq_init();
-    fonts_init();
+
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -67,8 +68,8 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_error = flashcart_init();
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_init();
+    if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
@@ -88,20 +89,30 @@ static void menu_init (boot_params_t *boot_params) {
     menu->browser.valid = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
+    menu->load.rom_path = NULL;
+
+    hdmi_clear_game_id();
+
     tv_type = get_tv_type();
-    if ((tv_type == TV_PAL) && menu->settings.pal60) {
+    if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
         TV_TYPE_RAM = TV_NTSC;
     }
 
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
 
     register_VI_handler(frame_counter_handler);
+    
+    fonts_init();
 }
 
 static void menu_deinit (menu_t *menu) {
+    unregister_VI_handler(frame_counter_handler);
+
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
+
+    hdmi_send_game_id(menu->boot_params);
 
     path_free(menu->browser.directory);
     free(menu);
@@ -110,13 +121,13 @@ static void menu_deinit (menu_t *menu) {
 
     flashcart_deinit();
 
-    sound_close();
+    sound_deinit();
+
     rdpq_close();
     rspq_close();
     rtc_close();
     timer_close();
-
-    unregister_VI_handler(frame_counter_handler);
+    joypad_close();
 
     display_close();
 }
@@ -136,6 +147,7 @@ static struct views_s {
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
+    { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
     { view_error_init, view_error_display }, // MENU_MODE_ERROR
     { view_fault_init, view_fault_display }, // MENU_MODE_FAULT

@@ -105,7 +105,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
 
         layout = rdpq_paragraph_builder_end();
 
-        int highlight_height = (layout->bbox[3] - layout->bbox[1]) / layout->nlines;
+        int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
         int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + ((selected - starting_position) * highlight_height);
 
         component_box_draw(

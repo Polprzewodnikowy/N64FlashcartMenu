@@ -35,18 +35,18 @@ void sound_init_mp3_playback (void) {
     sound_reconfigure(mp3player_get_samplerate());
 }
 
+void sound_deinit (void) {
+    if (sound_initialized) {
+        mixer_close();
+        audio_close();
+        sound_initialized = false;
+    }
+}
+
 void sound_poll (void) {
     if (sound_initialized && audio_can_write()) {
         short *audio_buffer = audio_write_begin();
         mixer_poll(audio_buffer, audio_get_buffer_length());
         audio_write_end();
-    }
-}
-
-void sound_close (void) {
-    if (sound_initialized) {
-        mixer_close();
-        audio_close();
-        sound_initialized = false;
     }
 }

@@ -13,8 +13,8 @@
 
 void sound_init_default (void);
 void sound_init_mp3_playback (void);
+void sound_deinit (void);
 void sound_poll (void);
-void sound_close (void);
 
 
 #endif

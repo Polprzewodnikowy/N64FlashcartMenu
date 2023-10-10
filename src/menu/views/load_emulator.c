@@ -75,7 +75,7 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 static void draw_progress (float progress) {
-    surface_t *d = display_try_get();
+    surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
 
     if (d) {
         rdpq_attach(d, NULL);

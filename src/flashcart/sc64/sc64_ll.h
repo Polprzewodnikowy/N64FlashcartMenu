@@ -110,11 +110,20 @@ typedef enum {
     BUTTON_MODE_DD_DISK_SWAP,
 } sc64_button_mode_t;
 
+typedef struct {
+    int count;
+    struct {
+        uint32_t thb_table;
+        uint32_t sector_table;
+    } disks[4];
+} sc64_disk_mapping_t;
+
 
 void sc64_ll_lock (void);
 sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);
 sc64_error_t sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);
 sc64_error_t sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);
+sc64_error_t sc64_ll_set_disk_mapping (sc64_disk_mapping_t *disk_mapping);
 sc64_error_t sc64_ll_writeback_pending (bool *pending);
 sc64_error_t sc64_ll_writeback_enable (void *address);
 sc64_error_t sc64_ll_flash_wait_busy (void);

@@ -21,6 +21,10 @@ static flashcart_err_t ed64_init (void) {
 
     // FIXME: Update firmware if needed.
     // FIXME: Enable RTC if available.
+
+    // FIXME: retrive a config file from (probably SRAM) that might have been set.
+    // This should include the location of the ROM and its save type.
+    // Then, if it is valid, perform a save.
     
     return FLASHCART_OK;
 }
@@ -47,6 +51,10 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
+
+    // FIXME: set the required actions for retriving the save file later (probably SRAM).
+    // This would involve creating some content in an area of RAM that would include
+    // the ROM location and its save type. This information will be used on init to perform a "save writeback".
 
     fix_file_size(&fil);
 

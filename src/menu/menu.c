@@ -94,7 +94,7 @@ static void menu_init (boot_params_t *boot_params) {
     hdmi_clear_game_id();
 
     tv_type = get_tv_type();
-    if ((tv_type == TV_PAL) && menu->settings.pal60) {
+    if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
         TV_TYPE_RAM = TV_NTSC;
     }

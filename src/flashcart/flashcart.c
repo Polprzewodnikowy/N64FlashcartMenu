@@ -98,6 +98,7 @@ flashcart_err_t flashcart_init (void) {
 
         case CART_EDX:  // Series X EverDrive-64
         case CART_ED:   // Original EverDrive-64
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64

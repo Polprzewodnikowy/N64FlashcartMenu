@@ -53,12 +53,11 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
 
     size_t rom_size = f_size(&fil);
 
-    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (rom_size > MiB(64) - KiB(128)) {
+    // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB
+    if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }
-
 
     size_t sdram_size = rom_size;
 

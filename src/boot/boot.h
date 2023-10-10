@@ -15,7 +15,7 @@
 /** @brief Boot device type enumeration */
 typedef enum {
     BOOT_DEVICE_TYPE_ROM = 0,
-    BOOT_DEVICE_TYPE_DD = 1,
+    BOOT_DEVICE_TYPE_64DD = 1,
 } boot_device_type_t;
 
 /** @brief Reset type enumeration */

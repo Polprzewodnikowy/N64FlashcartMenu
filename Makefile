@@ -14,6 +14,7 @@ N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs 
 SRCS = \
 	main.c \
 	boot/boot.c \
+	boot/cic.c \
 	boot/crc32.c \
 	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \
@@ -22,7 +23,6 @@ SRCS = \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
-	hdmi/hdmi.c \
 	libs/libspng/spng/spng.c \
 	libs/mini.c/src/mini.c \
 	libs/miniz/miniz_tdef.c \
@@ -36,12 +36,14 @@ SRCS = \
 	menu/components/common.c \
 	menu/components/context_menu.c \
 	menu/components/file_list.c \
+	menu/disk_info.c \
 	menu/fonts.c \
+	menu/hdmi.c \
 	menu/menu.c \
 	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
-	menu/rom_database.c \
+	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
 	menu/usb_comm.c \
@@ -51,6 +53,7 @@ SRCS = \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
+	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
 	menu/views/load_rom.c \
 	menu/views/music_player.c \

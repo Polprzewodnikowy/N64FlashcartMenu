@@ -3,7 +3,8 @@
 #include "views.h"
 
 
-#define SEEK_SECONDS    (5)
+#define SEEK_SECONDS        (5)
+#define SEEK_SECONDS_FAST   (60)
 
 
 static char *convert_error_message (mp3player_err_t err) {
@@ -47,8 +48,8 @@ static void process (menu_t *menu) {
             menu_show_error(menu, convert_error_message(err));
         }
     } else if (menu->actions.go_left || menu->actions.go_right) {
-        int seconds = (menu->actions.go_left ? -SEEK_SECONDS : SEEK_SECONDS);
-        err = mp3player_seek(seconds);
+        int seconds = menu->actions.go_fast ? SEEK_SECONDS_FAST : SEEK_SECONDS;
+        err = mp3player_seek(menu->actions.go_left ? (-seconds) : seconds);
         if (err != MP3PLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }

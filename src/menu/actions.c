@@ -3,8 +3,11 @@
 #include "actions.h"
 
 
-#define ACTIONS_REPEAT_DELAY    10
-#define JOYSTICK_DEADZONE       32
+#define ACTIONS_REPEAT_DELAY    (8)
+
+
+static int dir_repeat_delay;
+static joypad_8way_t last_dir = JOYPAD_8WAY_NONE;
 
 
 static void actions_clear (menu_t *menu) {
@@ -12,7 +15,8 @@ static void actions_clear (menu_t *menu) {
     menu->actions.go_down = false;
     menu->actions.go_left = false;
     menu->actions.go_right = false;
-    menu->actions.fast = false;
+    menu->actions.go_fast = false;
+
     menu->actions.enter = false;
     menu->actions.back = false;
     menu->actions.options = false;
@@ -20,93 +24,84 @@ static void actions_clear (menu_t *menu) {
     menu->actions.settings = false;
 }
 
+static void actions_update_direction (menu_t *menu) {
+    joypad_8way_t held_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_DPAD | JOYPAD_2D_STICK);
+    joypad_8way_t fast_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_C);
 
-void actions_update (menu_t *menu) {
-    controller_scan();
-
-    struct controller_data down = get_keys_down();
-    struct controller_data held = get_keys_held();
-    struct controller_data pressed = get_keys_pressed();
-
-    if (down.c[0].err != ERROR_NONE) {
-        return;
+    if (fast_dir != JOYPAD_8WAY_NONE) {
+        held_dir = fast_dir;
+        menu->actions.go_fast = true;
     }
 
-    actions_clear(menu);
+    joypad_8way_t final_dir = held_dir;
 
-    if (down.c[0].up || down.c[0].C_up) {
-        menu->actions.go_up = true;
-        menu->actions.vertical_held_counter = 0;
-        if (down.c[0].C_up) {
-            menu->actions.fast = true;
-        }
-    } else if (down.c[0].down || down.c[0].C_down) {
-        menu->actions.go_down = true;
-        menu->actions.vertical_held_counter = 0;
-        if (down.c[0].C_down) {
-            menu->actions.fast = true;
-        }
-    } else if (held.c[0].up || held.c[0].C_up) {
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_up = true;
-            if (held.c[0].C_up) {
-                menu->actions.fast = true;
-            }
-        }
-    } else if (held.c[0].down || held.c[0].C_down) {
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_down = true;
-            if (held.c[0].C_down) {
-                menu->actions.fast = true;
-            }
-        }
-    } else if (pressed.c[0].y > +JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-            menu->actions.go_up = true;
-            if (pressed.c[0].y < +75) {
-                menu->actions.vertical_held_counter = 0;
-            }
-        }
-    } else if (pressed.c[0].y < -JOYSTICK_DEADZONE) { // TODO: requires improvement for responsiveness
-        menu->actions.vertical_held_counter += 1;
-        if (menu->actions.vertical_held_counter >= ACTIONS_REPEAT_DELAY / 2) {
-            menu->actions.go_down = true;
-            if (pressed.c[0].y > -75) {
-                menu->actions.vertical_held_counter = 0;
-            }
-        }
+    if ((last_dir != held_dir) && (last_dir == JOYPAD_8WAY_NONE)) {
+        dir_repeat_delay = ACTIONS_REPEAT_DELAY;
+    } else if (dir_repeat_delay > 0) {
+        final_dir = JOYPAD_8WAY_NONE;
     }
 
-    if (down.c[0].left) {
-        menu->actions.go_left = true;
-        menu->actions.horizontal_held_counter = 0;
-    } else if (down.c[0].right) {
-        menu->actions.go_right = true;
-        menu->actions.horizontal_held_counter = 0;
-    } else if (held.c[0].left) {
-        menu->actions.horizontal_held_counter += 1;
-        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
-            menu->actions.go_left = true;
-        }
-    } else if (held.c[0].right) {
-        menu->actions.horizontal_held_counter += 1;
-        if (menu->actions.horizontal_held_counter >= ACTIONS_REPEAT_DELAY) {
+    switch (final_dir) {
+        case JOYPAD_8WAY_NONE:
+            break;
+        case JOYPAD_8WAY_RIGHT:
             menu->actions.go_right = true;
-        }
+            break;
+        case JOYPAD_8WAY_UP_RIGHT:
+            menu->actions.go_up = true;
+            menu->actions.go_right = true;
+            break;
+        case JOYPAD_8WAY_UP:
+            menu->actions.go_up = true;
+            break;
+        case JOYPAD_8WAY_UP_LEFT:
+            menu->actions.go_up = true;
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_LEFT:
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_DOWN_LEFT:
+            menu->actions.go_down = true;
+            menu->actions.go_left = true;
+            break;
+        case JOYPAD_8WAY_DOWN:
+            menu->actions.go_down = true;
+            break;
+        case JOYPAD_8WAY_DOWN_RIGHT:
+            menu->actions.go_down = true;
+            menu->actions.go_right = true;
+            break;
     }
 
-    if (down.c[0].A) {
+    if (dir_repeat_delay > 0) {
+        dir_repeat_delay -= 1;
+    }
+
+    last_dir = held_dir;
+}
+
+static void actions_update_buttons (menu_t *menu) {    
+    joypad_buttons_t pressed = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+
+    if (pressed.a) {
         menu->actions.enter = true;
-    } else if (down.c[0].B) {
+    } else if (pressed.b) {
         menu->actions.back = true;
-    } else if (down.c[0].R) {
+    } else if (pressed.r) {
         menu->actions.options = true;
-    } else if (down.c[0].L) {
+    } else if (pressed.l) {
         menu->actions.system_info = true;
-    } else if (down.c[0].start) {
+    } else if (pressed.start) {
         menu->actions.settings = true;
     }
+}
+
+
+void actions_update (menu_t *menu) {
+    joypad_poll();
+
+    actions_clear(menu);
+    actions_update_direction(menu);
+    actions_update_buttons(menu);
 }

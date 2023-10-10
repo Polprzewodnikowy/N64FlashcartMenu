@@ -10,6 +10,7 @@
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
+static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
@@ -28,6 +29,10 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_ROM) {
             return -1;
         } else if (b->type == ENTRY_TYPE_ROM) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_DISK) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_DISK) {
             return 1;
         } else if (a->type == ENTRY_TYPE_EMULATOR) {
             return -1;
@@ -81,7 +86,7 @@ static bool load_directory (menu_t *menu) {
         if (info.fattrib & AM_SYS) {
             continue;
         }
-        if ((info.fattrib & AM_HID) && !menu->settings.show_hidden_files) {
+        if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
             continue;
         }
 
@@ -97,6 +102,8 @@ static bool load_directory (menu_t *menu) {
             entry->type = ENTRY_TYPE_DIR;
         } else if (file_has_extensions(info.fname, rom_extensions)) {
             entry->type = ENTRY_TYPE_ROM;
+        } else if (file_has_extensions(info.fname, disk_extensions)) {
+            entry->type = ENTRY_TYPE_DISK;
         }else if (file_has_extensions(info.fname, emulator_extensions)) {
             entry->type = ENTRY_TYPE_EMULATOR;
         } else if (file_has_extensions(info.fname, save_extensions)) {
@@ -226,7 +233,7 @@ static void process (menu_t *menu) {
         return;
     }
 
-    int scroll_speed = menu->actions.fast ? 10 : 1;
+    int scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
@@ -253,6 +260,9 @@ static void process (menu_t *menu) {
                 break;
             case ENTRY_TYPE_ROM:
                 menu->next_mode = MENU_MODE_LOAD_ROM;
+                break;
+            case ENTRY_TYPE_DISK:
+                menu->next_mode = MENU_MODE_LOAD_DISK;
                 break;
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
@@ -297,6 +307,7 @@ static void draw (menu_t *menu, surface_t *d) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
+            case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
             default: action = "A: Info"; break;

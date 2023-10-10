@@ -12,7 +12,6 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
-#define EEPROM_ADDRESS              (0x1FFE2000)
 
 extern int ed_exit(void);
 
@@ -133,8 +132,6 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     switch (type) {
         case SAVE_TYPE_EEPROM_4K:
         case SAVE_TYPE_EEPROM_16K:
-            address = (void *) (EEPROM_ADDRESS);
-            break;
         case SAVE_TYPE_SRAM:
         case SAVE_TYPE_SRAM_128K:
         case SAVE_TYPE_FLASHRAM:

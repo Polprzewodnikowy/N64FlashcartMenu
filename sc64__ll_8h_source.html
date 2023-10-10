@@ -178,25 +178,35 @@ $(function() {
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    BUTTON_MODE_DD_DISK_SWAP,</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>} sc64_button_mode_t;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keywordtype">void</span> sc64_ll_lock (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>sc64_error_t sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>sc64_error_t sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>sc64_error_t sc64_ll_writeback_pending (<span class="keywordtype">bool</span> *pending);</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>sc64_error_t sc64_ll_writeback_enable (<span class="keywordtype">void</span> *address);</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>sc64_error_t sc64_ll_flash_wait_busy (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>sc64_error_t sc64_ll_flash_get_erase_block_size (<span class="keywordtype">size_t</span> *erase_block_size);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>sc64_error_t sc64_ll_flash_erase_block (<span class="keywordtype">void</span> *address);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> <span class="comment">/* sc64 */</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="group__sc64.html">  113</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">int</span> count;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="group__sc64.html">  115</a></span>    <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        uint32_t thb_table;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        uint32_t sector_table;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    } disks[4];</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="keywordtype">void</span> sc64_ll_lock (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>sc64_error_t sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>sc64_error_t sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>sc64_error_t sc64_ll_set_disk_mapping (<a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a> *disk_mapping);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>sc64_error_t sc64_ll_writeback_pending (<span class="keywordtype">bool</span> *pending);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>sc64_error_t sc64_ll_writeback_enable (<span class="keywordtype">void</span> *address);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>sc64_error_t sc64_ll_flash_wait_busy (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>sc64_error_t sc64_ll_flash_get_erase_block_size (<span class="keywordtype">size_t</span> *erase_block_size);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>sc64_error_t sc64_ll_flash_erase_block (<span class="keywordtype">void</span> *address);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> <span class="comment">/* sc64 */</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="agroup__sc64_html_structsc64__buffers__t"><div class="ttname"><a href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a></div><div class="ttdef"><b>Definition:</b> sc64_ll.h:20</div></div>
+<div class="ttc" id="agroup__sc64_html_structsc64__disk__mapping__t"><div class="ttname"><a href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a></div><div class="ttdef"><b>Definition:</b> sc64_ll.h:113</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 25 2023 21:41:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 10 2023 19:13:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

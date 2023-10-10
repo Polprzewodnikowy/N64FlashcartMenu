@@ -1,10 +1,23 @@
 var searchData=
 [
-  ['hb_5fsave_5ftype_5feeprom_5f16k_0',['HB_SAVE_TYPE_EEPROM_16K',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8a10d83c5d10accab32697ee25aa722de0',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5feeprom_5f4k_1',['HB_SAVE_TYPE_EEPROM_4K',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8aa924ea1df0fafd2abd108b11881663fc',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5fflashram_2',['HB_SAVE_TYPE_FLASHRAM',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8a3e8acd0c73d718a43ea1f7dd9c091da0',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5fnone_3',['HB_SAVE_TYPE_NONE',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8a19b2659e1029cc57e3316e7ddb7b3098',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5fsram_4',['HB_SAVE_TYPE_SRAM',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8af8faee9773d12f24b30df0a99d5e8307',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5fsram_5f128k_5',['HB_SAVE_TYPE_SRAM_128K',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8a03bbf34c332244ff38bd4c3202a366c4',1,'rom_database.h']]],
-  ['hb_5fsave_5ftype_5fsram_5fbanked_6',['HB_SAVE_TYPE_SRAM_BANKED',['../rom__database_8h.html#a3bd14048ebc4ca94184a04094d477fb8a89495d0cc0553ec93813bdc8cb7d6594',1,'rom_database.h']]]
+  ['market_5faustralian_0',['MARKET_AUSTRALIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf3c95d6d57569ce5413bcf0a1d0bca50',1,'rom_info.h']]],
+  ['market_5fbrazilian_1',['MARKET_BRAZILIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaab39c57cfd0fb43a7af9bd2c682c62ce',1,'rom_info.h']]],
+  ['market_5fcanadian_2',['MARKET_CANADIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eabe5d0f1f944cad284c5a91758a30c379',1,'rom_info.h']]],
+  ['market_5fchinese_3',['MARKET_CHINESE',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ead224762fea1a531aa708be42f866408b',1,'rom_info.h']]],
+  ['market_5fdutch_4',['MARKET_DUTCH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab1d8ed6dbfef6c7b95126a44206068a6',1,'rom_info.h']]],
+  ['market_5feuropean_5fbasic_5',['MARKET_EUROPEAN_BASIC',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea4b6ad276f30d76bfbfadb7b7268ab356',1,'rom_info.h']]],
+  ['market_5ffrench_6',['MARKET_FRENCH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf60c0d80eaa8026ff384f2a5a78dd1c8',1,'rom_info.h']]],
+  ['market_5fgateway64_5fntsc_7',['MARKET_GATEWAY64_NTSC',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab0a10418b57442d5759df02f5a0f45e8',1,'rom_info.h']]],
+  ['market_5fgateway64_5fpal_8',['MARKET_GATEWAY64_PAL',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaaba43978734c0351513b95f58e96aac4',1,'rom_info.h']]],
+  ['market_5fgerman_9',['MARKET_GERMAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea705dbb6f23b076d51a7ddd96a262cfa4',1,'rom_info.h']]],
+  ['market_5fitalian_10',['MARKET_ITALIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea6500a23f7efea1dd76a82407410bcdf8',1,'rom_info.h']]],
+  ['market_5fjapanese_11',['MARKET_JAPANESE',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea785c98321d0422b477041f7ad95ef506',1,'rom_info.h']]],
+  ['market_5fjapanese_5fmulti_12',['MARKET_JAPANESE_MULTI',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea87b3cff825fef81ced068588be03ec7b',1,'rom_info.h']]],
+  ['market_5fkorean_13',['MARKET_KOREAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7761799f68396739e9c25f18c4b70e92',1,'rom_info.h']]],
+  ['market_5fnorth_5famerica_14',['MARKET_NORTH_AMERICA',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7f85f1e3498bf9699e243b081cdbfe6b',1,'rom_info.h']]],
+  ['market_5fother_5fx_15',['MARKET_OTHER_X',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea9a33be6859415963d848880f7d1cadd6',1,'rom_info.h']]],
+  ['market_5fother_5fy_16',['MARKET_OTHER_Y',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea99303bee22a0150655178e4b45580c9c',1,'rom_info.h']]],
+  ['market_5fother_5fz_17',['MARKET_OTHER_Z',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea39a7ef9126c8174dde80215b516f15f0',1,'rom_info.h']]],
+  ['market_5fscandinavian_18',['MARKET_SCANDINAVIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf5e46754892b5cbd81b6163b51d7bb44',1,'rom_info.h']]],
+  ['market_5fspanish_19',['MARKET_SPANISH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea01bbf8dcc51edee02fdf339c864d66ea',1,'rom_info.h']]]
 ];

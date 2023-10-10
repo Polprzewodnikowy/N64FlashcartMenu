@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['sdk_5fversion_0',['sdk_version',['../rom__database_8h.html#a0115fe44deda826f21523f83edefd517',1,'rom_header_t']]],
-  ['show_5fhidden_5ffiles_1',['show_hidden_files',['../settings_8h.html#a7f6db7abffab57f3879660afc7187108',1,'settings_t']]]
+  ['use_5fsaves_5ffolder_0',['use_saves_folder',['../settings_8h.html#abf8e54596905858b3ada7f163b07d6a6',1,'settings_t']]]
 ];

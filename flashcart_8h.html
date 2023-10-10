@@ -89,6 +89,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
+<tr class="memitem:structflashcart__disk__parameters__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#structflashcart__disk__parameters__t">flashcart_disk_parameters_t</a></td></tr>
+<tr class="separator:structflashcart__disk__parameters__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structflashcart__t.html">flashcart_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flashcart Structure.  <a href="structflashcart__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -101,19 +103,24 @@ typedef void&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_pro
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a350f576549fef0c185b679ef0a132289"><td class="memItemLeft" align="right" valign="top"><a id="a350f576549fef0c185b679ef0a132289" name="a350f576549fef0c185b679ef0a132289"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a> { <br />
+<tr class="memitem:a324286864a7bc56dbbeeb791aa81ab73"><td class="memItemLeft" align="right" valign="top"><a id="a324286864a7bc56dbbeeb791aa81ab73" name="a324286864a7bc56dbbeeb791aa81ab73"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a> { <br />
 &#160;&#160;<b>FLASHCART_OK</b>
-, <b>FLASHCART_ERROR_NOT_DETECTED</b>
-, <b>FLASHCART_ERROR_OUTDATED</b>
-, <b>FLASHCART_ERROR_SD_CARD</b>
+, <b>FLASHCART_ERR_NOT_DETECTED</b>
+, <b>FLASHCART_ERR_OUTDATED</b>
+, <b>FLASHCART_ERR_SD_CARD</b>
 , <br />
-&#160;&#160;<b>FLASHCART_ERROR_ARGS</b>
-, <b>FLASHCART_ERROR_LOAD</b>
-, <b>FLASHCART_ERROR_INT</b>
+&#160;&#160;<b>FLASHCART_ERR_ARGS</b>
+, <b>FLASHCART_ERR_LOAD</b>
+, <b>FLASHCART_ERR_INT</b>
+, <b>FLASHCART_ERR_FUNCTION_NOT_SUPPORTED</b>
 <br />
  }</td></tr>
-<tr class="memdesc:a350f576549fef0c185b679ef0a132289"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flashcart error enumeration. <br /></td></tr>
-<tr class="separator:a350f576549fef0c185b679ef0a132289"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a324286864a7bc56dbbeeb791aa81ab73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flashcart error enumeration. <br /></td></tr>
+<tr class="separator:a324286864a7bc56dbbeeb791aa81ab73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956fff40ddf9cba0ca30fabc0cecb016"><td class="memItemLeft" align="right" valign="top"><a id="a956fff40ddf9cba0ca30fabc0cecb016" name="a956fff40ddf9cba0ca30fabc0cecb016"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#a956fff40ddf9cba0ca30fabc0cecb016">flashcart_features_t</a> { <b>FLASHCART_FEATURE_64DD</b>
+ }</td></tr>
+<tr class="memdesc:a956fff40ddf9cba0ca30fabc0cecb016"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of optional supported flashcart features. <br /></td></tr>
+<tr class="separator:a956fff40ddf9cba0ca30fabc0cecb016"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51261e17f581033419e18c3e3d0c2cf2"><td class="memItemLeft" align="right" valign="top"><a id="a51261e17f581033419e18c3e3d0c2cf2" name="a51261e17f581033419e18c3e3d0c2cf2"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2">flashcart_save_type_t</a> { <br />
 &#160;&#160;<b>FLASHCART_SAVE_TYPE_NONE</b>
 , <b>FLASHCART_SAVE_TYPE_EEPROM_4K</b>
@@ -133,28 +140,82 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4024fa595f146ea55008601219b42b11"><td class="memItemLeft" align="right" valign="top"><a id="a4024fa595f146ea55008601219b42b11" name="a4024fa595f146ea55008601219b42b11"></a>
-<a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_init</b> (void)</td></tr>
-<tr class="separator:a4024fa595f146ea55008601219b42b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca9778a0e9be6d7906028862f8a5f4d6"><td class="memItemLeft" align="right" valign="top"><a id="aca9778a0e9be6d7906028862f8a5f4d6" name="aca9778a0e9be6d7906028862f8a5f4d6"></a>
-<a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_deinit</b> (void)</td></tr>
-<tr class="separator:aca9778a0e9be6d7906028862f8a5f4d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfc6c6adcd9af602c157f12b97ab7fa8"><td class="memItemLeft" align="right" valign="top"><a id="adfc6c6adcd9af602c157f12b97ab7fa8" name="adfc6c6adcd9af602c157f12b97ab7fa8"></a>
-<a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_rom</b> (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress)</td></tr>
-<tr class="separator:adfc6c6adcd9af602c157f12b97ab7fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af26ed13617898b0e8fbd7149fa865790"><td class="memItemLeft" align="right" valign="top"><a id="af26ed13617898b0e8fbd7149fa865790" name="af26ed13617898b0e8fbd7149fa865790"></a>
-<a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_file</b> (char *file_path, uint32_t rom_offset, uint32_t file_offset)</td></tr>
-<tr class="separator:af26ed13617898b0e8fbd7149fa865790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1daf9a93bc2e1ea534fdae3d1385f9e1"><td class="memItemLeft" align="right" valign="top"><a id="a1daf9a93bc2e1ea534fdae3d1385f9e1" name="a1daf9a93bc2e1ea534fdae3d1385f9e1"></a>
-<a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_save</b> (char *save_path, <a class="el" href="flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2">flashcart_save_type_t</a> save_type)</td></tr>
-<tr class="separator:a1daf9a93bc2e1ea534fdae3d1385f9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af25818bfc66bf9d2d1bc0874cdd3ef44"><td class="memItemLeft" align="right" valign="top"><a id="af25818bfc66bf9d2d1bc0874cdd3ef44" name="af25818bfc66bf9d2d1bc0874cdd3ef44"></a>
+char *&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_convert_error_message</b> (<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a> err)</td></tr>
+<tr class="separator:af25818bfc66bf9d2d1bc0874cdd3ef44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb4443197e675ab8bdef69a00f7ebae1"><td class="memItemLeft" align="right" valign="top"><a id="aeb4443197e675ab8bdef69a00f7ebae1" name="aeb4443197e675ab8bdef69a00f7ebae1"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_init</b> (void)</td></tr>
+<tr class="separator:aeb4443197e675ab8bdef69a00f7ebae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb03233ab0fafc933ae9808a93a96987"><td class="memItemLeft" align="right" valign="top"><a id="adb03233ab0fafc933ae9808a93a96987" name="adb03233ab0fafc933ae9808a93a96987"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_deinit</b> (void)</td></tr>
+<tr class="separator:adb03233ab0fafc933ae9808a93a96987"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12216d7b254d6c0078f6e33412f62a7d"><td class="memItemLeft" align="right" valign="top"><a id="a12216d7b254d6c0078f6e33412f62a7d" name="a12216d7b254d6c0078f6e33412f62a7d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_has_feature</b> (<a class="el" href="flashcart_8h.html#a956fff40ddf9cba0ca30fabc0cecb016">flashcart_features_t</a> feature)</td></tr>
+<tr class="separator:a12216d7b254d6c0078f6e33412f62a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af20975a3b7aa5e6c97afc1718831a2dd"><td class="memItemLeft" align="right" valign="top"><a id="af20975a3b7aa5e6c97afc1718831a2dd" name="af20975a3b7aa5e6c97afc1718831a2dd"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_rom</b> (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress)</td></tr>
+<tr class="separator:af20975a3b7aa5e6c97afc1718831a2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5ded1802a6fb0e22823d4219093028"><td class="memItemLeft" align="right" valign="top"><a id="a6f5ded1802a6fb0e22823d4219093028" name="a6f5ded1802a6fb0e22823d4219093028"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_file</b> (char *file_path, uint32_t rom_offset, uint32_t file_offset)</td></tr>
+<tr class="separator:a6f5ded1802a6fb0e22823d4219093028"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9eafc0f23f023857def3195eb4abd4"><td class="memItemLeft" align="right" valign="top"><a id="a5a9eafc0f23f023857def3195eb4abd4" name="a5a9eafc0f23f023857def3195eb4abd4"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_save</b> (char *save_path, <a class="el" href="flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2">flashcart_save_type_t</a> save_type)</td></tr>
+<tr class="separator:a5a9eafc0f23f023857def3195eb4abd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5de6b1e2a3f144e5a82017e3fb2b33e8"><td class="memItemLeft" align="right" valign="top"><a id="a5de6b1e2a3f144e5a82017e3fb2b33e8" name="a5de6b1e2a3f144e5a82017e3fb2b33e8"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_64dd_ipl</b> (char *ipl_path, flashcart_progress_callback_t *progress)</td></tr>
+<tr class="separator:a5de6b1e2a3f144e5a82017e3fb2b33e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab80782373609c13e8e00fd86ed101dca"><td class="memItemLeft" align="right" valign="top"><a id="ab80782373609c13e8e00fd86ed101dca" name="ab80782373609c13e8e00fd86ed101dca"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_load_64dd_disk</b> (char *disk_path, <a class="el" href="flashcart_8h.html#structflashcart__disk__parameters__t">flashcart_disk_parameters_t</a> *disk_parameters)</td></tr>
+<tr class="separator:ab80782373609c13e8e00fd86ed101dca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Flashcart Subsystem. </p>
-</div></div><!-- contents -->
+</div><hr/><h2 class="groupheader">Data Structure Documentation</h2>
+<a name="structflashcart__disk__parameters__t" id="structflashcart__disk__parameters__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structflashcart__disk__parameters__t">&#9670;&#160;</a></span>flashcart_disk_parameters_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct flashcart_disk_parameters_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="ae1469bc79e8ee357edfc2b338d142f94" name="ae1469bc79e8ee357edfc2b338d142f94"></a>bool</td>
+<td class="fieldname">
+development_drive</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae3c98b378650338e9164332d28178177" name="ae3c98b378650338e9164332d28178177"></a>uint8_t</td>
+<td class="fieldname">
+disk_type</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac06bc2621cde4d7e0b0677725e07d41b" name="ac06bc2621cde4d7e0b0677725e07d41b"></a>bool</td>
+<td class="fieldname">
+bad_system_area_lbas[24]</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad62dae6f881576251e1df08274d2ccc8" name="ad62dae6f881576251e1df08274d2ccc8"></a>uint8_t</td>
+<td class="fieldname">
+defect_tracks[16][12]</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 25 2023 21:41:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 10 2023 19:13:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['flashcart_5ferror_5ft_0',['flashcart_error_t',['../flashcart_8h.html#a350f576549fef0c185b679ef0a132289',1,'flashcart.h']]],
-  ['flashcart_5fsave_5ftype_5ft_1',['flashcart_save_type_t',['../flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2',1,'flashcart.h']]]
+  ['entry_5ftype_5ft_0',['entry_type_t',['../menu__state_8h.html#a7e00527da87fefde59d447ebc4aedd7a',1,'menu_state.h']]],
+  ['expansion_5fpak_5ft_1',['expansion_pak_t',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897',1,'rom_info.h']]]
 ];

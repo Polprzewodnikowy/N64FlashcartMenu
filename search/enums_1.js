@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['db_5fsavetype_5ft_0',['db_savetype_t',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685',1,'rom_database.h']]]
+  ['category_5ftype_5ft_0',['category_type_t',['../rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2',1,'rom_info.h']]]
 ];

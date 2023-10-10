@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['pal60_0',['pal60',['../settings_8h.html#a79fc353a44eced7468274ad42f600695',1,'settings_t']]],
+  ['pal60_5fenabled_0',['pal60_enabled',['../settings_8h.html#ad88eea6bf7e99f89f316513306a07506',1,'settings_t']]],
   ['path_2eh_1',['path.h',['../path_8h.html',1,'']]],
   ['path_5ft_2',['path_t',['../path_8h.html#structpath__t',1,'']]],
   ['pi_5fregs_5ft_3',['pi_regs_t',['../boot__io_8h.html#structpi__regs__t',1,'']]],

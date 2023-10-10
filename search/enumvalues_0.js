@@ -1,19 +1,8 @@
 var searchData=
 [
-  ['db_5fmemory_5fexpansion_5ffaulty_0',['DB_MEMORY_EXPANSION_FAULTY',['../rom__database_8h.html#ae15b00a2fe5f49a9791a351b91d97714a6ef02e89e4750185a5dfb3684e982bdf',1,'rom_database.h']]],
-  ['db_5fmemory_5fexpansion_5fnone_1',['DB_MEMORY_EXPANSION_NONE',['../rom__database_8h.html#ae15b00a2fe5f49a9791a351b91d97714ae7e681827e7e5d1260923b18534ca2d0',1,'rom_database.h']]],
-  ['db_5fmemory_5fexpansion_5frecommended_2',['DB_MEMORY_EXPANSION_RECOMMENDED',['../rom__database_8h.html#ae15b00a2fe5f49a9791a351b91d97714a88afc3f995da808c3772b2c6d92eeb2d',1,'rom_database.h']]],
-  ['db_5fmemory_5fexpansion_5frequired_3',['DB_MEMORY_EXPANSION_REQUIRED',['../rom__database_8h.html#ae15b00a2fe5f49a9791a351b91d97714a073891ae34cfb1d6d40200d7b0236e46',1,'rom_database.h']]],
-  ['db_5fmemory_5fexpansion_5fsuggested_4',['DB_MEMORY_EXPANSION_SUGGESTED',['../rom__database_8h.html#ae15b00a2fe5f49a9791a351b91d97714ac7d2a6db839e168ec13c9e07c6650630',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fcpak_5',['DB_SAVE_TYPE_CPAK',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a218b71b755fa244349266a89270c5eb8',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fdd_6',['DB_SAVE_TYPE_DD',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a9ec98db1226c93752c8879e0a8ea429e',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fdd_5fconversion_7',['DB_SAVE_TYPE_DD_CONVERSION',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a4b29a4117a90e53975d74e7f0cf1feb3',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5feeprom_5f16k_8',['DB_SAVE_TYPE_EEPROM_16K',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a9c484e229a227629541c43fafa973619',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5feeprom_5f4k_9',['DB_SAVE_TYPE_EEPROM_4K',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a916ca00d1b321577c68ed8f80b9e3138',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fflashram_10',['DB_SAVE_TYPE_FLASHRAM',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a38243ddc6e5d5804891e485629645707',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5finvalid_11',['DB_SAVE_TYPE_INVALID',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a8dfe4e8e943ac053b89f8f9cf2aade86',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fnone_12',['DB_SAVE_TYPE_NONE',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685a07ec54dd69369e0ebb3027bc6a69f48e',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fsram_13',['DB_SAVE_TYPE_SRAM',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685acce0b10714a290fa6c183e9cc647b253',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fsram_5f128k_14',['DB_SAVE_TYPE_SRAM_128K',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685ab9da468ef68af55b24c78543741d1017',1,'rom_database.h']]],
-  ['db_5fsave_5ftype_5fsram_5fbanked_15',['DB_SAVE_TYPE_SRAM_BANKED',['../rom__database_8h.html#aa9fa987c4bd8ced5523cd65f3408c685ac159a2c35449b4e55f40bba06d965009',1,'rom_database.h']]]
+  ['expansion_5fpak_5ffaulty_0',['EXPANSION_PAK_FAULTY',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04',1,'rom_info.h']]],
+  ['expansion_5fpak_5fnone_1',['EXPANSION_PAK_NONE',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172',1,'rom_info.h']]],
+  ['expansion_5fpak_5frecommended_2',['EXPANSION_PAK_RECOMMENDED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a',1,'rom_info.h']]],
+  ['expansion_5fpak_5frequired_3',['EXPANSION_PAK_REQUIRED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947',1,'rom_info.h']]],
+  ['expansion_5fpak_5fsuggested_4',['EXPANSION_PAK_SUGGESTED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e',1,'rom_info.h']]]
 ];

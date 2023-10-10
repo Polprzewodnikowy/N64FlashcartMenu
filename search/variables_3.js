@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ipl_5fboot_5fcode_0',['ipl_boot_code',['../rom__database_8h.html#a21815400a686f92a7bfffdd1f17b5b86',1,'rom_header_t']]]
+  ['pal60_5fenabled_0',['pal60_enabled',['../settings_8h.html#ad88eea6bf7e99f89f316513306a07506',1,'settings_t']]]
 ];

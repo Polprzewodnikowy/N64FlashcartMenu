@@ -82,6 +82,10 @@ $(function() {
 Data Structures</h2></td></tr>
 <tr class="memitem:structsc64__buffers__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a></td></tr>
 <tr class="separator:structsc64__buffers__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structsc64__disk__mapping__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a></td></tr>
+<tr class="separator:structsc64__disk__mapping__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structsc64__disk__mapping__t_8disks"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sc64.html#structsc64__disk__mapping__t_8disks">sc64_disk_mapping_t.disks</a></td></tr>
+<tr class="separator:structsc64__disk__mapping__t_8disks"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -198,6 +202,9 @@ sc64_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>sc64_ll_get_c
 <tr class="memitem:gaf917620b1dece7ad0d76f0784a49155e"><td class="memItemLeft" align="right" valign="top"><a id="gaf917620b1dece7ad0d76f0784a49155e" name="gaf917620b1dece7ad0d76f0784a49155e"></a>
 sc64_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>sc64_ll_set_config</b> (sc64_cfg_id_t cfg, uint32_t value)</td></tr>
 <tr class="separator:gaf917620b1dece7ad0d76f0784a49155e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga519afa82c65adc591afd04a8422022a3"><td class="memItemLeft" align="right" valign="top"><a id="ga519afa82c65adc591afd04a8422022a3" name="ga519afa82c65adc591afd04a8422022a3"></a>
+sc64_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>sc64_ll_set_disk_mapping</b> (<a class="el" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a> *disk_mapping)</td></tr>
+<tr class="separator:ga519afa82c65adc591afd04a8422022a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0ad9cabd1f51bd126706beccfe38eef2"><td class="memItemLeft" align="right" valign="top"><a id="ga0ad9cabd1f51bd126706beccfe38eef2" name="ga0ad9cabd1f51bd126706beccfe38eef2"></a>
 sc64_error_t&#160;</td><td class="memItemRight" valign="bottom"><b>sc64_ll_writeback_pending</b> (bool *pending)</td></tr>
 <tr class="separator:ga0ad9cabd1f51bd126706beccfe38eef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,10 +264,68 @@ FLASHRAM[128]</td>
 
 </div>
 </div>
+<a name="structsc64__disk__mapping__t" id="structsc64__disk__mapping__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structsc64__disk__mapping__t">&#9670;&#160;</a></span>sc64_disk_mapping_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct sc64_disk_mapping_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a4871a999fa2fc37aae0c25d972df6b49" name="a4871a999fa2fc37aae0c25d972df6b49"></a>int</td>
+<td class="fieldname">
+count</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7e842e7878beb688fba8f678bbeb64ec" name="a7e842e7878beb688fba8f678bbeb64ec"></a>struct <a class="el" href="group__sc64.html#structsc64__disk__mapping__t_8disks">sc64_disk_mapping_t.disks</a></td>
+<td class="fieldname">
+disks[4]</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structsc64__disk__mapping__t_8disks" id="structsc64__disk__mapping__t_8disks"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structsc64__disk__mapping__t_8disks">&#9670;&#160;</a></span>sc64_disk_mapping_t.disks</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct sc64_disk_mapping_t.disks</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a861579386cf034675e6bc40c02a70d85" name="a861579386cf034675e6bc40c02a70d85"></a>uint32_t</td>
+<td class="fieldname">
+thb_table</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a6eb87f552c929841eb0bb309b8ba32e0" name="a6eb87f552c929841eb0bb309b8ba32e0"></a>uint32_t</td>
+<td class="fieldname">
+sector_table</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 25 2023 21:41:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 10 2023 19:13:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

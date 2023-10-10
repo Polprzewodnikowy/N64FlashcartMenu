@@ -89,13 +89,21 @@ $(function() {
 Enumerations</h2></td></tr>
 <tr class="memitem:a8fdf9a69cab967a2d76e575338b1c2e1"><td class="memItemLeft" align="right" valign="top"><a id="a8fdf9a69cab967a2d76e575338b1c2e1" name="a8fdf9a69cab967a2d76e575338b1c2e1"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_err_t</b> { <br />
 &#160;&#160;<b>CART_LOAD_OK</b>
-, <b>CART_LOAD_ERR_SAVES_SUBDIR</b>
-, <b>CART_LOAD_ERR_ROM</b>
-, <b>CART_LOAD_ERR_SAVE</b>
+, <b>CART_LOAD_ERR_ROM_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_SAVE_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_64DD_PRESENT</b>
 , <br />
-&#160;&#160;<b>CART_LOAD_ERR_EMU_NOT_FOUND</b>
-, <b>CART_LOAD_ERR_EMU</b>
-, <b>CART_LOAD_ERR_EMU_ROM</b>
+&#160;&#160;<b>CART_LOAD_ERR_64DD_IPL_NOT_FOUND</b>
+, <b>CART_LOAD_ERR_64DD_IPL_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_64DD_DISK_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_EMU_NOT_FOUND</b>
+, <br />
+&#160;&#160;<b>CART_LOAD_ERR_EMU_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_EMU_ROM_LOAD_FAIL</b>
+, <b>CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL</b>
+, <b>CART_LOAD_ERR_EXP_PAK_NOT_FOUND</b>
+, <br />
+&#160;&#160;<b>CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED</b>
 <br />
  }</td></tr>
 <tr class="separator:a8fdf9a69cab967a2d76e575338b1c2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,9 +123,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a15473e486e1aa6e4568c45040ae74426"><td class="memItemLeft" align="right" valign="top"><a id="a15473e486e1aa6e4568c45040ae74426" name="a15473e486e1aa6e4568c45040ae74426"></a>
 char *&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_convert_error_message</b> (cart_load_err_t err)</td></tr>
 <tr class="separator:a15473e486e1aa6e4568c45040ae74426"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff405987e9ae1c49b1c780d519bd8e10"><td class="memItemLeft" align="right" valign="top"><a id="aff405987e9ae1c49b1c780d519bd8e10" name="aff405987e9ae1c49b1c780d519bd8e10"></a>
-cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_n64_rom_and_save</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, <a class="el" href="rom__database_8h.html#structrom__header__t">rom_header_t</a> *header, flashcart_progress_callback_t progress)</td></tr>
-<tr class="separator:aff405987e9ae1c49b1c780d519bd8e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bd54bc6cd012de3156c5b7a649dfec3"><td class="memItemLeft" align="right" valign="top"><a id="a9bd54bc6cd012de3156c5b7a649dfec3" name="a9bd54bc6cd012de3156c5b7a649dfec3"></a>
+cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_n64_rom_and_save</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, flashcart_progress_callback_t progress)</td></tr>
+<tr class="separator:a9bd54bc6cd012de3156c5b7a649dfec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2812c219d9f2a935c42f1ffd8c05dc02"><td class="memItemLeft" align="right" valign="top"><a id="a2812c219d9f2a935c42f1ffd8c05dc02" name="a2812c219d9f2a935c42f1ffd8c05dc02"></a>
+cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_64dd_ipl_and_disk</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, flashcart_progress_callback_t progress)</td></tr>
+<tr class="separator:a2812c219d9f2a935c42f1ffd8c05dc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7ab3db0eb827664ec5251ced149615f"><td class="memItemLeft" align="right" valign="top"><a id="ae7ab3db0eb827664ec5251ced149615f" name="ae7ab3db0eb827664ec5251ced149615f"></a>
 cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_emulator</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress)</td></tr>
 <tr class="separator:ae7ab3db0eb827664ec5251ced149615f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,7 +138,7 @@ cart_load_err_t&#160;</td><td class="memItemRight" valign="bottom"><b>cart_load_
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 25 2023 21:41:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 10 2023 19:13:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

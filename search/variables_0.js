@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['boot_5faddress_0',['boot_address',['../rom__database_8h.html#aa48b8e6299791b00d3050c8b426ea7c0',1,'rom_header_t']]]
+  ['bgm_5fenabled_0',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]]
 ];

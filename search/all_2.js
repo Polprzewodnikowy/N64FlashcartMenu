@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['boot_2eh_0',['boot.h',['../boot_8h.html',1,'']]],
-  ['boot_5faddress_1',['boot_address',['../rom__database_8h.html#aa48b8e6299791b00d3050c8b426ea7c0',1,'rom_header_t']]],
+  ['bgm_5fenabled_0',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
+  ['boot_2eh_1',['boot.h',['../boot_8h.html',1,'']]],
   ['boot_5fdevice_5ftype_5ft_2',['boot_device_type_t',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbd',1,'boot.h']]],
   ['boot_5fio_2eh_3',['boot_io.h',['../boot__io_8h.html',1,'']]],
   ['boot_5fparams_5ft_4',['boot_params_t',['../boot_8h.html#structboot__params__t',1,'']]],

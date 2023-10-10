@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['default_5fdirectory_0',['default_directory',['../settings_8h.html#a7b25ac0c578507eb002025f1e5ad6041',1,'settings_t']]]
+  ['hidden_5ffiles_5fenabled_0',['hidden_files_enabled',['../settings_8h.html#a9104a215abdf644beae030600efcec6a',1,'settings_t']]]
 ];

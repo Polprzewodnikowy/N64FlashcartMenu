@@ -98,6 +98,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:structmenu__t_8actions"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structmenu__t_8browser"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="menu__state_8h.html#structmenu__t_8browser">menu_t.browser</a></td></tr>
 <tr class="separator:structmenu__t_8browser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structmenu__t_8load"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="menu__state_8h.html#structmenu__t_8load">menu_t.load</a></td></tr>
+<tr class="separator:structmenu__t_8load"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -119,11 +121,12 @@ Enumerations</h2></td></tr>
 , <b>MENU_MODE_CREDITS</b>
 , <br />
 &#160;&#160;<b>MENU_MODE_LOAD_ROM</b>
+, <b>MENU_MODE_LOAD_DISK</b>
 , <b>MENU_MODE_LOAD_EMULATOR</b>
 , <b>MENU_MODE_ERROR</b>
-, <b>MENU_MODE_FAULT</b>
 , <br />
-&#160;&#160;<b>MENU_MODE_BOOT</b>
+&#160;&#160;<b>MENU_MODE_FAULT</b>
+, <b>MENU_MODE_BOOT</b>
 , <b>__MENU_MODE_COUNT</b>
 <br />
  }</td></tr>
@@ -132,10 +135,11 @@ Enumerations</h2></td></tr>
 <tr class="memitem:a7e00527da87fefde59d447ebc4aedd7a"><td class="memItemLeft" align="right" valign="top"><a id="a7e00527da87fefde59d447ebc4aedd7a" name="a7e00527da87fefde59d447ebc4aedd7a"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="menu__state_8h.html#a7e00527da87fefde59d447ebc4aedd7a">entry_type_t</a> { <br />
 &#160;&#160;<b>ENTRY_TYPE_DIR</b>
 , <b>ENTRY_TYPE_ROM</b>
+, <b>ENTRY_TYPE_DISK</b>
 , <b>ENTRY_TYPE_EMULATOR</b>
-, <b>ENTRY_TYPE_SAVE</b>
 , <br />
-&#160;&#160;<b>ENTRY_TYPE_IMAGE</b>
+&#160;&#160;<b>ENTRY_TYPE_SAVE</b>
+, <b>ENTRY_TYPE_IMAGE</b>
 , <b>ENTRY_TYPE_MUSIC</b>
 , <b>ENTRY_TYPE_OTHER</b>
 <br />
@@ -221,15 +225,15 @@ boot_params</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a2cba053cad9f6d3236617aab1e349f71" name="a2cba053cad9f6d3236617aab1e349f71"></a><a class="el" href="flashcart_8h.html#a350f576549fef0c185b679ef0a132289">flashcart_error_t</a></td>
-<td class="fieldname">
-flashcart_error</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
 <a id="a057b4d4f44a9e6ffe0d18bb41cfff2d5" name="a057b4d4f44a9e6ffe0d18bb41cfff2d5"></a>char *</td>
 <td class="fieldname">
 error_message</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a71a38d703f0b95e19ac52cc2e312ac8d" name="a71a38d703f0b95e19ac52cc2e312ac8d"></a><a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a></td>
+<td class="fieldname">
+flashcart_err</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
@@ -239,15 +243,21 @@ current_time</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="ac83985a8ce385fa0dcbbac3c25afd400" name="ac83985a8ce385fa0dcbbac3c25afd400"></a>struct <a class="el" href="menu__state_8h.html#structmenu__t_8actions">menu_t.actions</a></td>
+<a id="a2eaa071466e5afb3d5ec861fa22fa63f" name="a2eaa071466e5afb3d5ec861fa22fa63f"></a>struct <a class="el" href="menu__state_8h.html#structmenu__t_8actions">menu_t.actions</a></td>
 <td class="fieldname">
 actions</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a0ca65378335d6cade7d5007e0534ea0d" name="a0ca65378335d6cade7d5007e0534ea0d"></a>struct <a class="el" href="menu__state_8h.html#structmenu__t_8browser">menu_t.browser</a></td>
+<a id="a9f99bc257914657ff89e612d2567ffb5" name="a9f99bc257914657ff89e612d2567ffb5"></a>struct <a class="el" href="menu__state_8h.html#structmenu__t_8browser">menu_t.browser</a></td>
 <td class="fieldname">
 browser</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="afc69a4f30d8b06ac866f166f7c4ed94b" name="afc69a4f30d8b06ac866f166f7c4ed94b"></a>struct <a class="el" href="menu__state_8h.html#structmenu__t_8load">menu_t.load</a></td>
+<td class="fieldname">
+load</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -292,21 +302,9 @@ go_right</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a31d4541b8e926a24f0c9b835b68cfdf3" name="a31d4541b8e926a24f0c9b835b68cfdf3"></a>bool</td>
+<a id="a02842289485fbb10fd35b58032082411" name="a02842289485fbb10fd35b58032082411"></a>bool</td>
 <td class="fieldname">
-fast</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a2733f89c8389ba4014a71be2079a772b" name="a2733f89c8389ba4014a71be2079a772b"></a>int</td>
-<td class="fieldname">
-vertical_held_counter</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="afe760727ce646ceb9b0b4b9c8e599367" name="afe760727ce646ceb9b0b4b9c8e599367"></a>int</td>
-<td class="fieldname">
-horizontal_held_counter</td>
+go_fast</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
@@ -396,10 +394,51 @@ selected</td>
 
 </div>
 </div>
+<a name="structmenu__t_8load" id="structmenu__t_8load"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structmenu__t_8load">&#9670;&#160;</a></span>menu_t.load</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct menu_t.load</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="aefbc918cf74acc7c15d147af827093bb" name="aefbc918cf74acc7c15d147af827093bb"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
+<td class="fieldname">
+rom_path</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae7ef75eba6328f2fbdff94a8e6961f29" name="ae7ef75eba6328f2fbdff94a8e6961f29"></a><a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a></td>
+<td class="fieldname">
+rom_info</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aa15da35798f753cd041bb3877e15ae69" name="aa15da35798f753cd041bb3877e15ae69"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
+<td class="fieldname">
+disk_path</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aea0f64b3818cf4031cb0e0551f0b359f" name="aea0f64b3818cf4031cb0e0551f0b359f"></a><a class="el" href="disk__info_8h.html#structdisk__info__t">disk_info_t</a></td>
+<td class="fieldname">
+disk_info</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Sep 25 2023 21:41:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Tue Oct 10 2023 19:13:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

@@ -21,6 +21,10 @@ static flashcart_err_t ed64_init (void) {
 
     // FIXME: Update firmware if needed.
     // FIXME: Enable RTC if available.
+
+    // FIXME: retrive a config file from (probably SRAM) that might have been set.
+    // This should include the location of the ROM and its save type.
+    // Then, if it is valid, perform a save.
     
     return FLASHCART_OK;
 }
@@ -48,11 +52,16 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
         return FLASHCART_ERR_LOAD;
     }
 
+    // FIXME: set the required actions for retriving the save file later (probably SRAM).
+    // This would involve creating some content in an area of RAM that would include
+    // the ROM location and its save type. This information will be used on init to perform a "save writeback".
+
     fix_file_size(&fil);
 
     size_t rom_size = f_size(&fil);
 
-    // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB
+    // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB for save compatibility.
+    // Or somehow warn that certain ROM's will have corruption due to the address space being used for saves.
     if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
@@ -96,8 +105,9 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 
     size_t file_size = f_size(&fil) - file_offset;
 
-    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (file_size > (MiB(64) - KiB(128) - rom_offset)) {
+    // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB for save compatibility.
+    // Or somehow warn that certain ROM's will have corruption due to the address space being used for saves.
+    if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERR_ARGS;
     }

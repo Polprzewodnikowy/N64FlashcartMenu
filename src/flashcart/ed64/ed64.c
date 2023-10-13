@@ -18,16 +18,22 @@ extern int ed_exit(void);
 static flashcart_err_t ed64_init (void) {
 
     // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
+    FIL fil, rsfil;
+    UINT br;
+    if (f_open(&rsfil, strip_sd_prefix("/menu/RESET"), FA_READ | FA_OPEN_EXISTING) == FR_OK) {
+        f_close(&rsfil);
+        f_unlink(strip_sd_prefix("/menu/RESET"));
+        int size = KiB(128);
+        uint8_t cartsave_data[size];
+        f_open(&fil, strip_sd_prefix("test.sav"), FA_WRITE | FA_CREATE_NEW);
+        getSRAM(cartsave_data, size);
+        f_write(&fil, cartsave_data, size, &br);
+        f_close(&fil);
+    }
 
-    // FIXME: Update firmware if needed.
-    // FIXME: Enable RTC if available.
-
-    // FIXME: retrive a config file from (probably SRAM) that might have been set.
-    // This should include the location of the ROM and its save type.
-    // Then, if it is valid, perform a save.
-    
     return FLASHCART_OK;
 }
+
 
 static flashcart_err_t ed64_deinit (void) {
 
@@ -134,43 +140,32 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 }
 
 static flashcart_err_t ed64_load_save (char *save_path) {
-    void *address =  NULL;
-    ed64_save_type_t type = ed64_ll_get_save_type();
-
-    switch (type) {
-        case SAVE_TYPE_EEPROM_4K:
-        case SAVE_TYPE_EEPROM_16K:
-        case SAVE_TYPE_SRAM:
-        case SAVE_TYPE_SRAM_128K:
-        case SAVE_TYPE_FLASHRAM:
-            address = (void *) (SRAM_ADDRESS);
-            break;
-        case SAVE_TYPE_NONE:
-        default:
-            return FLASHCART_ERR_ARGS;
-    }
-
+    //ed64_save_type_t type = ed64_ll_get_save_type();
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
-        return FLASHCART_ERR_LOAD;
-    }
+    if (f_open(&fil, strip_sd_prefix("test.sav"), FA_READ) == FR_OK) {
 
-    size_t save_size = f_size(&fil);
+    size_t save_size = KiB(128);
+    uint8_t cartsave_data[save_size];
 
-    if (f_read(&fil, address, save_size, &br) != FR_OK) {
-        f_close(&fil);
-        return FLASHCART_ERR_LOAD;
+    if (f_read(&fil, cartsave_data, save_size, &br) != FR_OK) {
+            f_close(&fil);
+            return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
-    if (br != save_size) {
-        return FLASHCART_ERR_LOAD;
-    }
+    setSRAM(cartsave_data, save_size);
+}
+    FIL rsfil;
+    UINT rsbr;
+    TCHAR byte[1];
+    f_open(&rsfil, strip_sd_prefix("/menu/RESET"), FA_WRITE | FA_CREATE_ALWAYS);
+    f_write(&rsfil, (void *)byte, 1, &rsbr);
+    f_close(&rsfil);
 
     return FLASHCART_OK;
 }

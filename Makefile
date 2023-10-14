@@ -9,7 +9,7 @@ OUTPUT_DIR = output
 
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS) -DMENU_VERSION=\"0.0.1.$(shell date --iso=minutes).ALPHA\"
 
 SRCS = \
 	main.c \

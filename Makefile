@@ -7,7 +7,7 @@ ASSETS_DIR = assets
 BUILD_DIR = build
 OUTPUT_DIR = output
 
-FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date --iso=minutes).ALPHA\"
+FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date +%Y-%m-%dT%H:%M:%SZ).ALPHA\"
 
 include $(N64_INST)/include/n64.mk
 

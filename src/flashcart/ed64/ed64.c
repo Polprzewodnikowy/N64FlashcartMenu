@@ -13,6 +13,14 @@
 #include "ed64.h"
 
 
+// #include "../menu/settings.h"
+
+// // This is a trial hack before using the settings API.
+// #ifndef LAST_ROM_FILE_PATH
+// #define LAST_ROM_FILE_PATH "/ed64/last_rom.txt"
+// #endif
+
+
 extern int ed_exit(void);
 
 static flashcart_err_t ed64_init (void) {
@@ -22,9 +30,26 @@ static flashcart_err_t ed64_init (void) {
     // FIXME: Update firmware if needed.
     // FIXME: Enable RTC if available.
 
-    // FIXME: retrive a config file from (probably SRAM) that might have been set.
+    // FIXME: Retrive a config file from the SD card that might have been set.
     // This should include the location of the ROM and its save type.
     // Then, if it is valid, perform a save.
+    // FIL lrp_fil;
+    // UINT lrp_br;
+
+    // if (f_open(&lrp_fil, LAST_ROM_PATH_FILE, FA_READ) != FR_OK) {
+    //     return FLASHCART_ERR_LOAD;
+    // }
+
+    // if (f_read(&lrp_fil, lrp_path, 1024, &lrp_br) != FR_OK) {
+    //     f_close(&lrp_fil);
+    //     return FLASHCART_ERR_LOAD;
+    // }
+
+    // if (f_close(&lrp_fil) != FR_OK) {
+    //     return FLASHCART_ERR_LOAD;
+    // }
+
+    // Now save the content back to the SD!
     
     return FLASHCART_OK;
 }
@@ -51,10 +76,6 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-
-    // FIXME: set the required actions for retriving the save file later (probably SRAM).
-    // This would involve creating some content in an area of RAM that would include
-    // the ROM location and its save type. This information will be used on init to perform a "save writeback".
 
     fix_file_size(&fil);
 
@@ -89,6 +110,26 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
+
+    
+    // Set the required actions for retriving the save file later.
+    // Given there is no good place in RAM...
+    // This would involve creating some content to a file on the SD card that includes:
+    // the ROM name and location and possibly its save type. This information will be used on init to perform a "save writeback".
+    // Actually, we should be using the settings API, so this is just a trial hack.
+    // FIL lrp_fil;
+    // UINT lrp_bw;
+    
+    // if (f_open(&lrp_fil, LAST_ROM_FILE_PATH, FA_CREATE_ALWAYS) != FR_OK) {
+    //     return FLASHCART_ERR_LOAD;
+    // }
+    // if (f_write(&lrp_fil, rom_path, strlen(rom_path) + 1, &lrp_bw) != FR_OK) {
+    //     f_close(&lrp_fil);
+    //     return FLASHCART_ERR_LOAD;
+    // }
+    // if (f_close(&lrp_fil) != FR_OK) {
+    //     return FLASHCART_ERR_LOAD;
+    // }
 
     return FLASHCART_OK;
 }

@@ -219,11 +219,26 @@ static void set_default_directory (menu_t *menu) {
     settings_save(&menu->settings);
 }
 
+static void set_bgm_file (menu_t *menu) {
+    if (file_has_extensions(menu->browser.entry->name, music_extensions)) {
+        path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        free(menu->settings.bgm_file_path);
+        menu->settings.bgm_file_path = strdup(strip_sd_prefix(path_get(path)));
+        menu->settings.bgm_enabled = true;
+        settings_save(&menu->settings);
+        menu_show_error(menu, "Reboot N64 to take effect!");
+    }
+    else {
+        menu_show_error(menu, "Couldn't use this file!");
+    }
+}
+
 static component_context_menu_t entry_context_menu = {
     .list = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Delete selected entry", .action = delete_entry },
         { .text = "Set current directory as default", .action = set_default_directory },
+        { .text = "Set current file as BGM", .action = set_bgm_file },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

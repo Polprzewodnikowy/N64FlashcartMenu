@@ -81,6 +81,31 @@ static void menu_init (boot_params_t *boot_params) {
 
     component_background_init(BACKGROUND_CACHE);
 
+    if(menu->settings.bgm_enabled && file_exists(menu->settings.bgm_file_path)) {
+        // FIXME: Note that this is stopped if playing an MP3 from the player!!! It needs to be paused and continued.
+        // FIXME: Loop the playback if it ends.
+        // Start playback.
+        mp3player_err_t err;
+
+        err = mp3player_init();
+        if (err != MP3PLAYER_OK) {
+            mp3player_deinit();
+        }
+        else {
+            err = mp3player_load(menu->settings.bgm_file_path);
+            if (err != MP3PLAYER_OK) {
+                mp3player_deinit();
+            } else {
+                sound_init_mp3_playback();
+                mp3player_mute(false);
+                err = mp3player_play();
+                if (err != MP3PLAYER_OK) {
+                    mp3player_deinit();
+                }
+            }
+        }
+    }
+
     menu->boot_params = boot_params;
 
     bool default_directory_exists = directory_exists(menu->settings.default_directory);

@@ -25,6 +25,9 @@ typedef struct {
     /** @brief Enable Background music */
     bool bgm_enabled;
 
+    /** @brief Background music file path */
+    char *bgm_file_path;
+
     /** @brief Enable Sounds */
     bool sound_enabled;
 

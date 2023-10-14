@@ -91,11 +91,11 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.back = true;
     } else if (pressed.r) {
         menu->actions.options = true;
-    } else if (pressed.l) {
+    } else if (pressed.z) {
         menu->actions.system_info = true;
     } else if (pressed.start) {
         menu->actions.credits = true;
-    } else if (pressed.z) {
+    } else if (pressed.l) {
         menu->actions.settings = true;
     }
 }

@@ -21,6 +21,9 @@ An open source menu for N64 flashcarts.
 * Real Time Clock support.
 * Music playback (MP3).
 
+## Video showcase (as of Oct 12 2023)
+
+[![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
 
 ## Getting started
 

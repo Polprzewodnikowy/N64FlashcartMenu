@@ -1,12 +1,10 @@
 #include "../mp3_player.h"
+#include "../sound.h"
 #include "views.h"
 
 
-#define SEEK_SECONDS            10
-#define SEEK_UNMUTE_TIMEOUT     17
-
-
-static int unmute_counter;
+#define SEEK_SECONDS        (5)
+#define SEEK_SECONDS_FAST   (60)
 
 
 static char *convert_error_message (mp3player_err_t err) {
@@ -39,13 +37,6 @@ static void format_elapsed_duration (char *buffer, float elapsed, float duration
 static void process (menu_t *menu) {
     mp3player_err_t err;
 
-    if (unmute_counter > 0) {
-        unmute_counter -= 1;
-        if (unmute_counter == 0) {
-            mp3player_mute(false);
-        }
-    }
-
     err = mp3player_process();
     if (err != MP3PLAYER_OK) {
         menu_show_error(menu, convert_error_message(err));
@@ -57,10 +48,8 @@ static void process (menu_t *menu) {
             menu_show_error(menu, convert_error_message(err));
         }
     } else if (menu->actions.go_left || menu->actions.go_right) {
-        mp3player_mute(true);
-        unmute_counter = SEEK_UNMUTE_TIMEOUT;
-        int seconds = (menu->actions.go_left ? -SEEK_SECONDS : SEEK_SECONDS);
-        err = mp3player_seek(seconds);
+        int seconds = menu->actions.go_fast ? SEEK_SECONDS_FAST : SEEK_SECONDS;
+        err = mp3player_seek(menu->actions.go_left ? (-seconds) : seconds);
         if (err != MP3PLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
@@ -81,7 +70,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "MUSIC PLAYER\n"
         "\n"
         "%s",
-        menu->browser.list[menu->browser.selected].name
+        menu->browser.entry->name
     );
 
     char formatted_track_elapsed_length[64];
@@ -122,14 +111,13 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 static void deinit (void) {
+    sound_init_default();
     mp3player_deinit();
 }
 
 
 void view_music_player_init (menu_t *menu) {
     mp3player_err_t err;
-
-    unmute_counter = 0;
 
     err = mp3player_init();
     if (err != MP3PLAYER_OK) {
@@ -138,16 +126,20 @@ void view_music_player_init (menu_t *menu) {
         return;
     }
 
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     err = mp3player_load(path_get(path));
     if (err != MP3PLAYER_OK) {
         menu_show_error(menu, convert_error_message(err));
         mp3player_deinit();
     } else {
+        sound_init_mp3_playback();
         mp3player_mute(false);
-        mp3player_play();
+        err = mp3player_play();
+        if (err != MP3PLAYER_OK) {
+            menu_show_error(menu, convert_error_message(err));
+            mp3player_deinit();
+        }
     }
 
     path_free(path);

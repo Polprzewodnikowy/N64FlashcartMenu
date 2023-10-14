@@ -122,8 +122,8 @@ void component_messagebox_draw (char *fmt, ...) {
     }, FNT_DEFAULT, formatted, &paragraph_nbytes);
 
     component_dialog_draw(
-        paragraph->bbox[2] - paragraph->bbox[0] + MESSAGEBOX_MARGIN,
-        paragraph->bbox[3] - paragraph->bbox[1] + MESSAGEBOX_MARGIN
+        paragraph->bbox.x1 - paragraph->bbox.x0 + MESSAGEBOX_MARGIN,
+        paragraph->bbox.y1 - paragraph->bbox.y0 + MESSAGEBOX_MARGIN
     );
 
     rdpq_paragraph_render(paragraph, DISPLAY_CENTER_X - (MESSAGEBOX_MAX_WIDTH / 2), VISIBLE_AREA_Y0);

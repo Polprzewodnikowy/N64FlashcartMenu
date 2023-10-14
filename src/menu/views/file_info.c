@@ -4,7 +4,7 @@
 #include "views.h"
 
 
-static const char *n64_rom_extensions[] = { "z64", "n64", "v64", NULL };
+static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *text_extensions[] = { "txt", NULL };
 static const char *config_extensions[] = { "ini", "cfg", "yml", "yaml", "toml", NULL };
 static const char *save_extensions[] = { "sav", "eep", "eeprom", "sra", "srm", "ram", "fla", "flashram", NULL };
@@ -65,7 +65,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "ENTRY INFORMATION\n"
         "\n"
         "%s",
-        menu->browser.list[menu->browser.selected].name
+        menu->browser.entry->name
     );
 
     component_main_text_draw(
@@ -99,14 +99,13 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_file_info_init (menu_t *menu) {
-    path_t *file = path_clone(menu->browser.directory);
-    path_push(file, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    if (f_stat(strip_sd_prefix(path_get(file)), &info) != FR_OK) {
+    if (f_stat(strip_sd_prefix(path_get(path)), &info) != FR_OK) {
         menu_show_error(menu, "Couldn't obtain file information");
     }
 
-    path_free(file);
+    path_free(path);
 }
 
 void view_file_info_display (menu_t *menu, surface_t *display) {

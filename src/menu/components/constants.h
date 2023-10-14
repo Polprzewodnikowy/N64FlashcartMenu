@@ -79,5 +79,7 @@
 
 #define FILE_LIST_HIGHLIGHT_COLOR       RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
+#define CONTEXT_MENU_HIGHLIGHT_COLOR    RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
+
 
 #endif

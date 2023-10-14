@@ -73,7 +73,7 @@ static void draw (menu_t *menu, surface_t *d) {
             component_messagebox_draw(
                 "Set \"%s\" as background image?\n\n"
                 "A: Yes, B: Back",
-                menu->browser.list[menu->browser.selected].name
+                menu->browser.entry->name
             );
         } else if (image_set_as_background) {
             component_messagebox_draw("Preparing background…");
@@ -105,8 +105,7 @@ void view_image_viewer_init (menu_t *menu) {
     image_set_as_background = false;
     image = NULL;
 
-    path_t *path = path_clone(menu->browser.directory);
-    path_push(path, menu->browser.list[menu->browser.selected].name);
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     png_err_t err = png_decoder_start(path_get(path), 640, 480, image_callback, menu);
     if (err != PNG_OK) {

@@ -7,9 +7,11 @@ ASSETS_DIR = assets
 BUILD_DIR = build
 OUTPUT_DIR = output
 
+FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date --iso=minutes).ALPHA\"
+
 include $(N64_INST)/include/n64.mk
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS) -DMENU_VERSION=\"0.0.1.$(shell date --iso=minutes).ALPHA\"
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \

@@ -37,13 +37,11 @@ static flashcart_err_t ed64_init (void) {
     FIL lrp_fil;
     UINT lrp_br;
     TCHAR lrp_path[1024];
-    lrp_path[0] = '\0';
-
     if (f_open(&lrp_fil, LAST_SAVE_FILE_PATH, FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
-    if (f_read(&lrp_fil, lrp_path, 1024, &lrp_br) != FR_OK) {
+    if (f_read(&lrp_fil, lrp_path, sizeof(&lrp_fil) + 1, &lrp_br) != FR_OK) {
         f_close(&lrp_fil);
         return FLASHCART_ERR_LOAD;
     }

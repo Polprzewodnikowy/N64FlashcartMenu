@@ -215,22 +215,22 @@ void PI_SafeDMAFromCart(void *dest, void *src, u32 size) {
 #include "types.h"
 
 int getSRAM( uint8_t *buffer, int size){
-    while (dma_busy()) ;
+    dma_wait();
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
     IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x0D);
     IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x02);
 
-    while (dma_busy()) ;
+    dma_wait();
 
     PI_Init();
 
-    while (dma_busy()) ;
+    dma_wait();
 
     PI_DMAFromSRAM(buffer, 0, size) ;
 
-    while (dma_busy()) ;
+    dma_wait();
 
     IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x40);
     IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x12);
@@ -263,7 +263,7 @@ int setSRAM(  uint8_t *buffer, int size){
     PI_Init();
 
     data_cache_hit_writeback_invalidate(buffer,size);
-     while (dma_busy());
+    dma_wait();
     PI_DMAToSRAM(buffer, 0, size);
     data_cache_hit_writeback_invalidate(buffer,size);
 

@@ -22,11 +22,6 @@
 
 extern int ed_exit(void);
 
-int read_line(FILE *in, char *buffer, size_t max)
-{
-  return fgets(buffer, max, in) == buffer;
-}
-
 static flashcart_err_t ed64_init (void) {
 
     if (file_exists(strip_sd_prefix("/menu/RESET"))) { // checks if reset
@@ -39,12 +34,12 @@ static flashcart_err_t ed64_init (void) {
     if (f_open(&lrp_fil, LAST_SAVE_FILE_PATH, FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-
-    if (f_read(&lrp_fil, lrp_path, sizeof(&lrp_fil) + 1, &lrp_br) != FR_OK) {
+    int test = f_size(&lrp_fil);
+    if (f_read(&lrp_fil, lrp_path, test, &lrp_br) != FR_OK) {
         f_close(&lrp_fil);
         return FLASHCART_ERR_LOAD;
     }
-    
+
     if (f_close(&lrp_fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
@@ -57,15 +52,12 @@ static flashcart_err_t ed64_init (void) {
 
     // find the path to last save
     
-    uint8_t cartsave_data[KiB(128)];
-    if (file_exists(strip_sd_prefix(lrp_path))){
     if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_WRITE)) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
-        f_lseek(&fil , SEEK_END);
-        int save_size = f_tell(&fil);
-        f_lseek(&fil, 0);
+        int save_size = KiB(32);
+        uint8_t cartsave_data[save_size];
 
     // everdrive doesnt care about the save type other than eeprom
     // so we can just check the size
@@ -83,7 +75,6 @@ static flashcart_err_t ed64_init (void) {
          return FLASHCART_ERR_LOAD;
     }
   }
-}
     return FLASHCART_OK;
 }
 
@@ -209,7 +200,6 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 }
 
 static flashcart_err_t ed64_load_save (char *save_path) {
-if (file_exists(strip_sd_prefix(save_path))){ // if file doesnt exist do nothing
     FIL fil;
     UINT br;
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
@@ -232,10 +222,11 @@ if (file_exists(strip_sd_prefix(save_path))){ // if file doesnt exist do nothing
     if (save_size >= KiB(32)) { //sram and flash
         setSRAM(cartsave_data, save_size);
     } else if (save_size >= 512){ // eeprom
-        setEeprom(cartsave_data, save_size);
+    setEeprom(cartsave_data, save_size);
     }
     FIL lsp_fil;
     UINT lsp_bw ;
+    f_unlink(LAST_SAVE_FILE_PATH);
      if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
          return FLASHCART_ERR_LOAD;
      }
@@ -253,7 +244,6 @@ if (file_exists(strip_sd_prefix(save_path))){ // if file doesnt exist do nothing
     f_open(&rsfil, "/menu/RESET",FA_CREATE_ALWAYS);
     f_write(&rsfil, (void *)reset_byte, 1, &rsbr);
     f_close(&rsfil);
-}
     return FLASHCART_OK;
 }
 

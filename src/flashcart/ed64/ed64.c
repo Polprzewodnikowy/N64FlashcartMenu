@@ -30,8 +30,10 @@ static flashcart_err_t ed64_init (void) {
         
     FIL lrp_fil;
     UINT lrp_br;
-    TCHAR lrp_path[1024];
-    // FIXME: use max supported length-
+    TCHAR lrp_path[255*32];
+
+    // FIXME: use max supported length
+    
     if (f_open(&lrp_fil, LAST_SAVE_FILE_PATH, FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
@@ -55,7 +57,8 @@ static flashcart_err_t ed64_init (void) {
     // Older everdrives cant save during gameplay so we need to the reset method.
 
     // find the path to last save
-    
+    if (file_exists(strip_sd_prefix(lrp_path))) {
+
     int save_size = file_get_size(strip_sd_prefix(lrp_path));
 
     if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
@@ -66,7 +69,7 @@ static flashcart_err_t ed64_init (void) {
     // so we can just check the size
     if (save_size > KiB(2)) {
         getSRAM(cartsave_data, save_size);
-    } else if (save_size > 0){
+    } else {
         getEeprom(cartsave_data, save_size);
     }
     
@@ -78,6 +81,7 @@ static flashcart_err_t ed64_init (void) {
          return FLASHCART_ERR_LOAD;
     }
   }
+}
     return FLASHCART_OK;
 }
 
@@ -138,26 +142,6 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-
-    
-    // Set the required actions for retriving the save file later.
-    // Given there is no good place in RAM...
-    // This would involve creating some content to a file on the SD card that includes:
-    // the ROM name and location and possibly its save type. This information will be used on init to perform a "save writeback".
-    // Actually, we should be using the settings API, so this is just a trial hack.
-    // FIL lrp_fil;
-    // UINT lrp_bw;
-    
-    // if (f_open(&lrp_fil, LAST_ROM_FILE_PATH, FA_CREATE_ALWAYS) != FR_OK) {
-    //     return FLASHCART_ERR_LOAD;
-    // }
-    // if (f_write(&lrp_fil, rom_path, strlen(rom_path) + 1, &lrp_bw) != FR_OK) {
-    //     f_close(&lrp_fil);
-    //     return FLASHCART_ERR_LOAD;
-    // }
-    // if (f_close(&lrp_fil) != FR_OK) {
-    //     return FLASHCART_ERR_LOAD;
-    // }
 
     return FLASHCART_OK;
 }

@@ -31,11 +31,14 @@ static flashcart_err_t ed64_init (void) {
     FIL lrp_fil;
     UINT lrp_br;
     TCHAR lrp_path[1024];
+    // FIXME: use max supported length-
     if (f_open(&lrp_fil, LAST_SAVE_FILE_PATH, FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-    int test = f_size(&lrp_fil);
-    if (f_read(&lrp_fil, lrp_path, test, &lrp_br) != FR_OK) {
+
+    int lrp_size = f_size(&lrp_fil);
+
+    if (f_read(&lrp_fil, lrp_path, lrp_size, &lrp_br) != FR_OK) {
         f_close(&lrp_fil);
         return FLASHCART_ERR_LOAD;
     }
@@ -45,25 +48,25 @@ static flashcart_err_t ed64_init (void) {
     }
 
     // Now save the content back to the SD!
-
+    
     FIL fil;
     UINT br;
+    uint8_t cartsave_data[KiB(128)];
     // Older everdrives cant save during gameplay so we need to the reset method.
 
     // find the path to last save
     
-    if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_WRITE)) != FR_OK) {
+    int save_size = file_get_size(strip_sd_prefix(lrp_path));
+
+    if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
-        int save_size = KiB(32);
-        uint8_t cartsave_data[save_size];
-
     // everdrive doesnt care about the save type other than eeprom
     // so we can just check the size
-    if (save_size >= KiB(32)) {
+    if (save_size > KiB(2)) {
         getSRAM(cartsave_data, save_size);
-    } else if (save_size >= 512){
+    } else if (save_size > 0){
         getEeprom(cartsave_data, save_size);
     }
     

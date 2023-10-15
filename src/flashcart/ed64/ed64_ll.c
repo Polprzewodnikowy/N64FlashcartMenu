@@ -3,6 +3,7 @@
 #include "ed64_ll.h"
 
 
+
 /* ED64 configuration registers base address  */
 #define ED64_CONFIG_REGS_BASE (0xA8040000)
 
@@ -239,8 +240,8 @@ int getSRAM( uint8_t *buffer, int size){
     return 1;
 }
 
-int getEeprom(  uint8_t *buffer){
-    int blocks=(16*1024)/8;
+int getEeprom(  uint8_t *buffer, int size){
+    int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_read( b, &buffer[b * 8] );
     }
@@ -252,7 +253,7 @@ int getEeprom(  uint8_t *buffer){
 /*
 sram upload
 */
-int setSRAM(  uint8_t *buffer,int size){
+int setSRAM(  uint8_t *buffer, int size){
      //half working
     PI_DMAWait();
     //Timing
@@ -275,8 +276,8 @@ int setSRAM(  uint8_t *buffer,int size){
 }
 
 
-int setEeprom(uint8_t *buffer){
-    int blocks=(16*1024)/8;
+int setEeprom(uint8_t *buffer, int size){
+    int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_write( b, &buffer[b * 8] );
     }

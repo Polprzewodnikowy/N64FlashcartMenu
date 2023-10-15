@@ -16,21 +16,41 @@
 extern int ed_exit(void);
 
 static flashcart_err_t ed64_init (void) {
+    if (file_exists(strip_sd_prefix("/menu/RESET"))) {
+    f_unlink(strip_sd_prefix("/menu/RESET"));
+    
+    FIL fil, lsfil, savfil;
+    UINT br, lsbr, savbr;
+    // Older everdrives cant save during gameplay so we need to the reset method.
 
-    // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
-    FIL fil, rsfil;
-    UINT br;
-    if (f_open(&rsfil, strip_sd_prefix("/menu/RESET"), FA_READ | FA_OPEN_EXISTING) == FR_OK) {
-        f_close(&rsfil);
-        f_unlink(strip_sd_prefix("/menu/RESET"));
-        int size = KiB(128);
-        uint8_t cartsave_data[size];
-        f_open(&fil, strip_sd_prefix("test.sav"), FA_WRITE | FA_CREATE_NEW);
-        getSRAM(cartsave_data, size);
-        f_write(&fil, cartsave_data, size, &br);
+    // find the path to last save
+        static char path[50];
+        f_open(&lsfil, strip_sd_prefix("/menu/LASTROM"), FA_READ);
+        f_lseek(&lsfil , SEEK_END);
+        int path_size = f_tell(&lsfil);
+        f_lseek((&lsfil), 0);
+        f_read(&lsfil, (void *)path, path_size, &lsbr);
+        f_close(&lsfil);
+    // find the size of the save file
+        char text_size[50];
+        f_open(&savfil, strip_sd_prefix("/menu/LASTSAVE"), FA_READ);
+        f_lseek(&savfil , SEEK_END);
+        int save_length = f_tell(&savfil);
+        f_lseek((&savfil), 0);
+        f_read(&savfil, (void *)text_size, save_length, &savbr);
+        int save_size = atoi(text_size);
+        f_close(&savfil);
+    uint8_t cartsave_data[save_size];
+    f_open(&fil, strip_sd_prefix(path), FA_WRITE | FA_CREATE_ALWAYS);
+        if (save_size == (512 || KiB(2))){
+            getEeprom(cartsave_data, save_size);
+            f_write(&fil, (void *)cartsave_data, save_size, &br);
+        } else if (save_size > KiB(2)){
+            getSRAM(cartsave_data, save_size);
+            f_write(&fil, (void *)cartsave_data, save_size, &br);
+        }
         f_close(&fil);
     }
-
     return FLASHCART_OK;
 }
 
@@ -140,14 +160,30 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 }
 
 static flashcart_err_t ed64_load_save (char *save_path) {
-    //ed64_save_type_t type = ed64_ll_get_save_type();
-    FIL fil;
-    UINT br;
+    ed64_save_type_t type = ed64_ll_get_save_type();
+    ed64_save_transfer_mode mode;
+    switch (type) {
+        case SAVE_TYPE_EEPROM_4K:
+        case SAVE_TYPE_EEPROM_16K:
+            mode = EEPROM_MODE;
+            break;
+        case SAVE_TYPE_SRAM:
+        case SAVE_TYPE_SRAM_128K:
+        case SAVE_TYPE_FLASHRAM:
+            mode = SRAM_MODE;
+            break;
+        case SAVE_TYPE_NONE:
+            mode = MEMPAK_MODE;
+        default:
+            return FLASHCART_ERR_ARGS;
+    }
 
-    if (f_open(&fil, strip_sd_prefix("test.sav"), FA_READ) == FR_OK) {
-
-    size_t save_size = KiB(128);
+    if (mode == SRAM_MODE) {
+    FIL fil, srmfil;
+    UINT br, srmbr;
+    size_t save_size = f_size(&fil);
     uint8_t cartsave_data[save_size];
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) == FR_OK) {
 
     if (f_read(&fil, cartsave_data, save_size, &br) != FR_OK) {
             f_close(&fil);
@@ -159,13 +195,52 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     }
 
     setSRAM(cartsave_data, save_size);
+
+    char sram_buffer[50];
+    f_open(&srmfil, strip_sd_prefix("/menu/LASTSAVE"), FA_WRITE | FA_CREATE_ALWAYS);
+    sprintf(sram_buffer, "%d", save_size);
+    f_write(&srmfil, (void *)sram_buffer, f_size(&srmfil), &srmbr);
+    f_close(&srmfil);
+    }
+} else if (mode == EEPROM_MODE){
+    FIL epfil, eepfil;
+    UINT epbr, eepbr;
+
+    if (f_open(&epfil, strip_sd_prefix(save_path), FA_READ) == FR_OK) {
+
+    size_t save_size = f_size(&epfil);
+    uint8_t cartsave_data[save_size];
+
+    if (f_read(&epfil, cartsave_data, save_size, &epbr) != FR_OK) {
+            f_close(&epfil);
+            return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_close(&epfil) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    setEeprom(cartsave_data, save_size);
+    char eeprom_buffer[50];
+    f_open(&eepfil, strip_sd_prefix("/menu/LASTSAVE"), FA_WRITE | FA_CREATE_ALWAYS);
+    sprintf(eeprom_buffer, "%d", save_size);
+    f_write(&eepfil, (void *)eeprom_buffer, f_size(&eepfil), &eepbr);
+    f_close(&eepfil);
+    }
 }
-    FIL rsfil;
-    UINT rsbr;
-    TCHAR byte[1];
+    FIL rsfil, lrfil;
+    UINT rsbr, lrbr;
+    TCHAR reset_byte[1];
     f_open(&rsfil, strip_sd_prefix("/menu/RESET"), FA_WRITE | FA_CREATE_ALWAYS);
-    f_write(&rsfil, (void *)byte, 1, &rsbr);
+    f_write(&rsfil, (void *)reset_byte, 1, &rsbr);
     f_close(&rsfil);
+    
+    
+    char tmp[50];
+    f_open(&lrfil, strip_sd_prefix("/menu/LASTROM"), FA_WRITE | FA_CREATE_ALWAYS);
+    strcpy(tmp, strip_sd_prefix(save_path));
+    f_write(&lrfil, (void *)tmp, f_size(&lrfil), &lrbr);
+    f_close(&lrfil);
 
     return FLASHCART_OK;
 }

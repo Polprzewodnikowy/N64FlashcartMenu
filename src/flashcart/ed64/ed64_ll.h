@@ -30,8 +30,13 @@ typedef enum {
     SAVE_TYPE_DD64 = 16,
 } ed64_save_type_t;
 
+typedef enum {
+    MEMPAK_MODE = 0,
+    EEPROM_MODE = 1,
+    SRAM_MODE = 2,
+} ed64_save_transfer_mode; 
 
-#define SRAM_ADDRESS (0x1FFE2000)
+
 #define ROM_ADDRESS  (0xB0000000)
 
 /* Save functions */
@@ -179,10 +184,10 @@ void *safe_memcpy(void *dest, const void *src, size_t n);
 #define FRAM_COMMAND_REG 0xA8010000
 
 int getSRAM( uint8_t *buffer, int size);
-int getEeprom(  uint8_t *buffer);
+int getEeprom(  uint8_t *buffer, int size);
 
 int setSRAM( uint8_t *buffer, int size);
-int setEeprom( uint8_t *buffer);
+int setEeprom( uint8_t *buffer, int size);
 
 
 

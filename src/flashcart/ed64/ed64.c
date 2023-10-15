@@ -29,10 +29,9 @@ int read_line(FILE *in, char *buffer, size_t max)
 
 static flashcart_err_t ed64_init (void) {
 
-    if (file_exists(strip_sd_prefix("/menu/RESET"))) {
+    if (file_exists(strip_sd_prefix("/menu/RESET"))) { // checks if reset
     
     f_unlink(strip_sd_prefix("/menu/RESET"));
-    if (file_exists(LAST_SAVE_FILE_PATH)) {
         
     FIL lrp_fil;
     UINT lrp_br;
@@ -59,7 +58,7 @@ static flashcart_err_t ed64_init (void) {
     // find the path to last save
     
     uint8_t cartsave_data[KiB(128)];
-
+    if (file_exists(strip_sd_prefix(lrp_path))){
     if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_WRITE)) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
@@ -67,9 +66,12 @@ static flashcart_err_t ed64_init (void) {
         f_lseek(&fil , SEEK_END);
         int save_size = f_tell(&fil);
         f_lseek(&fil, 0);
+
+    // everdrive doesnt care about the save type other than eeprom
+    // so we can just check the size
     if (save_size >= KiB(32)) {
         getSRAM(cartsave_data, save_size);
-    } else {
+    } else if (save_size >= 512){
         getEeprom(cartsave_data, save_size);
     }
     
@@ -80,7 +82,7 @@ static flashcart_err_t ed64_init (void) {
     if (f_close(&fil) != FR_OK) {
          return FLASHCART_ERR_LOAD;
     }
-}
+  }
 }
     return FLASHCART_OK;
 }
@@ -207,39 +209,7 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 }
 
 static flashcart_err_t ed64_load_save (char *save_path) {
-    FIL lsp_fil;
-    UINT lsp_bw ;
-     if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-         return FLASHCART_ERR_LOAD;
-     }
-     if (f_write(&lsp_fil, strip_sd_prefix(save_path) , strlen(save_path), &lsp_bw) != FR_OK) {
-         f_close(&lsp_fil);
-         return FLASHCART_ERR_LOAD;
-     }
-     if (f_close(&lsp_fil) != FR_OK) {
-         return FLASHCART_ERR_LOAD;
-     }
-
-    ed64_save_type_t type = ed64_ll_get_save_type();
-    ed64_save_transfer_mode mode;
-    switch (type) {
-        case SAVE_TYPE_EEPROM_4K:
-        case SAVE_TYPE_EEPROM_16K:
-            mode = EEPROM_MODE;
-            break;
-        case SAVE_TYPE_SRAM:
-        case SAVE_TYPE_SRAM_128K:
-        case SAVE_TYPE_FLASHRAM:
-            mode = SRAM_MODE;
-            break;
-        case SAVE_TYPE_NONE:
-            mode = MEMPAK_MODE;
-        break;
-        default:
-            return FLASHCART_ERR_ARGS;
-        break;
-    }
-    
+if (file_exists(strip_sd_prefix(save_path))){ // if file doesnt exist do nothing
     FIL fil;
     UINT br;
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
@@ -257,12 +227,25 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-
-if (mode == SRAM_MODE) {
-    setSRAM(cartsave_data, save_size);
-} else if (mode == EEPROM_MODE){
-    setEeprom(cartsave_data, save_size);
-}
+    // everdrive doesnt care about the save type other than eeprom
+    // so we can just check the size
+    if (save_size >= KiB(32)) { //sram and flash
+        setSRAM(cartsave_data, save_size);
+    } else if (save_size >= 512){ // eeprom
+        setEeprom(cartsave_data, save_size);
+    }
+    FIL lsp_fil;
+    UINT lsp_bw ;
+     if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
+         return FLASHCART_ERR_LOAD;
+     }
+     if (f_write(&lsp_fil, strip_sd_prefix(save_path) , strlen(save_path), &lsp_bw) != FR_OK) {
+         f_close(&lsp_fil);
+         return FLASHCART_ERR_LOAD;
+     }
+     if (f_close(&lsp_fil) != FR_OK) {
+         return FLASHCART_ERR_LOAD;
+     }
     FIL rsfil;
     UINT rsbr;
     TCHAR reset_byte[1];
@@ -270,7 +253,7 @@ if (mode == SRAM_MODE) {
     f_open(&rsfil, "/menu/RESET",FA_CREATE_ALWAYS);
     f_write(&rsfil, (void *)reset_byte, 1, &rsbr);
     f_close(&rsfil);
-
+}
     return FLASHCART_OK;
 }
 

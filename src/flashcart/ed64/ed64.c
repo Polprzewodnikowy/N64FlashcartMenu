@@ -67,6 +67,7 @@ static flashcart_err_t ed64_init (void) {
 
     // everdrive doesnt care about the save type other than eeprom
     // so we can just check the size
+
     if (save_size > KiB(2)) {
         getSRAM(cartsave_data, save_size);
     } else {
@@ -79,8 +80,8 @@ static flashcart_err_t ed64_init (void) {
 
     if (f_close(&fil) != FR_OK) {
          return FLASHCART_ERR_LOAD;
+        }
     }
-  }
 }
     return FLASHCART_OK;
 }
@@ -160,6 +161,7 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 
     // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB for save compatibility.
     // Or somehow warn that certain ROM's will have corruption due to the address space being used for saves.
+
     if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERR_ARGS;
@@ -189,10 +191,12 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 static flashcart_err_t ed64_load_save (char *save_path) {
     FIL fil;
     UINT br;
+
     if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
             f_close(&fil);
             return FLASHCART_ERR_LOAD;
     }
+
     size_t save_size = f_size(&fil);
     uint8_t cartsave_data[save_size];
 
@@ -204,33 +208,54 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
+
     // everdrive doesnt care about the save type other than eeprom
     // so we can just check the size
+
     if (save_size >= KiB(32)) { //sram and flash
         setSRAM(cartsave_data, save_size);
     } else if (save_size >= 512){ // eeprom
     setEeprom(cartsave_data, save_size);
     }
+
     FIL lsp_fil;
-    UINT lsp_bw ;
+    UINT lsp_bw;
+
+    // probably not nessacery
     f_unlink(LAST_SAVE_FILE_PATH);
-     if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
+
+    if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
          return FLASHCART_ERR_LOAD;
-     }
-     if (f_write(&lsp_fil, strip_sd_prefix(save_path) , strlen(save_path), &lsp_bw) != FR_OK) {
+    }
+    if (f_write(&lsp_fil, strip_sd_prefix(save_path) , strlen(save_path), &lsp_bw) != FR_OK) {
          f_close(&lsp_fil);
          return FLASHCART_ERR_LOAD;
-     }
-     if (f_close(&lsp_fil) != FR_OK) {
+    }
+
+    if (f_close(&lsp_fil) != FR_OK) {
          return FLASHCART_ERR_LOAD;
-     }
+    }
+
     FIL rsfil;
     UINT rsbr;
     TCHAR reset_byte[1];
 
-    f_open(&rsfil, "/menu/RESET",FA_CREATE_ALWAYS);
-    f_write(&rsfil, (void *)reset_byte, 1, &rsbr);
-    f_close(&rsfil);
+    // this wries a 1 byte file as it only needs to exist to detect a reset
+
+    if (f_open(&rsfil, "/menu/RESET",FA_CREATE_ALWAYS) != FR_OK) {
+     f_close(&rsfil);
+     return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_write(&rsfil, (void *)reset_byte, 1, &rsbr) != FR_OK) {
+        f_close(&rsfil);
+        return FLASHCART_ERR_LOAD;
+    }
+    
+    if (f_close(&rsfil) != FR_OK) {
+        return FLASHCART_OK;
+    }
+
     return FLASHCART_OK;
 }
 

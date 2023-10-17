@@ -120,8 +120,6 @@ void ed64_ll_set_sram_bank(uint8_t bank) {
 #include <malloc.h>
 #include <stdint.h>
 #include <string.h>
-#include "types.h"
-
 
 void PI_Init(void) {
 	PI_DMAWait();
@@ -144,7 +142,7 @@ void PI_DMAWait(void) {
 }
 
 
-void PI_DMAFromSRAM(void *dest, u32 offset, u32 size) {
+void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 	
 
 	IO_WRITE(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
@@ -156,7 +154,7 @@ void PI_DMAFromSRAM(void *dest, u32 offset, u32 size) {
 }
 
 
-void PI_DMAToSRAM(void *src, u32 offset, u32 size) { //void*
+void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
 	PI_DMAWait();
 
 	IO_WRITE(PI_STATUS_REG, 2);
@@ -165,7 +163,7 @@ void PI_DMAToSRAM(void *src, u32 offset, u32 size) { //void*
 	IO_WRITE(PI_RD_LEN_REG, (size - 1));
 }
 
-void PI_DMAFromCart(void* dest, void* src, u32 size) {
+void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
 	PI_DMAWait();
 
 	IO_WRITE(PI_STATUS_REG, 0x03);
@@ -175,7 +173,7 @@ void PI_DMAFromCart(void* dest, void* src, u32 size) {
 }
 
 
-void PI_DMAToCart(void* dest, void* src, u32 size) {
+void PI_DMAToCart(void* dest, void* src, unsigned long size) {
 	PI_DMAWait();
 
 	IO_WRITE(PI_STATUS_REG, 0x02);
@@ -186,11 +184,11 @@ void PI_DMAToCart(void* dest, void* src, u32 size) {
 
 
 // Wrapper to support unaligned access to memory
-void PI_SafeDMAFromCart(void *dest, void *src, u32 size) {
+void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 	if (!dest || !src || !size) return;
 
-	u32 unalignedSrc  = ((u32)src)  % 2;
-	u32 unalignedDest = ((u32)dest) % 8;
+	unsigned long unalignedSrc  = ((unsigned long)src)  % 2;
+	unsigned long unalignedDest = ((unsigned long)dest) % 8;
 
 	//FIXME: Do i really need to check if size is 16bit aligned?
 	if (!unalignedDest && !unalignedSrc && !(size % 2)) {
@@ -200,10 +198,10 @@ void PI_SafeDMAFromCart(void *dest, void *src, u32 size) {
 		return;
 	}
 
-	void* newSrc = (void*)(((u32)src) - unalignedSrc);
-	u32 newSize = (size + unalignedSrc) + ((size + unalignedSrc) % 2);
+	void* newSrc = (void*)(((unsigned long)src) - unalignedSrc);
+	unsigned long newSize = (size + unalignedSrc) + ((size + unalignedSrc) % 2);
 
-	u8 *buffer = memalign(8, newSize);
+	unsigned char *buffer = memalign(8, newSize);
 	PI_DMAFromCart(buffer, newSrc, newSize);
 	PI_DMAWait();
 
@@ -212,7 +210,6 @@ void PI_SafeDMAFromCart(void *dest, void *src, u32 size) {
 	free(buffer);
 }
 
-#include "types.h"
 
 int getSRAM( uint8_t *buffer, int size){
     dma_wait();

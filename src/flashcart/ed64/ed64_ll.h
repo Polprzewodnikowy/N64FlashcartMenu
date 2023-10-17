@@ -11,7 +11,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "types.h"
 
 /**
  * @addtogroup ed64
@@ -51,22 +50,22 @@ void ed64_ll_set_save_type(ed64_save_type_t type);
 
 void data_cache_hit_writeback_invalidate(volatile void *, unsigned long);
 unsigned int CRC_Calculate(unsigned int crc, unsigned char* buf, unsigned int len);
-void dma_write_sram(void* src, u32 offset, u32 size);
-void dma_read_sram(void *dest, u32 offset, u32 size);
+void dma_write_sram(void* src, unsigned long offset, unsigned long size);
+void dma_read_sram(void *dest, unsigned long offset, unsigned long size);
 void dma_write_s(void * ram_address, unsigned long pi_address, unsigned long len);
 void dma_read_s(void * ram_address, unsigned long pi_address, unsigned long len);
-int writeSram(void* src, u32 size);
+int writeSram(void* src, unsigned long size);
 void setSDTiming(void);
 
 
 void PI_Init(void);
 void PI_Init_SRAM(void);
 void PI_DMAWait(void);
-void PI_DMAFromCart(void* dest, void* src, u32 size);
-void PI_DMAToCart(void* dest, void* src, u32 size);
-void PI_DMAFromSRAM(void *dest, u32 offset, u32 size);
-void PI_DMAToSRAM(void* src, u32 offset, u32 size);
-void PI_SafeDMAFromCart(void *dest, void *src, u32 size);
+void PI_DMAFromCart(void* dest, void* src, unsigned long size);
+void PI_DMAToCart(void* dest, void* src, unsigned long size);
+void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size);
+void PI_DMAToSRAM(void* src, unsigned long offset, unsigned long size);
+void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size);
 
 //memory
 /*** MEMORY ***/
@@ -164,13 +163,13 @@ void *safe_memcpy(void *dest, const void *src, size_t n);
 #define	VI_H_SCALE	(VI_BASE_REG + 0x2C)
 #define	VI_VSCALE	(VI_BASE_REG + 0x30)
 
-#define	PHYS_TO_K0(x)	((u32)(x)|0x80000000)	/* physical to kseg0 */
-#define	K0_TO_PHYS(x)	((u32)(x)&0x1FFFFFFF)	/* kseg0 to physical */
-#define	PHYS_TO_K1(x)	((u32)(x)|0xA0000000)	/* physical to kseg1 */
-#define	K1_TO_PHYS(x)	((u32)(x)&0x1FFFFFFF)	/* kseg1 to physical */
+#define	PHYS_TO_K0(x)	((unsigned long)(x)|0x80000000)	/* physical to kseg0 */
+#define	K0_TO_PHYS(x)	((unsigned long)(x)&0x1FFFFFFF)	/* kseg0 to physical */
+#define	PHYS_TO_K1(x)	((unsigned long)(x)|0xA0000000)	/* physical to kseg1 */
+#define	K1_TO_PHYS(x)	((unsigned long)(x)&0x1FFFFFFF)	/* kseg1 to physical */
 
-#define	IO_READ(addr)		(*(volatile u32*)PHYS_TO_K1(addr))
-#define	IO_WRITE(addr,data)	(*(volatile u32*)PHYS_TO_K1(addr)=(u32)(data))
+#define	IO_READ(addr)		(*(volatile unsigned long*)PHYS_TO_K1(addr))
+#define	IO_WRITE(addr,data)	(*(volatile unsigned long*)PHYS_TO_K1(addr)=(unsigned long)(data))
 
 #define FRAM_EXECUTE_CMD		0xD2000000
 #define FRAM_STATUS_MODE_CMD	0xE1000000

@@ -14,8 +14,14 @@
 
 // FIXME: redefined because its in a .c instead of a .h
 #define PI_BASE_REG		    0x04600000
+#define IO_READ(addr)       (*(volatile uint32_t *)PHYS_TO_K1(addr))
+#define IO_WRITE(addr,data) \
+        (*(volatile uint32_t *)PHYS_TO_K1(addr) = (uint32_t)(data))
 
 #define PIF_RAM_START		0x1FC007C0
+#define	PI_STATUS_ERROR		0x04
+#define	PI_STATUS_IO_BUSY	0x02
+#define	PI_STATUS_DMA_BUSY	0x01
 
 #define PI_STATUS_REG		(PI_BASE_REG+0x10)
 #define PI_DRAM_ADDR_REG	(PI_BASE_REG+0x00)	/* DRAM address */
@@ -33,7 +39,9 @@
 #define PI_BSD_DOM2_PGS_REG     (PI_BASE_REG+0x2C)
 #define PI_BSD_DOM2_RLS_REG     (PI_BASE_REG+0x30)
 
+#define	PHYS_TO_K0(x)	((unsigned long)(x)|0x80000000)	/* physical to kseg0 */
 #define	K0_TO_PHYS(x)	((unsigned long)(x)&0x1FFFFFFF)	/* kseg0 to physical */
+#define	PHYS_TO_K1(x)	((unsigned long)(x)|0xA0000000)	/* physical to kseg1 */
 #define	K1_TO_PHYS(x)	((unsigned long)(x)&0x1FFFFFFF)	/* kseg1 to physical */
 
 

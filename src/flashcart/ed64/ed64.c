@@ -65,7 +65,7 @@ static flashcart_err_t ed64_init (void) {
         return FLASHCART_ERR_LOAD;
     }
 
-    // everdrive doesnt care about the save type other than eeprom
+    // everdrive doesn't care about the save type other than eeprom
     // so we can just check the size
 
     if (save_size > KiB(2)) {
@@ -197,7 +197,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
             return FLASHCART_ERR_LOAD;
     }
 
-    size_t save_size = f_size(&fil);
+    size_t save_size = file_get_size(strip_sd_prefix(save_path));
     uint8_t cartsave_data[save_size];
 
     if (f_read(&fil, cartsave_data, save_size, &br) != FR_OK) {
@@ -214,15 +214,14 @@ static flashcart_err_t ed64_load_save (char *save_path) {
 
     if (save_size >= KiB(32)) { //sram and flash
         setSRAM(cartsave_data, save_size);
-    } else if (save_size >= 512){ // eeprom
-    setEeprom(cartsave_data, save_size);
+    }
+    
+    else if (save_size >= 512){ // eeprom
+        setEeprom(cartsave_data, save_size);
     }
 
     FIL lsp_fil;
     UINT lsp_bw;
-
-    // probably not nessacery
-    f_unlink(LAST_SAVE_FILE_PATH);
 
     if (f_open(&lsp_fil, LAST_SAVE_FILE_PATH, FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
          return FLASHCART_ERR_LOAD;
@@ -237,19 +236,12 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     }
 
     FIL rsfil;
-    UINT rsbr;
-    TCHAR reset_byte[1];
 
     // this wries a 1 byte file as it only needs to exist to detect a reset
 
-    if (f_open(&rsfil, "/menu/RESET",FA_CREATE_ALWAYS) != FR_OK) {
+    if (f_open(&rsfil, "/menu/RESET", FA_CREATE_ALWAYS ) != FR_OK) {
      f_close(&rsfil);
      return FLASHCART_ERR_LOAD;
-    }
-
-    if (f_write(&rsfil, (void *)reset_byte, 1, &rsbr) != FR_OK) {
-        f_close(&rsfil);
-        return FLASHCART_ERR_LOAD;
     }
     
     if (f_close(&rsfil) != FR_OK) {

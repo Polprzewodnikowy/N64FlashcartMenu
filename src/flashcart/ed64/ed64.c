@@ -67,8 +67,9 @@ static flashcart_err_t ed64_init (void) {
 
     // everdrive doesn't care about the save type other than eeprom
     // so we can just check the size
-
-    if (save_size > KiB(2)) {
+    if (save_size == KiB(128)) {
+        getFlashRAM(cartsave_data, save_size);
+    } else if (save_size > KiB(2)) {
         getSRAM(cartsave_data, save_size);
     } else {
         getEeprom(cartsave_data, save_size);
@@ -212,7 +213,11 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     // everdrive doesnt care about the save type other than eeprom
     // so we can just check the size
 
-    if (save_size >= KiB(32)) { //sram and flash
+    if (save_size == KiB(128)) { //sram 128 and flash
+        setFlashRAM(cartsave_data, save_size);
+    }
+
+    else if (save_size > KiB(2)) { //sram
         setSRAM(cartsave_data, save_size);
     }
     

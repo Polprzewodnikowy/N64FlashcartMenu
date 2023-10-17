@@ -92,8 +92,10 @@ void PI_DMAToSRAM(void* src, unsigned long offset, unsigned long size);
 void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size);
 int getSRAM( uint8_t *buffer, int size);
 int getEeprom(  uint8_t *buffer, int size);
+int getFlashRAM(  uint8_t *buffer, int size);
 int setSRAM( uint8_t *buffer, int size);
 int setEeprom( uint8_t *buffer, int size);
+int setFlashRAM( uint8_t *buffer, int size);
 
 
 #endif

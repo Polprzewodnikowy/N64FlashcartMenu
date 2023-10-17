@@ -119,22 +119,22 @@ void ed64_ll_set_sram_bank(uint8_t bank) {
 
 void PI_Init(void) {
 	PI_DMAWait();
-	IO_WRITE(PI_STATUS_REG, 0x03);
+	io_write(PI_STATUS_REG, 0x03);
 }
 
 // Inits PI for sram transfer
 void PI_Init_SRAM(void) {
 	
-	IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
-	IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
-	IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x0D);
-	IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x02);
+	io_write(PI_BSD_DOM2_LAT_REG, 0x05);
+	io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
+	io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
+	io_write(PI_BSD_DOM2_RLS_REG, 0x02);
 	
 }
 
 void PI_DMAWait(void) {
 	  
-	while (IO_READ(PI_STATUS_REG) & (PI_STATUS_IO_BUSY | PI_STATUS_DMA_BUSY));
+	while (io_read(PI_STATUS_REG) & (PI_STATUS_IO_BUSY | PI_STATUS_DMA_BUSY));
     
 }
 
@@ -142,10 +142,10 @@ void PI_DMAWait(void) {
 void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 	
 
-	IO_WRITE(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
-	IO_WRITE(PI_CART_ADDR_REG, (0xA8000000 + offset));
+	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
+	io_write(PI_CART_ADDR_REG, (0xA8000000 + offset));
 	 asm volatile ("" : : : "memory");
-	IO_WRITE(PI_WR_LEN_REG, (size - 1));
+	io_write(PI_WR_LEN_REG, (size - 1));
 	 asm volatile ("" : : : "memory");
  
 }
@@ -154,29 +154,29 @@ void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
 	PI_DMAWait();
 
-	IO_WRITE(PI_STATUS_REG, 2);
-	IO_WRITE(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
-	IO_WRITE(PI_CART_ADDR_REG, (0xA8000000 + offset));
-	IO_WRITE(PI_RD_LEN_REG, (size - 1));
+	io_write(PI_STATUS_REG, 2);
+	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
+	io_write(PI_CART_ADDR_REG, (0xA8000000 + offset));
+	io_write(PI_RD_LEN_REG, (size - 1));
 }
 
 void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
 	PI_DMAWait();
 
-	IO_WRITE(PI_STATUS_REG, 0x03);
-	IO_WRITE(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
-	IO_WRITE(PI_CART_ADDR_REG, K0_TO_PHYS(src));
-	IO_WRITE(PI_WR_LEN_REG, (size - 1));
+	io_write(PI_STATUS_REG, 0x03);
+	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
+	io_write(PI_CART_ADDR_REG, K0_TO_PHYS(src));
+	io_write(PI_WR_LEN_REG, (size - 1));
 }
 
 
 void PI_DMAToCart(void* dest, void* src, unsigned long size) {
 	PI_DMAWait();
 
-	IO_WRITE(PI_STATUS_REG, 0x02);
-	IO_WRITE(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
-	IO_WRITE(PI_CART_ADDR_REG, K0_TO_PHYS(dest));
-	IO_WRITE(PI_RD_LEN_REG, (size - 1));
+	io_write(PI_STATUS_REG, 0x02);
+	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
+	io_write(PI_CART_ADDR_REG, K0_TO_PHYS(dest));
+	io_write(PI_RD_LEN_REG, (size - 1));
 }
 
 
@@ -211,10 +211,10 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 int getSRAM( uint8_t *buffer, int size){
     dma_wait();
 
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x0D);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x02);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x05);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x02);
 
     dma_wait();
 
@@ -226,10 +226,10 @@ int getSRAM( uint8_t *buffer, int size){
 
     dma_wait();
 
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x40);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x12);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x07);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x03);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x03);
 
     return 1;
 }
@@ -243,6 +243,19 @@ int getEeprom(  uint8_t *buffer, int size){
     return 1;
 }
 
+
+int getFlashRAM( uint8_t *buffer, int size){
+    ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
+    PI_DMAWait();
+
+    getSRAM(buffer, size);
+    data_cache_hit_writeback_invalidate(buffer, size);
+
+    PI_DMAWait();
+    ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
+
+    return 1;
+}
 
 /*
 sram upload
@@ -279,30 +292,44 @@ int setEeprom(uint8_t *buffer, int size){
     return 1;
 }
 
+int setFlashRAM(uint8_t *buffer, int size){
+    ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
+    PI_DMAWait();
+
+    setSRAM(buffer, size);
+    data_cache_hit_writeback_invalidate(buffer, size);
+
+    PI_DMAWait();
+    ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
+
+    return 1;
+}
+
+
 void setSDTiming(void){
 
     // PI_DMAWait();
-    IO_WRITE(PI_BSD_DOM1_LAT_REG, 0x40);
-    IO_WRITE(PI_BSD_DOM1_PWD_REG, 0x12);
-    IO_WRITE(PI_BSD_DOM1_PGS_REG, 0x07);
-    IO_WRITE(PI_BSD_DOM1_RLS_REG, 0x03);
+    io_write(PI_BSD_DOM1_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM1_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM1_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM1_RLS_REG, 0x03);
 
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x40);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x12);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x07);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x03);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x03);
 }
 
 
 void restoreTiming(void) {
     //n64 timing restore :>
-    IO_WRITE(PI_BSD_DOM1_LAT_REG, 0x40);
-    IO_WRITE(PI_BSD_DOM1_PWD_REG, 0x12);
-    IO_WRITE(PI_BSD_DOM1_PGS_REG, 0x07);
-    IO_WRITE(PI_BSD_DOM1_RLS_REG, 0x03);
+    io_write(PI_BSD_DOM1_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM1_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM1_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM1_RLS_REG, 0x03);
 
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x40);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x12);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x07);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x03);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x03);
 }

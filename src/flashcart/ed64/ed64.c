@@ -203,7 +203,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
 
     if (f_read(&fil, cartsave_data, save_size, &br) != FR_OK) {
             f_close(&fil);
-            return FLASHCART_ERR_LOAD;
+        return FLASHCART_ERR_LOAD;
     }
 
     if (f_close(&fil) != FR_OK) {

@@ -17,7 +17,7 @@
 
 // This is a trial hack before using the settings API.
 #ifndef LAST_SAVE_FILE_PATH
-#define LAST_SAVE_FILE_PATH strip_sd_prefix("/menu/last_rom.txt")
+#define LAST_SAVE_FILE_PATH "/menu/last_rom.txt"
 #endif
 
 extern int ed_exit(void);

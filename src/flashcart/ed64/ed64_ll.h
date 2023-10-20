@@ -83,7 +83,6 @@ void setSDTiming(void);
 
 void PI_Init(void);
 void PI_Init_SRAM(void);
-void PI_DMAWait(void);
 void PI_DMAFromCart(void* dest, void* src, unsigned long size);
 void PI_DMAToCart(void* dest, void* src, unsigned long size);
 void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size);

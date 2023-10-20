@@ -98,7 +98,6 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
             break;
     }
 
-    save_cfg = 0;
     if (eeprom_on)save_cfg |= SAV_EEP_ON;
     if (sram_on)save_cfg |= SAV_SRM_ON;
     if (eeprom_size)save_cfg |= SAV_EEP_SIZE;
@@ -118,7 +117,7 @@ void ed64_ll_set_sram_bank(uint8_t bank) {
 
 
 void PI_Init(void) {
-	PI_DMAWait();
+	dma_wait();
 	io_write(PI_STATUS_REG, 0x03);
 }
 
@@ -131,13 +130,6 @@ void PI_Init_SRAM(void) {
 	io_write(PI_BSD_DOM2_RLS_REG, 0x02);
 	
 }
-
-void PI_DMAWait(void) {
-	  
-	while (io_read(PI_STATUS_REG) & (PI_STATUS_IO_BUSY | PI_STATUS_DMA_BUSY));
-    
-}
-
 
 void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 	
@@ -152,7 +144,7 @@ void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 
 
 void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
-	PI_DMAWait();
+	dma_wait();
 
 	io_write(PI_STATUS_REG, 2);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
@@ -161,7 +153,7 @@ void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
 }
 
 void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
-	PI_DMAWait();
+	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x03);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
@@ -171,7 +163,7 @@ void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
 
 
 void PI_DMAToCart(void* dest, void* src, unsigned long size) {
-	PI_DMAWait();
+	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x02);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
@@ -190,7 +182,7 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 	//FIXME: Do i really need to check if size is 16bit aligned?
 	if (!unalignedDest && !unalignedSrc && !(size % 2)) {
 		PI_DMAFromCart(dest, src, size);
-		PI_DMAWait();
+		dma_wait();
 
 		return;
 	}
@@ -200,7 +192,7 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 
 	unsigned char *buffer = memalign(8, newSize);
 	PI_DMAFromCart(buffer, newSrc, newSize);
-	PI_DMAWait();
+	dma_wait();
 
 	memcpy(dest, (buffer + unalignedSrc), size);
 
@@ -246,12 +238,12 @@ int getEeprom(  uint8_t *buffer, int size){
 
 int getFlashRAM( uint8_t *buffer, int size){
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
-    PI_DMAWait();
+    dma_wait();
 
     getSRAM(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
-    PI_DMAWait();
+    dma_wait();
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
     return 1;
@@ -262,7 +254,7 @@ sram upload
 */
 int setSRAM(  uint8_t *buffer, int size){
      //half working
-    PI_DMAWait();
+    dma_wait();
     //Timing
     PI_Init_SRAM();
 
@@ -271,11 +263,12 @@ int setSRAM(  uint8_t *buffer, int size){
 
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
+
     PI_DMAToSRAM(buffer, 0, size);
     data_cache_hit_writeback_invalidate(buffer,size);
 
     //Wait
-    PI_DMAWait();
+    dma_wait();
     //Restore evd Timing
     setSDTiming();
 
@@ -293,13 +286,13 @@ int setEeprom(uint8_t *buffer, int size){
 }
 
 int setFlashRAM(uint8_t *buffer, int size){
-    ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
-    PI_DMAWait();
+    ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K);
+    dma_wait();
 
     setSRAM(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
-    PI_DMAWait();
+    dma_wait();
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
     return 1;
@@ -308,21 +301,6 @@ int setFlashRAM(uint8_t *buffer, int size){
 
 void setSDTiming(void){
 
-    // PI_DMAWait();
-    io_write(PI_BSD_DOM1_LAT_REG, 0x40);
-    io_write(PI_BSD_DOM1_PWD_REG, 0x12);
-    io_write(PI_BSD_DOM1_PGS_REG, 0x07);
-    io_write(PI_BSD_DOM1_RLS_REG, 0x03);
-
-    io_write(PI_BSD_DOM2_LAT_REG, 0x40);
-    io_write(PI_BSD_DOM2_PWD_REG, 0x12);
-    io_write(PI_BSD_DOM2_PGS_REG, 0x07);
-    io_write(PI_BSD_DOM2_RLS_REG, 0x03);
-}
-
-
-void restoreTiming(void) {
-    //n64 timing restore :>
     io_write(PI_BSD_DOM1_LAT_REG, 0x40);
     io_write(PI_BSD_DOM1_PWD_REG, 0x12);
     io_write(PI_BSD_DOM1_PGS_REG, 0x07);

@@ -4,6 +4,7 @@
 
 #include <fatfs/ff.h>
 #include <libdragon.h>
+#include <libcart/cart.h>
 
 #include "utils/fs.h"
 #include "utils/utils.h"
@@ -146,7 +147,7 @@ static flashcart_err_t ed64_load_rom(char *rom_path, flashcart_progress_callback
 
     fix_file_size(&fil);
 
-    size_t rom_size = f_size(&fil);
+    size_t rom_size = f_size(&fil) - KiB(128);
 
     // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB for save compatibility.
     // Or somehow warn that certain ROM's will have corruption due to the address space being used for saves.
@@ -173,11 +174,11 @@ static flashcart_err_t ed64_load_rom(char *rom_path, flashcart_progress_callback
             progress(f_tell(&fil) / (float)(f_size(&fil)));
         }
     }
-    if (f_tell(&fil) != sdram_size)
+    /*if (f_tell(&fil) != sdram_size)
     {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
-    }
+    }*/
 
     if (f_close(&fil) != FR_OK)
     {

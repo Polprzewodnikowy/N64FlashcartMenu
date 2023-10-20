@@ -12,18 +12,18 @@
 #include "../flashcart_utils.h"
 #include "ed64_ll.h"
 #include "ed64.h"
+#include "ed64_state.h"
 
-// #include "../menu/settings.h"
 
-// This is a trial hack before using the settings API.
+// FIXME: Use one file using the ed64_pseudo_writeback_t struct.
 #ifndef LAST_SAVE_FILE_PATH
-#define LAST_SAVE_FILE_PATH "/menu/last_rom.tmp"
+#define LAST_SAVE_FILE_PATH "/menu/ed_last_rom.tmp"
 #endif
 #ifndef RESET_CHECK_FILE_PATH
-#define RESET_CHECK_FILE_PATH "/menu/reset.tmp"
+#define RESET_CHECK_FILE_PATH "/menu/ed_reset.tmp"
 #endif
 #ifndef FLASHRAM_CHECK_FILE_PATH
-#define FLASHRAM_CHECK_FILE_PATH "/menu/flashram.tmp"
+#define FLASHRAM_CHECK_FILE_PATH "/menu/ed_flashram.tmp"
 #endif
 
 extern int ed_exit (void);

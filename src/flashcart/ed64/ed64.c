@@ -15,15 +15,11 @@
 #include "ed64_state.h"
 
 
+static ed64_pseudo_writeback_t current_state;
+
 // FIXME: Use one file using the ed64_pseudo_writeback_t struct.
 #ifndef LAST_SAVE_FILE_PATH
 #define LAST_SAVE_FILE_PATH "/menu/ed_last_rom.tmp"
-#endif
-#ifndef RESET_CHECK_FILE_PATH
-#define RESET_CHECK_FILE_PATH "/menu/ed_reset.tmp"
-#endif
-#ifndef FLASHRAM_CHECK_FILE_PATH
-#define FLASHRAM_CHECK_FILE_PATH "/menu/ed_flashram.tmp"
 #endif
 
 extern int ed_exit (void);
@@ -38,10 +34,13 @@ static flashcart_err_t ed64_init (void) {
     // older everdrives cannot save during gameplay so we need to the reset method.
     // works by checking if a file exists.
 
-    if (file_exists(strip_sd_prefix(RESET_CHECK_FILE_PATH))) {
+    ed64_state_load(&current_state);
 
-        // make sure next boot doesnt trigger the check by deleting the reset file
-        f_unlink(strip_sd_prefix(RESET_CHECK_FILE_PATH));
+    if (current_state.is_warm_start == true) {
+
+        // make sure next boot doesnt trigger the check changing its state.
+        current_state.is_warm_start = false;
+        ed64_state_save(&current_state);
 
         // finds the last save location
         FIL lrp_fil;
@@ -80,10 +79,11 @@ static flashcart_err_t ed64_init (void) {
 
             // everdrive doesn't care about the save type other than flash sram and eeprom
             // so minus flashram we can just check the size
-            if (file_exists(strip_sd_prefix(FLASHRAM_CHECK_FILE_PATH))) { // flashram is bugged atm
+            if (current_state.is_fram_save_type == true) { // flashram is bugged atm
                ed64_ll_get_fram(cartsave_data, save_size);
               // deletes flag
-              f_unlink(strip_sd_prefix(FLASHRAM_CHECK_FILE_PATH));
+              current_state.is_fram_save_type = false;
+              ed64_state_save(&current_state);
             }
             else if (save_size > KiB(2)) { // sram
                ed64_ll_get_sram(cartsave_data, save_size);
@@ -250,15 +250,8 @@ static flashcart_err_t ed64_load_save (char *save_path) {
        ed64_ll_set_fram(cartsave_data, save_size);
         // a cold and warm boot has no way of seeing save types and most types can be determined by size
         // this tells the cart to use flash instead of sram 128 since they are the same size
-        FIL flashfil;
-        if (f_open(&flashfil, strip_sd_prefix(FLASHRAM_CHECK_FILE_PATH), FA_CREATE_ALWAYS) != FR_OK) {
-            f_close(&flashfil);
-            return FLASHCART_ERR_LOAD;
-        }
-
-        if (f_close(&flashfil) != FR_OK) {
-            return FLASHCART_OK;
-        }
+        current_state.is_fram_save_type = true;
+        ed64_state_save(&current_state);
         break;
     default:
        break;
@@ -280,18 +273,8 @@ static flashcart_err_t ed64_load_save (char *save_path) {
         return FLASHCART_ERR_LOAD;
     }
 
-    FIL rsfil;
-
-    // simulate a unix touch command to create a file as it only needs to exist to detect a reset
-
-    if (f_open(&rsfil, strip_sd_prefix(RESET_CHECK_FILE_PATH), FA_CREATE_ALWAYS) != FR_OK) {
-        f_close(&rsfil);
-        return FLASHCART_ERR_LOAD;
-    }
-
-    if (f_close(&rsfil) != FR_OK) {
-        return FLASHCART_OK;
-    }
+    current_state.is_warm_start = true;
+    ed64_state_save(&current_state);
 
     return FLASHCART_OK;
 }

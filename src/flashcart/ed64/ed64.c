@@ -147,7 +147,7 @@ static flashcart_err_t ed64_load_rom(char *rom_path, flashcart_progress_callback
 
     fix_file_size(&fil);
 
-    size_t rom_size = f_size(&fil) - KiB(128);
+    size_t rom_size = f_size(&fil);
 
     // FIXME: if the cart is not V3 or X5 or X7, we need probably need to - 128KiB for save compatibility.
     // Or somehow warn that certain ROM's will have corruption due to the address space being used for saves.
@@ -158,6 +158,11 @@ static flashcart_err_t ed64_load_rom(char *rom_path, flashcart_progress_callback
         return FLASHCART_ERR_LOAD;
     }
 
+    if (rom_size == MiB(64))
+    {
+        rom_size -= KiB(128);
+    }
+    
     size_t sdram_size = rom_size;
 
     size_t chunk_size = MiB(1);

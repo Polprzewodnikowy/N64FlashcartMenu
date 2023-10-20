@@ -32,6 +32,10 @@ void pi_dma_from_sram(void *dest, unsigned long offset, unsigned long size);
 void pi_dma_to_sram(void* src, unsigned long offset, unsigned long size);
 void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size);
 
+void ed64_ll_set_sdcard_timing(void);
+
+void ed64_ll_set_sdcard_timing(void);
+
 
 #define SAV_EEP_ON 1
 #define SAV_SRM_ON 2

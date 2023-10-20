@@ -24,17 +24,15 @@ typedef enum {
 
 } ed64_registers_t;
 
-void pi_initialize(void);
-void pi_initialize_sram(void);
-void pi_dma_from_cart(void* dest, void* src, unsigned long size);
-void pi_dma_to_cart(void* dest, void* src, unsigned long size);
-void pi_dma_from_sram(void *dest, unsigned long offset, unsigned long size);
-void pi_dma_to_sram(void* src, unsigned long offset, unsigned long size);
-void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size);
+void pi_initialize (void);
+void pi_initialize_sram (void);
+void pi_dma_from_cart (void* dest, void* src, unsigned long size);
+void pi_dma_to_cart (void* dest, void* src, unsigned long size);
+void pi_dma_from_sram (void *dest, unsigned long offset, unsigned long size);
+void pi_dma_to_sram (void* src, unsigned long offset, unsigned long size);
+void pi_dma_from_cart_safe (void *dest, void *src, unsigned long size);
 
-void ed64_ll_set_sdcard_timing(void);
-
-void ed64_ll_set_sdcard_timing(void);
+void ed64_ll_set_sdcard_timing (void);
 
 
 #define SAV_EEP_ON 1
@@ -45,20 +43,21 @@ void ed64_ll_set_sdcard_timing(void);
 #define SAV_RAM_BANK 128
 #define SAV_RAM_BANK_APPLY 32768
 
-uint32_t ed64_ll_reg_read(uint32_t reg);
-void ed64_ll_reg_write(uint32_t reg, uint32_t data);
+uint32_t ed64_ll_reg_read (uint32_t reg);
+void ed64_ll_reg_write (uint32_t reg, uint32_t data);
 
 uint8_t ed64_ll_sram_bank;
 ed64_save_type_t ed64_ll_save_type;
 
 
-uint32_t ed64_ll_reg_read(uint32_t reg) {
+uint32_t ed64_ll_reg_read (uint32_t reg) {
 
     *(volatile uint32_t *) (ED64_CONFIG_REGS_BASE);
     return *(volatile uint32_t *) (ED64_CONFIG_REGS_BASE + reg * 4);
+
 }
 
-void ed64_ll_reg_write(uint32_t reg, uint32_t data) {
+void ed64_ll_reg_write (uint32_t reg, uint32_t data) {
 
     *(volatile uint32_t *) (ED64_CONFIG_REGS_BASE);
     *(volatile uint32_t *) (ED64_CONFIG_REGS_BASE + reg * 4) = data;
@@ -67,12 +66,13 @@ void ed64_ll_reg_write(uint32_t reg, uint32_t data) {
 }
 
 
-ed64_save_type_t ed64_ll_get_save_type() {
+ed64_save_type_t ed64_ll_get_save_type (void) {
 
     return ed64_ll_save_type;
+
 }
 
-void ed64_ll_set_save_type(ed64_save_type_t type) {
+void ed64_ll_set_save_type (ed64_save_type_t type) {
 
     uint16_t save_cfg;
     uint8_t eeprom_on, sram_on, eeprom_size, sram_size, ram_bank;
@@ -121,71 +121,79 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
 
 }
 
-void ed64_ll_set_sram_bank(uint8_t bank) {
+void ed64_ll_set_sram_bank (uint8_t bank) {
 
     ed64_ll_sram_bank = bank == 0 ? 0 : 1;
 
 }
 
 
-void pi_initialize(void) {
+void pi_initialize (void) {
+
 	dma_wait();
 	io_write(PI_STATUS_REG, 0x03);
+
 }
 
 // Inits PI for sram transfer
-void pi_initialize_sram(void) {
-	
+void pi_initialize_sram (void) {
+
 	io_write(PI_BSD_DOM2_LAT_REG, 0x05);
 	io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
 	io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
 	io_write(PI_BSD_DOM2_RLS_REG, 0x02);
-	
+
 }
 
-void pi_dma_from_sram(void *dest, unsigned long offset, unsigned long size) {
-	
+void pi_dma_from_sram (void *dest, unsigned long offset, unsigned long size) {
 
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
 	io_write(PI_CART_ADDR_REG, (0xA8000000 + offset));
 	 asm volatile ("" : : : "memory");
 	io_write(PI_WR_LEN_REG, (size - 1));
 	 asm volatile ("" : : : "memory");
- 
+
 }
 
 
-void pi_dma_to_sram(void *src, unsigned long offset, unsigned long size) { //void*
+void pi_dma_to_sram (void *src, unsigned long offset, unsigned long size) {
+
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 2);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
 	io_write(PI_CART_ADDR_REG, (0xA8000000 + offset));
 	io_write(PI_RD_LEN_REG, (size - 1));
+
 }
 
-void pi_dma_from_cart(void* dest, void* src, unsigned long size) {
+void pi_dma_from_cart (void* dest, void* src, unsigned long size) {
+
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x03);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
 	io_write(PI_CART_ADDR_REG, K0_TO_PHYS(src));
 	io_write(PI_WR_LEN_REG, (size - 1));
+
 }
 
 
-void pi_dma_to_cart(void* dest, void* src, unsigned long size) {
+void pi_dma_to_cart (void* dest, void* src, unsigned long size) {
+
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x02);
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(src));
 	io_write(PI_CART_ADDR_REG, K0_TO_PHYS(dest));
 	io_write(PI_RD_LEN_REG, (size - 1));
+
 }
 
 
 // Wrapper to support unaligned access to memory
-void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size) {
+void pi_dma_from_cart_safe (void *dest, void *src, unsigned long size) {
+
 	if (!dest || !src || !size) return;
 
 	unsigned long unalignedSrc  = ((unsigned long)src)  % 2;
@@ -209,10 +217,12 @@ void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size) {
 	memcpy(dest, (buffer + unalignedSrc), size);
 
 	free(buffer);
+
 }
 
 
-int ed64_ll_get_sram( uint8_t *buffer, int size){
+int ed64_ll_get_sram (uint8_t *buffer, int size) {
+
     dma_wait();
 
     io_write(PI_BSD_DOM2_LAT_REG, 0x05);
@@ -236,19 +246,23 @@ int ed64_ll_get_sram( uint8_t *buffer, int size){
     io_write(PI_BSD_DOM2_RLS_REG, 0x03);
 
     return 1;
+
 }
 
-int ed64_ll_get_eeprom(  uint8_t *buffer, int size){
+int ed64_ll_get_eeprom (uint8_t *buffer, int size) {
+
     int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_read( b, &buffer[b * 8] );
     }
 
     return 1;
+
 }
 
 
-int ed64_ll_get_fram( uint8_t *buffer, int size){
+int ed64_ll_get_fram (uint8_t *buffer, int size) {
+
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
     dma_wait();
 
@@ -259,13 +273,15 @@ int ed64_ll_get_fram( uint8_t *buffer, int size){
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
     return 1;
+
 }
 
 /*
 sram upload
 */
-int ed64_ll_set_sram(  uint8_t *buffer, int size){
-     //half working
+int ed64_ll_set_sram (uint8_t *buffer, int size) {
+
+    //half working
     dma_wait();
     //Timing
     pi_initialize_sram();
@@ -285,19 +301,23 @@ int ed64_ll_set_sram(  uint8_t *buffer, int size){
     ed64_ll_set_sdcard_timing();
 
     return 1;
+
 }
 
 
-int ed64_ll_set_eeprom(uint8_t *buffer, int size){
+int ed64_ll_set_eeprom (uint8_t *buffer, int size) {
+
     int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_write( b, &buffer[b * 8] );
     }
 
     return 1;
+
 }
 
-int ed64_ll_set_fram(uint8_t *buffer, int size){
+int ed64_ll_set_fram (uint8_t *buffer, int size) {
+
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K);
     dma_wait();
 
@@ -308,10 +328,11 @@ int ed64_ll_set_fram(uint8_t *buffer, int size){
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
     return 1;
+
 }
 
 
-void ed64_ll_set_sdcard_timing(void){
+void ed64_ll_set_sdcard_timing (void) {
 
     io_write(PI_BSD_DOM1_LAT_REG, 0x40);
     io_write(PI_BSD_DOM1_PWD_REG, 0x12);
@@ -322,4 +343,5 @@ void ed64_ll_set_sdcard_timing(void){
     io_write(PI_BSD_DOM2_PWD_REG, 0x12);
     io_write(PI_BSD_DOM2_PGS_REG, 0x07);
     io_write(PI_BSD_DOM2_RLS_REG, 0x03);
+
 }

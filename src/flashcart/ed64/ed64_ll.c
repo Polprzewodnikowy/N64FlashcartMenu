@@ -24,6 +24,14 @@ typedef enum {
 
 } ed64_registers_t;
 
+void pi_initialize(void);
+void pi_initialize_sram(void);
+void pi_dma_from_cart(void* dest, void* src, unsigned long size);
+void pi_dma_to_cart(void* dest, void* src, unsigned long size);
+void pi_dma_from_sram(void *dest, unsigned long offset, unsigned long size);
+void pi_dma_to_sram(void* src, unsigned long offset, unsigned long size);
+void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size);
+
 
 #define SAV_EEP_ON 1
 #define SAV_SRM_ON 2
@@ -116,13 +124,13 @@ void ed64_ll_set_sram_bank(uint8_t bank) {
 }
 
 
-void PI_Init(void) {
+void pi_initialize(void) {
 	dma_wait();
 	io_write(PI_STATUS_REG, 0x03);
 }
 
 // Inits PI for sram transfer
-void PI_Init_SRAM(void) {
+void pi_initialize_sram(void) {
 	
 	io_write(PI_BSD_DOM2_LAT_REG, 0x05);
 	io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
@@ -131,7 +139,7 @@ void PI_Init_SRAM(void) {
 	
 }
 
-void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
+void pi_dma_from_sram(void *dest, unsigned long offset, unsigned long size) {
 	
 
 	io_write(PI_DRAM_ADDR_REG, K1_TO_PHYS(dest));
@@ -143,7 +151,7 @@ void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size) {
 }
 
 
-void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
+void pi_dma_to_sram(void *src, unsigned long offset, unsigned long size) { //void*
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 2);
@@ -152,7 +160,7 @@ void PI_DMAToSRAM(void *src, unsigned long offset, unsigned long size) { //void*
 	io_write(PI_RD_LEN_REG, (size - 1));
 }
 
-void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
+void pi_dma_from_cart(void* dest, void* src, unsigned long size) {
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x03);
@@ -162,7 +170,7 @@ void PI_DMAFromCart(void* dest, void* src, unsigned long size) {
 }
 
 
-void PI_DMAToCart(void* dest, void* src, unsigned long size) {
+void pi_dma_to_cart(void* dest, void* src, unsigned long size) {
 	dma_wait();
 
 	io_write(PI_STATUS_REG, 0x02);
@@ -173,7 +181,7 @@ void PI_DMAToCart(void* dest, void* src, unsigned long size) {
 
 
 // Wrapper to support unaligned access to memory
-void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
+void pi_dma_from_cart_safe(void *dest, void *src, unsigned long size) {
 	if (!dest || !src || !size) return;
 
 	unsigned long unalignedSrc  = ((unsigned long)src)  % 2;
@@ -181,7 +189,7 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 
 	//FIXME: Do i really need to check if size is 16bit aligned?
 	if (!unalignedDest && !unalignedSrc && !(size % 2)) {
-		PI_DMAFromCart(dest, src, size);
+		pi_dma_from_cart(dest, src, size);
 		dma_wait();
 
 		return;
@@ -191,7 +199,7 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 	unsigned long newSize = (size + unalignedSrc) + ((size + unalignedSrc) % 2);
 
 	unsigned char *buffer = memalign(8, newSize);
-	PI_DMAFromCart(buffer, newSrc, newSize);
+	pi_dma_from_cart(buffer, newSrc, newSize);
 	dma_wait();
 
 	memcpy(dest, (buffer + unalignedSrc), size);
@@ -200,7 +208,7 @@ void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size) {
 }
 
 
-int getSRAM( uint8_t *buffer, int size){
+int ed64_ll_get_sram( uint8_t *buffer, int size){
     dma_wait();
 
     io_write(PI_BSD_DOM2_LAT_REG, 0x05);
@@ -210,11 +218,11 @@ int getSRAM( uint8_t *buffer, int size){
 
     dma_wait();
 
-    PI_Init();
+    pi_initialize();
 
     dma_wait();
 
-    PI_DMAFromSRAM(buffer, 0, size) ;
+    pi_dma_from_sram(buffer, 0, size) ;
 
     dma_wait();
 
@@ -226,7 +234,7 @@ int getSRAM( uint8_t *buffer, int size){
     return 1;
 }
 
-int getEeprom(  uint8_t *buffer, int size){
+int ed64_ll_get_eeprom(  uint8_t *buffer, int size){
     int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_read( b, &buffer[b * 8] );
@@ -236,11 +244,11 @@ int getEeprom(  uint8_t *buffer, int size){
 }
 
 
-int getFlashRAM( uint8_t *buffer, int size){
+int ed64_ll_get_fram( uint8_t *buffer, int size){
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
     dma_wait();
 
-    getSRAM(buffer, size);
+   ed64_ll_get_sram(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
     dma_wait();
@@ -252,31 +260,31 @@ int getFlashRAM( uint8_t *buffer, int size){
 /*
 sram upload
 */
-int setSRAM(  uint8_t *buffer, int size){
+int ed64_ll_set_sram(  uint8_t *buffer, int size){
      //half working
     dma_wait();
     //Timing
-    PI_Init_SRAM();
+    pi_initialize_sram();
 
     //Readmode
-    PI_Init();
+    pi_initialize();
 
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
 
-    PI_DMAToSRAM(buffer, 0, size);
+    pi_dma_to_sram(buffer, 0, size);
     data_cache_hit_writeback_invalidate(buffer,size);
 
     //Wait
     dma_wait();
     //Restore evd Timing
-    setSDTiming();
+    ed64_ll_set_sdcard_timing();
 
     return 1;
 }
 
 
-int setEeprom(uint8_t *buffer, int size){
+int ed64_ll_set_eeprom(uint8_t *buffer, int size){
     int blocks=size/8;
     for( int b = 0; b < blocks; b++ ) {
         eeprom_write( b, &buffer[b * 8] );
@@ -285,11 +293,11 @@ int setEeprom(uint8_t *buffer, int size){
     return 1;
 }
 
-int setFlashRAM(uint8_t *buffer, int size){
+int ed64_ll_set_fram(uint8_t *buffer, int size){
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K);
     dma_wait();
 
-    setSRAM(buffer, size);
+    ed64_ll_set_sram(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
     dma_wait();
@@ -299,7 +307,7 @@ int setFlashRAM(uint8_t *buffer, int size){
 }
 
 
-void setSDTiming(void){
+void ed64_ll_set_sdcard_timing(void){
 
     io_write(PI_BSD_DOM1_LAT_REG, 0x40);
     io_write(PI_BSD_DOM1_PWD_REG, 0x12);

@@ -17,13 +17,13 @@
 
 // This is a trial hack before using the settings API.
 #ifndef LAST_SAVE_FILE_PATH
-#define LAST_SAVE_FILE_PATH "/menu/last_rom.txt"
+#define LAST_SAVE_FILE_PATH "/menu/last_rom.tmp"
 #endif
 #ifndef RESET_CHECK_FILE_PATH
-#define RESET_CHECK_FILE_PATH "/menu/RESET"
+#define RESET_CHECK_FILE_PATH "/menu/reset.tmp"
 #endif
 #ifndef FLASHRAM_CHECK_FILE_PATH
-#define FLASHRAM_CHECK_FILE_PATH "/menu/FLASHRAM"
+#define FLASHRAM_CHECK_FILE_PATH "/menu/flashram.tmp"
 #endif
 
 extern int ed_exit(void);
@@ -35,7 +35,7 @@ static flashcart_err_t ed64_init(void)
     // FIXME: Update firmware if needed.
     // FIXME: Enable RTC if available.
 
-    // older everdrives cant save during gameplay so we need to the reset method.
+    // older everdrives cannot save during gameplay so we need to the reset method.
     // works by checking if a file exists.
 
     if (file_exists(strip_sd_prefix(RESET_CHECK_FILE_PATH)))
@@ -68,7 +68,7 @@ static flashcart_err_t ed64_init(void)
             return FLASHCART_ERR_LOAD;
         }
 
-        // Now save the content back to the SD!
+        // Now save the content back to the SD card!
         FIL fil;
         UINT br;
         uint8_t cartsave_data[KiB(128)];
@@ -88,17 +88,17 @@ static flashcart_err_t ed64_init(void)
             // so minus flashram we can just check the size
             if (file_exists(strip_sd_prefix(FLASHRAM_CHECK_FILE_PATH)))
             { // flashram is bugged atm
-                getFlashRAM(cartsave_data, save_size);
+               ed64_ll_get_fram(cartsave_data, save_size);
               // deletes flag
               f_unlink(strip_sd_prefix(FLASHRAM_CHECK_FILE_PATH));
             }
             else if (save_size > KiB(2))
             { // sram
-                getSRAM(cartsave_data, save_size);
+               ed64_ll_get_sram(cartsave_data, save_size);
             }
             else
             { // eeprom
-                getEeprom(cartsave_data, save_size);
+               ed64_ll_get_eeprom(cartsave_data, save_size);
             }
 
             if (f_write(&fil, cartsave_data, save_size, &br) != FR_OK)
@@ -272,14 +272,14 @@ static flashcart_err_t ed64_load_save(char *save_path)
     {
     case SAVE_TYPE_EEPROM_4K:
     case SAVE_TYPE_EEPROM_16K:
-        setEeprom(cartsave_data, save_size);
+       ed64_ll_set_eeprom(cartsave_data, save_size);
         break;
     case SAVE_TYPE_SRAM:
     case SAVE_TYPE_SRAM_128K:
-        setSRAM(cartsave_data, save_size);
+       ed64_ll_set_sram(cartsave_data, save_size);
         break;
     case SAVE_TYPE_FLASHRAM:
-        setFlashRAM(cartsave_data, save_size);
+       ed64_ll_set_fram(cartsave_data, save_size);
         // a cold and warm boot has no way of seeing save types and most types can be determined by size
         // this tells the cart to use flash instead of sram 128 since they are the same size
         FIL flashfil;

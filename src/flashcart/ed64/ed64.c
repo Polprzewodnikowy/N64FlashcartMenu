@@ -240,10 +240,10 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     case SAVE_TYPE_SRAM:
        ed64_ll_set_sram(cartsave_data, save_size);
     case SAVE_TYPE_SRAM_128K:
-       ed64_ll_set_sram_128(cartsave_data, save_size);
+       ed64_ll_set_sram_128(cartsave_data, KiB(128));
         break;
     case SAVE_TYPE_FLASHRAM:
-       ed64_ll_set_fram(cartsave_data, save_size);
+       ed64_ll_set_fram(cartsave_data, KiB(128));
         // a cold and warm boot has no way of seeing save types and most types can be determined by size
         // this tells the cart to use flash instead of sram 128 since they are the same size
         current_state.is_fram_save_type = true;

@@ -237,7 +237,7 @@ int ed64_ll_get_sram (uint8_t *buffer, int size) {
 
     dma_wait();
 
-    pi_dma_from_sram(buffer, 0 - (KiB(32) - size), size) ;
+    pi_dma_from_sram(buffer, 0 - (KiB(64) - size), size) ;
 
     dma_wait();
 
@@ -295,7 +295,7 @@ int ed64_ll_set_sram (uint8_t *buffer, int size) {
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
 
-    pi_dma_to_sram(buffer, 0 - (KiB(32) - size), size);
+    pi_dma_to_sram(buffer, 0 - (KiB(64) - size), size);
     data_cache_hit_writeback_invalidate(buffer,size);
 
     //Wait

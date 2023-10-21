@@ -1,6 +1,5 @@
 #include <string.h>
 
-#include <libcart/cart.h>
 #include <libdragon.h>
 
 #include "cart_load.h"

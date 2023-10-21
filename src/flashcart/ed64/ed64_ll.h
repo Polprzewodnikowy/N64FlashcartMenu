@@ -65,35 +65,17 @@ typedef enum {
 #define ROM_ADDRESS  (0xB0000000)
 
 /* Save functions */
-void ed64_ll_set_ram_bank(uint8_t bank);
-ed64_save_type_t ed64_ll_get_save_type();
-void ed64_ll_set_save_type(ed64_save_type_t type);
+void ed64_ll_set_sram_bank (uint8_t bank);
+ed64_save_type_t ed64_ll_get_save_type ();
+void ed64_ll_set_save_type (ed64_save_type_t type);
+
+int ed64_ll_get_sram (uint8_t *buffer, int size);
+int ed64_ll_get_eeprom (uint8_t *buffer, int size);
+int ed64_ll_get_fram (uint8_t *buffer, int size);
+
+int ed64_ll_set_sram (uint8_t *buffer, int size);
+int ed64_ll_set_eeprom (uint8_t *buffer, int size);
+int ed64_ll_set_fram (uint8_t *buffer, int size);
 
 /** @} */ /* ed64 */
-
-void data_cache_hit_writeback_invalidate(volatile void *, unsigned long);
-unsigned int CRC_Calculate(unsigned int crc, unsigned char* buf, unsigned int len);
-void dma_write_sram(void* src, unsigned long offset, unsigned long size);
-void dma_read_sram(void *dest, unsigned long offset, unsigned long size);
-void dma_write_s(void * ram_address, unsigned long pi_address, unsigned long len);
-void dma_read_s(void * ram_address, unsigned long pi_address, unsigned long len);
-int writeSram(void* src, unsigned long size);
-void setSDTiming(void);
-
-
-void PI_Init(void);
-void PI_Init_SRAM(void);
-void PI_DMAFromCart(void* dest, void* src, unsigned long size);
-void PI_DMAToCart(void* dest, void* src, unsigned long size);
-void PI_DMAFromSRAM(void *dest, unsigned long offset, unsigned long size);
-void PI_DMAToSRAM(void* src, unsigned long offset, unsigned long size);
-void PI_SafeDMAFromCart(void *dest, void *src, unsigned long size);
-int getSRAM( uint8_t *buffer, int size);
-int getEeprom(  uint8_t *buffer, int size);
-int getFlashRAM(  uint8_t *buffer, int size);
-int setSRAM( uint8_t *buffer, int size);
-int setEeprom( uint8_t *buffer, int size);
-int setFlashRAM( uint8_t *buffer, int size);
-
-
 #endif

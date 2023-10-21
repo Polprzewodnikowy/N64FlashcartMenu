@@ -1,13 +1,11 @@
 /**
- * @file settings.h
- * @brief Menu Settings
- * @ingroup menu 
+ * @file e664_state.h
+ * @brief ED64 state
+ * @ingroup flashcart
  */
 
 #ifndef FLASHCART_ED64_STATE_H__
 #define FLASHCART_ED64_STATE_H__
-
-#include <stdint.h>
 
 /** @brief ED64 Pseudo Writeback Structure */
 typedef struct {

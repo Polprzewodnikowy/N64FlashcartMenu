@@ -59,6 +59,9 @@ static flashcart_err_t ed64_init (void) {
               current_state.is_fram_save_type = false;
               ed64_state_save(&current_state);
             }
+            else if (save_size > KiB(32)) { // sram 128
+               ed64_ll_get_sram(cartsave_data, save_size);
+            }
             else if (save_size > KiB(2)) { // sram
                ed64_ll_get_sram(cartsave_data, save_size);
             }
@@ -237,8 +240,9 @@ static flashcart_err_t ed64_load_save (char *save_path) {
        ed64_ll_set_eeprom(cartsave_data, save_size);
         break;
     case SAVE_TYPE_SRAM:
-    case SAVE_TYPE_SRAM_128K:
        ed64_ll_set_sram(cartsave_data, save_size);
+    case SAVE_TYPE_SRAM_128K:
+       ed64_ll_set_sram_128(cartsave_data, save_size);
         break;
     case SAVE_TYPE_FLASHRAM:
        ed64_ll_set_fram(cartsave_data, save_size);

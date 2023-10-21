@@ -222,7 +222,7 @@ void pi_dma_from_cart_safe (void *dest, void *src, unsigned long size) {
 }
 
 
-int ed64_ll_get_sram (uint8_t *buffer, int size) {
+int ed64_ll_get_sram_128 (uint8_t *buffer, int size) {
 
     dma_wait();
 
@@ -238,6 +238,35 @@ int ed64_ll_get_sram (uint8_t *buffer, int size) {
     dma_wait();
 
     pi_dma_from_sram(buffer, 0 - (KiB(64) - size), size) ;
+
+    dma_wait();
+
+    io_write(PI_BSD_DOM2_LAT_REG, 0x40);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x12);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x07);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x03);
+
+    return 1;
+
+}
+
+
+int ed64_ll_get_sram (uint8_t *buffer, int size) {
+
+    dma_wait();
+
+    io_write(PI_BSD_DOM2_LAT_REG, 0x05);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
+    io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x02);
+
+    dma_wait();
+
+    pi_initialize();
+
+    dma_wait();
+
+    pi_dma_from_sram(buffer, 0, size) ;
 
     dma_wait();
 
@@ -267,7 +296,7 @@ int ed64_ll_get_fram (uint8_t *buffer, int size) {
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
     dma_wait();
 
-    ed64_ll_get_sram(buffer, size);
+    ed64_ll_get_sram_128(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
     dma_wait();
@@ -280,6 +309,32 @@ int ed64_ll_get_fram (uint8_t *buffer, int size) {
 /*
 sram upload
 */
+
+
+int ed64_ll_set_sram_128 (uint8_t *buffer, int size) {
+
+    //half working
+    dma_wait();
+    //Timing
+    pi_initialize_sram();
+
+    //Readmode
+    pi_initialize();
+
+    data_cache_hit_writeback_invalidate(buffer,size);
+    dma_wait();
+
+    pi_dma_to_sram(buffer, 0 - (KiB(64) - size), size);
+    data_cache_hit_writeback_invalidate(buffer,size);
+
+    //Wait
+    dma_wait();
+    //Restore evd Timing
+    ed64_ll_set_sdcard_timing();
+
+    return 1;
+
+}
 
 
 int ed64_ll_set_sram (uint8_t *buffer, int size) {
@@ -295,7 +350,7 @@ int ed64_ll_set_sram (uint8_t *buffer, int size) {
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
 
-    pi_dma_to_sram(buffer, 0 - (KiB(64) - size), size);
+    pi_dma_to_sram(buffer, 0, size);
     data_cache_hit_writeback_invalidate(buffer,size);
 
     //Wait
@@ -324,7 +379,7 @@ int ed64_ll_set_fram (uint8_t *buffer, int size) {
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K);
     dma_wait();
 
-    ed64_ll_set_sram(buffer, size);
+    ed64_ll_set_sram_128(buffer, size);
     data_cache_hit_writeback_invalidate(buffer, size);
 
     dma_wait();

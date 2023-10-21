@@ -125,7 +125,17 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     }
 
     if (rom_size == MiB(64)) {
-        rom_size -= KiB(128);
+            ed64_save_type_t type = ed64_ll_get_save_type();
+            switch (type) {
+            case SAVE_TYPE_SRAM:
+                rom_size -= KiB(32);
+            case SAVE_TYPE_SRAM_128K:
+            case SAVE_TYPE_FLASHRAM:
+                rom_size -= KiB(128);
+            break;
+            default:
+            break;
+        }
     }
     
     size_t sdram_size = rom_size;

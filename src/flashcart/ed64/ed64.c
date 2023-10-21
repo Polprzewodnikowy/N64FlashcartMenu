@@ -31,10 +31,10 @@ static flashcart_err_t ed64_init (void) {
 
     ed64_state_load(&current_state);
 
-    if (current_state.is_warm_start == true) {
+    if (current_state.is_expecting_save_writeback == true) {
 
         // make sure next boot doesnt trigger the check changing its state.
-        current_state.is_warm_start = false;
+        current_state.is_expecting_save_writeback = false;
         ed64_state_save(&current_state);
 
         // Now save the content back to the SD card!
@@ -75,6 +75,8 @@ static flashcart_err_t ed64_init (void) {
             }
         }
         else {
+            current_state.is_expecting_save_writeback = false;
+            current_state.is_fram_save_type = false;
             current_state.last_save_path = "";
             ed64_state_save(&current_state);
         }
@@ -214,6 +216,8 @@ static flashcart_err_t ed64_load_save (char *save_path) {
         return FLASHCART_ERR_LOAD;
     }
 
+    current_state.is_fram_save_type = false;
+
     ed64_save_type_t type = ed64_ll_get_save_type();
     switch (type) {
     case SAVE_TYPE_EEPROM_4K:
@@ -237,7 +241,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
 
 
     current_state.last_save_path = save_path;
-    current_state.is_warm_start = true;
+    current_state.is_expecting_save_writeback = true;
     ed64_state_save(&current_state);
 
     return FLASHCART_OK;

@@ -10,7 +10,7 @@
 /** @brief ED64 Pseudo Writeback Structure */
 typedef struct {
 /** @brief The reset button was used */
-    bool is_warm_start;
+    bool is_expecting_save_writeback;
 /** @brief The last save type was flash ram */
     bool is_fram_save_type;
 /** @brief The path to the last loaded ROM */

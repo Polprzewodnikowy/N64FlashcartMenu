@@ -83,8 +83,6 @@ static flashcart_err_t ed64_init (void) {
             current_state.last_save_path = "";
             ed64_state_save(&current_state);
         }
-        //clears rom/save sdram area
-        memset((void *)(ROM_ADDRESS), 0xFF, MiB(64) + KiB(128));
     }
     return FLASHCART_OK;
 }

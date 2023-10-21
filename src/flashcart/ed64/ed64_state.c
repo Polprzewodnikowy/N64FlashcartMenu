@@ -11,7 +11,7 @@
 static ed64_pseudo_writeback_t init = {
     .is_warm_start = false,
     .is_fram_save_type = false,
-    .last_rom_path = ""
+    .last_save_path = ""
 };
 
 
@@ -24,7 +24,7 @@ void ed64_state_load (ed64_pseudo_writeback_t *state) {
 
     state->is_warm_start = mini_get_bool(ini, "ed64", "is_warm_start", init.is_warm_start);
     state->is_fram_save_type = mini_get_bool(ini, "ed64", "is_fram_save_type", init.is_fram_save_type);
-    state->last_rom_path = strdup(mini_get_string(ini, "ed64", "last_rom_path", init.last_rom_path));
+    state->last_save_path = strdup(mini_get_string(ini, "ed64", "last_save_path", init.last_save_path));
 
     mini_free(ini);
 }
@@ -34,7 +34,7 @@ void ed64_state_save (ed64_pseudo_writeback_t *state) {
 
     mini_set_bool(ini, "ed64", "is_warm_start", state->is_warm_start);
     mini_set_bool(ini, "ed64", "is_fram_save_type", state->is_fram_save_type);
-    mini_set_string(ini, "ed64", "last_rom_path", state->last_rom_path);
+    mini_set_string(ini, "ed64", "last_save_path", state->last_save_path);
 
     mini_save(ini);
 

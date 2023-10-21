@@ -17,11 +17,6 @@
 
 static ed64_pseudo_writeback_t current_state;
 
-// FIXME: Use one file using the ed64_pseudo_writeback_t struct.
-#ifndef LAST_SAVE_FILE_PATH
-#define LAST_SAVE_FILE_PATH "/menu/ed_last_rom.tmp"
-#endif
-
 extern int ed_exit (void);
 
 static flashcart_err_t ed64_init (void) {
@@ -42,38 +37,17 @@ static flashcart_err_t ed64_init (void) {
         current_state.is_warm_start = false;
         ed64_state_save(&current_state);
 
-        // finds the last save location
-        FIL lrp_fil;
-        UINT lrp_br;
-
-        if (f_open(&lrp_fil, strip_sd_prefix(LAST_SAVE_FILE_PATH), FA_READ) != FR_OK) {
-            return FLASHCART_ERR_LOAD;
-        }
-
-        int lrp_size = f_size(&lrp_fil);
-
-        TCHAR lrp_path[lrp_size++];
-
-        if (f_read(&lrp_fil, lrp_path, lrp_size, &lrp_br) != FR_OK) {
-            f_close(&lrp_fil);
-            return FLASHCART_ERR_LOAD;
-        }
-
-        if (f_close(&lrp_fil) != FR_OK) {
-            return FLASHCART_ERR_LOAD;
-        }
-
         // Now save the content back to the SD card!
         FIL fil;
-        UINT br;
+        UINT bw;
         uint8_t cartsave_data[KiB(128)];
 
         // find the path to last save
-        if (file_exists(strip_sd_prefix(lrp_path))) {
+        if (file_exists(strip_sd_prefix(current_state.last_save_path))) {
 
-            int save_size = file_get_size(strip_sd_prefix(lrp_path));
+            int save_size = file_get_size(strip_sd_prefix(current_state.last_save_path));
 
-            if ((f_open(&fil, strip_sd_prefix(lrp_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
+            if ((f_open(&fil, strip_sd_prefix(current_state.last_save_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
                 return FLASHCART_ERR_LOAD;
             }
 
@@ -92,13 +66,17 @@ static flashcart_err_t ed64_init (void) {
                ed64_ll_get_eeprom(cartsave_data, save_size);
             }
 
-            if (f_write(&fil, cartsave_data, save_size, &br) != FR_OK) {
+            if (f_write(&fil, cartsave_data, save_size, &bw) != FR_OK) {
                 return FLASHCART_ERR_LOAD;
             }
 
             if (f_close(&fil) != FR_OK) {
                 return FLASHCART_ERR_LOAD;
             }
+        }
+        else {
+            current_state.last_save_path = "";
+            ed64_state_save(&current_state);
         }
     }
     return FLASHCART_OK;
@@ -258,21 +236,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     }
 
 
-    FIL lsp_fil;
-    UINT lsp_bw;
-
-    if (f_open(&lsp_fil, strip_sd_prefix(LAST_SAVE_FILE_PATH), FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-        return FLASHCART_ERR_LOAD;
-    }
-    if (f_write(&lsp_fil, strip_sd_prefix(save_path), strlen(save_path), &lsp_bw) != FR_OK) {
-        f_close(&lsp_fil);
-        return FLASHCART_ERR_LOAD;
-    }
-
-    if (f_close(&lsp_fil) != FR_OK) {
-        return FLASHCART_ERR_LOAD;
-    }
-
+    current_state.last_save_path = save_path;
     current_state.is_warm_start = true;
     ed64_state_save(&current_state);
 

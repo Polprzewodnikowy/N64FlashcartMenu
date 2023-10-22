@@ -129,10 +129,10 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
             ed64_save_type_t type = ed64_ll_get_save_type();
             switch (type) {
             case SAVE_TYPE_SRAM:
-                rom_size -= KiB(32);
+                rom_size -= KiB(32) - KiB(16);
             case SAVE_TYPE_SRAM_128K:
             case SAVE_TYPE_FLASHRAM:
-                rom_size -= KiB(128);
+                rom_size -= KiB(128) - KiB(16);
             break;
             default:
             break;

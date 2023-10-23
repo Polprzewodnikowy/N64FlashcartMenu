@@ -42,6 +42,8 @@ Download and add the relevant ipl files and rename them before adding them to th
 - `NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
 - `NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
 
+**Note:** to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
+
 ### ED64
 Download the `ED64.v64` ROM from the latest action run assets and place it in the `/ED64` folder.
 

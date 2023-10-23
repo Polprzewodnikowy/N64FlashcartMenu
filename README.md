@@ -47,6 +47,8 @@ Download and add the relevant ipl files and rename them before adding them to th
 ### ED64
 Download the `ED64.v64` ROM from the latest action run assets and place it in the `/ED64` folder.
 
+**Untested** The aim is to replace [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+
 ### ED64P
 Download the `ED64P.v64` ROM from the latest action run assets and place it in the `/ED64P` folder.
 

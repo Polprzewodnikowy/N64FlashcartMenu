@@ -59,7 +59,7 @@ typedef enum {
     SAVE_TYPE_EEPROM_16K = 4,
     SAVE_TYPE_FLASHRAM = 5,
     SAVE_TYPE_CPAK = 8,
-    SAVE_TYPE_DD64 = 16,
+    SAVE_TYPE_DD64_CART_PORT = 16,
 } ed64_save_type_t;
 
 #define ROM_ADDRESS  (0xB0000000)

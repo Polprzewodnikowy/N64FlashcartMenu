@@ -97,10 +97,10 @@ static flashcart_err_t ed64_deinit (void) {
 
 static bool ed64_has_feature (flashcart_features_t feature) {
     switch (feature) {
-    case FLASHCART_FEATURE_64DD:
-        return false;
-    default:
-        return false;
+        case FLASHCART_FEATURE_64DD:
+            return false;
+        default:
+            return false;
     }
 }
 
@@ -126,17 +126,19 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     }
 
     if (rom_size == MiB(64)) {
-            ed64_save_type_t type = ed64_ll_get_save_type();
-            switch (type) {
+        ed64_save_type_t type = ed64_ll_get_save_type();
+        switch (type) {
             case SAVE_TYPE_SRAM:
                 rom_size -= KiB(32);
-            break;
+                break;
             case SAVE_TYPE_SRAM_128K:
             case SAVE_TYPE_FLASHRAM:
                 rom_size -= KiB(128);
-            break;
+                break;
+            case SAVE_TYPE_DD64_CART_PORT:
+                break;
             default:
-            break;
+                break;
         }
     }
     
@@ -154,10 +156,6 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
             progress(f_tell(&fil) / (float)(f_size(&fil)));
         }
     }
-    /*if (f_tell(&fil) != sdram_size) {
-        f_close(&fil);
-        return FLASHCART_ERR_LOAD;
-    }*/
 
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
@@ -234,24 +232,26 @@ static flashcart_err_t ed64_load_save (char *save_path) {
 
     ed64_save_type_t type = ed64_ll_get_save_type();
     switch (type) {
-    case SAVE_TYPE_EEPROM_4K:
-    case SAVE_TYPE_EEPROM_16K:
-       ed64_ll_set_eeprom(cartsave_data, save_size);
-        break;
-    case SAVE_TYPE_SRAM:
-       ed64_ll_set_sram(cartsave_data, save_size);
-    case SAVE_TYPE_SRAM_128K:
-       ed64_ll_set_sram_128(cartsave_data, KiB(128));
-        break;
-    case SAVE_TYPE_FLASHRAM:
-       ed64_ll_set_fram(cartsave_data, KiB(128));
-        // a cold and warm boot has no way of seeing save types and most types can be determined by size
-        // this tells the cart to use flash instead of sram 128 since they are the same size
-        current_state.is_fram_save_type = true;
-        ed64_state_save(&current_state);
-        break;
-    default:
-       break;
+        case SAVE_TYPE_EEPROM_4K:
+        case SAVE_TYPE_EEPROM_16K:
+            ed64_ll_set_eeprom(cartsave_data, save_size);
+            break;
+        case SAVE_TYPE_SRAM:
+            ed64_ll_set_sram(cartsave_data, save_size);
+        case SAVE_TYPE_SRAM_128K:
+            ed64_ll_set_sram_128(cartsave_data, KiB(128));
+            break;
+        case SAVE_TYPE_FLASHRAM:
+            ed64_ll_set_fram(cartsave_data, KiB(128));
+            // a cold and warm boot has no way of seeing save types and most types can be determined by size
+            // this tells the cart to use flash instead of sram 128 since they are the same size
+            current_state.is_fram_save_type = true;
+            ed64_state_save(&current_state);
+            break;
+        case SAVE_TYPE_DD64_CART_PORT:
+            break;
+        default:
+            break;
     }
 
 

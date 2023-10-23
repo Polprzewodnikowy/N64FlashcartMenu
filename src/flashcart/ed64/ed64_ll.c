@@ -237,7 +237,9 @@ int ed64_ll_get_sram_128 (uint8_t *buffer, int size) {
 
     dma_wait();
 
-    pi_dma_from_sram(buffer, -(size - KiB(16)), size) ;
+    // Offset Large RAM size 128KiB with a 16KiB nudge to allocate enough space
+    // We do this because 128Kib is not recognised and a 32KiB allocates too little 
+    pi_dma_from_sram(buffer, -(size - KiB(16)), size);
 
     dma_wait();
 
@@ -324,6 +326,8 @@ int ed64_ll_set_sram_128 (uint8_t *buffer, int size) {
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
 
+    // Offset Large RAM size 128KiB with a 16KiB nudge to allocate enough space
+    // We do this because 128Kib is not recognised and a 32KiB allocates too little 
     pi_dma_to_sram(buffer, -(size - KiB(16)), size);
     data_cache_hit_writeback_invalidate(buffer,size);
 

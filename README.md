@@ -110,6 +110,43 @@ NOTE: a "release" version of the SC64 menu is called `sc64menu.n64` and can be c
 * Add the required file to the correct folder on your SD card.
 
 
+# GDB in devcontainer
+**Note:** only supported on flashcarts with USB functionality
+
+## ( via WSL )
+In your WSL instance, to install the necessary drivers and udev rules, run the command:
+``` 
+    wget https://github.com/buu342/N64-UNFLoader/releases/download/v2.1/UNFLoader-Linux-x64.zip && \
+    unzip UNFLoader-Linux-x64.zip -d /usr/local/unfloader && \
+    yes Y | . /usr/local/unfloader/installer_linux.sh
+    rm -rf /usr/local/unfloader/
+```
+
+In Windows run PowerShell as Administrator.
+* install usbipd: `winget install usbipd`.
+* run `usbipd list` and note the bus id for the flashcart.
+* run `usbipd wsl attach --busid <busid>`.
+
+When the devcontainer is started, run:
+* `gdb-multiarch` and then `set architecture` to confirm support for GDB on `mips:4300`
+* `lsusb` and `ls /dev/tty*` to confirm the flashcart is mounted in the container.
+
+Add `launch.json` to `.vscode` folder
+
+
+## Via Windows
+It is not currently possible to directly communicate with USB devices.
+BUT, as a work around you can use a proxy TCP/IP connection
+
+* Download UNFLoader [here](https://github.com/buu342/N64-UNFLoader/releases/download/v2.1/UNFLoader-Windows-x86.zip)
+* Extract and place `UNFLoader.exe` in the `tools/unfLoader` directory.
+* Set up a proxy: open a terminal window, `cd ./tools/unfLoader` and then `./UNFLoader -g`
+
+
+Add a `launch.json` file to `.vscode` folder
+TBD: add content.
+
+
 # Update Libdragon submodule
 This repo currently uses the `unstable` branch as a submodule at a specific commit.
 To update to the latest version, use `git submodule update --remote ` from the terminal.

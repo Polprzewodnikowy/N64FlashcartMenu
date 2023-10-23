@@ -138,6 +138,11 @@ else
 endif
 .PHONY: run-debug
 
+debug-gdb: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+	SRCS += libs/unfloader/debug.c \
+	FLAGS += -g -O0 -DDEBUG_GDB
+.PHONY: debug-gdb
+
 # test:
 #   TODO: run tests
 

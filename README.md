@@ -1,3 +1,5 @@
+![Build](https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg)
+
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
 

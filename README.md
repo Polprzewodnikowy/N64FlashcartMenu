@@ -1,13 +1,6 @@
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
 
-## Aims
-* Support as many N64 FlashCarts as possible.
-* Be open source, using permissive licensed third party licensed libraries.
-* Be testable, using unit and smoke tests in ares emulated environment.
-* Encourage active development from community members and N64 FlashCart owners.
-* Support as many common mods and features as possible.
-
 
 ## Current (notable) menu features
 * Fully Open Source.
@@ -21,45 +14,33 @@ An open source menu for N64 flashcarts.
 * Real Time Clock support.
 * Music playback (MP3).
 
-## Video showcase (as of Oct 12 2023)
+
+### Video showcase (as of Oct 12 2023)
 
 [![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
 
+
+## Aims
+* Support as many N64 FlashCarts as possible.
+* Be open source, using permissive licensed third party licensed libraries.
+* Be testable, using unit and smoke tests in ares emulated environment.
+* Encourage active development from community members and N64 FlashCart owners.
+* Support as many common mods and features as possible.
+
+
 ## Getting started
-
-### 64drive
-Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
-Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
-
-### SC64
-Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
-
-#### 64DD disk support
-For the ability to load and run 64DD disk images, you need to add the folder `/menu/64ddipl` on the SD card.
-Download and add the relevant ipl files and rename them before adding them to the folder:
-- `NDDE0.n64` the US Prototype IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_US_MJR.n64)
-- `NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
-- `NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
-
-Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
-
-### ED64 & ED64P
-Currently not supported, but there is an aim to do so.
-
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).
 
 
-### Common to all flashcarts
-
-#### ROM Boxart
+### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
 Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
 i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
-#### Emulator support
+
+### Emulator support
 Emulators should be added to the `/menu/emulators` directory on the SD card.
 
 Menu currently supports the following emulators and associated ROM file names:
@@ -69,8 +50,32 @@ Menu currently supports the following emulators and associated ROM file names:
  - **Sega Master System** / **Sega Game Gear** / **Sg1000**: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64` (Currently broken)
 
 
+### SC64 Specific
+- Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
+- Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
+
+##### 64DD disk support
+For the ability to load and run 64DD disk images, you need to add the folder `/menu/64ddipl` on the SD card.
+Download and add the relevant ipl files and rename them before adding them to the folder:
+- `NDDE0.n64` the US Prototype IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_US_MJR.n64)
+- `NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
+- `NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
+
+Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
+
+
+### 64drive Specific
+- Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
+- Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
+
+
+### ED64 & ED64P Specific
+Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+
+The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+
+
 # Developer documentation
-**Work in progress!**
 
 You can use a dev container in VSCode to ease development.
 
@@ -81,7 +86,7 @@ You can use a dev container in VSCode to ease development.
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
 Make sure that your firmware is compatible (currently v2.17.0+)
-See: https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.17.0/docs/00_quick_startup_guide.md#firmware-backupupdate
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.17.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 
 #### From the devcontainer

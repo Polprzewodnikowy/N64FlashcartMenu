@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>N64FlashcartMenu: N64 Flashcart Menu</title>
+<title>N64FlashcartMenu: N64FlashcartMenu</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,12 +69,15 @@ $(function() {
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">N64 Flashcart Menu </div></div>
+  <div class="headertitle"><div class="title">N64FlashcartMenu </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p ><a class="anchor" id="md_README"></a>An open source menu for N64 flashcarts.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
-Current (notable) menu features</h1>
+<div class="textblock"><p ><a class="anchor" id="md_README"></a> <img src="https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg" alt="Build" style="pointer-events: none;" class="inline"/></p>
+<h1><a class="anchor" id="autotoc_md0"></a>
+N64 Flashcart Menu</h1>
+<p >An open source menu for N64 flashcarts.</p>
+<h2><a class="anchor" id="autotoc_md1"></a>
+Current (notable) menu features</h2>
 <ul>
 <li>Fully Open Source.</li>
 <li>Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).</li>
@@ -87,11 +90,11 @@ Current (notable) menu features</h1>
 <li>Real Time Clock support.</li>
 <li>Music playback (MP3).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Video showcase (as of Oct 12 2023)</h2>
+<h3><a class="anchor" id="autotoc_md2"></a>
+Video showcase (as of Oct 12 2023)</h3>
 <p ><a href="http://www.youtube.com/watch?v=6CKImHTifDA" title="N64FlashcartMenu Showcase (Oct 12 2023)"><img src="http://img.youtube.com/vi/6CKImHTifDA/0.jpg" alt="N64FlashcartMenu Showcase" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md3"></a>
-Aims</h1>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Aims</h2>
 <ul>
 <li>Support as many N64 FlashCarts as possible.</li>
 <li>Be open source, using permissive licensed third party licensed libraries.</li>
@@ -99,14 +102,14 @@ Aims</h1>
 <li>Encourage active development from community members and N64 FlashCart owners.</li>
 <li>Support as many common mods and features as possible.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md4"></a>
-Getting started</h1>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Getting started</h2>
 <p >Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
-ROM Boxart</h2>
+<h3><a class="anchor" id="autotoc_md5"></a>
+ROM Boxart</h3>
 <p >To use boxart, you need to place png files of size 158x112 in the folder <code>/menu/boxart</code> on the SD card. Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type. i.e. for GoldenEye 2 letters, this would be <code>GE.png</code>. i.e. for GoldenEye 3 letters, this would be <code>NGE.png</code>. A known set of PNG files using 2 letter ID's can be downloaded <a href="https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w">here</a>.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
-Emulator support</h2>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Emulator support</h3>
 <p >Emulators should be added to the <code>/menu/emulators</code> directory on the SD card.</p>
 <p >Menu currently supports the following emulators and associated ROM file names:</p><ul>
 <li><b>NES</b>: <a href="https://github.com/hcs64/neon64v2">neon64v2</a> by <em>hcs64</em> - <code>neon64bu.rom</code></li>
@@ -114,28 +117,27 @@ Emulator support</h2>
 <li><b>Game Boy</b> / <b>GB Color</b>: <a href="https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html">gb64</a> by <em>lambertjamesd</em> - <code>gb.v64</code> / <code>gbc.v64</code></li>
 <li><b>Sega Master System</b> / <b>Sega Game Gear</b> / <b>Sg1000</b>: <a href="https://github.com/ITotalJustice/TotalSMS">TotalSMS</a> - <code>TotalSMS.z64</code> (Currently broken)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md7"></a>
-SC64 Specific</h2>
+<h3><a class="anchor" id="autotoc_md7"></a>
+SC64 Specific</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a> installed.</li>
 <li>Download the latest <code>sc64menu.n64</code> file from the releases page, then put it in the root directory of your SD card.</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md8"></a>
-64DD disk support</h4>
+<p ><a class="anchor" id="autotoc_md8"></a> </p><h5>64DD disk support</h5>
 <p >For the ability to load and run 64DD disk images, you need to add the folder <code>/menu/64ddipl</code> on the SD card. Download and add the relevant ipl files and rename them before adding them to the folder:</p><ul>
 <li><code>NDDE0.n64</code> the US Prototype IPL can be downloaded from <a href="https://64dd.org/dumps/64DD_IPL_US_MJR.n64">here</a></li>
 <li><code>NDXJ0.n64</code> the JPN Development IPL can be downloaded from <a href="https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64">here</a></li>
 <li><code>NDDJ2.n64</code> the JPN Retail IPL can be downloaded from <a href="https://64dd.org/dumps/N64DD_IPLROM_(J).zip">here</a></li>
 </ul>
 <p >Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the <code>R</code> button.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
-64drive Specific</h2>
+<h3><a class="anchor" id="autotoc_md9"></a>
+64drive Specific</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://64drive.retroactive.be/support.php">firmware</a> installed.</li>
 <li>Download the latest <code>menu.bin</code> file from the releases page, then put it in the root directory of your SD card.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md10"></a>
-ED64 &amp; ED64P Specific</h2>
+<h3><a class="anchor" id="autotoc_md10"></a>
+ED64 &amp; ED64P Specific</h3>
 <p >Currently not supported, but work is in progress (See <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls">PR's</a>).</p>
 <p >The aim is to replace <a href="https://github.com/networkfusion/altra64">Altra64</a> and <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a>.</p>
 <h1><a class="anchor" id="autotoc_md11"></a>
@@ -186,7 +188,7 @@ Open source software and licenses used</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 1 2023 18:33:43 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Nov 1 2023 18:47:23 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

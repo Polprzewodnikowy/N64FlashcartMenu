@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['n64_20flashcart_20menu_0',['N64 Flashcart Menu',['../index.html',1,'']]]
+  ['n64flashcartmenu_0',['N64FlashcartMenu',['../index.html',1,'']]]
 ];

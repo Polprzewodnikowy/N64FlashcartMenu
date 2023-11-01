@@ -68,7 +68,7 @@ void settings_save (settings_t *settings) {
     // mini_set_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
     // mini_set_bool(ini, "menu_beta_flag", "auto_firmware_update_enabled", init.auto_firmware_update_enabled);
 
-    mini_save(ini);
+    mini_save(ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
 
     mini_free(ini);
 }

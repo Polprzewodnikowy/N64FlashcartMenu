@@ -18,7 +18,7 @@ typedef volatile uint32_t io32_t;
 
 #define UNCACHED(address)           ((typeof(address)) (((io32_t) (address)) | (0xA0000000UL)))
 
-
+/** @brief Memory Structure */
 typedef struct {
     io32_t DMEM[1024];
     io32_t IMEM[1024];
@@ -27,7 +27,7 @@ typedef struct {
 #define SP_MEM_BASE                 (0x04000000UL)
 #define SP_MEM                      ((sp_mem_t *) SP_MEM_BASE)
 
-
+/** @brief SP Registers Structure */
 typedef struct {
     io32_t PADDR;
     io32_t MADDR;
@@ -161,7 +161,7 @@ typedef struct {
 
 #define VI_CURR_LINE_FIELD          (1 << 0)
 
-
+/** @brief AI Registers Structure. */
 typedef struct {
     io32_t MADDR;
     io32_t LEN;
@@ -179,7 +179,7 @@ typedef struct {
 #define AI_CR_DMA_ON                (1 << 0)
 
 
-/** @brief Parallel Interface Register Structure */
+/** @brief Parallel Interface Register Structure. */
 typedef struct {
     io32_t MADDR;
     io32_t PADDR;
@@ -211,7 +211,7 @@ typedef struct {
 #define ROM_CART_BASE               (0x10000000UL)
 #define ROM_CART                    ((io32_t *) ROM_CART_BASE)
 
-
+/** @brief OS Information Structure. */
 typedef struct {
     uint32_t tv_type;
     uint32_t device_type;

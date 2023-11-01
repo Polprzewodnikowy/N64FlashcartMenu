@@ -36,7 +36,7 @@ void ed64_state_save (ed64_pseudo_writeback_t *state) {
     mini_set_bool(ini, "ed64", "is_fram_save_type", state->is_fram_save_type);
     mini_set_string(ini, "ed64", "last_save_path", state->last_save_path);
 
-    mini_save(ini);
+    mini_save(ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
 
     mini_free(ini);
 }

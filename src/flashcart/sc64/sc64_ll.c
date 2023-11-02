@@ -4,6 +4,7 @@
 #include "sc64_ll.h"
 
 
+/** @brief SummerCart64 Registers Structure. */
 typedef struct {
     uint32_t SR_CMD;
     uint32_t DATA[2];
@@ -31,6 +32,7 @@ typedef enum {
     CMD_ID_FLASH_ERASE_BLOCK    = 'P',
 } sc64_cmd_id_t;
 
+/** @brief SummerCart64 Commands Structure. */
 typedef struct {
     sc64_cmd_id_t id;
     uint32_t arg[2];

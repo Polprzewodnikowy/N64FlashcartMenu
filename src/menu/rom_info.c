@@ -15,7 +15,7 @@
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
 
-
+/** @brief ROM File Information Structure. */
 typedef struct  __attribute__((packed)) {
     uint32_t pi_dom1_config;
     uint32_t clock_rate;

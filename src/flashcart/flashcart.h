@@ -42,6 +42,7 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END
 } flashcart_save_type_t;
 
+/** @brief Flashcart Disk Parameter Structure. */
 typedef struct {
     bool development_drive;
     uint8_t disk_type;

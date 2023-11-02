@@ -126,6 +126,8 @@ Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
 Generated documentation is located in `output/docs` folder.
 
+After the documents are merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
+
 # Open source software and licenses used
  - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
  - [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)

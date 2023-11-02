@@ -41,6 +41,7 @@ typedef struct  __attribute__((packed)) {
     uint8_t ipl3[IPL3_LENGTH];
 } rom_header_t;
 
+/** @brief ROM Information Match Type Enumeration. */
 typedef enum {
     // Check only game code
     MATCH_TYPE_ID,

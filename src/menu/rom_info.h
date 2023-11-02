@@ -142,8 +142,11 @@ typedef struct {
         /** @brief The game code defined in the ROM's header. */
         char game_code[4];
         struct {
+            /** @brief The game media type. */
             category_type_t category_code : 8;
+            /** @brief The game unique identifier. */
             char unique_code[2];
+            /** @brief The game region and or market. */
             destination_type_t destination_code : 8;
         };
     };

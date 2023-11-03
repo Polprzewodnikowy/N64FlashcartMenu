@@ -161,7 +161,7 @@ typedef struct {
 
 #define VI_CURR_LINE_FIELD          (1 << 0)
 
-/** @brief AI Registers Structure. */
+/** @brief Audio Interface Registers Structure. */
 typedef struct {
     io32_t MADDR;
     io32_t LEN;
@@ -179,7 +179,7 @@ typedef struct {
 #define AI_CR_DMA_ON                (1 << 0)
 
 
-/** @brief Parallel Interface Register Structure. */
+/** @brief Peripheral Interface Register Structure. */
 typedef struct {
     io32_t MADDR;
     io32_t PADDR;

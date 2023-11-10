@@ -85,128 +85,130 @@ $(function() {
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="group__sc64.html">   20</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    uint8_t BUFFER[8192];</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    uint8_t EEPROM[2048];</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    uint8_t DD_SECTOR[256];</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    uint8_t FLASHRAM[128];</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>} <a class="code hl_struct" href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define SC64_BUFFERS_BASE       (0x1FFE0000UL)</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define SC64_BUFFERS            ((sc64_buffers_t *) SC64_BUFFERS_BASE)</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="group__sc64.html">   21</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    uint8_t BUFFER[8192];</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    uint8_t EEPROM[2048];</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    uint8_t DD_SECTOR[256];</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    uint8_t FLASHRAM[128];</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <a class="code hl_struct" href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define SC64_BUFFERS_BASE       (0x1FFE0000UL)</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#define SC64_BUFFERS            ((sc64_buffers_t *) SC64_BUFFERS_BASE)</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    SC64_OK,</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    SC64_ERROR_BAD_ARGUMENT,</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    SC64_ERROR_BAD_ADDRESS,</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    SC64_ERROR_BAD_CONFIG_ID,</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    SC64_ERROR_TIMEOUT,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    SC64_ERROR_SD_CARD,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    SC64_ERROR_UNKNOWN_CMD = -1</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>} sc64_error_t;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    CFG_ID_BOOTLOADER_SWITCH,</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    CFG_ID_ROM_WRITE_ENABLE,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    CFG_ID_ROM_SHADOW_ENABLE,</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    CFG_ID_DD_MODE,</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    CFG_ID_ISV_ADDRESS,</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    CFG_ID_BOOT_MODE,</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    CFG_ID_SAVE_TYPE,</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    CFG_ID_CIC_SEED,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    CFG_ID_TV_TYPE,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    CFG_ID_DD_SD_ENABLE,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    CFG_ID_DD_DRIVE_TYPE,</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    CFG_ID_DD_DISK_STATE,</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    CFG_ID_BUTTON_STATE,</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    CFG_ID_BUTTON_MODE,</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    CFG_ID_ROM_EXTENDED_ENABLE,</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>} sc64_cfg_id_t;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    DD_MODE_DISABLED = 0,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    DD_MODE_REGS = 1,</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    DD_MODE_IPL = 2,</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    DD_MODE_FULL = 3</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>} sc64_dd_mode_t;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    BOOT_MODE_MENU = 0,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    BOOT_MODE_ROM = 1,</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    BOOT_MODE_DDIPL = 2,</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    BOOT_MODE_DIRECT_ROM = 3,</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    BOOT_MODE_DIRECT_DDIPL = 4,</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>} sc64_boot_mode_t;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    SAVE_TYPE_NONE,</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    SAVE_TYPE_EEPROM_4K,</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    SAVE_TYPE_EEPROM_16K,</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    SAVE_TYPE_SRAM,</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    SAVE_TYPE_FLASHRAM,</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    SAVE_TYPE_SRAM_BANKED,</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    SAVE_TYPE_SRAM_128K,</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>} sc64_save_type_t;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    CIC_SEED_AUTO = 0xFFFF</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>} sc64_cic_seed_t;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    TV_TYPE_PAL = 0,</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    TV_TYPE_NTSC = 1,</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    TV_TYPE_MPAL = 2,</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    TV_TYPE_PASSTHROUGH = 3</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>} sc64_tv_type_t;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    DRIVE_TYPE_RETAIL,</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    DRIVE_TYPE_DEVELOPMENT,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>} sc64_drive_type_t;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    DISK_STATE_EJECTED,</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    DISK_STATE_INSERTED,</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    DISK_STATE_CHANGED,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>} sc64_disk_state_t;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    BUTTON_MODE_NONE,</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    BUTTON_MODE_N64_IRQ,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    BUTTON_MODE_USB_PACKET,</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    BUTTON_MODE_DD_DISK_SWAP,</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>} sc64_button_mode_t;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="group__sc64.html">  113</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">int</span> count;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="group__sc64.html">  115</a></span>    <span class="keyword">struct </span>{</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        uint32_t thb_table;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        uint32_t sector_table;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    } disks[4];</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>} <a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a>;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span><span class="keywordtype">void</span> sc64_ll_lock (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>sc64_error_t sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>sc64_error_t sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>sc64_error_t sc64_ll_set_disk_mapping (<a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a> *disk_mapping);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>sc64_error_t sc64_ll_writeback_pending (<span class="keywordtype">bool</span> *pending);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>sc64_error_t sc64_ll_writeback_enable (<span class="keywordtype">void</span> *address);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>sc64_error_t sc64_ll_flash_wait_busy (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>sc64_error_t sc64_ll_flash_get_erase_block_size (<span class="keywordtype">size_t</span> *erase_block_size);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>sc64_error_t sc64_ll_flash_erase_block (<span class="keywordtype">void</span> *address);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> <span class="comment">/* sc64 */</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="agroup__sc64_html_structsc64__buffers__t"><div class="ttname"><a href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a></div><div class="ttdef"><b>Definition:</b> sc64_ll.h:20</div></div>
-<div class="ttc" id="agroup__sc64_html_structsc64__disk__mapping__t"><div class="ttname"><a href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a></div><div class="ttdef"><b>Definition:</b> sc64_ll.h:113</div></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">   32</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    SC64_OK,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    SC64_ERROR_BAD_ARGUMENT,</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    SC64_ERROR_BAD_ADDRESS,</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    SC64_ERROR_BAD_CONFIG_ID,</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    SC64_ERROR_TIMEOUT,</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    SC64_ERROR_SD_CARD,</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    SC64_ERROR_UNKNOWN_CMD = -1</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>} <a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    CFG_ID_BOOTLOADER_SWITCH,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    CFG_ID_ROM_WRITE_ENABLE,</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    CFG_ID_ROM_SHADOW_ENABLE,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    CFG_ID_DD_MODE,</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    CFG_ID_ISV_ADDRESS,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    CFG_ID_BOOT_MODE,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    CFG_ID_SAVE_TYPE,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    CFG_ID_CIC_SEED,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    CFG_ID_TV_TYPE,</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    CFG_ID_DD_SD_ENABLE,</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    CFG_ID_DD_DRIVE_TYPE,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    CFG_ID_DD_DISK_STATE,</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    CFG_ID_BUTTON_STATE,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    CFG_ID_BUTTON_MODE,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    CFG_ID_ROM_EXTENDED_ENABLE,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} sc64_cfg_id_t;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    DD_MODE_DISABLED = 0,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    DD_MODE_REGS = 1,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    DD_MODE_IPL = 2,</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    DD_MODE_FULL = 3</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} sc64_dd_mode_t;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="group__sc64.html#ga4fc6e6ea26473957f4720f59f69b934e">   68</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    BOOT_MODE_MENU = 0,</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    BOOT_MODE_ROM = 1,</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    BOOT_MODE_DDIPL = 2,</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    BOOT_MODE_DIRECT_ROM = 3,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    BOOT_MODE_DIRECT_DDIPL = 4,</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>} <a class="code hl_enumeration" href="group__sc64.html#ga4fc6e6ea26473957f4720f59f69b934e">sc64_boot_mode_t</a>;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="group__sc64.html#gaba7e686f2ef7ea48b82e33a73a513b95">   77</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    SAVE_TYPE_NONE,</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    SAVE_TYPE_EEPROM_4K,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    SAVE_TYPE_EEPROM_16K,</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    SAVE_TYPE_SRAM,</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    SAVE_TYPE_FLASHRAM,</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    SAVE_TYPE_SRAM_BANKED,</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    SAVE_TYPE_SRAM_128K,</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>} <a class="code hl_enumeration" href="group__sc64.html#gaba7e686f2ef7ea48b82e33a73a513b95">sc64_save_type_t</a>;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    CIC_SEED_AUTO = 0xFFFF</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>} sc64_cic_seed_t;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    TV_TYPE_PAL = 0,</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    TV_TYPE_NTSC = 1,</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    TV_TYPE_MPAL = 2,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    TV_TYPE_PASSTHROUGH = 3</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>} sc64_tv_type_t;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    DRIVE_TYPE_RETAIL,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    DRIVE_TYPE_DEVELOPMENT,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>} sc64_drive_type_t;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    DISK_STATE_EJECTED,</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    DISK_STATE_INSERTED,</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    DISK_STATE_CHANGED,</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>} sc64_disk_state_t;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    BUTTON_MODE_NONE,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    BUTTON_MODE_N64_IRQ,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    BUTTON_MODE_USB_PACKET,</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    BUTTON_MODE_DD_DISK_SWAP,</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>} sc64_button_mode_t;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="group__sc64.html">  116</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordtype">int</span> count;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="group__sc64.html">  118</a></span>    <span class="keyword">struct </span>{</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        uint32_t thb_table;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        uint32_t sector_table;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    } disks[4];</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>} <a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a>;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keywordtype">void</span> sc64_ll_lock (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_set_disk_mapping (<a class="code hl_struct" href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a> *disk_mapping);</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_writeback_pending (<span class="keywordtype">bool</span> *pending);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_writeback_enable (<span class="keywordtype">void</span> *address);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_flash_wait_busy (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_flash_get_erase_block_size (<span class="keywordtype">size_t</span> *erase_block_size);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span><a class="code hl_enumeration" href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a> sc64_ll_flash_erase_block (<span class="keywordtype">void</span> *address);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> <span class="comment">/* sc64 */</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="agroup__sc64_html_ga4fc6e6ea26473957f4720f59f69b934e"><div class="ttname"><a href="group__sc64.html#ga4fc6e6ea26473957f4720f59f69b934e">sc64_boot_mode_t</a></div><div class="ttdeci">sc64_boot_mode_t</div><div class="ttdoc">The SC64 Boot Mode Enumeration.</div><div class="ttdef"><b>Definition:</b> sc64_ll.h:68</div></div>
+<div class="ttc" id="agroup__sc64_html_gaba7e686f2ef7ea48b82e33a73a513b95"><div class="ttname"><a href="group__sc64.html#gaba7e686f2ef7ea48b82e33a73a513b95">sc64_save_type_t</a></div><div class="ttdeci">sc64_save_type_t</div><div class="ttdoc">The SC64 Save Type Enumeration.</div><div class="ttdef"><b>Definition:</b> sc64_ll.h:77</div></div>
+<div class="ttc" id="agroup__sc64_html_gad70dee817cc88e101b1908687b025138"><div class="ttname"><a href="group__sc64.html#gad70dee817cc88e101b1908687b025138">sc64_error_t</a></div><div class="ttdeci">sc64_error_t</div><div class="ttdoc">The SC64 State Enumeration.</div><div class="ttdef"><b>Definition:</b> sc64_ll.h:32</div></div>
+<div class="ttc" id="agroup__sc64_html_structsc64__buffers__t"><div class="ttname"><a href="group__sc64.html#structsc64__buffers__t">sc64_buffers_t</a></div><div class="ttdoc">The SC64 buffers structure.</div><div class="ttdef"><b>Definition:</b> sc64_ll.h:21</div></div>
+<div class="ttc" id="agroup__sc64_html_structsc64__disk__mapping__t"><div class="ttname"><a href="group__sc64.html#structsc64__disk__mapping__t">sc64_disk_mapping_t</a></div><div class="ttdef"><b>Definition:</b> sc64_ll.h:116</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 1 2023 21:18:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 10 2023 16:39:25 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

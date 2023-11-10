@@ -1,23 +1,11 @@
 var searchData=
 [
-  ['market_5faustralian_0',['MARKET_AUSTRALIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf3c95d6d57569ce5413bcf0a1d0bca50',1,'rom_info.h']]],
-  ['market_5fbrazilian_1',['MARKET_BRAZILIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaab39c57cfd0fb43a7af9bd2c682c62ce',1,'rom_info.h']]],
-  ['market_5fcanadian_2',['MARKET_CANADIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eabe5d0f1f944cad284c5a91758a30c379',1,'rom_info.h']]],
-  ['market_5fchinese_3',['MARKET_CHINESE',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ead224762fea1a531aa708be42f866408b',1,'rom_info.h']]],
-  ['market_5fdutch_4',['MARKET_DUTCH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab1d8ed6dbfef6c7b95126a44206068a6',1,'rom_info.h']]],
-  ['market_5feuropean_5fbasic_5',['MARKET_EUROPEAN_BASIC',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea4b6ad276f30d76bfbfadb7b7268ab356',1,'rom_info.h']]],
-  ['market_5ffrench_6',['MARKET_FRENCH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf60c0d80eaa8026ff384f2a5a78dd1c8',1,'rom_info.h']]],
-  ['market_5fgateway64_5fntsc_7',['MARKET_GATEWAY64_NTSC',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab0a10418b57442d5759df02f5a0f45e8',1,'rom_info.h']]],
-  ['market_5fgateway64_5fpal_8',['MARKET_GATEWAY64_PAL',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaaba43978734c0351513b95f58e96aac4',1,'rom_info.h']]],
-  ['market_5fgerman_9',['MARKET_GERMAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea705dbb6f23b076d51a7ddd96a262cfa4',1,'rom_info.h']]],
-  ['market_5fitalian_10',['MARKET_ITALIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea6500a23f7efea1dd76a82407410bcdf8',1,'rom_info.h']]],
-  ['market_5fjapanese_11',['MARKET_JAPANESE',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea785c98321d0422b477041f7ad95ef506',1,'rom_info.h']]],
-  ['market_5fjapanese_5fmulti_12',['MARKET_JAPANESE_MULTI',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea87b3cff825fef81ced068588be03ec7b',1,'rom_info.h']]],
-  ['market_5fkorean_13',['MARKET_KOREAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7761799f68396739e9c25f18c4b70e92',1,'rom_info.h']]],
-  ['market_5fnorth_5famerica_14',['MARKET_NORTH_AMERICA',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7f85f1e3498bf9699e243b081cdbfe6b',1,'rom_info.h']]],
-  ['market_5fother_5fx_15',['MARKET_OTHER_X',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea9a33be6859415963d848880f7d1cadd6',1,'rom_info.h']]],
-  ['market_5fother_5fy_16',['MARKET_OTHER_Y',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea99303bee22a0150655178e4b45580c9c',1,'rom_info.h']]],
-  ['market_5fother_5fz_17',['MARKET_OTHER_Z',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea39a7ef9126c8174dde80215b516f15f0',1,'rom_info.h']]],
-  ['market_5fscandinavian_18',['MARKET_SCANDINAVIAN',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf5e46754892b5cbd81b6163b51d7bb44',1,'rom_info.h']]],
-  ['market_5fspanish_19',['MARKET_SPANISH',['../rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea01bbf8dcc51edee02fdf339c864d66ea',1,'rom_info.h']]]
+  ['endianness_5fbig_0',['ENDIANNESS_BIG',['../rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfbadb8bfce13d503ca160e7968f85644b3d',1,'rom_info.h']]],
+  ['endianness_5fbyte_5fswap_1',['ENDIANNESS_BYTE_SWAP',['../rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfba5c832eba6efdb777959ce3795fa67a53',1,'rom_info.h']]],
+  ['endianness_5flittle_2',['ENDIANNESS_LITTLE',['../rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfba6d87b6ddecfd90ad85a9e202fe97c94c',1,'rom_info.h']]],
+  ['expansion_5fpak_5ffaulty_3',['EXPANSION_PAK_FAULTY',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04',1,'rom_info.h']]],
+  ['expansion_5fpak_5fnone_4',['EXPANSION_PAK_NONE',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172',1,'rom_info.h']]],
+  ['expansion_5fpak_5frecommended_5',['EXPANSION_PAK_RECOMMENDED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a',1,'rom_info.h']]],
+  ['expansion_5fpak_5frequired_6',['EXPANSION_PAK_REQUIRED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947',1,'rom_info.h']]],
+  ['expansion_5fpak_5fsuggested_7',['EXPANSION_PAK_SUGGESTED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e',1,'rom_info.h']]]
 ];

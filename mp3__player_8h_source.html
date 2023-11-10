@@ -76,7 +76,7 @@ $(function() {
   <div class="headertitle"><div class="title">mp3_player.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<a href="mp3__player_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#ifndef MP3_PLAYER_H__</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define MP3_PLAYER_H__</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
@@ -84,28 +84,28 @@ $(function() {
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">   15</a></span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    MP3PLAYER_OK,</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    MP3PLAYER_ERR_OUT_OF_MEM,</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    MP3PLAYER_ERR_IO,</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    MP3PLAYER_ERR_NO_FILE,</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    MP3PLAYER_ERR_INVALID_FILE,</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>} mp3player_err_t;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>} <a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keywordtype">void</span> mp3player_mixer_init (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>mp3player_err_t mp3player_init (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_init (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keywordtype">void</span> mp3player_deinit (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>mp3player_err_t mp3player_load (<span class="keywordtype">char</span> *path);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_load (<span class="keywordtype">char</span> *path);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keywordtype">void</span> mp3player_unload (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>mp3player_err_t mp3player_process (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_process (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keywordtype">bool</span> mp3player_is_playing (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">bool</span> mp3player_is_finished (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>mp3player_err_t mp3player_play (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_play (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> mp3player_stop (<span class="keywordtype">void</span>);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>mp3player_err_t mp3player_toggle (<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_toggle (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> mp3player_mute (<span class="keywordtype">bool</span> mute);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>mp3player_err_t mp3player_seek (<span class="keywordtype">int</span> seconds);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><a class="code hl_enumeration" href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a> mp3player_seek (<span class="keywordtype">int</span> seconds);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keywordtype">float</span> mp3player_get_duration (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">float</span> mp3player_get_bitrate (<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keywordtype">int</span> mp3player_get_samplerate (<span class="keywordtype">void</span>);</div>
@@ -113,10 +113,11 @@ $(function() {
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amp3__player_8h_html_ae483bec5bb11d6836e63cd49cdb6ed28"><div class="ttname"><a href="mp3__player_8h.html#ae483bec5bb11d6836e63cd49cdb6ed28">mp3player_err_t</a></div><div class="ttdeci">mp3player_err_t</div><div class="ttdoc">MP3 file error enumeration.</div><div class="ttdef"><b>Definition:</b> mp3_player.h:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 1 2023 21:18:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Fri Nov 10 2023 16:39:25 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

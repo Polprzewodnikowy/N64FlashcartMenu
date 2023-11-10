@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['rom_5fheader_5ft_0',['rom_header_t',['../structrom__header__t.html',1,'']]],
-  ['rom_5fheader_5ft_2e_5f_5funnamed9_5f_5f_1',['rom_header_t.__unnamed9__',['../unionrom__header__t_8____unnamed9____.html',1,'']]],
-  ['rom_5fheader_5ft_2e_5f_5funnamed9_5f_5f_2e_5f_5funnamed11_5f_5f_2',['rom_header_t.__unnamed9__.__unnamed11__',['../structrom__header__t_8____unnamed9_____8____unnamed11____.html',1,'']]],
-  ['rom_5fheader_5ft_2elibultra_3',['rom_header_t.libultra',['../structrom__header__t_8libultra.html',1,'']]],
-  ['rom_5finfo_2eh_4',['rom_info.h',['../rom__info_8h.html',1,'']]],
-  ['rom_5finfo_5ft_5',['rom_info_t',['../rom__info_8h.html#structrom__info__t',1,'']]],
-  ['rom_5finfo_5ft_2e_5f_5funnamed18_5f_5f_6',['rom_info_t.__unnamed18__',['../rom__info_8h.html#unionrom__info__t_8____unnamed18____',1,'']]],
-  ['rom_5finfo_5ft_2e_5f_5funnamed18_5f_5f_2e_5f_5funnamed21_5f_5f_7',['rom_info_t.__unnamed18__.__unnamed21__',['../rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed21____',1,'']]],
-  ['rom_5finfo_5ft_2efeatures_8',['rom_info_t.features',['../rom__info_8h.html#structrom__info__t_8features',1,'']]],
-  ['rom_5finfo_5ft_2elibultra_9',['rom_info_t.libultra',['../rom__info_8h.html#structrom__info__t_8libultra',1,'']]],
-  ['rumble_5fenabled_10',['rumble_enabled',['../settings_8h.html#af8e5d894c1bc8c114fb0bf9ad5d12360',1,'settings_t']]]
+  ['paddr_0',['PADDR',['../boot__io_8h.html#a39dcd01f99c2ca546737cff58821a43d',1,'pi_regs_t']]],
+  ['pal60_5fenabled_1',['pal60_enabled',['../settings_8h.html#ad88eea6bf7e99f89f316513306a07506',1,'settings_t']]],
+  ['path_2eh_2',['path.h',['../path_8h.html',1,'']]],
+  ['path_5ft_3',['path_t',['../path_8h.html#structpath__t',1,'']]],
+  ['pi_5fregs_5ft_4',['pi_regs_t',['../boot__io_8h.html#structpi__regs__t',1,'']]],
+  ['pi_5fregs_5ft_2edom_5',['pi_regs_t.DOM',['../boot__io_8h.html#structpi__regs__t_8DOM',1,'']]],
+  ['png_5fdecoder_2eh_6',['png_decoder.h',['../png__decoder_8h.html',1,'']]],
+  ['png_5fdecoder_5ft_7',['png_decoder_t',['../structpng__decoder__t.html',1,'']]],
+  ['png_5ferr_5ft_8',['png_err_t',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4',1,'png_decoder.h']]],
+  ['progressbar_5fbg_5fcolor_9',['PROGRESSBAR_BG_COLOR',['../constants_8h.html#a5ab464068eb9e8f6c60aa357ef311571',1,'constants.h']]],
+  ['progressbar_5fdone_5fcolor_10',['PROGRESSBAR_DONE_COLOR',['../constants_8h.html#a3f1a94f2927dd17b0fd77ccb23b33ddc',1,'constants.h']]]
 ];

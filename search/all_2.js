@@ -1,10 +1,21 @@
 var searchData=
 [
-  ['bgm_5fenabled_0',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
-  ['boot_2eh_1',['boot.h',['../boot_8h.html',1,'']]],
-  ['boot_5fdevice_5ftype_5ft_2',['boot_device_type_t',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbd',1,'boot.h']]],
-  ['boot_5fio_2eh_3',['boot_io.h',['../boot__io_8h.html',1,'']]],
-  ['boot_5fparams_5ft_4',['boot_params_t',['../boot_8h.html#structboot__params__t',1,'']]],
-  ['boot_5freset_5ftype_5ft_5',['boot_reset_type_t',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6',1,'boot.h']]],
-  ['boot_5ftv_5ftype_5ft_6',['boot_tv_type_t',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353',1,'boot.h']]]
+  ['background_5fempty_5fcolor_0',['BACKGROUND_EMPTY_COLOR',['../constants_8h.html#ad34ec4463c7da0f6da7f56f6d43f9f33',1,'constants.h']]],
+  ['background_5foverlay_5fcolor_1',['BACKGROUND_OVERLAY_COLOR',['../constants_8h.html#ab399c3a31a6aacaea384ee5552292590',1,'constants.h']]],
+  ['bgm_5fenabled_2',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
+  ['bitrate_3',['BITRATE',['../boot__io_8h.html#a43e0411e186298f185d39b80ea5f1d4f',1,'ai_regs_t']]],
+  ['boot_2eh_4',['boot.h',['../boot_8h.html',1,'']]],
+  ['boot_5faddress_5',['boot_address',['../rom__info_8h.html#afeb7118e65f58ed63767c1cd31be04d0',1,'rom_info_t']]],
+  ['boot_5fdevice_5ftype_5ft_6',['boot_device_type_t',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbd',1,'boot.h']]],
+  ['boot_5fio_2eh_7',['boot_io.h',['../boot__io_8h.html',1,'']]],
+  ['boot_5fparams_5ft_8',['boot_params_t',['../boot_8h.html#structboot__params__t',1,'']]],
+  ['boot_5freset_5ftype_5ft_9',['boot_reset_type_t',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5ft_10',['boot_tv_type_t',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353',1,'boot.h']]],
+  ['border_5fcolor_11',['BORDER_COLOR',['../constants_8h.html#a966901ace2cf6cba3fc9cec310150860',1,'constants.h']]],
+  ['border_5fthickness_12',['BORDER_THICKNESS',['../constants_8h.html#a8ed7a0f0ea48c9733bf7e57fe6eaf0f4',1,'constants.h']]],
+  ['boxart_5fheight_13',['BOXART_HEIGHT',['../constants_8h.html#aecb936f69f40e5bd052597baa49a11a2',1,'constants.h']]],
+  ['boxart_5floading_5fcolor_14',['BOXART_LOADING_COLOR',['../constants_8h.html#a0e310295ec01558e62840b2bbfe95f47',1,'constants.h']]],
+  ['boxart_5fwidth_15',['BOXART_WIDTH',['../constants_8h.html#a05817fe257afbe0f071f9ecb5b5544db',1,'constants.h']]],
+  ['boxart_5fx_16',['BOXART_X',['../constants_8h.html#a1dd26d043582325cae03bf26e09a02fe',1,'constants.h']]],
+  ['boxart_5fy_17',['BOXART_Y',['../constants_8h.html#a42e7d267ca14ca1060cab46284922dea',1,'constants.h']]]
 ];

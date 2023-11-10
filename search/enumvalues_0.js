@@ -1,8 +1,20 @@
 var searchData=
 [
-  ['expansion_5fpak_5ffaulty_0',['EXPANSION_PAK_FAULTY',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04',1,'rom_info.h']]],
-  ['expansion_5fpak_5fnone_1',['EXPANSION_PAK_NONE',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172',1,'rom_info.h']]],
-  ['expansion_5fpak_5frecommended_2',['EXPANSION_PAK_RECOMMENDED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a',1,'rom_info.h']]],
-  ['expansion_5fpak_5frequired_3',['EXPANSION_PAK_REQUIRED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947',1,'rom_info.h']]],
-  ['expansion_5fpak_5fsuggested_4',['EXPANSION_PAK_SUGGESTED',['../rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e',1,'rom_info.h']]]
+  ['cart_5fload_5femu_5ftype_5fgameboy_0',['CART_LOAD_EMU_TYPE_GAMEBOY',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfab0ff2ec231e699a01af2d0aa130a394d',1,'cart_load.h']]],
+  ['cart_5fload_5femu_5ftype_5fgameboy_5fcolor_1',['CART_LOAD_EMU_TYPE_GAMEBOY_COLOR',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfa3395e659a0a25fd963691ff6288d4cf3',1,'cart_load.h']]],
+  ['cart_5fload_5femu_5ftype_5fnes_2',['CART_LOAD_EMU_TYPE_NES',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfa7d3d6237c3ba74a6f976f0fc960d2fc8',1,'cart_load.h']]],
+  ['cart_5fload_5femu_5ftype_5fsega_5fgeneric_5f8bit_3',['CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfa357930eb0490e5517270e57dbadbae66',1,'cart_load.h']]],
+  ['cart_5fload_5femu_5ftype_5fsnes_4',['CART_LOAD_EMU_TYPE_SNES',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfa390aa1196d1fbec39236a891871de082',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5f64dd_5fdisk_5fload_5ffail_5',['CART_LOAD_ERR_64DD_DISK_LOAD_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1aa192e96811678f36f520e581f8d2ded6',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5f64dd_5fipl_5fload_5ffail_6',['CART_LOAD_ERR_64DD_IPL_LOAD_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a0e5ec7fa832ffa086a072b89055e8ead',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5f64dd_5fipl_5fnot_5ffound_7',['CART_LOAD_ERR_64DD_IPL_NOT_FOUND',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a624bbf8456bf0287885f1fb38d109c27',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5f64dd_5fpresent_8',['CART_LOAD_ERR_64DD_PRESENT',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a8e277b1b0166f4104b2e48cd80aab86f',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5fcreate_5fsaves_5fsubdir_5ffail_9',['CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1aefad8c3079967d11ae9be1bd78d2098f',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5femu_5fload_5ffail_10',['CART_LOAD_ERR_EMU_LOAD_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a5614f8fff9a2685697ce3aa122499da2',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5femu_5fnot_5ffound_11',['CART_LOAD_ERR_EMU_NOT_FOUND',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a4c236648876e0652e917b53ddef20f45',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5fexp_5fpak_5fnot_5ffound_12',['CART_LOAD_ERR_EXP_PAK_NOT_FOUND',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a56c5993cab82de5c3c9c495153295474',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5ffunction_5fnot_5fsupported_13',['CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1aec87a2398fb3cda8b6a4dcc2bf6debde',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5from_5fload_5ffail_14',['CART_LOAD_ERR_ROM_LOAD_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a73957ef4ccf0260503bc268e8f4ca3a1',1,'cart_load.h']]],
+  ['cart_5fload_5ferr_5fsave_5fload_5ffail_15',['CART_LOAD_ERR_SAVE_LOAD_FAIL',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1a0ddb2665a271110ce96727c18f73fc61',1,'cart_load.h']]],
+  ['cart_5fload_5fok_16',['CART_LOAD_OK',['../cart__load_8h.html#a8fdf9a69cab967a2d76e575338b1c2e1aea31d0c75e127d10538672f956b0a97f',1,'cart_load.h']]]
 ];

@@ -128,7 +128,9 @@ To update to the latest version, use `git submodule update --remote ` from the t
 # Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
-Generated documentation is located in `output/docs` folder.
+Generated documentation is located in `output/docs` folder and auto published to the `gh-pages` branch when merged with `main`.
+
+Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
 
 # Open source software and licenses used
  - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)

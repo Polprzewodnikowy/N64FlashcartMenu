@@ -54,6 +54,7 @@ void component_context_menu_show (component_context_menu_t *cm);
 bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm);
 void component_context_menu_draw (component_context_menu_t *cm);
 
+/** @brief Box Art Structure. */
 typedef struct {
     bool loading;
     surface_t *image;

@@ -18,7 +18,7 @@ typedef volatile uint32_t io32_t;
 
 #define UNCACHED(address)           ((typeof(address)) (((io32_t) (address)) | (0xA0000000UL)))
 
-
+/** @brief Memory Structure. */
 typedef struct {
     io32_t DMEM[1024];
     io32_t IMEM[1024];
@@ -27,7 +27,7 @@ typedef struct {
 #define SP_MEM_BASE                 (0x04000000UL)
 #define SP_MEM                      ((sp_mem_t *) SP_MEM_BASE)
 
-
+/** @brief SP Registers Structure. */
 typedef struct {
     io32_t PADDR;
     io32_t MADDR;
@@ -86,7 +86,7 @@ typedef struct {
 #define SP_SR_SET_SIG7              (1 << 24)
 
 
-/** @brief DPC Registers Structure */
+/** @brief DPC Registers Structure. */
 typedef struct {
     io32_t START;
     io32_t END;
@@ -124,21 +124,35 @@ typedef struct {
 #define DPC_SR_CLR_CLOCK_CTR        (1 << 9)
 
 
-/** @brief Video Interface Registers Structure */
+/** @brief Video Interface Registers Structure. */
 typedef struct {
+    /** @brief The Control Register. */
     io32_t CR;
+    /** @brief The Memory Address. */
     io32_t MADDR;
+    /** @brief The Horizontal Width. */
     io32_t H_WIDTH;
+    /** @brief The Virtical Interupt. */
     io32_t V_INTR;
+    /** @brief The Current Line. */
     io32_t CURR_LINE;
+    /** @brief The Timings. */
     io32_t TIMING;
+    /** @brief The Virtical Sync. */
     io32_t V_SYNC;
+    /** @brief The Horizontal Sync. */
     io32_t H_SYNC;
+    /** @brief The Horizontal Sync Leap. */
     io32_t H_SYNC_LEAP;
+    /** @brief The Horizontal Limits. */
     io32_t H_LIMITS;
+    /** @brief The Virtical Limits. */
     io32_t V_LIMITS;
+    /** @brief The Colour Burst. */
     io32_t COLOR_BURST;
+    /** @brief The Horizontal Scale. */
     io32_t H_SCALE;
+    /** @brief The Virtical Scale. */
     io32_t V_SCALE;
 } vi_regs_t;
 
@@ -161,13 +175,19 @@ typedef struct {
 
 #define VI_CURR_LINE_FIELD          (1 << 0)
 
-
+/** @brief Audio Interface Registers Structure. */
 typedef struct {
+    /** @brief The Memory Address. */
     io32_t MADDR;
+    /** @brief The Length of bytes. */
     io32_t LEN;
+    /** @brief The Control Register. */
     io32_t CR;
+    /** @brief The Status Register. */
     io32_t SR;
+    /** @brief The DAC rate. */
     io32_t DACRATE;
+    /** @brief The bit rate. */
     io32_t BITRATE;
 } ai_regs_t;
 
@@ -179,17 +199,27 @@ typedef struct {
 #define AI_CR_DMA_ON                (1 << 0)
 
 
-/** @brief Parallel Interface Register Structure */
+/** @brief Peripheral Interface Register Structure. */
 typedef struct {
+    /** @brief The Memory Address. */
     io32_t MADDR;
+    /** @brief The Cart Address. */
     io32_t PADDR;
+    /** @brief The Read Length. */
     io32_t RDMA;
+    /** @brief The Write Length. */
     io32_t WDMA;
+    /** @brief The Status Register. */
     io32_t SR;
+    /** @brief The Domain 2 Registers. */
     struct {
+        /** @brief The Latch Value. */
         io32_t LAT;
+        /** @brief The Pulse Width Value. */
         io32_t PWD;
+        /** @brief The Page Size Value. */
         io32_t PGS;
+        /** @brief The Release Value. */
         io32_t RLS;
     } DOM[2];
 } pi_regs_t;
@@ -211,7 +241,7 @@ typedef struct {
 #define ROM_CART_BASE               (0x10000000UL)
 #define ROM_CART                    ((io32_t *) ROM_CART_BASE)
 
-
+/** @brief OS Information Structure. */
 typedef struct {
     uint32_t tv_type;
     uint32_t device_type;
@@ -228,7 +258,9 @@ typedef struct {
 #define OS_INFO_BASE                (0x80000300UL)
 #define OS_INFO                     ((os_info_t *) OS_INFO_BASE)
 
+/** @brief The Console was powered on using the power switch. */
 #define OS_INFO_RESET_TYPE_COLD     (0)
+/** @brief The Console was reset using the reset button. */
 #define OS_INFO_RESET_TYPE_NMI      (1)
 
 

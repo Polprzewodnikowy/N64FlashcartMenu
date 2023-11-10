@@ -15,6 +15,7 @@
 #define SEEK_PREDECODE_FRAMES   (5)
 
 
+/** @brief MP3 File Information Structure. */
 typedef struct {
     bool loaded;
     bool io_error;

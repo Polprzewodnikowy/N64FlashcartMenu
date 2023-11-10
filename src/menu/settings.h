@@ -31,9 +31,6 @@ typedef struct {
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
 
-    /** @brief filepath of last ROM (for save writeback emulation if required) */
-    char *last_rom_path;
-
     /** @brief Enable auto firmware updates */
     bool auto_firmware_update_enabled;
 

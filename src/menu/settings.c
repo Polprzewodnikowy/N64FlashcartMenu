@@ -58,9 +58,6 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "show_hidden_files", settings->hidden_files_enabled);
     mini_set_string(ini, "menu", "default_directory", settings->default_directory);
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
-    
-    /* flashcart specific feature flags */
-    mini_set_string(ini, "menu", "last_rom_path", init.last_rom_path);
 
     /* Beta feature flags, they should not save until production ready! */
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);

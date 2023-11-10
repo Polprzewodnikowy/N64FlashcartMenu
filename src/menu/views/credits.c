@@ -2,7 +2,7 @@
 
 
 #ifndef MENU_VERSION
-#define MENU_VERSION "0.0.0.5.ALPHA"
+#define MENU_VERSION "0.0.0.6.ALPHA"
 #endif
 
 

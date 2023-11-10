@@ -7,6 +7,8 @@ ASSETS_DIR = assets
 BUILD_DIR = build
 OUTPUT_DIR = output
 
+FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date +%Y-%m-%dT%H:%M:%SZ).ALPHA\"
+
 include $(N64_INST)/include/n64.mk
 
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)

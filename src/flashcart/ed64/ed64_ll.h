@@ -12,11 +12,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* ED64 save location base address  */
+#define PI_SAVE_ADDR        0xA8000000
+
 // FIXME: redefined because its in a .c instead of a .h
 #define PI_BASE_REG		    0x04600000
-///////////////////////////////////////////////////////
 
-#define PIF_RAM_START		0x1FC007C0
+///////////////////////////////////////////////////////
 #define	PI_STATUS_ERROR		0x04
 #define	PI_STATUS_IO_BUSY	0x02
 #define	PI_STATUS_DMA_BUSY	0x01
@@ -65,19 +67,19 @@ typedef enum {
 #define ROM_ADDRESS  (0xB0000000)
 
 /* Save functions */
+void pi_initialize_sram (void);
+void _data_cache_invalidate_all (void);
 void ed64_ll_set_sram_bank (uint8_t bank);
 ed64_save_type_t ed64_ll_get_save_type ();
 void ed64_ll_set_save_type (ed64_save_type_t type);
 
-int ed64_ll_get_sram_128 (uint8_t *buffer, int size);
-int ed64_ll_get_sram (uint8_t *buffer, int size);
-int ed64_ll_get_eeprom (uint8_t *buffer, int size);
-int ed64_ll_get_fram (uint8_t *buffer, int size);
+void ed64_ll_get_sram (uint8_t *buffer, int size);
+void ed64_ll_get_eeprom (uint8_t *buffer, int size);
+void ed64_ll_get_fram (uint8_t *buffer, int size);
 
-int ed64_ll_set_sram_128 (uint8_t *buffer, int size);
-int ed64_ll_set_sram (uint8_t *buffer, int size);
-int ed64_ll_set_eeprom (uint8_t *buffer, int size);
-int ed64_ll_set_fram (uint8_t *buffer, int size);
+void ed64_ll_set_sram (uint8_t *buffer, int size);
+void ed64_ll_set_eeprom (uint8_t *buffer, int size);
+void ed64_ll_set_fram (uint8_t *buffer, int size);
 
 /** @} */ /* ed64 */
 #endif

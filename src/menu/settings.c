@@ -18,7 +18,6 @@ static settings_t init = {
     .bgm_enabled = false,
     .sound_enabled = false,
     .rumble_enabled = true,
-    .auto_firmware_update_enabled = false,
 };
 
 
@@ -38,7 +37,6 @@ void settings_load (settings_t *settings) {
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     settings->sound_enabled = mini_get_bool(ini, "menu_beta_flag", "sound_enabled", init.sound_enabled);
     settings->rumble_enabled = mini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
-    settings->auto_firmware_update_enabled = mini_get_bool(ini, "menu_beta_flag", "auto_firmware_update_enabled", init.auto_firmware_update_enabled);
 
 
     mini_free(ini);
@@ -56,7 +54,6 @@ void settings_save (settings_t *settings) {
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     // mini_set_bool(ini, "menu_beta_flag", "sound_enabled", init.sound_enabled);
     // mini_set_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
-    // mini_set_bool(ini, "menu_beta_flag", "auto_firmware_update_enabled", init.auto_firmware_update_enabled);
 
     mini_save(ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
 

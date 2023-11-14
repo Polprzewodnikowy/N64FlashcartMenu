@@ -31,9 +31,6 @@ typedef struct {
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
 
-    /** @brief Enable auto firmware updates */
-    bool auto_firmware_update_enabled;
-
 } settings_t;
 
 /** @brief The settings to load */

@@ -157,7 +157,7 @@ static struct views_s {
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
-    while (exception_reset_time() < RESET_TIME_LENGTH) {
+    while (exception_reset_time() == 0) {
         surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
         if (display != NULL) {

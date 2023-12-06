@@ -17,7 +17,6 @@ SRCS = \
 	main.c \
 	boot/boot.c \
 	boot/cic.c \
-	boot/crc32.c \
 	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \
 	flashcart/64drive/64drive.c \

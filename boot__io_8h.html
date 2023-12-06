@@ -106,9 +106,6 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structpi__regs__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="boot__io_8h.html#structpi__regs__t">pi_regs_t</a></td></tr>
 <tr class="memdesc:structpi__regs__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Peripheral Interface Register Structure.  <a href="boot__io_8h.html#structpi__regs__t">More...</a><br /></td></tr>
 <tr class="separator:structpi__regs__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structos__info__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="boot__io_8h.html#structos__info__t">os_info_t</a></td></tr>
-<tr class="memdesc:structos__info__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">OS Information Structure.  <a href="boot__io_8h.html#structos__info__t">More...</a><br /></td></tr>
-<tr class="separator:structos__info__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structpi__regs__t_8DOM"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="boot__io_8h.html#structpi__regs__t_8DOM">pi_regs_t.DOM</a></td></tr>
 <tr class="memdesc:structpi__regs__t_8DOM"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Domain 2 Registers.  <a href="boot__io_8h.html#structpi__regs__t_8DOM">More...</a><br /></td></tr>
 <tr class="separator:structpi__regs__t_8DOM"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -415,20 +412,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a6dace27f758eb9bd994ddf047c51e379"><td class="memItemLeft" align="right" valign="top"><a id="a6dace27f758eb9bd994ddf047c51e379" name="a6dace27f758eb9bd994ddf047c51e379"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ROM_CART</b>&#160;&#160;&#160;((io32_t *) ROM_CART_BASE)</td></tr>
 <tr class="separator:a6dace27f758eb9bd994ddf047c51e379"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc936dd1df73859c755994612d5124b4"><td class="memItemLeft" align="right" valign="top"><a id="afc936dd1df73859c755994612d5124b4" name="afc936dd1df73859c755994612d5124b4"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>OS_INFO_BASE</b>&#160;&#160;&#160;(0x80000300UL)</td></tr>
-<tr class="separator:afc936dd1df73859c755994612d5124b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86ebc1f8ea38f3c5adcf0a8d7d5f0669"><td class="memItemLeft" align="right" valign="top"><a id="a86ebc1f8ea38f3c5adcf0a8d7d5f0669" name="a86ebc1f8ea38f3c5adcf0a8d7d5f0669"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>OS_INFO</b>&#160;&#160;&#160;((<a class="el" href="boot__io_8h.html#structos__info__t">os_info_t</a> *) OS_INFO_BASE)</td></tr>
-<tr class="separator:a86ebc1f8ea38f3c5adcf0a8d7d5f0669"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab87a97fcc58a41d22595967c2476b19c"><td class="memItemLeft" align="right" valign="top"><a id="ab87a97fcc58a41d22595967c2476b19c" name="ab87a97fcc58a41d22595967c2476b19c"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>OS_INFO_RESET_TYPE_COLD</b>&#160;&#160;&#160;(0)</td></tr>
-<tr class="memdesc:ab87a97fcc58a41d22595967c2476b19c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Console was powered on using the power switch. <br /></td></tr>
-<tr class="separator:ab87a97fcc58a41d22595967c2476b19c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c31c90cda26d15dd2e24022ab9c0ceb"><td class="memItemLeft" align="right" valign="top"><a id="a0c31c90cda26d15dd2e24022ab9c0ceb" name="a0c31c90cda26d15dd2e24022ab9c0ceb"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>OS_INFO_RESET_TYPE_NMI</b>&#160;&#160;&#160;(1)</td></tr>
-<tr class="memdesc:a0c31c90cda26d15dd2e24022ab9c0ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The Console was reset using the reset button. <br /></td></tr>
-<tr class="separator:a0c31c90cda26d15dd2e24022ab9c0ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -826,84 +809,6 @@ The Domain 2 Registers. </td></tr>
 
 </div>
 </div>
-<a name="structos__info__t" id="structos__info__t"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structos__info__t">&#9670;&#160;</a></span>os_info_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct os_info_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><p >OS Information Structure. </p>
-</div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="a6455bcb3e612857ce81e65458d972d56" name="a6455bcb3e612857ce81e65458d972d56"></a>uint32_t</td>
-<td class="fieldname">
-tv_type</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a482d62e2efc49914fa0de486a900a466" name="a482d62e2efc49914fa0de486a900a466"></a>uint32_t</td>
-<td class="fieldname">
-device_type</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a40a6bca470f4f95125b8c8be80af7ea7" name="a40a6bca470f4f95125b8c8be80af7ea7"></a>uint32_t</td>
-<td class="fieldname">
-device_base</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a66fb65eed0574de7a4d7d8f56b32f85e" name="a66fb65eed0574de7a4d7d8f56b32f85e"></a>uint32_t</td>
-<td class="fieldname">
-reset_type</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="ae410fc30a4b0b526c3a59708f91838ae" name="ae410fc30a4b0b526c3a59708f91838ae"></a>uint32_t</td>
-<td class="fieldname">
-cic_id</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a009741d63f2a583dced5eb2336882067" name="a009741d63f2a583dced5eb2336882067"></a>uint32_t</td>
-<td class="fieldname">
-version</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="aa03cf4d9df48e68af54400afd9758d20" name="aa03cf4d9df48e68af54400afd9758d20"></a>uint32_t</td>
-<td class="fieldname">
-mem_size</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a7c097460afce5a38725b9e7ebf882eb9" name="a7c097460afce5a38725b9e7ebf882eb9"></a>uint8_t</td>
-<td class="fieldname">
-app_nmi_buffer[64]</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a162ac112d5d47fe70abe55df773bd002" name="a162ac112d5d47fe70abe55df773bd002"></a>uint32_t</td>
-<td class="fieldname">
-__reserved_1[37]</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a3c6702baa8e793a35080662bf77f0ff7" name="a3c6702baa8e793a35080662bf77f0ff7"></a>uint32_t</td>
-<td class="fieldname">
-mem_size_6105</td>
-<td class="fielddoc">
-</td></tr>
-</table>
-
-</div>
-</div>
 <a name="structpi__regs__t_8DOM" id="structpi__regs__t_8DOM"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structpi__regs__t_8DOM">&#9670;&#160;</a></span>pi_regs_t.DOM</h2>
 
@@ -949,7 +854,7 @@ The Release Value. </td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 10 2023 17:36:22 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Dec 6 2023 11:57:30 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

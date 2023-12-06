@@ -33,6 +33,5 @@ var searchData=
   ['constants_2eh_30',['constants.h',['../constants_8h.html',1,'']]],
   ['context_5fmenu_5fhighlight_5fcolor_31',['CONTEXT_MENU_HIGHLIGHT_COLOR',['../constants_8h.html#aaf6ba3542bb494f77f96f266bd96226f',1,'constants.h']]],
   ['cr_32',['CR',['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR()'],['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR()']]],
-  ['crc32_2eh_33',['crc32.h',['../crc32_8h.html',1,'']]],
-  ['curr_5fline_34',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]]
+  ['curr_5fline_33',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]]
 ];

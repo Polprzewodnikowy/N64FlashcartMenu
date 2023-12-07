@@ -67,6 +67,7 @@ static uint64_t cic_calculate_ipl3_checksum (uint8_t *ipl3, uint8_t seed) {
         }
 
         next = _get(ipl3, i);
+
         buf[10] = _sum(_add(buf[10], data), next, i);
         buf[11] = _sum(buf[11] ^ data, next, i);
         buf[12] = _add(buf[12], buf[8] ^ data);

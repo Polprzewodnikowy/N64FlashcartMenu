@@ -96,23 +96,19 @@ $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))
 $(OUTPUT_DIR)/$(PROJECT_NAME).n64: $(PROJECT_NAME).z64
 	@mv $< $@
 
-$(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
-	python3 ./tools/strip_debug_data.py $(BUILD_DIR)/$(PROJECT_NAME).elf $< $@
-	@$(N64_CHKSUM) $@ > /dev/null
-
 64drive: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 	@cp $< $(OUTPUT_DIR)/menu.bin
 .PHONY: 64drive
 
-ed64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+ed64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 	@cp $< $(OUTPUT_DIR)/OS64.v64
 .PHONY: ed64
 
-ed64-clone: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+ed64-clone: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 	@cp $< $(OUTPUT_DIR)/OS64P.v64
 .PHONY: ed64-clone
 
-sc64: $(BUILD_DIR)/$(PROJECT_NAME)_stripped.n64
+sc64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 	@cp $< $(OUTPUT_DIR)/sc64menu.n64
 .PHONY: sc64
 

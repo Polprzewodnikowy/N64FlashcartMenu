@@ -4,6 +4,7 @@ PROJECT_NAME = N64FlashcartMenu
 
 SOURCE_DIR = src
 ASSETS_DIR = assets
+FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
@@ -62,26 +63,28 @@ SRCS = \
 	menu/views/system_info.c \
 	utils/fs.c
 
-ASSETS = \
+FONTS = \
 	FiraMonoBold.ttf
 
-OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS) $(ASSETS))))
+OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
 DEPS = $(OBJS:.o=.d)
 
+FILESYSTEM = \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64)))
+
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(BUILD_DIR)/FiraMonoBold.asset: MKFONT_FLAGS+=-c 0 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
 
-$(BUILD_DIR)/%.asset: $(ASSETS_DIR)/%.ttf 
-	@echo "    [FONT] $(basename $@).font64"
-	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(BUILD_DIR) "$<"
-	@mv $(basename $@).font64 $@
+$(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 
-$(BUILD_DIR)/%.o: $(BUILD_DIR)/%.asset $(ASSETS_DIR)/assets.S
-	@sed -e "s,@sym@,$*,g" -e "s,@file@,$(basename $<).asset," < $(ASSETS_DIR)/assets.S | \
-		$(CC) -x assembler-with-cpp $(ASFLAGS) -c - -o $@
+$(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
+	@echo "    [FONT] $@"
+	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+
+$(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
@@ -90,6 +93,7 @@ disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
 .PHONY: disassembly
 
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
+$(PROJECT_NAME).z64: $(BUILD_DIR)/$(PROJECT_NAME).dfs
 
 $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))
 
@@ -116,7 +120,7 @@ all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
+	@rm -rf ./$(BUILD_DIR) ./$(FILESYSTEM_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64

@@ -206,16 +206,47 @@ static void load (menu_t *menu) {
 
     menu->next_mode = MENU_MODE_BOOT;
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-    // FIXME: If the setting `detect_rom_region_enabled` is not enabled, use BOOT_TV_TYPE_PASSTHROUGH
-    menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
-    // Else check the market type (menu->load.rom_info.destination_code) and set best guess?!
-    // If the guess is NTSC, use BOOT_TV_TYPE_NTSC
-    // If the guess is PAL, use BOOT_TV_TYPE_PAL
-    // If the guess is MPAL, use BOOT_TV_TYPE_MPAL
-    // There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia), but otherwise fine.
-
-
     menu->boot_params->detect_cic_seed = true;
+    
+    // FIXME: If the setting `detect_rom_region_enabled` is not enabled, use BOOT_TV_TYPE_PASSTHROUGH
+    //if (detect_rom_region_enabled) {
+    //menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
+    // check the market type (menu->load.rom_info.destination_code) and set best guess?!
+    switch (menu->load.rom_info.destination_code) {
+        case MARKET_NORTH_AMERICA:
+        case MARKET_JAPANESE:
+        case MARKET_JAPANESE_MULTI:
+        case MARKET_GATEWAY64_NTSC:
+            menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
+            break;
+        case MARKET_BRAZILIAN:
+            menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL;
+            break;
+        case MARKET_GERMAN:
+        case MARKET_FRENCH:
+        case MARKET_DUTCH:
+        case MARKET_ITALIAN:
+        case MARKET_SPANISH:
+        case MARKET_AUSTRALIAN:
+        case MARKET_SCANDINAVIAN:  
+        case MARKET_GATEWAY64_PAL:
+        case MARKET_EUROPEAN_BASIC:
+        // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
+        case MARKET_OTHER_X:
+        case MARKET_OTHER_Y:
+            menu->boot_params->tv_type = BOOT_TV_TYPE_PAL;
+            break;
+        // FIXME: We cannot be sure on these markets, so just return the default!
+        case MARKET_CHINESE:
+        case MARKET_CANADIAN:
+        case MARKET_KOREAN:
+        case MARKET_OTHER_Z:
+        default: 
+            menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
+            break;
+    }
+    
+
 }
 
 static void deinit (void) {

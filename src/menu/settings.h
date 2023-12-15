@@ -31,6 +31,9 @@ typedef struct {
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
 
+    /** @brief Enable forcing the (N64 system region) tv type to align with game region when booting the ROM. */
+    bool detect_rom_region_enabled;
+
 } settings_t;
 
 /** @brief The settings to load */

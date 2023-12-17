@@ -41,7 +41,6 @@ typedef struct {
 } boot_params_t;
 
 
-bool boot_is_warm (void);
 void boot (boot_params_t *params);
 
 

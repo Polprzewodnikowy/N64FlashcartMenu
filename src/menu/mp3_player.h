@@ -1,5 +1,5 @@
 /**
- * @file mp3player.h
+ * @file mp3_player.h
  * @brief MP3 Player
  * @ingroup menu 
  */

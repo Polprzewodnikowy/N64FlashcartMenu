@@ -14,16 +14,20 @@
 
 #include "boot/cic.h"
 
-
+/** @brief ROM error enumeration. */
 typedef enum {
     ROM_OK,
     ROM_ERR_IO,
     ROM_ERR_NO_FILE,
 } rom_err_t;
 
+/** @brief ROM endian enumeration. */
 typedef enum {
+    /** @brief Is Big Endian. */
     ENDIANNESS_BIG,
+    /** @brief Is Little Endian. */
     ENDIANNESS_LITTLE,
+    /** @brief Is Byte Swapped Endian. */
     ENDIANNESS_BYTE_SWAP,
 } endianness_t;
 
@@ -85,7 +89,9 @@ typedef enum {
     MARKET_OTHER_Z = 'Z' // no known ROM's use this.
 } destination_type_t;
 
+/** @brief ROM save type enumeration. */
 typedef enum {
+    /** @brief There is no expected save type. */
     SAVE_TYPE_NONE,
     SAVE_TYPE_EEPROM_4K,
     SAVE_TYPE_EEPROM_16K,
@@ -96,6 +102,7 @@ typedef enum {
     SAVE_TYPE_FLASHRAM_PKST2,
 } save_type_t;
 
+/** @brief ROM memory requirements enumeration. */
 typedef enum {
     /** @brief The ROM is happy with 4MB of memory. */
     EXPANSION_PAK_NONE,
@@ -113,30 +120,45 @@ typedef enum {
     EXPANSION_PAK_FAULTY,
 } expansion_pak_t;
 
+/** @brief ROM Information Structure. */
 typedef struct {
+    /** @brief The file endian. */
     endianness_t endianness;
+    /** @brief The clock rate defined in the ROM's header. */
     float clock_rate;
+    /** @brief The boot address defined in the ROM's header. */
     uint32_t boot_address;
     struct {
+        /** @brief The SDK version defined in the ROM's header. */
         uint8_t version;
+        /** @brief The SDK revision defined in the ROM's header. */
         char revision;
     } libultra;
+    /** @brief The check code defined in the ROM's header. */
     uint64_t check_code;
+    /** @brief The title defined in the ROM's header. */
     char title[20];
     union {
+        /** @brief The game code defined in the ROM's header. */
         char game_code[4];
         struct {
+            /** @brief The game media type. */
             category_type_t category_code : 8;
+            /** @brief The game unique identifier. */
             char unique_code[2];
+            /** @brief The game region and or market. */
             destination_type_t destination_code : 8;
         };
     };
+    /** @brief The ROM version defined in the ROM's header. */
     uint8_t version;
 
     cic_type_t cic_type;
 
+    /** @brief The save type required by the ROM. */
     save_type_t save_type;
 
+    /** @brief The supported ROM accessories. */
     struct {
         bool controller_pak;
         bool rumble_pak;

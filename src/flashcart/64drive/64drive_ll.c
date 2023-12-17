@@ -6,8 +6,8 @@
 
 #define CI_STATUS_BUSY              (1 << 12)
 
-#define DEVICE_VARIANT_MASK         (0xFFFF)
-#define FPGA_REVISION_MASK          (0xFFFF)
+#define D64_DEVICE_VARIANT_MASK     (0xFFFF)
+#define D64_FPGA_REVISION_MASK      (0xFFFF)
 
 
 typedef enum {
@@ -46,8 +46,8 @@ bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_re
     if (d64_ll_ci_wait()) {
         return true;
     }
-    *device_variant = (d64_device_variant_t) (io_read((uint32_t) (&d64_regs->VARIANT)) & DEVICE_VARIANT_MASK);
-    *fpga_revision = (io_read((uint32_t) (&d64_regs->REVISION)) & FPGA_REVISION_MASK);
+    *device_variant = (d64_device_variant_t) (io_read((uint32_t) (&d64_regs->VARIANT)) & D64_DEVICE_VARIANT_MASK);
+    *fpga_revision = (io_read((uint32_t) (&d64_regs->REVISION)) & D64_FPGA_REVISION_MASK);
     *bootloader_version = io_read((uint32_t) (&d64_regs->PERSISTENT));
     return d64_ll_ci_wait();
 }

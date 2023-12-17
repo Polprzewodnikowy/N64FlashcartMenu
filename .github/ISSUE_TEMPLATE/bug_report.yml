@@ -29,7 +29,7 @@ body:
     id: menu_version
     attributes:
       label: Menu revision used
-      description: Press (Start) button on the menu
+      description: Press (Start) button on the menu to show the current menu version.
       placeholder: e.g 1.2.3.456, N/A
     validations:
       required: false

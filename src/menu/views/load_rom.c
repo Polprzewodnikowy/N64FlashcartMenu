@@ -127,10 +127,11 @@ static boot_tv_type_t determine_tv_boot_type (destination_type_t rom_destination
             case MARKET_GATEWAY64_PAL:
             case MARKET_EUROPEAN_BASIC:
             // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
+            // But they are mainly PAL regions.
             case MARKET_OTHER_X:
             case MARKET_OTHER_Y:
                 return BOOT_TV_TYPE_PAL;
-            // FIXME: We cannot be sure on these markets, so just return the default!
+            // FIXME: We cannot be sure on these markets, so just return the default for the moment!
             case MARKET_CHINESE:
             case MARKET_CANADIAN:
             case MARKET_KOREAN:
@@ -248,8 +249,6 @@ static void load (menu_t *menu) {
     else {
         menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     }
-    
-
 }
 
 static void deinit (void) {

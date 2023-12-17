@@ -334,7 +334,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "Z: System Info | Start: Credits\n"
             "%s",
             ctime(&menu->current_time)
         );

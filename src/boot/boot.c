@@ -37,14 +37,25 @@ static void boot_detect_cic_seed (boot_params_t *params) {
 
 void boot (boot_params_t *params) {
     if (params->tv_type == BOOT_TV_TYPE_PASSTHROUGH) {
-        params->tv_type = OS_INFO->tv_type;
+        switch (get_tv_type()) {
+            case TV_PAL:
+                params->tv_type = BOOT_TV_TYPE_PAL;
+                break;
+            case TV_NTSC:
+                params->tv_type = BOOT_TV_TYPE_NTSC;
+                break;
+            case TV_MPAL:
+                params->tv_type = BOOT_TV_TYPE_MPAL;
+                break;
+            default:
+                params->tv_type = BOOT_TV_TYPE_NTSC;
+                break;
+        }
     }
 
     if (params->detect_cic_seed) {
         boot_detect_cic_seed(params);
     }
-
-    OS_INFO->mem_size_6105 = OS_INFO->mem_size;
 
     C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
 
@@ -120,7 +131,7 @@ void boot (boot_params_t *params) {
 
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
-    reset_type = BOOT_RESET_TYPE_NMI;
+    reset_type = BOOT_RESET_TYPE_COLD;
     cic_seed = (params->cic_seed & 0xFF);
     version = (params->tv_type == BOOT_TV_TYPE_PAL) ? 6
             : (params->tv_type == BOOT_TV_TYPE_NTSC) ? 1

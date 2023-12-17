@@ -15,7 +15,7 @@
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
 
-
+/** @brief ROM File Information Structure. */
 typedef struct  __attribute__((packed)) {
     uint32_t pi_dom1_config;
     uint32_t clock_rate;
@@ -41,6 +41,7 @@ typedef struct  __attribute__((packed)) {
     uint8_t ipl3[IPL3_LENGTH];
 } rom_header_t;
 
+/** @brief ROM Information Match Type Enumeration. */
 typedef enum {
     // Check only game code
     MATCH_TYPE_ID,

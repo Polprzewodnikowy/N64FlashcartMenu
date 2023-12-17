@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['save_5ftype_0',['save_type',['../rom__info_8h.html#a433c3e255bad63ec7695928afb18e81e',1,'rom_info_t']]],
-  ['set_5fsave_5ftype_1',['set_save_type',['../structflashcart__t.html#ac6fb8bf7d1957a4200273068c94d13b4',1,'flashcart_t']]],
-  ['set_5fsave_5fwriteback_2',['set_save_writeback',['../structflashcart__t.html#ae845c50d123fd327f7b3213adfb6702d',1,'flashcart_t']]],
-  ['sound_5fenabled_3',['sound_enabled',['../settings_8h.html#a7f7e78c2b3edb912391e59b3d0038323',1,'settings_t']]],
-  ['sr_4',['SR',['../boot__io_8h.html#a8b1251e120efe26718d3394aec73ca0c',1,'ai_regs_t::SR()'],['../boot__io_8h.html#a6c4f19758b5239f5239f490a6be98262',1,'pi_regs_t::SR()']]]
+  ['rdma_0',['RDMA',['../boot__io_8h.html#a6d04dc1568e8bec29264bc9a8c2e7724',1,'pi_regs_t']]],
+  ['rumble_5fenabled_1',['rumble_enabled',['../settings_8h.html#af8e5d894c1bc8c114fb0bf9ad5d12360',1,'settings_t']]]
 ];

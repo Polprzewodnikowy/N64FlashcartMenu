@@ -107,6 +107,40 @@ static const char *format_cic_type (cic_type_t cic_type) {
     }
 }
 
+static boot_tv_type_t determine_tv_boot_type (destination_type_t rom_destination_code) {
+        // check the market type from the ROM destination_code and return best guess!
+        switch (rom_destination_code) {
+            case MARKET_NORTH_AMERICA:
+            case MARKET_JAPANESE:
+            case MARKET_JAPANESE_MULTI:
+            case MARKET_GATEWAY64_NTSC:
+                return BOOT_TV_TYPE_NTSC;
+            case MARKET_BRAZILIAN:
+                return BOOT_TV_TYPE_MPAL;
+            case MARKET_GERMAN:
+            case MARKET_FRENCH:
+            case MARKET_DUTCH:
+            case MARKET_ITALIAN:
+            case MARKET_SPANISH:
+            case MARKET_AUSTRALIAN:
+            case MARKET_SCANDINAVIAN:  
+            case MARKET_GATEWAY64_PAL:
+            case MARKET_EUROPEAN_BASIC:
+            // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
+            case MARKET_OTHER_X:
+            case MARKET_OTHER_Y:
+                return BOOT_TV_TYPE_PAL;
+            // FIXME: We cannot be sure on these markets, so just return the default!
+            case MARKET_CHINESE:
+            case MARKET_CANADIAN:
+            case MARKET_KOREAN:
+            case MARKET_OTHER_Z:
+            default: 
+                return BOOT_TV_TYPE_PASSTHROUGH;
+        }
+
+}
+
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
@@ -209,41 +243,7 @@ static void load (menu_t *menu) {
     menu->boot_params->detect_cic_seed = true;
     
     if (menu->settings.autodetect_rom_region) {
-        // check the market type (menu->load.rom_info.destination_code) and set best guess?!
-        switch (menu->load.rom_info.destination_code) {
-            case MARKET_NORTH_AMERICA:
-            case MARKET_JAPANESE:
-            case MARKET_JAPANESE_MULTI:
-            case MARKET_GATEWAY64_NTSC:
-                menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
-                break;
-            case MARKET_BRAZILIAN:
-                menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL;
-                break;
-            case MARKET_GERMAN:
-            case MARKET_FRENCH:
-            case MARKET_DUTCH:
-            case MARKET_ITALIAN:
-            case MARKET_SPANISH:
-            case MARKET_AUSTRALIAN:
-            case MARKET_SCANDINAVIAN:  
-            case MARKET_GATEWAY64_PAL:
-            case MARKET_EUROPEAN_BASIC:
-            // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
-            case MARKET_OTHER_X:
-            case MARKET_OTHER_Y:
-                menu->boot_params->tv_type = BOOT_TV_TYPE_PAL;
-                break;
-            // FIXME: We cannot be sure on these markets, so just return the default!
-            case MARKET_CHINESE:
-            case MARKET_CANADIAN:
-            case MARKET_KOREAN:
-            case MARKET_OTHER_Z:
-            default: 
-                menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
-                break;
-        }
-
+        menu->boot_params->tv_type = determine_tv_boot_type(menu->load.rom_info.destination_code);
     }
     else {
         menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;

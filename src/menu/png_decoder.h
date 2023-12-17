@@ -1,5 +1,5 @@
 /**
- * @file png.h
+ * @file png_decoder.h
  * @brief PNG decoder
  * @ingroup menu 
  */

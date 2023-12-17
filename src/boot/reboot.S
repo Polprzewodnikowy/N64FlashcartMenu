@@ -2,10 +2,15 @@
 #define REBOOT_ADDRESS      0xA4001000
 #define STACK_ADDRESS       0xA4001FF0
 
+#define RI_ADDRESS          0xA4700000
+
+#define RI_SELECT           0x0C
+#define RI_REFRESH          0x10
+
 
 .set noat
 .section .text.reboot, "ax", %progbits
-.type reboot, %object
+
 reboot_start:
     .global reboot_start
 
@@ -29,6 +34,15 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
+reset_rdram:
+    bnez $s5, reset_rdram_skip
+
+    li $t0, RI_ADDRESS
+
+    sw $zero, RI_REFRESH($t0)
+    sw $zero, RI_SELECT($t0)
+reset_rdram_skip:
+
 detect_console_region:
     li $t0, 1
     beq $s4, $zero, pal_console
@@ -37,16 +51,16 @@ detect_console_region:
 
 pal_console:
     li $ra, 0xA4001554
-    b reset_registers
+    b prepare_registers
 
 ntsc_console:
     li $ra, 0xA4001550
-    b reset_registers
+    b prepare_registers
 
 mpal_console:
     li $ra, 0xA4001554
 
-reset_registers:
+prepare_registers:
     move $at, $zero
     move $v0, $zero
     move $v1, $zero
@@ -56,7 +70,7 @@ reset_registers:
     move $a3, $zero
     move $t0, $zero
     move $t1, $zero
-    move $t2, $zero
+    li $t2, 0x40
     move $t4, $zero
     move $t5, $zero
     move $t6, $zero

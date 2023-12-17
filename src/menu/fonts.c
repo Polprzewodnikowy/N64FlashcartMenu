@@ -1,11 +1,10 @@
 #include <libdragon.h>
 
-#include "assets.h"
 #include "fonts.h"
 
 
 static void load_default_font (void) {
-    rdpq_font_t *default_font = rdpq_font_load_buf(assets_FiraMonoBold, (int) (assets_FiraMonoBold_size));
+    rdpq_font_t *default_font = rdpq_font_load("rom:/FiraMonoBold.font64");
 
     rdpq_font_style(default_font, STL_DEFAULT, &((rdpq_fontstyle_t) { .color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF) }));
     rdpq_font_style(default_font, STL_DIRECTORY, &((rdpq_fontstyle_t) { .color = RGBA32(0xFF, 0xFF, 0x70, 0xFF) }));

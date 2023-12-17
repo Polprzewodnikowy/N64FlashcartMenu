@@ -36,8 +36,9 @@ typedef struct {
 
 } settings_t;
 
-
+/** @brief The settings to load */
 void settings_load (settings_t *settings);
+/** @brief The settings to save */
 void settings_save (settings_t *settings);
 
 

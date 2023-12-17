@@ -139,7 +139,6 @@ static boot_tv_type_t determine_tv_boot_type (destination_type_t rom_destination
             default: 
                 return BOOT_TV_TYPE_PASSTHROUGH;
         }
-
 }
 
 

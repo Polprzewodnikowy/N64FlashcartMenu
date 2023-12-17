@@ -35,6 +35,7 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->settings.pal60_enabled,
         menu->settings.hidden_files_enabled,
         menu->settings.default_directory,
+        menu->settings.use_saves_folder,
         menu->settings.autodetect_rom_region,
         menu->settings.bgm_enabled,
         menu->settings.sound_enabled,

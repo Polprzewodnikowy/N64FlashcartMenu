@@ -13,12 +13,12 @@ static settings_t init = {
     .hidden_files_enabled = false,
     .default_directory = "/",
     .use_saves_folder = true,
+    .autodetect_rom_region = true,
 
     /* Beta feature flags (should always init to off) */
     .bgm_enabled = false,
     .sound_enabled = false,
     .rumble_enabled = false,
-    .autodetect_rom_region = true,
 };
 
 

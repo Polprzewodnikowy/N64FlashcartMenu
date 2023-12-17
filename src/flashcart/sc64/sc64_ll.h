@@ -17,6 +17,7 @@
  * @{
  */
 
+/** @brief The SC64 buffers structure. */
 typedef struct {
     uint8_t BUFFER[8192];
     uint8_t EEPROM[2048];
@@ -27,7 +28,7 @@ typedef struct {
 #define SC64_BUFFERS_BASE       (0x1FFE0000UL)
 #define SC64_BUFFERS            ((sc64_buffers_t *) SC64_BUFFERS_BASE)
 
-
+/** @brief The SC64 State Enumeration. */
 typedef enum {
     SC64_OK,
     SC64_ERROR_BAD_ARGUMENT,
@@ -63,6 +64,7 @@ typedef enum {
     DD_MODE_FULL = 3
 } sc64_dd_mode_t;
 
+/** @brief The SC64 Boot Mode Enumeration. */
 typedef enum {
     BOOT_MODE_MENU = 0,
     BOOT_MODE_ROM = 1,
@@ -71,6 +73,7 @@ typedef enum {
     BOOT_MODE_DIRECT_DDIPL = 4,
 } sc64_boot_mode_t;
 
+/** @brief The SC64 Save Type Enumeration. */
 typedef enum {
     SAVE_TYPE_NONE,
     SAVE_TYPE_EEPROM_4K,

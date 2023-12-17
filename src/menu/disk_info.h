@@ -11,7 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-
+/** @brief Disk state enumeration. */
 typedef enum {
     DISK_OK,
     DISK_ERR_IO,
@@ -19,12 +19,14 @@ typedef enum {
     DISK_ERR_INVALID,
 } disk_err_t;
 
+/** @brief Disk region enumeration. */
 typedef enum {
     DISK_REGION_DEVELOPMENT,
     DISK_REGION_JAPANESE,
     DISK_REGION_USA,
 } disk_region_t;
 
+/** @brief Disk type enumeration. */
 typedef enum {
     DISK_TYPE_0,
     DISK_TYPE_1,
@@ -35,6 +37,7 @@ typedef enum {
     DISK_TYPE_6,
 } disk_type_t;
 
+/** @brief Disk Information Structure. */
 typedef struct {
     disk_region_t region;
     disk_type_t disk_type;

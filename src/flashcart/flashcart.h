@@ -42,6 +42,7 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END
 } flashcart_save_type_t;
 
+/** @brief Flashcart Disk Parameter Structure. */
 typedef struct {
     bool development_drive;
     uint8_t disk_type;
@@ -53,15 +54,25 @@ typedef void flashcart_progress_callback_t (float progress);
 
 /** @brief Flashcart Structure */
 typedef struct {
+    /** @brief The flashcart initialization function */
     flashcart_err_t (*init) (void);
+    /** @brief The flashcart de-initialization function */
     flashcart_err_t (*deinit) (void);
+    /** @brief The flashcart feature function */
     bool (*has_feature) (flashcart_features_t feature);
+    /** @brief The flashcart ROM load function */
     flashcart_err_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
+    /** @brief The flashcart file load function */
     flashcart_err_t (*load_file) (char *file_path, uint32_t rom_offset, uint32_t file_offset);
+    /** @brief The flashcart save file load function */
     flashcart_err_t (*load_save) (char *save_path);
+    /** @brief The flashcart disk bios load function */
     flashcart_err_t (*load_64dd_ipl) (char *ipl_path, flashcart_progress_callback_t *progress);
+    /** @brief The flashcart disk load function */
     flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+    /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
+    /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (uint32_t *sectors);
 } flashcart_t;
 

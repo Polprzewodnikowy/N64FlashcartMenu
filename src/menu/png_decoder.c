@@ -4,7 +4,7 @@
 #include "png_decoder.h"
 #include "utils/fs.h"
 
-
+/** @brief PNG File Information Structure. */
 typedef struct {
     FIL fil;
 

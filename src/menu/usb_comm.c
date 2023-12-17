@@ -12,9 +12,11 @@
 
 #define MAX_FILE_SIZE   MiB(4)
 
-
+/** @brief The supported USB commands structure. */
 typedef struct {
+    /** @brief The command identifier. */
     const char *id;
+    /** @brief The command operation. */
     void (*op) (menu_t *menu);
 } usb_comm_command_t;
 

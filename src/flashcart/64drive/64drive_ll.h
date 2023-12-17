@@ -17,6 +17,7 @@
  * @{
  */
 
+/** @brief Registers Structure. */
 typedef struct {
     uint8_t BUFFER[512];
     uint32_t STATUS;
@@ -54,18 +55,20 @@ typedef struct {
     uint32_t WRITEBACK[256];
 } d64_regs_t;
 
+/** @brief Registers Base Address. */
 #define D64_REGS_BASE       (0x18000000UL)
 #define D64_REGS_BASE_EXT   (0x1F800000UL)
 #define D64_REGS            ((d64_regs_t *) D64_REGS_BASE)
 #define D64_REGS_EXT        ((d64_regs_t *) D64_REGS_BASE_EXT)
 
-
+/** @brief Device Variant Enumeration. */
 typedef enum {
     DEVICE_VARIANT_UNKNOWN  = 0x0000,
     DEVICE_VARIANT_A        = 0x4100,
     DEVICE_VARIANT_B        = 0x4200,
 } d64_device_variant_t;
 
+/** @brief TV Type Enumeration. */
 typedef enum {
     TV_TYPE_PAL = 0,
     TV_TYPE_NTSC = 1,
@@ -73,6 +76,7 @@ typedef enum {
     TV_TYPE_UNKNOWN = 3,
 } d64_tv_type_t;
 
+/** @brief Save Type Enumeration. */
 typedef enum {
     SAVE_TYPE_NONE,
     SAVE_TYPE_EEPROM_4K,

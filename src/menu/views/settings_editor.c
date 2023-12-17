@@ -31,14 +31,14 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
-        "pal60_enabled: %s\n"
-        "hidden_files_enabled: %s\n"
-        "default_directory: %s\n"
-        "use_saves_folder: %s\n"
+        "pal60_enabled:         %s\n"
+        "hidden_files_enabled:  %s\n"
+        "default_directory:     %s\n"
+        "use_saves_folder:      %s\n"
         "autodetect_rom_region: %s\n"
-        "bgm_enabled: %s\n"
-        "sound_enabled: %s\n"
-        "rumble_enabled: %s\n",
+        "bgm_enabled:           %s\n"
+        "sound_enabled:         %s\n"
+        "rumble_enabled:        %s\n",
         convert_boolean(menu->settings.pal60_enabled),
         convert_boolean(menu->settings.hidden_files_enabled),
         menu->settings.default_directory,

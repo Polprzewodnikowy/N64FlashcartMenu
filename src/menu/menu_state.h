@@ -31,6 +31,7 @@ typedef enum {
     MENU_MODE_IMAGE_VIEWER,
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
+    MENU_MODE_SETTINGS_EDITOR,
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
@@ -84,6 +85,7 @@ typedef struct {
         bool options;
         bool system_info;
         bool settings;
+        bool credits;
     } actions;
 
     struct {

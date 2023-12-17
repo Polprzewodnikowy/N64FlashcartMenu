@@ -61,6 +61,7 @@ SRCS = \
 	menu/views/music_player.c \
 	menu/views/startup.c \
 	menu/views/system_info.c \
+	menu/views/settings_editor.c \
 	utils/fs.c
 
 FONTS = \

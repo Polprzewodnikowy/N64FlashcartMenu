@@ -208,7 +208,7 @@ static void load (menu_t *menu) {
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->detect_cic_seed = true;
     
-    if (menu->settings.detect_rom_region_enabled) {
+    if (menu->settings.autodetect_rom_region) {
         // check the market type (menu->load.rom_info.destination_code) and set best guess?!
         switch (menu->load.rom_info.destination_code) {
             case MARKET_NORTH_AMERICA:

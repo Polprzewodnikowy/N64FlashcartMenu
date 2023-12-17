@@ -1,5 +1,12 @@
 #include "views.h"
 
+static char *convert_boolean (int state) {
+    switch (state) {
+        case 0: return "Off";
+        case 1: return "On";
+        default: return "Unknown";
+    }
+}
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
@@ -24,22 +31,22 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
-        "pal60_enabled: %d\n"
-        "hidden_files_enabled: %d\n"
+        "pal60_enabled: %s\n"
+        "hidden_files_enabled: %s\n"
         "default_directory: %s\n"
-        "use_saves_folder: %d\n"
-        "autodetect_rom_region: %d\n"
-        "bgm_enabled: %d\n"
-        "sound_enabled: %d\n"
-        "rumble_enabled: %d\n",
-        menu->settings.pal60_enabled,
-        menu->settings.hidden_files_enabled,
+        "use_saves_folder: %s\n"
+        "autodetect_rom_region: %s\n"
+        "bgm_enabled: %s\n"
+        "sound_enabled: %s\n"
+        "rumble_enabled: %s\n",
+        convert_boolean(menu->settings.pal60_enabled),
+        convert_boolean(menu->settings.hidden_files_enabled),
         menu->settings.default_directory,
-        menu->settings.use_saves_folder,
-        menu->settings.autodetect_rom_region,
-        menu->settings.bgm_enabled,
-        menu->settings.sound_enabled,
-        menu->settings.rumble_enabled
+        convert_boolean(menu->settings.use_saves_folder),
+        convert_boolean(menu->settings.autodetect_rom_region),
+        convert_boolean(menu->settings.bgm_enabled),
+        convert_boolean(menu->settings.sound_enabled),
+        convert_boolean(menu->settings.rumble_enabled)
     );
 
 

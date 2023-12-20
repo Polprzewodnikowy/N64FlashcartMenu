@@ -59,7 +59,9 @@ static void menu_init (boot_params_t *boot_params) {
     rtc_init();
     rspq_init();
     rdpq_init();
+    dfs_init(DFS_DEFAULT_LOCATION);
 
+    fonts_init();
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -102,8 +104,6 @@ static void menu_init (boot_params_t *boot_params) {
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
 
     register_VI_handler(frame_counter_handler);
-    
-    fonts_init();
 }
 
 static void menu_deinit (menu_t *menu) {
@@ -146,6 +146,7 @@ static struct views_s {
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
+    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
     { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
@@ -157,7 +158,7 @@ static struct views_s {
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
-    while (exception_reset_time() < RESET_TIME_LENGTH) {
+    while (true) {
         surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
         if (display != NULL) {

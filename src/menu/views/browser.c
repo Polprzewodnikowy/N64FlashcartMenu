@@ -286,8 +286,10 @@ static void process (menu_t *menu) {
         component_context_menu_show(&entry_context_menu);
     } else if (menu->actions.system_info) {
         menu->next_mode = MENU_MODE_SYSTEM_INFO;
-    } else if (menu->actions.settings) {
+    } else if (menu->actions.credits) {
         menu->next_mode = MENU_MODE_CREDITS;
+    } else if (menu->actions.settings) {
+        menu->next_mode = MENU_MODE_SETTINGS_EDITOR;
     }
 }
 
@@ -332,7 +334,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "Z: System Info | Start: Credits\n"
             "%s",
             ctime(&menu->current_time)
         );

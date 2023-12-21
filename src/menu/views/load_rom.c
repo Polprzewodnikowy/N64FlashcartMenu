@@ -64,7 +64,7 @@ static const char *format_rom_destination_market (destination_type_t market_type
     }
 }
 
-static const char *format_rom_save_type (save_type_t save_type) {
+static const char *format_rom_save_type (rom_save_type_t save_type) {
     switch (save_type) {
         case SAVE_TYPE_NONE: return "None";
         case SAVE_TYPE_EEPROM_4K: return "EEPROM 4K";
@@ -74,6 +74,15 @@ static const char *format_rom_save_type (save_type_t save_type) {
         case SAVE_TYPE_SRAM_128K: return "SRAM 128K";
         case SAVE_TYPE_FLASHRAM: return "FlashRAM";
         case SAVE_TYPE_FLASHRAM_PKST2: return "FlashRAM (Pokemon Stadium 2)";
+        default: return "Unknown";
+    }
+}
+
+static const char *format_rom_tv_type (rom_tv_type_t tv_type) {
+    switch (tv_type) {
+        case ROM_TV_TYPE_PAL: return "PAL";
+        case ROM_TV_TYPE_NTSC: return "NTSC";
+        case ROM_TV_TYPE_MPAL: return "MPAL";
         default: return "Unknown";
     }
 }
@@ -107,46 +116,67 @@ static const char *format_cic_type (cic_type_t cic_type) {
     }
 }
 
-static boot_tv_type_t determine_tv_boot_type (destination_type_t rom_destination_code) {
-        // check the market type from the ROM destination_code and return best guess!
-        switch (rom_destination_code) {
-            case MARKET_NORTH_AMERICA:
-            case MARKET_JAPANESE:
-            case MARKET_JAPANESE_MULTI:
-            case MARKET_GATEWAY64_NTSC:
-                return BOOT_TV_TYPE_NTSC;
-            case MARKET_BRAZILIAN:
-                return BOOT_TV_TYPE_MPAL;
-            case MARKET_GERMAN:
-            case MARKET_FRENCH:
-            case MARKET_DUTCH:
-            case MARKET_ITALIAN:
-            case MARKET_SPANISH:
-            case MARKET_AUSTRALIAN:
-            case MARKET_SCANDINAVIAN:  
-            case MARKET_GATEWAY64_PAL:
-            case MARKET_EUROPEAN_BASIC:
-            // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
-            // But they are mainly PAL regions.
-            case MARKET_OTHER_X:
-            case MARKET_OTHER_Y:
-                return BOOT_TV_TYPE_PAL;
-            // FIXME: We cannot be sure on these markets, so just return the default for the moment!
-            case MARKET_CHINESE:
-            case MARKET_CANADIAN:
-            case MARKET_KOREAN:
-            case MARKET_OTHER_Z:
-            default: 
-                return BOOT_TV_TYPE_PASSTHROUGH;
-        }
+static void set_save_type (menu_t *menu, rom_save_type_t save_type) {
+    rom_info_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
+    menu->browser.reload = true;
 }
 
+static void set_save_type_automatic (menu_t *menu) { set_save_type(menu, SAVE_TYPE_AUTOMATIC); }
+static void set_save_type_none (menu_t *menu) { set_save_type(menu, SAVE_TYPE_NONE); }
+static void set_save_type_eeprom_4kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_EEPROM_4K); }
+static void set_save_type_eeprom_16kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_EEPROM_16K); }
+static void set_save_type_sram_256kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM); }
+static void set_save_type_sram_768kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM_BANKED); }
+static void set_save_type_sram_1mbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM_128K); }
+static void set_save_type_flash_ram_1mbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_FLASHRAM); }
+
+static component_context_menu_t set_save_type_context_menu = { .list = {
+    { .text = "Automatic", .action = set_save_type_automatic },
+    { .text = "None", .action = set_save_type_none },
+    { .text = "EEPROM 4kbit", .action = set_save_type_eeprom_4kbit },
+    { .text = "EEPROM 16kbit", .action = set_save_type_eeprom_16kbit },
+    { .text = "SRAM 256kbit", .action = set_save_type_sram_256kbit },
+    { .text = "SRAM 768kbit", .action = set_save_type_sram_768kbit },
+    { .text = "SRAM 1Mbit", .action = set_save_type_sram_1mbit },
+    { .text = "FlashRAM 1Mbit", .action = set_save_type_flash_ram_1mbit },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static void set_tv_type (menu_t *menu, rom_tv_type_t tv_type) {
+    rom_info_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
+    menu->browser.reload = true;
+}
+
+static void set_tv_type_automatic (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_AUTOMATIC); }
+static void set_tv_type_pal (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_PAL); }
+static void set_tv_type_ntsc (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_NTSC); }
+static void set_tv_type_mpal (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_MPAL); }
+
+static component_context_menu_t set_tv_type_context_menu = { .list = {
+    { .text = "Automatic", .action = set_tv_type_automatic },
+    { .text = "PAL", .action = set_tv_type_pal },
+    { .text = "NTSC", .action = set_tv_type_ntsc },
+    { .text = "MPAL", .action = set_tv_type_mpal },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
+    { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
 
 static void process (menu_t *menu) {
+    if (component_context_menu_process(menu, &options_context_menu)) {
+        return;
+    }
+
     if (menu->actions.enter) {
         load_pending = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+    } else if (menu->actions.options) {
+        component_context_menu_show(&options_context_menu);
     }
 }
 
@@ -182,6 +212,7 @@ static void draw (menu_t *menu, surface_t *d) {
             " Version: %hhu\n"
             " Check code: 0x%016llX\n"
             " Save type: %s\n"
+            " TV type: %s\n"
             " Expansion PAK: %s\n"
             "\n"
             " Extra information:\n"
@@ -196,7 +227,8 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_destination_market(menu->load.rom_info.destination_code),
             menu->load.rom_info.version,
             menu->load.rom_info.check_code,
-            format_rom_save_type(menu->load.rom_info.save_type),
+            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
+            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_cic_type(menu->load.rom_info.cic_type),
             menu->load.rom_info.boot_address,
@@ -210,7 +242,15 @@ static void draw (menu_t *menu, surface_t *d) {
             "B: Exit"
         );
 
+        component_actions_bar_text_draw(
+            ALIGN_RIGHT, VALIGN_TOP,
+            "\n"
+            "R: Options"
+        );
+
         component_boxart_draw(boxart);
+
+        component_context_menu_draw(&options_context_menu);
     }
 
     rdpq_detach_show();
@@ -239,14 +279,14 @@ static void load (menu_t *menu) {
     }
 
     menu->next_mode = MENU_MODE_BOOT;
+
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->detect_cic_seed = true;
-    
-    if (menu->settings.autodetect_rom_region) {
-        menu->boot_params->tv_type = determine_tv_boot_type(menu->load.rom_info.destination_code);
-    }
-    else {
-        menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
+    switch(rom_info_get_tv_type(&menu->load.rom_info)) {
+        case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
+        case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
+        case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
+        default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
 }
 
@@ -265,12 +305,14 @@ void view_load_rom_init (menu_t *menu) {
 
     menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    rom_err_t err = rom_info_load(path_get(menu->load.rom_path), &menu->load.rom_info);
+    rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
 
     boxart = component_boxart_init(menu->load.rom_info.game_code);
+
+    component_context_menu_init(&options_context_menu);
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

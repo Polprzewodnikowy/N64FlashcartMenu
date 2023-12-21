@@ -89,6 +89,7 @@ static void menu_init (boot_params_t *boot_params) {
     char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
 
     menu->browser.valid = false;
+    menu->browser.reload = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
     menu->load.rom_path = NULL;

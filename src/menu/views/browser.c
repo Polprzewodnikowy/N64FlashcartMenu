@@ -357,6 +357,20 @@ void view_browser_init (menu_t *menu) {
             menu->browser.valid = true;
         }
     }
+    if (menu->browser.reload) {
+        menu->browser.reload = false;
+        int selected = menu->browser.selected;
+        if (load_directory(menu)) {
+            menu_show_error(menu, "Error while reloading current directory");
+            menu->browser.valid = false;
+        } else {
+            menu->browser.selected = selected;
+            if (menu->browser.selected >= menu->browser.entries) {
+                menu->browser.selected = menu->browser.entries - 1;
+            }
+            menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
+        }
+    }
 }
 
 void view_browser_display (menu_t *menu, surface_t *display) {

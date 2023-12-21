@@ -34,8 +34,8 @@ static bool create_saves_subdirectory (path_t *path) {
     return error;
 }
 
-static flashcart_save_type_t convert_save_type (rom_info_t *info) {
-    switch (info->save_type) {
+static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
+    switch (save_type) {
         case SAVE_TYPE_EEPROM_4K: return FLASHCART_SAVE_TYPE_EEPROM_4K;
         case SAVE_TYPE_EEPROM_16K: return FLASHCART_SAVE_TYPE_EEPROM_16K;
         case SAVE_TYPE_SRAM: return FLASHCART_SAVE_TYPE_SRAM;
@@ -71,7 +71,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     path_t *path = path_clone(menu->load.rom_path);
 
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
-    flashcart_save_type_t save_type = convert_save_type(&menu->load.rom_info);
+    flashcart_save_type_t save_type = convert_save_type(rom_info_get_save_type(&menu->load.rom_info));
 
     menu->flashcart_err = flashcart_load_rom(path_get(path), byte_swap, progress);
     if (menu->flashcart_err != FLASHCART_OK) {

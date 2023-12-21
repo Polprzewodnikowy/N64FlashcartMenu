@@ -95,8 +95,10 @@ Data Structures</h2></td></tr>
 <tr class="separator:structrom__info__t_8libultra"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:unionrom__info__t_8____unnamed18____"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#unionrom__info__t_8____unnamed18____">rom_info_t.__unnamed18__</a></td></tr>
 <tr class="separator:unionrom__info__t_8____unnamed18____"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structrom__info__t_8____unnamed18_____8____unnamed21____"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed21____">rom_info_t.__unnamed18__.__unnamed21__</a></td></tr>
-<tr class="separator:structrom__info__t_8____unnamed18_____8____unnamed21____"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structrom__info__t_8____unnamed18_____8____unnamed22____"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed22____">rom_info_t.__unnamed18__.__unnamed22__</a></td></tr>
+<tr class="separator:structrom__info__t_8____unnamed18_____8____unnamed22____"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structrom__info__t_8override"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8override">rom_info_t.override</a></td></tr>
+<tr class="separator:structrom__info__t_8override"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structrom__info__t_8features"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8features">rom_info_t.features</a></td></tr>
 <tr class="memdesc:structrom__info__t_8features"><td class="mdescLeft">&#160;</td><td class="mdescRight">The supported ROM accessories.  <a href="rom__info_8h.html#structrom__info__t_8features">More...</a><br /></td></tr>
 <tr class="separator:structrom__info__t_8features"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,8 +157,8 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a9f1df68876fd842a165e4874cef1c85e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM market region &amp; language type enumeration.  <a href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85e">More...</a><br /></td></tr>
 <tr class="separator:a9f1df68876fd842a165e4874cef1c85e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68e76e412a632e208737b03668d844b1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a68e76e412a632e208737b03668d844b1">save_type_t</a> { <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a68e76e412a632e208737b03668d844b1ac37f15aade15457d7d68e9ec535bb8a2">SAVE_TYPE_NONE</a>
+<tr class="memitem:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a> { <br />
+&#160;&#160;<a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58ac37f15aade15457d7d68e9ec535bb8a2">SAVE_TYPE_NONE</a>
 , <b>SAVE_TYPE_EEPROM_4K</b>
 , <b>SAVE_TYPE_EEPROM_16K</b>
 , <b>SAVE_TYPE_SRAM</b>
@@ -165,10 +167,22 @@ Enumerations</h2></td></tr>
 , <b>SAVE_TYPE_SRAM_128K</b>
 , <b>SAVE_TYPE_FLASHRAM</b>
 , <b>SAVE_TYPE_FLASHRAM_PKST2</b>
+, <br />
+&#160;&#160;<b>SAVE_TYPE_AUTOMATIC</b> = -1
 <br />
  }</td></tr>
-<tr class="memdesc:a68e76e412a632e208737b03668d844b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM save type enumeration.  <a href="rom__info_8h.html#a68e76e412a632e208737b03668d844b1">More...</a><br /></td></tr>
-<tr class="separator:a68e76e412a632e208737b03668d844b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM save type enumeration.  <a href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">More...</a><br /></td></tr>
+<tr class="separator:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8fdf85ad8aa6e19519a262184541d7c"><td class="memItemLeft" align="right" valign="top"><a id="ac8fdf85ad8aa6e19519a262184541d7c" name="ac8fdf85ad8aa6e19519a262184541d7c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>rom_tv_type_t</b> { <br />
+&#160;&#160;<b>ROM_TV_TYPE_PAL</b>
+, <b>ROM_TV_TYPE_NTSC</b>
+, <b>ROM_TV_TYPE_MPAL</b>
+, <b>ROM_TV_TYPE_UNKNOWN</b>
+, <br />
+&#160;&#160;<b>ROM_TV_TYPE_AUTOMATIC</b> = -1
+<br />
+ }</td></tr>
+<tr class="separator:ac8fdf85ad8aa6e19519a262184541d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa741eaa527c42177bb1855f881a23897"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897">expansion_pak_t</a> { <br />
 &#160;&#160;<a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172">EXPANSION_PAK_NONE</a>
 , <a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947">EXPANSION_PAK_REQUIRED</a>
@@ -183,9 +197,21 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8113a25a08f765fa5c1e10e7ea3bd10e"><td class="memItemLeft" align="right" valign="top"><a id="a8113a25a08f765fa5c1e10e7ea3bd10e" name="a8113a25a08f765fa5c1e10e7ea3bd10e"></a>
-<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_load</b> (char *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
-<tr class="separator:a8113a25a08f765fa5c1e10e7ea3bd10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37b55475233b86e370b137c1164575f2"><td class="memItemLeft" align="right" valign="top"><a id="a37b55475233b86e370b137c1164575f2" name="a37b55475233b86e370b137c1164575f2"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_save_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, <a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a> save_type)</td></tr>
+<tr class="separator:a37b55475233b86e370b137c1164575f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a022dec551d7951fcc55cccd02ffc5e20"><td class="memItemLeft" align="right" valign="top"><a id="a022dec551d7951fcc55cccd02ffc5e20" name="a022dec551d7951fcc55cccd02ffc5e20"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_tv_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, rom_tv_type_t tv_type)</td></tr>
+<tr class="separator:a022dec551d7951fcc55cccd02ffc5e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae67b9446216e90117c580ecf33a46f9a"><td class="memItemLeft" align="right" valign="top"><a id="ae67b9446216e90117c580ecf33a46f9a" name="ae67b9446216e90117c580ecf33a46f9a"></a>
+<a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_save_type</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
+<tr class="separator:ae67b9446216e90117c580ecf33a46f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa29768d39a1d4a08ff6d17f728ce067"><td class="memItemLeft" align="right" valign="top"><a id="afa29768d39a1d4a08ff6d17f728ce067" name="afa29768d39a1d4a08ff6d17f728ce067"></a>
+rom_tv_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_tv_type</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
+<tr class="separator:afa29768d39a1d4a08ff6d17f728ce067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98874e7181961a6eaf62212ba7a723c6"><td class="memItemLeft" align="right" valign="top"><a id="a98874e7181961a6eaf62212ba7a723c6" name="a98874e7181961a6eaf62212ba7a723c6"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_load</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
+<tr class="separator:a98874e7181961a6eaf62212ba7a723c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >N64 ROM Database. </p>
@@ -260,13 +286,25 @@ cic_type</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a433c3e255bad63ec7695928afb18e81e" name="a433c3e255bad63ec7695928afb18e81e"></a><a class="el" href="rom__info_8h.html#a68e76e412a632e208737b03668d844b1">save_type_t</a></td>
+<a id="a9bf05efea2279aeacb197096bb88e59d" name="a9bf05efea2279aeacb197096bb88e59d"></a><a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a></td>
 <td class="fieldname">
 save_type</td>
 <td class="fielddoc">
 The save type required by the ROM. </td></tr>
 <tr><td class="fieldtype">
-<a id="a3523ce560079204f7746f007217eeb79" name="a3523ce560079204f7746f007217eeb79"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8features">rom_info_t.features</a></td>
+<a id="ad9a5855518fbf47645b8d8b60822d593" name="ad9a5855518fbf47645b8d8b60822d593"></a>rom_tv_type_t</td>
+<td class="fieldname">
+tv_type</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a9cce2224da92d90ba6c9d6e75d2f2f7c" name="a9cce2224da92d90ba6c9d6e75d2f2f7c"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8override">rom_info_t.override</a></td>
+<td class="fieldname">
+override</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a9f87b56f9e5c8677c3075bb4bb38d3f6" name="a9f87b56f9e5c8677c3075bb4bb38d3f6"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8features">rom_info_t.features</a></td>
 <td class="fieldname">
 features</td>
 <td class="fielddoc">
@@ -324,7 +362,7 @@ game_code[4]</td>
 <td class="fielddoc">
 The game code defined in the ROM's header. </td></tr>
 <tr><td class="fieldtype">
-<a id="ae8c598c9d0f2e3a9d2fb6a01ccfb4276" name="ae8c598c9d0f2e3a9d2fb6a01ccfb4276"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed21____">rom_info_t.__unnamed18__.__unnamed21__</a></td>
+<a id="a377f7288fde739b1f7dd8a3f91af7867" name="a377f7288fde739b1f7dd8a3f91af7867"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed22____">rom_info_t.__unnamed18__.__unnamed22__</a></td>
 <td class="fieldname">
 __unnamed__</td>
 <td class="fielddoc">
@@ -333,14 +371,14 @@ __unnamed__</td>
 
 </div>
 </div>
-<a name="structrom__info__t_8____unnamed18_____8____unnamed21____" id="structrom__info__t_8____unnamed18_____8____unnamed21____"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structrom__info__t_8____unnamed18_____8____unnamed21____">&#9670;&#160;</a></span>rom_info_t.__unnamed18__.__unnamed21__</h2>
+<a name="structrom__info__t_8____unnamed18_____8____unnamed22____" id="structrom__info__t_8____unnamed18_____8____unnamed22____"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structrom__info__t_8____unnamed18_____8____unnamed22____">&#9670;&#160;</a></span>rom_info_t.__unnamed18__.__unnamed22__</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct rom_info_t.__unnamed18__.__unnamed21__</td>
+          <td class="memname">struct rom_info_t.__unnamed18__.__unnamed22__</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -364,6 +402,47 @@ The game unique identifier. </td></tr>
 destination_code: 8</td>
 <td class="fielddoc">
 The game region and or market. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structrom__info__t_8override" id="structrom__info__t_8override"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structrom__info__t_8override">&#9670;&#160;</a></span>rom_info_t.override</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct rom_info_t.override</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a43781db5c40ecc39fd718685594f0956" name="a43781db5c40ecc39fd718685594f0956"></a>bool</td>
+<td class="fieldname">
+save</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ab02e3087d460fc91de6307164cc849a2" name="ab02e3087d460fc91de6307164cc849a2"></a><a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a></td>
+<td class="fieldname">
+save_type</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ac9a1fdac6e082dd89e7173244f34d7b3" name="ac9a1fdac6e082dd89e7173244f34d7b3"></a>bool</td>
+<td class="fieldname">
+tv</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a9cc6a5b92e4ac073a0e1f13583e589ba" name="a9cc6a5b92e4ac073a0e1f13583e589ba"></a>rom_tv_type_t</td>
+<td class="fieldname">
+tv_type</td>
+<td class="fielddoc">
+</td></tr>
 </table>
 
 </div>
@@ -545,21 +624,21 @@ expansion_pak</td>
 
 </div>
 </div>
-<a id="a68e76e412a632e208737b03668d844b1" name="a68e76e412a632e208737b03668d844b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a68e76e412a632e208737b03668d844b1">&#9670;&#160;</a></span>save_type_t</h2>
+<a id="a1d6ef99bd6292a3f586e63f67d9c5f58" name="a1d6ef99bd6292a3f586e63f67d9c5f58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d6ef99bd6292a3f586e63f67d9c5f58">&#9670;&#160;</a></span>rom_save_type_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="rom__info_8h.html#a68e76e412a632e208737b03668d844b1">save_type_t</a></td>
+          <td class="memname">enum <a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>ROM save type enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a68e76e412a632e208737b03668d844b1ac37f15aade15457d7d68e9ec535bb8a2" name="a68e76e412a632e208737b03668d844b1ac37f15aade15457d7d68e9ec535bb8a2"></a>SAVE_TYPE_NONE&#160;</td><td class="fielddoc"><p >There is no expected save type. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1d6ef99bd6292a3f586e63f67d9c5f58ac37f15aade15457d7d68e9ec535bb8a2" name="a1d6ef99bd6292a3f586e63f67d9c5f58ac37f15aade15457d7d68e9ec535bb8a2"></a>SAVE_TYPE_NONE&#160;</td><td class="fielddoc"><p >There is no expected save type. </p>
 </td></tr>
 </table>
 
@@ -596,7 +675,7 @@ expansion_pak</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 19 2023 17:18:14 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Thu Dec 21 2023 19:14:42 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

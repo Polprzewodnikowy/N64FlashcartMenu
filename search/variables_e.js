@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['timing_0',['TIMING',['../boot__io_8h.html#a62ad61417eb98ddc6ad522b566f4667d',1,'vi_regs_t']]],
-  ['title_1',['title',['../rom__info_8h.html#ad0ac2903416955beeea09ff127ab0245',1,'rom_info_t']]]
+  ['use_5fsaves_5ffolder_0',['use_saves_folder',['../settings_8h.html#abf8e54596905858b3ada7f163b07d6a6',1,'settings_t']]]
 ];

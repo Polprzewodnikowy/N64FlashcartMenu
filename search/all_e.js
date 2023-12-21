@@ -9,8 +9,10 @@ var searchData=
   ['rom_5finfo_2eh_6',['rom_info.h',['../rom__info_8h.html',1,'']]],
   ['rom_5finfo_5ft_7',['rom_info_t',['../rom__info_8h.html#structrom__info__t',1,'']]],
   ['rom_5finfo_5ft_2e_5f_5funnamed18_5f_5f_8',['rom_info_t.__unnamed18__',['../rom__info_8h.html#unionrom__info__t_8____unnamed18____',1,'']]],
-  ['rom_5finfo_5ft_2e_5f_5funnamed18_5f_5f_2e_5f_5funnamed21_5f_5f_9',['rom_info_t.__unnamed18__.__unnamed21__',['../rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed21____',1,'']]],
+  ['rom_5finfo_5ft_2e_5f_5funnamed18_5f_5f_2e_5f_5funnamed22_5f_5f_9',['rom_info_t.__unnamed18__.__unnamed22__',['../rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed22____',1,'']]],
   ['rom_5finfo_5ft_2efeatures_10',['rom_info_t.features',['../rom__info_8h.html#structrom__info__t_8features',1,'']]],
   ['rom_5finfo_5ft_2elibultra_11',['rom_info_t.libultra',['../rom__info_8h.html#structrom__info__t_8libultra',1,'']]],
-  ['rumble_5fenabled_12',['rumble_enabled',['../settings_8h.html#af8e5d894c1bc8c114fb0bf9ad5d12360',1,'settings_t']]]
+  ['rom_5finfo_5ft_2eoverride_12',['rom_info_t.override',['../rom__info_8h.html#structrom__info__t_8override',1,'']]],
+  ['rom_5fsave_5ftype_5ft_13',['rom_save_type_t',['../rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58',1,'rom_info.h']]],
+  ['rumble_5fenabled_14',['rumble_enabled',['../settings_8h.html#af8e5d894c1bc8c114fb0bf9ad5d12360',1,'settings_t']]]
 ];

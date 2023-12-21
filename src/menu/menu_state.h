@@ -83,9 +83,7 @@ typedef struct {
         bool enter;
         bool back;
         bool options;
-        bool system_info;
         bool settings;
-        bool credits;
     } actions;
 
     struct {

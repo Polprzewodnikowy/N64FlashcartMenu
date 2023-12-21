@@ -161,8 +161,8 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
 }};
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
-    { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+    { .text = "Set save type", .submenu = &set_save_type_context_menu },
+    { .text = "Set TV type", .submenu = &set_tv_type_context_menu },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

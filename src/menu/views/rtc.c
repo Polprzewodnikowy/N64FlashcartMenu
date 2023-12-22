@@ -1,6 +1,19 @@
 #include <time.h>
 #include "views.h"
 
+// FIXME: add implementation!
+// struct {
+//     uint16_t seconds;
+//     uint16_t minutes;
+//     uint16_t hours;
+//     uint16_t day;
+//     uint16_t month;
+//     uint16_t year;
+// } adjusted_datetime;
+
+// static void save_adjusted_datetime () {
+
+// }
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
@@ -19,7 +32,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_CENTER, VALIGN_TOP,
         "ADJUST REAL TIME CLOCK\n"
         "\n"
-        "Current date & time: %s\n",
+        "Original date & time: %s\n",
         menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
     );
 
@@ -32,7 +45,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
-        "\n"
+        "\n" // "A: Save\n"
         "B: Back"
     );
 

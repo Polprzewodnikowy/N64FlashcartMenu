@@ -3,16 +3,6 @@
 #include "utils/utils.h"
 #include "ed64_ll.h"
 
-//FIXME find a better solution, perferably a libdragon one
-void sleep (unsigned long ms);
-
-void sleep (unsigned long ms) {
-
-    unsigned long current_ms = get_ticks_ms();
-
-    while (get_ticks_ms() - current_ms < ms);
-
-}
 
 /* ED64 configuration registers base address  */
 #define ED64_CONFIG_REGS_BASE (0xA8040000)
@@ -221,7 +211,7 @@ void ed64_ll_get_sram (uint8_t *buffer, int size) {
 
     pi_initialize();
 
-    sleep(250);
+    wait_ms(250);
     
     // checks if the save isnt large and if so grabs it from the large save area
     if(size == KiB(32))
@@ -252,14 +242,14 @@ void ed64_ll_get_eeprom (uint8_t *buffer, int size) {
 void ed64_ll_get_fram (uint8_t *buffer, int size) {
 
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K); //2
-    sleep(512);
+    wait_ms(512);
 
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
     
     ed64_ll_get_sram(buffer, size);
 
-    sleep(512);
+    wait_ms(512);
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
 }
@@ -313,14 +303,14 @@ void ed64_ll_set_eeprom (uint8_t *buffer, int size) {
 void ed64_ll_set_fram (uint8_t *buffer, int size) {
 
     ed64_ll_set_save_type(SAVE_TYPE_SRAM_128K);
-    sleep(512);
+    wait_ms(512);
 
     data_cache_hit_writeback_invalidate(buffer,size);
     dma_wait();
 
     ed64_ll_set_sram(buffer, size);
 
-    sleep(512);
+    wait_ms(512);
     ed64_ll_set_save_type(SAVE_TYPE_FLASHRAM);
 
 }

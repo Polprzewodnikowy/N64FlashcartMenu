@@ -37,7 +37,7 @@ jobs:
           FLAGS: -DNDEBUG
 
       - name: Upload artifact (Standard ROM)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: N64FlashcartMenu
           path: |
@@ -45,25 +45,25 @@ jobs:
             ./build/N64FlashcartMenu.elf
 
       - name: Upload artifact (64drive version)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: 64drive
           path: ./output/menu.bin
 
       - name: Upload artifact (ED64 version)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ED64
           path: ./output/OS64.v64
 
       - name: Upload artifact (ED64P version)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ED64P
           path: ./output/OS64P.v64
 
       - name: Upload artifact (SC64 version)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SC64
           path: ./output/sc64menu.n64

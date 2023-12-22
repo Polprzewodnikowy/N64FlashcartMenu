@@ -1,6 +1,6 @@
 #include "views.h"
 
-static char *convert_boolean (int state) {
+static char *format_boolean_type (int state) {
     switch (state) {
         case 0: return "Off";
         case 1: return "On";
@@ -38,13 +38,13 @@ static void draw (menu_t *menu, surface_t *d) {
         "bgm_enabled:           %s\n"
         "sound_enabled:         %s\n"
         "rumble_enabled:        %s\n",
-        convert_boolean(menu->settings.pal60_enabled),
-        convert_boolean(menu->settings.hidden_files_enabled),
+        format_boolean_type(menu->settings.pal60_enabled),
+        format_boolean_type(menu->settings.hidden_files_enabled),
         menu->settings.default_directory,
-        convert_boolean(menu->settings.use_saves_folder),
-        convert_boolean(menu->settings.bgm_enabled),
-        convert_boolean(menu->settings.sound_enabled),
-        convert_boolean(menu->settings.rumble_enabled)
+        format_boolean_type(menu->settings.use_saves_folder),
+        format_boolean_type(menu->settings.bgm_enabled),
+        format_boolean_type(menu->settings.sound_enabled),
+        format_boolean_type(menu->settings.rumble_enabled)
     );
 
 

@@ -6,8 +6,9 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-
+#ifndef BOXART_DIRECTORY
 #define BOXART_DIRECTORY    "sd:/menu/boxart"
+#endif
 
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {

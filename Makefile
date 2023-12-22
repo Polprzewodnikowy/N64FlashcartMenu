@@ -65,6 +65,7 @@ SRCS = \
 	menu/views/startup.c \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
+	menu/views/rtc.c \
 	utils/fs.c
 
 FONTS = \

@@ -31,6 +31,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
+        "To change the settings, please adjust them\n"
+        "directly in the 'menu/config.ini' file.\n\n"
         "pal60_enabled:         %s\n"
         "hidden_files_enabled:  %s\n"
         "default_directory:     %s\n"

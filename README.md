@@ -51,6 +51,10 @@ Menu currently supports the following emulators and associated ROM file names:
  - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64`
  - **Sega Master System** / **Sega Game Gear** / **Sg1000**: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64` (Currently broken)
 
+### Menu Settings
+The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
+Currently these are read-only (can be viewed in the menu by pressing `L` on the Joypad).
+If required, you can manually adjust the file on the SD card using your computer.
 
 ### SC64 Specific
 - Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
@@ -84,11 +88,11 @@ You can use a dev container in VSCode to ease development.
 
 ## To deploy:
 ### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.17.0/sc64-deployer-windows-v2.17.0.zip)
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.17.0+)
-See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.17.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
+Make sure that your firmware is compatible (currently v2.18.0+)
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 
 #### From the devcontainer

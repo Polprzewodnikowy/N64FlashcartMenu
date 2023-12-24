@@ -1,5 +1,6 @@
 FROM debian:bookworm-slim
 
+ARG SC64_DEPLOYER_VERSION=v2.18.0
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install build-essential doxygen git python3 wget gdb-multiarch -y && \
@@ -7,9 +8,9 @@ RUN apt-get update && \
     wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \
     dpkg -i gcc-toolchain-mips64-x86_64.deb && \
     rm gcc-toolchain-mips64-x86_64.deb && \
-    wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.17.0/sc64-deployer-linux-v2.17.0.tar.gz && \
-    tar -xf sc64-deployer-linux-v2.17.0.tar.gz -C /usr/local/bin && \
-    rm sc64-deployer-linux-v2.17.0.tar.gz && \
+    wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC64_DEPLOYER_VERSION/sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
+    tar -xf sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -C /usr/local/bin && \
+    rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
     # wget https://github.com/buu342/N64-UNFLoader/releases/download/v2.1/UNFLoader-Linux-x64.zip && \
     # unzip UNFLoader-Linux-x64.zip -d /usr/local/unfloader && \
     # cp -f "/usr/local/unfloader/UNFLoader" "/usr/local/bin/UNFLoader"

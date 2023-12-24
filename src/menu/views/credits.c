@@ -33,7 +33,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Github:\n"
         " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
         "Authors:\n"
-        " JonesAlmighty / NetworkFusion\n"
+        " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Credits:\n"
         " N64Brew / libdragon contributors\n"

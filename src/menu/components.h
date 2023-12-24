@@ -37,13 +37,16 @@ void component_background_draw (void);
 
 void component_file_list_draw (entry_t *list, int entries, int selected);
 
-typedef struct {
+typedef struct component_context_menu {
     int count;
     int selected;
     bool hide_pending;
+    struct component_context_menu *parent;
+    struct component_context_menu *submenu;
     struct {
         const char *text;
         void (*action) (menu_t *menu);
+        struct component_context_menu *submenu;
     } list[];
 } component_context_menu_t;
 

@@ -228,8 +228,38 @@ static component_context_menu_t entry_context_menu = {
     }
 };
 
+static void edit_settings (menu_t *menu) {
+    menu->next_mode = MENU_MODE_SETTINGS_EDITOR;
+}
+
+static void show_system_info (menu_t *menu) {
+    menu->next_mode = MENU_MODE_SYSTEM_INFO;
+}
+
+static void show_credits (menu_t *menu) {
+    menu->next_mode = MENU_MODE_CREDITS;
+}
+
+static void edit_rtc (menu_t *menu) {
+    menu->next_mode = MENU_MODE_RTC;
+}
+
+static component_context_menu_t settings_context_menu = {
+    .list = {
+        { .text = "Edit settings", .action = edit_settings },
+        { .text = "Show system info", .action = show_system_info },
+        { .text = "Show credits", .action = show_credits },
+        { .text = "Adjust RTC", .action = edit_rtc },
+        COMPONENT_CONTEXT_MENU_LIST_END,
+    }
+};
+
 static void process (menu_t *menu) {
     if (component_context_menu_process(menu, &entry_context_menu)) {
+        return;
+    }
+
+    if (component_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -284,10 +314,8 @@ static void process (menu_t *menu) {
         }
     } else if (menu->actions.options && menu->browser.entry) {
         component_context_menu_show(&entry_context_menu);
-    } else if (menu->actions.system_info) {
-        menu->next_mode = MENU_MODE_SYSTEM_INFO;
     } else if (menu->actions.settings) {
-        menu->next_mode = MENU_MODE_CREDITS;
+        component_context_menu_show(&settings_context_menu);
     }
 }
 
@@ -324,9 +352,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "%s\n"
-        "L: Settings",
-        menu->browser.entries == 0 ? "" : "R: Options"
+        "Start: Settings\n"
+        "^%02XR: Options^00",
+        menu->browser.entries == 0 ? STL_UNKNOWN : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
@@ -340,6 +368,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_context_menu_draw(&entry_context_menu);
 
+    component_context_menu_draw(&settings_context_menu);
+
     rdpq_detach_show();
 }
 
@@ -347,12 +377,27 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         component_context_menu_init(&entry_context_menu);
+        component_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init("sd:/", "");
             menu_show_error(menu, "Error while opening initial directory");
         } else {
             menu->browser.valid = true;
+        }
+    }
+    if (menu->browser.reload) {
+        menu->browser.reload = false;
+        int selected = menu->browser.selected;
+        if (load_directory(menu)) {
+            menu_show_error(menu, "Error while reloading current directory");
+            menu->browser.valid = false;
+        } else {
+            menu->browser.selected = selected;
+            if (menu->browser.selected >= menu->browser.entries) {
+                menu->browser.selected = menu->browser.entries - 1;
+            }
+            menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
         }
     }
 }

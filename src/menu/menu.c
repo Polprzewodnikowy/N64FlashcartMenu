@@ -89,6 +89,7 @@ static void menu_init (boot_params_t *boot_params) {
     char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
 
     menu->browser.valid = false;
+    menu->browser.reload = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
     menu->load.rom_path = NULL;
@@ -146,6 +147,8 @@ static struct views_s {
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
+    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
+    { view_rtc_init, view_rtc_display }, // MENU_MODE_RTC
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
     { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR

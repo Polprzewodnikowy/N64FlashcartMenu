@@ -17,6 +17,7 @@
  * @{
  */
 
+/** @brief The SC64 buffers structure. */
 typedef struct {
     uint8_t BUFFER[8192];
     uint8_t EEPROM[2048];
@@ -27,7 +28,7 @@ typedef struct {
 #define SC64_BUFFERS_BASE       (0x1FFE0000UL)
 #define SC64_BUFFERS            ((sc64_buffers_t *) SC64_BUFFERS_BASE)
 
-
+/** @brief The SC64 State Enumeration. */
 typedef enum {
     SC64_OK,
     SC64_ERROR_BAD_ARGUMENT,
@@ -63,6 +64,7 @@ typedef enum {
     DD_MODE_FULL = 3
 } sc64_dd_mode_t;
 
+/** @brief The SC64 Boot Mode Enumeration. */
 typedef enum {
     BOOT_MODE_MENU = 0,
     BOOT_MODE_ROM = 1,
@@ -71,6 +73,7 @@ typedef enum {
     BOOT_MODE_DIRECT_DDIPL = 4,
 } sc64_boot_mode_t;
 
+/** @brief The SC64 Save Type Enumeration. */
 typedef enum {
     SAVE_TYPE_NONE,
     SAVE_TYPE_EEPROM_4K,
@@ -110,11 +113,20 @@ typedef enum {
     BUTTON_MODE_DD_DISK_SWAP,
 } sc64_button_mode_t;
 
+typedef struct {
+    int count;
+    struct {
+        uint32_t thb_table;
+        uint32_t sector_table;
+    } disks[4];
+} sc64_disk_mapping_t;
+
 
 void sc64_ll_lock (void);
 sc64_error_t sc64_ll_get_version (uint16_t *major, uint16_t *minor, uint32_t *revision);
 sc64_error_t sc64_ll_get_config (sc64_cfg_id_t cfg, uint32_t *value);
 sc64_error_t sc64_ll_set_config (sc64_cfg_id_t cfg, uint32_t value);
+sc64_error_t sc64_ll_set_disk_mapping (sc64_disk_mapping_t *disk_mapping);
 sc64_error_t sc64_ll_writeback_pending (bool *pending);
 sc64_error_t sc64_ll_writeback_enable (void *address);
 sc64_error_t sc64_ll_flash_wait_busy (void);

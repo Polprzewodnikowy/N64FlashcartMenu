@@ -2,7 +2,7 @@
 
 
 #ifndef MENU_VERSION
-#define MENU_VERSION "0.0.0.5.ALPHA"
+#define MENU_VERSION "0.0.0.6.ALPHA"
 #endif
 
 
@@ -33,7 +33,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Github:\n"
         " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
         "Authors:\n"
-        " JonesAlmighty / NetworkFusion\n"
+        " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Credits:\n"
         " N64Brew / libdragon contributors\n"

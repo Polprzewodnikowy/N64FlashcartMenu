@@ -8,12 +8,14 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
+#include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
+#include "usb_comm.h"
 #include "utils/fs.h"
 #include "views/views.h"
 
@@ -28,7 +30,6 @@
 
 
 static menu_t *menu;
-static bool boot_pending;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
 
@@ -53,15 +54,15 @@ static void frame_counter_reset (void) {
 }
 
 static void menu_init (boot_params_t *boot_params) {
-    controller_init();
+    joypad_init();
     timer_init();
     rtc_init();
     rspq_init();
     rdpq_init();
+    dfs_init(DFS_DEFAULT_LOCATION);
+
     fonts_init();
     sound_init_default();
-
-    boot_pending = false;
 
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
@@ -69,8 +70,8 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_error = flashcart_init();
-    if (menu->flashcart_error != FLASHCART_OK) {
+    menu->flashcart_err = flashcart_init();
+    if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
@@ -88,22 +89,31 @@ static void menu_init (boot_params_t *boot_params) {
     char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
 
     menu->browser.valid = false;
+    menu->browser.reload = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
+    menu->load.rom_path = NULL;
+
+    hdmi_clear_game_id();
+
     tv_type = get_tv_type();
-    if ((tv_type == TV_PAL) && menu->settings.pal60) {
+    if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
         TV_TYPE_RAM = TV_NTSC;
     }
 
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_OFF);
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
 
     register_VI_handler(frame_counter_handler);
 }
 
 static void menu_deinit (menu_t *menu) {
+    unregister_VI_handler(frame_counter_handler);
+
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
     TV_TYPE_RAM = tv_type;
+
+    hdmi_send_game_id(menu->boot_params);
 
     path_free(menu->browser.directory);
     free(menu);
@@ -112,13 +122,13 @@ static void menu_deinit (menu_t *menu) {
 
     flashcart_deinit();
 
-    sound_close();
+    sound_deinit();
+
     rdpq_close();
     rspq_close();
     rtc_close();
     timer_close();
-
-    unregister_VI_handler(frame_counter_handler);
+    joypad_close();
 
     display_close();
 }
@@ -137,7 +147,10 @@ static struct views_s {
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
+    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
+    { view_rtc_init, view_rtc_display }, // MENU_MODE_RTC
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
+    { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
     { view_error_init, view_error_display }, // MENU_MODE_ERROR
     { view_fault_init, view_fault_display }, // MENU_MODE_FAULT
@@ -147,7 +160,7 @@ static struct views_s {
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
-    while (!boot_pending && (exception_reset_time() < RESET_TIME_LENGTH)) {
+    while (true) {
         surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
 
         if (display != NULL) {
@@ -159,7 +172,12 @@ void menu_run (boot_params_t *boot_params) {
                 views[menu->mode].show(menu, display);
             } else {
                 rdpq_attach_clear(display, NULL);
-                rdpq_detach_show();
+                rdpq_detach_wait();
+                display_show(display);
+            }
+
+            if (menu->mode == MENU_MODE_BOOT) {
+                break;
             }
 
             while (menu->mode != menu->next_mode) {
@@ -167,10 +185,6 @@ void menu_run (boot_params_t *boot_params) {
 
                 if (views[menu->mode].init) {
                     views[menu->mode].init(menu);
-                }
-
-                if (menu->mode == MENU_MODE_BOOT) {
-                    boot_pending = true;
                 }
             }
 
@@ -180,6 +194,8 @@ void menu_run (boot_params_t *boot_params) {
         sound_poll();
 
         png_decoder_poll();
+
+        usb_comm_poll(menu);
     }
 
     menu_deinit(menu);

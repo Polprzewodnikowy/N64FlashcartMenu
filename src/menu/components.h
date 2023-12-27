@@ -37,13 +37,16 @@ void component_background_draw (void);
 
 void component_file_list_draw (entry_t *list, int entries, int selected);
 
-typedef struct {
+typedef struct component_context_menu {
     int count;
     int selected;
     bool hide_pending;
+    struct component_context_menu *parent;
+    struct component_context_menu *submenu;
     struct {
         const char *text;
         void (*action) (menu_t *menu);
+        struct component_context_menu *submenu;
     } list[];
 } component_context_menu_t;
 
@@ -54,12 +57,13 @@ void component_context_menu_show (component_context_menu_t *cm);
 bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm);
 void component_context_menu_draw (component_context_menu_t *cm);
 
+/** @brief Box Art Structure. */
 typedef struct {
     bool loading;
     surface_t *image;
 } component_boxart_t;
 
-component_boxart_t *component_boxart_init (uint16_t id);
+component_boxart_t *component_boxart_init (char *game_code);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
 

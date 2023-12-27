@@ -4,9 +4,11 @@
 #include "../path.h"
 #include "../png_decoder.h"
 #include "constants.h"
+#include "utils/fs.h"
 
-
+#ifndef BOXART_DIRECTORY
 #define BOXART_DIRECTORY    "sd:/menu/boxart"
+#endif
 
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
@@ -16,18 +18,21 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 
-component_boxart_t *component_boxart_init (uint16_t id) {
+component_boxart_t *component_boxart_init (char *game_code) {
     component_boxart_t *b = calloc(1, sizeof(component_boxart_t));
 
     if (b) {
         b->loading = true;
+        char *path = alloca(strlen(BOXART_DIRECTORY) + 1 + 7 + 1);
 
-        char *path = alloca(strlen(BOXART_DIRECTORY) + 1 + 6 + 1);
-        sprintf(path, "%s/%c%c.png", BOXART_DIRECTORY, ((id >> 8) & 0xFF), (id & 0xFF));
-
+        // TODO: This is bad, we should only check for 3 letter codes
+        sprintf(path, "%s/%.3s.png", BOXART_DIRECTORY, game_code);
         if (png_decoder_start(path, BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) != PNG_OK) {
-            free(b);
-            b = NULL;
+            sprintf(path, "%s/%.2s.png", BOXART_DIRECTORY, &game_code[1]);
+            if (png_decoder_start(path, BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) != PNG_OK) {
+                free(b);
+                b = NULL;
+            }
         }
     }
 

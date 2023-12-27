@@ -10,7 +10,8 @@
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
-static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", NULL };
+static const char *disk_extensions[] = { "ndd", NULL };
+static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
@@ -28,6 +29,10 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_ROM) {
             return -1;
         } else if (b->type == ENTRY_TYPE_ROM) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_DISK) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_DISK) {
             return 1;
         } else if (a->type == ENTRY_TYPE_EMULATOR) {
             return -1;
@@ -81,7 +86,7 @@ static bool load_directory (menu_t *menu) {
         if (info.fattrib & AM_SYS) {
             continue;
         }
-        if ((info.fattrib & AM_HID) && !menu->settings.show_hidden_files) {
+        if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
             continue;
         }
 
@@ -97,6 +102,8 @@ static bool load_directory (menu_t *menu) {
             entry->type = ENTRY_TYPE_DIR;
         } else if (file_has_extensions(info.fname, rom_extensions)) {
             entry->type = ENTRY_TYPE_ROM;
+        } else if (file_has_extensions(info.fname, disk_extensions)) {
+            entry->type = ENTRY_TYPE_DISK;
         }else if (file_has_extensions(info.fname, emulator_extensions)) {
             entry->type = ENTRY_TYPE_EMULATOR;
         } else if (file_has_extensions(info.fname, save_extensions)) {
@@ -168,11 +175,11 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
-void show_properties (menu_t *menu) {
+static void show_properties (menu_t *menu) {
     menu->next_mode = MENU_MODE_FILE_INFO;
 }
 
-void delete_entry (menu_t *menu) {
+static void delete_entry (menu_t *menu) {
     int selected = menu->browser.selected;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -206,10 +213,43 @@ void delete_entry (menu_t *menu) {
     menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
 }
 
+static void set_default_directory (menu_t *menu) {
+    free(menu->settings.default_directory);
+    menu->settings.default_directory = strdup(strip_sd_prefix(path_get(menu->browser.directory)));
+    settings_save(&menu->settings);
+}
+
 static component_context_menu_t entry_context_menu = {
     .list = {
-        { .text = "Properties", .action = show_properties },
-        { .text = "Delete", .action = delete_entry },
+        { .text = "Show entry properties", .action = show_properties },
+        { .text = "Delete selected entry", .action = delete_entry },
+        { .text = "Set current directory as default", .action = set_default_directory },
+        COMPONENT_CONTEXT_MENU_LIST_END,
+    }
+};
+
+static void edit_settings (menu_t *menu) {
+    menu->next_mode = MENU_MODE_SETTINGS_EDITOR;
+}
+
+static void show_system_info (menu_t *menu) {
+    menu->next_mode = MENU_MODE_SYSTEM_INFO;
+}
+
+static void show_credits (menu_t *menu) {
+    menu->next_mode = MENU_MODE_CREDITS;
+}
+
+static void edit_rtc (menu_t *menu) {
+    menu->next_mode = MENU_MODE_RTC;
+}
+
+static component_context_menu_t settings_context_menu = {
+    .list = {
+        { .text = "Edit settings", .action = edit_settings },
+        { .text = "Show system info", .action = show_system_info },
+        { .text = "Show credits", .action = show_credits },
+        { .text = "Adjust RTC", .action = edit_rtc },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -219,7 +259,11 @@ static void process (menu_t *menu) {
         return;
     }
 
-    int scroll_speed = menu->actions.fast ? 10 : 1;
+    if (component_context_menu_process(menu, &settings_context_menu)) {
+        return;
+    }
+
+    int scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
@@ -247,6 +291,9 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_ROM:
                 menu->next_mode = MENU_MODE_LOAD_ROM;
                 break;
+            case ENTRY_TYPE_DISK:
+                menu->next_mode = MENU_MODE_LOAD_DISK;
+                break;
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
@@ -267,10 +314,8 @@ static void process (menu_t *menu) {
         }
     } else if (menu->actions.options && menu->browser.entry) {
         component_context_menu_show(&entry_context_menu);
-    } else if (menu->actions.system_info) {
-        menu->next_mode = MENU_MODE_SYSTEM_INFO;
     } else if (menu->actions.settings) {
-        menu->next_mode = MENU_MODE_CREDITS;
+        component_context_menu_show(&settings_context_menu);
     }
 }
 
@@ -290,6 +335,7 @@ static void draw (menu_t *menu, surface_t *d) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
+            case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
             default: action = "A: Info"; break;
@@ -306,9 +352,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "%s\n"
-        "L: Settings",
-        menu->browser.entries == 0 ? "" : "R: Options"
+        "Start: Settings\n"
+        "^%02XR: Options^00",
+        menu->browser.entries == 0 ? STL_UNKNOWN : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
@@ -322,6 +368,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_context_menu_draw(&entry_context_menu);
 
+    component_context_menu_draw(&settings_context_menu);
+
     rdpq_detach_show();
 }
 
@@ -329,12 +377,27 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         component_context_menu_init(&entry_context_menu);
+        component_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init("sd:/", "");
             menu_show_error(menu, "Error while opening initial directory");
         } else {
             menu->browser.valid = true;
+        }
+    }
+    if (menu->browser.reload) {
+        menu->browser.reload = false;
+        int selected = menu->browser.selected;
+        if (load_directory(menu)) {
+            menu_show_error(menu, "Error while reloading current directory");
+            menu->browser.valid = false;
+        } else {
+            menu->browser.selected = selected;
+            if (menu->browser.selected >= menu->browser.entries) {
+                menu->browser.selected = menu->browser.entries - 1;
+            }
+            menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
         }
     }
 }

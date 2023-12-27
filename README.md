@@ -1,17 +1,13 @@
+![Build](https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg)
+
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
-
-## Aims
-* Support as many N64 FlashCarts as possible.
-* Be open source, using permissive licensed third party licensed libraries.
-* Be testable, using unit and smoke tests in ares emulated environment.
-* Encourage active development from community members and N64 FlashCart owners.
-* Support as many common mods and features as possible.
 
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and byteswapped ROMs).
+* Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
+* Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
@@ -21,47 +17,82 @@ An open source menu for N64 flashcarts.
 * Music playback (MP3).
 
 
+### Video showcase (as of Oct 12 2023)
+
+[![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
+
+
+## Aims
+* Support as many N64 FlashCarts as possible.
+* Be open source, using permissive licensed third party licensed libraries.
+* Be testable, using unit and smoke tests in ares emulated environment.
+* Encourage active development from community members and N64 FlashCart owners.
+* Support as many common mods and features as possible.
+
+
 ## Getting started
-
-### SC64
-Ensure the cart is running the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest).
-Download the `sc64menu.n64` ROM from the latest action run assets.
-Add it to the root folder on your SD card.
-
-### ED64 & ED64P
-Currently not supported, but there is an aim to do so.
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).
 
 
-### Common to all
-
-#### ROM Boxart
+### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
-Each file must be named according to the 2 letter ROM ID. e.g. for goldeneye, this would be `GE.png`.
-A known set of PNG files can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
+Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
+i.e. for GoldenEye 2 letters, this would be `GE.png`.
+i.e. for GoldenEye 3 letters, this would be `NGE.png`.
+A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
-#### Emulator support
-Emulators should be added to the `/emulators` directory on the SD card.
+
+### Emulator support
+Emulators should be added to the `/menu/emulators` directory on the SD card.
 
 Menu currently supports the following emulators and associated ROM file names:
  - **NES**: [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - `neon64bu.rom`
  - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - `sodium64.z64`
  - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64`
+ - **Sega Master System** / **Sega Game Gear** / **Sg1000**: [TotalSMS](https://github.com/ITotalJustice/TotalSMS) - `TotalSMS.z64` (Currently broken)
+
+### Menu Settings
+The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
+Currently these are read-only (can be viewed in the menu by pressing `L` on the Joypad).
+If required, you can manually adjust the file on the SD card using your computer.
+
+### SC64 Specific
+- Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
+- Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
+
+##### 64DD disk support
+For the ability to load and run 64DD disk images, you need to add the folder `/menu/64ddipl` on the SD card.
+Download and add the relevant ipl files and rename them before adding them to the folder:
+- `NDDE0.n64` the US Prototype IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_US_MJR.n64)
+- `NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
+- `NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
+
+Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
+
+
+### 64drive Specific
+- Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
+- Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
+
+
+### ED64 & ED64P Specific
+Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+
+The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 
 # Developer documentation
-**Work in progress!**
 
 You can use a dev container in VSCode to ease development.
 
 
 ## To deploy:
 ### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.16.0/sc64-deployer-windows-v2.16.0.zip)
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.16.0+)
-See: https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.16.0/docs/00_quick_startup_guide.md#firmware-backupupdate
+Make sure that your firmware is compatible (currently v2.18.0+)
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 
 #### From the devcontainer
@@ -76,7 +107,6 @@ Then in the dev container, use `make run` or `make run-debug`
 
 * Run `./localdeploy.bat` from the terminal
 
-
 Toggle the N64 power switch to load the ROM.
 
 `ms-vscode.makefile-tools` will help (installed automatically in dev container).
@@ -86,6 +116,11 @@ The ROM can be found in the `output` directory.
 
 NOTE: a "release" version of the SC64 menu is called `sc64menu.n64` and can be created for when you want to add it directly to the SDCard. This is generated by running `make all` or running `make sc64`.
 
+
+### Others
+* Add the required file to the correct folder on your SD card.
+
+
 # Update Libdragon submodule
 This repo currently uses the `unstable` branch as a submodule at a specific commit.
 To update to the latest version, use `git submodule update --remote ` from the terminal.
@@ -93,7 +128,9 @@ To update to the latest version, use `git submodule update --remote ` from the t
 # Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
-Generated documentation is located in `output/docs` folder.
+Generated documentation is located in `output/docs` folder and auto published to the `gh-pages` branch when merged with `main`.
+
+Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
 
 # Open source software and licenses used
  - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)

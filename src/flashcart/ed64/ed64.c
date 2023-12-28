@@ -65,14 +65,14 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
 
     size_t rom_size = f_size(&fil);
 
-    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (rom_size > MiB(64) - KiB(128)) {
+    // FIXME: if the cart is not V3 or X5 or X7, we probably need to - 128KiB
+    if (rom_size > MiB(64)) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }
 
 
-    size_t sdram_size = rom_size;
+    size_t sdram_size = MiB(64);
 
     size_t chunk_size = MiB(1);
     for (int offset = 0; offset < sdram_size; offset += chunk_size) {
@@ -85,7 +85,7 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
             progress(f_tell(&fil) / (float) (f_size(&fil)));
         }
     }
-    if (f_tell(&fil) != sdram_size) {
+    if (f_tell(&fil) != rom_size) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }
@@ -110,8 +110,8 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 
     size_t file_size = f_size(&fil) - file_offset;
 
-    // FIXME: if the cart is not V3 or X5 or X7, we need to - 128KiB
-    if (file_size > (MiB(64) - KiB(128) - rom_offset)) {
+    // FIXME: if the cart is not V3 or X5 or X7, we probably need to - 128KiB
+    if (file_size > (MiB(64) - rom_offset)) {
         f_close(&fil);
         return FLASHCART_ERR_ARGS;
     }
@@ -201,6 +201,7 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_SRAM_128K:
             type = SAVE_TYPE_SRAM_128K;
             break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
         case FLASHCART_SAVE_TYPE_FLASHRAM:
             type = SAVE_TYPE_FLASHRAM;
             break;

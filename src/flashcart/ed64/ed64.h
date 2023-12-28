@@ -1,5 +1,5 @@
 /**
- * @file flashcart.h
+ * @file ed64.h
  * @brief ED64 Flashcart Utilities
  * @ingroup flashcart 
  */

@@ -31,6 +31,10 @@ static flashcart_err_t ed64_init (void) {
     // ed64_ll_gpio_mode_rtc();
     // otherwise:
     // ed64_ll_gpio_mode_io();
+    
+    // if (fpga_revision < SUPPORTED_FPGA_REVISION) {
+    //     return FLASHCART_ERR_OUTDATED;
+    // }
 
 
     return FLASHCART_OK;

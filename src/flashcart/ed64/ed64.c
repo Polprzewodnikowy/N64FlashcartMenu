@@ -149,7 +149,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(save_path), FA_CREATE_ALWAYS | FA_READ) != FR_OK) { // FIXME: create always is a hack to ensure we always have a valid save.
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
@@ -225,7 +225,7 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
 
     ed64_ll_set_save_type(type);
 
-    // TODO: set pesudo save writeback.
+    // TODO: set pseudo save writeback.
     // as a start, create the file?!
 
     return FLASHCART_OK;

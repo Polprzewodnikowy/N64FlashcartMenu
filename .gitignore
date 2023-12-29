@@ -2,7 +2,7 @@
 /build
 /filesystem
 /output
-/tools/sc64/*
+/tools/*
 
 # There should never be ROMs uploaded, but just incase, make sure they are excluded.
 **/*.n64

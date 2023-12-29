@@ -244,12 +244,17 @@ static void edit_rtc (menu_t *menu) {
     menu->next_mode = MENU_MODE_RTC;
 }
 
+static void show_flashcart_info (menu_t *menu) {
+    menu->next_mode = MENU_MODE_FLASHCART;
+}
+
 static component_context_menu_t settings_context_menu = {
     .list = {
         { .text = "Edit settings", .action = edit_settings },
         { .text = "Show system info", .action = show_system_info },
         { .text = "Show credits", .action = show_credits },
         { .text = "Adjust RTC", .action = edit_rtc },
+        { .text = "Show cart info", .action = show_flashcart_info },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

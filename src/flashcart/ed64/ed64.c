@@ -180,7 +180,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
             eeprom_write_bytes(eeprom_contents, 0, KiB(2));
         }
         else {
-            eeprom_write_bytes(eeprom_contents, 0, KiB(1));
+            eeprom_write_bytes(eeprom_contents, 0, 512);
         }
     }
 

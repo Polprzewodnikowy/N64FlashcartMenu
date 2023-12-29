@@ -1,5 +1,6 @@
 #include <libdragon.h>
 
+#include "../flashcart_utils.h"
 #include "ed64_ll.h"
 
 // NOTE: these are a replica of libcart cart.c defines!
@@ -323,47 +324,45 @@ ed64_save_type_t ed64_ll_get_save_type() {
 
 void ed64_ll_set_save_type(ed64_save_type_t type) {
 
-    uint16_t save_cfg;
-    uint8_t eeprom_on, sram_on, eeprom_size, sram_size, ram_bank;
+    uint16_t save_cfg = 0;
+    uint8_t enable_eeprom = false;
+    uint8_t eeprom_size_16k = false;
+    uint8_t enable_sram = false;
+    uint8_t ram_size_large = false;
     ed64_ll_save_type = type;
-    eeprom_on = 0;
-    sram_on = 0;
-    eeprom_size = 0;
-    sram_size = 0;
-    ram_bank = ed64_ll_sram_bank;
+    uint8_t ram_bank = ed64_ll_sram_bank;
 
 
     switch (type) {
         case SAVE_TYPE_EEPROM_16K:
-            eeprom_on = 1;
-            eeprom_size = 1;
+            enable_eeprom = true;
+            eeprom_size_16k = true;
             break;
         case SAVE_TYPE_EEPROM_4K:
-            eeprom_on = 1;
+            enable_eeprom = true;
             break;
         case SAVE_TYPE_SRAM:
-            sram_on = 1;
+            enable_sram = true;
             break;
         case SAVE_TYPE_SRAM_128K:
-            sram_on = 1;
-            sram_size = 1;
+            enable_sram = true;
+            ram_size_large = true;
             break;
         case SAVE_TYPE_FLASHRAM:
-            sram_on = 0;
-            sram_size = 1;
+            enable_sram = false;
+            ram_size_large = true;
             break;
         default:
-            sram_on = 0;
-            sram_size = 0;
+            enable_sram = false;
+            ram_size_large = false;
             ram_bank = 1;
             break;
     }
 
-    save_cfg = 0;
-    if (eeprom_on)save_cfg |= SAV_EEP_ON;
-    if (sram_on)save_cfg |= SAV_SRM_ON;
-    if (eeprom_size)save_cfg |= SAV_EEP_SIZE;
-    if (sram_size)save_cfg |= SAV_SRM_SIZE;
+    if (enable_eeprom)save_cfg |= SAV_EEP_ON;
+    if (enable_sram)save_cfg |= SAV_SRM_ON;
+    if (eeprom_size_16k)save_cfg |= SAV_EEP_SIZE;
+    if (ram_size_large)save_cfg |= SAV_SRM_SIZE;
     if (ram_bank)save_cfg |= SAV_RAM_BANK;
     save_cfg |= SAV_RAM_BANK_APPLY;
 

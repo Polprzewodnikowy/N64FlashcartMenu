@@ -97,7 +97,7 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
-            break;
+            // break; // FIXME: Commented out as required to fall through due to need of F/W 3.06 and UNFLoader.
         case CART_ED:   // Original EverDrive-64 (V-Series & Clones)
             flashcart = ed64_get_flashcart();
             break;

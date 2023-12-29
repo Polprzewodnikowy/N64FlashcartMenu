@@ -12,7 +12,6 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
-#define EEPROM_ADDRESS              (0x1FFE2000)
 
 extern int ed_exit(void);
 
@@ -142,13 +141,24 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
 }
 
 static flashcart_err_t ed64_load_save (char *save_path) {
+    // TODO: look at d64_load_save() and adjust.
+    uint8_t eeprom_contents[KiB(2)] __attribute__((aligned(8)));
     void *address =  NULL;
-    ed64_save_type_t type = ed64_ll_get_save_type();
+    ed64_save_type_t current_save_type = ed64_ll_get_save_type();
 
-    switch (type) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_sd_prefix(save_path), FA_CREATE_ALWAYS | FA_READ) != FR_OK) { // FIXME: create always is a hack to ensure we always have a valid save.
+        return FLASHCART_ERR_LOAD;
+    }
+
+    size_t save_size = f_size(&fil);
+
+    switch (current_save_type) {
         case SAVE_TYPE_EEPROM_4K:
         case SAVE_TYPE_EEPROM_16K:
-            address = (void *) (EEPROM_ADDRESS);
+            address = eeprom_contents;
             break;
         case SAVE_TYPE_SRAM:
         case SAVE_TYPE_SRAM_128K:
@@ -160,18 +170,18 @@ static flashcart_err_t ed64_load_save (char *save_path) {
             return FLASHCART_ERR_ARGS;
     }
 
-    FIL fil;
-    UINT br;
-
-    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
+    if(f_read(&fil, address, save_size, &br) != FR_OK) {
+        f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }
 
-    size_t save_size = f_size(&fil);
-
-    if (f_read(&fil, address, save_size, &br) != FR_OK) {
-        f_close(&fil);
-        return FLASHCART_ERR_LOAD;
+    if (eeprom_present()) {
+        if (current_save_type == SAVE_TYPE_EEPROM_16K) { // FIXME: could use save_size instead?!
+            eeprom_write_bytes(eeprom_contents, 0, KiB(2));
+        }
+        else {
+            eeprom_write_bytes(eeprom_contents, 0, KiB(1));
+        }
     }
 
     if (f_close(&fil) != FR_OK) {
@@ -214,6 +224,9 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
     }
 
     ed64_ll_set_save_type(type);
+
+    // TODO: set pesudo save writeback.
+    // as a start, create the file?!
 
     return FLASHCART_OK;
 }

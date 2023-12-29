@@ -30,11 +30,10 @@
 /* PI dom2 release (R/W): [1:0] domain 2 device R/W release duration */
 #define PI_BSD_DOM2_RLS_REG	(PI_BASE_REG+0x30)    /*   release duration */
 
-#define	IO_READ(addr)		(*(volatile uint32_t *)PHYS_TO_K1(addr))
-#define	IO_WRITE(addr,data)	\
-        (*(volatile uint32_t *)PHYS_TO_K1(addr)=(uint32_t)(data))
+// #define	IO_READ(addr)		(*(volatile uint32_t *)PHYS_TO_K1(addr))
+// #define	IO_WRITE(addr,data)	(*(volatile uint32_t *)PHYS_TO_K1(addr)=(uint32_t)(data))
 
-#define	PHYS_TO_K1(x)	((uint32_t)(x)|0xA0000000)	/* physical to kseg1 */
+//#define	PHYS_TO_K1(x)	((uint32_t)(x)|0xA0000000)	/* physical to kseg1 */
 
 // END NOTE.
 
@@ -115,13 +114,13 @@ typedef enum {
 } ed64_config_t;
 
 
-#define FPGA_FW_DATA_SKIP_FW_INIT (1 << 8)
-#define FPGA_FW_DATA_SKIP_TV_INIT (1 << 9)
-#define FPGA_FW_DATA_TV_TYPE1 (1 << 10)
-#define FPGA_FW_DATA_TV_TYPE2 (1 << 11)
-#define FPGA_FW_DATA_SKIP_SD_INIT (1 << 12)
-#define FPGA_FW_DATA_SD_TYPE (1 << 13)
-#define FPGA_FW_DATA_HOT_START (1 << 14)
+#define FPGA_FW_DATA_SKIP_FW_INIT   (1 << 8)
+#define FPGA_FW_DATA_SKIP_TV_INIT   (1 << 9)
+#define FPGA_FW_DATA_TV_TYPE1       (1 << 10)
+#define FPGA_FW_DATA_TV_TYPE2       (1 << 11)
+#define FPGA_FW_DATA_SKIP_SD_INIT   (1 << 12)
+#define FPGA_FW_DATA_SD_TYPE        (1 << 13)
+#define FPGA_FW_DATA_HOT_START      (1 << 14)
 
 uint32_t ed64_ll_reg_read(uint32_t reg);
 void ed64_ll_reg_write(uint32_t reg, uint32_t data);
@@ -207,8 +206,9 @@ int ed64_ll_init() {
     uint8_t cold_start;
 
     // TODO: take into account libCart!
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, REG_LAT);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, REG_PWD);
+    io_write(PI_BSD_DOM2_LAT_REG, REG_LAT);
+    io_write(PI_BSD_DOM2_PWD_REG, REG_PWD);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 
 
     ed64_ll_reg_write(REG_KEY, ED64_KEY_UNLOCK);
@@ -409,57 +409,75 @@ void ed64_ll_dma_write_rom(void *ram, uint32_t start_address, uint32_t slen) {
 
 /* Read from SRAM over DMA */
 void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length) {
+    // Note: seemingly the ED64 cannot read SRAM at full speed,
+    // so we need to slow it down temporariy!
 
-    volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
-    volatile uint32_t piPwdReg = IO_READ(PI_BSD_DOM2_PWD_REG);
-    volatile uint32_t piPgsReg = IO_READ(PI_BSD_DOM2_PGS_REG);
-    volatile uint32_t piRlsReg = IO_READ(PI_BSD_DOM2_RLS_REG);
+    // Get the current timings
+    // TODO: is `volatile` actually needed?!
+    volatile uint32_t piLatReg = io_read(PI_BSD_DOM2_LAT_REG);
+    volatile uint32_t piPwdReg = io_read(PI_BSD_DOM2_PWD_REG);
+    volatile uint32_t piPgsReg = io_read(PI_BSD_DOM2_PGS_REG);
+    volatile uint32_t piRlsReg = io_read(PI_BSD_DOM2_RLS_REG);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x0D);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x02);
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
+    // Set slow timings
+    io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x02);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x05);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 
+    // Read SRAM
     ed64_ll_dma_read(ram, SRAM_ADDRESS + address, length);
 
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, piPwdReg);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, piPgsReg);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, piRlsReg);
+    // Restore original timings
+    io_write(PI_BSD_DOM2_LAT_REG, piLatReg);
+    io_write(PI_BSD_DOM2_PWD_REG, piPwdReg);
+    io_write(PI_BSD_DOM2_PGS_REG, piPgsReg);
+    io_write(PI_BSD_DOM2_RLS_REG, piRlsReg);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 }
 
 /* Write to SRAM over DMA */
 void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length) {
+    // Note: seemingly the ED64 cannot write SRAM at full speed,
+    // so we need to slow it down temporariy!
 
-    volatile uint32_t piLatReg = IO_READ(PI_BSD_DOM2_LAT_REG);
-    volatile uint32_t piPwdReg = IO_READ(PI_BSD_DOM2_PWD_REG);
-    volatile uint32_t piPgsReg = IO_READ(PI_BSD_DOM2_PGS_REG);
-    volatile uint32_t piRlsReg = IO_READ(PI_BSD_DOM2_RLS_REG);
+    // Get the current timings
+    // TODO: is `volatile` actually needed?!
+    volatile uint32_t piLatReg = io_read(PI_BSD_DOM2_LAT_REG);
+    volatile uint32_t piPwdReg = io_read(PI_BSD_DOM2_PWD_REG);
+    volatile uint32_t piPgsReg = io_read(PI_BSD_DOM2_PGS_REG);
+    volatile uint32_t piRlsReg = io_read(PI_BSD_DOM2_RLS_REG);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, 0x0D);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, 0x02);
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, 0x05);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, 0x0C);
+    // Set slow timings
+    io_write(PI_BSD_DOM2_PGS_REG, 0x0D);
+    io_write(PI_BSD_DOM2_RLS_REG, 0x02);
+    io_write(PI_BSD_DOM2_LAT_REG, 0x05);
+    io_write(PI_BSD_DOM2_PWD_REG, 0x0C);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 
+    // Write SRAM
     ed64_ll_dma_write(ram, SRAM_ADDRESS + address, length);
 
-
-    IO_WRITE(PI_BSD_DOM2_LAT_REG, piLatReg);
-    IO_WRITE(PI_BSD_DOM2_PWD_REG, piPwdReg);
-    IO_WRITE(PI_BSD_DOM2_PGS_REG, piPgsReg);
-    IO_WRITE(PI_BSD_DOM2_RLS_REG, piRlsReg);
-
+    // Restore original timings
+    io_write(PI_BSD_DOM2_LAT_REG, piLatReg);
+    io_write(PI_BSD_DOM2_PWD_REG, piPwdReg);
+    io_write(PI_BSD_DOM2_PGS_REG, piPgsReg);
+    io_write(PI_BSD_DOM2_RLS_REG, piRlsReg);
+    dma_wait(); // Make sure the libdragon Async io methods have been performed.
 }
 
-uint16_t ed64_ll_msg_rd() {
+// uint16_t ed64_ll_msg_rd() {
 
-    return ed64_ll_reg_read(REG_MSG);
-}
+//     return ed64_ll_reg_read(REG_MSG);
+// }
 
-void ed64_ll_msg_wr(uint16_t val) {
+// void ed64_ll_msg_wr(uint16_t val) {
 
-    ed64_ll_reg_write(REG_MSG, val);
-}
+//     ed64_ll_reg_write(REG_MSG, val);
+// }
 
 typedef struct PI_regs_s {
     /** @brief Uncached address in RAM where data should be found */
@@ -480,7 +498,7 @@ void ed64_ll_dma_pi_read(void * ram_address, unsigned long pi_address, unsigned 
 
     disable_interrupts();
     dma_wait();
-    IO_WRITE(PI_STATUS_REG, 3);
+    io_write(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->write_length = length - 1;
@@ -493,7 +511,7 @@ void ed64_ll_dma_pi_write(void * ram_address, unsigned long pi_address, unsigned
 
     disable_interrupts();
     dma_wait();
-    IO_WRITE(PI_STATUS_REG, 3);
+    io_write(PI_STATUS_REG, 3);
     PI_regs->ram_address = ram_address;
     PI_regs->pi_address = pi_address & 0x1FFFFFFF;
     PI_regs->read_length = length - 1;
@@ -587,42 +605,42 @@ void ed64_ll_unlock_regs() {
 
 /* GPIO functions */
 
-/* Set GPIO mode RTC */
-void ed64_ll_gpio_mode_rtc() {
+// /* Set GPIO mode RTC */
+// void ed64_ll_gpio_mode_rtc() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg &= ~ED_CFG_GPIO_ON;
-    cfg |= ED_CFG_RTC_ON;
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg &= ~ED_CFG_GPIO_ON;
+//     cfg |= ED_CFG_RTC_ON;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* Set GPIO mode ON */
-void ed64_ll_gpio_mode_io() {
+// /* Set GPIO mode ON */
+// void ed64_ll_gpio_mode_io() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg |= ED_CFG_GPIO_ON;
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg |= ED_CFG_GPIO_ON;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* Set GPIO mode OFF */
-void ed64_ll_gpio_mode_off() {
+// /* Set GPIO mode OFF */
+// void ed64_ll_gpio_mode_off() {
 
-    uint16_t cfg = ed64_ll_reg_read(REG_CFG);
-    cfg &= ~ED_CFG_GPIO_ON;
-    ed64_ll_reg_write(REG_CFG, cfg);
-}
+//     uint16_t cfg = ed64_ll_reg_read(REG_CFG);
+//     cfg &= ~ED_CFG_GPIO_ON;
+//     ed64_ll_reg_write(REG_CFG, cfg);
+// }
 
-/* GPIO mode write */
-void ed64_ll_gpio_write(uint8_t data) {
+// /* GPIO mode write */
+// void ed64_ll_gpio_write(uint8_t data) {
 
-    ed64_ll_reg_write(REG_GPIO, data);
-}
+//     ed64_ll_reg_write(REG_GPIO, data);
+// }
 
-/* GPIO mode read */
-uint8_t ed64_ll_gpio_read() {
+// /* GPIO mode read */
+// uint8_t ed64_ll_gpio_read() {
 
-    return ed64_ll_reg_read(REG_GPIO);
-}
+//     return ed64_ll_reg_read(REG_GPIO);
+// }
 
 
 

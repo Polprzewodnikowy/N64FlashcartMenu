@@ -40,8 +40,9 @@ typedef enum {
 
 // } ed64_cart_metadata_s;
 
-
+/* ED64 save location base address  */
 #define SRAM_ADDRESS (0xA8000000)
+/* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
 // #define USB_ERROR_FIFO_TIMEOUT 0x90
@@ -78,8 +79,8 @@ void ed64_ll_set_save_type(ed64_save_type_t type);
 /* reads metadata related to the assembily date and cart capabilities */
 void ed64_ll_read_cart_metadata(void *dest);
 
-uint16_t ed64_ll_msg_rd();
-void ed64_ll_msg_wr(uint16_t val);
+// uint16_t ed64_ll_msg_rd();
+// void ed64_ll_msg_wr(uint16_t val);
 
 void ed64_ll_lock_regs();
 void ed64_ll_unlock_regs();

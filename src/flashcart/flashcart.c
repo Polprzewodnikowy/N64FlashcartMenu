@@ -57,6 +57,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
+    .get_device_info = NULL,
 });
 
 #ifdef NDEBUG

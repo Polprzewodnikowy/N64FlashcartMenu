@@ -273,6 +273,7 @@ static flashcart_t flashcart_d64 = {
     .load_64dd_disk = NULL,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,
+    .get_device_info = NULL,
 };
 
 

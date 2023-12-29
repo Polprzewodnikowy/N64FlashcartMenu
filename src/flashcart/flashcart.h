@@ -74,6 +74,8 @@ typedef struct {
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (uint32_t *sectors);
+    /** @brief The flashcart device information function */
+    flashcart_err_t (*get_device_info) (void);
 } flashcart_t;
 
 

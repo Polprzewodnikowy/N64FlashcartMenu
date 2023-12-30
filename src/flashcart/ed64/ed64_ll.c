@@ -136,7 +136,7 @@ void ed64_ll_dma_read_sram(void *ram, uint32_t address, uint32_t length);
 void ed64_ll_dma_write_sram(void *ram, uint32_t address, uint32_t length);
 
 // static uint16_t spi_cfg;
-uint8_t ed64_ll_sram_bank;
+uint8_t ed64_ll_sram_bank = 1;
 ed64_save_type_t ed64_ll_save_type;
 
 #define REG_LAT 0x04

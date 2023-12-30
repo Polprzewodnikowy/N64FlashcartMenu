@@ -12,6 +12,15 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
+typedef struct {
+    uint16_t hardware_series;
+    uint16_t hardware_revision;
+    uint16_t fpga_firmware_version;
+    uint16_t cpld_firmware_version;
+    uint16_t manufacture_date;
+    uint16_t manufacture_time;
+    uint16_t serial_number;
+} flashcart_info_t;
 
 extern int ed_exit(void);
 
@@ -232,6 +241,12 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
+// static flashcart_info_t ed64_get_cart_info (void) {
+//     flashcart_info_t device_info;
+
+//     return device_info;
+// }
+
 
 static flashcart_t flashcart_ed64 = {
     .init = ed64_init,
@@ -244,7 +259,7 @@ static flashcart_t flashcart_ed64 = {
     .load_64dd_disk = NULL,
     .set_save_type = ed64_set_save_type,
     .set_save_writeback = NULL,
-    .get_device_info = NULL,
+    .get_device_info = NULL, //ed64_get_cart_info,
 };
 
 

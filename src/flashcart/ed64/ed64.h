@@ -16,16 +16,6 @@
  * @{
  */
 
-typedef struct {
-    uint16_t hardware_series;
-    uint16_t hardware_revision;
-    uint16_t fpga_firmware_version;
-    uint16_t cpld_firmware_version;
-    uint16_t manufacture_date;
-    uint16_t manufacture_time;
-    uint16_t serial_number;
-} flashcart_information_type;
-
 flashcart_t *ed64_get_flashcart (void);
 
 /** @} */ /* ed64 */

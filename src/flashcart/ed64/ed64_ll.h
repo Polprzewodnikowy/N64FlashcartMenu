@@ -30,15 +30,14 @@ typedef enum {
 } ed64_save_type_t;
 
 
-// typedef struct {
-//     uint16_t assembily_date;  /* The Date that the ED64 was manufactured */
-//     uint16_t assembily_time;  /* The Time that the ED64 was manufactured */
-//     uint16_t serial_number;   /* The ED64 serial number (unique for each ED64) */
-//     bool cic_6105_compatible; /* This returns whether the the cart CIC is 6105 compatible
-//                                  as many were produced before Ultra CIC existed!
-//                                  Carts that are not compatible will be unable to run certain ROMs */
-
-// } ed64_cart_metadata_s;
+typedef struct {
+    uint16_t production_date;  /* The Date that the ED64 was manufactured */
+    uint16_t production_time;  /* The Time that the ED64 was manufactured */
+    uint16_t serial_number;    /* The ED64 serial number (unique for each ED64) */
+    bool cic_6105_compatible;  /* This returns whether the the cart CIC is 6105 compatible
+                                 as many were produced before Ultra CIC existed!
+                                 Carts that are not compatible will be unable to run certain ROMs */
+} ed64_cart_metadata_t;
 
 /* ED64 save location base address  */
 #define SRAM_ADDRESS (0xA8000000)
@@ -55,16 +54,16 @@ typedef enum {
 
 
 /* Initialization functions */
-int ed64_ll_init();
-void ed64_ll_init_v2();
-void ed64_ll_init_v3();
+// int ed64_ll_init();
+// void ed64_ll_init_v2();
+// void ed64_ll_init_v3();
 
 /* Device information functions */
 uint16_t ed64_ll_get_fpga_version();
 uint16_t ed64_ll_get_cpld_version();
 
 /* Firmware update functions */
-void ed64_ll_load_firmware(uint8_t *firmware);
+// void ed64_ll_load_firmware(uint8_t *firmware);
 
 // /* USB functions */
 // uint8_t ed64_ll_usb_read_busy();
@@ -72,20 +71,20 @@ void ed64_ll_load_firmware(uint8_t *firmware);
 // uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen);
 
 /* Save functions */
-void ed64_ll_set_ram_bank(uint8_t bank);
+void ed64_ll_set_sram_bank(uint8_t bank);
 ed64_save_type_t ed64_ll_get_save_type();
 void ed64_ll_set_save_type(ed64_save_type_t type);
 
-/* reads metadata related to the assembily date and cart capabilities */
-void ed64_ll_read_cart_metadata(void *dest);
+// /* reads metadata related to the production date and cart capabilities */
+// ed64_cart_metadata_t ed64_ll_read_cart_metadata(void *dest);
 
-// uint16_t ed64_ll_msg_rd();
-// void ed64_ll_msg_wr(uint16_t val);
+void ed64_ll_dma_read_rom(void *ram, uint32_t address_offset, uint32_t length);
+void ed64_ll_dma_write_rom(void *ram, uint32_t address_offset, uint32_t length);
 
 void ed64_ll_lock_regs();
 void ed64_ll_unlock_regs();
 
-void ed64_ll_reset_spx();
+// void ed64_ll_reset_spx();
 
 /* GPIO functions */
 void ed64_ll_gpio_mode_rtc();
@@ -98,7 +97,7 @@ uint8_t ed64_ll_gpio_read();
 // void ed64_ll_64dd_ram_we();
 // void ed64_ll_64dd_ram_off();
 // void ed64_ll_64dd_ram_clear();
-// uint8_t ed64_ll_get_64dd_ram_supported();
+uint8_t ed64_ll_get_64dd_ram_supported();
 
 /** @} */ /* ed64 */
 

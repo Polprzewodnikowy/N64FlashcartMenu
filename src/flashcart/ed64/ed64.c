@@ -12,28 +12,19 @@
 #include "ed64_ll.h"
 #include "ed64.h"
 
-typedef struct {
-    uint16_t hardware_series;
-    uint16_t hardware_revision;
-    uint16_t fpga_firmware_version;
-    uint16_t cpld_firmware_version;
-    uint16_t manufacture_date;
-    uint16_t manufacture_time;
-    uint16_t serial_number;
-} flashcart_info_t;
-
-extern int ed_exit(void);
+// static ed64_variant_t device_variant_id = ED64_VARIANT_UNKNOWN;
+// static ed64_save_type_t current_save_type = SAVE_TYPE_NONE;
 
 static flashcart_err_t ed64_init (void) {
 
     // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
 
-    //ed64_ll_unlock_regs();
+    // ed64_ll_unlock_regs();
 
     // ed64_ll_init(); // FIXME: this causes a crash!
     // ed64_ll_reset_spx(); // only required if V2+ FW is updating!
 
-    // ed64_ll_set_ram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
+    // ed64_ll_set_sram_bank(1); // Seemingly bank 0 (for SRAM 128k) is only supported on V3 and it is not the default.
     
     // If a V3 or X7 cart is detected (has a battery?), enable RTC, 
     // ed64_ll_gpio_mode_rtc();
@@ -49,11 +40,6 @@ static flashcart_err_t ed64_init (void) {
 }
 
 static flashcart_err_t ed64_deinit (void) {
-
-    // ed64_ll_gpio_mode_off(); // On V3 or X7, this should be ed64_bios_gpio_mode_rtc() if it is required.
-
-    // For the moment, just use libCart exit.
-    ed_exit();
 
     return FLASHCART_OK;
 }
@@ -235,8 +221,9 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
 
     ed64_ll_set_save_type(type);
 
+    // FIXME: diagnose why this is not seemingly set!
+
     // TODO: set pseudo save writeback.
-    // as a start, create the file?!
 
     return FLASHCART_OK;
 }

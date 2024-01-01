@@ -13,9 +13,16 @@
 #include "ed64.h"
 
 // static ed64_variant_t device_variant_id = ED64_VARIANT_UNKNOWN;
-// static ed64_save_type_t current_save_type = SAVE_TYPE_NONE;
+static ed64_save_type_t current_save_type = SAVE_TYPE_NONE;
 
 static flashcart_err_t ed64_init (void) {
+
+    // FIXME: check FW compatible.
+    
+    // current_save_type = ed64_ll_get_save_type();
+    // if (current_save_type < SAVE_TYPE_NONE || current_save_type > SAVE_TYPE_FLASHRAM) {
+    //     return FLASHCART_ERR_INT;
+    // }
 
     // TODO: partly already done, see https://github.com/DragonMinded/libdragon/blob/4ec469d26b6dc4e308caf3d5b86c2b340b708bbd/src/libcart/cart.c#L1064
 
@@ -171,7 +178,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
         return FLASHCART_ERR_LOAD;
     }
 
-    if (eeprom_present()) {
+    if (current_save_type == SAVE_TYPE_EEPROM_4K || current_save_type == SAVE_TYPE_EEPROM_16K) {
         if (current_save_type == SAVE_TYPE_EEPROM_16K) { // FIXME: could use save_size instead?!
             eeprom_write_bytes(eeprom_contents, 0, KiB(2));
         }
@@ -220,6 +227,8 @@ static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
     }
 
     ed64_ll_set_save_type(type);
+
+    current_save_type = type;
 
     // FIXME: diagnose why this is not seemingly set!
 

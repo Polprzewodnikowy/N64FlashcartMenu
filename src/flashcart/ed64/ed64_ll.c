@@ -141,7 +141,9 @@ static void __cart_dma_wr(const void *dram, uint32_t cart, uint32_t size)
 #define ED_VER_REG              (ED_BASE_REG+0x2C) /* Hardware series version + firmware rev */
 /* ED64 GPIO register */
 #define ED_GPIO_REG             (ED_BASE_REG+0x30)
+
 // Unknown regs (if any)
+
 /* ED64 Config Count register */
 #define ED_CFG_CNT_REG          (ED_BASE_REG+0x40)
 /* ED64 Config Data register */
@@ -177,8 +179,8 @@ static void __cart_dma_wr(const void *dram, uint32_t cart, uint32_t size)
 
 // #define ED_DMA_SD_TO_RAM        1
 // #define ED_DMA_RAM_TO_SD        2
-// #define ED_DMA_FIFO_TO_RAM      3
-// #define ED_DMA_RAM_TO_FIFO      4
+// #define ED_DMA_FIFO_TO_RAM      3 // USB
+// #define ED_DMA_RAM_TO_FIFO      4 // USB
 
 // #define ED_SAV_EEP_OFF          (0 << 0)
 // #define ED_SAV_EEP_ON           (1 << 0)
@@ -208,8 +210,8 @@ typedef enum {
     ED_CFG_WRITE_ADDR_MASK = 0x08,
     ED_CFG_RTC_ON = 0x20, //32,
     ED_CFG_GPIO_ON = 0x60, //96,
-    // ED_CFG_64DD_ON = 0x0100, //256,
-    // ED_CFG_64DD_WRITE_ENABLED = 0x0200, //512,
+    ED_CFG_64DD_ON = 0x0100, //256,
+    ED_CFG_64DD_WRITE_ENABLED = 0x0200, //512,
 } ed64_config_t;
 
 
@@ -443,7 +445,6 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
     __cart_acs_get();
     io_write(ED_SAV_CFG_REG, save_cfg);
     __cart_acs_rel();
-
 }
 
 void ed64_ll_set_sram_bank(uint8_t bank) {
@@ -626,46 +627,46 @@ uint8_t ed64_ll_gpio_read() {
 
 
 
-// /* 64DD cart conversion save functions */
+/* 64DD cart conversion save functions */
 
-// /* Set 64DD ON and Enabled?! */
-// void ed64_ll_64dd_ram_oe() {
-//     __cart_acs_get();
-//     uint16_t cfg = io_read(ED_CFG_REG);
-//     cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
-//     cfg |= ED_CFG_64DD_ON;
-//     io_write(ED_CFG_REG, cfg);
-//     __cart_acs_rel();
-// }
+/* Set 64DD ON and Enabled?! */
+void ed64_ll_64dd_ram_oe() {
+    __cart_acs_get();
+    uint16_t cfg = io_read(ED_CFG_REG);
+    cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
+    cfg |= ED_CFG_64DD_ON;
+    io_write(ED_CFG_REG, cfg);
+    __cart_acs_rel();
+}
 
-// /* Set 64DD Write Enable?? */
-// void ed64_ll_64dd_ram_we() {
-//     __cart_acs_get();
-//     uint16_t cfg = io_read(ED_CFG_REG);
-//     cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
-//     io_write(ED_CFG_REG, cfg);
-//     __cart_acs_rel();
-// }
+/* Set 64DD Write Enable?? */
+void ed64_ll_64dd_ram_we() {
+    __cart_acs_get();
+    uint16_t cfg = io_read(ED_CFG_REG);
+    cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
+    io_write(ED_CFG_REG, cfg);
+    __cart_acs_rel();
+}
 
-// /* Set 64DD Disabled?? */
-// void ed64_ll_64dd_ram_off() {
-//     __cart_acs_get();
-//     uint16_t cfg = io_read(ED_CFG_REG);
-//     cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
-//     io_write(ED_CFG_REG, cfg);
-//     __cart_acs_rel();
-// }
+/* Set 64DD Disabled?? */
+void ed64_ll_64dd_ram_off() {
+    __cart_acs_get();
+    uint16_t cfg = io_read(ED_CFG_REG);
+    cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
+    io_write(ED_CFG_REG, cfg);
+    __cart_acs_rel();
+}
 
-// /* 64DD Save RAM Clear */
-// void ed64_ll_64dd_ram_clear() {
-//     __cart_acs_get();
-//     uint16_t cfg = io_read(ED_CFG_REG);
-//     cfg |= ED_CFG_64DD_WRITE_ENABLED;
-//     cfg &= ~ED_CFG_64DD_ON;
-//     io_write(ED_CFG_REG, cfg);
-//     wait_ms(100);
-//     __cart_acs_rel();
-// }
+/* 64DD Save RAM Clear */
+void ed64_ll_64dd_ram_clear() {
+    __cart_acs_get();
+    uint16_t cfg = io_read(ED_CFG_REG);
+    cfg |= ED_CFG_64DD_WRITE_ENABLED;
+    cfg &= ~ED_CFG_64DD_ON;
+    io_write(ED_CFG_REG, cfg);
+    wait_ms(100);
+    __cart_acs_rel();
+}
 
 /** @brief Check if 64DD Cart conversions allowed on this cart?! */
 uint8_t ed64_ll_get_64dd_ram_supported() {

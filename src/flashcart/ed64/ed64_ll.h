@@ -7,7 +7,6 @@
 #ifndef FLASHCART_ED64_LL_H__
 #define FLASHCART_ED64_LL_H__
 
-
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -93,10 +92,10 @@ void ed64_ll_gpio_mode_off();
 uint8_t ed64_ll_gpio_read();
 
 // /* 64DD cart conversion save functions */
-// void ed64_ll_64dd_ram_oe();
-// void ed64_ll_64dd_ram_we();
-// void ed64_ll_64dd_ram_off();
-// void ed64_ll_64dd_ram_clear();
+void ed64_ll_64dd_ram_oe();
+void ed64_ll_64dd_ram_we();
+void ed64_ll_64dd_ram_off();
+void ed64_ll_64dd_ram_clear();
 uint8_t ed64_ll_get_64dd_ram_supported();
 
 /** @} */ /* ed64 */

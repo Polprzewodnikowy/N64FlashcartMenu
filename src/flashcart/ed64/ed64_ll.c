@@ -177,8 +177,8 @@ typedef enum {
 
 } ed64_dma_state_t;
 
-#define ED_DMA_SD_TO_RAM        1
-#define ED_DMA_RAM_TO_SD        2
+#define ED_DMA_SD_TO_RAM        1 // SD Card
+#define ED_DMA_RAM_TO_SD        2 // SD Card
 #define ED_DMA_FIFO_TO_RAM      3 // USB
 #define ED_DMA_RAM_TO_FIFO      4 // USB
 
@@ -190,9 +190,13 @@ typedef enum {
 // #define ED_SAV_EEP_BIG          (1 << 2)
 // #define ED_SAV_SRM_SMALL        (0 << 3)
 // #define ED_SAV_SRM_BIG          (1 << 3)
+/* Enables the EEP save type */
 #define SAV_EEP_ON 1
+/* Enables the SRAM save type */
 #define SAV_SRM_ON 2
+/* Sets the EEP save type to 16K */
 #define SAV_EEP_BIG 4
+/* Sets the SRAM save type to 128K */
 #define SAV_SRM_BIG 8
 
 #define SAV_RAM_BANK 128
@@ -204,24 +208,24 @@ typedef enum {
 // #define ED_CFG_BYTESWAP_OFF     (0 << 1)
 // #define ED_CFG_BYTESWAP_ON      (1 << 1)
 typedef enum {
-    ED_CFG_SDRAM_ON = 0x01,
-    ED_CFG_BYTESWAP_ON = 0x02,
-    ED_CFG_WRITE_MODE_ON = 0x04,
-    ED_CFG_WRITE_ADDR_MASK = 0x08,
-    ED_CFG_RTC_ON = 0x20, //32,
-    ED_CFG_GPIO_ON = 0x60, //96,
-    ED_CFG_64DD_ON = 0x0100, //256,
+    ED_CFG_SDRAM_ON =           0x0001,
+    ED_CFG_BYTESWAP_ON =        0x0002,
+    ED_CFG_WRITE_MODE_ON =      0x0004,
+    ED_CFG_WRITE_ADDR_MASK =    0x0008,
+    ED_CFG_RTC_ON =             0x0020, //32,
+    ED_CFG_GPIO_ON =            0x0060, //96,
+    ED_CFG_64DD_ON =            0x0100, //256,
     ED_CFG_64DD_WRITE_ENABLED = 0x0200, //512,
 } ed64_config_t;
 
 
-// #define FPGA_FW_DATA_SKIP_FW_INIT   (1 << 8)
-// #define FPGA_FW_DATA_SKIP_TV_INIT   (1 << 9)
-// #define FPGA_FW_DATA_TV_TYPE1       (1 << 10)
-// #define FPGA_FW_DATA_TV_TYPE2       (1 << 11)
-// #define FPGA_FW_DATA_SKIP_SD_INIT   (1 << 12)
-// #define FPGA_FW_DATA_SD_TYPE        (1 << 13)
-// #define FPGA_FW_DATA_HOT_START      (1 << 14)
+#define FPGA_FW_DATA_SKIP_FW_INIT   (1 << 8)
+#define FPGA_FW_DATA_SKIP_TV_INIT   (1 << 9)
+#define FPGA_FW_DATA_TV_TYPE1       (1 << 10)
+#define FPGA_FW_DATA_TV_TYPE2       (1 << 11)
+#define FPGA_FW_DATA_SKIP_SD_INIT   (1 << 12)
+#define FPGA_FW_DATA_SD_TYPE        (1 << 13)
+#define FPGA_FW_DATA_HOT_START      (1 << 14)
 
 
 // static uint16_t spi_cfg;
@@ -329,15 +333,15 @@ ed64_save_type_t ed64_ll_save_type;
 //     return cold_start;
 // }
 
-// void ed64_ll_reset_spx() {
+void ed64_ll_reset_spx() {
 
-//     uint16_t cfg = io_read(ED_CFG_REG);
+    uint16_t cfg = io_read(ED_CFG_REG);
 
-//     io_write(ED_CFG_REG, 0x8000);
-//     wait_ms(100);
-//     io_write(ED_CFG_REG, cfg);
-//     wait_ms(100);
-// }
+    io_write(ED_CFG_REG, 0x8000);
+    wait_ms(100);
+    io_write(ED_CFG_REG, cfg);
+    wait_ms(100);
+}
 
 
 /*  Used for USB and SPI functions */

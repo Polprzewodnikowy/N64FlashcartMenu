@@ -43,8 +43,8 @@ typedef struct {
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
-// #define USB_ERROR_FIFO_TIMEOUT 0x90
-// #define EVD_ERROR_MMC_TIMEOUT 0x91
+#define ED_USB_ERR_FIFO_TIMEOUT 0x90 // FIXME: We can return a better error code?!
+// #define ED_ERROR_MMC_TIMEOUT 0x91
 
 // #define BOOT_UPD_ERR_WRONG_SIZE 0x95
 // #define BOOT_UPD_ERR_HDR 0x96

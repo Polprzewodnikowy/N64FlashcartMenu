@@ -168,19 +168,19 @@ static void __cart_dma_wr(const void *dram, uint32_t cart, uint32_t size)
 // #define ED_STATE_TXE            (1 << 2)
 // #define ED_STATE_RXF            (1 << 3)
 // #define ED_STATE_SPI            (1 << 4)
-// typedef enum {
-//     STATE_DMA_BUSY = 0x01,
-//     STATE_DMA_TOUT = 0x02,
-//     STATE_USB_TXE = 0x04,
-//     STATE_USB_RXF = 0x08,
-//     STATE_SPI = 0x10,
+typedef enum {
+    STATE_DMA_BUSY = 0x01,
+    STATE_DMA_TOUT = 0x02,
+    STATE_USB_TXE = 0x04,
+    STATE_USB_RXF = 0x08,
+    STATE_SPI = 0x10,
 
-// } ed64_dma_state_t;
+} ed64_dma_state_t;
 
-// #define ED_DMA_SD_TO_RAM        1
-// #define ED_DMA_RAM_TO_SD        2
-// #define ED_DMA_FIFO_TO_RAM      3 // USB
-// #define ED_DMA_RAM_TO_FIFO      4 // USB
+#define ED_DMA_SD_TO_RAM        1
+#define ED_DMA_RAM_TO_SD        2
+#define ED_DMA_FIFO_TO_RAM      3 // USB
+#define ED_DMA_RAM_TO_FIFO      4 // USB
 
 // #define ED_SAV_EEP_OFF          (0 << 0)
 // #define ED_SAV_EEP_ON           (1 << 0)
@@ -340,57 +340,57 @@ ed64_save_type_t ed64_ll_save_type;
 // }
 
 
-// /*  Used for USB and SPI functions */
-// uint8_t ed64_ll_dma_busy() {
+/*  Used for USB and SPI functions */
+uint8_t ed64_ll_dma_busy() {
 
-//     while ((io_read(ED_STATUS_REG) & STATE_DMA_BUSY) != 0);
-//     return io_read(ED_STATUS_REG) & STATE_DMA_TOUT;
-// }
+    while ((io_read(ED_STATUS_REG) & STATE_DMA_BUSY) != 0);
+    return io_read(ED_STATUS_REG) & STATE_DMA_TOUT;
+}
 
 
-// /* USB functions */
+/* USB functions */
 
-// /* USB read is busy */
-// uint8_t ed64_ll_usb_read_busy() {
+/* USB read is busy */
+uint8_t ed64_ll_usb_read_busy() {
 
-//     return io_read(ED_STATUS_REG) & STATE_USB_RXF;
-// }
+    return io_read(ED_STATUS_REG) & STATE_USB_RXF;
+}
 
-// /* USB write is busy */
-// uint8_t ed64_ll_usb_write_busy() {
+/* USB write is busy */
+uint8_t ed64_ll_usb_write_busy() {
 
-//     return io_read(ED_STATUS_REG) & STATE_USB_TXE;
-// }
+    return io_read(ED_STATUS_REG) & STATE_USB_TXE;
+}
 
-// /* USB read */
-// uint8_t ed64_ll_usb_read(uint32_t start_address, uint32_t slen) {
+/* USB read */
+uint8_t ed64_ll_usb_read(uint32_t start_address, uint32_t slen) {
 
-//     start_address /= 4;
-//     while (ed64_ll_usb_read_busy() != 0);
+    start_address /= 4;
+    while (ed64_ll_usb_read_busy() != 0);
 
-//     io_write(ED_DMA_LEN_REG, slen - 1);
-//     io_write(ED_DMA_ADDR_REG, start_address);
-//     io_write(ED_DMA_CFG_REG, ED_DMA_FIFO_TO_RAM);
+    io_write(ED_DMA_LEN_REG, slen - 1);
+    io_write(ED_DMA_ADDR_REG, start_address);
+    io_write(ED_DMA_CFG_REG, ED_DMA_FIFO_TO_RAM);
 
-//     if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+    if (ed64_ll_dma_busy() != 0)return ED_USB_ERR_FIFO_TIMEOUT;
 
-//     return 0;
-// }
+    return 0;
+}
 
-// /* USB write */
-// uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen) {
+/* USB write */
+uint8_t ed64_ll_usb_write(uint32_t start_address, uint32_t slen) {
 
-//     start_address /= 4;
-//     while (ed64_ll_usb_write_busy() != 0);
+    start_address /= 4;
+    while (ed64_ll_usb_write_busy() != 0);
 
-//     io_write(ED_DMA_LEN_REG, slen - 1);
-//     io_write(ED_DMA_ADDR_REG, start_address);
-//     io_write(ED_DMA_CFG_REG, ED_DMA_RAM_TO_FIFO);
+    io_write(ED_DMA_LEN_REG, slen - 1);
+    io_write(ED_DMA_ADDR_REG, start_address);
+    io_write(ED_DMA_CFG_REG, ED_DMA_RAM_TO_FIFO);
 
-//     if (ed64_ll_dma_busy() != 0)return USB_ERROR_FIFO_TIMEOUT;
+    if (ed64_ll_dma_busy() != 0)return ED_USB_ERR_FIFO_TIMEOUT;
 
-//     return 0;
-// }
+    return 0;
+}
 
 
 ed64_save_type_t ed64_ll_get_save_type() {
@@ -624,7 +624,6 @@ uint8_t ed64_ll_gpio_read() {
     __cart_acs_rel();
     return gpio_state;
 }
-
 
 
 /* 64DD cart conversion save functions */

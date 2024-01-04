@@ -110,3 +110,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output/docs
+
+  Run-Rom-Tests:
+    name: "Run ROM smoke tests"
+    needs: build-menu
+    uses: ./.github/workflows/smoke-tests.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}

@@ -20,8 +20,6 @@
 #include "views/views.h"
 
 
-#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
-
 #define CACHE_DIRECTORY     "sd:/menu/cache"
 #define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
 
@@ -32,6 +30,8 @@
 static menu_t *menu;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
+
+extern tv_type_t __boot_tvtype;
 
 
 static void frame_counter_handler (void) {
@@ -99,7 +99,7 @@ static void menu_init (boot_params_t *boot_params) {
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-        TV_TYPE_RAM = TV_NTSC;
+        __boot_tvtype = TV_NTSC;
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
@@ -111,7 +111,7 @@ static void menu_deinit (menu_t *menu) {
     unregister_VI_handler(frame_counter_handler);
 
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
-    TV_TYPE_RAM = tv_type;
+    __boot_tvtype = tv_type;
 
     hdmi_send_game_id(menu->boot_params);
 

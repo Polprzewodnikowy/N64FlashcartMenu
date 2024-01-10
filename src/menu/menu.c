@@ -145,6 +145,7 @@ static struct views_s {
     { view_file_info_init, view_file_info_display }, // MENU_MODE_FILE_INFO
     { view_system_info_init, view_system_info_display }, // MENU_MODE_SYSTEM_INFO
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
+    { view_text_viewer_init, view_text_viewer_display }, // MENU_MODE_TEXT_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
     { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR

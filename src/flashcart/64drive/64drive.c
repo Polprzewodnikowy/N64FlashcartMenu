@@ -73,6 +73,7 @@ static flashcart_err_t d64_deinit (void) {
 static bool d64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return false;
+        case FLASHCART_FEATURE_USB: return true;
         default: return false;
     }
 }

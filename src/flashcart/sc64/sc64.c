@@ -260,6 +260,7 @@ static flashcart_err_t sc64_deinit (void) {
 static bool sc64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return true;
+        case FLASHCART_FEATURE_USB: return true;
         default: return false;
     }
 }

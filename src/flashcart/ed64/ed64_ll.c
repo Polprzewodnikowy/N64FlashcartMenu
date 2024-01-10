@@ -333,15 +333,15 @@ ed64_save_type_t ed64_ll_save_type;
 //     return cold_start;
 // }
 
-void ed64_ll_reset_spx() {
+// void ed64_ll_reset_spx() {
 
-    uint16_t cfg = io_read(ED_CFG_REG);
+//     uint16_t cfg = io_read(ED_CFG_REG);
 
-    io_write(ED_CFG_REG, 0x8000);
-    wait_ms(100);
-    io_write(ED_CFG_REG, cfg);
-    wait_ms(100);
-}
+//     io_write(ED_CFG_REG, 0x8000);
+//     wait_ms(100);
+//     io_write(ED_CFG_REG, cfg);
+//     wait_ms(100);
+// }
 
 
 /*  Used for USB and SPI functions */
@@ -446,9 +446,9 @@ void ed64_ll_set_save_type(ed64_save_type_t type) {
     if (ram_bank)save_cfg |= SAV_RAM_BANK;
     save_cfg |= SAV_RAM_BANK_APPLY;
 
-    __cart_acs_get();
+    //__cart_acs_get();
     io_write(ED_SAV_CFG_REG, save_cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 void ed64_ll_set_sram_bank(uint8_t bank) {
@@ -483,62 +483,62 @@ void ed64_ll_set_sram_bank(uint8_t bank) {
 // }
 
 void ed64_ll_dma_read_rom(void *ram, uint32_t address_offset, uint32_t length) {
-    __cart_acs_get();
+    //__cart_acs_get();
     __cart_dma_rd(ram, ROM_ADDRESS + address_offset, length);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 
 }
 
 void ed64_ll_dma_write_rom(void *ram, uint32_t address_offset, uint32_t length) {
-    __cart_acs_get();
+    //__cart_acs_get();
     __cart_dma_wr(ram, ROM_ADDRESS + address_offset, length);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 
 }
 
 /* Read from SRAM over DMA */
 void ed64_ll_dma_read_sram(void *ram, uint32_t address_offset, uint32_t length) {
-    __cart_acs_get();
+    //__cart_acs_get();
 
     // Read SRAM
     __cart_dma_rd(ram, SRAM_ADDRESS + address_offset, length);
 
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /* Write to SRAM over DMA */
 void ed64_ll_dma_write_sram(void *ram, uint32_t address_offset, uint32_t length) {
-    __cart_acs_get();
+    //__cart_acs_get();
 
     // Write SRAM
     __cart_dma_wr(ram, SRAM_ADDRESS + address_offset, length);
 
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Get the current FPGA version */
 uint16_t ed64_ll_get_fpga_version() {
-    __cart_acs_get();
+    //__cart_acs_get();
     return io_read(ED_VER_REG);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Get the current CPLD version */
 uint16_t ed64_ll_get_cpld_version() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cpld_version;
     uint16_t cfg = io_read(ED_CFG_REG);
 
     io_write(ED_CFG_REG, 0);
     cpld_version = io_read(ED_CPLD_VER_REG);
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
     return cpld_version;
 }
 
 /** @brief Load the specified FPGA firmware */
 void ed64_ll_load_firmware(uint8_t *firmware) {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint32_t i = 0;
     uint16_t f_ctr = 0;
     uint16_t cfg = io_read(ED_CFG_REG);
@@ -567,20 +567,20 @@ void ed64_ll_load_firmware(uint8_t *firmware) {
     }
 
     wait_ms(20);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 
 void ed64_ll_lock_regs() {
-    __cart_acs_get();
+    //__cart_acs_get();
     io_write(ED_KEY_REG, ED64_KEY_LOCK);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 void ed64_ll_unlock_regs() {
-    __cart_acs_get();
+    //__cart_acs_get();
     io_write(ED_KEY_REG, ED64_KEY_UNLOCK);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 
@@ -588,37 +588,37 @@ void ed64_ll_unlock_regs() {
 
 /** @brief Set GPIO mode RTC */
 void ed64_ll_gpio_mode_rtc() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg &= ~ED_CFG_GPIO_ON;
     cfg |= ED_CFG_RTC_ON;
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Set GPIO mode ON */
 void ed64_ll_gpio_mode_io() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg |= ED_CFG_GPIO_ON;
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Set GPIO mode OFF */
 void ed64_ll_gpio_mode_off() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg &= ~ED_CFG_GPIO_ON;
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Set GPIO mode write */
 void ed64_ll_gpio_write(uint8_t data) {
-    __cart_acs_get();
+    //__cart_acs_get();
     io_write(ED_GPIO_REG, data);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Set GPIO mode read */
@@ -634,46 +634,46 @@ uint8_t ed64_ll_gpio_read() {
 
 /* Set 64DD ON and Enabled?! */
 void ed64_ll_64dd_ram_oe() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg &= ~ED_CFG_64DD_WRITE_ENABLED;
     cfg |= ED_CFG_64DD_ON;
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /* Set 64DD Write Enable?? */
 void ed64_ll_64dd_ram_we() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg |= ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED;
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /* Set 64DD Disabled?? */
 void ed64_ll_64dd_ram_off() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg &= ~(ED_CFG_64DD_ON | ED_CFG_64DD_WRITE_ENABLED);
     io_write(ED_CFG_REG, cfg);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /* 64DD Save RAM Clear */
 void ed64_ll_64dd_ram_clear() {
-    __cart_acs_get();
+    //__cart_acs_get();
     uint16_t cfg = io_read(ED_CFG_REG);
     cfg |= ED_CFG_64DD_WRITE_ENABLED;
     cfg &= ~ED_CFG_64DD_ON;
     io_write(ED_CFG_REG, cfg);
     wait_ms(100);
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }
 
 /** @brief Check if 64DD Cart conversions allowed on this cart?! */
 uint8_t ed64_ll_get_64dd_ram_supported() {
-    __cart_acs_get();
+    //__cart_acs_get();
     return (io_read(ED_STATUS_REG) >> 15) & 1;
-    __cart_acs_rel();
+    //__cart_acs_rel();
 }

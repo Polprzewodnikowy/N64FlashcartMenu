@@ -31,6 +31,8 @@ typedef enum {
     MENU_MODE_IMAGE_VIEWER,
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
+    MENU_MODE_SETTINGS_EDITOR,
+    MENU_MODE_RTC,
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
@@ -82,12 +84,12 @@ typedef struct {
         bool enter;
         bool back;
         bool options;
-        bool system_info;
         bool settings;
     } actions;
 
     struct {
         bool valid;
+        bool reload;
         path_t *directory;
         entry_t list[BROWSER_LIST_SIZE];
         int entries;

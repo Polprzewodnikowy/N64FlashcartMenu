@@ -20,7 +20,6 @@ static void actions_clear (menu_t *menu) {
     menu->actions.enter = false;
     menu->actions.back = false;
     menu->actions.options = false;
-    menu->actions.system_info = false;
     menu->actions.settings = false;
 }
 
@@ -90,8 +89,6 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.back = true;
     } else if (pressed.r) {
         menu->actions.options = true;
-    } else if (pressed.l) {
-        menu->actions.system_info = true;
     } else if (pressed.start) {
         menu->actions.settings = true;
     }

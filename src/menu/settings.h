@@ -22,9 +22,6 @@ typedef struct {
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
 
-    /** @brief Enable forcing the (N64 system region) tv type to align with game region when booting the ROM. */
-    bool autodetect_rom_region;
-
     /** @brief Enable Background music */
     bool bgm_enabled;
 
@@ -36,8 +33,8 @@ typedef struct {
 
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
-
 } settings_t;
+
 
 /** @brief The settings to load */
 void settings_load (settings_t *settings);

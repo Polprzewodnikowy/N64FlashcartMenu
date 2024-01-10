@@ -44,6 +44,12 @@ void view_load_rom_display (menu_t *menu, surface_t *display);
 void view_load_disk_init (menu_t *menu);
 void view_load_disk_display (menu_t *menu, surface_t *display);
 
+void view_settings_init (menu_t *menu);
+void view_settings_display (menu_t *menu, surface_t *display);
+
+void view_rtc_init (menu_t *menu);
+void view_rtc_display (menu_t *menu, surface_t *display);
+
 void view_load_emulator_init (menu_t *menu);
 void view_load_emulator_display (menu_t *menu, surface_t *display);
 

@@ -13,6 +13,8 @@
 #include <stdint.h>
 
 #include "boot/cic.h"
+#include "path.h"
+
 
 /** @brief ROM error enumeration. */
 typedef enum {
@@ -100,7 +102,16 @@ typedef enum {
     SAVE_TYPE_SRAM_128K,
     SAVE_TYPE_FLASHRAM,
     SAVE_TYPE_FLASHRAM_PKST2,
-} save_type_t;
+    SAVE_TYPE_AUTOMATIC = -1,
+} rom_save_type_t;
+
+typedef enum {
+    ROM_TV_TYPE_PAL,
+    ROM_TV_TYPE_NTSC,
+    ROM_TV_TYPE_MPAL,
+    ROM_TV_TYPE_UNKNOWN,
+    ROM_TV_TYPE_AUTOMATIC = -1,
+} rom_tv_type_t;
 
 /** @brief ROM memory requirements enumeration. */
 typedef enum {
@@ -156,7 +167,17 @@ typedef struct {
     cic_type_t cic_type;
 
     /** @brief The save type required by the ROM. */
-    save_type_t save_type;
+    rom_save_type_t save_type;
+
+    rom_tv_type_t tv_type;
+
+    struct {
+        bool save;
+        rom_save_type_t save_type;
+
+        bool tv;
+        rom_tv_type_t tv_type;
+    } override;
 
     /** @brief The supported ROM accessories. */
     struct {
@@ -172,7 +193,11 @@ typedef struct {
 } rom_info_t;
 
 
-rom_err_t rom_info_load (char *path, rom_info_t *rom_info);
+rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type);
+rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
+rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info);
+rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info);
+rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info);
 
 
 #endif

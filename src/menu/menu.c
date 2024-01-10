@@ -20,8 +20,6 @@
 #include "views/views.h"
 
 
-#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
-
 #define CACHE_DIRECTORY     "sd:/menu/cache"
 #define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
 
@@ -32,6 +30,8 @@
 static menu_t *menu;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
+
+extern tv_type_t __boot_tvtype;
 
 
 static void frame_counter_handler (void) {
@@ -114,6 +114,7 @@ static void menu_init (boot_params_t *boot_params) {
     char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
 
     menu->browser.valid = false;
+    menu->browser.reload = false;
     menu->browser.directory = path_init("sd:/", init_directory);
 
     menu->load.rom_path = NULL;
@@ -123,7 +124,7 @@ static void menu_init (boot_params_t *boot_params) {
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-        TV_TYPE_RAM = TV_NTSC;
+        __boot_tvtype = TV_NTSC;
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
@@ -135,7 +136,7 @@ static void menu_deinit (menu_t *menu) {
     unregister_VI_handler(frame_counter_handler);
 
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
-    TV_TYPE_RAM = tv_type;
+    __boot_tvtype = tv_type;
 
     hdmi_send_game_id(menu->boot_params);
 
@@ -171,6 +172,8 @@ static struct views_s {
     { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
     { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
     { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
+    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
+    { view_rtc_init, view_rtc_display }, // MENU_MODE_RTC
     { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
     { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
     { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR

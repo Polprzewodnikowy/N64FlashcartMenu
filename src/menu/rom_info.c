@@ -1,6 +1,7 @@
 #include <string.h>
 
 #include <fatfs/ff.h>
+#include <mini.c/src/mini.h>
 
 #include "rom_info.h"
 #include "utils/fs.h"
@@ -121,7 +122,7 @@ typedef struct {
     // Matched game metadata
     struct {
         // Save type (only cartridge save types)
-        save_type_t save;
+        rom_save_type_t save;
 
         // Supported features
         feat_t feat;
@@ -659,6 +660,40 @@ static uint32_t fix_boot_address (cic_type_t cic_type, uint32_t boot_address) {
     }
 }
 
+static rom_tv_type_t determine_tv_type (destination_type_t rom_destination_code) {
+        // check the market type from the ROM destination_code and return best guess!
+        switch (rom_destination_code) {
+            case MARKET_NORTH_AMERICA:
+            case MARKET_JAPANESE:
+            case MARKET_JAPANESE_MULTI:
+            case MARKET_GATEWAY64_NTSC:
+                return ROM_TV_TYPE_NTSC;
+            case MARKET_BRAZILIAN:
+                return ROM_TV_TYPE_MPAL;
+            case MARKET_GERMAN:
+            case MARKET_FRENCH:
+            case MARKET_DUTCH:
+            case MARKET_ITALIAN:
+            case MARKET_SPANISH:
+            case MARKET_AUSTRALIAN:
+            case MARKET_SCANDINAVIAN:
+            case MARKET_GATEWAY64_PAL:
+            case MARKET_EUROPEAN_BASIC:
+            // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
+            // But they are mainly PAL regions.
+            case MARKET_OTHER_X:
+            case MARKET_OTHER_Y:
+                return ROM_TV_TYPE_PAL;
+            // FIXME: We cannot be sure on these markets, so just return the default for the moment!
+            case MARKET_CHINESE:
+            case MARKET_CANADIAN:
+            case MARKET_KOREAN:
+            case MARKET_OTHER_Z:
+            default:
+                return ROM_TV_TYPE_UNKNOWN;
+        }
+}
+
 static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info_t *rom_info) {
     rom_info->cic_type = cic_detect(rom_header->ipl3);
 
@@ -688,6 +723,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->version = rom_header->version;
 
     rom_info->save_type = match->data.save;
+    rom_info->tv_type = determine_tv_type(rom_info->destination_code);
 
     rom_info->features.controller_pak = (match->data.feat & FEAT_CPAK);
     rom_info->features.rumble_pak = (match->data.feat & FEAT_RPAK);
@@ -709,13 +745,127 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 }
 
+static void load_overrides (path_t *path, rom_info_t *rom_info) {
+    rom_info->override.save = false;
+    rom_info->override.tv = false;
 
-rom_err_t rom_info_load (char *path, rom_info_t *rom_info) {
+    path_t *overrides_path = path_clone(path);
+
+    path_ext_replace(overrides_path, "ini");
+
+    if (!file_exists(path_get(overrides_path))) {
+        path_free(overrides_path);
+        return;
+    }
+
+    mini_t *ini = mini_try_load(path_get(overrides_path));
+
+    rom_info->override.save_type = mini_get_int(ini, NULL, "save_type", SAVE_TYPE_AUTOMATIC);
+    if (rom_info->override.save_type != SAVE_TYPE_AUTOMATIC) {
+        rom_info->override.save = true;
+    }
+
+    rom_info->override.tv_type = mini_get_int(ini, NULL, "tv_type", ROM_TV_TYPE_AUTOMATIC);
+    if (rom_info->override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
+        rom_info->override.tv = true;
+    }
+
+    mini_free(ini);
+
+    path_free(overrides_path);
+}
+
+
+rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
+    path_t *overrides_path = path_clone(path);
+
+    path_ext_replace(overrides_path, "ini");
+
+    mini_t *ini = mini_try_load(path_get(overrides_path));
+
+    rom_info->override.save_type = save_type;
+
+    if (rom_info->override.save_type == SAVE_TYPE_AUTOMATIC) {
+        rom_info->override.save = false;
+        mini_delete_value(ini, NULL, "save_type");
+    } else {
+        rom_info->override.save = true;
+        mini_set_int(ini, NULL, "save_type", rom_info->override.save_type);
+    }
+
+    bool empty_override_file = mini_empty(ini);
+
+    if (!empty_override_file) {
+        mini_save(ini, MINI_FLAGS_NONE);
+    }
+
+    mini_free(ini);
+
+    if (empty_override_file) {
+        file_delete(path_get(overrides_path));
+    }
+
+    path_free(overrides_path);
+
+    return ROM_OK;
+}
+
+rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
+    path_t *overrides_path = path_clone(path);
+
+    path_ext_replace(overrides_path, "ini");
+
+    mini_t *ini = mini_try_load(path_get(overrides_path));
+
+    rom_info->override.tv_type = tv_type;
+
+    if (rom_info->override.tv_type == ROM_TV_TYPE_AUTOMATIC) {
+        rom_info->override.tv = false;
+        mini_delete_value(ini, NULL, "tv_type");
+    } else {
+        rom_info->override.tv = true;
+        mini_set_int(ini, NULL, "tv_type", rom_info->override.tv_type);
+    }
+
+    bool empty_override_file = mini_empty(ini);
+
+    if (!empty_override_file) {
+        mini_save(ini, MINI_FLAGS_NONE);
+    }
+
+    mini_free(ini);
+
+    if (empty_override_file) {
+        file_delete(path_get(overrides_path));
+    }
+
+    path_free(overrides_path);
+
+    return ROM_OK;
+}
+
+rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
+    if (rom_info->override.save) {
+        return rom_info->override.save_type;
+    } else {
+        return rom_info->save_type;
+    }
+}
+
+rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
+    if (rom_info->override.tv) {
+        return rom_info->override.tv_type;
+    } else {
+        return rom_info->tv_type;
+    }
+}
+
+rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
     FIL fil;
     UINT br;
     rom_header_t rom_header;
 
-    if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_sd_prefix(path_get(path)), FA_READ) != FR_OK) {
         return ROM_ERR_NO_FILE;
     }
     if (f_read(&fil, &rom_header, sizeof(rom_header), &br) != FR_OK) {
@@ -734,6 +884,8 @@ rom_err_t rom_info_load (char *path, rom_info_t *rom_info) {
     match_t match = find_rom_in_database(&rom_header);
 
     extract_rom_info(&match, &rom_header, rom_info);
+
+    load_overrides(path, rom_info);
 
     return ROM_OK;
 }

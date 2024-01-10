@@ -3,10 +3,19 @@
 #include "constants.h"
 
 
+static component_context_menu_t *get_current_submenu (component_context_menu_t *cm) {
+    while (cm->submenu != NULL) {
+        cm = cm->submenu;
+    }
+    return cm;
+}
+
+
 void component_context_menu_init (component_context_menu_t *cm) {
     cm->selected = -1;
     cm->count = 0;
     cm->hide_pending = false;
+    cm->parent = NULL;
     for (int i = 0; (cm->list[i].text) != NULL; i++) {
         cm->count += 1;
     }
@@ -14,6 +23,7 @@ void component_context_menu_init (component_context_menu_t *cm) {
 
 void component_context_menu_show (component_context_menu_t *cm) {
     cm->selected = 0;
+    cm->submenu = NULL;
 }
 
 bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
@@ -21,12 +31,25 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
         return false;
     }
 
+    component_context_menu_t *top = cm;
+
+    cm = get_current_submenu(cm);
+
     if (menu->actions.back) {
-        cm->hide_pending = true;
-    } else if (menu->actions.enter) {
-        if (cm->list[cm->selected].action) {
-            cm->list[cm->selected].action(menu);
+        if (cm->parent) {
+            cm->parent->submenu = NULL;
+        } else {
             cm->hide_pending = true;
+        }
+    } else if (menu->actions.enter) {
+        if (cm->list[cm->selected].submenu) {
+            cm->submenu = cm->list[cm->selected].submenu;
+            component_context_menu_init(cm->submenu);
+            cm->submenu->selected = 0;
+            cm->submenu->parent = cm;
+        } else if (cm->list[cm->selected].action) {
+            cm->list[cm->selected].action(menu);
+            top->hide_pending = true;
         }
     } else if (menu->actions.go_up) {
         cm->selected -= 1;
@@ -47,6 +70,10 @@ void component_context_menu_draw (component_context_menu_t *cm) {
     if (!cm || (cm->selected < 0)) {
         return;
     }
+
+    component_context_menu_t *top = cm;
+
+    cm = get_current_submenu(cm);
 
     rdpq_paragraph_builder_begin(
         &(rdpq_textparms_t) {
@@ -91,8 +118,8 @@ void component_context_menu_draw (component_context_menu_t *cm) {
 
     rdpq_paragraph_free(layout);
 
-    if (cm->hide_pending) {
-        cm->hide_pending = false;
-        cm->selected = -1;
+    if (top->hide_pending) {
+        top->hide_pending = false;
+        top->selected = -1;
     }
 }

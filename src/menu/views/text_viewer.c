@@ -1,7 +1,8 @@
 #include <libdragon.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/stat.h>
+
+#include "utils/fs.h"
 
 #include "views.h"
 
@@ -48,14 +49,7 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_text_viewer_init (menu_t *menu) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-
-    char *sd_path = calloc(4 + strlen(path_get(path)) + 1, sizeof(char));
-    sprintf(sd_path, "sd:/%s", path_get(path));
-
-    // Set the buffer size from the file size
-    struct stat file_stat;
-    stat(sd_path, &file_stat);
-    uint32_t file_size = file_stat.st_size;
+    uint32_t file_size = file_get_size(path_get(path));
 
     if (file_size > 307200) { // FIXME: this is just 640x480 which definitely means it will be larger than the display can show.
         file_size = 307200; // For the moment, we just set it to that, since any more would be a waste.
@@ -64,9 +58,9 @@ void view_text_viewer_init (menu_t *menu) {
     file_content = calloc(file_size, 1);
 
     // read file content
-    FILE *fp = fopen(sd_path, "r");
+    FILE *fp = fopen(path_get(path), "r");
 
-    debugf("loading path: %s\n", sd_path);
+    debugf("loading path: %s\n", path_get(path));
 	if (!fp) {
         debugf("Error loading file content\n");
     }

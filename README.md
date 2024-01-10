@@ -3,6 +3,16 @@
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
 
+## Supported Flashcarts
+
+### Fully supported
+* SummerCart64
+* 64Drive
+
+### Work in Progress
+* ED64
+* ED64P
+
 
 ## Current (notable) menu features
 * Fully Open Source.

@@ -63,6 +63,7 @@ SRCS = \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
+	menu/views/flashcart_info.c \
 	utils/fs.c
 
 FONTS = \

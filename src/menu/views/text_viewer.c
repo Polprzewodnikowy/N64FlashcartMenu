@@ -1,9 +1,6 @@
-#include <libdragon.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <fatfs/ff.h>
 
 #include "utils/fs.h"
-
 #include "views.h"
 
 static char *file_content;
@@ -58,15 +55,18 @@ void view_text_viewer_init (menu_t *menu) {
     file_content = calloc(file_size, 1);
 
     // read file content
-    FILE *fp = fopen(path_get(path), "r");
+    FIL fil;
+    UINT br;
 
-    debugf("loading path: %s\n", path_get(path));
-	if (!fp) {
+    if (f_open(&fil, strip_sd_prefix(path_get(path)), FA_READ) != FR_OK) {
+        debugf("Error loading file\n");
+    }
+    if (f_read(&fil, file_content, file_size, &br) != FR_OK) {
+        f_close(&fil);
         debugf("Error loading file content\n");
     }
-    else {
-        fread(file_content, file_size, 1, fp);
-        fclose(fp);
+    if (f_close(&fil) != FR_OK) {
+        debugf("Error closing file\n");
     }
 
     path_free(path);

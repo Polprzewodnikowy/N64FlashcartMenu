@@ -9,7 +9,7 @@ An open source menu for N64 flashcarts.
 * SummerCart64
 * 64Drive
 
-### Work in Progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls))
+### Work in Progress
 * ED64
 * ED64P
 

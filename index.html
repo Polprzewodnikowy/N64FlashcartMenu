@@ -77,6 +77,20 @@ $(function() {
 N64 Flashcart Menu</h1>
 <p >An open source menu for N64 flashcarts.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
+Supported Flashcarts</h2>
+<h3><a class="anchor" id="autotoc_md2"></a>
+Fully supported</h3>
+<ul>
+<li>SummerCart64</li>
+<li>64Drive</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md3"></a>
+Work in Progress (See &lt;a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls" &gt;PR's&lt;/a&gt;)</h3>
+<ul>
+<li>ED64</li>
+<li>ED64P</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
 Current (notable) menu features</h2>
 <ul>
 <li>Fully Open Source.</li>
@@ -90,10 +104,10 @@ Current (notable) menu features</h2>
 <li>Real Time Clock support.</li>
 <li>Music playback (MP3).</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md2"></a>
+<h3><a class="anchor" id="autotoc_md5"></a>
 Video showcase (as of Oct 12 2023)</h3>
 <p ><a href="http://www.youtube.com/watch?v=6CKImHTifDA" title="N64FlashcartMenu Showcase (Oct 12 2023)"><img src="http://img.youtube.com/vi/6CKImHTifDA/0.jpg" alt="N64FlashcartMenu Showcase" class="inline"/></a></p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 Aims</h2>
 <ul>
 <li>Support as many N64 FlashCarts as possible.</li>
@@ -102,13 +116,13 @@ Aims</h2>
 <li>Encourage active development from community members and N64 FlashCart owners.</li>
 <li>Support as many common mods and features as possible.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Getting started</h2>
 <p >Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).</p>
-<h3><a class="anchor" id="autotoc_md5"></a>
+<h3><a class="anchor" id="autotoc_md8"></a>
 ROM Boxart</h3>
 <p >To use boxart, you need to place png files of size 158x112 in the folder <code>/menu/boxart</code> on the SD card. Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type. i.e. for GoldenEye 2 letters, this would be <code>GE.png</code>. i.e. for GoldenEye 3 letters, this would be <code>NGE.png</code>. A known set of PNG files using 2 letter ID's can be downloaded <a href="https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w">here</a>.</p>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Emulator support</h3>
 <p >Emulators should be added to the <code>/menu/emulators</code> directory on the SD card.</p>
 <p >Menu currently supports the following emulators and associated ROM file names:</p><ul>
@@ -117,49 +131,49 @@ Emulator support</h3>
 <li><b>Game Boy</b> / <b>GB Color</b>: <a href="https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html">gb64</a> by <em>lambertjamesd</em> - <code>gb.v64</code> / <code>gbc.v64</code></li>
 <li><b>Sega Master System</b> / <b>Sega Game Gear</b> / <b>Sg1000</b>: <a href="https://github.com/ITotalJustice/TotalSMS">TotalSMS</a> - <code>TotalSMS.z64</code> (Currently broken)</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md10"></a>
 Menu Settings</h3>
 <p >The Menu creates a <code>config.ini</code> file in <code>sd:/menu/</code> which contains various settings that are used by the menu. Currently these are read-only (can be viewed in the menu by pressing <code>L</code> on the Joypad). If required, you can manually adjust the file on the SD card using your computer.</p>
-<h3><a class="anchor" id="autotoc_md8"></a>
+<h3><a class="anchor" id="autotoc_md11"></a>
 SC64 Specific</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a> installed.</li>
 <li>Download the latest <code>sc64menu.n64</code> file from the releases page, then put it in the root directory of your SD card.</li>
 </ul>
-<p ><a class="anchor" id="autotoc_md9"></a> </p><h5>64DD disk support</h5>
+<p ><a class="anchor" id="autotoc_md12"></a> </p><h5>64DD disk support</h5>
 <p >For the ability to load and run 64DD disk images, you need to add the folder <code>/menu/64ddipl</code> on the SD card. Download and add the relevant ipl files and rename them before adding them to the folder:</p><ul>
 <li><code>NDDE0.n64</code> the US Prototype IPL can be downloaded from <a href="https://64dd.org/dumps/64DD_IPL_US_MJR.n64">here</a></li>
 <li><code>NDXJ0.n64</code> the JPN Development IPL can be downloaded from <a href="https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64">here</a></li>
 <li><code>NDDJ2.n64</code> the JPN Retail IPL can be downloaded from <a href="https://64dd.org/dumps/N64DD_IPLROM_(J).zip">here</a></li>
 </ul>
 <p >Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the <code>R</code> button.</p>
-<h3><a class="anchor" id="autotoc_md10"></a>
+<h3><a class="anchor" id="autotoc_md13"></a>
 64drive Specific</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://64drive.retroactive.be/support.php">firmware</a> installed.</li>
 <li>Download the latest <code>menu.bin</code> file from the releases page, then put it in the root directory of your SD card.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md11"></a>
+<h3><a class="anchor" id="autotoc_md14"></a>
 ED64 &amp; ED64P Specific</h3>
 <p >Currently not supported, but work is in progress (See <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls">PR's</a>).</p>
 <p >The aim is to replace <a href="https://github.com/networkfusion/altra64">Altra64</a> and <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a>.</p>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Developer documentation</h1>
 <p >You can use a dev container in VSCode to ease development.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 To deploy:</h2>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md17"></a>
 SC64</h3>
 <ul>
 <li>Download the deployer <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip">here</a></li>
 <li>Extract and place <code>sc64deployer.exe</code> in the <code>tools/sc64</code> directory.</li>
 </ul>
 <p >Make sure that your firmware is compatible (currently v2.18.0+) See: <a href="https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate">here</a></p>
-<h4><a class="anchor" id="autotoc_md15"></a>
+<h4><a class="anchor" id="autotoc_md18"></a>
 From the devcontainer</h4>
 <p >It is not currently possible to directly communicate with USB devices. BUT, as a work around you can use a proxy TCP/IP connection Set up a proxy: open a terminal window, <code>cd ./tools/sc64</code> and then <code>./sc64deployer.exe server</code></p>
 <p >Then in the dev container, use <code>make run</code> or <code>make run-debug</code></p>
-<h4><a class="anchor" id="autotoc_md16"></a>
+<h4><a class="anchor" id="autotoc_md19"></a>
 From your host (Windows) OS</h4>
 <ul>
 <li>Run <code>./localdeploy.bat</code> from the terminal</li>
@@ -167,19 +181,19 @@ From your host (Windows) OS</h4>
 <p >Toggle the N64 power switch to load the ROM.</p>
 <p ><code>ms-vscode.makefile-tools</code> will help (installed automatically in dev container). TODO: it does not yet work with <code>F5</code>: see <a href="https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/">https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/</a> WORKAROUND: in the dev container terminal, use make directly, i.e.: <code>make</code> The ROM can be found in the <code>output</code> directory.</p>
 <p >NOTE: a "release" version of the SC64 menu is called <code>sc64menu.n64</code> and can be created for when you want to add it directly to the SDCard. This is generated by running <code>make all</code> or running <code>make sc64</code>.</p>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md20"></a>
 Others</h3>
 <ul>
 <li>Add the required file to the correct folder on your SD card.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md21"></a>
 Update Libdragon submodule</h1>
 <p >This repo currently uses the <code>unstable</code> branch as a submodule at a specific commit. To update to the latest version, use <code>git submodule update --remote</code> from the terminal.</p>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md22"></a>
 Generate documentation</h1>
 <p >Run <code>doxygen</code> from the dev container terminal. Make sure you fix the warnings before creating a PR! Generated documentation is located in <code>output/docs</code> folder and auto published to the <code>gh-pages</code> branch when merged with <code>main</code>.</p>
 <p >Once merged, they can be viewed <a href="https://polprzewodnikowy.github.io/N64FlashcartMenu/">here</a></p>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Open source software and licenses used</h1>
 <ul>
 <li><a href="https://github.com/DragonMinded/libdragon">libdragon</a> (UNLICENSE License)</li>
@@ -192,7 +206,7 @@ Open source software and licenses used</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 10 2024 16:06:34 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Jan 10 2024 17:21:04 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

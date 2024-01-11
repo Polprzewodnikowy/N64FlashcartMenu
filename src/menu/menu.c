@@ -157,6 +157,7 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
+    { MENU_MODE_LOAD_PATCH, view_load_rom_patch_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
 };

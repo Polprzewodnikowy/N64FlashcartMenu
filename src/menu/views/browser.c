@@ -34,6 +34,10 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DISK) {
             return 1;
+        } else if (a->type == ENTRY_TYPE_PATCH) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_PATCH) {
+            return 1;
         } else if (a->type == ENTRY_TYPE_EMULATOR) {
             return -1;
         } else if (b->type == ENTRY_TYPE_EMULATOR) {
@@ -294,6 +298,9 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_DISK:
                 menu->next_mode = MENU_MODE_LOAD_DISK;
                 break;
+            case ENTRY_TYPE_PATCH:
+                menu->next_mode = MENU_MODE_LOAD_PATCH;
+                break;
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
@@ -336,6 +343,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
+            case ENTRY_TYPE_PATCH: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
             default: action = "A: Info"; break;

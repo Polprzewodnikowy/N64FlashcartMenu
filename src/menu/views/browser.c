@@ -14,6 +14,7 @@ static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
+static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
 
@@ -45,6 +46,10 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_IMAGE) {
             return -1;
         } else if (b->type == ENTRY_TYPE_IMAGE) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_TEXT) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_TEXT) {
             return 1;
         } else if (a->type == ENTRY_TYPE_MUSIC) {
             return -1;
@@ -110,6 +115,8 @@ static bool load_directory (menu_t *menu) {
             entry->type = ENTRY_TYPE_SAVE;
         } else if (file_has_extensions(info.fname, image_extensions)) {
             entry->type = ENTRY_TYPE_IMAGE;
+        } else if (file_has_extensions(info.fname, text_extensions)) {
+            entry->type = ENTRY_TYPE_TEXT;
         } else if (file_has_extensions(info.fname, music_extensions)) {
             entry->type = ENTRY_TYPE_MUSIC;
         } else {
@@ -297,6 +304,9 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;
                 break;
+            case ENTRY_TYPE_TEXT:
+                menu->next_mode = MENU_MODE_TEXT_VIEWER;
+                break;
             case ENTRY_TYPE_MUSIC:
                 menu->next_mode = MENU_MODE_MUSIC_PLAYER;
                 break;
@@ -334,6 +344,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
+            case ENTRY_TYPE_TEXT: action = "A: View"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
             default: action = "A: Info"; break;
         }

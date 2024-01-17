@@ -32,6 +32,9 @@ void view_system_info_display (menu_t *menu, surface_t *display);
 void view_image_viewer_init (menu_t *menu);
 void view_image_viewer_display (menu_t *menu, surface_t *display);
 
+void view_text_viewer_init (menu_t *menu);
+void view_text_viewer_display (menu_t *menu, surface_t *display);
+
 void view_music_player_init (menu_t *menu);
 void view_music_player_display (menu_t *menu, surface_t *display);
 

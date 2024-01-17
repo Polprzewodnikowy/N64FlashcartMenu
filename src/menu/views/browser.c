@@ -135,6 +135,22 @@ static bool load_directory (menu_t *menu) {
     return false;
 }
 
+static bool reload_directory (menu_t *menu) {
+    int selected = menu->browser.selected;
+
+    if (load_directory(menu)) {
+        return true;
+    }
+
+    menu->browser.selected = selected;
+    if (menu->browser.selected >= menu->browser.entries) {
+        menu->browser.selected = menu->browser.entries - 1;
+    }
+    menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
+
+    return false;
+}
+
 static bool push_directory (menu_t *menu, char *directory) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
@@ -175,13 +191,11 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
-static void show_properties (menu_t *menu) {
+static void show_properties (menu_t *menu, void *arg) {
     menu->next_mode = MENU_MODE_FILE_INFO;
 }
 
-static void delete_entry (menu_t *menu) {
-    int selected = menu->browser.selected;
-
+static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
@@ -200,20 +214,13 @@ static void delete_entry (menu_t *menu) {
 
     path_free(path);
 
-    if (load_directory(menu)) {
+    if (reload_directory(menu)) {
         menu->browser.valid = false;
         menu_show_error(menu, "Couldn't refresh directory contents after delete operation");
-        return;
     }
-
-    menu->browser.selected = selected;
-    if (menu->browser.selected >= menu->browser.entries) {
-        menu->browser.selected = menu->browser.entries - 1;
-    }
-    menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
 }
 
-static void set_default_directory (menu_t *menu) {
+static void set_default_directory (menu_t *menu, void *arg) {
     free(menu->settings.default_directory);
     menu->settings.default_directory = strdup(strip_sd_prefix(path_get(menu->browser.directory)));
     settings_save(&menu->settings);
@@ -228,33 +235,18 @@ static component_context_menu_t entry_context_menu = {
     }
 };
 
-static void edit_settings (menu_t *menu) {
-    menu->next_mode = MENU_MODE_SETTINGS_EDITOR;
-}
-
-static void show_system_info (menu_t *menu) {
-    menu->next_mode = MENU_MODE_SYSTEM_INFO;
-}
-
-static void show_credits (menu_t *menu) {
-    menu->next_mode = MENU_MODE_CREDITS;
-}
-
-static void edit_rtc (menu_t *menu) {
-    menu->next_mode = MENU_MODE_RTC;
-}
-
-static void show_flashcart_info (menu_t *menu) {
-    menu->next_mode = MENU_MODE_FLASHCART;
+static void set_menu_next_mode (menu_t *menu, void *arg) {
+    menu_mode_t next_mode = (menu_mode_t) (arg);
+    menu->next_mode = next_mode;
 }
 
 static component_context_menu_t settings_context_menu = {
     .list = {
-        { .text = "Edit settings", .action = edit_settings },
-        { .text = "Show system info", .action = show_system_info },
-        { .text = "Show credits", .action = show_credits },
-        { .text = "Adjust RTC", .action = edit_rtc },
-        { .text = "Show cart info", .action = show_flashcart_info },
+        { .text = "Edit settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
+        { .text = "Show system info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
+        { .text = "Show credits", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
+        { .text = "Adjust RTC", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
+        { .text = "Show cart info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -391,18 +383,12 @@ void view_browser_init (menu_t *menu) {
             menu->browser.valid = true;
         }
     }
+
     if (menu->browser.reload) {
         menu->browser.reload = false;
-        int selected = menu->browser.selected;
-        if (load_directory(menu)) {
+        if (reload_directory(menu)) {
             menu_show_error(menu, "Error while reloading current directory");
             menu->browser.valid = false;
-        } else {
-            menu->browser.selected = selected;
-            if (menu->browser.selected >= menu->browser.entries) {
-                menu->browser.selected = menu->browser.entries - 1;
-            }
-            menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
         }
     }
 }

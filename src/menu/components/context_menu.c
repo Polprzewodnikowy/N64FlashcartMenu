@@ -48,7 +48,7 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
             cm->submenu->selected = 0;
             cm->submenu->parent = cm;
         } else if (cm->list[cm->selected].action) {
-            cm->list[cm->selected].action(menu);
+            cm->list[cm->selected].action(menu, cm->list[cm->selected].arg);
             top->hide_pending = true;
         }
     } else if (menu->actions.go_up) {

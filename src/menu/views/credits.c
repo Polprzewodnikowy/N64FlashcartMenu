@@ -2,7 +2,11 @@
 
 
 #ifndef MENU_VERSION
-#define MENU_VERSION "0.0.0.6.ALPHA"
+#define MENU_VERSION "Unknown"
+#endif
+
+#ifndef BUILD_TIMESTAMP
+#define BUILD_TIMESTAMP "Unknown"
 #endif
 
 
@@ -28,7 +32,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
-        "Menu Revision: V%s\n"
+        "Menu version: %s\n"
+        "Build timestamp: %s\n"
         "\n"
         "Github:\n"
         " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
@@ -44,7 +49,8 @@ static void draw (menu_t *menu, surface_t *d) {
         " mini.c (BSD 2-Clause License)\n"
         " minimp3 (CC0 1.0 Universal)\n"
         " miniz (MIT License)",
-        MENU_VERSION
+        MENU_VERSION,
+        BUILD_TIMESTAMP
     );
 
     component_actions_bar_text_draw(

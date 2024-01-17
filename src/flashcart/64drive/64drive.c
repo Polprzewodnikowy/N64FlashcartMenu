@@ -73,6 +73,7 @@ static flashcart_err_t d64_deinit (void) {
 static bool d64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return false;
+        case FLASHCART_FEATURE_RTC: return true;
         case FLASHCART_FEATURE_USB: return true;
         default: return false;
     }
@@ -97,7 +98,7 @@ static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback
 
     size_t sdram_size = MiB(64);
 
-    size_t chunk_size = MiB(1);
+    size_t chunk_size = KiB(128);
     for (int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {

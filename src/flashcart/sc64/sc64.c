@@ -260,6 +260,7 @@ static flashcart_err_t sc64_deinit (void) {
 static bool sc64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return true;
+        case FLASHCART_FEATURE_RTC: return true;
         case FLASHCART_FEATURE_USB: return true;
         default: return false;
     }
@@ -289,7 +290,7 @@ static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callbac
     size_t shadow_size = shadow_enabled ? MIN(rom_size - sdram_size, KiB(128)) : 0;
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
-    size_t chunk_size = MiB(1);
+    size_t chunk_size = KiB(128);
     for (int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
@@ -451,7 +452,7 @@ static flashcart_err_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_ca
         return FLASHCART_ERR_LOAD;
     }
 
-    size_t chunk_size = KiB(256);
+    size_t chunk_size = KiB(128);
     for (int offset = 0; offset < ipl_size; offset += chunk_size) {
         size_t block_size = MIN(ipl_size - offset, chunk_size);
         if (f_read(&fil, (void *) (IPL_ADDRESS + offset), block_size, &br) != FR_OK) {

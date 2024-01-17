@@ -3,6 +3,7 @@
 #include <fatfs/ff.h>
 #include <mini.c/src/mini.h>
 
+#include "boot/cic.h"
 #include "rom_info.h"
 #include "utils/fs.h"
 
@@ -15,6 +16,7 @@
 #define PI_CONFIG_64DD_IPL      (0x80270740)
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
+
 
 /** @brief ROM File Information Structure. */
 typedef struct  __attribute__((packed)) {
@@ -652,15 +654,34 @@ static match_t find_rom_in_database (rom_header_t *rom_header) {
     return *match;
 }
 
-static uint32_t fix_boot_address (cic_type_t cic_type, uint32_t boot_address) {
+static rom_cic_type_t detect_cic_type (uint8_t *ipl3) {
+    switch (cic_detect(ipl3)) {
+        case CIC_5101: return ROM_CIC_TYPE_5101;
+        case CIC_5167: return ROM_CIC_TYPE_5167;
+        case CIC_6101: return ROM_CIC_TYPE_6101;
+        case CIC_7102: return ROM_CIC_TYPE_7102;
+        case CIC_x102: return ROM_CIC_TYPE_x102;
+        case CIC_x103: return ROM_CIC_TYPE_x103;
+        case CIC_x105: return ROM_CIC_TYPE_x105;
+        case CIC_x106: return ROM_CIC_TYPE_x106;
+        case CIC_8301: return ROM_CIC_TYPE_8301;
+        case CIC_8302: return ROM_CIC_TYPE_8302;
+        case CIC_8303: return ROM_CIC_TYPE_8303;
+        case CIC_8401: return ROM_CIC_TYPE_8401;
+        case CIC_8501: return ROM_CIC_TYPE_8501;
+        default: return ROM_CIC_TYPE_UNKNOWN;
+    }
+}
+
+static uint32_t fix_boot_address (rom_cic_type_t cic_type, uint32_t boot_address) {
     switch (cic_type) {
-        case CIC_x103: return (boot_address - 0x100000);
-        case CIC_x106: return (boot_address - 0x200000);
+        case ROM_CIC_TYPE_x103: return (boot_address - 0x100000);
+        case ROM_CIC_TYPE_x106: return (boot_address - 0x200000);
         default: return boot_address;
     }
 }
 
-static rom_tv_type_t determine_tv_type (destination_type_t rom_destination_code) {
+static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_code) {
         // check the market type from the ROM destination_code and return best guess!
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
@@ -695,7 +716,7 @@ static rom_tv_type_t determine_tv_type (destination_type_t rom_destination_code)
 }
 
 static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info_t *rom_info) {
-    rom_info->cic_type = cic_detect(rom_header->ipl3);
+    rom_info->cic_type = detect_cic_type(rom_header->ipl3);
 
     if (match->type == MATCH_TYPE_HOMEBREW_HEADER) {
         if (rom_header->version & (1 << 0)) {
@@ -746,63 +767,72 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 }
 
 static void load_overrides (path_t *path, rom_info_t *rom_info) {
+    path_t *overrides_path = path_clone(path);
+
+    path_ext_replace(overrides_path, "ini");
+
+    mini_t *ini = mini_load(path_get(overrides_path));
+
+    rom_info->override.cic = false;
     rom_info->override.save = false;
     rom_info->override.tv = false;
 
-    path_t *overrides_path = path_clone(path);
+    if (ini) {
+        rom_info->override.cic_type = mini_get_int(ini, NULL, "cic_type", ROM_CIC_TYPE_AUTOMATIC);
+        if (rom_info->override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {
+            rom_info->override.cic = true;
+        }
 
-    path_ext_replace(overrides_path, "ini");
+        rom_info->override.save_type = mini_get_int(ini, NULL, "save_type", SAVE_TYPE_AUTOMATIC);
+        if (rom_info->override.save_type != SAVE_TYPE_AUTOMATIC) {
+            rom_info->override.save = true;
+        }
 
-    if (!file_exists(path_get(overrides_path))) {
-        path_free(overrides_path);
-        return;
+        rom_info->override.tv_type = mini_get_int(ini, NULL, "tv_type", ROM_TV_TYPE_AUTOMATIC);
+        if (rom_info->override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
+            rom_info->override.tv = true;
+        }
+
+        mini_free(ini);
     }
-
-    mini_t *ini = mini_try_load(path_get(overrides_path));
-
-    rom_info->override.save_type = mini_get_int(ini, NULL, "save_type", SAVE_TYPE_AUTOMATIC);
-    if (rom_info->override.save_type != SAVE_TYPE_AUTOMATIC) {
-        rom_info->override.save = true;
-    }
-
-    rom_info->override.tv_type = mini_get_int(ini, NULL, "tv_type", ROM_TV_TYPE_AUTOMATIC);
-    if (rom_info->override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
-        rom_info->override.tv = true;
-    }
-
-    mini_free(ini);
 
     path_free(overrides_path);
 }
 
-
-rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
+static rom_err_t save_override (path_t *path, const char *id, int value, int default_value) {
     path_t *overrides_path = path_clone(path);
 
     path_ext_replace(overrides_path, "ini");
 
     mini_t *ini = mini_try_load(path_get(overrides_path));
 
-    rom_info->override.save_type = save_type;
-
-    if (rom_info->override.save_type == SAVE_TYPE_AUTOMATIC) {
-        rom_info->override.save = false;
-        mini_delete_value(ini, NULL, "save_type");
-    } else {
-        rom_info->override.save = true;
-        mini_set_int(ini, NULL, "save_type", rom_info->override.save_type);
+    if (!ini) {
+        return ROM_ERR_IO;
     }
 
-    bool empty_override_file = mini_empty(ini);
+    if (value == default_value) {
+        mini_delete_value(ini, NULL, id);
+    } else {
+        mini_set_int(ini, NULL, id, value);
+    }
 
-    if (!empty_override_file) {
-        mini_save(ini, MINI_FLAGS_NONE);
+    bool empty = mini_empty(ini);
+
+    if (!empty) {
+        if (mini_save(ini, MINI_FLAGS_NONE) != MINI_OK) {
+            path_free(overrides_path);
+            mini_free(ini);
+            return ROM_ERR_IO;
+        }
     }
 
     mini_free(ini);
 
-    if (empty_override_file) {
-        file_delete(path_get(overrides_path));
+    if (empty) {
+        if (file_delete(path_get(overrides_path))) {
+            path_free(overrides_path);
+            return ROM_ERR_IO;
+        }
     }
 
     path_free(overrides_path);
@@ -810,38 +840,45 @@ rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_s
     return ROM_OK;
 }
 
-rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
-    path_t *overrides_path = path_clone(path);
 
-    path_ext_replace(overrides_path, "ini");
-
-    mini_t *ini = mini_try_load(path_get(overrides_path));
-
-    rom_info->override.tv_type = tv_type;
-
-    if (rom_info->override.tv_type == ROM_TV_TYPE_AUTOMATIC) {
-        rom_info->override.tv = false;
-        mini_delete_value(ini, NULL, "tv_type");
+rom_cic_type_t rom_info_get_cic_type (rom_info_t *rom_info) {
+    if (rom_info->override.cic) {
+        return rom_info->override.cic_type;
     } else {
-        rom_info->override.tv = true;
-        mini_set_int(ini, NULL, "tv_type", rom_info->override.tv_type);
+        return rom_info->cic_type;
+    }
+}
+
+bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed) {
+    cic_type_t cic_type;
+
+    switch (rom_info_get_cic_type(rom_info)) {
+        case ROM_CIC_TYPE_5101: cic_type = CIC_5101; break;
+        case ROM_CIC_TYPE_5167: cic_type = CIC_5167; break;
+        case ROM_CIC_TYPE_6101: cic_type = CIC_6101; break;
+        case ROM_CIC_TYPE_7102: cic_type = CIC_7102; break;
+        case ROM_CIC_TYPE_x102: cic_type = CIC_x102; break;
+        case ROM_CIC_TYPE_x103: cic_type = CIC_x103; break;
+        case ROM_CIC_TYPE_x105: cic_type = CIC_x105; break;
+        case ROM_CIC_TYPE_x106: cic_type = CIC_x106; break;
+        case ROM_CIC_TYPE_8301: cic_type = CIC_8301; break;
+        case ROM_CIC_TYPE_8302: cic_type = CIC_8302; break;
+        case ROM_CIC_TYPE_8303: cic_type = CIC_8303; break;
+        case ROM_CIC_TYPE_8401: cic_type = CIC_8401; break;
+        case ROM_CIC_TYPE_8501: cic_type = CIC_8501; break;
+        default: cic_type = CIC_UNKNOWN; break;
     }
 
-    bool empty_override_file = mini_empty(ini);
+    *seed = cic_get_seed(cic_type);
 
-    if (!empty_override_file) {
-        mini_save(ini, MINI_FLAGS_NONE);
-    }
+    return (!rom_info->override.cic);
+}
 
-    mini_free(ini);
+rom_err_t rom_info_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type) {
+    rom_info->override.cic = (cic_type != ROM_CIC_TYPE_AUTOMATIC);
+    rom_info->override.cic_type = cic_type;
 
-    if (empty_override_file) {
-        file_delete(path_get(overrides_path));
-    }
-
-    path_free(overrides_path);
-
-    return ROM_OK;
+    return save_override(path, "cic_type", rom_info->override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
 }
 
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
@@ -852,12 +889,26 @@ rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
     }
 }
 
+rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
+    rom_info->override.save = (save_type != SAVE_TYPE_AUTOMATIC);
+    rom_info->override.save_type = save_type;
+
+    return save_override(path, "save_type", rom_info->override.save_type, SAVE_TYPE_AUTOMATIC);
+}
+
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
     if (rom_info->override.tv) {
         return rom_info->override.tv_type;
     } else {
         return rom_info->tv_type;
     }
+}
+
+rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
+    rom_info->override.tv = (tv_type != ROM_TV_TYPE_AUTOMATIC);
+    rom_info->override.tv_type = tv_type;
+
+    return save_override(path, "tv_type", rom_info->override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {

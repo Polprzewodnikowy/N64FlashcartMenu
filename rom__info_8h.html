@@ -98,6 +98,7 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structrom__info__t_8____unnamed18_____8____unnamed22____"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8____unnamed18_____8____unnamed22____">rom_info_t.__unnamed18__.__unnamed22__</a></td></tr>
 <tr class="separator:structrom__info__t_8____unnamed18_____8____unnamed22____"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structrom__info__t_8override"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8override">rom_info_t.override</a></td></tr>
+<tr class="memdesc:structrom__info__t_8override"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overrides of auto-detected CIC/save/TV types.  <a href="rom__info_8h.html#structrom__info__t_8override">More...</a><br /></td></tr>
 <tr class="separator:structrom__info__t_8override"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structrom__info__t_8features"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#structrom__info__t_8features">rom_info_t.features</a></td></tr>
 <tr class="memdesc:structrom__info__t_8features"><td class="mdescLeft">&#160;</td><td class="mdescRight">The supported ROM accessories.  <a href="rom__info_8h.html#structrom__info__t_8features">More...</a><br /></td></tr>
@@ -111,62 +112,85 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:aa88b4550e60dc0ba7d3317eda7ea6037"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM error enumeration. <br /></td></tr>
 <tr class="separator:aa88b4550e60dc0ba7d3317eda7ea6037"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ee416154f17c63c478a546c59e5bbfb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfb">endianness_t</a> { <a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfbadb8bfce13d503ca160e7968f85644b3d">ENDIANNESS_BIG</a>
-, <a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfba6d87b6ddecfd90ad85a9e202fe97c94c">ENDIANNESS_LITTLE</a>
-, <a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfba5c832eba6efdb777959ce3795fa67a53">ENDIANNESS_BYTE_SWAP</a>
+<tr class="memitem:a82c04852ed047d4fc2eea528a25fec4a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4a">rom_endianness_t</a> { <a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4aadb8bfce13d503ca160e7968f85644b3d">ENDIANNESS_BIG</a>
+, <a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4aa6d87b6ddecfd90ad85a9e202fe97c94c">ENDIANNESS_LITTLE</a>
+, <a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4aa5c832eba6efdb777959ce3795fa67a53">ENDIANNESS_BYTE_SWAP</a>
  }</td></tr>
-<tr class="memdesc:a8ee416154f17c63c478a546c59e5bbfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM endian enumeration.  <a href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfb">More...</a><br /></td></tr>
-<tr class="separator:a8ee416154f17c63c478a546c59e5bbfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35e2ad1d851789329b0f0a94bef1f1f2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2">category_type_t</a> { <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2a1bd823fc8b9c795053d238a96c6f5524">N64_CART</a> = 'N'
-, <a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2a4892177cc838193ba4b53d904d91af25">N64_DISK</a> = 'D'
-, <a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2a45d9f8446e39a1fa4220d57448e609df">N64_CART_EXPANDABLE</a> = 'C'
-, <a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2a0b98dff1eb797c2684050e4d430d8722">N64_DISK_EXPANDABLE</a> = 'E'
+<tr class="memdesc:a82c04852ed047d4fc2eea528a25fec4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM endian enumeration.  <a href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4a">More...</a><br /></td></tr>
+<tr class="separator:a82c04852ed047d4fc2eea528a25fec4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0049f84e1fa62200145aa4bcbf7510b0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0">rom_category_type_t</a> { <br />
+&#160;&#160;<a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a1bd823fc8b9c795053d238a96c6f5524">N64_CART</a> = 'N'
+, <a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a4892177cc838193ba4b53d904d91af25">N64_DISK</a> = 'D'
+, <a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a45d9f8446e39a1fa4220d57448e609df">N64_CART_EXPANDABLE</a> = 'C'
+, <a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a0b98dff1eb797c2684050e4d430d8722">N64_DISK_EXPANDABLE</a> = 'E'
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2ae05d1f3888937647e60af840097f32c0">N64_ALECK64</a> = 'Z'
+&#160;&#160;<a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0ae05d1f3888937647e60af840097f32c0">N64_ALECK64</a> = 'Z'
 <br />
  }</td></tr>
-<tr class="memdesc:a35e2ad1d851789329b0f0a94bef1f1f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM media type enumeration.  <a href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2">More...</a><br /></td></tr>
-<tr class="separator:a35e2ad1d851789329b0f0a94bef1f1f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f1df68876fd842a165e4874cef1c85e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85e">destination_type_t</a> { <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea87b3cff825fef81ced068588be03ec7b">MARKET_JAPANESE_MULTI</a> = 'A'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaab39c57cfd0fb43a7af9bd2c682c62ce">MARKET_BRAZILIAN</a> = 'B'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ead224762fea1a531aa708be42f866408b">MARKET_CHINESE</a> = 'C'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea705dbb6f23b076d51a7ddd96a262cfa4">MARKET_GERMAN</a> = 'D'
+<tr class="memdesc:a0049f84e1fa62200145aa4bcbf7510b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM media type enumeration.  <a href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0">More...</a><br /></td></tr>
+<tr class="separator:a0049f84e1fa62200145aa4bcbf7510b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a420e7e3d760e0d1a2105de0cd4a2e630"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630">rom_destination_type_t</a> { <br />
+&#160;&#160;<a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a87b3cff825fef81ced068588be03ec7b">MARKET_JAPANESE_MULTI</a> = 'A'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630aab39c57cfd0fb43a7af9bd2c682c62ce">MARKET_BRAZILIAN</a> = 'B'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630ad224762fea1a531aa708be42f866408b">MARKET_CHINESE</a> = 'C'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a705dbb6f23b076d51a7ddd96a262cfa4">MARKET_GERMAN</a> = 'D'
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7f85f1e3498bf9699e243b081cdbfe6b">MARKET_NORTH_AMERICA</a> = 'E'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf60c0d80eaa8026ff384f2a5a78dd1c8">MARKET_FRENCH</a> = 'F'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab0a10418b57442d5759df02f5a0f45e8">MARKET_GATEWAY64_NTSC</a> = 'G'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eab1d8ed6dbfef6c7b95126a44206068a6">MARKET_DUTCH</a> = 'H'
+&#160;&#160;<a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a7f85f1e3498bf9699e243b081cdbfe6b">MARKET_NORTH_AMERICA</a> = 'E'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630af60c0d80eaa8026ff384f2a5a78dd1c8">MARKET_FRENCH</a> = 'F'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630ab0a10418b57442d5759df02f5a0f45e8">MARKET_GATEWAY64_NTSC</a> = 'G'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630ab1d8ed6dbfef6c7b95126a44206068a6">MARKET_DUTCH</a> = 'H'
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea6500a23f7efea1dd76a82407410bcdf8">MARKET_ITALIAN</a> = 'I'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea785c98321d0422b477041f7ad95ef506">MARKET_JAPANESE</a> = 'J'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea7761799f68396739e9c25f18c4b70e92">MARKET_KOREAN</a> = 'K'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaaba43978734c0351513b95f58e96aac4">MARKET_GATEWAY64_PAL</a> = 'L'
+&#160;&#160;<a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a6500a23f7efea1dd76a82407410bcdf8">MARKET_ITALIAN</a> = 'I'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a785c98321d0422b477041f7ad95ef506">MARKET_JAPANESE</a> = 'J'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a7761799f68396739e9c25f18c4b70e92">MARKET_KOREAN</a> = 'K'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630aaba43978734c0351513b95f58e96aac4">MARKET_GATEWAY64_PAL</a> = 'L'
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eabe5d0f1f944cad284c5a91758a30c379">MARKET_CANADIAN</a> = 'N'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea4b6ad276f30d76bfbfadb7b7268ab356">MARKET_EUROPEAN_BASIC</a> = 'P'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea01bbf8dcc51edee02fdf339c864d66ea">MARKET_SPANISH</a> = 'S'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf3c95d6d57569ce5413bcf0a1d0bca50">MARKET_AUSTRALIAN</a> = 'U'
+&#160;&#160;<a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630abe5d0f1f944cad284c5a91758a30c379">MARKET_CANADIAN</a> = 'N'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a4b6ad276f30d76bfbfadb7b7268ab356">MARKET_EUROPEAN_BASIC</a> = 'P'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a01bbf8dcc51edee02fdf339c864d66ea">MARKET_SPANISH</a> = 'S'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630af3c95d6d57569ce5413bcf0a1d0bca50">MARKET_AUSTRALIAN</a> = 'U'
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85eaf5e46754892b5cbd81b6163b51d7bb44">MARKET_SCANDINAVIAN</a> = 'W'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea9a33be6859415963d848880f7d1cadd6">MARKET_OTHER_X</a> = 'X'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea99303bee22a0150655178e4b45580c9c">MARKET_OTHER_Y</a> = 'Y'
-, <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85ea39a7ef9126c8174dde80215b516f15f0">MARKET_OTHER_Z</a> = 'Z'
+&#160;&#160;<a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630af5e46754892b5cbd81b6163b51d7bb44">MARKET_SCANDINAVIAN</a> = 'W'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a9a33be6859415963d848880f7d1cadd6">MARKET_OTHER_X</a> = 'X'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a99303bee22a0150655178e4b45580c9c">MARKET_OTHER_Y</a> = 'Y'
+, <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630a39a7ef9126c8174dde80215b516f15f0">MARKET_OTHER_Z</a> = 'Z'
 <br />
  }</td></tr>
-<tr class="memdesc:a9f1df68876fd842a165e4874cef1c85e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM market region &amp; language type enumeration.  <a href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85e">More...</a><br /></td></tr>
-<tr class="separator:a9f1df68876fd842a165e4874cef1c85e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a420e7e3d760e0d1a2105de0cd4a2e630"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM market region &amp; language type enumeration.  <a href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630">More...</a><br /></td></tr>
+<tr class="separator:a420e7e3d760e0d1a2105de0cd4a2e630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21ae7cdab56bbcd9cb4627f69903c89c"><td class="memItemLeft" align="right" valign="top"><a id="a21ae7cdab56bbcd9cb4627f69903c89c" name="a21ae7cdab56bbcd9cb4627f69903c89c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89c">rom_cic_type_t</a> { <br />
+&#160;&#160;<b>ROM_CIC_TYPE_UNKNOWN</b> = 0
+, <b>ROM_CIC_TYPE_5101</b> = 5101
+, <b>ROM_CIC_TYPE_5167</b> = 5167
+, <b>ROM_CIC_TYPE_6101</b> = 6101
+, <br />
+&#160;&#160;<b>ROM_CIC_TYPE_7102</b> = 7102
+, <b>ROM_CIC_TYPE_x102</b> = 6102
+, <b>ROM_CIC_TYPE_x103</b> = 6103
+, <b>ROM_CIC_TYPE_x105</b> = 6105
+, <br />
+&#160;&#160;<b>ROM_CIC_TYPE_x106</b> = 6106
+, <b>ROM_CIC_TYPE_8301</b> = 8301
+, <b>ROM_CIC_TYPE_8302</b> = 8302
+, <b>ROM_CIC_TYPE_8303</b> = 8303
+, <br />
+&#160;&#160;<b>ROM_CIC_TYPE_8401</b> = 8401
+, <b>ROM_CIC_TYPE_8501</b> = 8501
+, <b>ROM_CIC_TYPE_AUTOMATIC</b> = -1
+<br />
+ }</td></tr>
+<tr class="memdesc:a21ae7cdab56bbcd9cb4627f69903c89c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM CIC type enumeration. <br /></td></tr>
+<tr class="separator:a21ae7cdab56bbcd9cb4627f69903c89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a> { <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58ac37f15aade15457d7d68e9ec535bb8a2">SAVE_TYPE_NONE</a>
-, <b>SAVE_TYPE_EEPROM_4K</b>
-, <b>SAVE_TYPE_EEPROM_16K</b>
-, <b>SAVE_TYPE_SRAM</b>
+&#160;&#160;<a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58ac37f15aade15457d7d68e9ec535bb8a2">SAVE_TYPE_NONE</a> = 0
+, <b>SAVE_TYPE_EEPROM_4K</b> = 1
+, <b>SAVE_TYPE_EEPROM_16K</b> = 2
+, <b>SAVE_TYPE_SRAM</b> = 3
 , <br />
-&#160;&#160;<b>SAVE_TYPE_SRAM_BANKED</b>
-, <b>SAVE_TYPE_SRAM_128K</b>
-, <b>SAVE_TYPE_FLASHRAM</b>
-, <b>SAVE_TYPE_FLASHRAM_PKST2</b>
+&#160;&#160;<b>SAVE_TYPE_SRAM_BANKED</b> = 4
+, <b>SAVE_TYPE_SRAM_128K</b> = 5
+, <b>SAVE_TYPE_FLASHRAM</b> = 6
+, <b>SAVE_TYPE_FLASHRAM_PKST2</b> = 7
 , <br />
 &#160;&#160;<b>SAVE_TYPE_AUTOMATIC</b> = -1
 <br />
@@ -174,48 +198,57 @@ Enumerations</h2></td></tr>
 <tr class="memdesc:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM save type enumeration.  <a href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">More...</a><br /></td></tr>
 <tr class="separator:a1d6ef99bd6292a3f586e63f67d9c5f58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8fdf85ad8aa6e19519a262184541d7c"><td class="memItemLeft" align="right" valign="top"><a id="ac8fdf85ad8aa6e19519a262184541d7c" name="ac8fdf85ad8aa6e19519a262184541d7c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>rom_tv_type_t</b> { <br />
-&#160;&#160;<b>ROM_TV_TYPE_PAL</b>
-, <b>ROM_TV_TYPE_NTSC</b>
-, <b>ROM_TV_TYPE_MPAL</b>
-, <b>ROM_TV_TYPE_UNKNOWN</b>
+&#160;&#160;<b>ROM_TV_TYPE_PAL</b> = 0
+, <b>ROM_TV_TYPE_NTSC</b> = 1
+, <b>ROM_TV_TYPE_MPAL</b> = 2
+, <b>ROM_TV_TYPE_UNKNOWN</b> = 3
 , <br />
 &#160;&#160;<b>ROM_TV_TYPE_AUTOMATIC</b> = -1
 <br />
  }</td></tr>
 <tr class="separator:ac8fdf85ad8aa6e19519a262184541d7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa741eaa527c42177bb1855f881a23897"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897">expansion_pak_t</a> { <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172">EXPANSION_PAK_NONE</a>
-, <a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947">EXPANSION_PAK_REQUIRED</a>
-, <a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a">EXPANSION_PAK_RECOMMENDED</a>
-, <a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e">EXPANSION_PAK_SUGGESTED</a>
+<tr class="memitem:a250b0904144dfc38ccb7637464f5aa59"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59">rom_expansion_pak_t</a> { <br />
+&#160;&#160;<a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59a46117d7839a1b542d71c6ab1587a8172">EXPANSION_PAK_NONE</a>
+, <a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59ac8f26f21dc54c02dbfacfc076e785947">EXPANSION_PAK_REQUIRED</a>
+, <a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59a56cc066bcf96dd9ec437e75d4fee4a3a">EXPANSION_PAK_RECOMMENDED</a>
+, <a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59a25d9b18d9c0f36871ded0e36966f410e">EXPANSION_PAK_SUGGESTED</a>
 , <br />
-&#160;&#160;<a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04">EXPANSION_PAK_FAULTY</a>
+&#160;&#160;<a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59afbb76c646ca33b144594fa1dc381ca04">EXPANSION_PAK_FAULTY</a>
 <br />
  }</td></tr>
-<tr class="memdesc:aa741eaa527c42177bb1855f881a23897"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM memory requirements enumeration.  <a href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897">More...</a><br /></td></tr>
-<tr class="separator:aa741eaa527c42177bb1855f881a23897"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memdesc:a250b0904144dfc38ccb7637464f5aa59"><td class="mdescLeft">&#160;</td><td class="mdescRight">ROM memory requirements enumeration.  <a href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59">More...</a><br /></td></tr>
+<tr class="separator:a250b0904144dfc38ccb7637464f5aa59"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a37b55475233b86e370b137c1164575f2"><td class="memItemLeft" align="right" valign="top"><a id="a37b55475233b86e370b137c1164575f2" name="a37b55475233b86e370b137c1164575f2"></a>
-<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_save_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, <a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a> save_type)</td></tr>
-<tr class="separator:a37b55475233b86e370b137c1164575f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a022dec551d7951fcc55cccd02ffc5e20"><td class="memItemLeft" align="right" valign="top"><a id="a022dec551d7951fcc55cccd02ffc5e20" name="a022dec551d7951fcc55cccd02ffc5e20"></a>
-<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_tv_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, rom_tv_type_t tv_type)</td></tr>
-<tr class="separator:a022dec551d7951fcc55cccd02ffc5e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fb13271e363b06155ee36be73b58380"><td class="memItemLeft" align="right" valign="top"><a id="a9fb13271e363b06155ee36be73b58380" name="a9fb13271e363b06155ee36be73b58380"></a>
+<a class="el" href="rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89c">rom_cic_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_cic_type</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
+<tr class="separator:a9fb13271e363b06155ee36be73b58380"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae81da7bba307a40855783e67c862df9b"><td class="memItemLeft" align="right" valign="top"><a id="ae81da7bba307a40855783e67c862df9b" name="ae81da7bba307a40855783e67c862df9b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_cic_seed</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, uint8_t *seed)</td></tr>
+<tr class="separator:ae81da7bba307a40855783e67c862df9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d074566027a7e70cf5a242d056a9452"><td class="memItemLeft" align="right" valign="top"><a id="a4d074566027a7e70cf5a242d056a9452" name="a4d074566027a7e70cf5a242d056a9452"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_cic_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, <a class="el" href="rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89c">rom_cic_type_t</a> cic_type)</td></tr>
+<tr class="separator:a4d074566027a7e70cf5a242d056a9452"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae67b9446216e90117c580ecf33a46f9a"><td class="memItemLeft" align="right" valign="top"><a id="ae67b9446216e90117c580ecf33a46f9a" name="ae67b9446216e90117c580ecf33a46f9a"></a>
 <a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_save_type</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
 <tr class="separator:ae67b9446216e90117c580ecf33a46f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37b55475233b86e370b137c1164575f2"><td class="memItemLeft" align="right" valign="top"><a id="a37b55475233b86e370b137c1164575f2" name="a37b55475233b86e370b137c1164575f2"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_save_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, <a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a> save_type)</td></tr>
+<tr class="separator:a37b55475233b86e370b137c1164575f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa29768d39a1d4a08ff6d17f728ce067"><td class="memItemLeft" align="right" valign="top"><a id="afa29768d39a1d4a08ff6d17f728ce067" name="afa29768d39a1d4a08ff6d17f728ce067"></a>
 rom_tv_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get_tv_type</b> (<a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
 <tr class="separator:afa29768d39a1d4a08ff6d17f728ce067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a022dec551d7951fcc55cccd02ffc5e20"><td class="memItemLeft" align="right" valign="top"><a id="a022dec551d7951fcc55cccd02ffc5e20" name="a022dec551d7951fcc55cccd02ffc5e20"></a>
+<a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_override_tv_type</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info, rom_tv_type_t tv_type)</td></tr>
+<tr class="separator:a022dec551d7951fcc55cccd02ffc5e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98874e7181961a6eaf62212ba7a723c6"><td class="memItemLeft" align="right" valign="top"><a id="a98874e7181961a6eaf62212ba7a723c6" name="a98874e7181961a6eaf62212ba7a723c6"></a>
 <a class="el" href="rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037">rom_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_load</b> (<a class="el" href="path_8h.html#structpath__t">path_t</a> *path, <a class="el" href="rom__info_8h.html#structrom__info__t">rom_info_t</a> *rom_info)</td></tr>
 <tr class="separator:a98874e7181961a6eaf62212ba7a723c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >N64 ROM Database. </p>
-<dl class="section note"><dt>Note</dt><dd>Only works with N64 ROM's by checking the first 1024 bytes of the file. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Only works with N64 ROM's by checking the first 4096 bytes of the file. </dd></dl>
 </div><hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structrom__info__t" id="structrom__info__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structrom__info__t">&#9670;&#160;</a></span>rom_info_t</h2>
@@ -232,7 +265,7 @@ rom_tv_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>rom_info_get
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a37b9e973b46432105d54148306520a87" name="a37b9e973b46432105d54148306520a87"></a><a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfb">endianness_t</a></td>
+<a id="a0b802f6d76c318b3077b4b076fa29c15" name="a0b802f6d76c318b3077b4b076fa29c15"></a><a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4a">rom_endianness_t</a></td>
 <td class="fieldname">
 endianness</td>
 <td class="fielddoc">
@@ -280,11 +313,11 @@ version</td>
 <td class="fielddoc">
 The ROM version defined in the ROM's header. </td></tr>
 <tr><td class="fieldtype">
-<a id="aba6f7f9bd0e4cfaa897b9b90b208072f" name="aba6f7f9bd0e4cfaa897b9b90b208072f"></a>cic_type_t</td>
+<a id="a32ce102e3ff3539b226461fd174c347b" name="a32ce102e3ff3539b226461fd174c347b"></a><a class="el" href="rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89c">rom_cic_type_t</a></td>
 <td class="fieldname">
 cic_type</td>
 <td class="fielddoc">
-</td></tr>
+The CIC type required by the ROM. </td></tr>
 <tr><td class="fieldtype">
 <a id="a9bf05efea2279aeacb197096bb88e59d" name="a9bf05efea2279aeacb197096bb88e59d"></a><a class="el" href="rom__info_8h.html#a1d6ef99bd6292a3f586e63f67d9c5f58">rom_save_type_t</a></td>
 <td class="fieldname">
@@ -296,13 +329,13 @@ The save type required by the ROM. </td></tr>
 <td class="fieldname">
 tv_type</td>
 <td class="fielddoc">
-</td></tr>
+The TV type required by the ROM. </td></tr>
 <tr><td class="fieldtype">
 <a id="a9cce2224da92d90ba6c9d6e75d2f2f7c" name="a9cce2224da92d90ba6c9d6e75d2f2f7c"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8override">rom_info_t.override</a></td>
 <td class="fieldname">
 override</td>
 <td class="fielddoc">
-</td></tr>
+Overrides of auto-detected CIC/save/TV types. </td></tr>
 <tr><td class="fieldtype">
 <a id="a9f87b56f9e5c8677c3075bb4bb38d3f6" name="a9f87b56f9e5c8677c3075bb4bb38d3f6"></a>struct <a class="el" href="rom__info_8h.html#structrom__info__t_8features">rom_info_t.features</a></td>
 <td class="fieldname">
@@ -385,7 +418,7 @@ __unnamed__</td>
 <div class="textblock"></div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="afd9aa94087972759698e6e66f4d80a68" name="afd9aa94087972759698e6e66f4d80a68"></a><a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2">category_type_t</a></td>
+<a id="afd9aa94087972759698e6e66f4d80a68" name="afd9aa94087972759698e6e66f4d80a68"></a><a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0">rom_category_type_t</a></td>
 <td class="fieldname">
 category_code: 8</td>
 <td class="fielddoc">
@@ -397,7 +430,7 @@ unique_code[2]</td>
 <td class="fielddoc">
 The game unique identifier. </td></tr>
 <tr><td class="fieldtype">
-<a id="a3008aa82b5d7245bd003978c91802199" name="a3008aa82b5d7245bd003978c91802199"></a><a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85e">destination_type_t</a></td>
+<a id="a3008aa82b5d7245bd003978c91802199" name="a3008aa82b5d7245bd003978c91802199"></a><a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630">rom_destination_type_t</a></td>
 <td class="fieldname">
 destination_code: 8</td>
 <td class="fielddoc">
@@ -417,8 +450,21 @@ The game region and or market. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"></div><table class="fieldtable">
+<div class="textblock"><p >Overrides of auto-detected CIC/save/TV types. </p>
+</div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a87c225cf0ef858082c1e638eae0cce66" name="a87c225cf0ef858082c1e638eae0cce66"></a>bool</td>
+<td class="fieldname">
+cic</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a497f30b5b9649a7afd5617a50819d7dd" name="a497f30b5b9649a7afd5617a50819d7dd"></a><a class="el" href="rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89c">rom_cic_type_t</a></td>
+<td class="fieldname">
+cic_type</td>
+<td class="fielddoc">
+</td></tr>
 <tr><td class="fieldtype">
 <a id="a43781db5c40ecc39fd718685594f0956" name="a43781db5c40ecc39fd718685594f0956"></a>bool</td>
 <td class="fieldname">
@@ -504,7 +550,7 @@ combo_rom_disk_game</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a18e69616d5ba4d1164edba4298653cfc" name="a18e69616d5ba4d1164edba4298653cfc"></a><a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897">expansion_pak_t</a></td>
+<a id="a18e69616d5ba4d1164edba4298653cfc" name="a18e69616d5ba4d1164edba4298653cfc"></a><a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59">rom_expansion_pak_t</a></td>
 <td class="fieldname">
 expansion_pak</td>
 <td class="fielddoc">
@@ -514,111 +560,111 @@ expansion_pak</td>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="a8ee416154f17c63c478a546c59e5bbfb" name="a8ee416154f17c63c478a546c59e5bbfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8ee416154f17c63c478a546c59e5bbfb">&#9670;&#160;</a></span>endianness_t</h2>
+<a id="a82c04852ed047d4fc2eea528a25fec4a" name="a82c04852ed047d4fc2eea528a25fec4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82c04852ed047d4fc2eea528a25fec4a">&#9670;&#160;</a></span>rom_endianness_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="rom__info_8h.html#a8ee416154f17c63c478a546c59e5bbfb">endianness_t</a></td>
+          <td class="memname">enum <a class="el" href="rom__info_8h.html#a82c04852ed047d4fc2eea528a25fec4a">rom_endianness_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>ROM endian enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a8ee416154f17c63c478a546c59e5bbfbadb8bfce13d503ca160e7968f85644b3d" name="a8ee416154f17c63c478a546c59e5bbfbadb8bfce13d503ca160e7968f85644b3d"></a>ENDIANNESS_BIG&#160;</td><td class="fielddoc"><p >Is Big Endian. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a82c04852ed047d4fc2eea528a25fec4aadb8bfce13d503ca160e7968f85644b3d" name="a82c04852ed047d4fc2eea528a25fec4aadb8bfce13d503ca160e7968f85644b3d"></a>ENDIANNESS_BIG&#160;</td><td class="fielddoc"><p >Is Big Endian. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a8ee416154f17c63c478a546c59e5bbfba6d87b6ddecfd90ad85a9e202fe97c94c" name="a8ee416154f17c63c478a546c59e5bbfba6d87b6ddecfd90ad85a9e202fe97c94c"></a>ENDIANNESS_LITTLE&#160;</td><td class="fielddoc"><p >Is Little Endian. </p>
+<tr><td class="fieldname"><a id="a82c04852ed047d4fc2eea528a25fec4aa6d87b6ddecfd90ad85a9e202fe97c94c" name="a82c04852ed047d4fc2eea528a25fec4aa6d87b6ddecfd90ad85a9e202fe97c94c"></a>ENDIANNESS_LITTLE&#160;</td><td class="fielddoc"><p >Is Little Endian. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a8ee416154f17c63c478a546c59e5bbfba5c832eba6efdb777959ce3795fa67a53" name="a8ee416154f17c63c478a546c59e5bbfba5c832eba6efdb777959ce3795fa67a53"></a>ENDIANNESS_BYTE_SWAP&#160;</td><td class="fielddoc"><p >Is Byte Swapped Endian. </p>
+<tr><td class="fieldname"><a id="a82c04852ed047d4fc2eea528a25fec4aa5c832eba6efdb777959ce3795fa67a53" name="a82c04852ed047d4fc2eea528a25fec4aa5c832eba6efdb777959ce3795fa67a53"></a>ENDIANNESS_BYTE_SWAP&#160;</td><td class="fielddoc"><p >Is Byte Swapped Endian. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="a35e2ad1d851789329b0f0a94bef1f1f2" name="a35e2ad1d851789329b0f0a94bef1f1f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35e2ad1d851789329b0f0a94bef1f1f2">&#9670;&#160;</a></span>category_type_t</h2>
+<a id="a0049f84e1fa62200145aa4bcbf7510b0" name="a0049f84e1fa62200145aa4bcbf7510b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0049f84e1fa62200145aa4bcbf7510b0">&#9670;&#160;</a></span>rom_category_type_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="rom__info_8h.html#a35e2ad1d851789329b0f0a94bef1f1f2">category_type_t</a></td>
+          <td class="memname">enum <a class="el" href="rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0">rom_category_type_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>ROM media type enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a35e2ad1d851789329b0f0a94bef1f1f2a1bd823fc8b9c795053d238a96c6f5524" name="a35e2ad1d851789329b0f0a94bef1f1f2a1bd823fc8b9c795053d238a96c6f5524"></a>N64_CART&#160;</td><td class="fielddoc"><p >Is a stand alone Cartridge program. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0049f84e1fa62200145aa4bcbf7510b0a1bd823fc8b9c795053d238a96c6f5524" name="a0049f84e1fa62200145aa4bcbf7510b0a1bd823fc8b9c795053d238a96c6f5524"></a>N64_CART&#160;</td><td class="fielddoc"><p >Is a stand alone Cartridge program. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a35e2ad1d851789329b0f0a94bef1f1f2a4892177cc838193ba4b53d904d91af25" name="a35e2ad1d851789329b0f0a94bef1f1f2a4892177cc838193ba4b53d904d91af25"></a>N64_DISK&#160;</td><td class="fielddoc"><p >Is a stand alone Disk Drive program. </p>
+<tr><td class="fieldname"><a id="a0049f84e1fa62200145aa4bcbf7510b0a4892177cc838193ba4b53d904d91af25" name="a0049f84e1fa62200145aa4bcbf7510b0a4892177cc838193ba4b53d904d91af25"></a>N64_DISK&#160;</td><td class="fielddoc"><p >Is a stand alone Disk Drive program. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a35e2ad1d851789329b0f0a94bef1f1f2a45d9f8446e39a1fa4220d57448e609df" name="a35e2ad1d851789329b0f0a94bef1f1f2a45d9f8446e39a1fa4220d57448e609df"></a>N64_CART_EXPANDABLE&#160;</td><td class="fielddoc"><p >Is a Cartridge program that could use an extra Disk Drive program to expand its capabilities. </p>
+<tr><td class="fieldname"><a id="a0049f84e1fa62200145aa4bcbf7510b0a45d9f8446e39a1fa4220d57448e609df" name="a0049f84e1fa62200145aa4bcbf7510b0a45d9f8446e39a1fa4220d57448e609df"></a>N64_CART_EXPANDABLE&#160;</td><td class="fielddoc"><p >Is a Cartridge program that could use an extra Disk Drive program to expand its capabilities. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a35e2ad1d851789329b0f0a94bef1f1f2a0b98dff1eb797c2684050e4d430d8722" name="a35e2ad1d851789329b0f0a94bef1f1f2a0b98dff1eb797c2684050e4d430d8722"></a>N64_DISK_EXPANDABLE&#160;</td><td class="fielddoc"><p >Is a Disk Drive program that could use an extra Cartridge program to expand its capabilities. </p>
+<tr><td class="fieldname"><a id="a0049f84e1fa62200145aa4bcbf7510b0a0b98dff1eb797c2684050e4d430d8722" name="a0049f84e1fa62200145aa4bcbf7510b0a0b98dff1eb797c2684050e4d430d8722"></a>N64_DISK_EXPANDABLE&#160;</td><td class="fielddoc"><p >Is a Disk Drive program that could use an extra Cartridge program to expand its capabilities. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a35e2ad1d851789329b0f0a94bef1f1f2ae05d1f3888937647e60af840097f32c0" name="a35e2ad1d851789329b0f0a94bef1f1f2ae05d1f3888937647e60af840097f32c0"></a>N64_ALECK64&#160;</td><td class="fielddoc"><p >Is an Aleck64 program. </p>
+<tr><td class="fieldname"><a id="a0049f84e1fa62200145aa4bcbf7510b0ae05d1f3888937647e60af840097f32c0" name="a0049f84e1fa62200145aa4bcbf7510b0ae05d1f3888937647e60af840097f32c0"></a>N64_ALECK64&#160;</td><td class="fielddoc"><p >Is an Aleck64 program. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="a9f1df68876fd842a165e4874cef1c85e" name="a9f1df68876fd842a165e4874cef1c85e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f1df68876fd842a165e4874cef1c85e">&#9670;&#160;</a></span>destination_type_t</h2>
+<a id="a420e7e3d760e0d1a2105de0cd4a2e630" name="a420e7e3d760e0d1a2105de0cd4a2e630"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a420e7e3d760e0d1a2105de0cd4a2e630">&#9670;&#160;</a></span>rom_destination_type_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="rom__info_8h.html#a9f1df68876fd842a165e4874cef1c85e">destination_type_t</a></td>
+          <td class="memname">enum <a class="el" href="rom__info_8h.html#a420e7e3d760e0d1a2105de0cd4a2e630">rom_destination_type_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>ROM market region &amp; language type enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea87b3cff825fef81ced068588be03ec7b" name="a9f1df68876fd842a165e4874cef1c85ea87b3cff825fef81ced068588be03ec7b"></a>MARKET_JAPANESE_MULTI&#160;</td><td class="fielddoc"><p >The ROM is designed for Japanese and "English" languages. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a87b3cff825fef81ced068588be03ec7b" name="a420e7e3d760e0d1a2105de0cd4a2e630a87b3cff825fef81ced068588be03ec7b"></a>MARKET_JAPANESE_MULTI&#160;</td><td class="fielddoc"><p >The ROM is designed for Japanese and "English" languages. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eaab39c57cfd0fb43a7af9bd2c682c62ce" name="a9f1df68876fd842a165e4874cef1c85eaab39c57cfd0fb43a7af9bd2c682c62ce"></a>MARKET_BRAZILIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Brazil (Portuguese) language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630aab39c57cfd0fb43a7af9bd2c682c62ce" name="a420e7e3d760e0d1a2105de0cd4a2e630aab39c57cfd0fb43a7af9bd2c682c62ce"></a>MARKET_BRAZILIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Brazil (Portuguese) language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ead224762fea1a531aa708be42f866408b" name="a9f1df68876fd842a165e4874cef1c85ead224762fea1a531aa708be42f866408b"></a>MARKET_CHINESE&#160;</td><td class="fielddoc"><p >The ROM is designed for Chinese language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630ad224762fea1a531aa708be42f866408b" name="a420e7e3d760e0d1a2105de0cd4a2e630ad224762fea1a531aa708be42f866408b"></a>MARKET_CHINESE&#160;</td><td class="fielddoc"><p >The ROM is designed for Chinese language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea705dbb6f23b076d51a7ddd96a262cfa4" name="a9f1df68876fd842a165e4874cef1c85ea705dbb6f23b076d51a7ddd96a262cfa4"></a>MARKET_GERMAN&#160;</td><td class="fielddoc"><p >The ROM is designed for German language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a705dbb6f23b076d51a7ddd96a262cfa4" name="a420e7e3d760e0d1a2105de0cd4a2e630a705dbb6f23b076d51a7ddd96a262cfa4"></a>MARKET_GERMAN&#160;</td><td class="fielddoc"><p >The ROM is designed for German language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea7f85f1e3498bf9699e243b081cdbfe6b" name="a9f1df68876fd842a165e4874cef1c85ea7f85f1e3498bf9699e243b081cdbfe6b"></a>MARKET_NORTH_AMERICA&#160;</td><td class="fielddoc"><p >The ROM is designed for North American "English" language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a7f85f1e3498bf9699e243b081cdbfe6b" name="a420e7e3d760e0d1a2105de0cd4a2e630a7f85f1e3498bf9699e243b081cdbfe6b"></a>MARKET_NORTH_AMERICA&#160;</td><td class="fielddoc"><p >The ROM is designed for North American "English" language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eaf60c0d80eaa8026ff384f2a5a78dd1c8" name="a9f1df68876fd842a165e4874cef1c85eaf60c0d80eaa8026ff384f2a5a78dd1c8"></a>MARKET_FRENCH&#160;</td><td class="fielddoc"><p >The ROM is designed for French language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630af60c0d80eaa8026ff384f2a5a78dd1c8" name="a420e7e3d760e0d1a2105de0cd4a2e630af60c0d80eaa8026ff384f2a5a78dd1c8"></a>MARKET_FRENCH&#160;</td><td class="fielddoc"><p >The ROM is designed for French language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eab0a10418b57442d5759df02f5a0f45e8" name="a9f1df68876fd842a165e4874cef1c85eab0a10418b57442d5759df02f5a0f45e8"></a>MARKET_GATEWAY64_NTSC&#160;</td><td class="fielddoc"><p >The ROM is designed for a NTSC Gateway 64. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630ab0a10418b57442d5759df02f5a0f45e8" name="a420e7e3d760e0d1a2105de0cd4a2e630ab0a10418b57442d5759df02f5a0f45e8"></a>MARKET_GATEWAY64_NTSC&#160;</td><td class="fielddoc"><p >The ROM is designed for a NTSC Gateway 64. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eab1d8ed6dbfef6c7b95126a44206068a6" name="a9f1df68876fd842a165e4874cef1c85eab1d8ed6dbfef6c7b95126a44206068a6"></a>MARKET_DUTCH&#160;</td><td class="fielddoc"><p >The ROM is designed for Dutch language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630ab1d8ed6dbfef6c7b95126a44206068a6" name="a420e7e3d760e0d1a2105de0cd4a2e630ab1d8ed6dbfef6c7b95126a44206068a6"></a>MARKET_DUTCH&#160;</td><td class="fielddoc"><p >The ROM is designed for Dutch language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea6500a23f7efea1dd76a82407410bcdf8" name="a9f1df68876fd842a165e4874cef1c85ea6500a23f7efea1dd76a82407410bcdf8"></a>MARKET_ITALIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Italian language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a6500a23f7efea1dd76a82407410bcdf8" name="a420e7e3d760e0d1a2105de0cd4a2e630a6500a23f7efea1dd76a82407410bcdf8"></a>MARKET_ITALIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Italian language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea785c98321d0422b477041f7ad95ef506" name="a9f1df68876fd842a165e4874cef1c85ea785c98321d0422b477041f7ad95ef506"></a>MARKET_JAPANESE&#160;</td><td class="fielddoc"><p >The ROM is designed for Japanese language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a785c98321d0422b477041f7ad95ef506" name="a420e7e3d760e0d1a2105de0cd4a2e630a785c98321d0422b477041f7ad95ef506"></a>MARKET_JAPANESE&#160;</td><td class="fielddoc"><p >The ROM is designed for Japanese language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea7761799f68396739e9c25f18c4b70e92" name="a9f1df68876fd842a165e4874cef1c85ea7761799f68396739e9c25f18c4b70e92"></a>MARKET_KOREAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Korean language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a7761799f68396739e9c25f18c4b70e92" name="a420e7e3d760e0d1a2105de0cd4a2e630a7761799f68396739e9c25f18c4b70e92"></a>MARKET_KOREAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Korean language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eaaba43978734c0351513b95f58e96aac4" name="a9f1df68876fd842a165e4874cef1c85eaaba43978734c0351513b95f58e96aac4"></a>MARKET_GATEWAY64_PAL&#160;</td><td class="fielddoc"><p >The ROM is designed for a PAL Gateway 64. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630aaba43978734c0351513b95f58e96aac4" name="a420e7e3d760e0d1a2105de0cd4a2e630aaba43978734c0351513b95f58e96aac4"></a>MARKET_GATEWAY64_PAL&#160;</td><td class="fielddoc"><p >The ROM is designed for a PAL Gateway 64. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eabe5d0f1f944cad284c5a91758a30c379" name="a9f1df68876fd842a165e4874cef1c85eabe5d0f1f944cad284c5a91758a30c379"></a>MARKET_CANADIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Canada region (English and French) language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630abe5d0f1f944cad284c5a91758a30c379" name="a420e7e3d760e0d1a2105de0cd4a2e630abe5d0f1f944cad284c5a91758a30c379"></a>MARKET_CANADIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Canada region (English and French) language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea4b6ad276f30d76bfbfadb7b7268ab356" name="a9f1df68876fd842a165e4874cef1c85ea4b6ad276f30d76bfbfadb7b7268ab356"></a>MARKET_EUROPEAN_BASIC&#160;</td><td class="fielddoc"><p >The ROM is designed for European market and languages (must at minimum include English). </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a4b6ad276f30d76bfbfadb7b7268ab356" name="a420e7e3d760e0d1a2105de0cd4a2e630a4b6ad276f30d76bfbfadb7b7268ab356"></a>MARKET_EUROPEAN_BASIC&#160;</td><td class="fielddoc"><p >The ROM is designed for European market and languages (must at minimum include English). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea01bbf8dcc51edee02fdf339c864d66ea" name="a9f1df68876fd842a165e4874cef1c85ea01bbf8dcc51edee02fdf339c864d66ea"></a>MARKET_SPANISH&#160;</td><td class="fielddoc"><p >The ROM is designed for Spanish language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a01bbf8dcc51edee02fdf339c864d66ea" name="a420e7e3d760e0d1a2105de0cd4a2e630a01bbf8dcc51edee02fdf339c864d66ea"></a>MARKET_SPANISH&#160;</td><td class="fielddoc"><p >The ROM is designed for Spanish language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eaf3c95d6d57569ce5413bcf0a1d0bca50" name="a9f1df68876fd842a165e4874cef1c85eaf3c95d6d57569ce5413bcf0a1d0bca50"></a>MARKET_AUSTRALIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Australia (English) language. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630af3c95d6d57569ce5413bcf0a1d0bca50" name="a420e7e3d760e0d1a2105de0cd4a2e630af3c95d6d57569ce5413bcf0a1d0bca50"></a>MARKET_AUSTRALIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Australia (English) language. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85eaf5e46754892b5cbd81b6163b51d7bb44" name="a9f1df68876fd842a165e4874cef1c85eaf5e46754892b5cbd81b6163b51d7bb44"></a>MARKET_SCANDINAVIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Scandinavian (Swedish, Norwegian, Finnish, etc.) languages. </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630af5e46754892b5cbd81b6163b51d7bb44" name="a420e7e3d760e0d1a2105de0cd4a2e630af5e46754892b5cbd81b6163b51d7bb44"></a>MARKET_SCANDINAVIAN&#160;</td><td class="fielddoc"><p >The ROM is designed for Scandinavian (Swedish, Norwegian, Finnish, etc.) languages. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea9a33be6859415963d848880f7d1cadd6" name="a9f1df68876fd842a165e4874cef1c85ea9a33be6859415963d848880f7d1cadd6"></a>MARKET_OTHER_X&#160;</td><td class="fielddoc"><p >The ROM is designed for an undefined region and TBD language(s). </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a9a33be6859415963d848880f7d1cadd6" name="a420e7e3d760e0d1a2105de0cd4a2e630a9a33be6859415963d848880f7d1cadd6"></a>MARKET_OTHER_X&#160;</td><td class="fielddoc"><p >The ROM is designed for an undefined region and TBD language(s). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea99303bee22a0150655178e4b45580c9c" name="a9f1df68876fd842a165e4874cef1c85ea99303bee22a0150655178e4b45580c9c"></a>MARKET_OTHER_Y&#160;</td><td class="fielddoc"><p >The ROM is designed for a European region and language(s). </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a99303bee22a0150655178e4b45580c9c" name="a420e7e3d760e0d1a2105de0cd4a2e630a99303bee22a0150655178e4b45580c9c"></a>MARKET_OTHER_Y&#160;</td><td class="fielddoc"><p >The ROM is designed for a European region and language(s). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a9f1df68876fd842a165e4874cef1c85ea39a7ef9126c8174dde80215b516f15f0" name="a9f1df68876fd842a165e4874cef1c85ea39a7ef9126c8174dde80215b516f15f0"></a>MARKET_OTHER_Z&#160;</td><td class="fielddoc"><p >The ROM is designed for an undefined region and TBD language(s). </p>
+<tr><td class="fieldname"><a id="a420e7e3d760e0d1a2105de0cd4a2e630a39a7ef9126c8174dde80215b516f15f0" name="a420e7e3d760e0d1a2105de0cd4a2e630a39a7ef9126c8174dde80215b516f15f0"></a>MARKET_OTHER_Z&#160;</td><td class="fielddoc"><p >The ROM is designed for an undefined region and TBD language(s). </p>
 </td></tr>
 </table>
 
@@ -644,29 +690,29 @@ expansion_pak</td>
 
 </div>
 </div>
-<a id="aa741eaa527c42177bb1855f881a23897" name="aa741eaa527c42177bb1855f881a23897"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa741eaa527c42177bb1855f881a23897">&#9670;&#160;</a></span>expansion_pak_t</h2>
+<a id="a250b0904144dfc38ccb7637464f5aa59" name="a250b0904144dfc38ccb7637464f5aa59"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a250b0904144dfc38ccb7637464f5aa59">&#9670;&#160;</a></span>rom_expansion_pak_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="rom__info_8h.html#aa741eaa527c42177bb1855f881a23897">expansion_pak_t</a></td>
+          <td class="memname">enum <a class="el" href="rom__info_8h.html#a250b0904144dfc38ccb7637464f5aa59">rom_expansion_pak_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>ROM memory requirements enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172" name="aa741eaa527c42177bb1855f881a23897a46117d7839a1b542d71c6ab1587a8172"></a>EXPANSION_PAK_NONE&#160;</td><td class="fielddoc"><p >The ROM is happy with 4MB of memory. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a250b0904144dfc38ccb7637464f5aa59a46117d7839a1b542d71c6ab1587a8172" name="a250b0904144dfc38ccb7637464f5aa59a46117d7839a1b542d71c6ab1587a8172"></a>EXPANSION_PAK_NONE&#160;</td><td class="fielddoc"><p >The ROM is happy with 4MB of memory. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947" name="aa741eaa527c42177bb1855f881a23897ac8f26f21dc54c02dbfacfc076e785947"></a>EXPANSION_PAK_REQUIRED&#160;</td><td class="fielddoc"><p >The ROM requires 8MB of memory. </p>
+<tr><td class="fieldname"><a id="a250b0904144dfc38ccb7637464f5aa59ac8f26f21dc54c02dbfacfc076e785947" name="a250b0904144dfc38ccb7637464f5aa59ac8f26f21dc54c02dbfacfc076e785947"></a>EXPANSION_PAK_REQUIRED&#160;</td><td class="fielddoc"><p >The ROM requires 8MB of memory. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a" name="aa741eaa527c42177bb1855f881a23897a56cc066bcf96dd9ec437e75d4fee4a3a"></a>EXPANSION_PAK_RECOMMENDED&#160;</td><td class="fielddoc"><p >The ROM recommends 8MB of memory. </p>
+<tr><td class="fieldname"><a id="a250b0904144dfc38ccb7637464f5aa59a56cc066bcf96dd9ec437e75d4fee4a3a" name="a250b0904144dfc38ccb7637464f5aa59a56cc066bcf96dd9ec437e75d4fee4a3a"></a>EXPANSION_PAK_RECOMMENDED&#160;</td><td class="fielddoc"><p >The ROM recommends 8MB of memory. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e" name="aa741eaa527c42177bb1855f881a23897a25d9b18d9c0f36871ded0e36966f410e"></a>EXPANSION_PAK_SUGGESTED&#160;</td><td class="fielddoc"><p >The ROM suggests 8MB of memory. </p>
+<tr><td class="fieldname"><a id="a250b0904144dfc38ccb7637464f5aa59a25d9b18d9c0f36871ded0e36966f410e" name="a250b0904144dfc38ccb7637464f5aa59a25d9b18d9c0f36871ded0e36966f410e"></a>EXPANSION_PAK_SUGGESTED&#160;</td><td class="fielddoc"><p >The ROM suggests 8MB of memory. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04" name="aa741eaa527c42177bb1855f881a23897afbb76c646ca33b144594fa1dc381ca04"></a>EXPANSION_PAK_FAULTY&#160;</td><td class="fielddoc"><p >The ROM is faulty when using 8MB of memory. </p>
+<tr><td class="fieldname"><a id="a250b0904144dfc38ccb7637464f5aa59afbb76c646ca33b144594fa1dc381ca04" name="a250b0904144dfc38ccb7637464f5aa59afbb76c646ca33b144594fa1dc381ca04"></a>EXPANSION_PAK_FAULTY&#160;</td><td class="fielddoc"><p >The ROM is faulty when using 8MB of memory. </p>
 </td></tr>
 </table>
 
@@ -675,7 +721,7 @@ expansion_pak</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 10 2024 17:43:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Jan 17 2024 14:44:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

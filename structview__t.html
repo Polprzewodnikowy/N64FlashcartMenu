@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.5"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>N64FlashcartMenu: actions.h File Reference</title>
+<title>N64FlashcartMenu: view_t Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,32 +67,30 @@ $(function() {
 </div>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_1a56cc8cdc1689899910be5fa4716ee4.html">menu</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">actions.h File Reference</div></div>
+<a href="#pub-attribs">Data Fields</a>  </div>
+  <div class="headertitle"><div class="title">view_t Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Menu Actions.  
-<a href="#details">More...</a></p>
-
-<p><a href="actions_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aa3023d6fdaf7332365de86598bf5bde5"><td class="memItemLeft" align="right" valign="top"><a id="aa3023d6fdaf7332365de86598bf5bde5" name="aa3023d6fdaf7332365de86598bf5bde5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>actions_update</b> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu)</td></tr>
-<tr class="separator:aa3023d6fdaf7332365de86598bf5bde5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a9e888ef46303941949c5536bc77ea7ba"><td class="memItemLeft" align="right" valign="top"><a id="a9e888ef46303941949c5536bc77ea7ba" name="a9e888ef46303941949c5536bc77ea7ba"></a>
+<a class="el" href="menu__state_8h.html#aea8b3793f8f84c964eb96c91b0768a70">menu_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>id</b></td></tr>
+<tr class="separator:a9e888ef46303941949c5536bc77ea7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcab02eb618506530bafb1c42965c1a5"><td class="memItemLeft" align="right" valign="top"><a id="adcab02eb618506530bafb1c42965c1a5" name="adcab02eb618506530bafb1c42965c1a5"></a>
+void(*&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> )(<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu)</td></tr>
+<tr class="separator:adcab02eb618506530bafb1c42965c1a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b387bca6c0b9ace5174030d02928759"><td class="memItemLeft" align="right" valign="top"><a id="a1b387bca6c0b9ace5174030d02928759" name="a1b387bca6c0b9ace5174030d02928759"></a>
+void(*&#160;</td><td class="memItemRight" valign="bottom"><b>show</b> )(<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, surface_t *display)</td></tr>
+<tr class="separator:a1b387bca6c0b9ace5174030d02928759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Menu Actions. </p>
-</div></div><!-- contents -->
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>menu.c</li>
+</ul>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Wed Jan 17 2024 14:44:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5

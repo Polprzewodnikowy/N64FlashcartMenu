@@ -29,6 +29,7 @@ typedef enum {
     MENU_MODE_FILE_INFO,
     MENU_MODE_SYSTEM_INFO,
     MENU_MODE_IMAGE_VIEWER,
+    MENU_MODE_TEXT_VIEWER,
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_SETTINGS_EDITOR,
@@ -40,7 +41,6 @@ typedef enum {
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
-    __MENU_MODE_COUNT,
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -51,6 +51,7 @@ typedef enum {
     ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
+    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_MUSIC,
     ENTRY_TYPE_OTHER,
 } entry_type_t;

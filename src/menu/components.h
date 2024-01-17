@@ -45,7 +45,8 @@ typedef struct component_context_menu {
     struct component_context_menu *submenu;
     struct {
         const char *text;
-        void (*action) (menu_t *menu);
+        void (*action) (menu_t *menu, void *arg);
+        void *arg;
         struct component_context_menu *submenu;
     } list[];
 } component_context_menu_t;

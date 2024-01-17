@@ -6,7 +6,7 @@
 
 
 #define DEFAULT_FREQUENCY   (44100)
-#define NUM_BUFFERS         (2)
+#define NUM_BUFFERS         (4)
 #define NUM_CHANNELS        (2)
 
 

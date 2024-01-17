@@ -27,7 +27,7 @@ typedef struct {
     mp3dec_t dec;
     mp3dec_frame_info_t info;
 
-    uint8_t buffer[MAX_FREE_FORMAT_FRAME_SIZE];
+    uint8_t buffer[16 * 1024];
     uint8_t *buffer_ptr;
     size_t buffer_left;
 
@@ -51,6 +51,10 @@ static void mp3player_fill_buffer (void) {
     UINT bytes_read;
 
     if (f_eof(&p->fil)) {
+        return;
+    }
+
+    if (p->buffer_left >= ALIGN(MAX_FREE_FORMAT_FRAME_SIZE, FS_SECTOR_SIZE)) {
         return;
     }
 

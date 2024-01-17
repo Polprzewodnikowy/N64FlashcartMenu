@@ -23,26 +23,23 @@ void view_startup_display (menu_t *menu, surface_t *display);
 void view_browser_init (menu_t *menu);
 void view_browser_display (menu_t *menu, surface_t *display);
 
-void view_system_info_init (menu_t *menu);
-void view_system_info_display (menu_t *menu, surface_t *display);
-
 void view_file_info_init (menu_t *menu);
 void view_file_info_display (menu_t *menu, surface_t *display);
 
+void view_system_info_init (menu_t *menu);
+void view_system_info_display (menu_t *menu, surface_t *display);
+
 void view_image_viewer_init (menu_t *menu);
 void view_image_viewer_display (menu_t *menu, surface_t *display);
+
+void view_text_viewer_init (menu_t *menu);
+void view_text_viewer_display (menu_t *menu, surface_t *display);
 
 void view_music_player_init (menu_t *menu);
 void view_music_player_display (menu_t *menu, surface_t *display);
 
 void view_credits_init (menu_t *menu);
 void view_credits_display (menu_t *menu, surface_t *display);
-
-void view_load_rom_init (menu_t *menu);
-void view_load_rom_display (menu_t *menu, surface_t *display);
-
-void view_load_disk_init (menu_t *menu);
-void view_load_disk_display (menu_t *menu, surface_t *display);
 
 void view_settings_init (menu_t *menu);
 void view_settings_display (menu_t *menu, surface_t *display);

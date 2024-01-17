@@ -152,6 +152,7 @@ static view_t menu_views[] = {
     { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
     { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
     { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
+    { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },

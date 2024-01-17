@@ -8,7 +8,8 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
-FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date +%Y-%m-%dT%H:%M:%SZ).ALPHA\"
+MENU_VERSION ?= "Rolling release"
+BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
 include $(N64_INST)/include/n64.mk
 
@@ -55,6 +56,7 @@ SRCS = \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
+	menu/views/text_viewer.c \
 	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
 	menu/views/load_rom.c \
@@ -63,6 +65,7 @@ SRCS = \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
+	menu/views/flashcart_info.c \
 	utils/fs.c
 
 FONTS = \
@@ -87,6 +90,9 @@ $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
+
+$(BUILD_DIR)/menu/views/credits.o: .FORCE
+$(BUILD_DIR)/menu/views/credits.o: FLAGS+=-DMENU_VERSION=\"$(MENU_VERSION)\" -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\"
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
@@ -143,5 +149,7 @@ endif
 
 # test:
 #   TODO: run tests
+
+.FORCE:
 
 -include $(DEPS)

@@ -27,6 +27,8 @@ typedef enum {
 /** @brief List of optional supported flashcart features */
 typedef enum {
     FLASHCART_FEATURE_64DD,
+    FLASHCART_FEATURE_RTC,
+    FLASHCART_FEATURE_USB,
 } flashcart_features_t;
 
 /** @brief Flashcart save type enumeration */

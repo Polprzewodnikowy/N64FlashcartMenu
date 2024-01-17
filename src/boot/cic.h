@@ -13,7 +13,7 @@ typedef enum {
     CIC_5167,
     CIC_6101,
     CIC_7102,
-    CIC_6102_7101,
+    CIC_x102,
     CIC_x103,
     CIC_x105,
     CIC_x106,

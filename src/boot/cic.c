@@ -102,7 +102,7 @@ cic_type_t cic_detect (uint8_t *ipl3) {
     switch (cic_calculate_ipl3_checksum(ipl3, 0x3F)) {
         case 0x45CC73EE317AULL: return CIC_6101;        // 6101
         case 0x44160EC5D9AFULL: return CIC_7102;        // 7102
-        case 0xA536C0F1D859ULL: return CIC_6102_7101;   // 6102 / 7101
+        case 0xA536C0F1D859ULL: return CIC_x102;        // 6102 / 7101
     }
     switch (cic_calculate_ipl3_checksum(ipl3, 0x78)) {
         case 0x586FD4709867ULL: return CIC_x103;        // 6103 / 7103
@@ -133,7 +133,7 @@ uint8_t cic_get_seed (cic_type_t cic_type) {
         case CIC_5167: return 0xDD;
         case CIC_6101: return 0x3F;
         case CIC_7102: return 0x3F;
-        case CIC_6102_7101: return 0x3F;
+        case CIC_x102: return 0x3F;
         case CIC_x103: return 0x78;
         case CIC_x105: return 0x91;
         case CIC_x106: return 0x85;

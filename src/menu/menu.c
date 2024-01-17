@@ -20,6 +20,7 @@
 #include "views/views.h"
 
 
+#define MENU_DIRECTORY      "sd:/menu"
 #define CACHE_DIRECTORY     "sd:/menu/cache"
 #define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
 
@@ -77,6 +78,8 @@ static void menu_init (boot_params_t *boot_params) {
 
     menu->error_message = NULL;
 
+    directory_create(MENU_DIRECTORY);
+
     settings_load(&menu->settings);
 
     directory_create(CACHE_DIRECTORY);
@@ -133,30 +136,40 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 }
 
-
-// NOTE: Keep this array in sync with menu_mode_t
-static struct views_s {
+typedef const struct {
+    menu_mode_t id;
     void (*init) (menu_t *menu);
     void (*show) (menu_t *menu, surface_t *display);
-} views[__MENU_MODE_COUNT] = {
-    { NULL, NULL }, // MENU_MODE_NONE
-    { view_startup_init, view_startup_display }, // MENU_MODE_STARTUP
-    { view_browser_init, view_browser_display }, // MENU_MODE_BROWSER
-    { view_file_info_init, view_file_info_display }, // MENU_MODE_FILE_INFO
-    { view_system_info_init, view_system_info_display }, // MENU_MODE_SYSTEM_INFO
-    { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
-    { view_text_viewer_init, view_text_viewer_display }, // MENU_MODE_TEXT_VIEWER
-    { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
-    { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
-    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
-    { view_rtc_init, view_rtc_display }, // MENU_MODE_RTC
-    { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
-    { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
-    { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
-    { view_error_init, view_error_display }, // MENU_MODE_ERROR
-    { view_fault_init, view_fault_display }, // MENU_MODE_FAULT
-    { NULL, NULL }, // MENU_MODE_BOOT
+} view_t;
+
+static view_t menu_views[] = {
+    { MENU_MODE_STARTUP, view_startup_init, view_startup_display },
+    { MENU_MODE_BROWSER, view_browser_init, view_browser_display },
+    { MENU_MODE_FILE_INFO, view_file_info_init, view_file_info_display },
+    { MENU_MODE_SYSTEM_INFO, view_system_info_init, view_system_info_display },
+    { MENU_MODE_IMAGE_VIEWER, view_image_viewer_init, view_image_viewer_display },
+    { MENU_MODE_TEXT_VIEWER, view_text_viewer_init, view_text_viewer_display },
+    { MENU_MODE_MUSIC_PLAYER, view_music_player_init, view_music_player_display },
+    { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
+    { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
+    { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
+    { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
+    { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
+    { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
+    { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
+    { MENU_MODE_ERROR, view_error_init, view_error_display },
+    { MENU_MODE_FAULT, view_fault_init, view_fault_display },
 };
+
+static view_t *menu_get_view (menu_mode_t id) {
+    for (int i = 0; i < sizeof(menu_views) / sizeof(view_t); i++) {
+        if (menu_views[i].id == id) {
+            return &menu_views[i];
+        }
+    }
+    return NULL;
+}
+
 
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
@@ -169,8 +182,9 @@ void menu_run (boot_params_t *boot_params) {
 
             actions_update(menu);
 
-            if (views[menu->mode].show) {
-                views[menu->mode].show(menu, display);
+            view_t *view = menu_get_view(menu->mode);
+            if (view && view->show) {
+                view->show(menu, display);
             } else {
                 rdpq_attach_clear(display, NULL);
                 rdpq_detach_wait();
@@ -184,8 +198,9 @@ void menu_run (boot_params_t *boot_params) {
             while (menu->mode != menu->next_mode) {
                 menu->mode = menu->next_mode;
 
-                if (views[menu->mode].init) {
-                    views[menu->mode].init(menu);
+                view_t *next_view = menu_get_view(menu->next_mode);
+                if (next_view && next_view->init) {
+                    next_view->init(menu);
                 }
             }
 

@@ -1,7 +1,7 @@
 /**
  * @file rom_info.h
  * @brief N64 ROM Database.
- * @note Only works with N64 ROM's by checking the first 1024 bytes of the file.
+ * @note Only works with N64 ROM's by checking the first 4096 bytes of the file.
  * @ingroup menu 
  */
 
@@ -12,7 +12,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "boot/cic.h"
 #include "path.h"
 
 
@@ -31,7 +30,7 @@ typedef enum {
     ENDIANNESS_LITTLE,
     /** @brief Is Byte Swapped Endian. */
     ENDIANNESS_BYTE_SWAP,
-} endianness_t;
+} rom_endianness_t;
 
 /** @brief ROM media type enumeration. */
 typedef enum {
@@ -45,7 +44,7 @@ typedef enum {
     N64_DISK_EXPANDABLE = 'E',
     /** @brief Is an Aleck64 program. */
     N64_ALECK64  = 'Z'
-} category_type_t;
+} rom_category_type_t;
 
 /** @brief ROM market region & language type enumeration. */
 typedef enum {
@@ -89,27 +88,46 @@ typedef enum {
     MARKET_OTHER_Y = 'Y', // many EU ROM's uses this.
     /** @brief The ROM is designed for an undefined region and TBD language(s). */
     MARKET_OTHER_Z = 'Z' // no known ROM's use this.
-} destination_type_t;
+} rom_destination_type_t;
+
+/** @brief ROM CIC type enumeration. */
+typedef enum {
+    ROM_CIC_TYPE_UNKNOWN = 0,       // No known CIC type detected
+    ROM_CIC_TYPE_5101 = 5101,       // Aleck64 CIC-5101
+    ROM_CIC_TYPE_5167 = 5167,       // 64DD ROM conversion CIC-5167
+    ROM_CIC_TYPE_6101 = 6101,       // NTSC CIC-6101
+    ROM_CIC_TYPE_7102 = 7102,       // PAL CIC-7102
+    ROM_CIC_TYPE_x102 = 6102,       // NTSC CIC-6102 / PAL CIC-7101
+    ROM_CIC_TYPE_x103 = 6103,       // NTSC CIC-6103 / PAL CIC-7103
+    ROM_CIC_TYPE_x105 = 6105,       // NTSC CIC-6105 / PAL CIC-7105
+    ROM_CIC_TYPE_x106 = 6106,       // NTSC CIC-6106 / PAL CIC-7106
+    ROM_CIC_TYPE_8301 = 8301,       // NDDJ0 64DD IPL
+    ROM_CIC_TYPE_8302 = 8302,       // NDDJ1 64DD IPL
+    ROM_CIC_TYPE_8303 = 8303,       // NDDJ2 64DD IPL
+    ROM_CIC_TYPE_8401 = 8401,       // NDXJ0 64DD IPL
+    ROM_CIC_TYPE_8501 = 8501,       // NDDE0 64DD IPL
+    ROM_CIC_TYPE_AUTOMATIC = -1,    // Guess CIC from IPL3
+} rom_cic_type_t;
 
 /** @brief ROM save type enumeration. */
 typedef enum {
     /** @brief There is no expected save type. */
-    SAVE_TYPE_NONE,
-    SAVE_TYPE_EEPROM_4K,
-    SAVE_TYPE_EEPROM_16K,
-    SAVE_TYPE_SRAM,
-    SAVE_TYPE_SRAM_BANKED,
-    SAVE_TYPE_SRAM_128K,
-    SAVE_TYPE_FLASHRAM,
-    SAVE_TYPE_FLASHRAM_PKST2,
+    SAVE_TYPE_NONE = 0,
+    SAVE_TYPE_EEPROM_4K = 1,
+    SAVE_TYPE_EEPROM_16K = 2,
+    SAVE_TYPE_SRAM = 3,
+    SAVE_TYPE_SRAM_BANKED = 4,
+    SAVE_TYPE_SRAM_128K = 5,
+    SAVE_TYPE_FLASHRAM = 6,
+    SAVE_TYPE_FLASHRAM_PKST2 = 7,
     SAVE_TYPE_AUTOMATIC = -1,
 } rom_save_type_t;
 
 typedef enum {
-    ROM_TV_TYPE_PAL,
-    ROM_TV_TYPE_NTSC,
-    ROM_TV_TYPE_MPAL,
-    ROM_TV_TYPE_UNKNOWN,
+    ROM_TV_TYPE_PAL = 0,
+    ROM_TV_TYPE_NTSC = 1,
+    ROM_TV_TYPE_MPAL = 2,
+    ROM_TV_TYPE_UNKNOWN = 3,
     ROM_TV_TYPE_AUTOMATIC = -1,
 } rom_tv_type_t;
 
@@ -129,49 +147,62 @@ typedef enum {
 
     /** @brief The ROM is faulty when using 8MB of memory. */
     EXPANSION_PAK_FAULTY,
-} expansion_pak_t;
+} rom_expansion_pak_t;
 
 /** @brief ROM Information Structure. */
 typedef struct {
     /** @brief The file endian. */
-    endianness_t endianness;
+    rom_endianness_t endianness;
+
     /** @brief The clock rate defined in the ROM's header. */
     float clock_rate;
+
     /** @brief The boot address defined in the ROM's header. */
     uint32_t boot_address;
+
     struct {
         /** @brief The SDK version defined in the ROM's header. */
         uint8_t version;
         /** @brief The SDK revision defined in the ROM's header. */
         char revision;
     } libultra;
+
     /** @brief The check code defined in the ROM's header. */
     uint64_t check_code;
+
     /** @brief The title defined in the ROM's header. */
     char title[20];
+
     union {
         /** @brief The game code defined in the ROM's header. */
         char game_code[4];
         struct {
             /** @brief The game media type. */
-            category_type_t category_code : 8;
+            rom_category_type_t category_code : 8;
             /** @brief The game unique identifier. */
             char unique_code[2];
             /** @brief The game region and or market. */
-            destination_type_t destination_code : 8;
+            rom_destination_type_t destination_code : 8;
         };
     };
+
     /** @brief The ROM version defined in the ROM's header. */
     uint8_t version;
 
-    cic_type_t cic_type;
+    /** @brief The CIC type required by the ROM. */
+    rom_cic_type_t cic_type;
 
     /** @brief The save type required by the ROM. */
     rom_save_type_t save_type;
 
+    /** @brief The TV type required by the ROM. */
     rom_tv_type_t tv_type;
 
+    /** @brief Overrides of auto-detected CIC/save/TV types. */
     struct {
+        bool cic;
+        rom_cic_type_t cic_type;
+
         bool save;
         rom_save_type_t save_type;
 
@@ -188,15 +219,21 @@ typedef struct {
         bool real_time_clock;
         bool disk_conversion;
         bool combo_rom_disk_game;
-        expansion_pak_t expansion_pak;
+        rom_expansion_pak_t expansion_pak;
     } features;
 } rom_info_t;
 
 
-rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type);
-rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
+rom_cic_type_t rom_info_get_cic_type (rom_info_t *rom_info);
+bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed);
+rom_err_t rom_info_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type);
+
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info);
+rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type);
+
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info);
+rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
+
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info);
 
 

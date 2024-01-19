@@ -37,7 +37,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "^%02X** empty directory **",
-            STL_UNKNOWN
+            STL_GRAY
         );
     } else {
         rdpq_paragraph_t *file_list_layout;
@@ -80,12 +80,16 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             menu_font_style_t style;
 
             switch (entry->type) {
-                case ENTRY_TYPE_DIR: style = STL_DIRECTORY; break;
-                case ENTRY_TYPE_SAVE: style = STL_SAVE; break;
-                case ENTRY_TYPE_OTHER: style = STL_UNKNOWN; break;
-                case ENTRY_TYPE_IMAGE: style = STL_MEDIA; break;
-                case ENTRY_TYPE_MUSIC: style = STL_MEDIA; break;
-                default: style = STL_DEFAULT; break;
+                case ENTRY_TYPE_DIR: style = STL_YELLOW; break;
+                case ENTRY_TYPE_ROM: style = STL_DEFAULT; break;
+                case ENTRY_TYPE_DISK: style = STL_DEFAULT; break;
+                case ENTRY_TYPE_EMULATOR: style = STL_DEFAULT; break;
+                case ENTRY_TYPE_SAVE: style = STL_GREEN; break;
+                case ENTRY_TYPE_IMAGE: style = STL_BLUE; break;
+                case ENTRY_TYPE_MUSIC: style = STL_BLUE; break;
+                case ENTRY_TYPE_TEXT: style = STL_ORANGE; break;
+                case ENTRY_TYPE_OTHER: style = STL_GRAY; break;
+                default: style = STL_GRAY; break;
             }
 
             rdpq_paragraph_builder_style(style);

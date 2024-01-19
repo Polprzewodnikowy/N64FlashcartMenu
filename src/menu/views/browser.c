@@ -47,13 +47,13 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_IMAGE) {
             return 1;
-        } else if (a->type == ENTRY_TYPE_TEXT) {
-            return -1;
-        } else if (b->type == ENTRY_TYPE_TEXT) {
-            return 1;
         } else if (a->type == ENTRY_TYPE_MUSIC) {
             return -1;
         } else if (b->type == ENTRY_TYPE_MUSIC) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_TEXT) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_TEXT) {
             return 1;
         }
     }
@@ -355,14 +355,14 @@ static void draw (menu_t *menu, surface_t *d) {
         "%s\n"
         "^%02XB: Back^00",
         menu->browser.entries == 0 ? "" : action,
-        path_is_root(menu->browser.directory) ? STL_UNKNOWN : STL_DEFAULT
+        path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
     component_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "Start: Settings\n"
         "^%02XR: Options^00",
-        menu->browser.entries == 0 ? STL_UNKNOWN : STL_DEFAULT
+        menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {

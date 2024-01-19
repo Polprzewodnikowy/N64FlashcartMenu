@@ -51,8 +51,8 @@ typedef enum {
     ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
-    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_MUSIC,
+    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_OTHER,
 } entry_type_t;
 

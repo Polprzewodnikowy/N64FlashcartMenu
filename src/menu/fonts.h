@@ -15,10 +15,11 @@ typedef enum {
 /** @brief Font style enumeration. */
 typedef enum {
     STL_DEFAULT = 0,
-    STL_DIRECTORY,
-    STL_SAVE,
-    STL_MEDIA,
-    STL_UNKNOWN,
+    STL_GREEN,
+    STL_BLUE,
+    STL_YELLOW,
+    STL_ORANGE,
+    STL_GRAY,
 } menu_font_style_t;
 
 

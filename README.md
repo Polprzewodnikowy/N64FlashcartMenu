@@ -52,7 +52,7 @@ If transfering a file from a different flashcart such as the ED64, it will be ne
 
 i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (USA).sav`
 
-**NOTE:** certain emulator saves may be incompatible.
+**NOTE:** certain emulator saves or saves created for a different ROM version or region may be incompatible.
 
 
 ### ROM Boxart

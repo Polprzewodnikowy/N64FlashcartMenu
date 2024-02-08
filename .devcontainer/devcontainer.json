@@ -11,7 +11,8 @@
         "vscode": {
             "extensions": [
                 "ms-vscode.cpptools",
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "coolchyni.beyond-debug"
             ],
             "settings": {
                 "git.ignoredRepositories": [

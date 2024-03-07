@@ -17,8 +17,9 @@ typedef enum {
     PATCH_ERR_IO,
     PATCH_ERR_NO_FILE,
     PATCH_ERR_INVALID,
+    PATCH_ERR_UNSUPPORTED,
 } rom_patcher_err_t;
 
-rom_patcher_err_t rom_patcher_load (char *path);
+rom_patcher_err_t rom_patcher_load_file (char *path);
 
 #endif

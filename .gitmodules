@@ -19,7 +19,3 @@
 	path = src/libs/miniz
 	url = https://github.com/richgel999/miniz.git
 	ignore = dirty
-[submodule "src/libs/Flips"]
-	path = src/libs/Flips
-	url = https://github.com/Alcaro/Flips.git
-	ignore = dirty

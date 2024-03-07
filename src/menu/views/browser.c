@@ -302,11 +302,11 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_DISK:
                 menu->next_mode = MENU_MODE_LOAD_DISK;
                 break;
-            case ENTRY_TYPE_PATCH:
-                menu->next_mode = MENU_MODE_LOAD_PATCH;
-                break;
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
+                break;
+            case ENTRY_TYPE_PATCH:
+                menu->next_mode = MENU_MODE_LOAD_PATCH;
                 break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;

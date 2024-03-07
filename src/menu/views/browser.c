@@ -11,6 +11,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
+static const char *patch_extensions[] = { "bps", "ips", "aps", "xdelta", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
 static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *image_extensions[] = { "png", NULL };
@@ -113,6 +114,8 @@ static bool load_directory (menu_t *menu) {
             entry->type = ENTRY_TYPE_ROM;
         } else if (file_has_extensions(info.fname, disk_extensions)) {
             entry->type = ENTRY_TYPE_DISK;
+        } else if (file_has_extensions(info.fname, patch_extensions)) {
+            entry->type = ENTRY_TYPE_PATCH;
         }else if (file_has_extensions(info.fname, emulator_extensions)) {
             entry->type = ENTRY_TYPE_EMULATOR;
         } else if (file_has_extensions(info.fname, save_extensions)) {

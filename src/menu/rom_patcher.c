@@ -4,6 +4,22 @@
 #include "rom_patcher.h"
 
 
+typedef struct
+{
+    uint32_t address; // The start address of the data to modify as big endian. NOTE: this is only 3 bytes.
+    uint16_t length; // The length of the following data (greater than zero) as big endian.
+    uint8_t *data; // The data to be written to "Address" (using length).
+} ips_patch_record_t;
+
+typedef struct
+{
+    uint32_t address; //  The start address of the data to modify as big endian. NOTE: this is only 3 bytes.
+    uint16_t zero_bytes; // The record length was zero, this determines the difference between ips_patch_record_t length.
+    uint16_t rle_byte_count; // Number of times to repeat the following byte as big endian.
+    uint8_t rle_byte; // The repeatitive byte to be written to "Address".
+} ips_patch_record_rle_t;
+
+
 rom_patcher_err_t apply_patch_type_bps(FIL *fil)
 {
     // https://github.com/Alcaro/Flips/blob/master/bps_spec.md
@@ -13,8 +29,21 @@ rom_patcher_err_t apply_patch_type_bps(FIL *fil)
 
 rom_patcher_err_t apply_patch_type_ips(FIL *fil)
 {
-    // http://www.smwiki.net/wiki/IPS_file_format
-    return PATCH_ERR_INVALID;
+    // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
+
+    // Check the header is valid.
+    // UINT bytes_read = 0;
+    // UINT *buff = 0;
+    // f_read(fil, &buff, 1024, &bytes_read);
+    // if (&header != "PATCH") {
+    //     return PATCH_ERR_INVALID;
+    // }
+
+    //ips_patch_record_t records;
+    //ips_patch_record_rle_t records_rle;
+
+    // FIXME: we are not yet doing the patch write!
+    return PATCH_OK;
 }
 
 rom_patcher_err_t apply_patch_type_aps(FIL *fil)
@@ -128,32 +157,31 @@ rom_patcher_err_t rom_patcher_load_file (char *path)
 //         if (apsGetNextByte() != "PATCH"[i])return ERR_WRONG_IPS;
 //     }
 
-
-//     // if (aps_header[5] != 0 || aps_header[6] != 0 || aps_header[7] != 16 || aps_header[8] != 0 || aps_header[9] != 8)return ERR_WRONG_IPS2;
-
 //     asp_swap = 0;
-
-
-//     // for (i = 0; i < 5; i++)apsGetNextByte();
 
 //     while (aps_addr < len) {
 
-
-
+// Get Address
 //         rom_addr = apsGetNextByte() << 16;
 //         rom_addr |= apsGetNextByte() << 8;
 //         rom_addr |= apsGetNextByte();
 
+// get length
 //         block_len = apsGetNextByte() << 8;
 //         block_len |= apsGetNextByte();
+
 //         if (aps_resp)return aps_resp;
 
+// if the length is zero
 //         if (block_len == 0) {
+// get the rle length
 //             block_len = apsGetNextByte() << 8;
 //             block_len |= apsGetNextByte();
+// get the rle value
 //             rle_val = apsGetNextByte();
 //             if (aps_resp)return aps_resp;
 
+// apply the rle value while the rle length is valid
 //             while (block_len--) {
 //                 apsSetRomByteRLE(rle_val);
 //             }

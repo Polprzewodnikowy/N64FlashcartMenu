@@ -1,57 +1,93 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
-
+#include "utils/fs.h"
 #include "rom_patcher.h"
 
 
-rom_patcher_err_t rom_patcher_load_file (char *path)
-{
-    // ROM file should be loaded before patch is applied.
-    // See https://github.com/marcrobledo/RomPatcher.js/ for an example lib.
-    // Though needs conversion from JS to C
-    // apply patch dependent on extension.
-    //return apply_patch_type_bps(path);
-    //return apply_patch_type_ips(path);
-    //return apply_patch_type_aps(path);
-    //return apply_patch_type_ups(path);
-    //return apply_patch_type_xdelta(path);
-    // aps should be PATCH_ERR_UNSUPPORTED; as not really a thing?!
-    return PATCH_ERR_IO;
-}
-
-rom_patcher_err_t apply_patch_type_bps(char *path)
+rom_patcher_err_t apply_patch_type_bps(FIL *fil)
 {
     // https://github.com/Alcaro/Flips/blob/master/bps_spec.md
     // https://www.romhacking.net/documents/746/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patcher_err_t apply_patch_type_ips(char *path)
+rom_patcher_err_t apply_patch_type_ips(FIL *fil)
 {
     // http://www.smwiki.net/wiki/IPS_file_format
     return PATCH_ERR_INVALID;
 }
 
-rom_patcher_err_t apply_patch_type_aps(char *path)
+rom_patcher_err_t apply_patch_type_aps(FIL *fil)
 {
     // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
     return PATCH_ERR_INVALID;
 }
 
-rom_patcher_err_t apply_patch_type_ups(char *path)
+rom_patcher_err_t apply_patch_type_ups(FIL *fil)
 {
     // http://www.romhacking.net/documents/392/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patcher_err_t apply_patch_type_xdelta(char *path)
+rom_patcher_err_t apply_patch_type_xdelta(FIL *fil)
 {
     return PATCH_ERR_UNSUPPORTED;
 }
 
 
+rom_patcher_err_t rom_patcher_load_file (char *path)
+{
+    FIL fil;
+    rom_patcher_err_t err;
 
-// Krikzz implementation:
+    if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+        return PATCH_ERR_NO_FILE;
+    }
+
+
+    // ROM file should be loaded before patch is applied.
+    // See https://github.com/marcrobledo/RomPatcher.js/ for an example lib.
+    // Though needs conversion from JS to C
+    // apply patch dependent on extension.
+
+    rom_patch_type_t patch_ext_type = PATCH_TYPE_IPS; // FIXME: should be the extension of the file!
+
+    switch (patch_ext_type)
+    {
+    case PATCH_TYPE_BPS:
+        err = apply_patch_type_bps(&fil);
+        break;
+    case PATCH_TYPE_IPS:
+        err = apply_patch_type_ips(&fil);
+        break;
+    case PATCH_TYPE_APS:
+        err = apply_patch_type_aps(&fil);
+        break;
+    case PATCH_TYPE_UPS:
+        err = apply_patch_type_ups(&fil);
+        break;
+    case PATCH_TYPE_XDELTA:
+        err = apply_patch_type_xdelta(&fil);
+        break;
+    default:
+        return PATCH_ERR_UNSUPPORTED;
+    }
+
+
+    if (f_close(&fil) != FR_OK) {
+        return PATCH_ERR_IO;
+    }
+
+    if (err != PATCH_OK) {
+        return err;
+    }
+
+    return PATCH_OK;
+}
+
+
+
+// Krikzz implementation for ref:
 // #define APS_BUFF_SIZE 32768
 
 // static uint8_t aps_buff[APS_BUFF_SIZE];
@@ -99,7 +135,6 @@ rom_patcher_err_t apply_patch_type_xdelta(char *path)
 
 
 //     // for (i = 0; i < 5; i++)apsGetNextByte();
-//     // gSetXY(4, 4);
 
 //     while (aps_addr < len) {
 

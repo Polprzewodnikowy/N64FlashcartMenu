@@ -60,14 +60,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load ROM\n"
+            "A: Load and run patched ROM\n"
             "B: Exit"
         );
 
         if (menu->load.rom_path) {
             component_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load patched ROM"
+                "R: Load with ROM"
             );
         }
     }
@@ -107,9 +107,21 @@ static void load (menu_t *menu) {
     // }
 
     menu->next_mode = MENU_MODE_BOOT;
-    menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-    menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
-    menu->boot_params->detect_cic_seed = true;
+
+    if (load_rom) {
+        menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
+        menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
+        switch (rom_info_get_tv_type(&menu->load.rom_info)) {
+            case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
+            case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
+            case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
+            default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
+        }
+    } else {
+        menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
+        menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
+        menu->boot_params->detect_cic_seed = true;
+    }
 }
 
 

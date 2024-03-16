@@ -8,12 +8,11 @@ typedef struct
     char *header_magic[5]; // The header type, should always be "APS10" for N64.
     uint8_t type; // The patch type, 0 for a Simple Patch, 1 for a N64 Specific Patch.
     uint8_t encoding_method; // Encoding Method, 0 for Simple Encoding.
-    char *description[49]; // Patch description.
+    char *description[50]; // Patch description.
     bool endian; // image file format 0 = Doctor V64, 1 = CD64/Z64/Wc/SP.
     uint16_t rom_id; // This is the two bytes of Cart ID taken directly from the original image.
     uint8_t country_code; //  The original image's country code.
     uint64_t crc; // The original image's CRC taken directly out of the original image.
-    char *pad[6]; // For future expansion.
     uint32_t size; // Size of destination image.
 } aps_patch_header_t;
 
@@ -278,6 +277,7 @@ rom_patcher_err_t rom_patcher_load_file (char *path)
 //         block_len = apsGetNextByte();
 //         if (aps_resp)return aps_resp;
 
+// If paramter block_len is set to zero (0) then the write will be a two (2) byte field
 //         if (block_len == 0) {
 //             block_len = apsGetNextByte();
 //             rle_val = apsGetNextByte();
@@ -290,6 +290,7 @@ rom_patcher_err_t rom_patcher_load_file (char *path)
 //         }
 
 
+// Else, the write is a 4 byte field
 //         while (block_len--) {
 
 //             apsSetRomByte();

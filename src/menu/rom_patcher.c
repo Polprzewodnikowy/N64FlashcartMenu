@@ -3,6 +3,12 @@
 #include "utils/fs.h"
 #include "rom_patcher.h"
 
+#define PATCH_APS_MAGIC_GBA "APS1"
+#define PATCH_APS_MAGIC_N64 "APS10"
+#define PATCH_IPS_MAGIC "PATCH"
+#define PATCH_BPS_MAGIC "BPS1"
+#define PATCH_UPS_MAGIC "UPS1"
+
 typedef struct
 {
     char header_magic[5]; // The header type, should always be "APS10" for N64.
@@ -49,7 +55,7 @@ rom_patcher_err_t apply_patch_type_ips(FIL *fil)
     f_read(fil, header_magic, 5, &bytes_read);
 
     // Check the header is valid.
-    if (strcmp(header_magic, "PATCH") != 0) {
+    if (strcmp(header_magic, PATCH_IPS_MAGIC) != 0) {
         return PATCH_ERR_INVALID;
     }
 
@@ -69,7 +75,7 @@ rom_patcher_err_t apply_patch_type_aps(FIL *fil)
     f_read(fil, &aps_patch_header, sizeof(aps_patch_header_t), &bytes_read);
 
     // Check the header is valid.
-    if (strcmp(aps_patch_header.header_magic, "APS10") != 0) {
+    if (strcmp(aps_patch_header.header_magic, PATCH_APS_MAGIC_N64) != 0) {
         return PATCH_ERR_INVALID;
     }
 

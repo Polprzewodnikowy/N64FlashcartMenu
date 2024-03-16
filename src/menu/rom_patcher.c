@@ -5,10 +5,10 @@
 
 typedef struct
 {
-    char *header_magic[5]; // The header type, should always be "APS10" for N64.
+    char header_magic[5]; // The header type, should always be "APS10" for N64.
     uint8_t type; // The patch type, 0 for a Simple Patch, 1 for a N64 Specific Patch.
     uint8_t encoding_method; // Encoding Method, 0 for Simple Encoding.
-    char *description[50]; // Patch description.
+    char description[50]; // Patch description.
     bool endian; // image file format 0 = Doctor V64, 1 = CD64/Z64/Wc/SP.
     uint16_t rom_id; // This is the two bytes of Cart ID taken directly from the original image.
     uint8_t country_code; //  The original image's country code.
@@ -44,14 +44,14 @@ rom_patcher_err_t apply_patch_type_ips(FIL *fil)
 {
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
-    // UINT bytes_read = 0;
-    // UINT *buff = 0;
-    // f_read(fil, &buff, 1024, &bytes_read);
+    UINT bytes_read = 0;
+    char header_magic[5];
+    f_read(fil, header_magic, 5, &bytes_read);
 
     // Check the header is valid.
-    // if (header != "PATCH") {
-    //     return PATCH_ERR_INVALID;
-    // }
+    if (strcmp(header_magic, "PATCH") != 0) {
+        return PATCH_ERR_INVALID;
+    }
 
     //ips_patch_record_t records;
     //ips_patch_record_rle_t records_rle;
@@ -64,10 +64,15 @@ rom_patcher_err_t apply_patch_type_aps(FIL *fil)
 {
     // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
 
+    UINT bytes_read = 0;
+    aps_patch_header_t aps_patch_header;
+    f_read(fil, &aps_patch_header, sizeof(aps_patch_header_t), &bytes_read);
+
     // Check the header is valid.
-    // if (header != "APS10") {
-    //     return PATCH_ERR_INVALID;
-    // }
+    if (strcmp(aps_patch_header.header_magic, "APS10") != 0) {
+        return PATCH_ERR_INVALID;
+    }
+
     return PATCH_ERR_INVALID;
 }
 

@@ -3,17 +3,31 @@
 #include "utils/fs.h"
 #include "rom_patcher.h"
 
+typedef struct
+{
+    char *header_magic[5]; // The header type, should always be "APS10" for N64.
+    uint8_t type; // The patch type, 0 for a Simple Patch, 1 for a N64 Specific Patch.
+    uint8_t encoding_method; // Encoding Method, 0 for Simple Encoding.
+    char *description[49]; // Patch description.
+    bool endian; // image file format 0 = Doctor V64, 1 = CD64/Z64/Wc/SP.
+    uint16_t rom_id; // This is the two bytes of Cart ID taken directly from the original image.
+    uint8_t country_code; //  The original image's country code.
+    uint64_t crc; // The original image's CRC taken directly out of the original image.
+    char *pad[6]; // For future expansion.
+    uint32_t size; // Size of destination image.
+} aps_patch_header_t;
+
 
 typedef struct
 {
-    uint32_t address; // The start address of the data to modify as big endian. NOTE: this is only 3 bytes.
-    uint16_t length; // The length of the following data (greater than zero) as big endian.
+    uint32_t address; // The start address of the data to modify as big endian. NOTE: this is only 3 bytes for IPS.
+    uint16_t length; // The length of the following data (greater than zero) as big endian. If zero, use ips_patch_record_rle_t
     uint8_t *data; // The data to be written to "Address" (using length).
 } ips_patch_record_t;
 
 typedef struct
 {
-    uint32_t address; //  The start address of the data to modify as big endian. NOTE: this is only 3 bytes.
+    uint32_t address_offset; //  The start address of the data to modify as big endian. NOTE: this is only 3 bytes for IPS.
     uint16_t zero_bytes; // The record length was zero, this determines the difference between ips_patch_record_t length.
     uint16_t rle_byte_count; // Number of times to repeat the following byte as big endian.
     uint8_t rle_byte; // The repeatitive byte to be written to "Address".
@@ -31,11 +45,12 @@ rom_patcher_err_t apply_patch_type_ips(FIL *fil)
 {
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
-    // Check the header is valid.
     // UINT bytes_read = 0;
     // UINT *buff = 0;
     // f_read(fil, &buff, 1024, &bytes_read);
-    // if (&header != "PATCH") {
+
+    // Check the header is valid.
+    // if (header != "PATCH") {
     //     return PATCH_ERR_INVALID;
     // }
 
@@ -49,6 +64,11 @@ rom_patcher_err_t apply_patch_type_ips(FIL *fil)
 rom_patcher_err_t apply_patch_type_aps(FIL *fil)
 {
     // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
+
+    // Check the header is valid.
+    // if (header != "APS10") {
+    //     return PATCH_ERR_INVALID;
+    // }
     return PATCH_ERR_INVALID;
 }
 
@@ -226,29 +246,35 @@ rom_patcher_err_t rom_patcher_load_file (char *path)
 
 
 
-
+// get the patch header
 //     for (i = 0; i < 78; i++) {
 //         resp = apsGetNextByte();
 //         if (aps_resp)return aps_resp;
 //         aps_header[i] = aps_byte;
 //     }
 
+// check the magic in the header, for N64, first 5 bytes should be "APS10"
 //     for (i = 0; i < 5; i++) {
 //         if (aps_header[i] != "APS10"[i])return ERR_WRONG_APS;
 //     }
 
+// check the rom header CRC against the expected patch CRC
 //     for (i = 0; i < 8; i++) {
 //         if (rom_buff[i + 0x10] != aps_header[i + 0x3d])return ERR_APS_CRC;
 //     }
 
+// determine patch endian
 //     asp_swap = aps_header[57] == 0 ? 1 : 0;
 
 //     while (aps_addr < len) {
 
+// the address
 //         rom_addr = apsGetNextByte();
 //         rom_addr |= apsGetNextByte() << 8;
 //         rom_addr |= apsGetNextByte() << 16;
 //         rom_addr |= apsGetNextByte() << 24;
+
+// the number of bytes to be changed
 //         block_len = apsGetNextByte();
 //         if (aps_resp)return aps_resp;
 

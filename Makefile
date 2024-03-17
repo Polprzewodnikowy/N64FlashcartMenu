@@ -66,6 +66,7 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
+	menu/views/joypad_controller_pak.c \
 	utils/fs.c
 
 FONTS = \

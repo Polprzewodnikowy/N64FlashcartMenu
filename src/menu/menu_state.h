@@ -12,7 +12,7 @@
 
 #include "boot/boot.h"
 #include "disk_info.h"
-#include "rom_patcher.h"
+#include "rom_patch_info.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
 #include "rom_info.h"
@@ -39,7 +39,7 @@ typedef enum {
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
-    MENU_MODE_LOAD_PATCH,
+    MENU_MODE_LOAD_ROM_PATCH,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
@@ -107,8 +107,8 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
-        path_t *patch_path;
-        //patch_info_t patch_info;
+        path_t *rom_patch_path;
+        rom_patch_info_t rom_patch_info;
     } load;
 } menu_t;
 

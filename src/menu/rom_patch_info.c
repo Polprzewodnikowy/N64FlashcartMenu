@@ -1,23 +1,19 @@
 #include <fatfs/ff.h>
 #include <libdragon.h>
 #include "utils/fs.h"
-#include "rom_patcher.h"
+#include "rom_patch_info.h"
+#include "rom_info.h"
 
-#define PATCH_APS_MAGIC_GBA "APS1"
-#define PATCH_APS_MAGIC_N64 "APS10"
-#define PATCH_IPS_MAGIC "PATCH"
-#define PATCH_BPS_MAGIC "BPS1"
-#define PATCH_UPS_MAGIC "UPS1"
 
 typedef struct
 {
-    char header_magic[5]; // The header type, should always be "APS10" for N64.
-    uint8_t type; // The patch type, 0 for a Simple Patch, 1 for a N64 Specific Patch.
-    uint8_t encoding_method; // Encoding Method, 0 for Simple Encoding.
-    char description[50]; // Patch description.
+    char header_magic[6]; // The header type, should always be "APS10" for N64. (plus null char)
+    aps_patch_type_t type; // The patch type, 0 for a Simple Patch, 1 for a N64 Specific Patch.
+    aps_patch_encoding_t encoding_method; // Encoding Method, 0 for Simple Encoding.
+    char description[50]; // Patch description. (plus null char)
     bool endian; // image file format 0 = Doctor V64, 1 = CD64/Z64/Wc/SP.
     uint16_t rom_id; // This is the two bytes of Cart ID taken directly from the original image.
-    uint8_t country_code; //  The original image's country code.
+    rom_destination_type_t destination_code; //  The original rom image's market code.
     uint64_t crc; // The original image's CRC taken directly out of the original image.
     uint32_t size; // Size of destination image.
 } aps_patch_header_t;
@@ -39,14 +35,30 @@ typedef struct
 } ips_patch_record_rle_t;
 
 
-rom_patcher_err_t apply_patch_type_bps(FIL *fil)
+typedef struct
+{
+    uint32_t file_offset; //  The start address of the data to modify as big endian. NOTE: this is only 3 bytes for IPS.
+    uint8_t byte_count; // Number of times to repeat the following byte as big endian.
+    uint8_t byte; // The repeatitive byte to be written to "Address".
+    uint8_t repetitions; // The repeatitive byte to be written to "Address".
+} aps_patch_record_t;
+
+typedef struct
+{
+    uint32_t file_offset; //  The start address of the data to modify as big endian. NOTE: this is only 3 bytes for IPS.
+    uint8_t byte_count; // Number of times to repeat the following byte as big endian.
+    uint8_t *bytes; // The repeatitive byte to be written to "Address".
+} aps_patch_record_rle_t;
+
+
+rom_patch_load_err_t apply_patch_type_bps(FIL *fil)
 {
     // https://github.com/Alcaro/Flips/blob/master/bps_spec.md
     // https://www.romhacking.net/documents/746/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patcher_err_t apply_patch_type_ips(FIL *fil)
+rom_patch_load_err_t apply_patch_type_ips(FIL *fil)
 {
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
@@ -66,7 +78,7 @@ rom_patcher_err_t apply_patch_type_ips(FIL *fil)
     return PATCH_OK;
 }
 
-rom_patcher_err_t apply_patch_type_aps(FIL *fil)
+rom_patch_load_err_t apply_patch_type_aps(FIL *fil)
 {
     // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
 
@@ -82,22 +94,22 @@ rom_patcher_err_t apply_patch_type_aps(FIL *fil)
     return PATCH_ERR_INVALID;
 }
 
-rom_patcher_err_t apply_patch_type_ups(FIL *fil)
+rom_patch_load_err_t apply_patch_type_ups(FIL *fil)
 {
     // http://www.romhacking.net/documents/392/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patcher_err_t apply_patch_type_xdelta(FIL *fil)
+rom_patch_load_err_t apply_patch_type_xdelta(FIL *fil)
 {
     return PATCH_ERR_UNSUPPORTED;
 }
 
 
-rom_patcher_err_t rom_patcher_load_file (char *path)
+rom_patch_load_err_t rom_patch_info_load (char *path)
 {
     FIL fil;
-    rom_patcher_err_t err;
+    rom_patch_load_err_t err;
 
     if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
         return PATCH_ERR_NO_FILE;
@@ -113,23 +125,23 @@ rom_patcher_err_t rom_patcher_load_file (char *path)
 
     switch (patch_ext_type)
     {
-    case PATCH_TYPE_BPS:
-        err = apply_patch_type_bps(&fil);
-        break;
-    case PATCH_TYPE_IPS:
-        err = apply_patch_type_ips(&fil);
-        break;
-    case PATCH_TYPE_APS:
-        err = apply_patch_type_aps(&fil);
-        break;
-    case PATCH_TYPE_UPS:
-        err = apply_patch_type_ups(&fil);
-        break;
-    case PATCH_TYPE_XDELTA:
-        err = apply_patch_type_xdelta(&fil);
-        break;
-    default:
-        return PATCH_ERR_UNSUPPORTED;
+        case PATCH_TYPE_BPS:
+            err = apply_patch_type_bps(&fil);
+            break;
+        case PATCH_TYPE_IPS:
+            err = apply_patch_type_ips(&fil);
+            break;
+        case PATCH_TYPE_APS:
+            err = apply_patch_type_aps(&fil);
+            break;
+        case PATCH_TYPE_UPS:
+            err = apply_patch_type_ups(&fil);
+            break;
+        case PATCH_TYPE_XDELTA:
+            err = apply_patch_type_xdelta(&fil);
+            break;
+        default:
+            return PATCH_ERR_UNSUPPORTED;
     }
 
 

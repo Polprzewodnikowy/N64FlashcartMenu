@@ -309,7 +309,7 @@ static void process (menu_t *menu) {
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
             case ENTRY_TYPE_PATCH:
-                menu->next_mode = MENU_MODE_LOAD_PATCH;
+                menu->next_mode = MENU_MODE_LOAD_ROM_PATCH;
                 break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;

@@ -47,7 +47,7 @@ SRCS = \
 	menu/path.c \
 	menu/png_decoder.c \
 	menu/rom_info.c \
-	menu/rom_patcher.c \
+	menu/rom_patch_info.c \
 	menu/settings.c \
 	menu/sound.c \
 	menu/usb_comm.c \

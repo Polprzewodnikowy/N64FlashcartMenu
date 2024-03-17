@@ -1,5 +1,5 @@
 #include "../cart_load.h"
-#include "../rom_patcher.h"
+#include "../rom_patch_info.h"
 #include "boot/boot.h"
 #include "views.h"
 
@@ -8,14 +8,15 @@ static bool load_pending;
 static bool load_rom;
 
 
-// static char *convert_error_message (rom_patcher_err_t err) {
-//     switch (err) {
-//         case PATCH_ERR_IO: return "I/O error during loading patch file information";
-//         case PATCH_ERR_NO_FILE: return "Couldn't open patch file";
-//         case PATCH_ERR_INVALID: return "Invalid patch file";
-//         default: return "Unknown patch info load error";
-//     }
-// }
+static char *convert_error_message (rom_patch_load_err_t err) {
+    switch (err) {
+        case PATCH_ERR_IO: return "I/O error during loading patch file information";
+        case PATCH_ERR_NO_FILE: return "Couldn't open patch file";
+        case PATCH_ERR_INVALID: return "Invalid patch file";
+        case PATCH_ERR_UNSUPPORTED: return "The patch type is not (yet) supported";
+        default: return "Unknown patch info load error";
+    }
+}
 
 
 static void process (menu_t *menu) {
@@ -126,16 +127,16 @@ static void load (menu_t *menu) {
 
 
 void view_load_rom_patch_init (menu_t *menu) {
-    if (menu->load.patch_path) {
-        path_free(menu->load.patch_path);
-        menu->load.patch_path = NULL;
+    if (menu->load.rom_patch_path) {
+        path_free(menu->load.rom_patch_path);
+        menu->load.rom_patch_path = NULL;
     }
 
     load_pending = false;
 
-    menu->load.patch_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    menu->load.rom_patch_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    // rom_patcher_err_t err = patch_info_load(path_get(menu->load.patch_path), &menu->load.patch_info);
+    // rom_patch_load_err_t err = patch_info_load(path_get(menu->load.rom_patch_path), &menu->load.patch_info);
     // if (err != PATCH_OK) {
     //     menu_show_error(menu, convert_error_message(err));
     // }

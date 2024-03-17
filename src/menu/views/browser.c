@@ -36,9 +36,9 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DISK) {
             return 1;
-        } else if (a->type == ENTRY_TYPE_PATCH) {
+        } else if (a->type == ENTRY_TYPE_ROM_PATCH) {
             return -1;
-        } else if (b->type == ENTRY_TYPE_PATCH) {
+        } else if (b->type == ENTRY_TYPE_ROM_PATCH) {
             return 1;
         } else if (a->type == ENTRY_TYPE_EMULATOR) {
             return -1;
@@ -115,7 +115,7 @@ static bool load_directory (menu_t *menu) {
         } else if (file_has_extensions(info.fname, disk_extensions)) {
             entry->type = ENTRY_TYPE_DISK;
         } else if (file_has_extensions(info.fname, patch_extensions)) {
-            entry->type = ENTRY_TYPE_PATCH;
+            entry->type = ENTRY_TYPE_ROM_PATCH;
         }else if (file_has_extensions(info.fname, emulator_extensions)) {
             entry->type = ENTRY_TYPE_EMULATOR;
         } else if (file_has_extensions(info.fname, save_extensions)) {
@@ -308,7 +308,7 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
-            case ENTRY_TYPE_PATCH:
+            case ENTRY_TYPE_ROM_PATCH:
                 menu->next_mode = MENU_MODE_LOAD_ROM_PATCH;
                 break;
             case ENTRY_TYPE_IMAGE:
@@ -353,7 +353,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
-            case ENTRY_TYPE_PATCH: action = "A: Load"; break;
+            case ENTRY_TYPE_ROM_PATCH: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;

@@ -7,13 +7,14 @@
 #include "../utils/fs.h"
 #include "cpak_handler.h"
 
-#define PAK_BLOCKS 128
-uint8_t pak_data[PAK_BLOCKS * MEMPAK_BLOCK_SIZE];
+#define CPAK_BLOCKS 128
+#define CPAK_BLOCK_SIZE MEMPAK_BLOCK_SIZE
 
 int clone_pak_content_to_file(char *path, uint8_t port) {
+    uint8_t cpak_data[CPAK_BLOCKS * CPAK_BLOCK_SIZE];
     int err;
-    for (int i = 0; i < PAK_BLOCKS; i++) {
-        err = read_mempak_sector(port, i, &pak_data[i * MEMPAK_BLOCK_SIZE]);
+    for (int i = 0; i < CPAK_BLOCKS; i++) {
+        err = read_mempak_sector(port, i, &cpak_data[i * CPAK_BLOCK_SIZE]);
         if (err) {
             return err;
         }
@@ -25,7 +26,7 @@ int clone_pak_content_to_file(char *path, uint8_t port) {
         return 1;
     }
 
-    FRESULT fw_err = f_write(&fil, &pak_data, sizeof(pak_data), &bytes_written);
+    FRESULT fw_err = f_write(&fil, &cpak_data, sizeof(cpak_data), &bytes_written);
 
     f_close(&fil);
 
@@ -36,3 +37,11 @@ int clone_pak_content_to_file(char *path, uint8_t port) {
         return 0;
     }
 }
+
+// void overwite_pak_content_from_file(char *path, uint8_t port) {
+
+// }
+
+// void try_repair_pak() {
+
+// }

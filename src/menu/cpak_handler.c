@@ -7,16 +7,14 @@
 #include "../utils/fs.h"
 #include "cpak_handler.h"
 
-uint8_t pak_data[128 * MEMPAK_BLOCK_SIZE];
+#define PAK_BLOCKS 128
+uint8_t pak_data[PAK_BLOCKS * MEMPAK_BLOCK_SIZE];
 
-int clone_pak_content_to_file(char *path, uint8_t jpad_port) {
-    // get the pak content
+int clone_pak_content_to_file(char *path, uint8_t port) {
     int err;
-    for (int i = 0; i < 128; i++) {
-        err = read_mempak_sector(jpad_port, i, &pak_data[i * MEMPAK_BLOCK_SIZE]);
+    for (int i = 0; i < PAK_BLOCKS; i++) {
+        err = read_mempak_sector(port, i, &pak_data[i * MEMPAK_BLOCK_SIZE]);
         if (err) {
-            // there was an issue reading the content (-1 if the sector was out of bounds or sector_data was null
-            // -2 if there was an error reading part of a sector
             return err;
         }
     }

@@ -39,6 +39,7 @@ SRCS = \
 	menu/components/common.c \
 	menu/components/context_menu.c \
 	menu/components/file_list.c \
+	menu/cpak_handler.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -56,6 +57,7 @@ SRCS = \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
+	menu/views/joypad_controller_pak.c \
 	menu/views/text_viewer.c \
 	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
@@ -66,7 +68,6 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
-	menu/views/joypad_controller_pak.c \
 	utils/fs.c
 
 FONTS = \

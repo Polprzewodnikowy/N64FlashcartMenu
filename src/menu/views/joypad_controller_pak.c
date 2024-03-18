@@ -1,4 +1,5 @@
 #include "views.h"
+#include "../cpak_handler.h"
 
 static int accessory_is_cpak[4];
 
@@ -10,7 +11,11 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        // do something?! 
+        // TODO: handle all ports
+        if (accessory_is_cpak[0]) {
+            // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
+            clone_pak_content_to_file("sd://cpak/cpak_backup.mpk", 0);
+        }
     }
 
     if (menu->actions.back) {
@@ -32,21 +37,30 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
     );
 
-    // Backup to SD, restore from SD, and/or Repair functions.
+    // TODO: Backup from other ports, restore from SD, and/or Repair functions.
     // Bonus would be to handle individual per game entries!
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
-        "Not yet implemented!\n"
+        "Clone Controller Pak (1) to SD Card.\n"
+        "If it is available.\n"
     );
 
-
-    component_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n" // "A: Clone PAK to SD Card\n"
-        "B: Back"
-    );
+    if (accessory_is_cpak[0]) {
+        component_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Clone\n"
+            "B: Back"
+        );
+    }
+    else {
+        component_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "B: Back"
+        );
+    }
 
     rdpq_detach_show();
 }

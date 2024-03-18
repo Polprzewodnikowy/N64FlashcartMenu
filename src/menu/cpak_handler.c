@@ -1,9 +1,6 @@
 #include <libdragon.h>
 
 #include <fatfs/ff.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
 #include "../utils/fs.h"
 #include "cpak_handler.h"
 

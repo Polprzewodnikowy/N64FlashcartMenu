@@ -10,6 +10,6 @@
 #ifndef CPAK_HANDLER_H__
 #define CPAK_HANDLER_H__
 
-int clone_pak_content_to_file(char *path, uint8_t jpad_port);
+int clone_pak_content_to_file(char *path, uint8_t port);
 
 #endif

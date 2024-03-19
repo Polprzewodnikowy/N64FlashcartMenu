@@ -11,6 +11,7 @@
 
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 
 #define SAVE_WRITEBACK_MAX_SECTORS  (256)
@@ -96,7 +97,9 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
+            // break; // FIXME: Commented out as required to fall through due to need of F/W 3.06 and UNFLoader (at minimum).
         case CART_ED:   // Original EverDrive-64
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64

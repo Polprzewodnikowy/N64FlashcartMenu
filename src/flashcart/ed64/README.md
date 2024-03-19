@@ -1,0 +1,1 @@
+This folder allows support for the ED64(P) flashcart when using V series hardware.

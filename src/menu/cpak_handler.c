@@ -7,7 +7,19 @@
 #define CPAK_BLOCKS 128
 #define CPAK_BLOCK_SIZE MEMPAK_BLOCK_SIZE
 
-int clone_pak_content_to_file(char *path, uint8_t port) {
+cpak_err_t cpak_info_load(uint8_t port, cpak_info_t *cpak_info)
+{
+    int res = validate_mempak(port);
+    if (res != CONTROLLER_PAK_OK) {
+        return CONTROLLER_PAK_ERR_INVALID;
+    }
+
+    // TODO: implementation.
+
+    return CONTROLLER_PAK_OK;
+}
+
+int cpak_clone_contents_to_file(char *path, uint8_t port) {
     uint8_t cpak_data[CPAK_BLOCKS * CPAK_BLOCK_SIZE];
     int err;
     for (int i = 0; i < CPAK_BLOCKS; i++) {
@@ -20,25 +32,27 @@ int clone_pak_content_to_file(char *path, uint8_t port) {
     FIL fil;
     UINT bytes_written;
     if (f_open(&fil, strip_sd_prefix(path), FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
-        return 1;
+        return CONTROLLER_PAK_ERR_IO;
     }
 
-    FRESULT fw_err = f_write(&fil, &cpak_data, sizeof(cpak_data), &bytes_written);
+    FRESULT fwrite_err = f_write(&fil, &cpak_data, sizeof(cpak_data), &bytes_written);
 
     f_close(&fil);
 
-    if (fw_err) {
-        return fw_err;
+    if (fwrite_err) {
+        return fwrite_err;
     }
     else {
-        return 0;
+        return CONTROLLER_PAK_OK;
     }
 }
 
-// void overwite_pak_content_from_file(char *path, uint8_t port) {
+cpak_err_t cpak_overwrite_contents_from_file(char *path, uint8_t port) {
+    // TODO: implementation.
+    return CONTROLLER_PAK_ERR_IO;
+}
 
-// }
-
-// void try_repair_pak() {
-
-// }
+cpak_err_t cpak_attempt_repair() {
+    // TODO: implementation.
+    return CONTROLLER_PAK_ERR_IO;
+}

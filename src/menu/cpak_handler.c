@@ -61,7 +61,17 @@ cpak_err_t cpak_overwrite_contents_from_file(char *path, uint8_t port) {
     return CONTROLLER_PAK_ERR_IO;
 }
 
-cpak_err_t cpak_attempt_repair() {
-    // TODO: implementation.
-    return CONTROLLER_PAK_ERR_IO;
+cpak_err_t cpak_attempt_repair(uint8_t port, bool allow_formatting) {
+    int result = validate_mempak(port);
+    if (result == CONTROLLER_PAK_OK) {
+        return CONTROLLER_PAK_OK;
+    }
+
+    // TODO: repair implementation.
+
+    // last resort would be to format it completely!
+    if (result == -3 && allow_formatting) {
+        result = format_mempak(port);
+    }
+    return result;
 }

@@ -28,6 +28,6 @@ typedef struct {
 cpak_err_t cpak_info_load(uint8_t port, cpak_info_t *cpak_info);
 int cpak_clone_contents_to_file(char *path, uint8_t port);
 cpak_err_t cpak_overwrite_contents_from_file(char *path, uint8_t port);
-cpak_err_t cpak_attempt_repair();
+cpak_err_t cpak_attempt_repair(uint8_t port, bool allow_formatting);
 
 #endif

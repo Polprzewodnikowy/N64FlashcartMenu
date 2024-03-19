@@ -14,7 +14,16 @@ cpak_err_t cpak_info_load(uint8_t port, cpak_info_t *cpak_info)
         return CONTROLLER_PAK_ERR_INVALID;
     }
 
-    // TODO: implementation.
+    for (int j = 0; j < 16; j++)
+    {
+        entry_structure_t entry;
+
+        get_mempak_entry(port, j, &entry);
+
+        cpak_info->entries[j] = entry;
+    }
+
+    cpak_info->free_space = get_mempak_free_space(port);
 
     return CONTROLLER_PAK_OK;
 }

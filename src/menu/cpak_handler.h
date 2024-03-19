@@ -20,8 +20,9 @@ typedef enum {
 
 /** @brief Controller Pak Information Structure. */
 typedef struct {
-    // header
-    // pages
+    entry_structure_t entries[16];
+    int free_space;
+
 } cpak_info_t;
 
 cpak_err_t cpak_info_load(uint8_t port, cpak_info_t *cpak_info);

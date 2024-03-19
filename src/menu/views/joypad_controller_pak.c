@@ -14,7 +14,7 @@ static void process (menu_t *menu) {
         // TODO: handle all ports
         if (accessory_is_cpak[0]) {
             // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
-            clone_pak_content_to_file("sd://cpak/cpak_backup.mpk", 0);
+            cpak_clone_contents_to_file("sd://cpak/cpak_backup.mpk", 0);
         }
     }
 

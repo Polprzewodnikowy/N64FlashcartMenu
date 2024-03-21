@@ -11,6 +11,7 @@
 
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 
 #define SAVE_WRITEBACK_MAX_SECTORS  (256)
@@ -56,6 +57,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_save = NULL,
     .set_save_type = NULL,
     .set_save_writeback = NULL,
+    .get_device_info = NULL,
 });
 
 #ifdef NDEBUG
@@ -96,7 +98,10 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
-        case CART_ED:   // Original EverDrive-64
+            // break;   // FIXME: Commented out as required to fall through due to need of F/W 3.06 and UNFLoader.
+                        // but, this is possibily causing the issues related to saves etc.
+        case CART_ED:   // Original EverDrive-64 (V-Series & Clones)
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64

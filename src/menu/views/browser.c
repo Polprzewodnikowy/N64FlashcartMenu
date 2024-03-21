@@ -247,6 +247,10 @@ static void set_menu_next_mode (menu_t *menu, void *arg) {
     menu->next_mode = next_mode;
 }
 
+static void show_flashcart_info (menu_t *menu) {
+    menu->next_mode = MENU_MODE_FLASHCART;
+}
+
 static component_context_menu_t settings_context_menu = {
     .list = {
         { .text = "Edit settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },

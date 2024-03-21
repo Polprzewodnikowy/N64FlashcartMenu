@@ -20,10 +20,12 @@ SRCS = \
 	boot/boot.c \
 	boot/cic.c \
 	boot/reboot.S \
-	flashcart/64drive/64drive_ll.c \
-	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
 	flashcart/flashcart.c \
+	flashcart/64drive/64drive_ll.c \
+	flashcart/64drive/64drive.c \
+	flashcart/ed64/ed64_ll.c \
+	flashcart/ed64/ed64.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
 	libs/libspng/spng/spng.c \
@@ -55,6 +57,7 @@ SRCS = \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
+	menu/views/flashcart_info.c \
 	menu/views/image_viewer.c \
 	menu/views/text_viewer.c \
 	menu/views/load_disk.c \

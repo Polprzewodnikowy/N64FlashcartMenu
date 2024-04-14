@@ -34,9 +34,10 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
-reset_rdram:
-    bnez $s5, reset_rdram_skip
+    bnez $a0, reset_rdram_skip  # Skip when cheats are enabled
+    bnez $s5, reset_rdram_skip  # Skip when reset type is set to NMI
 
+reset_rdram:
     li $t0, RI_ADDRESS
 
     sw $zero, RI_REFRESH($t0)

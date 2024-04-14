@@ -18,6 +18,7 @@ N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs 
 SRCS = \
 	main.c \
 	boot/boot.c \
+	boot/cheats.S \
 	boot/cic.c \
 	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \

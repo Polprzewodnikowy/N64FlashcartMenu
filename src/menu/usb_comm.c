@@ -70,6 +70,7 @@ static void command_reboot (menu_t *menu) {
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
+    menu->boot_params->cheat_list = NULL;
 };
 
 static void command_send_file (menu_t *menu) {

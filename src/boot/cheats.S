@@ -1,5 +1,5 @@
-# Cheat patcher and the cheat engine largely based on the code form "Altra64"
-# https://github.com/Suprapote/Altra64/blob/a38e7c2f3e6ad3be823eb33118bc659b102e635d/src/utils.c#L621
+# Original code written by Jay Oster 'Parasyte'
+# https://github.com/parasyte/alt64/blob/master/utils.c#L891-L1153
 
 
 #include "cheats.h"

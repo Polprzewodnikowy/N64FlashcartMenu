@@ -6,14 +6,14 @@
 #
 # Supported codes:
 #  - 50 - Repeater (patcher)
-#  - 80/81/A0/A1 - Continous 8/16 bit write to a cached/uncached address
+#  - 80/81/A0/A1 - Continuous 8/16 bit write to a cached/uncached address
 #  - D0/D1/D2/D3 - Conditional 8/16 bit equal/different to specified value
 #  - EE - Disable expansion pak
 #  - F0/F1 - Single 8/16 bit write to an uncached address at boot
 #  - FF - Set cheat engine and cheat list address
 #
 # Unsupported codes (for now):
-#  - 88/89/A8/A9 - Continous 8/16 bit write to a cached/uncached address (triggered by GS button)
+#  - 88/89/A8/A9 - Continuous 8/16 bit write to a cached/uncached address (triggered by GS button)
 #  - D8/D9/DA/DB - Conditional 8/16 bit equal/different to specified value (triggered by GS button)
 #
 # TODO/ideas list:
@@ -165,7 +165,7 @@ patcher_return_to_game_code:
 
 # ----- CHEAT ENGINE -----
 
-# This code is hooked to the general exeption handler and is run on every exception/interrupt
+# This code is hooked to the general exception handler and is run on every exception/interrupt
 
 cheat_engine:
     .set noat

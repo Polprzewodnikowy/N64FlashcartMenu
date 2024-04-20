@@ -2,8 +2,6 @@
 #include <string.h>
 #include <time.h>
 
-#include <fatfs/ff.h>
-
 #include "../fonts.h"
 #include "utils/fs.h"
 #include "views.h"
@@ -62,8 +60,7 @@ static int compare_entry (const void *pa, const void *pb) {
 }
 
 static bool load_directory (menu_t *menu) {
-    DIR dir;
-    FILINFO info;
+    dir_t info;
 
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
@@ -73,63 +70,53 @@ static bool load_directory (menu_t *menu) {
     menu->browser.selected = -1;
     menu->browser.entry = NULL;
 
-    if (f_opendir(&dir, strip_sd_prefix(path_get(menu->browser.directory))) != FR_OK) {
-        return true;
+
+    if (dir_findfirst(path_get(menu->browser.directory), &info)) {
+        return false;
     }
 
     while (menu->browser.entries < BROWSER_LIST_SIZE) {
-        if (f_readdir(&dir, &info) != FR_OK) {
-            return true;
-        }
-
-        size_t length = strlen(info.fname);
-
-        if (length == 0) {
-            break;
-        }
-
-        if (info.fattrib & AM_SYS) {
-            continue;
-        }
-        if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
-            continue;
-        }
+        // if (info.fattrib & AM_SYS) {
+        //     continue;
+        // }
+        // if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
+        //     continue;
+        // }
 
         entry_t *entry = &menu->browser.list[menu->browser.entries];
 
-        entry->name = strdup(info.fname);
+        entry->name = strdup(info.d_name);
         if (!entry->name) {
-            f_closedir(&dir);
             return true;
         }
 
-        if (info.fattrib & AM_DIR) {
+        if (info.d_type == DT_DIR) {
             entry->type = ENTRY_TYPE_DIR;
-        } else if (file_has_extensions(info.fname, rom_extensions)) {
+        } else if (file_has_extensions(entry->name, rom_extensions)) {
             entry->type = ENTRY_TYPE_ROM;
-        } else if (file_has_extensions(info.fname, disk_extensions)) {
+        } else if (file_has_extensions(entry->name, disk_extensions)) {
             entry->type = ENTRY_TYPE_DISK;
-        }else if (file_has_extensions(info.fname, emulator_extensions)) {
+        }else if (file_has_extensions(entry->name, emulator_extensions)) {
             entry->type = ENTRY_TYPE_EMULATOR;
-        } else if (file_has_extensions(info.fname, save_extensions)) {
+        } else if (file_has_extensions(entry->name, save_extensions)) {
             entry->type = ENTRY_TYPE_SAVE;
-        } else if (file_has_extensions(info.fname, image_extensions)) {
+        } else if (file_has_extensions(entry->name, image_extensions)) {
             entry->type = ENTRY_TYPE_IMAGE;
-        } else if (file_has_extensions(info.fname, text_extensions)) {
+        } else if (file_has_extensions(entry->name, text_extensions)) {
             entry->type = ENTRY_TYPE_TEXT;
-        } else if (file_has_extensions(info.fname, music_extensions)) {
+        } else if (file_has_extensions(entry->name, music_extensions)) {
             entry->type = ENTRY_TYPE_MUSIC;
         } else {
             entry->type = ENTRY_TYPE_OTHER;
         }
 
-        entry->size = info.fsize;
+        entry->size = info.d_size;
 
         menu->browser.entries += 1;
-    }
 
-    if (f_closedir(&dir) != FR_OK) {
-        return true;
+        if (dir_findnext(path_get(menu->browser.directory), &info)) {
+            break;
+        }
     }
 
     if (menu->browser.entries > 0) {
@@ -205,18 +192,14 @@ static void show_properties (menu_t *menu, void *arg) {
 static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
-        if (directory_delete(path_get(path))) {
+    if (file_delete(path_get(path))) {
+        if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
             menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
-            path_free(path);
-            return;
-        }
-    } else {
-        if (file_delete(path_get(path))) {
+        } else {
             menu_show_error(menu, "Couldn't delete file");
-            path_free(path);
-            return;
         }
+        path_free(path);
+        return;
     }
 
     path_free(path);
@@ -229,7 +212,7 @@ static void delete_entry (menu_t *menu, void *arg) {
 
 static void set_default_directory (menu_t *menu, void *arg) {
     free(menu->settings.default_directory);
-    menu->settings.default_directory = strdup(strip_sd_prefix(path_get(menu->browser.directory)));
+    menu->settings.default_directory = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
     settings_save(&menu->settings);
 }
 

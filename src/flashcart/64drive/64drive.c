@@ -83,7 +83,7 @@ static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
@@ -125,7 +125,7 @@ static flashcart_err_t d64_load_file (char *file_path, uint32_t rom_offset, uint
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(file_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
@@ -164,7 +164,7 @@ static flashcart_err_t d64_load_save (char *save_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 

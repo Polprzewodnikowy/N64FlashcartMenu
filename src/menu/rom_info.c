@@ -1,6 +1,6 @@
+#include <stdio.h>
 #include <string.h>
 
-#include <fatfs/ff.h>
 #include <mini.c/src/mini.h>
 
 #include "boot/cic.h"
@@ -912,21 +912,18 @@ rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_
 }
 
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
-    FIL fil;
-    UINT br;
+    FILE *f;
     rom_header_t rom_header;
 
-    if (f_open(&fil, strip_sd_prefix(path_get(path)), FA_READ) != FR_OK) {
+    if ((f = fopen(path_get(path), "rb")) == NULL) {
         return ROM_ERR_NO_FILE;
     }
-    if (f_read(&fil, &rom_header, sizeof(rom_header), &br) != FR_OK) {
-        f_close(&fil);
+    setbuf(f, NULL);
+    if (fread(&rom_header, sizeof(rom_header), 1, f) != 1) {
+        fclose(f);
         return ROM_ERR_IO;
     }
-    if (f_close(&fil) != FR_OK) {
-        return ROM_ERR_IO;
-    }
-    if (br != sizeof(rom_header)) {
+    if (fclose(f)) {
         return ROM_ERR_IO;
     }
 

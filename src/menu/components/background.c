@@ -1,4 +1,4 @@
-#include <fatfs/ff.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "../components.h"
@@ -31,22 +31,21 @@ static void load_from_cache (component_background_t *c) {
         return;
     }
 
-    FIL fil;
-    UINT bytes_read;
+    FILE *f;
 
-    if (f_open(&fil, strip_sd_prefix(c->cache_location), FA_READ) != FR_OK) {
+    if ((f = fopen(c->cache_location, "rb")) == NULL) {
         return;
     }
 
     cache_metadata_t cache_metadata;
 
-    if ((f_read(&fil, &cache_metadata, sizeof(cache_metadata), &bytes_read) != FR_OK) || (bytes_read != sizeof(cache_metadata))) {
-        f_close(&fil);
+    if (fread(&cache_metadata, sizeof(cache_metadata), 1, f) != 1) {
+        fclose(f);
         return;
     }
 
     if (cache_metadata.magic != CACHE_METADATA_MAGIC || cache_metadata.width > DISPLAY_WIDTH || cache_metadata.height > DISPLAY_HEIGHT) {
-        f_close(&fil);
+        fclose(f);
         return;
     }
 
@@ -57,17 +56,17 @@ static void load_from_cache (component_background_t *c) {
         surface_free(c->image);
         free(c->image);
         c->image = NULL;
-        f_close(&fil);
+        fclose(f);
         return;
     }
 
-    if ((f_read(&fil, c->image->buffer, cache_metadata.size, &bytes_read) != FR_OK) || (bytes_read != cache_metadata.size)) {
+    if (fread(c->image->buffer, cache_metadata.size, 1, f) != 1) {
         surface_free(c->image);
         free(c->image);
         c->image = NULL;
     }
 
-    f_close(&fil);
+    fclose(f);
 }
 
 static void save_to_cache (component_background_t *c) {
@@ -75,9 +74,9 @@ static void save_to_cache (component_background_t *c) {
         return;
     }
 
-    FIL fil;
-    UINT bytes_written;
-    if (f_open(&fil, strip_sd_prefix(c->cache_location), FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
+    FILE *f;
+
+    if ((f = fopen(c->cache_location, "wb")) == NULL) {
         return;
     }
 
@@ -88,10 +87,10 @@ static void save_to_cache (component_background_t *c) {
         .size = (c->image->height * c->image->stride),
     };
 
-    f_write(&fil, &cache_metadata, sizeof(cache_metadata), &bytes_written);
-    f_write(&fil, c->image->buffer, cache_metadata.size, &bytes_written);
+    fwrite(&cache_metadata, sizeof(cache_metadata), 1, f);
+    fwrite(c->image->buffer, cache_metadata.size, 1, f);
 
-    f_close(&fil);
+    fclose(f);
 }
 
 static void prepare_background (component_background_t *c) {

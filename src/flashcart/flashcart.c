@@ -8,6 +8,7 @@
 #include "utils/utils.h"
 
 #include "flashcart.h"
+#include "flashcart_utils.h"
 
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"

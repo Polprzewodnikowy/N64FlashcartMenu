@@ -2,8 +2,9 @@
 //       Main use of these functions is to aid menu development
 //       (for example replace files on the SD card or reboot menu).
 
-#include <fatfs/ff.h>
+#include <stdio.h>
 #include <string.h>
+
 #include <usb.h>
 
 #include "usb_comm.h"
@@ -73,15 +74,12 @@ static void command_reboot (menu_t *menu) {
 };
 
 static void command_send_file (menu_t *menu) {
-    char path[256];
+    FILE *f;
+    char buffer[256];
+    uint8_t data[8192];
     char length[8];
 
-    FIL f;
-    int remaining;
-    uint8_t data[8192];
-    UINT bytes_written;
-
-    if (usb_comm_read_string(path, sizeof(path), ' ')) {
+    if (usb_comm_read_string(buffer, sizeof(buffer), ' ')) {
         return usb_comm_send_error("Invalid path argument\n");
     }
 
@@ -93,11 +91,17 @@ static void command_send_file (menu_t *menu) {
         return usb_comm_send_error("Invalid file length argument\n");
     }
 
-    if (f_open(&f, path, FA_CREATE_ALWAYS | FA_WRITE) != FR_OK) {
+    path_t *path = path_init("sd:/", buffer);
+
+    if ((f = fopen(path_get(path), "wb")) == NULL) {
+        path_free(path);
         return usb_comm_send_error("Couldn't create file\n");
     }
 
-    remaining = atoi(length);
+    setbuf(f, NULL);
+    path_free(path);
+
+    int remaining = atoi(length);
 
     if (remaining > MAX_FILE_SIZE) {
         return usb_comm_send_error("File size too big\n");
@@ -106,18 +110,14 @@ static void command_send_file (menu_t *menu) {
     while (remaining > 0) {
         int block_size = MIN(remaining, sizeof(data));
         usb_read(data, block_size);
-        if (f_write(&f, data, block_size, &bytes_written) != FR_OK) {
-            f_close(&f);
-            return usb_comm_send_error("Couldn't write data to the file\n");
-        }
-        if (bytes_written != block_size) {
-            f_close(&f);
+        if (fwrite(data, 1, block_size, f) != block_size) {
+            fclose(f);
             return usb_comm_send_error("Couldn't write all required data to the file\n");
         }
         remaining -= block_size;
     }
 
-    if (f_close(&f) != FR_OK) {
+    if (fclose(f)) {
         return usb_comm_send_error("Couldn't flush data to the file\n");
     }
 

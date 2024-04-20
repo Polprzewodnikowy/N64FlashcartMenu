@@ -1,9 +1,11 @@
-#include <fatfs/ff.h>
+#include <stdio.h>
 
 #include "utils/fs.h"
 #include "views.h"
 
+
 static char *file_content;
+
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
@@ -32,7 +34,6 @@ static void draw (menu_t *menu, surface_t *d) {
         file_content
     );
 
-
     component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
@@ -44,6 +45,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_text_viewer_init (menu_t *menu) {
+    FILE *f;
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     uint32_t file_size = file_get_size(path_get(path));
@@ -54,25 +56,20 @@ void view_text_viewer_init (menu_t *menu) {
 
     file_content = calloc(file_size, 1);
 
-    // read file content
-    FIL fil;
-    UINT br;
-
-    if (f_open(&fil, strip_sd_prefix(path_get(path)), FA_READ) != FR_OK) {
-        debugf("Error loading file\n");
+    if ((f = fopen(path_get(path), "r")) == NULL) {
+        path_free(path);
+        menu_show_error(menu, "Couldn't open text file");
+        return;
     }
-    if (f_read(&fil, file_content, file_size, &br) != FR_OK) {
-        f_close(&fil);
-        debugf("Error loading file content\n");
-    }
-    if (f_close(&fil) != FR_OK) {
-        debugf("Error closing file\n");
-    }
-
     path_free(path);
+    fread(file_content, 1, file_size, f);
+    if (fclose(f)) {
+        menu_show_error(menu, "Couldn't close text file");
+    }
 }
 
 void view_text_viewer_display (menu_t *menu, surface_t *display) {
     process(menu);
+
     draw(menu, display);
 }

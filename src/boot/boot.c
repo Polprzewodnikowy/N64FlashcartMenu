@@ -4,15 +4,12 @@
 #include "boot.h"
 #include "cheats.h"
 #include "cic.h"
+#include "reboot.h"
 
 
 #define C0_STATUS_FR    (1 << 26)
 #define C0_STATUS_CU0   (1 << 28)
 #define C0_STATUS_CU1   (1 << 29)
-
-
-extern uint32_t reboot_start __attribute__((section(".text")));
-extern size_t reboot_size __attribute__((section(".text")));
 
 
 static io32_t *boot_get_device_base (boot_params_t *params) {

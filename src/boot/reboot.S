@@ -1,3 +1,6 @@
+#include "reboot.h"
+
+
 #define IPL3_ENTRY          0xA4000040
 #define REBOOT_ADDRESS      0xA4001000
 #define STACK_ADDRESS       0xA4001FF0

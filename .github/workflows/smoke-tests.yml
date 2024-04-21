@@ -30,7 +30,7 @@ jobs:
 
       - name: Download ROM artifact
         id: download-rom-artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: N64FlashcartMenu
           path: ${{ runner.temp }}/roms
@@ -104,7 +104,7 @@ jobs:
 
       - name: Upload files
         if: ${{ matrix.ares-ci-compatible }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.rom-name }}-${{ env.Delay_Time_Seconds }}s-ares-output-log.txt
           if-no-files-found: ignore

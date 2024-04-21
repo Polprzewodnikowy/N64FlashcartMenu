@@ -77,12 +77,12 @@ static void draw (menu_t *menu, surface_t *d) {
         " Size: %d bytes\n"
         " Attributes: %s %s\n"
         "%s"
-        " Modified: %u-%02u-%02u %02u:%02u",
+        " Modified: %s",
         st.st_size,
         S_ISDIR(st.st_mode) ? "Directory" : "File",
         st.st_mode & S_IWUSR ? "" : "(Read only)",
         format_file_type(menu->browser.entry->name, S_ISDIR(st.st_mode)),
-        0,0,0,0,0
+        ctime(&st.st_mtim.tv_sec)
     );
 
     component_actions_bar_text_draw(

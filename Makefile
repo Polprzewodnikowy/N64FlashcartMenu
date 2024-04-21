@@ -71,13 +71,17 @@ SRCS = \
 FONTS = \
 	FiraMonoBold.ttf
 
+ROM_FILES = \
+	# placeholder for future test files to be embedded into the ROM
+
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
 DEPS = $(OBJS:.o=.d)
 
 FILESYSTEM = \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64)))
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(ROM_FILES)))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
@@ -88,6 +92,10 @@ $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
 	@echo "    [FONT] $@"
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+
+$(FILESYSTEM_DIR)/%: $(ASSETS_DIR)/%
+	@echo "    [ROM FS] $@"
+	@cp $< $@
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 

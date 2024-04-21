@@ -96,9 +96,11 @@ static void menu_init (boot_params_t *boot_params) {
 
     menu->boot_params = boot_params;
 
-    bool default_dir_exists = directory_exists(menu->settings.default_directory);
-    char *default_dir = default_dir_exists ? menu->settings.default_directory : "";
-    menu->browser.directory = path_init(menu->storage_prefix, default_dir);
+    menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
+    if (!directory_exists(path_get(menu->browser.directory))) {
+        path_free(menu->browser.directory);
+        menu->browser.directory = path_init(menu->storage_prefix, "/");
+    }
 
     hdmi_clear_game_id();
 

@@ -21,7 +21,7 @@ char *strip_fs_prefix (char *path) {
 bool file_exists (char *path) {
     struct stat st;
     int error = stat(path, &st);
-    return ((error == 0) && ((st.st_mode & S_IFDIR) == 0));
+    return ((error == 0) && S_ISREG(st.st_mode));
 }
 
 size_t file_get_size (char *path) {
@@ -110,8 +110,7 @@ bool file_has_extensions (char *path, const char *extensions[]) {
 bool directory_exists (char *path) {
     struct stat st;
     int error = stat(path, &st);
-    // debugf("[%s], error: %d, st_mode: 0x%08lX\n", path, error, st.st_mode);
-    return ((error == 0) && (st.st_mode & S_IFDIR));
+    return ((error == 0) && S_ISDIR(st.st_mode));
 }
 
 bool directory_create (char *path) {

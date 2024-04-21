@@ -9,7 +9,9 @@ static const char *dir_prefix = "/";
 
 
 static int format_file_size (char *buffer, int size) {
-    if (size < 8 * 1024) {
+    if (size < 0) {
+        return sprintf(buffer, "-");
+    } else if (size < 8 * 1024) {
         return sprintf(buffer, "%d B", size);
     } else if (size < 8 * 1024 * 1024) {
         return sprintf(buffer, "%d kB", size / 1024);

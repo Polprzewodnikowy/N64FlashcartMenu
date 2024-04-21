@@ -76,26 +76,15 @@ static void menu_init (boot_params_t *boot_params) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
-    menu->error_message = NULL;
-
     directory_create(MENU_DIRECTORY);
-
     settings_load(&menu->settings);
-
     directory_create(CACHE_DIRECTORY);
-
     component_background_init(BACKGROUND_CACHE);
 
     menu->boot_params = boot_params;
 
-    bool default_directory_exists = directory_exists(menu->settings.default_directory);
-    char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
-
-    menu->browser.valid = false;
-    menu->browser.reload = false;
-    menu->browser.directory = path_init("sd:/", init_directory);
-
-    menu->load.rom_path = NULL;
+    bool default_dir_exists = directory_exists(menu->settings.default_directory);
+    menu->browser.directory = path_init("sd:/", default_dir_exists ? menu->settings.default_directory : "");
 
     hdmi_clear_game_id();
 
@@ -118,6 +107,12 @@ static void menu_deinit (menu_t *menu) {
 
     hdmi_send_game_id(menu->boot_params);
 
+    path_free(menu->load.disk_path);
+    path_free(menu->load.rom_path);
+    for (int i = 0; i < menu->browser.entries; i++) {
+        free(menu->browser.list[i].name);
+    }
+    free(menu->browser.list);
     path_free(menu->browser.directory);
     free(menu);
 

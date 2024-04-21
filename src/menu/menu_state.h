@@ -18,9 +18,6 @@
 #include "settings.h"
 
 
-#define BROWSER_LIST_SIZE   2048
-
-
 /** @brief Menu mode enumeration */
 typedef enum {
     MENU_MODE_NONE,
@@ -93,7 +90,7 @@ typedef struct {
         bool valid;
         bool reload;
         path_t *directory;
-        entry_t list[BROWSER_LIST_SIZE];
+        entry_t *list;
         int entries;
         entry_t *entry;
         int selected;

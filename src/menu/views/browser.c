@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <sys/errno.h>
 #include <time.h>
 
 #include "../fonts.h"
@@ -66,22 +67,26 @@ static bool load_directory (menu_t *menu) {
         free(menu->browser.list[i].name);
     }
 
+    free(menu->browser.list);
+    menu->browser.list = NULL;
     menu->browser.entries = 0;
-    menu->browser.selected = -1;
     menu->browser.entry = NULL;
+    menu->browser.selected = -1;
 
 
     if (dir_findfirst(path_get(menu->browser.directory), &info)) {
-        return false;
+        debugf("test: %d\n", errno);
+        return true;
     }
 
-    while (menu->browser.entries < BROWSER_LIST_SIZE) {
+    do {
         // if (info.fattrib & AM_SYS) {
         //     continue;
         // }
         // if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
         //     continue;
         // }
+        menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
 
         entry_t *entry = &menu->browser.list[menu->browser.entries];
 
@@ -113,11 +118,7 @@ static bool load_directory (menu_t *menu) {
         entry->size = info.d_size;
 
         menu->browser.entries += 1;
-
-        if (dir_findnext(path_get(menu->browser.directory), &info)) {
-            break;
-        }
-    }
+    } while (!dir_findnext(path_get(menu->browser.directory), &info));
 
     if (menu->browser.entries > 0) {
         menu->browser.selected = 0;

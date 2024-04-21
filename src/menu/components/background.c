@@ -165,7 +165,7 @@ static void display_list_free (void *arg) {
 void component_background_init (char *cache_location) {
     if (!background) {
         background = calloc(1, sizeof(component_background_t));
-        background->cache_location = cache_location;
+        background->cache_location = strdup(cache_location);
         load_from_cache(background);
         prepare_background(background);
     }
@@ -181,6 +181,9 @@ void component_background_free (void) {
         if (background->image_display_list) {
             rdpq_call_deferred(display_list_free, background->image_display_list);
             background->image_display_list = NULL;
+        }
+        if (background->cache_location) {
+            free(background->cache_location);
         }
         free(background);
         background = NULL;

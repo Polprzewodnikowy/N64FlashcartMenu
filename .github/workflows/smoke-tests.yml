@@ -122,7 +122,7 @@ jobs:
 
       - name: Take screenshot
         if: ${{ env.Enable_Screenshot == 'yes' }} && ${{ matrix.ares-ci-compatible }}
-        uses: networkfusion/desktop-screenshot-action@0.2
+        uses: networkfusion/desktop-screenshot-action@0.3
         with:
           file-name: '${{ matrix.rom-name }}-emu-screenshot_${{ env.Delay_Time_Seconds }}s.jpg'
 

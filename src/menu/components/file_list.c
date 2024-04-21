@@ -141,7 +141,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             NULL
         );
 
-        char file_size[8];
+        char file_size[16];
 
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];

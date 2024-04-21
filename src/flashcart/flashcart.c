@@ -104,6 +104,7 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
 
         default:
             *storage_prefix = "rom:/";
+            debug_init_isviewer();
             return FLASHCART_OK;
     }
 

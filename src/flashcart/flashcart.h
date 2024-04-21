@@ -15,7 +15,6 @@
 /** @brief Flashcart error enumeration */
 typedef enum {
     FLASHCART_OK,
-    FLASHCART_ERR_NOT_DETECTED,
     FLASHCART_ERR_OUTDATED,
     FLASHCART_ERR_SD_CARD,
     FLASHCART_ERR_ARGS,
@@ -80,7 +79,7 @@ typedef struct {
 
 
 char *flashcart_convert_error_message (flashcart_err_t err);
-flashcart_err_t flashcart_init (void);
+flashcart_err_t flashcart_init (const char **storage_prefix);
 flashcart_err_t flashcart_deinit (void);
 bool flashcart_has_feature (flashcart_features_t feature);
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);

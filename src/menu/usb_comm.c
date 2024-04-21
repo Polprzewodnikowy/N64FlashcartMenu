@@ -91,7 +91,7 @@ static void command_send_file (menu_t *menu) {
         return usb_comm_send_error("Invalid file length argument\n");
     }
 
-    path_t *path = path_init("sd:/", buffer);
+    path_t *path = path_init(menu->storage_prefix, buffer);
 
     if ((f = fopen(path_get(path), "wb")) == NULL) {
         path_free(path);

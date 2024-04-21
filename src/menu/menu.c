@@ -20,12 +20,14 @@
 #include "views/views.h"
 
 
-#define MENU_DIRECTORY      "sd:/menu"
-#define CACHE_DIRECTORY     "sd:/menu/cache"
-#define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
+#define MENU_DIRECTORY          "/menu"
+#define MENU_SETTINGS_FILE      "config.ini"
 
-#define FRAMERATE_DIVIDER   (2)
-#define LAG_REPORT          (false)
+#define MENU_CACHE_DIRECTORY    "cache"
+#define BACKGROUND_CACHE_FILE   "background.data"
+
+#define FRAMERATE_DIVIDER       (2)
+#define LAG_REPORT              (false)
 
 
 static menu_t *menu;
@@ -71,20 +73,32 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_err = flashcart_init();
+    menu->flashcart_err = flashcart_init(&menu->storage_prefix);
     if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
-    directory_create(MENU_DIRECTORY);
+    path_t *path = path_init(menu->storage_prefix, MENU_DIRECTORY);
+
+    directory_create(path_get(path));
+
+    path_push(path, MENU_SETTINGS_FILE);
+    settings_init(path_get(path));
     settings_load(&menu->settings);
-    directory_create(CACHE_DIRECTORY);
-    component_background_init(BACKGROUND_CACHE);
+    path_pop(path);
+
+    path_push(path, MENU_CACHE_DIRECTORY);
+    directory_create(path_get(path));
+    path_push(path, BACKGROUND_CACHE_FILE);
+    component_background_init(path_get(path));
+
+    path_free(path);
 
     menu->boot_params = boot_params;
 
     bool default_dir_exists = directory_exists(menu->settings.default_directory);
-    menu->browser.directory = path_init("sd:/", default_dir_exists ? menu->settings.default_directory : "");
+    char *default_dir = default_dir_exists ? menu->settings.default_directory : "";
+    menu->browser.directory = path_init(menu->storage_prefix, default_dir);
 
     hdmi_clear_game_id();
 

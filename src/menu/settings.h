@@ -33,6 +33,8 @@ typedef struct {
 } settings_t;
 
 
+/** @brief Init settings path */
+void settings_init (char *path);
 /** @brief The settings to load */
 void settings_load (settings_t *settings);
 /** @brief The settings to save */

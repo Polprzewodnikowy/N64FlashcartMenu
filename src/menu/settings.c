@@ -5,9 +5,7 @@
 #include "utils/fs.h"
 
 
-#ifndef SETTINGS_FILE_PATH
-#define SETTINGS_FILE_PATH  "sd:/menu/config.ini"
-#endif
+static char *settings_path = NULL;
 
 
 static settings_t init = {
@@ -23,12 +21,23 @@ static settings_t init = {
 };
 
 
+void settings_init (char *path) {
+    if (settings_path) {
+        free(path);
+    }
+    settings_path = strdup(path);
+}
+
 void settings_load (settings_t *settings) {
-    if (!file_exists(SETTINGS_FILE_PATH)) {
+    if (!settings_path) {
+        return;
+    }
+
+    if (!file_exists(settings_path)) {
         settings_save(&init);
     }
 
-    mini_t *ini = mini_try_load(SETTINGS_FILE_PATH);
+    mini_t *ini = mini_try_load(settings_path);
 
     settings->pal60_enabled = mini_get_bool(ini, "menu", "pal60", init.pal60_enabled); // TODO: consider changing file setting name
     settings->hidden_files_enabled = mini_get_bool(ini, "menu", "show_hidden_files", init.hidden_files_enabled);
@@ -44,7 +53,11 @@ void settings_load (settings_t *settings) {
 }
 
 void settings_save (settings_t *settings) {
-    mini_t *ini = mini_create(SETTINGS_FILE_PATH);
+    if (!settings_path) {
+        return;
+    }
+
+    mini_t *ini = mini_create(settings_path);
 
     mini_set_bool(ini, "menu", "pal60", settings->pal60_enabled);
     mini_set_bool(ini, "menu", "show_hidden_files", settings->hidden_files_enabled);

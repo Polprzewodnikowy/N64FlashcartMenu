@@ -57,7 +57,7 @@ typedef enum {
 typedef struct {
     char *name;
     entry_type_t type;
-    int size;
+    int64_t size;
 } entry_t;
 
 /** @brief Menu Structure */
@@ -67,6 +67,8 @@ typedef struct {
 
     settings_t settings;
     boot_params_t *boot_params;
+
+    const char *storage_prefix;
 
     char *error_message;
     flashcart_err_t flashcart_err;

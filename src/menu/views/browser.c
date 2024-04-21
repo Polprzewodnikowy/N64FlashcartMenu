@@ -61,6 +61,7 @@ static int compare_entry (const void *pa, const void *pb) {
 }
 
 static bool load_directory (menu_t *menu) {
+    int result;
     dir_t info;
 
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
@@ -73,19 +74,9 @@ static bool load_directory (menu_t *menu) {
     menu->browser.entry = NULL;
     menu->browser.selected = -1;
 
+    result = dir_findfirst(path_get(menu->browser.directory), &info);
 
-    if (dir_findfirst(path_get(menu->browser.directory), &info)) {
-        debugf("test: %d\n", errno);
-        return true;
-    }
-
-    do {
-        // if (info.fattrib & AM_SYS) {
-        //     continue;
-        // }
-        // if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
-        //     continue;
-        // }
+    while (result == 0) {
         menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
 
         entry_t *entry = &menu->browser.list[menu->browser.entries];
@@ -118,7 +109,13 @@ static bool load_directory (menu_t *menu) {
         entry->size = info.d_size;
 
         menu->browser.entries += 1;
-    } while (!dir_findnext(path_get(menu->browser.directory), &info));
+
+        result = dir_findnext(path_get(menu->browser.directory), &info);
+    }
+
+    if (result < -1) {
+        return true;
+    }
 
     if (menu->browser.entries > 0) {
         menu->browser.selected = 0;
@@ -372,7 +369,7 @@ void view_browser_init (menu_t *menu) {
         component_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
-            menu->browser.directory = path_init("sd:/", "");
+            menu->browser.directory = path_init(menu->storage_prefix, "");
             menu_show_error(menu, "Error while opening initial directory");
         } else {
             menu->browser.valid = true;

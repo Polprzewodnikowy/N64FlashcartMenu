@@ -70,7 +70,6 @@ static flashcart_t *flashcart = &((flashcart_t) {
 char *flashcart_convert_error_message (flashcart_err_t err) {
     switch (err) {
         case FLASHCART_OK: return "No error";
-        case FLASHCART_ERR_NOT_DETECTED: return "No flashcart hardware was detected";
         case FLASHCART_ERR_OUTDATED: return "Outdated flashcart firmware";
         case FLASHCART_ERR_SD_CARD: return "Error during SD card initialization";
         case FLASHCART_ERR_ARGS: return "Invalid argument passed to flashcart function";
@@ -81,15 +80,12 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
     }
 }
 
-flashcart_err_t flashcart_init (void) {
+flashcart_err_t flashcart_init (const char **storage_prefix) {
     flashcart_err_t err;
 
-    bool sd_card_initialized = debug_init_sdfs("sd:/", -1);
+    *storage_prefix = "sd:/";
 
-#ifndef NDEBUG
-    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
-    debug_init_usblog();
-#endif
+    bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
 
     switch (cart_type) {
         case CART_CI:   // 64drive
@@ -97,6 +93,8 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
+            break;
+
         case CART_ED:   // Original EverDrive-64
             break;
 
@@ -105,8 +103,14 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         default:
-            return FLASHCART_ERR_NOT_DETECTED;
+            *storage_prefix = "rom:/";
+            return FLASHCART_OK;
     }
+
+#ifndef NDEBUG
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
+#endif
 
     if ((err = flashcart->init()) != FLASHCART_OK) {
         return err;

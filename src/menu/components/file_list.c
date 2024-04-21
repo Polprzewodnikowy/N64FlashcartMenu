@@ -8,17 +8,17 @@
 static const char *dir_prefix = "/";
 
 
-static int format_file_size (char *buffer, int size) {
+static int format_file_size (char *buffer, int64_t size) {
     if (size < 0) {
         return sprintf(buffer, "-");
     } else if (size < 8 * 1024) {
-        return sprintf(buffer, "%d B", size);
+        return sprintf(buffer, "%lld B", size);
     } else if (size < 8 * 1024 * 1024) {
-        return sprintf(buffer, "%d kB", size / 1024);
+        return sprintf(buffer, "%lld kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
-        return sprintf(buffer, "%d MB", size / 1024 / 1024);
+        return sprintf(buffer, "%lld MB", size / 1024 / 1024);
     } else {
-        return sprintf(buffer, "%d GB", size / 1024 / 1024 / 1024);
+        return sprintf(buffer, "%lld GB", size / 1024 / 1024 / 1024);
     }
 }
 

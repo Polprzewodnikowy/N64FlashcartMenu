@@ -81,10 +81,12 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
 }
 
 flashcart_err_t flashcart_init (const char **storage_prefix) {
-    flashcart_err_t err;
+    if (sys_bbplayer()) {
+        *storage_prefix = "bbfs:/";
+        return FLASHCART_OK;
+    }
 
     *storage_prefix = "sd:/";
-
     bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
 
     switch (cart_type) {
@@ -112,6 +114,8 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here
     debug_init_usblog();
 #endif
+
+    flashcart_err_t err;
 
     if ((err = flashcart->init()) != FLASHCART_OK) {
         return err;

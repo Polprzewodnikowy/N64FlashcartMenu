@@ -87,7 +87,7 @@ static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback
         return FLASHCART_ERR_LOAD;
     }
 
-    fix_file_size(&fil);
+    fatfs_fix_file_size(&fil);
 
     size_t rom_size = f_size(&fil);
 
@@ -129,7 +129,7 @@ static flashcart_err_t d64_load_file (char *file_path, uint32_t rom_offset, uint
         return FLASHCART_ERR_LOAD;
     }
 
-    fix_file_size(&fil);
+    fatfs_fix_file_size(&fil);
 
     size_t file_size = f_size(&fil) - file_offset;
 
@@ -251,7 +251,13 @@ static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
-static flashcart_err_t d64_set_save_writeback (uint32_t *sectors) {
+static flashcart_err_t d64_set_save_writeback (char *save_path) {
+    uint32_t sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
+
+    if (fatfs_get_file_sectors(save_path, sectors, ADDRESS_TYPE_MEM, SAVE_WRITEBACK_MAX_SECTORS)) {
+        return FLASHCART_ERR_LOAD;
+    }
+
     if (d64_ll_write_save_writeback_lba_list(sectors)) {
         return FLASHCART_ERR_INT;
     }

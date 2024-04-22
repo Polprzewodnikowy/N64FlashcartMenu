@@ -190,7 +190,7 @@ static void show_properties (menu_t *menu, void *arg) {
 static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    if (file_delete(path_get(path))) {
+    if (remove(path_get(path))) {
         if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
             menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
         } else {

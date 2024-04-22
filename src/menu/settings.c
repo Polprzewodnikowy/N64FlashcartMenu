@@ -23,16 +23,12 @@ static settings_t init = {
 
 void settings_init (char *path) {
     if (settings_path) {
-        free(path);
+        free(settings_path);
     }
     settings_path = strdup(path);
 }
 
 void settings_load (settings_t *settings) {
-    if (!settings_path) {
-        return;
-    }
-
     if (!file_exists(settings_path)) {
         settings_save(&init);
     }
@@ -53,10 +49,6 @@ void settings_load (settings_t *settings) {
 }
 
 void settings_save (settings_t *settings) {
-    if (!settings_path) {
-        return;
-    }
-
     mini_t *ini = mini_create(settings_path);
 
     mini_set_bool(ini, "menu", "pal60", settings->pal60_enabled);

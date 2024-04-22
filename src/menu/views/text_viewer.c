@@ -48,7 +48,7 @@ void view_text_viewer_init (menu_t *menu) {
     FILE *f;
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    uint32_t file_size = file_get_size(path_get(path));
+    int64_t file_size = file_get_size(path_get(path));
 
     if (file_size > 1024) { // FIXME: this is just a placeholder until scrolling is implemented.
         file_size = 1024; // For the moment, we just set it to that, since any more would be a waste.

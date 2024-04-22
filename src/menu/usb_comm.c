@@ -97,7 +97,6 @@ static void command_send_file (menu_t *menu) {
         path_free(path);
         return usb_comm_send_error("Couldn't create file\n");
     }
-
     setbuf(f, NULL);
     path_free(path);
 

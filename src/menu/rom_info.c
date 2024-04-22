@@ -829,7 +829,7 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
     mini_free(ini);
 
     if (empty) {
-        if (file_delete(path_get(overrides_path))) {
+        if (remove(path_get(overrides_path))) {
             path_free(overrides_path);
             return ROM_ERR_IO;
         }

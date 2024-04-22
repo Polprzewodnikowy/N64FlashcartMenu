@@ -1,8 +1,7 @@
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
+#include <sys/errno.h>
 #include <sys/stat.h>
 
 #include "fs.h"
@@ -13,10 +12,11 @@ char *strip_fs_prefix (char *path) {
     const char *prefix = ":/";
     char *found = strstr(path, prefix);
     if (found) {
-        return found + strlen(prefix) - 1;
+        return (found + strlen(prefix) - 1);
     }
     return path;
 }
+
 
 bool file_exists (char *path) {
     struct stat st;
@@ -24,16 +24,12 @@ bool file_exists (char *path) {
     return ((error == 0) && S_ISREG(st.st_mode));
 }
 
-size_t file_get_size (char *path) {
+int64_t file_get_size (char *path) {
     struct stat st;
     if (stat(path, &st)) {
-        return 0;
+        return -1;
     }
-    return st.st_size;
-}
-
-bool file_delete (char *path) {
-    return (remove(path) != 0);
+    return (int64_t) (st.st_size);
 }
 
 bool file_allocate (char *path, size_t size) {
@@ -106,6 +102,7 @@ bool file_has_extensions (char *path, const char *extensions[]) {
 
     return false;
 }
+
 
 bool directory_exists (char *path) {
     struct stat st;

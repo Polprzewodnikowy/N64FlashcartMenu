@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <sys/stat.h>
 
 #include <libdragon.h>
 
@@ -161,15 +162,13 @@ mp3player_err_t mp3player_load (char *path) {
         return MP3PLAYER_ERR_IO;
     }
     setbuf(p->f, NULL);
-    if (fseek(p->f, 0, SEEK_END)) {
+
+    struct stat st;
+    if (fstat(fileno(p->f), &st)) {
         fclose(p->f);
         return MP3PLAYER_ERR_IO;
     }
-    p->file_size = ftell(p->f);
-    if (fseek(p->f, 0, SEEK_SET)) {
-        fclose(p->f);
-        return MP3PLAYER_ERR_IO;
-    } 
+    p->file_size = st.st_size;
 
     mp3player_reset_decoder();
 

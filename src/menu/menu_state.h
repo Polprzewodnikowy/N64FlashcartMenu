@@ -65,10 +65,9 @@ typedef struct {
     menu_mode_t mode;
     menu_mode_t next_mode;
 
+    const char *storage_prefix;
     settings_t settings;
     boot_params_t *boot_params;
-
-    const char *storage_prefix;
 
     char *error_message;
     flashcart_err_t flashcart_err;

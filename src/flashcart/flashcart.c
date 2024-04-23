@@ -30,13 +30,39 @@ static flashcart_err_t dummy_init (void) {
     return FLASHCART_OK;
 }
 
+static bool dummy_has_feature (flashcart_features_t feature) {
+    switch (feature) {
+        default:
+            return false;
+    }
+}
+
+static flashcart_err_t dummy_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t dummy_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t dummy_load_save (char *save_path) {
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t dummy_set_save_type (flashcart_save_type_t save_type) {
+    return FLASHCART_OK;
+}
+
 static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
-    .load_rom = NULL,
-    .load_file = NULL,
-    .load_save = NULL,
-    .set_save_type = NULL,
+    .has_feature = dummy_has_feature,
+    .load_rom = dummy_load_rom,
+    .load_file = dummy_load_file,
+    .load_save = dummy_load_save,
+    .load_64dd_ipl = NULL,
+    .load_64dd_disk = NULL,
+    .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
 });
 
@@ -62,7 +88,10 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
 }
 
 flashcart_err_t flashcart_init (const char **storage_prefix) {
+    flashcart_err_t err;
+
     if (sys_bbplayer()) {
+        // TODO: Add iQue callbacks
         *storage_prefix = "bbfs:/";
         return FLASHCART_OK;
     }
@@ -85,10 +114,10 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             flashcart = sc64_get_flashcart();
             break;
 
-        default:
+        default:        // Probably emulator
             *storage_prefix = "rom:/";
             debug_init_isviewer();
-            return FLASHCART_OK;
+            break;
     }
 
 #ifndef NDEBUG
@@ -96,13 +125,11 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     debug_init_usblog();
 #endif
 
-    flashcart_err_t err;
-
     if ((err = flashcart->init()) != FLASHCART_OK) {
         return err;
     }
 
-    if (!sd_card_initialized) {
+    if ((cart_type != CART_NULL) && (!sd_card_initialized)) {
         return FLASHCART_ERR_SD_CARD;
     }
 

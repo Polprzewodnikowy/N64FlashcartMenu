@@ -76,9 +76,6 @@ SRCS = \
 FONTS = \
 	FiraMonoBold.ttf
 
-ROM_FILES = \
-	# placeholder for future test files to be embedded into the ROM
-
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
@@ -97,10 +94,6 @@ $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
 	@echo "    [FONT] $@"
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
-
-$(FILESYSTEM_DIR)/%: $(ASSETS_DIR)/%
-	@echo "    [ROM FS] $@"
-	@cp $< $@
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 
@@ -141,7 +134,9 @@ all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	@rm -rf ./$(BUILD_DIR) ./$(FILESYSTEM_DIR) ./$(OUTPUT_DIR)
+	@rm -f ./$(FILESYSTEM)
+	@find ./$(FILESYSTEM_DIR) -type d -empty -delete
+	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64

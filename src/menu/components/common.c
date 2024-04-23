@@ -121,6 +121,10 @@ void component_messagebox_draw (char *fmt, ...) {
         .wrap = WRAP_WORD
     }, FNT_DEFAULT, formatted, &paragraph_nbytes);
 
+    if (formatted != buffer) {
+        free(formatted);
+    }
+
     component_dialog_draw(
         paragraph->bbox.x1 - paragraph->bbox.x0 + MESSAGEBOX_MARGIN,
         paragraph->bbox.y1 - paragraph->bbox.y0 + MESSAGEBOX_MARGIN
@@ -154,6 +158,10 @@ void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *f
         formatted,
         nbytes
     );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
 }
 
 void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
@@ -179,4 +187,8 @@ void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, 
         formatted,
         nbytes
     );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
 }

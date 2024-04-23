@@ -23,7 +23,7 @@ typedef enum {
 } menu_font_style_t;
 
 
-void fonts_init (void);
+void fonts_init (char *custom_font_path);
 
 
 #endif

@@ -22,6 +22,7 @@
 
 #define MENU_DIRECTORY          "/menu"
 #define MENU_SETTINGS_FILE      "config.ini"
+#define MENU_CUSTOM_FONT_FILE   "custom.font64"
 
 #define MENU_CACHE_DIRECTORY    "cache"
 #define BACKGROUND_CACHE_FILE   "background.data"
@@ -64,7 +65,6 @@ static void menu_init (boot_params_t *boot_params) {
     rdpq_init();
     dfs_init(DFS_DEFAULT_LOCATION);
 
-    fonts_init();
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -85,6 +85,10 @@ static void menu_init (boot_params_t *boot_params) {
     path_push(path, MENU_SETTINGS_FILE);
     settings_init(path_get(path));
     settings_load(&menu->settings);
+    path_pop(path);
+
+    path_push(path, MENU_CUSTOM_FONT_FILE);
+    fonts_init(path_get(path));
     path_pop(path);
 
     path_push(path, MENU_CACHE_DIRECTORY);

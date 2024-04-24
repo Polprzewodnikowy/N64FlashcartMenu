@@ -8,15 +8,19 @@
 static const char *dir_prefix = "/";
 
 
-static int format_file_size (char *buffer, int size) {
-    if (size < 8 * 1024) {
-        return sprintf(buffer, "%d B", size);
+static int format_file_size (char *buffer, int64_t size) {
+    if (size < 0) {
+        return sprintf(buffer, "unknown");
+    } else if (size == 0) {
+        return sprintf(buffer, "empty");
+    } else if (size < 8 * 1024) {
+        return sprintf(buffer, "%lld B", size);
     } else if (size < 8 * 1024 * 1024) {
-        return sprintf(buffer, "%d kB", size / 1024);
+        return sprintf(buffer, "%lld kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
-        return sprintf(buffer, "%d MB", size / 1024 / 1024);
+        return sprintf(buffer, "%lld MB", size / 1024 / 1024);
     } else {
-        return sprintf(buffer, "%d GB", size / 1024 / 1024 / 1024);
+        return sprintf(buffer, "%lld GB", size / 1024 / 1024 / 1024);
     }
 }
 
@@ -139,7 +143,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             NULL
         );
 
-        char file_size[8];
+        char file_size[16];
 
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];

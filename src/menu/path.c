@@ -19,7 +19,7 @@ static void path_resize (path_t *path, size_t min_length) {
     assert(path->buffer != NULL);
 }
 
-static path_t *path_create (char *string) {
+static path_t *path_create (const char *string) {
     if (string == NULL) {
         string = "";
     }
@@ -43,7 +43,7 @@ static void path_append (path_t *path, char *string) {
 }
 
 
-path_t *path_init (char *prefix, char *string) {
+path_t *path_init (const char *prefix, char *string) {
     path_t *path = path_create(prefix);
     size_t prefix_length = strlen(prefix);
     if ((prefix_length > 0) && (prefix[prefix_length - 1] == '/')) {

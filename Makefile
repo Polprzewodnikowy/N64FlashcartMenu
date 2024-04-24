@@ -13,6 +13,11 @@ BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
 include $(N64_INST)/include/n64.mk
 
+N64_ROM_SAVETYPE = none
+N64_ROM_RTC = 1
+N64_ROM_REGIONFREE = 1
+N64_ROM_REGION = E
+
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
 
 SRCS = \
@@ -128,7 +133,9 @@ all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	@rm -rf ./$(BUILD_DIR) ./$(FILESYSTEM_DIR) ./$(OUTPUT_DIR)
+	@rm -f ./$(FILESYSTEM)
+	@find ./$(FILESYSTEM_DIR) -type d -empty -delete
+	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64

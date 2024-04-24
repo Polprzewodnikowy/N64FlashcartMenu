@@ -6,14 +6,7 @@
     "mounts": [
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": [
-        "git submodule update --init",
-        "pushd ./libdragon",
-        "make clobber -j",
-        "make libdragon tools -j",
-        "sudo make install tools-install -j",
-        "popd"
-    ],
+    "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j",
     "customizations": {
         "vscode": {
             "extensions": [

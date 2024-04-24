@@ -74,6 +74,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">flashcart_utils.h File Reference</div></div>
 </div><!--header-->
@@ -84,24 +86,40 @@ $(function() {
 
 <p><a href="flashcart__utils_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:aef1be394be8374f266f4caf0d0270795"><td class="memItemLeft" align="right" valign="top"><a id="aef1be394be8374f266f4caf0d0270795" name="aef1be394be8374f266f4caf0d0270795"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>SAVE_WRITEBACK_MAX_SECTORS</b>&#160;&#160;&#160;(256)</td></tr>
+<tr class="separator:aef1be394be8374f266f4caf0d0270795"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a7796f7897be4ba858f0f76139f41c89d"><td class="memItemLeft" align="right" valign="top"><a id="a7796f7897be4ba858f0f76139f41c89d" name="a7796f7897be4ba858f0f76139f41c89d"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>address_type_t</b> { <b>ADDRESS_TYPE_MEM</b>
+, <b>ADDRESS_TYPE_PI</b>
+ }</td></tr>
+<tr class="separator:a7796f7897be4ba858f0f76139f41c89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4b9eb02b048687226f142b1593f1fe1c"><td class="memItemLeft" align="right" valign="top"><a id="a4b9eb02b048687226f142b1593f1fe1c" name="a4b9eb02b048687226f142b1593f1fe1c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>fix_file_size</b> (FIL *fil)</td></tr>
-<tr class="separator:a4b9eb02b048687226f142b1593f1fe1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae5b7ee93a018d6488b00e87b9a8f0626"><td class="memItemLeft" align="right" valign="top"><a id="ae5b7ee93a018d6488b00e87b9a8f0626" name="ae5b7ee93a018d6488b00e87b9a8f0626"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>pi_dma_read_data</b> (void *src, void *dst, size_t length)</td></tr>
 <tr class="separator:ae5b7ee93a018d6488b00e87b9a8f0626"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7698e2930f7e565626659acda24004c"><td class="memItemLeft" align="right" valign="top"><a id="ac7698e2930f7e565626659acda24004c" name="ac7698e2930f7e565626659acda24004c"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>pi_dma_write_data</b> (void *src, void *dst, size_t length)</td></tr>
 <tr class="separator:ac7698e2930f7e565626659acda24004c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b17d7de83d3f7a435ed2f25ca3f6844"><td class="memItemLeft" align="right" valign="top"><a id="a9b17d7de83d3f7a435ed2f25ca3f6844" name="a9b17d7de83d3f7a435ed2f25ca3f6844"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fatfs_fix_file_size</b> (FIL *fil)</td></tr>
+<tr class="separator:a9b17d7de83d3f7a435ed2f25ca3f6844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ea4b97918b42944b1d190984ebdde56"><td class="memItemLeft" align="right" valign="top"><a id="a8ea4b97918b42944b1d190984ebdde56" name="a8ea4b97918b42944b1d190984ebdde56"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>fatfs_get_file_sectors</b> (char *path, uint32_t *address, address_type_t address_type, uint32_t max_sectors)</td></tr>
+<tr class="separator:a8ea4b97918b42944b1d190984ebdde56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Flashcart utilities. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 19 2024 17:11:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Apr 24 2024 00:45:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

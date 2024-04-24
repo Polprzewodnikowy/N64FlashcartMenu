@@ -83,24 +83,15 @@ Data Fields</h2></td></tr>
 <tr class="memitem:ade3309a0775b080a13e47fd7673d5ba0"><td class="memItemLeft" align="right" valign="top"><a id="ade3309a0775b080a13e47fd7673d5ba0" name="ade3309a0775b080a13e47fd7673d5ba0"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>loaded</b></td></tr>
 <tr class="separator:ade3309a0775b080a13e47fd7673d5ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa74d26780fd9f49d2aea5f06b04cedf9"><td class="memItemLeft" align="right" valign="top"><a id="aa74d26780fd9f49d2aea5f06b04cedf9" name="aa74d26780fd9f49d2aea5f06b04cedf9"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>io_error</b></td></tr>
-<tr class="separator:aa74d26780fd9f49d2aea5f06b04cedf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6a298eb7b8c7c7b4090388dab69e3a7"><td class="memItemLeft" align="right" valign="top"><a id="ae6a298eb7b8c7c7b4090388dab69e3a7" name="ae6a298eb7b8c7c7b4090388dab69e3a7"></a>
-FIL&#160;</td><td class="memItemRight" valign="bottom"><b>fil</b></td></tr>
-<tr class="separator:ae6a298eb7b8c7c7b4090388dab69e3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a2bfe7a7603dccc0cdbffb44c95274"><td class="memItemLeft" align="right" valign="top"><a id="a27a2bfe7a7603dccc0cdbffb44c95274" name="a27a2bfe7a7603dccc0cdbffb44c95274"></a>
-FSIZE_t&#160;</td><td class="memItemRight" valign="bottom"><b>data_start</b></td></tr>
-<tr class="separator:a27a2bfe7a7603dccc0cdbffb44c95274"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa6bd2748224a835beb2fc07553faf51"><td class="memItemLeft" align="right" valign="top"><a id="afa6bd2748224a835beb2fc07553faf51" name="afa6bd2748224a835beb2fc07553faf51"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>seek_predecode_frames</b></td></tr>
-<tr class="separator:afa6bd2748224a835beb2fc07553faf51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4bbcc9cc56f965a488de3eb9c483845"><td class="memItemLeft" align="right" valign="top"><a id="ac4bbcc9cc56f965a488de3eb9c483845" name="ac4bbcc9cc56f965a488de3eb9c483845"></a>
-mp3dec_t&#160;</td><td class="memItemRight" valign="bottom"><b>dec</b></td></tr>
-<tr class="separator:ac4bbcc9cc56f965a488de3eb9c483845"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d76743c0ae9296728b203dbf5806c65"><td class="memItemLeft" align="right" valign="top"><a id="a1d76743c0ae9296728b203dbf5806c65" name="a1d76743c0ae9296728b203dbf5806c65"></a>
-mp3dec_frame_info_t&#160;</td><td class="memItemRight" valign="bottom"><b>info</b></td></tr>
-<tr class="separator:a1d76743c0ae9296728b203dbf5806c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ad0ad738e15b5e0996337f7511e5862"><td class="memItemLeft" align="right" valign="top"><a id="a1ad0ad738e15b5e0996337f7511e5862" name="a1ad0ad738e15b5e0996337f7511e5862"></a>
+FILE *&#160;</td><td class="memItemRight" valign="bottom"><b>f</b></td></tr>
+<tr class="separator:a1ad0ad738e15b5e0996337f7511e5862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a260710af446dde70259d66a6cde951ca"><td class="memItemLeft" align="right" valign="top"><a id="a260710af446dde70259d66a6cde951ca" name="a260710af446dde70259d66a6cde951ca"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>file_size</b></td></tr>
+<tr class="separator:a260710af446dde70259d66a6cde951ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3cd038c53c92cc89475ffdf4e953888"><td class="memItemLeft" align="right" valign="top"><a id="ab3cd038c53c92cc89475ffdf4e953888" name="ab3cd038c53c92cc89475ffdf4e953888"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>data_start</b></td></tr>
+<tr class="separator:ab3cd038c53c92cc89475ffdf4e953888"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a978a0a3ab662d5537747bcb9db76dd40"><td class="memItemLeft" align="right" valign="top"><a id="a978a0a3ab662d5537747bcb9db76dd40" name="a978a0a3ab662d5537747bcb9db76dd40"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> [16 *1024]</td></tr>
 <tr class="separator:a978a0a3ab662d5537747bcb9db76dd40"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,6 +101,15 @@ uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><b>buffer_ptr</b></
 <tr class="memitem:a312b7a6217d34d4949df61f0dd71b503"><td class="memItemLeft" align="right" valign="top"><a id="a312b7a6217d34d4949df61f0dd71b503" name="a312b7a6217d34d4949df61f0dd71b503"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>buffer_left</b></td></tr>
 <tr class="separator:a312b7a6217d34d4949df61f0dd71b503"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4bbcc9cc56f965a488de3eb9c483845"><td class="memItemLeft" align="right" valign="top"><a id="ac4bbcc9cc56f965a488de3eb9c483845" name="ac4bbcc9cc56f965a488de3eb9c483845"></a>
+mp3dec_t&#160;</td><td class="memItemRight" valign="bottom"><b>dec</b></td></tr>
+<tr class="separator:ac4bbcc9cc56f965a488de3eb9c483845"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d76743c0ae9296728b203dbf5806c65"><td class="memItemLeft" align="right" valign="top"><a id="a1d76743c0ae9296728b203dbf5806c65" name="a1d76743c0ae9296728b203dbf5806c65"></a>
+mp3dec_frame_info_t&#160;</td><td class="memItemRight" valign="bottom"><b>info</b></td></tr>
+<tr class="separator:a1d76743c0ae9296728b203dbf5806c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa6bd2748224a835beb2fc07553faf51"><td class="memItemLeft" align="right" valign="top"><a id="afa6bd2748224a835beb2fc07553faf51" name="afa6bd2748224a835beb2fc07553faf51"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>seek_predecode_frames</b></td></tr>
+<tr class="separator:afa6bd2748224a835beb2fc07553faf51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc5090c30cfd6aa0ac23c645e484c34b"><td class="memItemLeft" align="right" valign="top"><a id="abc5090c30cfd6aa0ac23c645e484c34b" name="abc5090c30cfd6aa0ac23c645e484c34b"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>duration</b></td></tr>
 <tr class="separator:abc5090c30cfd6aa0ac23c645e484c34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,84 +137,42 @@ waveform_t&#160;</td><td class="memItemRight" valign="bottom"><b>wave</b></td></
 
 </div>
 </div>
-<a id="aa74d26780fd9f49d2aea5f06b04cedf9" name="aa74d26780fd9f49d2aea5f06b04cedf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa74d26780fd9f49d2aea5f06b04cedf9">&#9670;&#160;</a></span>io_error</h2>
+<a id="a1ad0ad738e15b5e0996337f7511e5862" name="a1ad0ad738e15b5e0996337f7511e5862"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ad0ad738e15b5e0996337f7511e5862">&#9670;&#160;</a></span>f</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool mp3player_t::io_error</td>
+          <td class="memname">FILE* mp3player_t::f</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="ae6a298eb7b8c7c7b4090388dab69e3a7" name="ae6a298eb7b8c7c7b4090388dab69e3a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6a298eb7b8c7c7b4090388dab69e3a7">&#9670;&#160;</a></span>fil</h2>
+<a id="a260710af446dde70259d66a6cde951ca" name="a260710af446dde70259d66a6cde951ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a260710af446dde70259d66a6cde951ca">&#9670;&#160;</a></span>file_size</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FIL mp3player_t::fil</td>
+          <td class="memname">size_t mp3player_t::file_size</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a27a2bfe7a7603dccc0cdbffb44c95274" name="a27a2bfe7a7603dccc0cdbffb44c95274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27a2bfe7a7603dccc0cdbffb44c95274">&#9670;&#160;</a></span>data_start</h2>
+<a id="ab3cd038c53c92cc89475ffdf4e953888" name="ab3cd038c53c92cc89475ffdf4e953888"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3cd038c53c92cc89475ffdf4e953888">&#9670;&#160;</a></span>data_start</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FSIZE_t mp3player_t::data_start</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afa6bd2748224a835beb2fc07553faf51" name="afa6bd2748224a835beb2fc07553faf51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa6bd2748224a835beb2fc07553faf51">&#9670;&#160;</a></span>seek_predecode_frames</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int mp3player_t::seek_predecode_frames</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac4bbcc9cc56f965a488de3eb9c483845" name="ac4bbcc9cc56f965a488de3eb9c483845"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4bbcc9cc56f965a488de3eb9c483845">&#9670;&#160;</a></span>dec</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">mp3dec_t mp3player_t::dec</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1d76743c0ae9296728b203dbf5806c65" name="a1d76743c0ae9296728b203dbf5806c65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1d76743c0ae9296728b203dbf5806c65">&#9670;&#160;</a></span>info</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">mp3dec_frame_info_t mp3player_t::info</td>
+          <td class="memname">size_t mp3player_t::data_start</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -257,6 +215,48 @@ waveform_t&#160;</td><td class="memItemRight" valign="bottom"><b>wave</b></td></
       <table class="memname">
         <tr>
           <td class="memname">size_t mp3player_t::buffer_left</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac4bbcc9cc56f965a488de3eb9c483845" name="ac4bbcc9cc56f965a488de3eb9c483845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4bbcc9cc56f965a488de3eb9c483845">&#9670;&#160;</a></span>dec</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mp3dec_t mp3player_t::dec</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1d76743c0ae9296728b203dbf5806c65" name="a1d76743c0ae9296728b203dbf5806c65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d76743c0ae9296728b203dbf5806c65">&#9670;&#160;</a></span>info</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mp3dec_frame_info_t mp3player_t::info</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afa6bd2748224a835beb2fc07553faf51" name="afa6bd2748224a835beb2fc07553faf51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa6bd2748224a835beb2fc07553faf51">&#9670;&#160;</a></span>seek_predecode_frames</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mp3player_t::seek_predecode_frames</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -311,7 +311,7 @@ waveform_t&#160;</td><td class="memItemRight" valign="bottom"><b>wave</b></td></
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 19 2024 17:11:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Apr 24 2024 00:45:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

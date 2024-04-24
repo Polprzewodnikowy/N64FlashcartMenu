@@ -81,19 +81,33 @@ $(function() {
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define FLASHCART_UTILS_H__</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;fatfs/ff.h&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keywordtype">void</span> fix_file_size (FIL *fil);</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keywordtype">void</span> pi_dma_read_data (<span class="keywordtype">void</span> *src, <span class="keywordtype">void</span> *dst, <span class="keywordtype">size_t</span> length);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keywordtype">void</span> pi_dma_write_data (<span class="keywordtype">void</span> *src, <span class="keywordtype">void</span> *dst, <span class="keywordtype">size_t</span> length);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;fatfs/ff.h&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define SAVE_WRITEBACK_MAX_SECTORS  (256)</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    ADDRESS_TYPE_MEM,</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    ADDRESS_TYPE_PI,</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>} address_type_t;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keywordtype">void</span> pi_dma_read_data (<span class="keywordtype">void</span> *src, <span class="keywordtype">void</span> *dst, <span class="keywordtype">size_t</span> length);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keywordtype">void</span> pi_dma_write_data (<span class="keywordtype">void</span> *src, <span class="keywordtype">void</span> *dst, <span class="keywordtype">size_t</span> length);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keywordtype">void</span> fatfs_fix_file_size (FIL *fil);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keywordtype">bool</span> fatfs_get_file_sectors (<span class="keywordtype">char</span> *path, uint32_t *address, address_type_t address_type, uint32_t max_sectors);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 19 2024 17:11:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Apr 24 2024 00:45:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

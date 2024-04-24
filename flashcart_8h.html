@@ -106,12 +106,11 @@ typedef void&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_pro
 Enumerations</h2></td></tr>
 <tr class="memitem:a324286864a7bc56dbbeeb791aa81ab73"><td class="memItemLeft" align="right" valign="top"><a id="a324286864a7bc56dbbeeb791aa81ab73" name="a324286864a7bc56dbbeeb791aa81ab73"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a> { <br />
 &#160;&#160;<b>FLASHCART_OK</b>
-, <b>FLASHCART_ERR_NOT_DETECTED</b>
 , <b>FLASHCART_ERR_OUTDATED</b>
 , <b>FLASHCART_ERR_SD_CARD</b>
+, <b>FLASHCART_ERR_ARGS</b>
 , <br />
-&#160;&#160;<b>FLASHCART_ERR_ARGS</b>
-, <b>FLASHCART_ERR_LOAD</b>
+&#160;&#160;<b>FLASHCART_ERR_LOAD</b>
 , <b>FLASHCART_ERR_INT</b>
 , <b>FLASHCART_ERR_FUNCTION_NOT_SUPPORTED</b>
 <br />
@@ -146,9 +145,9 @@ Functions</h2></td></tr>
 <tr class="memitem:af25818bfc66bf9d2d1bc0874cdd3ef44"><td class="memItemLeft" align="right" valign="top"><a id="af25818bfc66bf9d2d1bc0874cdd3ef44" name="af25818bfc66bf9d2d1bc0874cdd3ef44"></a>
 char *&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_convert_error_message</b> (<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a> err)</td></tr>
 <tr class="separator:af25818bfc66bf9d2d1bc0874cdd3ef44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb4443197e675ab8bdef69a00f7ebae1"><td class="memItemLeft" align="right" valign="top"><a id="aeb4443197e675ab8bdef69a00f7ebae1" name="aeb4443197e675ab8bdef69a00f7ebae1"></a>
-<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_init</b> (void)</td></tr>
-<tr class="separator:aeb4443197e675ab8bdef69a00f7ebae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bb9abfe366442f0b730d2cd6cc09d80"><td class="memItemLeft" align="right" valign="top"><a id="a8bb9abfe366442f0b730d2cd6cc09d80" name="a8bb9abfe366442f0b730d2cd6cc09d80"></a>
+<a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_init</b> (const char **storage_prefix)</td></tr>
+<tr class="separator:a8bb9abfe366442f0b730d2cd6cc09d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb03233ab0fafc933ae9808a93a96987"><td class="memItemLeft" align="right" valign="top"><a id="adb03233ab0fafc933ae9808a93a96987" name="adb03233ab0fafc933ae9808a93a96987"></a>
 <a class="el" href="flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73">flashcart_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>flashcart_deinit</b> (void)</td></tr>
 <tr class="separator:adb03233ab0fafc933ae9808a93a96987"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,7 +218,7 @@ defect_tracks[16][12]</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 19 2024 17:11:45 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
+Generated on Wed Apr 24 2024 00:45:24 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.5
 </small></address>
 </body>
 </html>

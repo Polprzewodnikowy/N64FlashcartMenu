@@ -16,6 +16,17 @@ static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
+static const char *hidden_paths[] = {
+    "/menu.bin",
+    "/menu",
+    "/N64FlashcartMenu.n64",
+    "/OS64.v64",
+    "/OS64P.v64",
+    "/sc64menu.n64",
+    "/System Volume Information",
+    NULL
+};
+
 
 static int compare_entry (const void *pa, const void *pb) {
     entry_t *a = (entry_t *) (pa);
@@ -60,60 +71,87 @@ static int compare_entry (const void *pa, const void *pb) {
     return strcasecmp((const char *) (a->name), (const char *) (b->name));
 }
 
-static bool load_directory (menu_t *menu) {
-    int result;
-    dir_t info;
-
+static void browser_list_free (menu_t *menu) {
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
 
     free(menu->browser.list);
+
     menu->browser.list = NULL;
     menu->browser.entries = 0;
     menu->browser.entry = NULL;
     menu->browser.selected = -1;
+}
 
-    result = dir_findfirst(path_get(menu->browser.directory), &info);
+static bool load_directory (menu_t *menu) {
+    int result;
+    dir_t info;
+
+    browser_list_free(menu);
+
+    path_t *path = path_clone(menu->browser.directory);
+
+    result = dir_findfirst(path_get(path), &info);
 
     while (result == 0) {
-        menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
+        bool hide = false;
 
-        entry_t *entry = &menu->browser.list[menu->browser.entries];
+        if (!menu->settings.show_protected_entries) {
+            path_push(path, info.d_name);
 
-        entry->name = strdup(info.d_name);
-        if (!entry->name) {
-            return true;
+            for (int i = 0; hidden_paths[i] != NULL; i++) {
+                if (strcmp(strip_fs_prefix(path_get(path)), hidden_paths[i]) == 0) {
+                    hide = true;
+                    break;
+                }
+            }
+
+            path_pop(path);
         }
 
-        if (info.d_type == DT_DIR) {
-            entry->type = ENTRY_TYPE_DIR;
-        } else if (file_has_extensions(entry->name, rom_extensions)) {
-            entry->type = ENTRY_TYPE_ROM;
-        } else if (file_has_extensions(entry->name, disk_extensions)) {
-            entry->type = ENTRY_TYPE_DISK;
-        }else if (file_has_extensions(entry->name, emulator_extensions)) {
-            entry->type = ENTRY_TYPE_EMULATOR;
-        } else if (file_has_extensions(entry->name, save_extensions)) {
-            entry->type = ENTRY_TYPE_SAVE;
-        } else if (file_has_extensions(entry->name, image_extensions)) {
-            entry->type = ENTRY_TYPE_IMAGE;
-        } else if (file_has_extensions(entry->name, text_extensions)) {
-            entry->type = ENTRY_TYPE_TEXT;
-        } else if (file_has_extensions(entry->name, music_extensions)) {
-            entry->type = ENTRY_TYPE_MUSIC;
-        } else {
-            entry->type = ENTRY_TYPE_OTHER;
+        if (!hide) {
+            menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
+
+            entry_t *entry = &menu->browser.list[menu->browser.entries++];
+
+            entry->name = strdup(info.d_name);
+            if (!entry->name) {
+                path_free(path);
+                browser_list_free(menu);
+                return true;
+            }
+
+            if (info.d_type == DT_DIR) {
+                entry->type = ENTRY_TYPE_DIR;
+            } else if (file_has_extensions(entry->name, rom_extensions)) {
+                entry->type = ENTRY_TYPE_ROM;
+            } else if (file_has_extensions(entry->name, disk_extensions)) {
+                entry->type = ENTRY_TYPE_DISK;
+            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+                entry->type = ENTRY_TYPE_EMULATOR;
+            } else if (file_has_extensions(entry->name, save_extensions)) {
+                entry->type = ENTRY_TYPE_SAVE;
+            } else if (file_has_extensions(entry->name, image_extensions)) {
+                entry->type = ENTRY_TYPE_IMAGE;
+            } else if (file_has_extensions(entry->name, text_extensions)) {
+                entry->type = ENTRY_TYPE_TEXT;
+            } else if (file_has_extensions(entry->name, music_extensions)) {
+                entry->type = ENTRY_TYPE_MUSIC;
+            } else {
+                entry->type = ENTRY_TYPE_OTHER;
+            }
+
+            entry->size = info.d_size;
         }
 
-        entry->size = info.d_size;
-
-        menu->browser.entries += 1;
-
-        result = dir_findnext(path_get(menu->browser.directory), &info);
+        result = dir_findnext(path_get(path), &info);
     }
 
+    path_free(path);
+
     if (result < -1) {
+        browser_list_free(menu);
         return true;
     }
 

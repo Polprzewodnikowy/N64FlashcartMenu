@@ -13,8 +13,8 @@ typedef struct {
     /** @brief Use 60 Hz refresh rate on a PAL console */
     bool pal60_enabled;
 
-    /** @brief Show files marked as hidden in the browser */
-    bool hidden_files_enabled;
+    /** @brief Show files/directories that are filtered in the browser */
+    bool show_protected_entries;
 
     /** @brief Default directory to navigate to when menu loads */
     char *default_directory;

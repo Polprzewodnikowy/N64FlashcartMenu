@@ -1,6 +1,6 @@
 #include <libdragon.h>
 
-#include <fatfs/ff.h>
+#include <stdio.h>
 #include "../utils/fs.h"
 #include "cpak_handler.h"
 
@@ -38,18 +38,20 @@ int cpak_clone_contents_to_file(char *path, uint8_t port) {
         }
     }
 
-    FIL fil;
-    UINT bytes_written;
-    if (f_open(&fil, strip_sd_prefix(path), FA_WRITE | FA_CREATE_ALWAYS) != FR_OK) {
+    FILE *f;
+
+    if ((f = fopen(strip_fs_prefix(path), "wb")) == NULL) {
         return CONTROLLER_PAK_ERR_IO;
     }
 
-    FRESULT fwrite_err = f_write(&fil, &cpak_data, sizeof(cpak_data), &bytes_written);
 
-    f_close(&fil);
+    if (fwrite(&cpak_data, 1, sizeof(cpak_data), f) != sizeof(cpak_data)) {
+        err = 3;
+    }
+    fclose(f);
 
-    if (fwrite_err) {
-        return fwrite_err;
+    if (err) {
+        return err;
     }
     else {
         return CONTROLLER_PAK_OK;

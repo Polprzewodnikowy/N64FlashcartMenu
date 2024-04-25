@@ -20,7 +20,7 @@ typedef struct {
 } path_t;
 
 
-path_t *path_init (char *prefix, char *string);
+path_t *path_init (const char *prefix, char *string);
 void path_free (path_t *path);
 path_t *path_clone (path_t *string);
 path_t *path_clone_push (path_t *path, char *string);

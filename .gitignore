@@ -1,9 +1,17 @@
+# Ignore editor specific config folders/files
 /.vscode
+
+# Ignore compilation result directories
 /build
-/filesystem
 /output
+
+# Ignore generated files in the libdragon FS
+/filesystem/FiraMonoBold.font64
+
+# Ignore external development tools
 /tools/*
 
-# There should never be ROMs uploaded, but just incase, make sure they are excluded.
+# Ignore any N64 ROM
 **/*.n64
+**/*.v64
 **/*.z64

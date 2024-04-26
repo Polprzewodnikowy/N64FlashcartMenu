@@ -1,0 +1,20 @@
+BasedOnStyle: LLVM
+
+AlignAfterOpenBracket: BlockIndent
+AlignEscapedNewlines: DontAlign
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakBeforeMultilineStrings: true
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Attach
+ColumnLimit: 120
+IndentWidth: 4
+SpaceBeforeParens: Custom
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterFunctionDeclarationName: true
+  AfterFunctionDefinitionName: true
+UseTab: Never

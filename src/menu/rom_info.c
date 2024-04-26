@@ -141,6 +141,8 @@ typedef struct {
 
 
 // List shamelessly stolen from https://github.com/ares-emulator/ares/blob/master/mia/medium/nintendo-64.cpp
+
+// clang-format off
 static const match_t database[] = {
     MATCH_HOMEBREW_HEADER("ED"),                                                                            // Homebrew header (ED)
 
@@ -576,6 +578,7 @@ static const match_t database[] = {
 
     MATCH_END,
 };
+// clang-format on
 
 
 static void fix_rom_header_endianness (rom_header_t *rom_header, rom_info_t *rom_info) {

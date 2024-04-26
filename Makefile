@@ -138,6 +138,13 @@ clean:
 	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
 
+format:
+	@find ./$(SOURCE_DIR) \
+		-path \./$(SOURCE_DIR)/libs -prune \
+		-o -iname *.c -print \
+		-o -iname *.h -print \
+		| xargs clang-format -i
+
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)
 	./localdeploy.bat

@@ -11,7 +11,8 @@
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
-static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+// TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+static const char *save_extensions[] = { "sav", NULL };
 static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
@@ -24,7 +25,7 @@ static const char *hidden_paths[] = {
     "/OS64P.v64",
     "/sc64menu.n64",
     "/System Volume Information",
-    NULL
+    NULL,
 };
 
 

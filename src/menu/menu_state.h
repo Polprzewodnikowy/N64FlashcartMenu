@@ -18,9 +18,6 @@
 #include "settings.h"
 
 
-#define BROWSER_LIST_SIZE   2048
-
-
 /** @brief Menu mode enumeration */
 typedef enum {
     MENU_MODE_NONE,
@@ -29,17 +26,18 @@ typedef enum {
     MENU_MODE_FILE_INFO,
     MENU_MODE_SYSTEM_INFO,
     MENU_MODE_IMAGE_VIEWER,
+    MENU_MODE_TEXT_VIEWER,
     MENU_MODE_MUSIC_PLAYER,
     MENU_MODE_CREDITS,
     MENU_MODE_SETTINGS_EDITOR,
     MENU_MODE_RTC,
+    MENU_MODE_FLASHCART,
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
-    __MENU_MODE_COUNT,
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -51,6 +49,7 @@ typedef enum {
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
     ENTRY_TYPE_MUSIC,
+    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_OTHER,
 } entry_type_t;
 
@@ -58,7 +57,7 @@ typedef enum {
 typedef struct {
     char *name;
     entry_type_t type;
-    int size;
+    int64_t size;
 } entry_t;
 
 /** @brief Menu Structure */
@@ -66,6 +65,7 @@ typedef struct {
     menu_mode_t mode;
     menu_mode_t next_mode;
 
+    const char *storage_prefix;
     settings_t settings;
     boot_params_t *boot_params;
 
@@ -91,7 +91,7 @@ typedef struct {
         bool valid;
         bool reload;
         path_t *directory;
-        entry_t list[BROWSER_LIST_SIZE];
+        entry_t *list;
         int entries;
         entry_t *entry;
         int selected;

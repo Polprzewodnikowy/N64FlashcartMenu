@@ -1,12 +1,14 @@
-#include <fatfs/ff.h>
+#include <stdio.h>
+
 #include <libspng/spng/spng.h>
 
 #include "png_decoder.h"
 #include "utils/fs.h"
 
+
 /** @brief PNG File Information Structure. */
 typedef struct {
-    FIL fil;
+    FILE *f;
 
     spng_ctx *ctx;
     struct spng_ihdr ihdr;
@@ -24,7 +26,7 @@ static png_decoder_t *decoder;
 
 static void png_decoder_deinit (bool free_image) {
     if (decoder != NULL) {
-        f_close(&decoder->fil);
+        fclose(decoder->f);
         if (decoder->ctx != NULL) {
             spng_ctx_free(decoder->ctx);
         }
@@ -40,21 +42,6 @@ static void png_decoder_deinit (bool free_image) {
     }
 }
 
-static int png_file_read (spng_ctx *ctx, void *user, void *dst_src, size_t length) {
-    UINT bytes_read = 0;
-    png_decoder_t *d = (png_decoder_t *) (user);
-
-    if (f_read(&d->fil, dst_src, length, &bytes_read) != FR_OK) {
-        return SPNG_IO_ERROR;
-    }
-
-    if (bytes_read != length) {
-        return SPNG_EOF;
-    }
-
-    return SPNG_OK;
-}
-
 
 png_err_t png_decoder_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data) {
     if (decoder != NULL) {
@@ -66,10 +53,12 @@ png_err_t png_decoder_start (char *path, int max_width, int max_height, png_call
         return PNG_ERR_OUT_OF_MEM;
     }
 
-    if (f_open(&decoder->fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+    if ((decoder->f = fopen(path, "rb")) == NULL) {
         png_decoder_deinit(false);
         return PNG_ERR_NO_FILE;
     }
+
+    setbuf(decoder->f, NULL);
 
     if ((decoder->ctx = spng_ctx_new(SPNG_CTX_IGNORE_ADLER32)) == NULL) {
         png_decoder_deinit(false);
@@ -86,7 +75,7 @@ png_err_t png_decoder_start (char *path, int max_width, int max_height, png_call
         return PNG_ERR_INT;
     }
 
-    if (spng_set_png_stream(decoder->ctx, png_file_read, decoder) != SPNG_OK) {
+    if (spng_set_png_file(decoder->ctx, decoder->f) != SPNG_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_INT;
     }

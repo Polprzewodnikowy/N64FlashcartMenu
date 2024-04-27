@@ -8,15 +8,15 @@ static bool load_pending;
 static component_boxart_t *boxart;
 
 
-static char *convert_error_message (disk_err_t err) {
+static char *convert_error_message (rom_err_t err) {
     switch (err) {
-        case ROM_ERR_IO: return "I/O error during loading ROM information";
+        case ROM_ERR_IO: return "I/O error during loading/storing ROM information";
         case ROM_ERR_NO_FILE: return "Couldn't open ROM file";
         default: return "Unknown ROM info load error";
     }
 }
 
-static const char *format_rom_endianness (endianness_t endianness) {
+static const char *format_rom_endianness (rom_endianness_t endianness) {
     switch (endianness) {
         case ENDIANNESS_BIG: return "Big (default)";
         case ENDIANNESS_LITTLE: return "Little (unsupported)";
@@ -25,7 +25,7 @@ static const char *format_rom_endianness (endianness_t endianness) {
     }
 }
 
-static const char *format_rom_media_type (category_type_t media_type) {
+static const char *format_rom_media_type (rom_category_type_t media_type) {
     switch (media_type) {
         case N64_CART: return "Cartridge";
         case N64_DISK: return "Disk";
@@ -36,7 +36,7 @@ static const char *format_rom_media_type (category_type_t media_type) {
     }
 }
 
-static const char *format_rom_destination_market (destination_type_t market_type) {
+static const char *format_rom_destination_market (rom_destination_type_t market_type) {
     // TODO: These are all assumptions and should be corrected if required.
     // From http://n64devkit.square7.ch/info/submission/pal/01-01.html
     switch (market_type) {
@@ -87,7 +87,7 @@ static const char *format_rom_tv_type (rom_tv_type_t tv_type) {
     }
 }
 
-static char *format_rom_expansion_pak_info (expansion_pak_t expansion_pak_info) {
+static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_pak_info) {
     switch (expansion_pak_info) {
         case EXPANSION_PAK_REQUIRED: return "Required";
         case EXPANSION_PAK_RECOMMENDED: return "Recommended";
@@ -97,72 +97,94 @@ static char *format_rom_expansion_pak_info (expansion_pak_t expansion_pak_info) 
     }
 }
 
-static const char *format_cic_type (cic_type_t cic_type) {
+static const char *format_cic_type (rom_cic_type_t cic_type) {
     switch (cic_type) {
-        case CIC_5101: return "5101";
-        case CIC_5167: return "5167";
-        case CIC_6101: return "6101";
-        case CIC_7102: return "7102";
-        case CIC_6102_7101: return "6102 / 7101";
-        case CIC_x103: return "6103 / 7103";
-        case CIC_x105: return "6105 / 7105";
-        case CIC_x106: return "6106 / 7106";
-        case CIC_8301: return "8301";
-        case CIC_8302: return "8302";
-        case CIC_8303: return "8303";
-        case CIC_8401: return "8401";
-        case CIC_8501: return "8501";
+        case ROM_CIC_TYPE_5101: return "5101";
+        case ROM_CIC_TYPE_5167: return "5167";
+        case ROM_CIC_TYPE_6101: return "6101";
+        case ROM_CIC_TYPE_7102: return "7102";
+        case ROM_CIC_TYPE_x102: return "6102 / 7101";
+        case ROM_CIC_TYPE_x103: return "6103 / 7103";
+        case ROM_CIC_TYPE_x105: return "6105 / 7105";
+        case ROM_CIC_TYPE_x106: return "6106 / 7106";
+        case ROM_CIC_TYPE_8301: return "8301";
+        case ROM_CIC_TYPE_8302: return "8302";
+        case ROM_CIC_TYPE_8303: return "8303";
+        case ROM_CIC_TYPE_8401: return "8401";
+        case ROM_CIC_TYPE_8501: return "8501";
         default: return "Unknown";
     }
 }
 
-static void set_save_type (menu_t *menu, rom_save_type_t save_type) {
-    rom_info_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
+static void set_cic_type (menu_t *menu, void *arg) {
+    rom_cic_type_t cic_type = (rom_cic_type_t) (arg);
+    rom_err_t err = rom_info_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
+    if (err != ROM_OK) {
+        menu_show_error(menu, convert_error_message(err));
+    }
     menu->browser.reload = true;
 }
 
-static void set_save_type_automatic (menu_t *menu) { set_save_type(menu, SAVE_TYPE_AUTOMATIC); }
-static void set_save_type_none (menu_t *menu) { set_save_type(menu, SAVE_TYPE_NONE); }
-static void set_save_type_eeprom_4kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_EEPROM_4K); }
-static void set_save_type_eeprom_16kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_EEPROM_16K); }
-static void set_save_type_sram_256kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM); }
-static void set_save_type_sram_768kbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM_BANKED); }
-static void set_save_type_sram_1mbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_SRAM_128K); }
-static void set_save_type_flash_ram_1mbit (menu_t *menu) { set_save_type(menu, SAVE_TYPE_FLASHRAM); }
+static void set_save_type (menu_t *menu, void *arg) {
+    rom_save_type_t save_type = (rom_save_type_t) (arg);
+    rom_err_t err = rom_info_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
+    if (err != ROM_OK) {
+        menu_show_error(menu, convert_error_message(err));
+    }
+    menu->browser.reload = true;
+}
 
-static component_context_menu_t set_save_type_context_menu = { .list = {
-    { .text = "Automatic", .action = set_save_type_automatic },
-    { .text = "None", .action = set_save_type_none },
-    { .text = "EEPROM 4kbit", .action = set_save_type_eeprom_4kbit },
-    { .text = "EEPROM 16kbit", .action = set_save_type_eeprom_16kbit },
-    { .text = "SRAM 256kbit", .action = set_save_type_sram_256kbit },
-    { .text = "SRAM 768kbit", .action = set_save_type_sram_768kbit },
-    { .text = "SRAM 1Mbit", .action = set_save_type_sram_1mbit },
-    { .text = "FlashRAM 1Mbit", .action = set_save_type_flash_ram_1mbit },
+static void set_tv_type (menu_t *menu, void *arg) {
+    rom_tv_type_t tv_type = (rom_tv_type_t) (arg);
+    rom_err_t err = rom_info_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
+    if (err != ROM_OK) {
+        menu_show_error(menu, convert_error_message(err));
+    }
+    menu->browser.reload = true;
+}
+
+static component_context_menu_t set_cic_type_context_menu = { .list = {
+    {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
+    {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
+    {.text = "CIC-7102", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_7102) },
+    {.text = "CIC-6102 / CIC-7101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_x102) },
+    {.text = "CIC-6103 / CIC-7103", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_x103) },
+    {.text = "CIC-6105 / CIC-7105", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_x105) },
+    {.text = "CIC-6106 / CIC-7106", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_x106) },
+    {.text = "Aleck64 CIC-5101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_5101) },
+    {.text = "64DD ROM conversion CIC-5167", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_5167) },
+    {.text = "NDDJ0 64DD IPL", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_8301) },
+    {.text = "NDDJ1 64DD IPL", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_8302) },
+    {.text = "NDDJ2 64DD IPL", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_8303) },
+    {.text = "NDXJ0 64DD IPL", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_8401) },
+    {.text = "NDDE0 64DD IPL", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_8501) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static void set_tv_type (menu_t *menu, rom_tv_type_t tv_type) {
-    rom_info_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
-    menu->browser.reload = true;
-}
-
-static void set_tv_type_automatic (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_AUTOMATIC); }
-static void set_tv_type_pal (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_PAL); }
-static void set_tv_type_ntsc (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_NTSC); }
-static void set_tv_type_mpal (menu_t *menu) { set_tv_type(menu, ROM_TV_TYPE_MPAL); }
+static component_context_menu_t set_save_type_context_menu = { .list = {
+    { .text = "Automatic", .action = set_save_type, .arg = (void *) (SAVE_TYPE_AUTOMATIC) },
+    { .text = "None", .action = set_save_type, .arg = (void *) (SAVE_TYPE_NONE) },
+    { .text = "EEPROM 4kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_4K) },
+    { .text = "EEPROM 16kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_16K) },
+    { .text = "SRAM 256kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM) },
+    { .text = "SRAM 768kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_BANKED) },
+    { .text = "SRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_128K) },
+    { .text = "FlashRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_FLASHRAM) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
 
 static component_context_menu_t set_tv_type_context_menu = { .list = {
-    { .text = "Automatic", .action = set_tv_type_automatic },
-    { .text = "PAL", .action = set_tv_type_pal },
-    { .text = "NTSC", .action = set_tv_type_ntsc },
-    { .text = "MPAL", .action = set_tv_type_mpal },
+    { .text = "Automatic", .action = set_tv_type, .arg = (void *) (ROM_TV_TYPE_AUTOMATIC) },
+    { .text = "PAL", .action = set_tv_type, .arg = (void *) (ROM_TV_TYPE_PAL) },
+    { .text = "NTSC", .action = set_tv_type, .arg = (void *) (ROM_TV_TYPE_NTSC) },
+    { .text = "MPAL", .action = set_tv_type, .arg = (void *) (ROM_TV_TYPE_MPAL) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Set save type", .submenu = &set_save_type_context_menu },
-    { .text = "Set TV type", .submenu = &set_tv_type_context_menu },
+    { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
+    { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
+    { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -230,7 +252,7 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
-            format_cic_type(menu->load.rom_info.cic_type),
+            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
             menu->load.rom_info.boot_address,
             (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
             menu->load.rom_info.clock_rate
@@ -281,8 +303,8 @@ static void load (menu_t *menu) {
     menu->next_mode = MENU_MODE_BOOT;
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-    menu->boot_params->detect_cic_seed = true;
-    switch(rom_info_get_tv_type(&menu->load.rom_info)) {
+    menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
+    switch (rom_info_get_tv_type(&menu->load.rom_info)) {
         case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
         case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
@@ -296,21 +318,23 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
+    load_pending = false;
+
     if (menu->load.rom_path) {
         path_free(menu->load.rom_path);
-        menu->load.rom_path = NULL;
     }
-
-    load_pending = false;
 
     menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
+        path_free(menu->load.rom_path);
+        menu->load.rom_path = NULL;
         menu_show_error(menu, convert_error_message(err));
+        return;
     }
 
-    boxart = component_boxart_init(menu->load.rom_info.game_code);
+    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code);
 
     component_context_menu_init(&options_context_menu);
 }

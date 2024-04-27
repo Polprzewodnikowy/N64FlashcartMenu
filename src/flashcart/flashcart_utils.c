@@ -5,13 +5,6 @@
 #include "utils/utils.h"
 
 
-void fix_file_size (FIL *fil) {
-    // HACK: Align file size to the SD sector size to prevent FatFs from doing partial sector load.
-    //       We are relying on direct transfer from SD to SDRAM without CPU intervention.
-    //       Sending some extra bytes isn't an issue here.
-    fil->obj.objsize = ALIGN(f_size(fil), FS_SECTOR_SIZE);
-}
-
 void pi_dma_read_data (void *src, void *dst, size_t length) {
     data_cache_hit_writeback_invalidate(dst, length);
     dma_read_async(dst, (uint32_t) (src), length);
@@ -26,4 +19,69 @@ void pi_dma_write_data (void *src, void *dst, size_t length) {
     data_cache_hit_writeback(src, length);
     dma_write_raw_async(src, (uint32_t) (dst), length);
     dma_wait();
+}
+
+void fatfs_fix_file_size (FIL *fil) {
+    // HACK: Align file size to the SD sector size to prevent FatFs from doing partial sector load.
+    //       We are relying on direct transfer from SD to SDRAM without CPU intervention.
+    //       Sending some extra bytes isn't an issue here.
+    fil->obj.objsize = ALIGN(f_size(fil), FS_SECTOR_SIZE);
+}
+
+bool fatfs_get_file_sectors (char *path, uint32_t *address, address_type_t type, uint32_t max_sectors) {
+    FATFS *fs;
+    FIL fil;
+    bool error = false;
+
+    if (f_open(&fil, strip_fs_prefix(path), FA_READ) != FR_OK) {
+        return true;
+    }
+
+    fatfs_fix_file_size(&fil);
+
+    fs = fil.obj.fs;
+
+    uint32_t sector_count = MIN(f_size(&fil) / FS_SECTOR_SIZE, max_sectors);
+
+    for (uint32_t file_sector = 0; file_sector < sector_count; file_sector += fs->csize) {
+        if ((f_lseek(&fil, (file_sector * FS_SECTOR_SIZE) + (FS_SECTOR_SIZE / 2))) != FR_OK) {
+            error = true;
+            break;
+        }
+
+        uint32_t cluster = fil.clust;
+
+        if (cluster >= fs->n_fatent) {
+            error = true;
+            break;
+        }
+
+        uint32_t cluster_sector = (fs->database + ((LBA_t) (fs->csize) * (cluster - 2)));
+
+        for (uint32_t i = 0; i < fs->csize; i++) {
+            uint32_t sector = (cluster_sector + i);
+
+            if ((file_sector + i) >= sector_count) {
+                break;
+            }
+
+            switch (type) {
+                case ADDRESS_TYPE_MEM:
+                    *address = sector;
+                    break;
+
+                case ADDRESS_TYPE_PI:
+                    io_write((uint32_t) (address), sector);
+                    break;
+            }
+
+            address++;
+        }
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        error = true;
+    }
+
+    return error;
 }

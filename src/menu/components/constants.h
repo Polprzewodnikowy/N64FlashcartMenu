@@ -77,19 +77,19 @@
 #define BOXART_Y                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT - 24)
 
 /** @brief The scroll bar width. */
-#define FILE_LIST_SCROLLBAR_WIDTH       (12)
+#define LIST_SCROLLBAR_WIDTH            (12)
 /** @brief The scroll bar height. */
-#define FILE_LIST_SCROLLBAR_HEIGHT      (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT)
+#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT)
 /** @brief The scroll bar position on the X axis. */
-#define FILE_LIST_SCROLLBAR_X           (VISIBLE_AREA_X1 - FILE_LIST_SCROLLBAR_WIDTH)
+#define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
 /** @brief The scroll bar position on the Y axis. */
-#define FILE_LIST_SCROLLBAR_Y           (VISIBLE_AREA_Y0)
+#define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0)
 
 /** @brief The maximum amount of file list entries. */
-#define FILE_LIST_ENTRIES               (20)
+#define LIST_ENTRIES                    (20)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
-#define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - FILE_LIST_SCROLLBAR_WIDTH)
+#define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)
 #define FILE_LIST_HIGHLIGHT_X           (VISIBLE_AREA_X0)
 
 /** @brief The default background colour. */

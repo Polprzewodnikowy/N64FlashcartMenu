@@ -6,9 +6,8 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-#ifndef BOXART_DIRECTORY
-#define BOXART_DIRECTORY    "sd:/menu/boxart"
-#endif
+
+#define BOXART_DIRECTORY    "menu/boxart"
 
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
@@ -18,25 +17,38 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 
-component_boxart_t *component_boxart_init (char *game_code) {
-    component_boxart_t *b = calloc(1, sizeof(component_boxart_t));
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code) {
+    component_boxart_t *b;
+    char file_name[8];
 
-    if (b) {
-        b->loading = true;
-        char *path = alloca(strlen(BOXART_DIRECTORY) + 1 + 7 + 1);
-
-        // TODO: This is bad, we should only check for 3 letter codes
-        sprintf(path, "%s/%.3s.png", BOXART_DIRECTORY, game_code);
-        if (png_decoder_start(path, BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) != PNG_OK) {
-            sprintf(path, "%s/%.2s.png", BOXART_DIRECTORY, &game_code[1]);
-            if (png_decoder_start(path, BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) != PNG_OK) {
-                free(b);
-                b = NULL;
-            }
-        }
+    if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
+        return NULL;
     }
 
-    return b;
+    b->loading = true;
+
+    path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
+
+    sprintf(file_name, "%.3s.png", game_code);
+    path_push(path, file_name);
+    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+        path_free(path);
+        return b;
+    }
+    path_pop(path);
+
+    // TODO: This is bad, we should only check for 3 letter codes
+    sprintf(file_name, "%.2s.png", game_code + 1);
+    path_push(path, file_name);
+    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+        path_free(path);
+        return b;
+    }
+
+    path_free(path);
+    free(b);
+
+    return NULL;
 }
 
 void component_boxart_free (component_boxart_t *b) {

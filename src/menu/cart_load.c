@@ -19,10 +19,9 @@
 
 
 static bool is_64dd_connected (void) {
-    return (
-        ((io_read(0x05000540) & 0x0000FFFF) == 0x0000) ||
-        (io_read(0x06001010) == 0x2129FFF8)
-    );
+    bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
+    bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
+    return (is_64dd_io_present || is_64dd_ipl_present);
 }
 
 static bool create_saves_subdirectory (path_t *path) {
@@ -112,7 +111,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
         return CART_LOAD_ERR_EXP_PAK_NOT_FOUND;
     }
 
-    path_t *path = path_init("sd:/", DDIPL_LOCATION);
+    path_t *path = path_init(menu->storage_prefix, DDIPL_LOCATION);
     flashcart_disk_parameters_t disk_parameters;
 
     disk_parameters.development_drive = (menu->load.disk_info.region == DISK_REGION_DEVELOPMENT);
@@ -154,7 +153,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 }
 
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress) {
-    path_t *path = path_init("sd:/", EMU_LOCATION);
+    path_t *path = path_init(menu->storage_prefix, EMU_LOCATION);
 
     flashcart_save_type_t save_type = FLASHCART_SAVE_TYPE_NONE;
     uint32_t emulated_rom_offset = 0x200000;

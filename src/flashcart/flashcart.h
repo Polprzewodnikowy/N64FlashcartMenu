@@ -15,9 +15,9 @@
 /** @brief Flashcart error enumeration */
 typedef enum {
     FLASHCART_OK,
-    FLASHCART_ERR_NOT_DETECTED,
     FLASHCART_ERR_OUTDATED,
     FLASHCART_ERR_SD_CARD,
+    FLASHCART_ERR_BBFS,
     FLASHCART_ERR_ARGS,
     FLASHCART_ERR_LOAD,
     FLASHCART_ERR_INT,
@@ -27,6 +27,8 @@ typedef enum {
 /** @brief List of optional supported flashcart features */
 typedef enum {
     FLASHCART_FEATURE_64DD,
+    FLASHCART_FEATURE_RTC,
+    FLASHCART_FEATURE_USB,
 } flashcart_features_t;
 
 /** @brief Flashcart save type enumeration */
@@ -73,12 +75,12 @@ typedef struct {
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
-    flashcart_err_t (*set_save_writeback) (uint32_t *sectors);
+    flashcart_err_t (*set_save_writeback) (char *save_path);
 } flashcart_t;
 
 
 char *flashcart_convert_error_message (flashcart_err_t err);
-flashcart_err_t flashcart_init (void);
+flashcart_err_t flashcart_init (const char **storage_prefix);
 flashcart_err_t flashcart_deinit (void);
 bool flashcart_has_feature (flashcart_features_t feature);
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);

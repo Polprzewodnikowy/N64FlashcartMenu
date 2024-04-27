@@ -3,6 +3,16 @@
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
 
+## Supported Flashcarts
+
+### Fully supported
+* SummerCart64
+* 64Drive
+
+### Work in Progress
+* ED64
+* ED64P
+
 
 ## Current (notable) menu features
 * Fully Open Source.
@@ -32,6 +42,17 @@ An open source menu for N64 flashcarts.
 
 ## Getting started
 Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).
+
+### Save files
+By default, all save files (whether `FlashRam`, `SRAM` or `EEPROM`) use the `.sav` extension and match the filename of the ROM.
+
+Each save file can be found in the `/saves` folder located in the same directory as the ROM and shares the same file name, apart from the extension.
+
+If transfering a file from a different flashcart such as the ED64, it will be necessary to change the extension of the file to `sav`.
+
+i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (USA).sav`
+
+**NOTE:** certain emulator saves or saves created for a different ROM version or region may be incompatible.
 
 
 ### ROM Boxart

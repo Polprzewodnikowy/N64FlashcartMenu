@@ -20,18 +20,22 @@
 #include "views/views.h"
 
 
-#define TV_TYPE_RAM         *((uint32_t *) (0x80000300))
+#define MENU_DIRECTORY          "/menu"
+#define MENU_SETTINGS_FILE      "config.ini"
+#define MENU_CUSTOM_FONT_FILE   "custom.font64"
 
-#define CACHE_DIRECTORY     "sd:/menu/cache"
-#define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
+#define MENU_CACHE_DIRECTORY    "cache"
+#define BACKGROUND_CACHE_FILE   "background.data"
 
-#define FRAMERATE_DIVIDER   (2)
-#define LAG_REPORT          (false)
+#define FRAMERATE_DIVIDER       (2)
+#define LAG_REPORT              (false)
 
 
 static menu_t *menu;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
+
+extern tv_type_t __boot_tvtype;
 
 
 static void frame_counter_handler (void) {
@@ -61,7 +65,6 @@ static void menu_init (boot_params_t *boot_params) {
     rdpq_init();
     dfs_init(DFS_DEFAULT_LOCATION);
 
-    fonts_init();
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -70,36 +73,46 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_err = flashcart_init();
+    menu->flashcart_err = flashcart_init(&menu->storage_prefix);
     if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
-    menu->error_message = NULL;
+    path_t *path = path_init(menu->storage_prefix, MENU_DIRECTORY);
 
+    directory_create(path_get(path));
+
+    path_push(path, MENU_SETTINGS_FILE);
+    settings_init(path_get(path));
     settings_load(&menu->settings);
+    path_pop(path);
 
-    directory_create(CACHE_DIRECTORY);
+    path_push(path, MENU_CUSTOM_FONT_FILE);
+    fonts_init(path_get(path));
+    path_pop(path);
 
-    component_background_init(BACKGROUND_CACHE);
+    path_push(path, MENU_CACHE_DIRECTORY);
+    directory_create(path_get(path));
+
+    path_push(path, BACKGROUND_CACHE_FILE);
+    component_background_init(path_get(path));
+
+    path_free(path);
 
     menu->boot_params = boot_params;
 
-    bool default_directory_exists = directory_exists(menu->settings.default_directory);
-    char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
-
-    menu->browser.valid = false;
-    menu->browser.reload = false;
-    menu->browser.directory = path_init("sd:/", init_directory);
-
-    menu->load.rom_path = NULL;
+    menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
+    if (!directory_exists(path_get(menu->browser.directory))) {
+        path_free(menu->browser.directory);
+        menu->browser.directory = path_init(menu->storage_prefix, "/");
+    }
 
     hdmi_clear_game_id();
 
     tv_type = get_tv_type();
     if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
         // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-        TV_TYPE_RAM = TV_NTSC;
+        __boot_tvtype = TV_NTSC;
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
@@ -111,10 +124,16 @@ static void menu_deinit (menu_t *menu) {
     unregister_VI_handler(frame_counter_handler);
 
     // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
-    TV_TYPE_RAM = tv_type;
+    __boot_tvtype = tv_type;
 
     hdmi_send_game_id(menu->boot_params);
 
+    path_free(menu->load.disk_path);
+    path_free(menu->load.rom_path);
+    for (int i = 0; i < menu->browser.entries; i++) {
+        free(menu->browser.list[i].name);
+    }
+    free(menu->browser.list);
     path_free(menu->browser.directory);
     free(menu);
 
@@ -133,29 +152,40 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 }
 
-
-// NOTE: Keep this array in sync with menu_mode_t
-static struct views_s {
+typedef const struct {
+    menu_mode_t id;
     void (*init) (menu_t *menu);
     void (*show) (menu_t *menu, surface_t *display);
-} views[__MENU_MODE_COUNT] = {
-    { NULL, NULL }, // MENU_MODE_NONE
-    { view_startup_init, view_startup_display }, // MENU_MODE_STARTUP
-    { view_browser_init, view_browser_display }, // MENU_MODE_BROWSER
-    { view_file_info_init, view_file_info_display }, // MENU_MODE_FILE_INFO
-    { view_system_info_init, view_system_info_display }, // MENU_MODE_SYSTEM_INFO
-    { view_image_viewer_init, view_image_viewer_display }, // MENU_MODE_IMAGE_VIEWER
-    { view_music_player_init, view_music_player_display }, // MENU_MODE_MUSIC_PLAYER
-    { view_credits_init, view_credits_display }, // MENU_MODE_CREDITS
-    { view_settings_init, view_settings_display }, // MENU_MODE_SETTINGS_EDITOR
-    { view_rtc_init, view_rtc_display }, // MENU_MODE_RTC
-    { view_load_rom_init, view_load_rom_display }, // MENU_MODE_LOAD_ROM
-    { view_load_disk_init, view_load_disk_display }, // MENU_MODE_LOAD_DISK
-    { view_load_emulator_init, view_load_emulator_display }, // MENU_MODE_LOAD_EMULATOR
-    { view_error_init, view_error_display }, // MENU_MODE_ERROR
-    { view_fault_init, view_fault_display }, // MENU_MODE_FAULT
-    { NULL, NULL }, // MENU_MODE_BOOT
+} view_t;
+
+static view_t menu_views[] = {
+    { MENU_MODE_STARTUP, view_startup_init, view_startup_display },
+    { MENU_MODE_BROWSER, view_browser_init, view_browser_display },
+    { MENU_MODE_FILE_INFO, view_file_info_init, view_file_info_display },
+    { MENU_MODE_SYSTEM_INFO, view_system_info_init, view_system_info_display },
+    { MENU_MODE_IMAGE_VIEWER, view_image_viewer_init, view_image_viewer_display },
+    { MENU_MODE_TEXT_VIEWER, view_text_viewer_init, view_text_viewer_display },
+    { MENU_MODE_MUSIC_PLAYER, view_music_player_init, view_music_player_display },
+    { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
+    { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
+    { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
+    { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
+    { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
+    { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
+    { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
+    { MENU_MODE_ERROR, view_error_init, view_error_display },
+    { MENU_MODE_FAULT, view_fault_init, view_fault_display },
 };
+
+static view_t *menu_get_view (menu_mode_t id) {
+    for (int i = 0; i < sizeof(menu_views) / sizeof(view_t); i++) {
+        if (menu_views[i].id == id) {
+            return &menu_views[i];
+        }
+    }
+    return NULL;
+}
+
 
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
@@ -168,8 +198,9 @@ void menu_run (boot_params_t *boot_params) {
 
             actions_update(menu);
 
-            if (views[menu->mode].show) {
-                views[menu->mode].show(menu, display);
+            view_t *view = menu_get_view(menu->mode);
+            if (view && view->show) {
+                view->show(menu, display);
             } else {
                 rdpq_attach_clear(display, NULL);
                 rdpq_detach_wait();
@@ -183,8 +214,9 @@ void menu_run (boot_params_t *boot_params) {
             while (menu->mode != menu->next_mode) {
                 menu->mode = menu->next_mode;
 
-                if (views[menu->mode].init) {
-                    views[menu->mode].init(menu);
+                view_t *next_view = menu_get_view(menu->next_mode);
+                if (next_view && next_view->init) {
+                    next_view->init(menu);
                 }
             }
 

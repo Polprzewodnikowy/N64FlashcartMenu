@@ -8,9 +8,15 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
-FLAGS += -DMENU_VERSION=\"0.0.1.$(shell date +%Y-%m-%dT%H:%M:%SZ).ALPHA\"
+MENU_VERSION ?= "Rolling release"
+BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
 include $(N64_INST)/include/n64.mk
+
+N64_ROM_SAVETYPE = none
+N64_ROM_RTC = 1
+N64_ROM_REGIONFREE = 1
+N64_ROM_REGION = E
 
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
 
@@ -58,6 +64,7 @@ SRCS = \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
+	menu/views/text_viewer.c \
 	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
 	menu/views/load_rom.c \
@@ -66,6 +73,7 @@ SRCS = \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
+	menu/views/flashcart_info.c \
 	utils/fs.c
 
 FONTS = \
@@ -81,7 +89,7 @@ FILESYSTEM = \
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-1FF -r 2026-2026 --ellipsis 2026,1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 
@@ -90,6 +98,9 @@ $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
+
+$(BUILD_DIR)/menu/views/credits.o: .FORCE
+$(BUILD_DIR)/menu/views/credits.o: FLAGS+=-DMENU_VERSION=\"$(MENU_VERSION)\" -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\"
 
 $(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
@@ -125,8 +136,17 @@ all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
 .PHONY: all
 
 clean:
-	@rm -rf ./$(BUILD_DIR) ./$(FILESYSTEM_DIR) ./$(OUTPUT_DIR)
+	@rm -f ./$(FILESYSTEM)
+	@find ./$(FILESYSTEM_DIR) -type d -empty -delete
+	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
+
+format:
+	@find ./$(SOURCE_DIR) \
+		-path \./$(SOURCE_DIR)/libs -prune \
+		-o -iname *.c -print \
+		-o -iname *.h -print \
+		| xargs clang-format -i
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)
@@ -146,5 +166,7 @@ endif
 
 # test:
 #   TODO: run tests
+
+.FORCE:
 
 -include $(DEPS)

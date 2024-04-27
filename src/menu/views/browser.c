@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
+#include <sys/errno.h>
 #include <time.h>
-
-#include <fatfs/ff.h>
 
 #include "../fonts.h"
 #include "utils/fs.h"
@@ -12,9 +11,22 @@
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
-static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+// TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+static const char *save_extensions[] = { "sav", NULL };
 static const char *image_extensions[] = { "png", NULL };
+static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
+
+static const char *hidden_paths[] = {
+    "/menu.bin",
+    "/menu",
+    "/N64FlashcartMenu.n64",
+    "/OS64.v64",
+    "/OS64P.v64",
+    "/sc64menu.n64",
+    "/System Volume Information",
+    NULL,
+};
 
 
 static int compare_entry (const void *pa, const void *pb) {
@@ -50,78 +62,97 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_MUSIC) {
             return 1;
+        } else if (a->type == ENTRY_TYPE_TEXT) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_TEXT) {
+            return 1;
         }
     }
 
     return strcasecmp((const char *) (a->name), (const char *) (b->name));
 }
 
-static bool load_directory (menu_t *menu) {
-    DIR dir;
-    FILINFO info;
-
+static void browser_list_free (menu_t *menu) {
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
 
+    free(menu->browser.list);
+
+    menu->browser.list = NULL;
     menu->browser.entries = 0;
-    menu->browser.selected = -1;
     menu->browser.entry = NULL;
+    menu->browser.selected = -1;
+}
 
-    if (f_opendir(&dir, strip_sd_prefix(path_get(menu->browser.directory))) != FR_OK) {
-        return true;
+static bool load_directory (menu_t *menu) {
+    int result;
+    dir_t info;
+
+    browser_list_free(menu);
+
+    path_t *path = path_clone(menu->browser.directory);
+
+    result = dir_findfirst(path_get(path), &info);
+
+    while (result == 0) {
+        bool hide = false;
+
+        if (!menu->settings.show_protected_entries) {
+            path_push(path, info.d_name);
+
+            for (int i = 0; hidden_paths[i] != NULL; i++) {
+                if (strcmp(strip_fs_prefix(path_get(path)), hidden_paths[i]) == 0) {
+                    hide = true;
+                    break;
+                }
+            }
+
+            path_pop(path);
+        }
+
+        if (!hide) {
+            menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
+
+            entry_t *entry = &menu->browser.list[menu->browser.entries++];
+
+            entry->name = strdup(info.d_name);
+            if (!entry->name) {
+                path_free(path);
+                browser_list_free(menu);
+                return true;
+            }
+
+            if (info.d_type == DT_DIR) {
+                entry->type = ENTRY_TYPE_DIR;
+            } else if (file_has_extensions(entry->name, rom_extensions)) {
+                entry->type = ENTRY_TYPE_ROM;
+            } else if (file_has_extensions(entry->name, disk_extensions)) {
+                entry->type = ENTRY_TYPE_DISK;
+            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+                entry->type = ENTRY_TYPE_EMULATOR;
+            } else if (file_has_extensions(entry->name, save_extensions)) {
+                entry->type = ENTRY_TYPE_SAVE;
+            } else if (file_has_extensions(entry->name, image_extensions)) {
+                entry->type = ENTRY_TYPE_IMAGE;
+            } else if (file_has_extensions(entry->name, text_extensions)) {
+                entry->type = ENTRY_TYPE_TEXT;
+            } else if (file_has_extensions(entry->name, music_extensions)) {
+                entry->type = ENTRY_TYPE_MUSIC;
+            } else {
+                entry->type = ENTRY_TYPE_OTHER;
+            }
+
+            entry->size = info.d_size;
+        }
+
+        result = dir_findnext(path_get(path), &info);
     }
 
-    while (menu->browser.entries < BROWSER_LIST_SIZE) {
-        if (f_readdir(&dir, &info) != FR_OK) {
-            return true;
-        }
+    path_free(path);
 
-        size_t length = strlen(info.fname);
-
-        if (length == 0) {
-            break;
-        }
-
-        if (info.fattrib & AM_SYS) {
-            continue;
-        }
-        if ((info.fattrib & AM_HID) && !menu->settings.hidden_files_enabled) {
-            continue;
-        }
-
-        entry_t *entry = &menu->browser.list[menu->browser.entries];
-
-        entry->name = strdup(info.fname);
-        if (!entry->name) {
-            f_closedir(&dir);
-            return true;
-        }
-
-        if (info.fattrib & AM_DIR) {
-            entry->type = ENTRY_TYPE_DIR;
-        } else if (file_has_extensions(info.fname, rom_extensions)) {
-            entry->type = ENTRY_TYPE_ROM;
-        } else if (file_has_extensions(info.fname, disk_extensions)) {
-            entry->type = ENTRY_TYPE_DISK;
-        }else if (file_has_extensions(info.fname, emulator_extensions)) {
-            entry->type = ENTRY_TYPE_EMULATOR;
-        } else if (file_has_extensions(info.fname, save_extensions)) {
-            entry->type = ENTRY_TYPE_SAVE;
-        } else if (file_has_extensions(info.fname, image_extensions)) {
-            entry->type = ENTRY_TYPE_IMAGE;
-        } else if (file_has_extensions(info.fname, music_extensions)) {
-            entry->type = ENTRY_TYPE_MUSIC;
-        } else {
-            entry->type = ENTRY_TYPE_OTHER;
-        }
-
-        entry->size = info.fsize;
-
-        menu->browser.entries += 1;
-    }
-
-    if (f_closedir(&dir) != FR_OK) {
+    if (result < -1) {
+        browser_list_free(menu);
         return true;
     }
 
@@ -131,6 +162,22 @@ static bool load_directory (menu_t *menu) {
     }
 
     qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
+
+    return false;
+}
+
+static bool reload_directory (menu_t *menu) {
+    int selected = menu->browser.selected;
+
+    if (load_directory(menu)) {
+        return true;
+    }
+
+    menu->browser.selected = selected;
+    if (menu->browser.selected >= menu->browser.entries) {
+        menu->browser.selected = menu->browser.entries - 1;
+    }
+    menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
 
     return false;
 }
@@ -175,47 +222,35 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
-static void show_properties (menu_t *menu) {
+static void show_properties (menu_t *menu, void *arg) {
     menu->next_mode = MENU_MODE_FILE_INFO;
 }
 
-static void delete_entry (menu_t *menu) {
-    int selected = menu->browser.selected;
-
+static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
-        if (directory_delete(path_get(path))) {
+    if (remove(path_get(path))) {
+        menu->browser.valid = false;
+        if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
             menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
-            path_free(path);
-            return;
-        }
-    } else {
-        if (file_delete(path_get(path))) {
+        } else {
             menu_show_error(menu, "Couldn't delete file");
-            path_free(path);
-            return;
         }
+        path_free(path);
+        return;
     }
 
     path_free(path);
 
-    if (load_directory(menu)) {
+    if (reload_directory(menu)) {
         menu->browser.valid = false;
         menu_show_error(menu, "Couldn't refresh directory contents after delete operation");
-        return;
     }
-
-    menu->browser.selected = selected;
-    if (menu->browser.selected >= menu->browser.entries) {
-        menu->browser.selected = menu->browser.entries - 1;
-    }
-    menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
 }
 
-static void set_default_directory (menu_t *menu) {
+static void set_default_directory (menu_t *menu, void *arg) {
     free(menu->settings.default_directory);
-    menu->settings.default_directory = strdup(strip_sd_prefix(path_get(menu->browser.directory)));
+    menu->settings.default_directory = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
     settings_save(&menu->settings);
 }
 
@@ -228,28 +263,18 @@ static component_context_menu_t entry_context_menu = {
     }
 };
 
-static void edit_settings (menu_t *menu) {
-    menu->next_mode = MENU_MODE_SETTINGS_EDITOR;
-}
-
-static void show_system_info (menu_t *menu) {
-    menu->next_mode = MENU_MODE_SYSTEM_INFO;
-}
-
-static void show_credits (menu_t *menu) {
-    menu->next_mode = MENU_MODE_CREDITS;
-}
-
-static void edit_rtc (menu_t *menu) {
-    menu->next_mode = MENU_MODE_RTC;
+static void set_menu_next_mode (menu_t *menu, void *arg) {
+    menu_mode_t next_mode = (menu_mode_t) (arg);
+    menu->next_mode = next_mode;
 }
 
 static component_context_menu_t settings_context_menu = {
     .list = {
-        { .text = "Edit settings", .action = edit_settings },
-        { .text = "Show system info", .action = show_system_info },
-        { .text = "Show credits", .action = show_credits },
-        { .text = "Adjust RTC", .action = edit_rtc },
+        { .text = "Edit settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
+        { .text = "Show system info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
+        { .text = "Show credits", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
+        { .text = "Adjust RTC", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
+        { .text = "Show cart info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -300,6 +325,9 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;
                 break;
+            case ENTRY_TYPE_TEXT:
+                menu->next_mode = MENU_MODE_TEXT_VIEWER;
+                break;
             case ENTRY_TYPE_MUSIC:
                 menu->next_mode = MENU_MODE_MUSIC_PLAYER;
                 break;
@@ -337,6 +365,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
+            case ENTRY_TYPE_TEXT: action = "A: View"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
             default: action = "A: Info"; break;
         }
@@ -347,14 +376,14 @@ static void draw (menu_t *menu, surface_t *d) {
         "%s\n"
         "^%02XB: Back^00",
         menu->browser.entries == 0 ? "" : action,
-        path_is_root(menu->browser.directory) ? STL_UNKNOWN : STL_DEFAULT
+        path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
     component_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "Start: Settings\n"
         "^%02XR: Options^00",
-        menu->browser.entries == 0 ? STL_UNKNOWN : STL_DEFAULT
+        menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
@@ -380,24 +409,18 @@ void view_browser_init (menu_t *menu) {
         component_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
-            menu->browser.directory = path_init("sd:/", "");
+            menu->browser.directory = path_init(menu->storage_prefix, "");
             menu_show_error(menu, "Error while opening initial directory");
         } else {
             menu->browser.valid = true;
         }
     }
+
     if (menu->browser.reload) {
         menu->browser.reload = false;
-        int selected = menu->browser.selected;
-        if (load_directory(menu)) {
+        if (reload_directory(menu)) {
             menu_show_error(menu, "Error while reloading current directory");
             menu->browser.valid = false;
-        } else {
-            menu->browser.selected = selected;
-            if (menu->browser.selected >= menu->browser.entries) {
-                menu->browser.selected = menu->browser.entries - 1;
-            }
-            menu->browser.entry = menu->browser.selected >= 0 ? &menu->browser.list[menu->browser.selected] : NULL;
         }
     }
 }

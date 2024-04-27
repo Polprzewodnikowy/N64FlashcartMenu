@@ -126,9 +126,21 @@ static void load (menu_t *menu) {
     }
 
     menu->next_mode = MENU_MODE_BOOT;
-    menu->boot_params->device_type = load_rom ? BOOT_DEVICE_TYPE_ROM : BOOT_DEVICE_TYPE_64DD;
-    menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
-    menu->boot_params->detect_cic_seed = true;
+
+    if (load_rom) {
+        menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
+        menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
+        switch (rom_info_get_tv_type(&menu->load.rom_info)) {
+            case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
+            case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
+            case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
+            default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
+        }
+    } else {
+        menu->boot_params->device_type = BOOT_DEVICE_TYPE_64DD;
+        menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
+        menu->boot_params->detect_cic_seed = true;
+    }
 }
 
 
@@ -142,7 +154,7 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    disk_err_t err = disk_info_load(path_get(menu->load.disk_path), &menu->load.disk_info);
+    disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
     }

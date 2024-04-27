@@ -24,7 +24,7 @@ void component_progressbar_draw (int x0, int y0, int x1, int y1, float progress)
 void component_seekbar_draw (float progress);
 void component_loader_draw (float position);
 void component_scrollbar_draw (int x, int y, int width, int height, int position, int items, int visible_items);
-void component_file_list_scrollbar_draw (int position, int items, int visible_items);
+void component_list_scrollbar_draw (int position, int items, int visible_items);
 void component_dialog_draw (int width, int height);
 void component_messagebox_draw (char *fmt, ...);
 void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
@@ -45,7 +45,8 @@ typedef struct component_context_menu {
     struct component_context_menu *submenu;
     struct {
         const char *text;
-        void (*action) (menu_t *menu);
+        void (*action) (menu_t *menu, void *arg);
+        void *arg;
         struct component_context_menu *submenu;
     } list[];
 } component_context_menu_t;
@@ -63,7 +64,7 @@ typedef struct {
     surface_t *image;
 } component_boxart_t;
 
-component_boxart_t *component_boxart_init (char *game_code);
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
 

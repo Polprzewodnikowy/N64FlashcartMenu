@@ -110,7 +110,7 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
         return FLASHCART_ERR_LOAD;
     }
 
-    fix_file_size(&fil);
+    fatfs_fix_file_size(&fil);
 
     size_t rom_size = f_size(&fil);
 
@@ -173,7 +173,7 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
         return FLASHCART_ERR_LOAD;
     }
 
-    fix_file_size(&fil);
+    fatfs_fix_file_size(&fil);
 
     size_t file_size = f_size(&fil) - file_offset;
 

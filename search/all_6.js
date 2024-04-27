@@ -1,19 +1,14 @@
 var searchData=
 [
   ['features_0',['features',['../rom__info_8h.html#a9f87b56f9e5c8677c3075bb4bb38d3f6',1,'rom_info_t']]],
-  ['file_5flist_5fentries_1',['FILE_LIST_ENTRIES',['../constants_8h.html#acb66ef68dc9f98630e4f447d5f51f86c',1,'constants.h']]],
-  ['file_5flist_5fhighlight_5fcolor_2',['FILE_LIST_HIGHLIGHT_COLOR',['../constants_8h.html#aea0ff4749095856d59aacdad57614f59',1,'constants.h']]],
-  ['file_5flist_5fmax_5fwidth_3',['FILE_LIST_MAX_WIDTH',['../constants_8h.html#a084715a542c9cc19fce9ee942f1cda85',1,'constants.h']]],
-  ['file_5flist_5fscrollbar_5fheight_4',['FILE_LIST_SCROLLBAR_HEIGHT',['../constants_8h.html#a58229a7d19dda288fe7e97c96627241c',1,'constants.h']]],
-  ['file_5flist_5fscrollbar_5fwidth_5',['FILE_LIST_SCROLLBAR_WIDTH',['../constants_8h.html#ac0fc3c2cde61609c3d0aadc2625c60e2',1,'constants.h']]],
-  ['file_5flist_5fscrollbar_5fx_6',['FILE_LIST_SCROLLBAR_X',['../constants_8h.html#a738d89e376e1d21ab45fd1a3f1c3fa21',1,'constants.h']]],
-  ['file_5flist_5fscrollbar_5fy_7',['FILE_LIST_SCROLLBAR_Y',['../constants_8h.html#ab1dc234f2e8a87c33888f5f8fe1f5439',1,'constants.h']]],
-  ['flashcart_2eh_8',['flashcart.h',['../flashcart_8h.html',1,'']]],
-  ['flashcart_5fdisk_5fparameters_5ft_9',['flashcart_disk_parameters_t',['../flashcart_8h.html#structflashcart__disk__parameters__t',1,'']]],
-  ['flashcart_5ferr_5ft_10',['flashcart_err_t',['../flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73',1,'flashcart.h']]],
-  ['flashcart_5ffeatures_5ft_11',['flashcart_features_t',['../flashcart_8h.html#a956fff40ddf9cba0ca30fabc0cecb016',1,'flashcart.h']]],
-  ['flashcart_5fsave_5ftype_5ft_12',['flashcart_save_type_t',['../flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2',1,'flashcart.h']]],
-  ['flashcart_5ft_13',['flashcart_t',['../structflashcart__t.html',1,'']]],
-  ['flashcart_5futils_2eh_14',['flashcart_utils.h',['../flashcart__utils_8h.html',1,'']]],
-  ['fonts_2eh_15',['fonts.h',['../fonts_8h.html',1,'']]]
+  ['file_5flist_5fhighlight_5fcolor_1',['FILE_LIST_HIGHLIGHT_COLOR',['../constants_8h.html#aea0ff4749095856d59aacdad57614f59',1,'constants.h']]],
+  ['file_5flist_5fmax_5fwidth_2',['FILE_LIST_MAX_WIDTH',['../constants_8h.html#a084715a542c9cc19fce9ee942f1cda85',1,'constants.h']]],
+  ['flashcart_2eh_3',['flashcart.h',['../flashcart_8h.html',1,'']]],
+  ['flashcart_5fdisk_5fparameters_5ft_4',['flashcart_disk_parameters_t',['../flashcart_8h.html#structflashcart__disk__parameters__t',1,'']]],
+  ['flashcart_5ferr_5ft_5',['flashcart_err_t',['../flashcart_8h.html#a324286864a7bc56dbbeeb791aa81ab73',1,'flashcart.h']]],
+  ['flashcart_5ffeatures_5ft_6',['flashcart_features_t',['../flashcart_8h.html#a956fff40ddf9cba0ca30fabc0cecb016',1,'flashcart.h']]],
+  ['flashcart_5fsave_5ftype_5ft_7',['flashcart_save_type_t',['../flashcart_8h.html#a51261e17f581033419e18c3e3d0c2cf2',1,'flashcart.h']]],
+  ['flashcart_5ft_8',['flashcart_t',['../structflashcart__t.html',1,'']]],
+  ['flashcart_5futils_2eh_9',['flashcart_utils.h',['../flashcart__utils_8h.html',1,'']]],
+  ['fonts_2eh_10',['fonts.h',['../fonts_8h.html',1,'']]]
 ];

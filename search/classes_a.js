@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['usb_5fcomm_5fcommand_5ft_0',['usb_comm_command_t',['../structusb__comm__command__t.html',1,'']]]
+  ['text_5ffile_5ft_0',['text_file_t',['../structtext__file__t.html',1,'']]]
 ];

@@ -43,11 +43,11 @@ static flashcart_err_t ed64_init (void) {
         uint8_t cartsave_data[KiB(128)];
 
         // find the path to last save
-        if (file_exists(strip_sd_prefix(current_state.last_save_path))) {
+        if (file_exists(strip_fs_prefix(current_state.last_save_path))) {
 
             int save_size = file_get_size(current_state.last_save_path);
 
-            if ((f_open(&fil, strip_sd_prefix(current_state.last_save_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
+            if ((f_open(&fil, strip_fs_prefix(current_state.last_save_path), FA_CREATE_ALWAYS | FA_READ | FA_WRITE)) != FR_OK) {
                 return FLASHCART_ERR_LOAD;
             }
 
@@ -106,7 +106,7 @@ static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callbac
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(rom_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(rom_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
@@ -169,7 +169,7 @@ static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uin
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(file_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(file_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
 
@@ -211,7 +211,7 @@ static flashcart_err_t ed64_load_save (char *save_path) {
     FIL fil;
     UINT br;
 
-    if (f_open(&fil, strip_sd_prefix(save_path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(save_path), FA_READ) != FR_OK) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }

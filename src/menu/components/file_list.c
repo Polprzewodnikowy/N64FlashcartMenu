@@ -28,14 +28,14 @@ static int format_file_size (char *buffer, int64_t size) {
 void component_file_list_draw (entry_t *list, int entries, int selected) {
     int starting_position = 0;
 
-    if (entries > FILE_LIST_ENTRIES && selected >= (FILE_LIST_ENTRIES / 2)) {
-        starting_position = selected - (FILE_LIST_ENTRIES / 2);
-        if (starting_position >= entries - FILE_LIST_ENTRIES) {
-            starting_position = entries - FILE_LIST_ENTRIES;
+    if (entries > LIST_ENTRIES && selected >= (LIST_ENTRIES / 2)) {
+        starting_position = selected - (LIST_ENTRIES / 2);
+        if (starting_position >= entries - LIST_ENTRIES) {
+            starting_position = entries - LIST_ENTRIES;
         }
     }
 
-    component_file_list_scrollbar_draw(selected, entries, FILE_LIST_ENTRIES);
+    component_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
 
     if (entries == 0) {
         component_main_text_draw(
@@ -47,10 +47,10 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_t *file_list_layout;
         rdpq_paragraph_t *layout;
 
-        size_t name_lengths[FILE_LIST_ENTRIES];
+        size_t name_lengths[LIST_ENTRIES];
         size_t total_length = 1;
 
-        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+        for (int i = 0; i < LIST_ENTRIES; i++) {
             int entry_index = starting_position + i;
 
             if (entry_index >= entries) {
@@ -76,7 +76,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             file_list_layout
         );
 
-        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+        for (int i = 0; i < LIST_ENTRIES; i++) {
             int entry_index = starting_position + i;
 
             entry_t *entry = &list[entry_index];
@@ -134,7 +134,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
-                .width = VISIBLE_AREA_WIDTH - FILE_LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
+                .width = VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
                 .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
                 .align = ALIGN_RIGHT,
                 .wrap = WRAP_ELLIPSES,
@@ -152,7 +152,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
             }
 
-            if ((i + 1) == (starting_position + FILE_LIST_ENTRIES)) {
+            if ((i + 1) == (starting_position + LIST_ENTRIES)) {
                 break;
             }
 

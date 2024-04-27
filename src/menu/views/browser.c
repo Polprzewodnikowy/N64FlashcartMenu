@@ -230,6 +230,7 @@ static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     if (remove(path_get(path))) {
+        menu->browser.valid = false;
         if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
             menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
         } else {

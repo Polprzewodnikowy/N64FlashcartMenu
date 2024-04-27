@@ -11,6 +11,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "path.h"
+
+
 /** @brief Disk state enumeration. */
 typedef enum {
     DISK_OK,
@@ -49,7 +52,7 @@ typedef struct {
 } disk_info_t;
 
 
-disk_err_t disk_info_load (char *path, disk_info_t *disk_info);
+disk_err_t disk_info_load (path_t *path, disk_info_t *disk_info);
 
 
 #endif

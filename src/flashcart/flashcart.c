@@ -8,12 +8,10 @@
 #include "utils/utils.h"
 
 #include "flashcart.h"
+#include "flashcart_utils.h"
 
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
-
-
-#define SAVE_WRITEBACK_MAX_SECTORS  (256)
 
 
 static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
@@ -27,34 +25,44 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(128),
 };
 
-static uint32_t save_writeback_sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
+static flashcart_err_t dummy_init (void) {
+    return FLASHCART_OK;
+}
 
-static void save_writeback_sectors_callback (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size) {
-    for (uint32_t i = 0; i < cluster_size; i++) {
-        uint32_t offset = file_sector + i;
-        uint32_t sector = cluster_sector + i;
-
-        if ((offset > SAVE_WRITEBACK_MAX_SECTORS) || (offset > sector_count)) {
-            return;
-        }
-
-        save_writeback_sectors[offset] = sector;
+static bool dummy_has_feature (flashcart_features_t feature) {
+    switch (feature) {
+        default:
+            return false;
     }
 }
 
+static flashcart_err_t dummy_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+    return FLASHCART_OK;
+}
 
-static flashcart_err_t dummy_init (void) {
+static flashcart_err_t dummy_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t dummy_load_save (char *save_path) {
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t dummy_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
 static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
-    .load_rom = NULL,
-    .load_file = NULL,
-    .load_save = NULL,
-    .set_save_type = NULL,
+    .has_feature = dummy_has_feature,
+    .load_rom = dummy_load_rom,
+    .load_file = dummy_load_file,
+    .load_save = dummy_load_save,
+    .load_64dd_ipl = NULL,
+    .load_64dd_disk = NULL,
+    .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
 });
 
@@ -69,9 +77,9 @@ static flashcart_t *flashcart = &((flashcart_t) {
 char *flashcart_convert_error_message (flashcart_err_t err) {
     switch (err) {
         case FLASHCART_OK: return "No error";
-        case FLASHCART_ERR_NOT_DETECTED: return "No flashcart hardware was detected";
         case FLASHCART_ERR_OUTDATED: return "Outdated flashcart firmware";
         case FLASHCART_ERR_SD_CARD: return "Error during SD card initialization";
+        case FLASHCART_ERR_BBFS: return "Error during iQue NAND initialization";
         case FLASHCART_ERR_ARGS: return "Invalid argument passed to flashcart function";
         case FLASHCART_ERR_LOAD: return "Error during loading data into flashcart";
         case FLASHCART_ERR_INT: return "Internal flashcart error";
@@ -80,15 +88,20 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
     }
 }
 
-flashcart_err_t flashcart_init (void) {
+flashcart_err_t flashcart_init (const char **storage_prefix) {
     flashcart_err_t err;
 
-    bool sd_card_initialized = debug_init_sdfs("sd:/", -1);
+    if (sys_bbplayer()) {
+        // TODO: Add iQue callbacks
+        *storage_prefix = "bbfs:/";
+        if (bbfs_init()) {
+            return FLASHCART_ERR_BBFS;
+        }
+        return FLASHCART_OK;
+    }
 
-#ifndef NDEBUG
-    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
-    debug_init_usblog();
-#endif
+    *storage_prefix = "sd:/";
+    bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
 
     switch (cart_type) {
         case CART_CI:   // 64drive
@@ -96,6 +109,8 @@ flashcart_err_t flashcart_init (void) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
+            break;
+
         case CART_ED:   // Original EverDrive-64
             break;
 
@@ -103,15 +118,22 @@ flashcart_err_t flashcart_init (void) {
             flashcart = sc64_get_flashcart();
             break;
 
-        default:
-            return FLASHCART_ERR_NOT_DETECTED;
+        default:        // Probably emulator
+            *storage_prefix = "rom:/";
+            debug_init_isviewer();
+            break;
     }
+
+#ifndef NDEBUG
+    // NOTE: Some flashcarts doesn't have USB port, can't throw error here
+    debug_init_usblog();
+#endif
 
     if ((err = flashcart->init()) != FLASHCART_OK) {
         return err;
     }
 
-    if (!sd_card_initialized) {
+    if ((cart_type != CART_NULL) && (!sd_card_initialized)) {
         return FLASHCART_ERR_SD_CARD;
     }
 
@@ -184,19 +206,11 @@ flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save
         return err;
     }
 
-    if (flashcart->set_save_writeback) {
-        for (int i = 0; i < SAVE_WRITEBACK_MAX_SECTORS; i++) {
-            save_writeback_sectors[i] = 0;
-        }
-        if (file_get_sectors(save_path, save_writeback_sectors_callback)) {
-            return FLASHCART_ERR_LOAD;
-        }
-        if ((err = flashcart->set_save_writeback(save_writeback_sectors)) != FLASHCART_OK) {
-            return err;
-        }
+    if (!flashcart->set_save_writeback) {
+        return FLASHCART_OK;
     }
 
-    return FLASHCART_OK;
+    return flashcart->set_save_writeback(save_path);
 }
 
 flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {

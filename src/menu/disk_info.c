@@ -1,6 +1,6 @@
-#include <fatfs/ff.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "disk_info.h"
@@ -39,18 +39,14 @@ static const int disk_id_lbas[DISK_ID_LBA_COUNT] = {
 };
 
 
-static bool load_system_area_lba (FIL *fil, int lba, uint8_t *buffer) {
-    UINT bytes_read;
+static bool load_system_area_lba (FILE *f, int lba, uint8_t *buffer) {
     if (lba >= SYSTEM_AREA_LBA_COUNT) {
         return true;
     }
-    if (f_lseek(fil, SYSTEM_AREA_LBA_LENGTH * lba) != FR_OK) {
+    if (fseek(f, SYSTEM_AREA_LBA_LENGTH * lba, SEEK_SET)) {
         return true;
     }
-    if (f_read(fil, buffer, SYSTEM_AREA_LBA_LENGTH, &bytes_read) != FR_OK) {
-        return true;
-    }
-    if (bytes_read != SYSTEM_AREA_LBA_LENGTH) {
+    if (fread(buffer, SYSTEM_AREA_LBA_LENGTH, 1, f) != 1) {
         return true;
     }
     return false;
@@ -113,7 +109,7 @@ static void update_bad_system_area_lbas (disk_info_t *disk_info) {
     }
 }
 
-static disk_err_t load_and_verify_system_data_lba (FIL *fil, disk_info_t *disk_info) {
+static disk_err_t load_and_verify_system_data_lba (FILE *f, disk_info_t *disk_info) {
     uint8_t buffer[SYSTEM_AREA_LBA_LENGTH];
     int sector_length;
 
@@ -122,7 +118,7 @@ static disk_err_t load_and_verify_system_data_lba (FIL *fil, disk_info_t *disk_i
     for (int i = 0; i < SYSTEM_DATA_LBA_COUNT; i++) {
         int lba = system_data_lbas[i];
 
-        if (load_system_area_lba(fil, lba, buffer)) {
+        if (load_system_area_lba(f, lba, buffer)) {
             return DISK_ERR_IO;
         }
 
@@ -155,7 +151,7 @@ static disk_err_t load_and_verify_system_data_lba (FIL *fil, disk_info_t *disk_i
     return valid_system_data_lba_found ? DISK_OK : DISK_ERR_INVALID;
 }
 
-static disk_err_t load_and_verify_disk_id_lba (FIL *fil, disk_info_t *disk_info) {
+static disk_err_t load_and_verify_disk_id_lba (FILE *f, disk_info_t *disk_info) {
     uint8_t buffer[SYSTEM_AREA_LBA_LENGTH];
 
     bool valid_disk_id_lba_found = false;
@@ -163,7 +159,7 @@ static disk_err_t load_and_verify_disk_id_lba (FIL *fil, disk_info_t *disk_info)
     for (int i = 0; i < DISK_ID_LBA_COUNT; i++) {
         int lba = disk_id_lbas[i];
 
-        if (load_system_area_lba(fil, lba, buffer)) {
+        if (load_system_area_lba(f, lba, buffer)) {
             return DISK_ERR_IO;
         }
 
@@ -180,29 +176,27 @@ static disk_err_t load_and_verify_disk_id_lba (FIL *fil, disk_info_t *disk_info)
 }
 
 
-disk_err_t disk_info_load (char *path, disk_info_t *disk_info) {
-    FIL fil;
+disk_err_t disk_info_load (path_t *path, disk_info_t *disk_info) {
+    FILE *f;
     disk_err_t err;
 
     for (int i = 0; i < SYSTEM_AREA_LBA_COUNT; i++) {
         disk_info->bad_system_area_lbas[i] = false;
     }
 
-    if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+    if ((f = fopen(path_get(path), "rb")) == NULL) {
         return DISK_ERR_NO_FILE;
     }
-
-    if ((err = load_and_verify_system_data_lba(&fil, disk_info)) != DISK_OK) {
-        f_close(&fil);
+    setbuf(f, NULL);
+    if ((err = load_and_verify_system_data_lba(f, disk_info)) != DISK_OK) {
+        fclose(f);
         return err;
     }
-
-    if ((err = load_and_verify_disk_id_lba(&fil, disk_info)) != DISK_OK) {
-        f_close(&fil);
+    if ((err = load_and_verify_disk_id_lba(f, disk_info)) != DISK_OK) {
+        fclose(f);
         return err;
     }
-
-    if (f_close(&fil) != FR_OK) {
+    if (fclose(f)) {
         return DISK_ERR_IO;
     }
 

@@ -156,7 +156,7 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    disk_err_t err = disk_info_load(path_get(menu->load.disk_path), &menu->load.disk_info);
+    disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
     }

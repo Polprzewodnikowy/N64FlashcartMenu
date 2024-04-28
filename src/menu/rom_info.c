@@ -152,7 +152,7 @@ static const match_t database[] = {
     MATCH_CHECK_CODE(0xEB85EBC9596682AF, SAVE_TYPE_FLASHRAM, FEAT_NONE),                                    // Doubutsu Banchou
     MATCH_CHECK_CODE(0x9A746EBF2802EA99, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Toon panic
     MATCH_CHECK_CODE(0x5D40ED2C10D6ABCF, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Viewpoint 2064
-    MATCH_CHECK_CODE(0x21548CA921548CA9, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                  // Mini racers
+    MATCH_CHECK_CODE(0x21548CA921548CA9, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Mini racers
     MATCH_CHECK_CODE(0xBC9B2CC34ED04DA5, SAVE_TYPE_FLASHRAM, FEAT_NONE),                                    // Starcraft 64 [Prototype 2000]
 
     MATCH_CHECK_CODE(0xCDB8B4D08832352D, SAVE_TYPE_SRAM, FEAT_RPAK),                                        // Jet Force Gemini [USA CRACK]

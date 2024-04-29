@@ -11,7 +11,8 @@
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
-static const char *save_extensions[] = { "sav", NULL }; // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+// TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
+static const char *save_extensions[] = { "sav", NULL };
 //static const char *joypad_accessory_save_extensions[] = { "cpak", "mpk", NULL };
 static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
@@ -25,7 +26,7 @@ static const char *hidden_paths[] = {
     "/OS64P.v64",
     "/sc64menu.n64",
     "/System Volume Information",
-    NULL
+    NULL,
 };
 
 
@@ -230,6 +231,7 @@ static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     if (remove(path_get(path))) {
+        menu->browser.valid = false;
         if (menu->browser.entry->type == ENTRY_TYPE_DIR) {
             menu_show_error(menu, "Couldn't delete directory\nDirectory might not be empty");
         } else {

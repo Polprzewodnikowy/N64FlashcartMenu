@@ -50,5 +50,4 @@ void view_error_display (menu_t *menu, surface_t *display) {
 void menu_show_error (menu_t *menu, char *error_message) {
     menu->next_mode = MENU_MODE_ERROR;
     menu->error_message = error_message;
-    menu->browser.valid = false;
 }

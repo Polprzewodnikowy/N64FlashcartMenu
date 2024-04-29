@@ -19,10 +19,9 @@
 
 
 static bool is_64dd_connected (void) {
-    return (
-        ((io_read(0x05000540) & 0x0000FFFF) == 0x0000) ||
-        (io_read(0x06001010) == 0x2129FFF8)
-    );
+    bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
+    bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
+    return (is_64dd_io_present || is_64dd_ipl_present);
 }
 
 static bool create_saves_subdirectory (path_t *path) {

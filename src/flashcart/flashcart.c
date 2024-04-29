@@ -79,6 +79,7 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
         case FLASHCART_OK: return "No error";
         case FLASHCART_ERR_OUTDATED: return "Outdated flashcart firmware";
         case FLASHCART_ERR_SD_CARD: return "Error during SD card initialization";
+        case FLASHCART_ERR_BBFS: return "Error during iQue NAND initialization";
         case FLASHCART_ERR_ARGS: return "Invalid argument passed to flashcart function";
         case FLASHCART_ERR_LOAD: return "Error during loading data into flashcart";
         case FLASHCART_ERR_INT: return "Internal flashcart error";
@@ -93,6 +94,9 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     if (sys_bbplayer()) {
         // TODO: Add iQue callbacks
         *storage_prefix = "bbfs:/";
+        if (bbfs_init()) {
+            return FLASHCART_ERR_BBFS;
+        }
         return FLASHCART_OK;
     }
 

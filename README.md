@@ -82,11 +82,8 @@ If required, you can manually adjust the file on the SD card using your computer
 - Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
 ##### 64DD disk support
-For the ability to load and run 64DD disk images, you need to add the folder `/menu/64ddipl` on the SD card.
-Download and add the relevant ipl files and rename them before adding them to the folder:
-- `NDDE0.n64` the US Prototype IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_US_MJR.n64)
-- `NDXJ0.n64` the JPN Development IPL can be downloaded from [here](https://64dd.org/dumps/64DD_IPL_DEV_H4G.n64)
-- `NDDJ2.n64` the JPN Retail IPL can be downloaded from [here](https://64dd.org/dumps/N64DD_IPLROM_(J).zip)
+For the ability to load and run 64DD disk images, you need to place required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
+For more details follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
 
 Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
 

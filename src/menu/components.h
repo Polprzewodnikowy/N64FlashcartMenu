@@ -24,7 +24,7 @@ void component_progressbar_draw (int x0, int y0, int x1, int y1, float progress)
 void component_seekbar_draw (float progress);
 void component_loader_draw (float position);
 void component_scrollbar_draw (int x, int y, int width, int height, int position, int items, int visible_items);
-void component_file_list_scrollbar_draw (int position, int items, int visible_items);
+void component_list_scrollbar_draw (int position, int items, int visible_items);
 void component_dialog_draw (int width, int height);
 void component_messagebox_draw (char *fmt, ...);
 void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);

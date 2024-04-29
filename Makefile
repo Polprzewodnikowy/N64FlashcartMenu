@@ -88,7 +88,7 @@ FILESYSTEM = \
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-1FF -r 2026-2026 --ellipsis 2026,1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 
@@ -139,6 +139,13 @@ clean:
 	@find ./$(FILESYSTEM_DIR) -type d -empty -delete
 	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
 .PHONY: clean
+
+format:
+	@find ./$(SOURCE_DIR) \
+		-path \./$(SOURCE_DIR)/libs -prune \
+		-o -iname *.c -print \
+		-o -iname *.h -print \
+		| xargs clang-format -i
 
 run: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)

@@ -57,16 +57,27 @@ static void draw (menu_t *menu, surface_t *d) {
 
     // TODO: Backup from other ports, restore from SD, and/or Repair functions.
     // Bonus would be to handle individual per game entries!
-    component_main_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "\n"
-        "Controller Pak (1).\n"
-        "Free space: %d blocks"
-        "Entries: \n%s",
-        cpak_info.free_space,
-        format_entries_info(cpak_info.entries)
-    );
+    if (accessory_is_cpak[0]) {
+        component_main_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "\n"
+            "Controller Pak (1).\n"
+            "Free space: %d blocks"
+            "Entries: \n%s",
+            cpak_info.free_space,
+            format_entries_info(cpak_info.entries)
+        );
+    }
+    else {
+        component_main_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "\n"
+            "Controller Pak (1).\n"
+            "Not inserted.\n"
+        );
+    }
 
     if (accessory_is_cpak[0]) {
         component_actions_bar_text_draw(

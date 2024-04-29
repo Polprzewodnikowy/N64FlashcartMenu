@@ -12,7 +12,7 @@ static const char *patch_extensions[] = { "ips", "aps", "pps", "xdelta", NULL };
 static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NULL };
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
-static const char *dexdrive_extensions[] = { "mpk", NULL };
+static const char *dexdrive_extensions[] = { "mpk", "pak", NULL };
 static const char *emulator_extensions[] = { "emu", NULL };
 
 

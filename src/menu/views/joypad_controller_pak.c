@@ -63,7 +63,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Controller Pak (1).\n"
-            "Free space: %d blocks"
+            "Free space: %d blocks \n"
             "Entries: \n%s",
             cpak_info.free_space,
             format_entries_info(cpak_info.entries)

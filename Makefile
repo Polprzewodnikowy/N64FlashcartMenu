@@ -98,8 +98,6 @@ $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 
-$(BUILD_DIR)/boot/cheats.o: N64_ASFLAGS+=-O2
-$(BUILD_DIR)/boot/reboot.o: N64_ASFLAGS+=-O2
 $(BUILD_DIR)/menu/views/credits.o: .FORCE
 $(BUILD_DIR)/menu/views/credits.o: FLAGS+=-DMENU_VERSION=\"$(MENU_VERSION)\" -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\"
 

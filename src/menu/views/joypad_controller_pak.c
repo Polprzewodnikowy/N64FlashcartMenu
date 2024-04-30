@@ -1,6 +1,10 @@
 #include "views.h"
 #include "../cpak_handler.h"
 
+#define CPAK_BACKUP_DIRECTORY    "/cpak"
+#define CPAK_BACKUP_FILE         "cpak_backup.pak"
+
+
 static int accessory_is_cpak[4];
 static cpak_info_t cpak_info;
 
@@ -29,13 +33,15 @@ static void process (menu_t *menu) {
         accessory_is_cpak[port] = joypad_get_accessory_type(port) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
     }
 
-    cpak_info_load(0, &cpak_info);
+    cpak_info_load(JOYPAD_PORT_1, &cpak_info);
 
     if (menu->actions.enter) {
         // TODO: handle all ports
-        if (accessory_is_cpak[0]) {
+        if (accessory_is_cpak[JOYPAD_PORT_1]) {
             // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
-            cpak_clone_contents_to_file("sd://cpak/cpak_backup.mpk", 0);
+            path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY"/"CPAK_BACKUP_FILE);
+            cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
+            path_free(path);
         }
     }
 

@@ -32,106 +32,14 @@ static cic_type_t boot_detect_cic (boot_params_t *params) {
     return cic_detect(ipl3);
 }
 
-static bool boot_install_cheats (boot_params_t *params) {
-    if (!params->cheat_list) {
-        return false;
-    }
-
-    cic_type_t cic_type = boot_detect_cic(params);
-    uint32_t patch_offset = 0;
-    uint32_t assembled_j_instruction = (0b000010 << 26) | ((CHEAT_PAYLOAD_ADDRESS & 0x0FFFFFFC) >> 2);
-    io32_t *ipl3 = SP_MEM->DMEM;
-
-    switch (cic_type) {
-        case CIC_5101:
-            patch_offset = 476; // might be incorrect
-            break;
-
-        case CIC_6101:
-        case CIC_7102:
-            patch_offset = 476;
-            break;
-
-        case CIC_x102:
-            patch_offset = 475;
-            break;
-
-        case CIC_x103:
-            patch_offset = 472;
-            break;
-
-        case CIC_x105:
-            patch_offset = 499;
-            break;
-
-        case CIC_x106:
-            patch_offset = 488;
-            break;
-
-        default:
-            return false;
-    }
-
-    // NOTE: Check for "jr $t1" instruction
-    // libdragon IPL3 could be brute-force signed with any retail CIC seed and checksum
-    if (cpu_io_read(&ipl3[patch_offset]) != ((0b000000 << 26) | (9 << 21) | (0b001000 << 0))) {
-        return false;
-    }
-
-    switch (cic_type) {
-        case CIC_x105:
-            // NOTE: This disables game code checksum verification
-            cpu_io_write(&ipl3[486], 0);
-            break;
-
-        case CIC_x106:
-            // NOTE: CIC x106 IPL3 is partially scrambled
-            assembled_j_instruction ^= 0x8188764A;
-            break;
-
-        default:
-            break;
-    }
-
-    cpu_io_write(&ipl3[patch_offset], assembled_j_instruction);
-
-    uint32_t *payload_start = (uint32_t *) (CHEAT_PAYLOAD_ADDRESS);
-
-    uint32_t *payload_src = &cheat_payload;
-    uint32_t *payload_dst = payload_start;
-    size_t payload_size = (size_t) (&cheat_payload_size) / sizeof(uint32_t);
-
-    for (int i = 0; i < payload_size; i++) {
-        *payload_dst++ = *payload_src++;
-    }
-
-    data_cache_hit_writeback_invalidate(payload_start, payload_size * sizeof(uint32_t));
-    inst_cache_hit_invalidate(payload_start, payload_size * sizeof(uint32_t));
-
-    uint32_t *cheat_list_start = payload_dst;
-
-    uint32_t *cheat_list_src = params->cheat_list;
-    uint32_t *cheat_list_dst = cheat_list_start;
-
-    uint32_t cheat_type_address;
-    uint32_t cheat_value;
-
-    do {
-        cheat_type_address = *cheat_list_src++;
-        cheat_value = *cheat_list_src++;
-        *cheat_list_dst++ = cheat_type_address;
-        *cheat_list_dst++ = cheat_value;
-    } while ((cheat_type_address | cheat_value) != 0);
-
-    size_t cheat_list_size = (cheat_list_dst - cheat_list_start);
-
-    data_cache_hit_writeback_invalidate(cheat_list_start, cheat_list_size * sizeof(uint32_t));
-
-    return true;
-}
-
 
 void boot (boot_params_t *params) {
+    cic_type_t cic_type = boot_detect_cic(params);
+
+    if (params->detect_cic_seed) {
+        params->cic_seed = cic_get_seed(cic_type);
+    }
+
     if (params->tv_type == BOOT_TV_TYPE_PASSTHROUGH) {
         switch (get_tv_type()) {
             case TV_PAL:
@@ -147,10 +55,6 @@ void boot (boot_params_t *params) {
                 params->tv_type = BOOT_TV_TYPE_NTSC;
                 break;
         }
-    }
-
-    if (params->detect_cic_seed) {
-        params->cic_seed = cic_get_seed(boot_detect_cic(params));
     }
 
     C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
@@ -219,7 +123,7 @@ void boot (boot_params_t *params) {
         cpu_io_write(&ipl3_dst[i], io_read((uint32_t) (&ipl3_src[i])));
     }
 
-    bool cheats_installed = boot_install_cheats(params);
+    bool cheats_installed = cheats_install(cic_type, params->cheat_list);
 
     register uint32_t skip_rdram_reset asm ("a0");
     register uint32_t boot_device asm ("s3");

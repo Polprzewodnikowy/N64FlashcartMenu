@@ -95,6 +95,9 @@ static flashcart_err_t ed64_deinit (void) {
 static bool ed64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD:
+        // FIXME: this is not valid for the V3, as does contain them:
+        case FLASHCART_FEATURE_RTC:
+        case FLASHCART_FEATURE_USB:
             return false;
         default:
             return false;

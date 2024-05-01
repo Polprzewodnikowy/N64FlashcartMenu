@@ -17,6 +17,8 @@ typedef struct {
     char *last_save_path;
 } ed64_pseudo_writeback_t;
 
+/** @brief Init ED64 state path */
+void ed64_state_init (char *path);
 void ed64_state_load (ed64_pseudo_writeback_t *state);
 void ed64_state_save (ed64_pseudo_writeback_t *state);
 

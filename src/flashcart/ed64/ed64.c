@@ -14,6 +14,11 @@
 #include "ed64.h"
 #include "ed64_state.h"
 
+#define ED64_STATE_FILE  "ed64_state.ini"
+
+#ifndef ED64_OS_DIRECTORY
+#define ED64_OS_DIRECTORY  "/ED64"
+#endif
 
 static ed64_pseudo_writeback_t current_state;
 
@@ -29,6 +34,9 @@ static flashcart_err_t ed64_init (void) {
     // older everdrives cannot save during gameplay so we need to the reset method.
     // works by checking if a file exists.
 
+    // FIXME: should put the file in the OS dir, but different if a clone (ED64P).
+    char *state_path = "sd:/menu/"ED64_STATE_FILE;
+    ed64_state_init(state_path);
     ed64_state_load(&current_state);
 
     if (current_state.is_expecting_save_writeback == true) {

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['features_0',['features',['../rom__info_8h.html#a9f87b56f9e5c8677c3075bb4bb38d3f6',1,'rom_info_t']]]
+  ['features_0',['features',['../rom__info_8h.html#a7eda06a6294dca780f036d3802aaed3e',1,'rom_info_t']]]
 ];

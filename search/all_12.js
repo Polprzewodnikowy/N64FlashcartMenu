@@ -14,5 +14,10 @@ var searchData=
   ['visible_5farea_5fx0_11',['VISIBLE_AREA_X0',['../constants_8h.html#a9b677c2a6549810814fa608f4697910a',1,'constants.h']]],
   ['visible_5farea_5fx1_12',['VISIBLE_AREA_X1',['../constants_8h.html#ab42ef3a06ea6594861bb1dfe41d4cbfc',1,'constants.h']]],
   ['visible_5farea_5fy0_13',['VISIBLE_AREA_Y0',['../constants_8h.html#a599519b46c499c0b6ee7591ad1443700',1,'constants.h']]],
-  ['visible_5farea_5fy1_14',['VISIBLE_AREA_Y1',['../constants_8h.html#a993f4bc0369a4835a2cddd44f38241ee',1,'constants.h']]]
+  ['visible_5farea_5fy1_14',['VISIBLE_AREA_Y1',['../constants_8h.html#a993f4bc0369a4835a2cddd44f38241ee',1,'constants.h']]],
+  ['vr4300_5finstruction_5ft_15',['vr4300_instruction_t',['../unionvr4300__instruction__t.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ec_5ftype_16',['vr4300_instruction_t.c_type',['../structvr4300__instruction__t_8c__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ei_5ftype_17',['vr4300_instruction_t.i_type',['../structvr4300__instruction__t_8i__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ej_5ftype_18',['vr4300_instruction_t.j_type',['../structvr4300__instruction__t_8j__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2er_5ftype_19',['vr4300_instruction_t.r_type',['../structvr4300__instruction__t_8r__type.html',1,'']]]
 ];

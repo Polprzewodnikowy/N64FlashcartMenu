@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['features_0',['features',['../rom__info_8h.html#a9f87b56f9e5c8677c3075bb4bb38d3f6',1,'rom_info_t']]],
+  ['features_0',['features',['../rom__info_8h.html#a7eda06a6294dca780f036d3802aaed3e',1,'rom_info_t']]],
   ['file_5flist_5fhighlight_5fcolor_1',['FILE_LIST_HIGHLIGHT_COLOR',['../constants_8h.html#aea0ff4749095856d59aacdad57614f59',1,'constants.h']]],
   ['file_5flist_5fmax_5fwidth_2',['FILE_LIST_MAX_WIDTH',['../constants_8h.html#a084715a542c9cc19fce9ee942f1cda85',1,'constants.h']]],
   ['flashcart_2eh_3',['flashcart.h',['../flashcart_8h.html',1,'']]],

@@ -9,8 +9,13 @@
 
 #define D_CACHE_LINE_SIZE (16)
 
+#define CAUSE_IRQ_PRE_NMI (1 << 12)
+#define CAUSE_EXC_CODE_MASK (0x7C)
+#define CAUSE_EXC_CODE_WATCH (0x5C)
+
 #define WATCHLO_W (1 << 0)
 
+#define RELOCATED_EXCEPTION_HANDLER_ADDRESS (0x80000120)
 #define EXCEPTION_HANDLER_ADDRESS (0x80000180)
 #define PATCHER_ADDRESS (0x80700000)
 #define ENGINE_TEMPORARY_ADDRESS (PATCHER_ADDRESS + 0x10000)
@@ -114,7 +119,7 @@ static bool cheats_get_next (uint32_t **cheat_list, cheat_entry_t *cheat) {
     return true;
 }
 
-static io32_t *cheats_get_engine_location (uint32_t *cheat_list) {
+static io32_t *cheats_get_engine_address (uint32_t *cheat_list) {
     cheat_entry_t cheat;
     while (cheats_get_next(&cheat_list, &cheat)) {
         if (cheat.main.type == SPECIAL_SET_STORE_LOCATION) {
@@ -134,24 +139,63 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
         return false;
     }
 
-    io32_t *payload_p = &cheat_payload;
-    size_t payload_size = (size_t)(&cheat_payload_size) / sizeof(uint32_t);
+    io32_t *engine_start = (io32_t *)(ENGINE_TEMPORARY_ADDRESS);
+    io32_t *engine_p = engine_start;
 
     io32_t *patcher_start = (io32_t *)(PATCHER_ADDRESS);
     io32_t *patcher_p = patcher_start;
-
-    io32_t *engine_start = (io32_t *)(ENGINE_TEMPORARY_ADDRESS);
-    io32_t *engine_p = engine_start;
 
     if (cheats_patch_ipl3(cic_type, patcher_start)) {
         return false;
     }
 
-    for (size_t i = 0; i < payload_size; i++) {
-        *engine_p++ = *payload_p++;
-    }
+    io32_t *final_engine_address = cheats_get_engine_address(cheat_list);
 
-    io32_t *final_engine_location = cheats_get_engine_location(cheat_list);
+    // Original watch exception handler code written by Jay Oster 'Parasyte'
+    // https://github.com/parasyte/alt64/blob/master/utils.c#L1024-L1054
+
+    uint32_t ori_placeholder_instruction = I_ORI(REG_ZERO, REG_K0, A_OFFSET(RELOCATED_EXCEPTION_HANDLER_ADDRESS));
+    uint32_t ori_placeholder_address = (uint32_t)(final_engine_address + 20);
+
+    // Load cause register
+    *engine_p++ = I_MFC0(REG_K0, C0_REG_CAUSE);
+
+    // Disable watch exception when reset button is pressed
+    *engine_p++ = I_ANDI(REG_K1, REG_K0, CAUSE_IRQ_PRE_NMI);
+    *engine_p++ = I_BNEL(REG_K1, REG_ZERO, 1);
+    *engine_p++ = I_MTC0(REG_ZERO, C0_REG_WATCH_LO);
+
+    // Check if watch exception ocurred, if yes then proceed to relocate the game exception handler
+    *engine_p++ = I_ANDI(REG_K0, REG_K0, CAUSE_EXC_CODE_MASK);
+    *engine_p++ = I_ORI(REG_K1, REG_ZERO, CAUSE_EXC_CODE_WATCH);
+    *engine_p++ = I_BNE(REG_K0, REG_K1, 15); // Skips to after the 'eret' instruction
+
+    // Extract base register number from the store instruction
+    *engine_p++ = I_MFC0(REG_K1, C0_REG_EPC);
+    *engine_p++ = I_LW(REG_K1, 0, REG_K1);
+    *engine_p++ = I_LUI(REG_K0, 0x03E0);
+    *engine_p++ = I_AND(REG_K1, REG_K0, REG_K1);
+    *engine_p++ = I_SRL(REG_K1, REG_K1, 5);
+
+    // Update create final instruction and update its target register number
+    *engine_p++ = I_LUI(REG_K0, ori_placeholder_instruction >> 16);
+    *engine_p++ = I_ORI(REG_K0, REG_K0, ori_placeholder_instruction);
+    *engine_p++ = I_OR(REG_K0, REG_K0, REG_K1);
+
+    // Write created instruction into placeholder
+    *engine_p++ = I_LUI(REG_K1, A_BASE(ori_placeholder_address));
+    *engine_p++ = I_SW(REG_K0, A_OFFSET(ori_placeholder_address), REG_K1);
+
+    // Force write and instruction cache invalidation
+    *engine_p++ = I_CACHE(HIT_WRITE_BACK_D, A_OFFSET(ori_placeholder_address), REG_K1);
+    *engine_p++ = I_CACHE(HIT_INVALIDATE_I, A_OFFSET(ori_placeholder_address), REG_K1);
+
+    // Load address base and execute created instruction
+    *engine_p++ = I_LUI(REG_K0, A_BASE(RELOCATED_EXCEPTION_HANDLER_ADDRESS));
+    *engine_p++ = I_NOP();
+
+    // Return from the exception
+    *engine_p++ = I_ERET();
 
     cheat_entry_t cheat;
 
@@ -165,17 +209,15 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
 
             int count = ((c->address >> 8) & 0xFF);
             int step = (c->address & 0xFF);
-            int16_t increment = c->value;
+            int16_t increment = (int16_t)(c->value);
 
             c = &cheat.sub;
 
             for (int i = 0; i < count; i++) {
-                int16_t offset = (c->address & 0xFFFF);
-                uint16_t base = ((c->address >> 16) & 0xFFFF) + ((offset < 0) ? 1 : 0);
-
-                *engine_p++ = I_LUI(REG_K0, base);
+                *engine_p++ = I_LUI(REG_K0, A_BASE(c->address));
                 *engine_p++ = I_ORI(REG_K1, REG_ZERO, c->value);
-                *engine_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, offset, REG_K0) : I_SB(REG_K1, offset, REG_K0);
+                *engine_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, A_OFFSET(c->address), REG_K0)
+                                                   : I_SB(REG_K1, A_OFFSET(c->address), REG_K0);
 
                 c->address += step;
                 c->value += increment;
@@ -189,11 +231,9 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
                 continue;
             }
 
-            int16_t offset = (c->address & 0xFFFF);
-            uint16_t base = ((c->address >> 16) & 0xFFFF) + ((offset < 0) ? 1 : 0);
-
-            *engine_p++ = I_LUI(REG_K0, base);
-            *engine_p++ = IS_WIDTH_16(c->type) ? I_LHU(REG_K0, offset, REG_K0) : I_LBU(REG_K0, offset, REG_K0);
+            *engine_p++ = I_LUI(REG_K0, A_BASE(c->address));
+            *engine_p++ = IS_WIDTH_16(c->type) ? I_LHU(REG_K0, A_OFFSET(c->address), REG_K0)
+                                               : I_LBU(REG_K0, A_OFFSET(c->address), REG_K0);
             *engine_p++ = I_ORI(REG_K1, REG_ZERO, c->value & (IS_WIDTH_16(c->type) ? 0xFFFF : 0xFF));
             *engine_p++ = IS_CONDITION_NOT_EQUAL(c->type) ? I_BEQ(REG_K0, REG_K1, 3) : I_BNE(REG_K0, REG_K1, 3);
 
@@ -205,12 +245,10 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
                 continue;
             }
 
-            int16_t offset = (c->address & 0xFFFF);
-            uint16_t base = ((c->address >> 16) & 0xFFFF) + ((offset < 0) ? 1 : 0);
-
-            *engine_p++ = I_LUI(REG_K0, base);
+            *engine_p++ = I_LUI(REG_K0, A_BASE(c->address));
             *engine_p++ = I_ORI(REG_K1, REG_ZERO, c->value);
-            *engine_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, offset, REG_K0) : I_SB(REG_K1, offset, REG_K0);
+            *engine_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, A_OFFSET(c->address), REG_K0)
+                                               : I_SB(REG_K1, A_OFFSET(c->address), REG_K0);
 
             continue;
         }
@@ -218,12 +256,10 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
         switch (c->type) {
         case SPECIAL_WRITE_BYTE_ON_BOOT:
         case SPECIAL_WRITE_SHORT_ON_BOOT: {
-            int16_t offset = (c->address & 0xFFFF);
-            uint16_t base = ((c->address >> 16) & 0xFFFF) + ((offset < 0) ? 1 : 0);
-
-            *patcher_p++ = I_LUI(REG_K0, base);
+            *patcher_p++ = I_LUI(REG_K0, A_BASE(c->address));
             *patcher_p++ = I_ORI(REG_K1, REG_ZERO, c->value);
-            *patcher_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, offset, REG_K0) : I_SB(REG_K1, offset, REG_K0);
+            *patcher_p++ = IS_WIDTH_16(c->type) ? I_SH(REG_K1, A_OFFSET(c->address), REG_K0)
+                                                : I_SB(REG_K1, A_OFFSET(c->address), REG_K0);
             break;
         }
         case SPECIAL_DISABLE_EXPANSION_PAK: {
@@ -240,16 +276,17 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
     *engine_p++ = I_J(RELOCATED_EXCEPTION_HANDLER_ADDRESS);
     *engine_p++ = I_NOP();
 
-    uint32_t j_engine_from_handler = I_J((uint32_t)(final_engine_location));
+    uint32_t j_engine_from_handler = I_J((uint32_t)(final_engine_address));
 
-    *patcher_p++ = I_LUI(REG_T3, (uint32_t)(engine_start) >> 16);
-    *patcher_p++ = I_ORI(REG_T3, REG_T3, (uint32_t)(engine_start));
+    // Copy engine to the final location
+    *patcher_p++ = I_LUI(REG_T3, A_BASE((uint32_t)(engine_start)));
+    *patcher_p++ = I_ADDIU(REG_T3, REG_T3, A_OFFSET((uint32_t)(engine_start)));
 
-    *patcher_p++ = I_LUI(REG_T4, (uint32_t)(engine_p) >> 16);
-    *patcher_p++ = I_ORI(REG_T4, REG_T4, (uint32_t)(engine_p));
+    *patcher_p++ = I_LUI(REG_T4, A_BASE((uint32_t)(engine_p)));
+    *patcher_p++ = I_ADDIU(REG_T4, REG_T4, A_OFFSET((uint32_t)(engine_p)));
 
-    *patcher_p++ = I_LUI(REG_T5, (uint32_t)(final_engine_location) >> 16);
-    *patcher_p++ = I_ORI(REG_T5, REG_T5, (uint32_t)(final_engine_location));
+    *patcher_p++ = I_LUI(REG_T5, A_BASE((uint32_t)(final_engine_address)));
+    *patcher_p++ = I_ADDIU(REG_T5, REG_T5, A_OFFSET((uint32_t)(final_engine_address)));
 
     *patcher_p++ = I_ORI(REG_T6, REG_ZERO, 0);
 
@@ -260,8 +297,9 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
     *patcher_p++ = I_BNE(REG_T3, REG_T4, -5);
     *patcher_p++ = I_ADDIU(REG_T6, REG_T6, 4);
 
-    *patcher_p++ = I_LUI(REG_T5, (uint32_t)(final_engine_location) >> 16);
-    *patcher_p++ = I_ORI(REG_T5, REG_T5, (uint32_t)(final_engine_location));
+    // Force write and invalidate instruction cache
+    *patcher_p++ = I_LUI(REG_T5, A_BASE((uint32_t)(final_engine_address)));
+    *patcher_p++ = I_ADDIU(REG_T5, REG_T5, A_OFFSET((uint32_t)(final_engine_address)));
 
     *patcher_p++ = I_CACHE(HIT_WRITE_BACK_D, 0, REG_T5);
     *patcher_p++ = I_CACHE(HIT_INVALIDATE_I, 0, REG_T5);
@@ -269,25 +307,24 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
     *patcher_p++ = I_BGTZ(REG_T6, -4);
     *patcher_p++ = I_ADDIU(REG_T5, REG_T5, D_CACHE_LINE_SIZE);
 
-    *patcher_p++ = I_LUI(REG_K0, EXCEPTION_HANDLER_ADDRESS >> 16);
+    // Write jump instruction to the exception handler
+    *patcher_p++ = I_LUI(REG_K0, A_BASE(EXCEPTION_HANDLER_ADDRESS));
+    *patcher_p++ = I_ADDIU(REG_K0, REG_K0, A_OFFSET(EXCEPTION_HANDLER_ADDRESS));
 
     *patcher_p++ = I_LUI(REG_K1, j_engine_from_handler >> 16);
     *patcher_p++ = I_ORI(REG_K1, REG_K1, j_engine_from_handler);
-    *patcher_p++ = I_SW(REG_K1, EXCEPTION_HANDLER_ADDRESS + 0, REG_K0);
+    *patcher_p++ = I_SW(REG_K1, 0, REG_K0);
+    *patcher_p++ = I_SW(REG_ZERO, 4, REG_K0);
 
-    *patcher_p++ = I_SW(REG_ZERO, EXCEPTION_HANDLER_ADDRESS + 4, REG_K0);
+    *patcher_p++ = I_CACHE(HIT_WRITE_BACK_D, 0, REG_K0);
+    *patcher_p++ = I_CACHE(HIT_INVALIDATE_I, 0, REG_K0);
 
-    *patcher_p++ = I_LUI(REG_K1, (uint32_t)(final_engine_location) >> 16);
-    *patcher_p++ = I_ORI(REG_K1, REG_K1, (uint32_t)(final_engine_location));
-    *patcher_p++ = I_SW(REG_K1, EXCEPTION_HANDLER_ADDRESS + 8, REG_K0);
-
-    *patcher_p++ = I_CACHE(HIT_WRITE_BACK_D, EXCEPTION_HANDLER_ADDRESS, REG_K0);
-    *patcher_p++ = I_CACHE(HIT_INVALIDATE_I, EXCEPTION_HANDLER_ADDRESS, REG_K0);
-
+    // Set watch exception on address 0x80000180
     *patcher_p++ = I_ORI(REG_K1, REG_ZERO, EXCEPTION_HANDLER_ADDRESS | WATCHLO_W);
     *patcher_p++ = I_MTC0(REG_K1, C0_REG_WATCH_LO);
     *patcher_p++ = I_MTC0(REG_ZERO, C0_REG_WATCH_HI);
 
+    // Jump back to the game code
     *patcher_p++ = I_JR(REG_T1);
     *patcher_p++ = I_NOP();
 

@@ -26,6 +26,12 @@ typedef union {
         uint32_t sa : 5;
         uint32_t funct : 6;
     } r_type;
+
+    struct {
+        uint32_t op : 6;
+        uint32_t co : 1;
+        uint32_t funct : 25;
+    } c_type;
 } vr4300_instruction_t;
 
 typedef enum {
@@ -286,28 +292,106 @@ typedef enum {
     __COPZ_RS_RESERVED_15,
 } vr4300_copz_rs_t;
 
+typedef enum {
+    __C0_FUNCT_RESERVED_0,
+    C0_FUNCT_TLBR,
+    C0_FUNCT_TLBWI,
+    __C0_FUNCT_RESERVED_3,
+    __C0_FUNCT_RESERVED_4,
+    __C0_FUNCT_RESERVED_5,
+    C0_FUNCT_TLBWR,
+    __C0_FUNCT_RESERVED_7,
+    C0_FUNCT_TLBP,
+    __C0_FUNCT_RESERVED_9,
+    __C0_FUNCT_RESERVED_10,
+    __C0_FUNCT_RESERVED_11,
+    __C0_FUNCT_RESERVED_12,
+    __C0_FUNCT_RESERVED_13,
+    __C0_FUNCT_RESERVED_14,
+    __C0_FUNCT_RESERVED_15,
+    __C0_FUNCT_RESERVED_16,
+    __C0_FUNCT_RESERVED_17,
+    __C0_FUNCT_RESERVED_18,
+    __C0_FUNCT_RESERVED_19,
+    __C0_FUNCT_RESERVED_20,
+    __C0_FUNCT_RESERVED_21,
+    __C0_FUNCT_RESERVED_22,
+    __C0_FUNCT_RESERVED_23,
+    C0_FUNCT_ERET,
+    __C0_FUNCT_RESERVED_25,
+    __C0_FUNCT_RESERVED_26,
+    __C0_FUNCT_RESERVED_27,
+    __C0_FUNCT_RESERVED_28,
+    __C0_FUNCT_RESERVED_29,
+    __C0_FUNCT_RESERVED_30,
+    __C0_FUNCT_RESERVED_31,
+    __C0_FUNCT_RESERVED_32,
+    __C0_FUNCT_RESERVED_33,
+    __C0_FUNCT_RESERVED_34,
+    __C0_FUNCT_RESERVED_35,
+    __C0_FUNCT_RESERVED_36,
+    __C0_FUNCT_RESERVED_37,
+    __C0_FUNCT_RESERVED_38,
+    __C0_FUNCT_RESERVED_39,
+    __C0_FUNCT_RESERVED_40,
+    __C0_FUNCT_RESERVED_41,
+    __C0_FUNCT_RESERVED_42,
+    __C0_FUNCT_RESERVED_43,
+    __C0_FUNCT_RESERVED_44,
+    __C0_FUNCT_RESERVED_45,
+    __C0_FUNCT_RESERVED_46,
+    __C0_FUNCT_RESERVED_47,
+    __C0_FUNCT_RESERVED_48,
+    __C0_FUNCT_RESERVED_49,
+    __C0_FUNCT_RESERVED_50,
+    __C0_FUNCT_RESERVED_51,
+    __C0_FUNCT_RESERVED_52,
+    __C0_FUNCT_RESERVED_53,
+    __C0_FUNCT_RESERVED_54,
+    __C0_FUNCT_RESERVED_55,
+    __C0_FUNCT_RESERVED_56,
+    __C0_FUNCT_RESERVED_57,
+    __C0_FUNCT_RESERVED_58,
+    __C0_FUNCT_RESERVED_59,
+    __C0_FUNCT_RESERVED_60,
+    __C0_FUNCT_RESERVED_61,
+    __C0_FUNCT_RESERVED_62,
+    __C0_FUNCT_RESERVED_63,
+} vr4300_c0_funct;
+
 #define __ASM_I_INST(o, s, t, i) \
     (((vr4300_instruction_t){.i_type = {.op = (o), .rs = (s), .rt = (t), .imm = (i)&0xFFFF}}).raw)
 #define __ASM_J_INST(o, t) (((vr4300_instruction_t){.j_type = {.op = (o), .target = (t)&0x3FFFFFF}}).raw)
 #define __ASM_R_INST(o, s, t, d, a, f) \
     (((vr4300_instruction_t){.r_type = {.op = (o), .rs = (s), .rt = (t), .rd = (d), .sa = (a), .funct = (f)}}).raw)
+#define __ASM_C_INST(o, c, f) (((vr4300_instruction_t){.c_type = {.op = (o), .co = (c), .funct = (f)}}).raw)
+
+#define A_OFFSET(a) ((int16_t)((a)&0xFFFF))
+#define A_BASE(a) ((uint16_t)((((a) >> 16) & 0xFFFF) + (A_OFFSET(a) < 0 ? 1 : 0)))
 
 #define I_ADDIU(rt, rs, immediate) __ASM_I_INST(OP_ADDIU, rs, rt, immediate)
+#define I_AND(rd, rs, rt) __ASM_R_INST(OP_SPECIAL, rs, rt, rd, 0, FUNCT_AND)
+#define I_ANDI(rt, rs, immediate) __ASM_I_INST(OP_ANDI, rs, rt, immediate)
 #define I_BEQ(rs, rt, offset) __ASM_I_INST(OP_BEQ, rs, rt, offset)
 #define I_BGTZ(rs, offset) __ASM_I_INST(OP_BGTZ, rs, 0, offset)
 #define I_BNE(rs, rt, offset) __ASM_I_INST(OP_BNE, rs, rt, offset)
+#define I_BNEL(rs, rt, offset) __ASM_I_INST(OP_BNEL, rs, rt, offset)
 #define I_CACHE(op, offset, base) __ASM_I_INST(OP_CACHE, base, op, offset)
+#define I_ERET() __ASM_C_INST(OP_COP0, 1, C0_FUNCT_ERET)
 #define I_J(target) __ASM_J_INST(OP_J, (target >> 2))
 #define I_JR(rs) __ASM_R_INST(OP_SPECIAL, rs, REG_ZERO, REG_ZERO, 0, FUNCT_JR)
 #define I_LBU(rt, offset, base) __ASM_I_INST(OP_LBU, base, rt, offset)
 #define I_LHU(rt, offset, base) __ASM_I_INST(OP_LHU, base, rt, offset)
 #define I_LUI(rt, immediate) __ASM_I_INST(OP_LUI, 0, rt, immediate)
 #define I_LW(rt, offset, base) __ASM_I_INST(OP_LW, base, rt, offset)
+#define I_MFC0(rt, rd) __ASM_R_INST(OP_COP0, COPZ_RS_MF, rt, rd, 0, 0)
 #define I_MTC0(rt, rd) __ASM_R_INST(OP_COP0, COPZ_RS_MT, rt, rd, 0, 0)
 #define I_NOP() __ASM_R_INST(OP_SPECIAL, REG_ZERO, REG_ZERO, REG_ZERO, 0, FUNCT_SSL)
+#define I_OR(rd, rs, rt) __ASM_R_INST(OP_SPECIAL, rs, rt, rd, 0, FUNCT_OR)
 #define I_ORI(rt, rs, immediate) __ASM_I_INST(OP_ORI, rs, rt, immediate)
 #define I_SB(rt, offset, base) __ASM_I_INST(OP_SB, base, rt, offset)
 #define I_SH(rt, offset, base) __ASM_I_INST(OP_SH, base, rt, offset)
+#define I_SRL(rd, rt, sa) __ASM_R_INST(OP_SPECIAL, 0, rt, rd, sa, FUNCT_SRL)
 #define I_SW(rt, offset, base) __ASM_I_INST(OP_SW, base, rt, offset)
 
 #endif

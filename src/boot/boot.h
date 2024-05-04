@@ -38,6 +38,7 @@ typedef struct {
     boot_tv_type_t tv_type;
     uint8_t cic_seed;
     bool detect_cic_seed;
+    uint32_t *cheat_list;
 } boot_params_t;
 
 

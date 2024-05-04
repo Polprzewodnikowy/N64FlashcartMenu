@@ -2,7 +2,7 @@
 
 ### Official documentation
 
-http://64drive.retroactive.be/64drive_hardware_spec.pdf
+https://web.archive.org/web/20220611032320/http://64drive.retroactive.be/64drive_hardware_spec.pdf
 
 
 ### Save location offset in SDRAM

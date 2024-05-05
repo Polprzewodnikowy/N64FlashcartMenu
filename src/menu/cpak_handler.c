@@ -40,7 +40,7 @@ int cpak_clone_contents_to_file(char *path, uint8_t port) {
 
     FILE *f;
 
-    if ((f = fopen(strip_fs_prefix(path), "wb")) == NULL) {
+    if ((f = fopen(path, "wb")) == NULL) {
         return CONTROLLER_PAK_ERR_IO;
     }
 

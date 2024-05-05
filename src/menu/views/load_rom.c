@@ -310,6 +310,7 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
+    menu->boot_params->cheat_list = NULL;
 }
 
 static void deinit (void) {

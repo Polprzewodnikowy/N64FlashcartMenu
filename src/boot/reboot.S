@@ -1,3 +1,6 @@
+#include "reboot.h"
+
+
 #define IPL3_ENTRY          0xA4000040
 #define REBOOT_ADDRESS      0xA4001000
 #define STACK_ADDRESS       0xA4001FF0
@@ -34,9 +37,10 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
-reset_rdram:
-    bnez $s5, reset_rdram_skip
+    bnez $a0, reset_rdram_skip  # Skip when cheats are enabled
+    bnez $s5, reset_rdram_skip  # Skip when reset type is set to NMI
 
+reset_rdram:
     li $t0, RI_ADDRESS
 
     sw $zero, RI_REFRESH($t0)

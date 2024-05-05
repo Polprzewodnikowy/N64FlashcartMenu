@@ -110,6 +110,7 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
+            //flashcart = ed64x_get_flashcart();
             break;
 
         case CART_ED:   // Original EverDrive-64

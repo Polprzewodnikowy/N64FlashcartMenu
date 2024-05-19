@@ -89,9 +89,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/develop'
         with:
-          name: Rolling dev release
-          body: Rolling dev release built from latest commit on `develop` branch.
-          tag_name: rolling-release-dev
+          name: 'Rolling dev release-V${{ github.run_id }}'
+          body: Rolling dev prerelease built from latest commit on `develop` branch.
+          tag_name: prerelease-dev
           prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64

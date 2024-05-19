@@ -92,6 +92,7 @@ jobs:
           name: Rolling dev release
           body: Rolling dev release built from latest commit on `develop` branch.
           tag_name: rolling-release-dev
+          prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin

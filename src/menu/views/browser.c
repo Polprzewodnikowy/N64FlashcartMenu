@@ -136,6 +136,8 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_DISK;
             }else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
+            } else if (file_has_extensions(entry->name, patch_extensions)) {
+            entry->type = ENTRY_TYPE_ROM_PATCH;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;
             } else if (file_has_extensions(entry->name, image_extensions)) {

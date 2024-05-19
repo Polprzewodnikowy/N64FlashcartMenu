@@ -111,7 +111,7 @@ rom_patch_load_err_t rom_patch_info_load (char *path)
     FIL fil;
     rom_patch_load_err_t err;
 
-    if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+    if (f_open(&fil, strip_fs_prefix(path), FA_READ) != FR_OK) {
         return PATCH_ERR_NO_FILE;
     }
 

@@ -8,15 +8,19 @@
 static const char *dir_prefix = "/";
 
 
-static int format_file_size (char *buffer, int size) {
-    if (size < 8 * 1024) {
-        return sprintf(buffer, "%d B", size);
+static int format_file_size (char *buffer, int64_t size) {
+    if (size < 0) {
+        return sprintf(buffer, "unknown");
+    } else if (size == 0) {
+        return sprintf(buffer, "empty");
+    } else if (size < 8 * 1024) {
+        return sprintf(buffer, "%lld B", size);
     } else if (size < 8 * 1024 * 1024) {
-        return sprintf(buffer, "%d kB", size / 1024);
+        return sprintf(buffer, "%lld kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
-        return sprintf(buffer, "%d MB", size / 1024 / 1024);
+        return sprintf(buffer, "%lld MB", size / 1024 / 1024);
     } else {
-        return sprintf(buffer, "%d GB", size / 1024 / 1024 / 1024);
+        return sprintf(buffer, "%lld GB", size / 1024 / 1024 / 1024);
     }
 }
 
@@ -24,14 +28,14 @@ static int format_file_size (char *buffer, int size) {
 void component_file_list_draw (entry_t *list, int entries, int selected) {
     int starting_position = 0;
 
-    if (entries > FILE_LIST_ENTRIES && selected >= (FILE_LIST_ENTRIES / 2)) {
-        starting_position = selected - (FILE_LIST_ENTRIES / 2);
-        if (starting_position >= entries - FILE_LIST_ENTRIES) {
-            starting_position = entries - FILE_LIST_ENTRIES;
+    if (entries > LIST_ENTRIES && selected >= (LIST_ENTRIES / 2)) {
+        starting_position = selected - (LIST_ENTRIES / 2);
+        if (starting_position >= entries - LIST_ENTRIES) {
+            starting_position = entries - LIST_ENTRIES;
         }
     }
 
-    component_file_list_scrollbar_draw(selected, entries, FILE_LIST_ENTRIES);
+    component_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
 
     if (entries == 0) {
         component_main_text_draw(
@@ -43,10 +47,10 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_t *file_list_layout;
         rdpq_paragraph_t *layout;
 
-        size_t name_lengths[FILE_LIST_ENTRIES];
+        size_t name_lengths[LIST_ENTRIES];
         size_t total_length = 1;
 
-        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+        for (int i = 0; i < LIST_ENTRIES; i++) {
             int entry_index = starting_position + i;
 
             if (entry_index >= entries) {
@@ -72,7 +76,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             file_list_layout
         );
 
-        for (int i = 0; i < FILE_LIST_ENTRIES; i++) {
+        for (int i = 0; i < LIST_ENTRIES; i++) {
             int entry_index = starting_position + i;
 
             entry_t *entry = &list[entry_index];
@@ -130,7 +134,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
-                .width = VISIBLE_AREA_WIDTH - FILE_LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
+                .width = VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
                 .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
                 .align = ALIGN_RIGHT,
                 .wrap = WRAP_ELLIPSES,
@@ -139,7 +143,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
             NULL
         );
 
-        char file_size[8];
+        char file_size[16];
 
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];
@@ -148,7 +152,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
             }
 
-            if ((i + 1) == (starting_position + FILE_LIST_ENTRIES)) {
+            if ((i + 1) == (starting_position + LIST_ENTRIES)) {
                 break;
             }
 

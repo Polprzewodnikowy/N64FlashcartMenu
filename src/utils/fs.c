@@ -1,145 +1,85 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
-
-#include <fatfs/ff.h>
+#include <sys/errno.h>
+#include <sys/stat.h>
 
 #include "fs.h"
 #include "utils.h"
 
 
-char *strip_sd_prefix (char *path) {
-    const char *prefix = "sd:/";
-
+char *strip_fs_prefix (char *path) {
+    const char *prefix = ":/";
     char *found = strstr(path, prefix);
     if (found) {
-        return found + strlen(prefix) - 1;
+        return (found + strlen(prefix) - 1);
     }
-
     return path;
 }
 
 
 bool file_exists (char *path) {
-    FRESULT fr;
-    FILINFO fno;
-
-    fr = f_stat(strip_sd_prefix(path), &fno);
-
-    return ((fr == FR_OK) && (!(fno.fattrib & AM_DIR)));
+    struct stat st;
+    int error = stat(path, &st);
+    return ((error == 0) && S_ISREG(st.st_mode));
 }
 
-
-size_t file_get_size (char *path) {
-    FILINFO fno;
-
-    if (f_stat(strip_sd_prefix(path), &fno) != FR_OK) {
-        return 0;
+int64_t file_get_size (char *path) {
+    struct stat st;
+    if (stat(path, &st)) {
+        return -1;
     }
-
-    return (size_t) (fno.fsize);
+    return (int64_t) (st.st_size);
 }
 
-bool file_delete (char *path) {
-    if (file_exists(path)) {
-        return (f_unlink(strip_sd_prefix(path)) != FR_OK);
+bool file_allocate (char *path, size_t size) {
+    FILE *f;
+    if ((f = fopen(path, "wb")) == NULL) {
+        return true;
+    }
+    if (fseek(f, size, SEEK_SET)) {
+        fclose(f);
+        return true;
+    }
+    if (ftell(f) != size) {
+        fclose(f);
+        return true;
+    }
+    if (fclose(f)) {
+        return true;
     }
     return false;
 }
 
-bool file_allocate (char *path, size_t size) {
-    FIL fil;
-    bool error = false;
-
-    if (f_open(&fil, strip_sd_prefix(path), FA_WRITE | FA_CREATE_NEW) != FR_OK) {
-        return true;
-    }
-
-    if (f_lseek(&fil, size) != FR_OK) {
-        error = true;
-    }
-
-    if (f_tell(&fil) != size) {
-        error = true;
-    }
-
-    if (f_close(&fil) != FR_OK) {
-        error = true;
-    }
-
-    return error;
-}
-
 bool file_fill (char *path, uint8_t value) {
-    FIL fil;
+    FILE *f;
     bool error = false;
     uint8_t buffer[FS_SECTOR_SIZE * 8];
-    FRESULT res;
-    UINT bytes_to_write;
-    UINT bytes_written;
+    size_t bytes_to_write;
 
     for (int i = 0; i < sizeof(buffer); i++) {
         buffer[i] = value;
     }
 
-    if (f_open(&fil, strip_sd_prefix(path), FA_WRITE) != FR_OK) {
+    if ((f = fopen(path, "rb+")) == NULL) {
         return true;
     }
 
-    for (int i = 0; i < f_size(&fil); i += sizeof(buffer)) {
-        bytes_to_write = MIN(f_size(&fil) - f_tell(&fil), sizeof(buffer));
-        res = f_write(&fil, buffer, bytes_to_write, &bytes_written);
-        if ((res != FR_OK) || (bytes_to_write != bytes_written)) {
+    setbuf(f, NULL);
+
+    fseek(f, 0, SEEK_END);
+    size_t size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    for (size_t i = 0; i < size; i += sizeof(buffer)) {
+        bytes_to_write = MIN(size - ftell(f), sizeof(buffer));
+        if (fwrite(buffer, 1, bytes_to_write, f) != bytes_to_write) {
             error = true;
             break;
         }
     }
 
-    if (f_tell(&fil) != f_size(&fil)) {
-        error = true;
-    }
-
-    if (f_close(&fil) != FR_OK) {
-        error = true;
-    }
-
-    return error;
-}
-
-bool file_get_sectors (char *path, void (*callback) (uint32_t sector_count, uint32_t file_sector, uint32_t cluster_sector, uint32_t cluster_size)) {
-    FATFS *fs;
-    FIL fil;
-    bool error = false;
-
-    if (!callback) {
-        return true;
-    }
-
-    if (f_open(&fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
-        return true;
-    }
-
-    fs = fil.obj.fs;
-
-    uint32_t sector_count = (ALIGN(f_size(&fil), FS_SECTOR_SIZE) / FS_SECTOR_SIZE);
-
-    uint32_t cluster_sector = 0;
-
-    for (int file_sector = 0; file_sector < sector_count; file_sector += fs->csize) {
-        if ((f_lseek(&fil, (file_sector * FS_SECTOR_SIZE) + (FS_SECTOR_SIZE / 2))) != FR_OK) {
-            error = true;
-            break;
-        }
-        uint32_t cluster = fil.clust;
-        if (cluster >= fs->n_fatent) {
-            error = true;
-            break;
-        }
-        cluster_sector = (fs->database + ((LBA_t) (fs->csize) * (cluster - 2)));
-        callback(sector_count, file_sector, cluster_sector, fs->csize);
-    }
-
-    if (f_close(&fil) != FR_OK) {
+    if (fclose(f)) {
         error = true;
     }
 
@@ -165,20 +105,9 @@ bool file_has_extensions (char *path, const char *extensions[]) {
 
 
 bool directory_exists (char *path) {
-    FRESULT fr;
-    FILINFO fno;
-
-    fr = f_stat(strip_sd_prefix(path), &fno);
-
-    return ((fr == FR_OK) && (fno.fattrib & AM_DIR));
-}
-
-bool directory_delete (char *path) {
-    if (directory_exists(path)) {
-        return (f_unlink(strip_sd_prefix(path)) != FR_OK);
-    }
-
-    return false;
+    struct stat st;
+    int error = stat(path, &st);
+    return ((error == 0) && S_ISDIR(st.st_mode));
 }
 
 bool directory_create (char *path) {
@@ -188,8 +117,12 @@ bool directory_create (char *path) {
         return false;
     }
 
-    char *directory = strdup(strip_sd_prefix(path));
-    char *separator = directory;
+    char *directory = strdup(path);
+    char *separator = strip_fs_prefix(directory);
+
+    if (separator != directory) {
+        separator++;
+    }
 
     do {
         separator = strchr(separator, '/');
@@ -199,8 +132,7 @@ bool directory_create (char *path) {
         }
 
         if (directory[0] != '\0') {
-            FRESULT res = f_mkdir(directory);
-            if ((res != FR_OK) && (res != FR_EXIST)) {
+            if (mkdir(directory, 0777) && (errno != EEXIST)) {
                 error = true;
                 break;
             }

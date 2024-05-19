@@ -136,10 +136,12 @@ static void load (menu_t *menu) {
             case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
             default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
         }
+        menu->boot_params->cheat_list = NULL;
     } else {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_64DD;
         menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
         menu->boot_params->detect_cic_seed = true;
+        menu->boot_params->cheat_list = NULL;
     }
 }
 
@@ -154,7 +156,7 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    disk_err_t err = disk_info_load(path_get(menu->load.disk_path), &menu->load.disk_info);
+    disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
     }

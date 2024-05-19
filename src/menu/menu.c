@@ -20,12 +20,15 @@
 #include "views/views.h"
 
 
-#define MENU_DIRECTORY      "sd:/menu"
-#define CACHE_DIRECTORY     "sd:/menu/cache"
-#define BACKGROUND_CACHE    "sd:/menu/cache/background.data"
+#define MENU_DIRECTORY          "/menu"
+#define MENU_SETTINGS_FILE      "config.ini"
+#define MENU_CUSTOM_FONT_FILE   "custom.font64"
 
-#define FRAMERATE_DIVIDER   (2)
-#define LAG_REPORT          (false)
+#define MENU_CACHE_DIRECTORY    "cache"
+#define BACKGROUND_CACHE_FILE   "background.data"
+
+#define FRAMERATE_DIVIDER       (2)
+#define LAG_REPORT              (false)
 
 
 static menu_t *menu;
@@ -62,7 +65,6 @@ static void menu_init (boot_params_t *boot_params) {
     rdpq_init();
     dfs_init(DFS_DEFAULT_LOCATION);
 
-    fonts_init();
     sound_init_default();
 
     menu = calloc(1, sizeof(menu_t));
@@ -71,31 +73,39 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
-    menu->flashcart_err = flashcart_init();
+    menu->flashcart_err = flashcart_init(&menu->storage_prefix);
     if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
 
-    menu->error_message = NULL;
+    path_t *path = path_init(menu->storage_prefix, MENU_DIRECTORY);
 
-    directory_create(MENU_DIRECTORY);
+    directory_create(path_get(path));
 
+    path_push(path, MENU_SETTINGS_FILE);
+    settings_init(path_get(path));
     settings_load(&menu->settings);
+    path_pop(path);
 
-    directory_create(CACHE_DIRECTORY);
+    path_push(path, MENU_CUSTOM_FONT_FILE);
+    fonts_init(path_get(path));
+    path_pop(path);
 
-    component_background_init(BACKGROUND_CACHE);
+    path_push(path, MENU_CACHE_DIRECTORY);
+    directory_create(path_get(path));
+
+    path_push(path, BACKGROUND_CACHE_FILE);
+    component_background_init(path_get(path));
+
+    path_free(path);
 
     menu->boot_params = boot_params;
 
-    bool default_directory_exists = directory_exists(menu->settings.default_directory);
-    char *init_directory = default_directory_exists ? menu->settings.default_directory : "";
-
-    menu->browser.valid = false;
-    menu->browser.reload = false;
-    menu->browser.directory = path_init("sd:/", init_directory);
-
-    menu->load.rom_path = NULL;
+    menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
+    if (!directory_exists(path_get(menu->browser.directory))) {
+        path_free(menu->browser.directory);
+        menu->browser.directory = path_init(menu->storage_prefix, "/");
+    }
 
     hdmi_clear_game_id();
 
@@ -118,6 +128,12 @@ static void menu_deinit (menu_t *menu) {
 
     hdmi_send_game_id(menu->boot_params);
 
+    path_free(menu->load.disk_path);
+    path_free(menu->load.rom_path);
+    for (int i = 0; i < menu->browser.entries; i++) {
+        free(menu->browser.list[i].name);
+    }
+    free(menu->browser.list);
     path_free(menu->browser.directory);
     free(menu);
 

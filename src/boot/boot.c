@@ -2,16 +2,14 @@
 
 #include "boot_io.h"
 #include "boot.h"
+#include "cheats.h"
 #include "cic.h"
+#include "reboot.h"
 
 
 #define C0_STATUS_FR    (1 << 26)
 #define C0_STATUS_CU0   (1 << 28)
 #define C0_STATUS_CU1   (1 << 29)
-
-
-extern uint32_t reboot_start __attribute__((section(".text")));
-extern size_t reboot_size __attribute__((section(".text")));
 
 
 static io32_t *boot_get_device_base (boot_params_t *params) {
@@ -22,7 +20,7 @@ static io32_t *boot_get_device_base (boot_params_t *params) {
     return device_base_address;
 }
 
-static void boot_detect_cic_seed (boot_params_t *params) {
+static cic_type_t boot_detect_cic (boot_params_t *params) {
     io32_t *base = boot_get_device_base(params);
 
     uint8_t ipl3[IPL3_LENGTH] __attribute__((aligned(8)));
@@ -31,11 +29,17 @@ static void boot_detect_cic_seed (boot_params_t *params) {
     dma_read_raw_async(ipl3, (uint32_t) (&base[16]), sizeof(ipl3));
     dma_wait();
 
-    params->cic_seed = cic_get_seed(cic_detect(ipl3));
+    return cic_detect(ipl3);
 }
 
 
 void boot (boot_params_t *params) {
+    cic_type_t cic_type = boot_detect_cic(params);
+
+    if (params->detect_cic_seed) {
+        params->cic_seed = cic_get_seed(cic_type);
+    }
+
     if (params->tv_type == BOOT_TV_TYPE_PASSTHROUGH) {
         switch (get_tv_type()) {
             case TV_PAL:
@@ -51,10 +55,6 @@ void boot (boot_params_t *params) {
                 params->tv_type = BOOT_TV_TYPE_NTSC;
                 break;
         }
-    }
-
-    if (params->detect_cic_seed) {
-        boot_detect_cic_seed(params);
     }
 
     C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
@@ -123,12 +123,16 @@ void boot (boot_params_t *params) {
         cpu_io_write(&ipl3_dst[i], io_read((uint32_t) (&ipl3_src[i])));
     }
 
+    bool cheats_installed = cheats_install(cic_type, params->cheat_list);
+
+    register uint32_t skip_rdram_reset asm ("a0");
     register uint32_t boot_device asm ("s3");
     register uint32_t tv_type asm ("s4");
     register uint32_t reset_type asm ("s5");
     register uint32_t cic_seed asm ("s6");
     register uint32_t version asm ("s7");
 
+    skip_rdram_reset = cheats_installed;
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
     reset_type = BOOT_RESET_TYPE_COLD;
@@ -141,6 +145,7 @@ void boot (boot_params_t *params) {
     asm volatile (
         "la $t3, reboot \n"
         "jr $t3 \n" ::
+        [skip_rdram_reset] "r" (skip_rdram_reset),
         [boot_device] "r" (boot_device),
         [tv_type] "r" (tv_type),
         [reset_type] "r" (reset_type),

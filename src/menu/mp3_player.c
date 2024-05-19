@@ -1,4 +1,6 @@
-#include <fatfs/ff.h>
+#include <stdio.h>
+#include <sys/stat.h>
+
 #include <libdragon.h>
 
 #include "mp3_player.h"
@@ -18,19 +20,18 @@
 /** @brief MP3 File Information Structure. */
 typedef struct {
     bool loaded;
-    bool io_error;
 
-    FIL fil;
-    FSIZE_t data_start;
-    int seek_predecode_frames;
-
-    mp3dec_t dec;
-    mp3dec_frame_info_t info;
-
+    FILE *f;
+    size_t file_size;
+    size_t data_start;
     uint8_t buffer[16 * 1024];
     uint8_t *buffer_ptr;
     size_t buffer_left;
 
+    mp3dec_t dec;
+    mp3dec_frame_info_t info;
+
+    int seek_predecode_frames;
     float duration;
     float bitrate;
 
@@ -48,9 +49,7 @@ static void mp3player_reset_decoder (void) {
 }
 
 static void mp3player_fill_buffer (void) {
-    UINT bytes_read;
-
-    if (f_eof(&p->fil)) {
+    if (feof(p->f)) {
         return;
     }
 
@@ -63,11 +62,7 @@ static void mp3player_fill_buffer (void) {
         p->buffer_ptr = p->buffer;
     }
 
-    if (f_read(&p->fil, p->buffer + p->buffer_left, sizeof(p->buffer) - p->buffer_left, &bytes_read) == FR_OK) {
-        p->buffer_left += bytes_read;
-    } else {
-        p->io_error = true;
-    }
+    p->buffer_left += fread(p->buffer + p->buffer_left, 1, sizeof(p->buffer) - p->buffer_left, p->f);
 }
 
 static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int wlen, bool seeking) {
@@ -109,7 +104,7 @@ static void mp3player_calculate_duration (int samples) {
     uint32_t frames;
     int delay, padding;
 
-    long data_size = (f_size(&p->fil) - p->data_start);
+    long data_size = (p->file_size - p->data_start);
     if (mp3dec_check_vbrtag((const uint8_t *) (p->buffer_ptr), p->info.frame_bytes, &frames, &delay, &padding) > 0) {
         p->duration = (frames * samples) / (float) (p->info.hz);
         p->bitrate = (data_size * 8) / p->duration;
@@ -137,7 +132,6 @@ mp3player_err_t mp3player_init (void) {
     mp3player_reset_decoder();
 
     p->loaded = false;
-    p->io_error = false;
 
     p->wave = (waveform_t) {
         .name = "mp3player",
@@ -164,22 +158,32 @@ mp3player_err_t mp3player_load (char *path) {
         mp3player_unload();
     }
 
-    if (f_open(&p->fil, strip_sd_prefix(path), FA_READ) != FR_OK) {
+    if ((p->f = fopen(path, "rb")) == NULL) {
         return MP3PLAYER_ERR_IO;
     }
+    setbuf(p->f, NULL);
+
+    struct stat st;
+    if (fstat(fileno(p->f), &st)) {
+        fclose(p->f);
+        return MP3PLAYER_ERR_IO;
+    }
+    p->file_size = st.st_size;
 
     mp3player_reset_decoder();
 
-    while (!(f_eof(&p->fil) && p->buffer_left == 0)) {
+    while (!(feof(p->f) && p->buffer_left == 0)) {
         mp3player_fill_buffer();
 
-        if (p->io_error) {
+        if (ferror(p->f)) {
+            fclose(p->f);
             return MP3PLAYER_ERR_IO;
         }
 
         size_t id3v2_skip = mp3dec_skip_id3v2((const uint8_t *) (p->buffer_ptr), p->buffer_left);
         if (id3v2_skip > 0) {
-            if (f_lseek(&p->fil, f_tell(&p->fil) - p->buffer_left + id3v2_skip) != FR_OK) {
+            if (fseek(p->f, (-p->buffer_left) + id3v2_skip, SEEK_CUR)) {
+                fclose(p->f);
                 return MP3PLAYER_ERR_IO;
             }
             mp3player_reset_decoder();
@@ -189,7 +193,7 @@ mp3player_err_t mp3player_load (char *path) {
         int samples = mp3dec_decode_frame(&p->dec, p->buffer_ptr, p->buffer_left, NULL, &p->info);
         if (samples > 0) {
             p->loaded = true;
-            p->data_start = f_tell(&p->fil) - p->buffer_left + p->info.frame_offset;
+            p->data_start = ftell(p->f) - p->buffer_left + p->info.frame_offset;
 
             p->buffer_ptr += p->info.frame_offset;
             p->buffer_left -= p->info.frame_offset;
@@ -206,7 +210,7 @@ mp3player_err_t mp3player_load (char *path) {
         p->buffer_left -= p->info.frame_bytes;
     }
 
-    if (f_close(&p->fil) != FR_OK) {
+    if (fclose(p->f)) {
         return MP3PLAYER_ERR_IO;
     }
 
@@ -217,12 +221,12 @@ void mp3player_unload (void) {
     mp3player_stop();
     if (p->loaded) {
         p->loaded = false;
-        f_close(&p->fil);
+        fclose(p->f);
     }
 }
 
 mp3player_err_t mp3player_process (void) {
-    if (p->io_error) {
+    if (ferror(p->f)) {
         mp3player_unload();
         return MP3PLAYER_ERR_IO;
     }
@@ -239,7 +243,7 @@ bool mp3player_is_playing (void) {
 }
 
 bool mp3player_is_finished (void) {
-    return p->loaded && f_eof(&p->fil) && (p->buffer_left == 0);
+    return p->loaded && feof(p->f) && (p->buffer_left == 0);
 }
 
 mp3player_err_t mp3player_play (void) {
@@ -248,8 +252,7 @@ mp3player_err_t mp3player_play (void) {
     }
     if (!mp3player_is_playing()) {
         if (mp3player_is_finished()) {
-            if (f_lseek(&p->fil, p->data_start) != FR_OK) {
-                p->io_error = true;
+            if (fseek(p->f, p->data_start, SEEK_SET)) {
                 return MP3PLAYER_ERR_IO;
             }
             mp3player_reset_decoder();
@@ -292,24 +295,23 @@ mp3player_err_t mp3player_seek (int seconds) {
         return MP3PLAYER_OK;
     }
 
-    long position = ((long) (f_tell(&p->fil)) - p->buffer_left + bytes_to_move);
+    long position = (ftell(p->f) - p->buffer_left + bytes_to_move);
     if (position < (long) (p->data_start)) {
         position = p->data_start;
     }
 
-    if (f_lseek(&p->fil, position) != FR_OK) {
-        p->io_error = true;
+    if (fseek(p->f, position, SEEK_SET)) {
         return MP3PLAYER_ERR_IO;
     }
 
     mp3player_reset_decoder();
     mp3player_fill_buffer();
 
-    p->seek_predecode_frames = (position == p->data_start) ? 0 : SEEK_PREDECODE_FRAMES;
-
-    if (p->io_error) {
+    if (ferror(p->f)) {
         return MP3PLAYER_ERR_IO;
     }
+
+    p->seek_predecode_frames = (position == p->data_start) ? 0 : SEEK_PREDECODE_FRAMES;
 
     return MP3PLAYER_OK;
 }
@@ -346,9 +348,9 @@ float mp3player_get_progress (void) {
         return 0.0f;
     }
 
-    FSIZE_t data_size = f_size(&p->fil) - p->data_start;
-    FSIZE_t data_consumed = f_tell(&p->fil) - p->buffer_left;
-    FSIZE_t data_position = (data_consumed > p->data_start) ? (data_consumed - p->data_start) : 0;
+    long data_size = p->file_size - p->data_start;
+    long data_consumed = ftell(p->f) - p->buffer_left;
+    long data_position = (data_consumed > p->data_start) ? (data_consumed - p->data_start) : 0;
 
     return data_position / (float) (data_size);
 }

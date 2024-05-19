@@ -1,4 +1,4 @@
-#include <fatfs/ff.h>
+#include <sys/stat.h>
 
 #include "utils/fs.h"
 #include "views.h"
@@ -8,7 +8,7 @@ static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *text_extensions[] = { "txt", NULL };
 static const char *config_extensions[] = { "ini", "cfg", "yml", "yaml", "toml", NULL };
 static const char *save_extensions[] = { "sav", "eep", "eeprom", "sra", "srm", "ram", "fla", "flashram", NULL };
-static const char *patch_extensions[] = { "ips", "aps", "pps", "xdelta", NULL };
+static const char *patch_extensions[] = { "aps", "bps", "ips", "pps", "ups", "xdelta", NULL };
 static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NULL };
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
@@ -16,7 +16,7 @@ static const char *dexdrive_extensions[] = { "mpk", NULL };
 static const char *emulator_extensions[] = { "emu", NULL };
 
 
-static FILINFO info;
+static struct stat st;
 
 
 static char *format_file_type (char *name, bool is_directory) {
@@ -75,17 +75,14 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "\n"
         " Size: %d bytes\n"
-        " Attributes: %s%s%s%s%s\n"
+        " Attributes: %s %s\n"
         "%s"
-        " Modified: %u-%02u-%02u %02u:%02u",
-        info.fsize,
-        (info.fattrib & AM_DIR) ? "Directory " : "File ",
-        (info.fattrib & AM_RDO) ? "| Read only " : "",
-        (info.fattrib & AM_SYS) ? "| System " : "",
-        (info.fattrib & AM_ARC) ? "| Archive " : "",
-        (info.fattrib & AM_HID) ? "| Hidden " : "",
-        format_file_type(info.fname, info.fattrib & AM_DIR),
-        (info.fdate >> 9) + 1980, info.fdate >> 5 & 0x0F, info.fdate & 0x1F, info.ftime >> 11, info.ftime >> 5 & 0x3F
+        " Modified: %s",
+        st.st_size,
+        S_ISDIR(st.st_mode) ? "Directory" : "File",
+        st.st_mode & S_IWUSR ? "" : "(Read only)",
+        format_file_type(menu->browser.entry->name, S_ISDIR(st.st_mode)),
+        ctime(&st.st_mtim.tv_sec)
     );
 
     component_actions_bar_text_draw(
@@ -101,7 +98,7 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_file_info_init (menu_t *menu) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    if (f_stat(strip_sd_prefix(path_get(path)), &info) != FR_OK) {
+    if (stat(path_get(path), &st)) {
         menu_show_error(menu, "Couldn't obtain file information");
     }
 

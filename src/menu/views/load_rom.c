@@ -310,6 +310,7 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
+    menu->boot_params->cheat_list = NULL;
 }
 
 static void deinit (void) {
@@ -334,7 +335,7 @@ void view_load_rom_init (menu_t *menu) {
         return;
     }
 
-    boxart = component_boxart_init(menu->load.rom_info.game_code);
+    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code);
 
     component_context_menu_init(&options_context_menu);
 }

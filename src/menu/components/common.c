@@ -80,12 +80,12 @@ void component_scrollbar_draw (int x, int y, int width, int height, int position
     }
 }
 
-void component_file_list_scrollbar_draw (int position, int items, int visible_items) {
+void component_list_scrollbar_draw (int position, int items, int visible_items) {
     component_scrollbar_draw(
-        FILE_LIST_SCROLLBAR_X,
-        FILE_LIST_SCROLLBAR_Y,
-        FILE_LIST_SCROLLBAR_WIDTH,
-        FILE_LIST_SCROLLBAR_HEIGHT,
+        LIST_SCROLLBAR_X,
+        LIST_SCROLLBAR_Y,
+        LIST_SCROLLBAR_WIDTH,
+        LIST_SCROLLBAR_HEIGHT,
         position,
         items,
         visible_items
@@ -121,6 +121,10 @@ void component_messagebox_draw (char *fmt, ...) {
         .wrap = WRAP_WORD
     }, FNT_DEFAULT, formatted, &paragraph_nbytes);
 
+    if (formatted != buffer) {
+        free(formatted);
+    }
+
     component_dialog_draw(
         paragraph->bbox.x1 - paragraph->bbox.x0 + MESSAGEBOX_MARGIN,
         paragraph->bbox.y1 - paragraph->bbox.y0 + MESSAGEBOX_MARGIN
@@ -154,6 +158,10 @@ void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *f
         formatted,
         nbytes
     );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
 }
 
 void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
@@ -179,4 +187,8 @@ void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, 
         formatted,
         nbytes
     );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
 }

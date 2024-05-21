@@ -11,6 +11,8 @@ on:
 jobs:
   build-menu:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -68,14 +70,6 @@ jobs:
           name: SC64
           path: ./output/sc64menu.n64
 
-      # - name: Delete rolling-release tag and release
-      #   uses: dev-drprasad/delete-tag-and-release@v1.0
-      #   if: github.ref == 'refs/heads/main'
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     tag_name: rolling-release
-      #   continue-on-error: true
-
       - name: Upload rolling release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
@@ -83,6 +77,22 @@ jobs:
           name: Rolling release
           body: Rolling release built from latest commit on `main` branch.
           tag_name: rolling-release
+          files: |
+            ./output/N64FlashcartMenu.n64
+            ./output/menu.bin
+            ./output/OS64.v64
+            ./output/OS64P.v64
+            ./output/sc64menu.n64
+        continue-on-error: true
+
+      - name: Upload dev rolling release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/develop'
+        with:
+          name: 'Rolling dev release-V${{ github.run_id }}'
+          body: Rolling dev prerelease built from latest commit on `develop` branch.
+          tag_name: prerelease-dev
+          prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin

@@ -236,12 +236,10 @@ static void draw (menu_t *menu, surface_t *d) {
             " Save type: %s\n"
             " TV type: %s\n"
             " Expansion PAK: %s\n"
-            "\n"
-            " Extra information:\n"
-            "  CIC: %s\n"
-            "  Boot address: 0x%08lX\n"
-            "  SDK version: %.1f%c\n"
-            "  Clock Rate: %.2fMHz\n",
+            " CIC: %s\n"
+            " Boot address: 0x%08lX\n"
+            " SDK version: %.1f%c\n"
+            " Clock Rate: %.2fMHz\n",
             format_rom_endianness(menu->load.rom_info.endianness),
             menu->load.rom_info.title,
             menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],

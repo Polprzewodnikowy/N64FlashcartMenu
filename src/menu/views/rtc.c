@@ -21,12 +21,12 @@ typedef enum {
     RTC_EDIT_HOUR,
     RTC_EDIT_MIN,
     RTC_EDIT_SEC,
-    RTC_EDIT_NONE,
-} rtc_editor_t;
+} rtc_field_t;
 
 
 static rtc_time_t rtc_time;
-static uint16_t editing_field_mode = RTC_EDIT_NONE;
+static uint16_t is_editing_mode = false;
+static uint16_t editing_field_type = RTC_EDIT_YEAR;
 
 int wrap( uint16_t val, uint16_t min, uint16_t max )
 {
@@ -38,7 +38,7 @@ int wrap( uint16_t val, uint16_t min, uint16_t max )
 void adjust_rtc_time( rtc_time_t* dt, int incr )
 {
     uint8_t expected_day = 0;
-    switch( editing_field_mode )
+    switch( editing_field_type )
     {
         case RTC_EDIT_YEAR:
             /* TODO Figure out what the max supported year is */
@@ -77,19 +77,26 @@ static void process (menu_t *menu) {
     }
     // FIXME: these are submenu items
     if (menu->actions.enter) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        is_editing_mode = true;
+        //menu->next_mode = MENU_MODE_BROWSER;
     }
     if (menu->actions.go_left) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        if ( editing_field_type > RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
+        else { menu->next_mode = editing_field_type - 1; }
     }
     if (menu->actions.go_right) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        if ( editing_field_type < RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
+        else { menu->next_mode = editing_field_type + 1; }
     }
     if (menu->actions.go_up) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        adjust_rtc_time( &rtc_time, +1 );
+        /* Add a delay so you can just hold the direction */
+        wait_ms( 100 );
     }
     if (menu->actions.go_down) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        adjust_rtc_time( &rtc_time, -1 );
+        /* Add a delay so you can just hold the direction */
+        wait_ms( 100 );
     }
 
 }
@@ -135,7 +142,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (rtc_is_writable()) {
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Save\n"
+            "A: Change\n"
             "B: Back"
         );
     }

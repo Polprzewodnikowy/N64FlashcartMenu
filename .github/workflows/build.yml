@@ -12,6 +12,7 @@ jobs:
   build-menu:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       packages: write
 
     steps:

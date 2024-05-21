@@ -4,15 +4,6 @@
 #include <stdio.h>
 #include <libdragon.h>
 
-// FIXME: add implementation!
-// struct {
-//     uint16_t seconds;
-//     uint16_t minutes;
-//     uint16_t hours;
-//     uint16_t day;
-//     uint16_t month;
-//     uint16_t year;
-// } adjusted_datetime;
 
 typedef enum {
     RTC_EDIT_YEAR,
@@ -66,37 +57,38 @@ void adjust_rtc_time( rtc_time_t* dt, int incr )
     if( expected_day && expected_day != dt->day && incr > 0 ) dt->day = 1;
 }
 
-// static void save_adjusted_datetime () {
-
-// }
-
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
     }
-    // FIXME: these are submenu items
     if (menu->actions.enter) {
         is_editing_mode = true;
-        //menu->next_mode = MENU_MODE_BROWSER;
     }
-    if (menu->actions.go_left) {
-        if ( editing_field_type > RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
-        else { menu->next_mode = editing_field_type - 1; }
-    }
-    if (menu->actions.go_right) {
-        if ( editing_field_type < RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
-        else { menu->next_mode = editing_field_type + 1; }
-    }
-    if (menu->actions.go_up) {
-        adjust_rtc_time( &rtc_time, +1 );
-        /* Add a delay so you can just hold the direction */
-        wait_ms( 100 );
-    }
-    if (menu->actions.go_down) {
-        adjust_rtc_time( &rtc_time, -1 );
-        /* Add a delay so you can just hold the direction */
-        wait_ms( 100 );
+    if (is_editing_mode) {
+        if (menu->actions.go_left) {
+            if ( editing_field_type > RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
+            else { menu->next_mode = editing_field_type - 1; }
+        }
+        if (menu->actions.go_right) {
+            if ( editing_field_type < RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
+            else { menu->next_mode = editing_field_type + 1; }
+        }
+        if (menu->actions.go_up) {
+            adjust_rtc_time( &rtc_time, +1 );
+            /* Add a delay so you can just hold the direction */
+            wait_ms( 100 );
+        }
+        if (menu->actions.go_down) {
+            adjust_rtc_time( &rtc_time, -1 );
+            /* Add a delay so you can just hold the direction */
+            wait_ms( 100 );
+        }
+        if (menu->actions.enter) {
+            is_editing_mode = false;
+            rtc_set( &rtc_time );
+            menu->next_mode = MENU_MODE_BROWSER;
+        }
     }
 
 }

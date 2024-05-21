@@ -2,8 +2,6 @@
 #include "../sound.h"
 #include "views.h"
 #include <stdio.h>
-#include <malloc.h>
-#include <string.h>
 #include <libdragon.h>
 
 // FIXME: add implementation!
@@ -28,7 +26,7 @@ typedef enum {
 
 
 static rtc_time_t rtc_time;
-static uint16_t edit_mode = RTC_EDIT_NONE;
+static uint16_t editing_field_mode = RTC_EDIT_NONE;
 
 int wrap( uint16_t val, uint16_t min, uint16_t max )
 {
@@ -40,7 +38,7 @@ int wrap( uint16_t val, uint16_t min, uint16_t max )
 void adjust_rtc_time( rtc_time_t* dt, int incr )
 {
     uint8_t expected_day = 0;
-    switch( edit_mode )
+    switch( editing_field_mode )
     {
         case RTC_EDIT_YEAR:
             /* TODO Figure out what the max supported year is */

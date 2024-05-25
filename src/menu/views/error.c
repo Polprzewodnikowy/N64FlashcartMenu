@@ -16,7 +16,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->error_message) {
         component_messagebox_draw(menu->error_message);
-        wav64_play(&sfx_error, SFX_CURSOR);
     } else {
         component_messagebox_draw("Unspecified error");
     }
@@ -51,6 +50,7 @@ void view_error_display (menu_t *menu, surface_t *display) {
 }
 
 void menu_show_error (menu_t *menu, char *error_message) {
+    wav64_play(&sfx_error, SFX_CURSOR);
     menu->next_mode = MENU_MODE_ERROR;
     menu->error_message = error_message;
 }

@@ -14,6 +14,7 @@
 #include "mp3_player.h"
 #include "png_decoder.h"
 #include "settings.h"
+#include "sfx.h"
 #include "sound.h"
 #include "usb_comm.h"
 #include "utils/fs.h"
@@ -34,6 +35,7 @@
 static menu_t *menu;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
+wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_settings;
 
 extern tv_type_t __boot_tvtype;
 
@@ -66,6 +68,13 @@ static void menu_init (boot_params_t *boot_params) {
     dfs_init(DFS_DEFAULT_LOCATION);
 
     sound_init_default();
+
+    mixer_ch_set_vol(SFX_CURSOR, 0.5f, 0.5f);
+	wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
+    wav64_open(&sfx_exit, "rom:/back.wav64");
+    wav64_open(&sfx_settings, "rom:/settings.wav64");
+    wav64_open(&sfx_enter, "rom:/enter.wav64");
+    wav64_open(&sfx_error, "rom:/error.wav64");
 
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);

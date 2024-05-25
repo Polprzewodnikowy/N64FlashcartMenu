@@ -1,4 +1,5 @@
 #include <libdragon.h>
+#include "sfx.h"
 
 #include "actions.h"
 

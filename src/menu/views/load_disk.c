@@ -1,6 +1,7 @@
 #include "../cart_load.h"
 #include "../disk_info.h"
 #include "boot/boot.h"
+#include "../sfx.h"
 #include "views.h"
 
 
@@ -34,8 +35,10 @@ static void process (menu_t *menu) {
     } else if (menu->actions.options && menu->load.rom_path) {
         load_pending = true;
         load_rom = true;
+        wav64_play(&sfx_settings, SFX_CURSOR);
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        wav64_play(&sfx_exit, SFX_CURSOR);
     }
 }
 

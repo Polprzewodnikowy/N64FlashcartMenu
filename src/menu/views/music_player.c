@@ -1,5 +1,6 @@
 #include "../mp3_player.h"
 #include "../sound.h"
+#include "../sfx.h"
 #include "views.h"
 
 
@@ -42,6 +43,7 @@ static void process (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        wav64_play(&sfx_exit, SFX_CURSOR);
     } else if (menu->actions.enter) {
         err = mp3player_toggle();
         if (err != MP3PLAYER_OK) {

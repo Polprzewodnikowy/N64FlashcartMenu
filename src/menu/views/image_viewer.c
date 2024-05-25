@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "../sfx.h"
 
 #include "../png_decoder.h"
 #include "views.h"
@@ -40,6 +41,7 @@ static void process (menu_t *menu) {
         } else {
             menu->next_mode = MENU_MODE_BROWSER;
         }
+        wav64_play(&sfx_exit, SFX_CURSOR);
     } else if (menu->actions.enter && image) {
         if (show_message) {
             show_message = false;
@@ -48,6 +50,7 @@ static void process (menu_t *menu) {
         } else {
             show_message = true;
         }
+        wav64_play(&sfx_enter, SFX_CURSOR);
     }
 }
 

@@ -1,9 +1,11 @@
 #include "views.h"
+#include "../sfx.h"
 
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        wav64_play(&sfx_exit, SFX_CURSOR);
     }
 }
 
@@ -14,6 +16,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->error_message) {
         component_messagebox_draw(menu->error_message);
+        wav64_play(&sfx_error, SFX_CURSOR);
     } else {
         component_messagebox_draw("Unspecified error");
     }

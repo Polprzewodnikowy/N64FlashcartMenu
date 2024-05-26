@@ -1,5 +1,4 @@
 #include <libdragon.h>
-#include "menu.h"
 
 #include "actions.h"
 

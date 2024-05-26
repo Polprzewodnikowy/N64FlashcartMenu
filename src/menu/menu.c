@@ -124,6 +124,10 @@ static void menu_init (boot_params_t *boot_params) {
         __boot_tvtype = TV_NTSC;
     }
 
+    if (!menu->settings.sound_enabled) {
+        mixer_ch_set_vol(SFX_CHANNEL, 0, 0);
+    }
+
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
 
     register_VI_handler(frame_counter_handler);

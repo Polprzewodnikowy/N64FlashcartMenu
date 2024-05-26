@@ -1,7 +1,7 @@
 #include "../cart_load.h"
 #include "boot/boot.h"
 #include "utils/fs.h"
-#include "../sfx.h"
+#include "../menu.h"
 #include "views.h"
 
 
@@ -37,7 +37,7 @@ static void process (menu_t *menu) {
         load_pending = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
-        wav64_play(&sfx_exit, SFX_CURSOR);
+        wav64_play(&sfx_exit, SFX_CHANNEL);
     }
 }
 

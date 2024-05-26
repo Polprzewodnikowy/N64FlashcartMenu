@@ -1,6 +1,6 @@
 #include <time.h>
 
-#include "../sfx.h"
+#include "../menu.h"
 #include "views.h"
 
 
@@ -29,7 +29,7 @@ static void process (menu_t *menu) {
 
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
-        wav64_play(&sfx_exit, SFX_CURSOR);
+        wav64_play(&sfx_exit, SFX_CHANNEL);
     }
 }
 

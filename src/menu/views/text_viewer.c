@@ -3,7 +3,7 @@
 
 #include "../components/constants.h"
 #include "../fonts.h"
-#include "../sfx.h"
+#include "../menu.h"
 #include "utils/utils.h"
 #include "views.h"
 
@@ -56,7 +56,7 @@ static void perform_vertical_scroll (int lines) {
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
-        wav64_play(&sfx_exit, SFX_CURSOR);
+        wav64_play(&sfx_exit, SFX_CHANNEL);
     } else if (text) {
         if (menu->actions.go_up) {
             perform_vertical_scroll(menu->actions.go_fast ? -10 : -1);

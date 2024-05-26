@@ -1,5 +1,5 @@
 #include <sys/stat.h>
-#include "../sfx.h"
+#include "../menu.h"
 
 #include "utils/fs.h"
 #include "views.h"
@@ -51,7 +51,7 @@ static char *format_file_type (char *name, bool is_directory) {
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
-        wav64_play(&sfx_exit, SFX_CURSOR);
+        wav64_play(&sfx_exit, SFX_CHANNEL);
     }
 }
 

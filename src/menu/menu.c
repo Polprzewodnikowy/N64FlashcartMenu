@@ -14,7 +14,7 @@
 #include "mp3_player.h"
 #include "png_decoder.h"
 #include "settings.h"
-#include "sfx.h"
+#include "menu.h"
 #include "sound.h"
 #include "usb_comm.h"
 #include "utils/fs.h"
@@ -69,7 +69,7 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
-    mixer_ch_set_vol(SFX_CURSOR, 0.5f, 0.5f);
+    mixer_ch_set_vol(SFX_CHANNEL, 0.5f, 0.5f);
 	wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
     wav64_open(&sfx_exit, "rom:/back.wav64");
     wav64_open(&sfx_settings, "rom:/settings.wav64");

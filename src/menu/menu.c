@@ -70,7 +70,7 @@ static void menu_init (boot_params_t *boot_params) {
     sound_init_default();
 
     mixer_ch_set_vol(SFX_CHANNEL, 0.5f, 0.5f);
-	wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
+    wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
     wav64_open(&sfx_exit, "rom:/back.wav64");
     wav64_open(&sfx_settings, "rom:/settings.wav64");
     wav64_open(&sfx_enter, "rom:/enter.wav64");

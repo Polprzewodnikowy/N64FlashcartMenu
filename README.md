@@ -160,3 +160,7 @@ Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64Fla
  - [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
  - [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
  - [miniz](https://github.com/richgel999/miniz) (MIT License)
+
+ - [Cursor sound](https://pixabay.com/es/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) (Free to use)
+ - [Actions sound](https://pixabay.com/es/sound-effects/menu-button-user-interface-pack-190041/) (Free to use)
+ - [Error sound](https://pixabay.com/es/sound-effects/error-call-to-attention-129258/) (Free to use)

@@ -59,38 +59,42 @@ void adjust_rtc_time( rtc_time_t* dt, int incr )
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
+        is_editing_mode = false;
         menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
     }
-    if (menu->actions.enter) {
+    else if (menu->actions.enter) { // FIXME: rtc_is_writable()
         is_editing_mode = true;
     }
-    if (is_editing_mode) {
+    else if (is_editing_mode) {
         if (menu->actions.go_left) {
             if ( editing_field_type > RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
             else { menu->next_mode = editing_field_type - 1; }
         }
-        if (menu->actions.go_right) {
+        else if (menu->actions.go_right) {
             if ( editing_field_type < RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
             else { menu->next_mode = editing_field_type + 1; }
         }
-        if (menu->actions.go_up) {
+        else if (menu->actions.go_up) {
             adjust_rtc_time( &rtc_time, +1 );
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        if (menu->actions.go_down) {
+        else if (menu->actions.go_down) {
             adjust_rtc_time( &rtc_time, -1 );
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        if (menu->actions.enter) {
+        else if (menu->actions.enter) { // save
             is_editing_mode = false;
-            rtc_set( &rtc_time );
+            //rtc_set( &rtc_time );
+            menu->next_mode = MENU_MODE_BROWSER;
+        }
+        else if (menu->actions.back) { // cancel
+            is_editing_mode = false;
             menu->next_mode = MENU_MODE_BROWSER;
         }
     }
-
 }
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -100,30 +104,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_layout_draw();
 
-    if (rtc_is_writable()) {
-        component_main_text_draw(
-            ALIGN_CENTER, VALIGN_TOP,
-            "ADJUST REAL TIME CLOCK\n"
-            "\n"
-            "\n"
-            "To set the date and time, please use the PC terminal\n"
-            "application and set via USB.\n\n"
-            "Current date & time: %s\n",
-            menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
-        );
-    }
-    else {
-        // FIXME: time since N64 started?
-        component_main_text_draw(
-            ALIGN_CENTER, VALIGN_TOP,
-            "REAL TIME CLOCK\n"
-            "\n"
-            "\n"
-            "Adjusting the date and time is not supported.\n"
-            "Current date & time: %s\n",
-            menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
-        );
-    }
+    component_main_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "ADJUST REAL TIME CLOCK\n"
+        "\n"
+        "\n"
+        "Current date & time: %s\n",
+        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
+    );
 
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
@@ -131,7 +119,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
     );
 
-    if (rtc_is_writable()) {
+    if (!is_editing_mode ) { // FIXME: rtc_is_writable()
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Change\n"
@@ -144,6 +132,10 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "B: Back"
         );
+    }
+
+    if (is_editing_mode) { // FIXME: rtc_is_writable()
+        // show msgbox for RTC edit
     }
 
     rdpq_detach_show();

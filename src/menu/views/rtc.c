@@ -136,6 +136,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (is_editing_mode) { // FIXME: rtc_is_writable()
         // show msgbox for RTC edit
+        component_messagebox_draw("YYYY|MM|DD:hh|mm|ss"); // FIXME: use rtc_time
     }
 
     rdpq_detach_show();

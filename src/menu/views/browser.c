@@ -1,6 +1,6 @@
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/errno.h>
 #include <time.h>
 
 #include "../fonts.h"
@@ -22,8 +22,8 @@ static const char *hidden_paths[] = {
     "/menu.bin",
     "/menu",
     "/N64FlashcartMenu.n64",
-    "/OS64.v64",
-    "/OS64P.v64",
+    "/ED64",
+    "/ED64P",
     "/sc64menu.n64",
     "/System Volume Information",
     NULL,

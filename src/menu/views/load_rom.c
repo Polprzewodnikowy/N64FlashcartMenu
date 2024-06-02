@@ -10,7 +10,8 @@ static component_boxart_t *boxart;
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
-        case ROM_ERR_IO: return "I/O error during loading/storing ROM information";
+        case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
+        case ROM_ERR_SAVE_IO: return "I/O error during storing ROM options";
         case ROM_ERR_NO_FILE: return "Couldn't open ROM file";
         default: return "Unknown ROM info load error";
     }

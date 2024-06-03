@@ -20,6 +20,12 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     component_main_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "This feature is\n"
+        "not implemented yet.\n\n"
+    );
+
+    component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"

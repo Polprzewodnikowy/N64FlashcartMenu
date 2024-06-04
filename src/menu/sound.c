@@ -57,7 +57,7 @@ void sound_play_effect(sound_effect_t sfx) {
             wav64_play(&sfx_cursor, SFX_CHANNEL);
             break;
         case SFX_EXIT:
-            wav64_play(&sfx_error, SFX_CHANNEL);
+            wav64_play(&sfx_exit, SFX_CHANNEL);
             break;
         case SFX_SETTING:
             wav64_play(&sfx_setting, SFX_CHANNEL);

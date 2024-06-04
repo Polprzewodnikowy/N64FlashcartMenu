@@ -6,7 +6,7 @@
 #include "../fonts.h"
 #include "utils/fs.h"
 #include "views.h"
-#include "../menu.h"
+#include "../sound.h"
 
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
@@ -297,19 +297,19 @@ static void process (menu_t *menu) {
             if (menu->browser.selected < 0) {
                 menu->browser.selected = 0;
             }
-            wav64_play(&sfx_cursor, SFX_CHANNEL);
+            sound_play_effect(SFX_CURSOR);
         } else if (menu->actions.go_down) {
             menu->browser.selected += scroll_speed;
             if (menu->browser.selected >= menu->browser.entries) {
                 menu->browser.selected = menu->browser.entries - 1;
             }
-            wav64_play(&sfx_cursor, SFX_CHANNEL);
+            sound_play_effect(SFX_CURSOR);
         }
         menu->browser.entry = &menu->browser.list[menu->browser.selected];
     }
 
     if (menu->actions.enter && menu->browser.entry) {
-        wav64_play(&sfx_enter, SFX_CHANNEL);
+        sound_play_effect(SFX_ENTER);
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR:
                 if (push_directory(menu, menu->browser.entry->name)) {
@@ -344,13 +344,13 @@ static void process (menu_t *menu) {
             menu->browser.valid = false;
             menu_show_error(menu, "Couldn't open last directory");
         }
-        wav64_play(&sfx_exit, SFX_CHANNEL);
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
         component_context_menu_show(&entry_context_menu);
-        wav64_play(&sfx_settings, SFX_CHANNEL);
+        sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
         component_context_menu_show(&settings_context_menu);
-        wav64_play(&sfx_settings, SFX_CHANNEL);
+        sound_play_effect(SFX_SETTING);
     }
 }
 

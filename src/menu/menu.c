@@ -69,12 +69,6 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
-    mixer_ch_set_vol(SFX_CHANNEL, 0.5f, 0.5f);
-    wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
-    wav64_open(&sfx_exit, "rom:/back.wav64");
-    wav64_open(&sfx_settings, "rom:/settings.wav64");
-    wav64_open(&sfx_enter, "rom:/enter.wav64");
-    wav64_open(&sfx_error, "rom:/error.wav64");
 
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
@@ -124,8 +118,8 @@ static void menu_init (boot_params_t *boot_params) {
         __boot_tvtype = TV_NTSC;
     }
 
-    if (!menu->settings.sound_enabled) {
-        mixer_ch_set_vol(SFX_CHANNEL, 0, 0);
+    if (menu->settings.sound_enabled) {
+        sound_init_sfx();
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);

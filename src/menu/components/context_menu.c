@@ -1,6 +1,6 @@
 #include "../components.h"
 #include "../fonts.h"
-#include "../menu.h"
+#include "../sound.h"
 #include "constants.h"
 
 
@@ -42,7 +42,7 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
         } else {
             cm->hide_pending = true;
         }
-        wav64_play(&sfx_exit, SFX_CHANNEL);
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.enter) {
         if (cm->list[cm->selected].submenu) {
             cm->submenu = cm->list[cm->selected].submenu;
@@ -53,19 +53,19 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
             cm->list[cm->selected].action(menu, cm->list[cm->selected].arg);
             top->hide_pending = true;
         }
-        wav64_play(&sfx_enter, SFX_CHANNEL);
+        sound_play_effect(SFX_ENTER);
     } else if (menu->actions.go_up) {
         cm->selected -= 1;
         if (cm->selected < 0) {
             cm->selected = 0;
         }
-        wav64_play(&sfx_cursor, SFX_CHANNEL);
+        sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.go_down) {
         cm->selected += 1;
         if (cm->selected >= cm->count) {
             cm->selected = (cm->count - 1);
         }
-        wav64_play(&sfx_cursor, SFX_CHANNEL);
+        sound_play_effect(SFX_CURSOR);
     }
 
     return true;

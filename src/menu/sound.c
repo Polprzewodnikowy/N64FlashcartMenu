@@ -1,5 +1,4 @@
 #include <stdbool.h>
-
 #include <libdragon.h>
 
 #include "mp3_player.h"
@@ -14,6 +13,7 @@ static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
 
 
 static bool sound_initialized = false;
+static bool sfx_enabled = false;
 
 
 static void sound_reconfigure (int frequency) {
@@ -47,29 +47,32 @@ void sound_init_sfx (void) {
     wav64_open(&sfx_setting, "rom:/settings.wav64");
     wav64_open(&sfx_enter, "rom:/enter.wav64");
     wav64_open(&sfx_error, "rom:/error.wav64");
+    sfx_enabled = true;
 }
 
 
 void sound_play_effect(sound_effect_t sfx) {
-    switch (sfx) {
-        case SFX_CURSOR:
-            wav64_play(&sfx_cursor, SOUND_SFX_CHANNEL);
-            break;
-        case SFX_EXIT:
-            wav64_play(&sfx_exit, SOUND_SFX_CHANNEL);
-            break;
-        case SFX_SETTING:
-            wav64_play(&sfx_setting, SOUND_SFX_CHANNEL);
-            break;
-        case SFX_ENTER:
-            wav64_play(&sfx_enter, SOUND_SFX_CHANNEL);
-            break;
-        case SFX_ERROR:
-            wav64_play(&sfx_error, SOUND_SFX_CHANNEL);
-            break;
-        default:
-            break;
-    } 
+    if(sfx_enabled) {
+        switch (sfx) {
+            case SFX_CURSOR:
+                wav64_play(&sfx_cursor, SOUND_SFX_CHANNEL);
+                break;
+            case SFX_EXIT:
+                wav64_play(&sfx_exit, SOUND_SFX_CHANNEL);
+                break;
+            case SFX_SETTING:
+                wav64_play(&sfx_setting, SOUND_SFX_CHANNEL);
+                break;
+            case SFX_ENTER:
+                wav64_play(&sfx_enter, SOUND_SFX_CHANNEL);
+                break;
+            case SFX_ERROR:
+                wav64_play(&sfx_error, SOUND_SFX_CHANNEL);
+                break;
+            default:
+                break;
+        } 
+    }
 }
 
 

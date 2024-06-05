@@ -167,5 +167,3 @@ See [License](https://pixabay.com/es/service/license-summary/) for the following
  - [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
  - [Actions sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
  - [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)
- - [Back sound](https://pixabay.com/en/sound-effects/) by ?? (Free to use)
- - [Enter sound](https://pixabay.com/en/sound-effects/) by ?? (Free to use)

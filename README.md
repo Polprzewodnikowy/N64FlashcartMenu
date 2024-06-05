@@ -41,7 +41,7 @@ An open source menu for N64 flashcarts.
 
 
 ## Getting started
-Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).
+Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances, though EXFAT is fully supported on the SummerCart64).
 
 ### Save files
 By default, all save files (whether `FlashRam`, `SRAM` or `EEPROM`) use the `.sav` extension and match the filename of the ROM.

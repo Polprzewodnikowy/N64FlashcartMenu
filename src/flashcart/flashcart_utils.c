@@ -51,7 +51,7 @@ bool fatfs_get_file_sectors (char *path, uint32_t *address, address_type_t type,
 
         uint32_t cluster = fil.clust;
 
-        if (cluster >= fs->n_fatent) {
+        if ((cluster < 2) || (cluster >= fs->n_fatent)) {
             error = true;
             break;
         }

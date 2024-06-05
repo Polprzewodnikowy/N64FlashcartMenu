@@ -81,6 +81,7 @@ void component_context_menu_draw (component_context_menu_t *cm) {
             .height = VISIBLE_AREA_HEIGHT,
             .align = ALIGN_CENTER,
             .valign = VALIGN_CENTER,
+            .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,
         NULL

@@ -10,7 +10,8 @@ static component_boxart_t *boxart;
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
-        case ROM_ERR_IO: return "I/O error during loading/storing ROM information";
+        case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
+        case ROM_ERR_SAVE_IO: return "I/O error during storing ROM options";
         case ROM_ERR_NO_FILE: return "Couldn't open ROM file";
         default: return "Unknown ROM info load error";
     }
@@ -236,12 +237,10 @@ static void draw (menu_t *menu, surface_t *d) {
             " Save type: %s\n"
             " TV type: %s\n"
             " Expansion PAK: %s\n"
-            "\n"
-            " Extra information:\n"
-            "  CIC: %s\n"
-            "  Boot address: 0x%08lX\n"
-            "  SDK version: %.1f%c\n"
-            "  Clock Rate: %.2fMHz\n",
+            " CIC: %s\n"
+            " Boot address: 0x%08lX\n"
+            " SDK version: %.1f%c\n"
+            " Clock Rate: %.2fMHz\n",
             format_rom_endianness(menu->load.rom_info.endianness),
             menu->load.rom_info.title,
             menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],

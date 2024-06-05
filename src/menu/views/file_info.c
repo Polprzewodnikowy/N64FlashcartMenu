@@ -1,5 +1,4 @@
 #include <sys/stat.h>
-#include "../menu.h"
 #include "../sound.h"
 
 #include "utils/fs.h"

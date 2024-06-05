@@ -1,7 +1,6 @@
 #include "../cart_load.h"
 #include "boot/boot.h"
 #include "utils/fs.h"
-#include "../menu.h"
 #include "../sound.h"
 #include "views.h"
 

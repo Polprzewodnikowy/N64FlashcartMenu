@@ -3,7 +3,6 @@
 
 #include "../components/constants.h"
 #include "../fonts.h"
-#include "../menu.h"
 #include "../sound.h"
 #include "utils/utils.h"
 #include "views.h"

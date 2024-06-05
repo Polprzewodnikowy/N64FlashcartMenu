@@ -1,8 +1,9 @@
+#include <stdbool.h>
+#include <stdio.h>
+#include <libdragon.h>
 #include <time.h>
 #include "../sound.h"
 #include "views.h"
-#include <stdio.h>
-#include <libdragon.h>
 
 
 typedef enum {
@@ -14,10 +15,9 @@ typedef enum {
     RTC_EDIT_SEC,
 } rtc_field_t;
 
-
 static rtc_time_t rtc_time;
-static uint16_t is_editing_mode = false;
-static uint16_t editing_field_type = RTC_EDIT_YEAR;
+static bool is_editing_mode = false;
+static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
 
 int wrap( uint16_t val, uint16_t min, uint16_t max )
 {
@@ -28,33 +28,33 @@ int wrap( uint16_t val, uint16_t min, uint16_t max )
 
 void adjust_rtc_time( rtc_time_t* dt, int incr )
 {
-    uint8_t expected_day = 0;
-    switch( editing_field_type )
+    //uint8_t expected_day = 0; // FIXME: if required.
+    switch(editing_field_type)
     {
         case RTC_EDIT_YEAR:
-            /* TODO Figure out what the max supported year is */
-            dt->year = wrap( dt->year + incr, 1996, 2037 );
+            /* TODO Figure out if the max supported year is larger */
+            dt->year = wrap( (int)dt->year + incr, 1996, 2037 );
             break;
         case RTC_EDIT_MONTH:
-            dt->month = wrap( dt->month + incr, 0, 11 );
+            dt->month = wrap( (int)dt->month + incr, 0, 11 );
             break;
         case RTC_EDIT_DAY:
-            dt->day = wrap( dt->day + incr, 1, 31 );
-            expected_day = dt->day;
+            dt->day = wrap( (int)dt->day + incr, 1, 31 );
+            //expected_day = dt->day;
             break;
         case RTC_EDIT_HOUR:
-            dt->hour = wrap( dt->hour + incr, 0, 23 );
+            dt->hour = wrap( (int)dt->hour + incr, 0, 23 );
             break;
         case RTC_EDIT_MIN:
-            dt->min = wrap( dt->min + incr, 0, 59 );
+            dt->min = wrap( (int)dt->min + incr, 0, 59 );
             break;
         case RTC_EDIT_SEC:
-            dt->sec = wrap( dt->sec + incr, 0, 59 );
+            dt->sec = wrap( (int)dt->sec + incr, 0, 59 );
             break;
     }
-    rtc_normalize_time( dt );
+    //rtc_normalize_time( dt );
     /* Handle wrap-around for normalized day of month */
-    if( expected_day && expected_day != dt->day && incr > 0 ) dt->day = 1;
+    //if( expected_day && expected_day != dt->day && incr > 0 ) dt->day = 1;
 }
 
 static void process (menu_t *menu) {
@@ -68,11 +68,11 @@ static void process (menu_t *menu) {
     }
     else if (is_editing_mode) {
         if (menu->actions.go_left) {
-            if ( editing_field_type > RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
+            if ( editing_field_type <= RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
             else { menu->next_mode = editing_field_type - 1; }
         }
         else if (menu->actions.go_right) {
-            if ( editing_field_type < RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
+            if ( editing_field_type >= RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
             else { menu->next_mode = editing_field_type + 1; }
         }
         else if (menu->actions.go_up) {
@@ -85,15 +85,15 @@ static void process (menu_t *menu) {
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        else if (menu->actions.enter) { // save
-            is_editing_mode = false;
-            //rtc_set( &rtc_time );
-            menu->next_mode = MENU_MODE_BROWSER;
-        }
-        else if (menu->actions.back) { // cancel
-            is_editing_mode = false;
-            menu->next_mode = MENU_MODE_BROWSER;
-        }
+        // else if (menu->actions.enter) { // save
+        //     is_editing_mode = false;
+        //     //rtc_set( &rtc_time ); // FIXME: requires setting it!
+        //     menu->next_mode = MENU_MODE_BROWSER;
+        // }
+        // else if (menu->actions.back) { // cancel
+        //     is_editing_mode = false;
+        //     menu->next_mode = MENU_MODE_BROWSER;
+        // }
     }
 }
 
@@ -136,7 +136,12 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (is_editing_mode) { // FIXME: rtc_is_writable()
         // show msgbox for RTC edit
-        component_messagebox_draw("YYYY|MM|DD:hh|mm|ss"); // FIXME: use rtc_time
+        /* Format RTC date/time as strings */
+        char full_dt[19];
+        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d",
+            rtc_time.year % 10000, (rtc_time.month % 12) + 1, rtc_time.day % 32,
+            rtc_time.hour % 24, rtc_time.min % 60, rtc_time.sec % 60 );
+        component_messagebox_draw(full_dt);
     }
 
     rdpq_detach_show();

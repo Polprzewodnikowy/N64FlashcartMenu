@@ -1,4 +1,5 @@
 #include <time.h>
+#include "../sound.h"
 #include "views.h"
 
 // FIXME: add implementation!
@@ -18,6 +19,7 @@
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     }
 }
 

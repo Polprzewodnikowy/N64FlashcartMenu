@@ -1,4 +1,5 @@
 #include <stdbool.h>
+
 #include <libdragon.h>
 
 #include "mp3_player.h"

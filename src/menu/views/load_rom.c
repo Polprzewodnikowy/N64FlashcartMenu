@@ -1,6 +1,7 @@
 #include "../cart_load.h"
 #include "../rom_info.h"
 #include "boot/boot.h"
+#include "../sound.h"
 #include "views.h"
 
 
@@ -198,8 +199,10 @@ static void process (menu_t *menu) {
         load_pending = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options) {
         component_context_menu_show(&options_context_menu);
+        sound_play_effect(SFX_SETTING);
     }
 }
 

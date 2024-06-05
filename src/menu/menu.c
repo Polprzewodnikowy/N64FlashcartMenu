@@ -14,7 +14,6 @@
 #include "mp3_player.h"
 #include "png_decoder.h"
 #include "settings.h"
-#include "menu.h"
 #include "sound.h"
 #include "usb_comm.h"
 #include "utils/fs.h"
@@ -35,7 +34,6 @@
 static menu_t *menu;
 static tv_type_t tv_type;
 static volatile int frame_counter = 0;
-wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_settings;
 
 extern tv_type_t __boot_tvtype;
 

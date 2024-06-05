@@ -1,4 +1,3 @@
-#include "../menu.h"
 #include "../sound.h"
 #include "views.h"
 

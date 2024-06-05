@@ -7,8 +7,6 @@
 #ifndef MENU_H__
 #define MENU_H__
 
-#include <libdragon.h>
-
 #include "boot/boot.h"
 
 

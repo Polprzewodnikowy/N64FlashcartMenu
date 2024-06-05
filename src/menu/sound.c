@@ -9,7 +9,6 @@
 #define DEFAULT_FREQUENCY   (44100)
 #define NUM_BUFFERS         (4)
 #define NUM_CHANNELS        (3)
-#define SFX_CHANNEL         (2)
 
 static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
 
@@ -42,7 +41,7 @@ void sound_init_mp3_playback (void) {
 
 
 void sound_init_sfx (void) {
-    mixer_ch_set_vol(SFX_CHANNEL, 0.5f, 0.5f);
+    mixer_ch_set_vol(SOUND_SFX_CHANNEL, 0.5f, 0.5f);
     wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
     wav64_open(&sfx_exit, "rom:/back.wav64");
     wav64_open(&sfx_setting, "rom:/settings.wav64");
@@ -54,19 +53,19 @@ void sound_init_sfx (void) {
 void sound_play_effect(sound_effect_t sfx) {
     switch (sfx) {
         case SFX_CURSOR:
-            wav64_play(&sfx_cursor, SFX_CHANNEL);
+            wav64_play(&sfx_cursor, SOUND_SFX_CHANNEL);
             break;
         case SFX_EXIT:
-            wav64_play(&sfx_exit, SFX_CHANNEL);
+            wav64_play(&sfx_exit, SOUND_SFX_CHANNEL);
             break;
         case SFX_SETTING:
-            wav64_play(&sfx_setting, SFX_CHANNEL);
+            wav64_play(&sfx_setting, SOUND_SFX_CHANNEL);
             break;
         case SFX_ENTER:
-            wav64_play(&sfx_enter, SFX_CHANNEL);
+            wav64_play(&sfx_enter, SOUND_SFX_CHANNEL);
             break;
         case SFX_ERROR:
-            wav64_play(&sfx_error, SFX_CHANNEL);
+            wav64_play(&sfx_error, SOUND_SFX_CHANNEL);
             break;
         default:
             break;

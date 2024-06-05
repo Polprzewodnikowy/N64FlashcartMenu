@@ -22,6 +22,11 @@ static void draw (menu_t *menu, surface_t *d) {
         "This feature is not yet supported.\n\n"
     );
 
+    // FIXME: Display:
+    // * cart_type
+    // * Firmware version
+    // * supported features (flashcart_features_t)
+
 
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,

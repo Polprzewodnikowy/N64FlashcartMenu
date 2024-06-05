@@ -165,5 +165,5 @@ Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64Fla
 ## Sounds
 See [License](https://pixabay.com/es/service/license-summary/) for the following sounds.
  - [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
- - [Actions sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
+ - [Actions (Enter, back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
  - [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)

@@ -67,7 +67,6 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
-
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 

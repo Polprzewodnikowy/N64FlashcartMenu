@@ -1,4 +1,5 @@
 #include <stdbool.h>
+
 #include <libdragon.h>
 
 #include "mp3_player.h"
@@ -33,7 +34,6 @@ static void sound_reconfigure (int frequency) {
 void sound_init_default (void) {
     sound_reconfigure(DEFAULT_FREQUENCY);
 }
-
 
 void sound_init_mp3_playback (void) {
     sound_reconfigure(mp3player_get_samplerate());

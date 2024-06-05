@@ -35,7 +35,6 @@ void sound_init_default (void) {
     sound_reconfigure(DEFAULT_FREQUENCY);
 }
 
-
 void sound_init_mp3_playback (void) {
     sound_reconfigure(mp3player_get_samplerate());
 }

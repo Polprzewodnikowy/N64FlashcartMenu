@@ -18,7 +18,8 @@
 /** @brief ROM error enumeration. */
 typedef enum {
     ROM_OK,
-    ROM_ERR_IO,
+    ROM_ERR_LOAD_IO,
+    ROM_ERR_SAVE_IO,
     ROM_ERR_NO_FILE,
 } rom_err_t;
 

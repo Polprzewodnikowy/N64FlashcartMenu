@@ -1,5 +1,6 @@
 #include "../components.h"
 #include "../fonts.h"
+#include "../sound.h"
 #include "constants.h"
 
 
@@ -41,6 +42,7 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
         } else {
             cm->hide_pending = true;
         }
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.enter) {
         if (cm->list[cm->selected].submenu) {
             cm->submenu = cm->list[cm->selected].submenu;
@@ -51,16 +53,19 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
             cm->list[cm->selected].action(menu, cm->list[cm->selected].arg);
             top->hide_pending = true;
         }
+        sound_play_effect(SFX_ENTER);
     } else if (menu->actions.go_up) {
         cm->selected -= 1;
         if (cm->selected < 0) {
             cm->selected = 0;
         }
+        sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.go_down) {
         cm->selected += 1;
         if (cm->selected >= cm->count) {
             cm->selected = (cm->count - 1);
         }
+        sound_play_effect(SFX_CURSOR);
     }
 
     return true;
@@ -81,6 +86,7 @@ void component_context_menu_draw (component_context_menu_t *cm) {
             .height = VISIBLE_AREA_HEIGHT,
             .align = ALIGN_CENTER,
             .valign = VALIGN_CENTER,
+            .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,
         NULL

@@ -1,9 +1,11 @@
 #include "views.h"
+#include "../sound.h"
 
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     }
 }
 
@@ -48,6 +50,7 @@ void view_error_display (menu_t *menu, surface_t *display) {
 }
 
 void menu_show_error (menu_t *menu, char *error_message) {
+    sound_play_effect(SFX_ERROR);
     menu->next_mode = MENU_MODE_ERROR;
     menu->error_message = error_message;
 }

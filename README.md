@@ -25,6 +25,7 @@ An open source menu for N64 flashcarts.
 * Comprehensive ROM information display.
 * Real Time Clock support.
 * Music playback (MP3).
+* Menu sound effects.
 
 
 ### Video showcase (as of Oct 12 2023)
@@ -41,7 +42,7 @@ An open source menu for N64 flashcarts.
 
 
 ## Getting started
-Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances).
+Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances, though EXFAT is fully supported on the SummerCart64).
 
 ### Save files
 By default, all save files (whether `FlashRam`, `SRAM` or `EEPROM`) use the `.sav` extension and match the filename of the ROM.
@@ -174,3 +175,9 @@ Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64Fla
  - [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
  - [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
  - [miniz](https://github.com/richgel999/miniz) (MIT License)
+
+## Sounds
+See [License](https://pixabay.com/en/service/license-summary/) for the following sounds:
+ - [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
+ - [Actions (Enter, back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
+ - [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)

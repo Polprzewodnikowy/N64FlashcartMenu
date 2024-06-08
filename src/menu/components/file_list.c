@@ -71,6 +71,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 .width = FILE_LIST_MAX_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
                 .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
                 .wrap = WRAP_ELLIPSES,
+                .line_spacing = TEXT_LINE_SPACING_ADJUST,
             },
             FNT_DEFAULT,
             file_list_layout
@@ -114,7 +115,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         layout = rdpq_paragraph_builder_end();
 
         int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
-        int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + ((selected - starting_position) * highlight_height);
+        int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
 
         component_box_draw(
             FILE_LIST_HIGHLIGHT_X,
@@ -127,7 +128,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);
@@ -138,6 +139,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
                 .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
                 .align = ALIGN_RIGHT,
                 .wrap = WRAP_ELLIPSES,
+                .line_spacing = TEXT_LINE_SPACING_ADJUST,
             },
             FNT_DEFAULT,
             NULL
@@ -164,7 +166,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);

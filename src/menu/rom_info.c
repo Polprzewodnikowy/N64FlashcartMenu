@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -832,13 +833,21 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
     mini_t *ini = mini_try_load(path_get(overrides_path));
 
     if (!ini) {
-        return ROM_ERR_IO;
+        return ROM_ERR_SAVE_IO;
     }
 
+    int mini_err;
+
     if (value == default_value) {
-        mini_delete_value(ini, NULL, id);
+        mini_err = mini_delete_value(ini, NULL, id);
     } else {
-        mini_set_int(ini, NULL, id, value);
+        mini_err = mini_set_int(ini, NULL, id, value);
+    }
+
+    if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
+        path_free(overrides_path);
+        mini_free(ini);
+        return ROM_ERR_SAVE_IO;
     }
 
     bool empty = mini_empty(ini);
@@ -847,16 +856,16 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
         if (mini_save(ini, MINI_FLAGS_NONE) != MINI_OK) {
             path_free(overrides_path);
             mini_free(ini);
-            return ROM_ERR_IO;
+            return ROM_ERR_SAVE_IO;
         }
     }
 
     mini_free(ini);
 
     if (empty) {
-        if (remove(path_get(overrides_path))) {
+        if (remove(path_get(overrides_path)) && (errno != ENOENT)) {
             path_free(overrides_path);
-            return ROM_ERR_IO;
+            return ROM_ERR_SAVE_IO;
         }
     }
 
@@ -946,10 +955,10 @@ rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
     setbuf(f, NULL);
     if (fread(&rom_header, sizeof(rom_header), 1, f) != 1) {
         fclose(f);
-        return ROM_ERR_IO;
+        return ROM_ERR_LOAD_IO;
     }
     if (fclose(f)) {
-        return ROM_ERR_IO;
+        return ROM_ERR_LOAD_IO;
     }
 
     fix_rom_header_endianness(&rom_header, rom_info);

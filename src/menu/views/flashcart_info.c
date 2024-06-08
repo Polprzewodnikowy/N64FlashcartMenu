@@ -1,9 +1,11 @@
 #include "views.h"
+#include "../sound.h"
 
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     }
 }
 
@@ -17,7 +19,16 @@ static void draw (menu_t *menu, surface_t *d) {
     component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "FLASHCART INFORMATION\n"
+        "\n"
+        "\n"
+        "This feature is not yet supported.\n\n"
     );
+
+    // FIXME: Display:
+    // * cart_type
+    // * Firmware version
+    // * supported features (flashcart_features_t)
+
 
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,

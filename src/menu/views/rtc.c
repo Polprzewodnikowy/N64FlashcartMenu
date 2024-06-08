@@ -1,10 +1,16 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <libdragon.h>
-#include <time.h>
+#include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
 
+#define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
+#define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
+#define CLAMP(x, min, max) (MIN(MAX((x), (min)), (max)))
+
+#define YEAR_MIN 1996
+#define YEAR_MAX 2095
 
 typedef enum {
     RTC_EDIT_YEAR,
@@ -15,7 +21,12 @@ typedef enum {
     RTC_EDIT_SEC,
 } rtc_field_t;
 
-static rtc_time_t rtc_time;
+static const char* const DAYS_OF_WEEK[7] =
+    { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+static struct tm rtc_tm = {0};
+//static bool rtc_detected = false;
+//static bool rtc_persistent = false;
 static bool is_editing_mode = false;
 static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
 
@@ -26,35 +37,34 @@ int wrap( uint16_t val, uint16_t min, uint16_t max )
     return val;
 }
 
-void adjust_rtc_time( rtc_time_t* dt, int incr )
+void adjust_rtc_time( struct tm *t, int incr )
 {
     //uint8_t expected_day = 0; // FIXME: if required.
     switch(editing_field_type)
     {
         case RTC_EDIT_YEAR:
             /* TODO Figure out if the max supported year is larger */
-            dt->year = wrap( (int)dt->year + incr, 1996, 2037 );
+            t->tm_year = wrap( t->tm_year + incr, YEAR_MIN - 1900, YEAR_MAX - 1900 );
             break;
         case RTC_EDIT_MONTH:
-            dt->month = wrap( (int)dt->month + incr, 0, 11 );
+            t->tm_mon = wrap( t->tm_mon + incr, 0, 11 );
             break;
         case RTC_EDIT_DAY:
-            dt->day = wrap( (int)dt->day + incr, 1, 31 );
-            //expected_day = dt->day;
+            t->tm_mday = wrap( t->tm_mday + incr, 1, 31 );
             break;
         case RTC_EDIT_HOUR:
-            dt->hour = wrap( (int)dt->hour + incr, 0, 23 );
+            t->tm_hour = wrap( t->tm_hour + incr, 0, 23 );
             break;
         case RTC_EDIT_MIN:
-            dt->min = wrap( (int)dt->min + incr, 0, 59 );
+            t->tm_min = wrap( t->tm_min + incr, 0, 59 );
             break;
         case RTC_EDIT_SEC:
-            dt->sec = wrap( (int)dt->sec + incr, 0, 59 );
+            t->tm_sec = wrap( t->tm_sec + incr, 0, 59 );
             break;
     }
-    //rtc_normalize_time( dt );
-    /* Handle wrap-around for normalized day of month */
-    //if( expected_day && expected_day != dt->day && incr > 0 ) dt->day = 1;
+    // Recalculate day-of-week and day-of-year
+    time_t timestamp = mktime( t );
+    *t = *gmtime( &timestamp );
 }
 
 static void process (menu_t *menu) {
@@ -76,12 +86,12 @@ static void process (menu_t *menu) {
             else { menu->next_mode = editing_field_type + 1; }
         }
         else if (menu->actions.go_up) {
-            adjust_rtc_time( &rtc_time, +1 );
+            adjust_rtc_time( &rtc_tm, +1 );
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
         else if (menu->actions.go_down) {
-            adjust_rtc_time( &rtc_time, -1 );
+            adjust_rtc_time( &rtc_tm, -1 );
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
@@ -138,9 +148,15 @@ static void draw (menu_t *menu, surface_t *d) {
         // show msgbox for RTC edit
         /* Format RTC date/time as strings */
         char full_dt[19];
-        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d",
-            rtc_time.year % 10000, (rtc_time.month % 12) + 1, rtc_time.day % 32,
-            rtc_time.hour % 24, rtc_time.min % 60, rtc_time.sec % 60 );
+        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d - %s",
+            CLAMP(rtc_tm.tm_year + 1900, YEAR_MIN, YEAR_MAX),
+            CLAMP(rtc_tm.tm_mon + 1, 1, 12),
+            CLAMP(rtc_tm.tm_mday, 1, 31),
+            CLAMP(rtc_tm.tm_hour, 0, 23),
+            CLAMP(rtc_tm.tm_min, 0, 59),
+            CLAMP(rtc_tm.tm_sec, 0, 59),
+            DAYS_OF_WEEK[CLAMP(rtc_tm.tm_wday, 0, 6)]
+            );
         component_messagebox_draw(full_dt);
     }
 

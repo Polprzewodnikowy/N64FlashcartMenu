@@ -147,234 +147,234 @@ typedef struct {
 static const match_t database[] = {
     MATCH_HOMEBREW_HEADER("ED"),                                                                            // Homebrew header (ED)
 
-    MATCH_CHECK_CODE(0x000000004CBC3B56, SAVE_TYPE_SRAM, FEAT_EXP_PAK_REQUIRED | FEAT_64DD_CONVERSION),     // DMTJ 64DD cartridge conversion
+    MATCH_CHECK_CODE(0x000000004CBC3B56, SAVE_TYPE_SRAM_256KBIT, FEAT_EXP_PAK_REQUIRED | FEAT_64DD_CONVERSION),     // DMTJ 64DD cartridge conversion
 
-    MATCH_CHECK_CODE(0x0DD4ABABB5A2A91E, SAVE_TYPE_EEPROM_16K, FEAT_EXP_PAK_REQUIRED),                      // DK Retail kiosk demo
-    MATCH_CHECK_CODE(0xEB85EBC9596682AF, SAVE_TYPE_FLASHRAM, FEAT_NONE),                                    // Doubutsu Banchou
-    MATCH_CHECK_CODE(0x9A746EBF2802EA99, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Toon panic
-    MATCH_CHECK_CODE(0x21548CA921548CA9, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Mini racers
-    MATCH_CHECK_CODE(0xBC9B2CC34ED04DA5, SAVE_TYPE_FLASHRAM, FEAT_NONE),                                    // Starcraft 64 [Prototype 2000]
-    MATCH_CHECK_CODE(0x5D40ED2C10D6ABCF, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Viewpoint 2064
-    MATCH_CHECK_CODE(0x7280E03F497689BA, SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                   // Viewpoint 2064 [ENG patch]
+    MATCH_CHECK_CODE(0x0DD4ABABB5A2A91E, SAVE_TYPE_EEPROM_16KBIT, FEAT_EXP_PAK_REQUIRED),                      // DK Retail kiosk demo
+    MATCH_CHECK_CODE(0xEB85EBC9596682AF, SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                    // Doubutsu Banchou
+    MATCH_CHECK_CODE(0x9A746EBF2802EA99, SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                   // Toon panic
+    MATCH_CHECK_CODE(0x21548CA921548CA9, SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                   // Mini racers
+    MATCH_CHECK_CODE(0xBC9B2CC34ED04DA5, SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                    // Starcraft 64 [Prototype 2000]
+    MATCH_CHECK_CODE(0x5D40ED2C10D6ABCF, SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                   // Viewpoint 2064
+    MATCH_CHECK_CODE(0x7280E03F497689BA, SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                   // Viewpoint 2064 [ENG patch]
 
-    MATCH_CHECK_CODE(0xCDB8B4D08832352D, SAVE_TYPE_SRAM, FEAT_RPAK),                                        // Jet Force Gemini [USA CRACK]
-    MATCH_CHECK_CODE(0xB66E0F7C2709C22F, SAVE_TYPE_SRAM, FEAT_RPAK),                                        // Jet Force Gemini [PAL CRACK]
+    MATCH_CHECK_CODE(0xCDB8B4D08832352D, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                        // Jet Force Gemini [USA CRACK]
+    MATCH_CHECK_CODE(0xB66E0F7C2709C22F, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                        // Jet Force Gemini [PAL CRACK]
 
-    MATCH_CHECK_CODE(0xCE84793D27ECC1AD, SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                // Donkey kong 64 [USA CRACK]
-    MATCH_CHECK_CODE(0x1F95CAAA047FC22A, SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                // Donkey kong 64 [PAL CRACK]
+    MATCH_CHECK_CODE(0xCE84793D27ECC1AD, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                // Donkey kong 64 [USA CRACK]
+    MATCH_CHECK_CODE(0x1F95CAAA047FC22A, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                // Donkey kong 64 [PAL CRACK]
 
-    MATCH_CHECK_CODE(0xE3FF09DFCAE4B0ED, SAVE_TYPE_SRAM, FEAT_RPAK),                                        // Banjo tooie [USA CRACK]
+    MATCH_CHECK_CODE(0xE3FF09DFCAE4B0ED, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                        // Banjo tooie [USA CRACK]
 
-    MATCH_ID_REGION_VERSION("NK4J", 0, SAVE_TYPE_SRAM, FEAT_RPAK),                                          // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
-    MATCH_ID_REGION_VERSION("NK4J", 1, SAVE_TYPE_SRAM, FEAT_RPAK),                                          // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
-    MATCH_ID("NK4", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
+    MATCH_ID_REGION_VERSION("NK4J", 0, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                          // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
+    MATCH_ID_REGION_VERSION("NK4J", 1, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                          // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
+    MATCH_ID("NK4", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
 
-    MATCH_ID_REGION_VERSION("NSMJ", 3, SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                     // Super Mario 64 Shindou Edition
-    MATCH_ID("NSM", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Super Mario 64
+    MATCH_ID_REGION_VERSION("NSMJ", 3, SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                     // Super Mario 64 Shindou Edition
+    MATCH_ID("NSM", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Super Mario 64
 
-    MATCH_ID_REGION_VERSION("NWRJ", 2, SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                         // Wave Race 64 Shindou Edition
-    MATCH_ID("NWR", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Wave Race 64
+    MATCH_ID_REGION_VERSION("NWRJ", 2, SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                         // Wave Race 64 Shindou Edition
+    MATCH_ID("NWR", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Wave Race 64
 
-    MATCH_ID_REGION("N3HJ", SAVE_TYPE_SRAM, FEAT_NONE),                                                     // Ganbare! Nippon! Olympics 2000
+    MATCH_ID_REGION("N3HJ", SAVE_TYPE_SRAM_256KBIT, FEAT_NONE),                                                     // Ganbare! Nippon! Olympics 2000
     MATCH_ID("N3H", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // International Track & Field 2000
 
-    MATCH_ID_REGION("ND3J", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                               // Akumajou Dracula Mokushiroku (J)
+    MATCH_ID_REGION("ND3J", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                               // Akumajou Dracula Mokushiroku (J)
     MATCH_ID("ND3", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Castlevania
 
-    MATCH_ID_REGION("ND4J", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                               // Akumajou Dracula Mokushiroku Gaiden: Legend of Cornell (J)
+    MATCH_ID_REGION("ND4J", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                               // Akumajou Dracula Mokushiroku Gaiden: Legend of Cornell (J)
     MATCH_ID("ND4", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Castlevania - Legacy of Darkness
 
-    MATCH_ID_REGION("NDKJ", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                // Dark Rift [Space Dynamites (J)]
+    MATCH_ID_REGION("NDKJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                // Dark Rift [Space Dynamites (J)]
 
-    MATCH_ID_REGION("NSVE", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                // Space Station Silicon Valley
-    MATCH_ID("NSV", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_EXP_PAK_BROKEN),                                  // Space Station Silicon Valley
+    MATCH_ID_REGION("NSVE", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                // Space Station Silicon Valley
+    MATCH_ID("NSV", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_EXP_PAK_BROKEN),                                  // Space Station Silicon Valley
 
-    MATCH_ID_REGION("NWTJ", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                // Wetrix
+    MATCH_ID_REGION("NWTJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                // Wetrix
     MATCH_ID("NWT", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Wetrix
 
     // EEPROM 4K
-    MATCH_ID("CLB", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_64DD_ENHANCED),                                   // Mario Party (NTSC)
-    MATCH_ID("NAB", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Air Boarder 64
-    MATCH_ID("NAD", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Worms Armageddon (U)
-    MATCH_ID("NAG", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // AeroGauge
-    MATCH_ID("NB6", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_TPAK),                                            // Super B-Daman: Battle Phoenix 64
-    MATCH_ID("NBC", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Blast Corps
-    MATCH_ID("NBD", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Bomberman Hero [Mirian Ojo o Sukue! (J)]
-    MATCH_ID("NBH", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Body Harvest
-    MATCH_ID("NBK", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Banjo-Kazooie [Banjo to Kazooie no Daiboken (J)]
-    MATCH_ID("NBM", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Bomberman 64 [Baku Bomberman (J)]
-    MATCH_ID("NBN", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Bakuretsu Muteki Bangaioh
-    MATCH_ID("NBV", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Bomberman 64: The Second Attack! [Baku Bomberman 2 (J)]
-    MATCH_ID("NCG", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK),                                // Choro Q 64 II - Hacha Mecha Grand Prix Race (J)
-    MATCH_ID("NCH", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Chopper Attack
-    MATCH_ID("NCR", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Penny Racers [Choro Q 64 (J)]
-    MATCH_ID("NCT", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Chameleon Twist
-    MATCH_ID("NCU", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Cruis'n USA
-    MATCH_ID("NCX", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Custom Robo
-    MATCH_ID("NDQ", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Disney's Donald Duck - Goin' Quackers [Quack Attack (E)]
-    MATCH_ID("NDR", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Doraemon: Nobita to 3tsu no Seireiseki
-    MATCH_ID("NDU", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Duck Dodgers starring Daffy Duck
-    MATCH_ID("NDY", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Diddy Kong Racing
-    MATCH_ID("NEA", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // PGA European Tour
-    MATCH_ID("NER", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Aero Fighters Assault [Sonic Wings Assault (J)]
-    MATCH_ID("NF2", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // F-1 World Grand Prix II
-    MATCH_ID("NFG", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Fighter Destiny 2
-    MATCH_ID("NFH", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // In-Fisherman Bass Hunter 64 
-    MATCH_ID("NFW", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // F-1 World Grand Prix
-    MATCH_ID("NFX", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Star Fox 64 [Lylat Wars (E)]
-    MATCH_ID("NFY", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Kakutou Denshou: F-Cup Maniax
-    MATCH_ID("NGE", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // GoldenEye 007
-    MATCH_ID("NGL", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Getter Love!!
-    MATCH_ID("NGU", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Tsumi to Batsu: Hoshi no Keishousha (Sin and Punishment)
-    MATCH_ID("NGV", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Glover
-    MATCH_ID("NHA", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Bomberman 64: Arcade Edition (J)
-    MATCH_ID("NHF", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // 64 Hanafuda: Tenshi no Yakusoku
-    MATCH_ID("NHP", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Heiwa Pachinko World 64
-    MATCH_ID("NIC", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Indy Racing 2000
-    MATCH_ID("NIJ", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_EXP_PAK_RECOMMENDED),                             // Indiana Jones and the Infernal Machine
-    MATCH_ID("NIR", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Utchan Nanchan no Hono no Challenger: Denryuu Ira Ira Bou
-    MATCH_ID("NJM", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Earthworm Jim 3D
-    MATCH_ID("NK2", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Snowboard Kids 2 [Chou Snobow Kids (J)]
-    MATCH_ID("NKA", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Fighters Destiny [Fighting Cup (J)]
-    MATCH_ID("NKI", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Killer Instinct Gold
-    MATCH_ID("NKT", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Mario Kart 64
-    MATCH_ID("NLB", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Mario Party (PAL)
-    MATCH_ID("NLL", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Last Legion UX
-    MATCH_ID("NLR", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Lode Runner 3-D
-    MATCH_ID("NMG", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Monaco Grand Prix [Racing Simulation 2 (G)]
-    MATCH_ID("NMI", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Mission: Impossible
-    MATCH_ID("NML", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_TPAK),                                            // Mickey's Speedway USA [Mickey no Racing Challenge USA (J)]
-    MATCH_ID("NMO", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Monopoly
-    MATCH_ID("NMR", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Multi-Racing Championship
-    MATCH_ID("NMS", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // Morita Shougi 64
-    MATCH_ID("NMU", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Big Mountain 2000
-    MATCH_ID("NMW", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Mario Party 2
-    MATCH_ID("NMZ", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Zool - Majou Tsukai Densetsu (J)
-    MATCH_ID("NN6", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Dr. Mario 64
-    MATCH_ID("NNA", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Star Wars Episode I: Battle for Naboo
-    MATCH_ID("NOS", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // 64 Oozumou
-    MATCH_ID("NP2", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Chou Kuukan Night Pro Yakyuu King 2 (J)
-    MATCH_ID("NPG", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_VRU),                                             // Hey You, Pikachu! [Pikachu Genki Dechu (J)]
-    MATCH_ID("NPT", SAVE_TYPE_EEPROM_4K, FEAT_RPAK | FEAT_TPAK),                                            // Puyo Puyon Party
-    MATCH_ID("NPW", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Pilotwings 64
-    MATCH_ID("NPY", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Puyo Puyo Sun 64
-    MATCH_ID("NRA", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Rally '99 (J)
-    MATCH_ID("NRC", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Top Gear Overdrive
-    MATCH_ID("NRS", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Star Wars: Rogue Squadron [Shutsugeki! Rogue Chuutai (J)]
-    MATCH_ID("NS3", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // AI Shougi 3
-    MATCH_ID("NS6", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Star Soldier: Vanishing Earth
-    MATCH_ID("NSA", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Sonic Wings Assault (J)
-    MATCH_ID("NSC", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Starshot: Space Circus Fever
-    MATCH_ID("NSN", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Snow Speeder (J)
-    MATCH_ID("NSS", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Super Robot Spirits
-    MATCH_ID("NSU", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Rocket: Robot on Wheels
-    MATCH_ID("NSW", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Star Wars: Shadows of the Empire [Teikoku no Kage (J)]
-    MATCH_ID("NT6", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Tetris 64
-    MATCH_ID("NTB", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Transformers: Beast Wars Metals 64 (J)
-    MATCH_ID("NTC", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // 64 Trump Collection
-    MATCH_ID("NTJ", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Tom & Jerry in Fists of Fury
-    MATCH_ID("NTM", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Mischief Makers [Yuke Yuke!! Trouble Makers (J)]
-    MATCH_ID("NTN", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // All Star Tennis '99
-    MATCH_ID("NTP", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Tetrisphere
-    MATCH_ID("NTR", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Top Gear Rally (J + E)
-    MATCH_ID("NTW", SAVE_TYPE_EEPROM_4K, FEAT_CPAK),                                                        // 64 de Hakken!! Tamagotchi
-    MATCH_ID("NTX", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Taz Express
-    MATCH_ID("NVL", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // V-Rally Edition '99
-    MATCH_ID("NVY", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // V-Rally Edition '99 (J)
-    MATCH_ID("NWC", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Wild Choppers
-    MATCH_ID("NWQ", SAVE_TYPE_EEPROM_4K, FEAT_CPAK | FEAT_RPAK),                                            // Rally Challenge 2000
-    MATCH_ID("NWU", SAVE_TYPE_EEPROM_4K, FEAT_NONE),                                                        // Worms Armageddon (E)
-    MATCH_ID("NXO", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Cruis'n Exotica
-    MATCH_ID("NYK", SAVE_TYPE_EEPROM_4K, FEAT_RPAK),                                                        // Yakouchuu II: Satsujin Kouro
+    MATCH_ID("CLB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                   // Mario Party (NTSC)
+    MATCH_ID("NAB", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Air Boarder 64
+    MATCH_ID("NAD", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Worms Armageddon (U)
+    MATCH_ID("NAG", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // AeroGauge
+    MATCH_ID("NB6", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_TPAK),                                            // Super B-Daman: Battle Phoenix 64
+    MATCH_ID("NBC", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Blast Corps
+    MATCH_ID("NBD", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Bomberman Hero [Mirian Ojo o Sukue! (J)]
+    MATCH_ID("NBH", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Body Harvest
+    MATCH_ID("NBK", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Banjo-Kazooie [Banjo to Kazooie no Daiboken (J)]
+    MATCH_ID("NBM", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Bomberman 64 [Baku Bomberman (J)]
+    MATCH_ID("NBN", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Bakuretsu Muteki Bangaioh
+    MATCH_ID("NBV", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Bomberman 64: The Second Attack! [Baku Bomberman 2 (J)]
+    MATCH_ID("NCG", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK),                                // Choro Q 64 II - Hacha Mecha Grand Prix Race (J)
+    MATCH_ID("NCH", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Chopper Attack
+    MATCH_ID("NCR", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Penny Racers [Choro Q 64 (J)]
+    MATCH_ID("NCT", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Chameleon Twist
+    MATCH_ID("NCU", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Cruis'n USA
+    MATCH_ID("NCX", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Custom Robo
+    MATCH_ID("NDQ", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Disney's Donald Duck - Goin' Quackers [Quack Attack (E)]
+    MATCH_ID("NDR", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Doraemon: Nobita to 3tsu no Seireiseki
+    MATCH_ID("NDU", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Duck Dodgers starring Daffy Duck
+    MATCH_ID("NDY", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Diddy Kong Racing
+    MATCH_ID("NEA", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // PGA European Tour
+    MATCH_ID("NER", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Aero Fighters Assault [Sonic Wings Assault (J)]
+    MATCH_ID("NF2", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // F-1 World Grand Prix II
+    MATCH_ID("NFG", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Fighter Destiny 2
+    MATCH_ID("NFH", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // In-Fisherman Bass Hunter 64
+    MATCH_ID("NFW", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // F-1 World Grand Prix
+    MATCH_ID("NFX", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Star Fox 64 [Lylat Wars (E)]
+    MATCH_ID("NFY", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Kakutou Denshou: F-Cup Maniax
+    MATCH_ID("NGE", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // GoldenEye 007
+    MATCH_ID("NGL", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Getter Love!!
+    MATCH_ID("NGU", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Tsumi to Batsu: Hoshi no Keishousha (Sin and Punishment)
+    MATCH_ID("NGV", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Glover
+    MATCH_ID("NHA", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Bomberman 64: Arcade Edition (J)
+    MATCH_ID("NHF", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // 64 Hanafuda: Tenshi no Yakusoku
+    MATCH_ID("NHP", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Heiwa Pachinko World 64
+    MATCH_ID("NIC", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Indy Racing 2000
+    MATCH_ID("NIJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_EXP_PAK_RECOMMENDED),                             // Indiana Jones and the Infernal Machine
+    MATCH_ID("NIR", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Utchan Nanchan no Hono no Challenger: Denryuu Ira Ira Bou
+    MATCH_ID("NJM", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Earthworm Jim 3D
+    MATCH_ID("NK2", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Snowboard Kids 2 [Chou Snobow Kids (J)]
+    MATCH_ID("NKA", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Fighters Destiny [Fighting Cup (J)]
+    MATCH_ID("NKI", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Killer Instinct Gold
+    MATCH_ID("NKT", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Mario Kart 64
+    MATCH_ID("NLB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Mario Party (PAL)
+    MATCH_ID("NLL", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Last Legion UX
+    MATCH_ID("NLR", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Lode Runner 3-D
+    MATCH_ID("NMG", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Monaco Grand Prix [Racing Simulation 2 (G)]
+    MATCH_ID("NMI", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Mission: Impossible
+    MATCH_ID("NML", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_TPAK),                                            // Mickey's Speedway USA [Mickey no Racing Challenge USA (J)]
+    MATCH_ID("NMO", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Monopoly
+    MATCH_ID("NMR", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Multi-Racing Championship
+    MATCH_ID("NMS", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // Morita Shougi 64
+    MATCH_ID("NMU", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Big Mountain 2000
+    MATCH_ID("NMW", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Mario Party 2
+    MATCH_ID("NMZ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Zool - Majou Tsukai Densetsu (J)
+    MATCH_ID("NN6", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Dr. Mario 64
+    MATCH_ID("NNA", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Star Wars Episode I: Battle for Naboo
+    MATCH_ID("NOS", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // 64 Oozumou
+    MATCH_ID("NP2", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Chou Kuukan Night Pro Yakyuu King 2 (J)
+    MATCH_ID("NPG", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_VRU),                                             // Hey You, Pikachu! [Pikachu Genki Dechu (J)]
+    MATCH_ID("NPT", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_TPAK),                                            // Puyo Puyon Party
+    MATCH_ID("NPW", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Pilotwings 64
+    MATCH_ID("NPY", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Puyo Puyo Sun 64
+    MATCH_ID("NRA", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Rally '99 (J)
+    MATCH_ID("NRC", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Top Gear Overdrive
+    MATCH_ID("NRS", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Star Wars: Rogue Squadron [Shutsugeki! Rogue Chuutai (J)]
+    MATCH_ID("NS3", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // AI Shougi 3
+    MATCH_ID("NS6", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Star Soldier: Vanishing Earth
+    MATCH_ID("NSA", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Sonic Wings Assault (J)
+    MATCH_ID("NSC", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Starshot: Space Circus Fever
+    MATCH_ID("NSN", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Snow Speeder (J)
+    MATCH_ID("NSS", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Super Robot Spirits
+    MATCH_ID("NSU", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Rocket: Robot on Wheels
+    MATCH_ID("NSW", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Star Wars: Shadows of the Empire [Teikoku no Kage (J)]
+    MATCH_ID("NT6", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Tetris 64
+    MATCH_ID("NTB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Transformers: Beast Wars Metals 64 (J)
+    MATCH_ID("NTC", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // 64 Trump Collection
+    MATCH_ID("NTJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Tom & Jerry in Fists of Fury
+    MATCH_ID("NTM", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Mischief Makers [Yuke Yuke!! Trouble Makers (J)]
+    MATCH_ID("NTN", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // All Star Tennis '99
+    MATCH_ID("NTP", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Tetrisphere
+    MATCH_ID("NTR", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Top Gear Rally (J + E)
+    MATCH_ID("NTW", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK),                                                        // 64 de Hakken!! Tamagotchi
+    MATCH_ID("NTX", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Taz Express
+    MATCH_ID("NVL", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // V-Rally Edition '99
+    MATCH_ID("NVY", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // V-Rally Edition '99 (J)
+    MATCH_ID("NWC", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Wild Choppers
+    MATCH_ID("NWQ", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Rally Challenge 2000
+    MATCH_ID("NWU", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                        // Worms Armageddon (E)
+    MATCH_ID("NXO", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Cruis'n Exotica
+    MATCH_ID("NYK", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                        // Yakouchuu II: Satsujin Kouro
 
     // EEPROM 16K
-    MATCH_ID("N3D", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Doraemon 3: Nobita no Machi SOS!
-    MATCH_ID("NB7", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Banjo-Tooie [Banjo to Kazooie no Daiboken 2 (J)]
-    MATCH_ID("NCW", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Cruis'n World
-    MATCH_ID("NCZ", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Custom Robo V2
-    MATCH_ID("ND2", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Doraemon 2: Nobita to Hikari no Shinden
-    MATCH_ID("ND6", SAVE_TYPE_EEPROM_16K, FEAT_RPAK | FEAT_VRU),                                            // Densha de Go! 64
-    MATCH_ID("NDO", SAVE_TYPE_EEPROM_16K, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                               // Donkey Kong 64
-    MATCH_ID("NEP", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Star Wars Episode I: Racer
-    MATCH_ID("NEV", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Neon Genesis Evangelion
-    MATCH_ID("NFU", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Conker's Bad Fur Day
-    MATCH_ID("NGC", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_RPAK),                                           // GT 64: Championship Edition
-    MATCH_ID("NGT", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_RPAK),                                           // City Tour GrandPrix - Zen Nihon GT Senshuken
-    MATCH_ID("NIM", SAVE_TYPE_EEPROM_16K, FEAT_NONE),                                                       // Ide Yosuke no Mahjong Juku
-    MATCH_ID("NM8", SAVE_TYPE_EEPROM_16K, FEAT_RPAK | FEAT_TPAK),                                           // Mario Tennis
-    MATCH_ID("NMV", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Mario Party 3
-    MATCH_ID("NMX", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_RPAK),                                           // Excitebike 64
-    MATCH_ID("NNB", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_RPAK),                                           // Kobe Bryant in NBA Courtside
-    MATCH_ID("NPD", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK | FEAT_EXP_PAK_RECOMMENDED),    // Perfect Dark
-    MATCH_ID("NPP", SAVE_TYPE_EEPROM_16K, FEAT_CPAK),                                                       // Parlor! Pro 64: Pachinko Jikki Simulation Game
-    MATCH_ID("NR7", SAVE_TYPE_EEPROM_16K, FEAT_TPAK),                                                       // Robot Poncots 64: 7tsu no Umi no Caramel
-    MATCH_ID("NRZ", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Ridge Racer 64
-    MATCH_ID("NUB", SAVE_TYPE_EEPROM_16K, FEAT_CPAK | FEAT_TPAK),                                           // PD Ultraman Battle Collection 64
-    MATCH_ID("NYS", SAVE_TYPE_EEPROM_16K, FEAT_RPAK),                                                       // Yoshi's Story
+    MATCH_ID("N3D", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Doraemon 3: Nobita no Machi SOS!
+    MATCH_ID("NB7", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Banjo-Tooie [Banjo to Kazooie no Daiboken 2 (J)]
+    MATCH_ID("NCW", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Cruis'n World
+    MATCH_ID("NCZ", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Custom Robo V2
+    MATCH_ID("ND2", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Doraemon 2: Nobita to Hikari no Shinden
+    MATCH_ID("ND6", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK | FEAT_VRU),                                            // Densha de Go! 64
+    MATCH_ID("NDO", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                               // Donkey Kong 64
+    MATCH_ID("NEP", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Star Wars Episode I: Racer
+    MATCH_ID("NEV", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Neon Genesis Evangelion
+    MATCH_ID("NFU", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Conker's Bad Fur Day
+    MATCH_ID("NGC", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                           // GT 64: Championship Edition
+    MATCH_ID("NGT", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                           // City Tour GrandPrix - Zen Nihon GT Senshuken
+    MATCH_ID("NIM", SAVE_TYPE_EEPROM_16KBIT, FEAT_NONE),                                                       // Ide Yosuke no Mahjong Juku
+    MATCH_ID("NM8", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK | FEAT_TPAK),                                           // Mario Tennis
+    MATCH_ID("NMV", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Mario Party 3
+    MATCH_ID("NMX", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                           // Excitebike 64
+    MATCH_ID("NNB", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                           // Kobe Bryant in NBA Courtside
+    MATCH_ID("NPD", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK | FEAT_EXP_PAK_RECOMMENDED),    // Perfect Dark
+    MATCH_ID("NPP", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK),                                                       // Parlor! Pro 64: Pachinko Jikki Simulation Game
+    MATCH_ID("NR7", SAVE_TYPE_EEPROM_16KBIT, FEAT_TPAK),                                                       // Robot Poncots 64: 7tsu no Umi no Caramel
+    MATCH_ID("NRZ", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Ridge Racer 64
+    MATCH_ID("NUB", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_TPAK),                                           // PD Ultraman Battle Collection 64
+    MATCH_ID("NYS", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                       // Yoshi's Story
 
     // SRAM 256K
-    MATCH_ID("CFZ", SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_64DD_ENHANCED),                                        // F-Zero X (J)
-    MATCH_ID("CPS", SAVE_TYPE_SRAM, FEAT_TPAK | FEAT_64DD_ENHANCED),                                        // Pocket Monsters Stadium (J)
-    MATCH_ID("CZL", SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_64DD_ENHANCED),                                        // Legend of Zelda: Ocarina of Time [Zelda no Densetsu - Toki no Ocarina (J)]
-    MATCH_ID("NA2", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // Virtual Pro Wrestling 2
-    MATCH_ID("NAL", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Super Smash Bros. [Nintendo All-Star! Dairantou Smash Brothers (J)]
-    MATCH_ID("NB5", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Biohazard 2 (J)
-    MATCH_ID("NDD", SAVE_TYPE_SRAM, FEAT_EXP_PAK_REQUIRED | FEAT_64DD_CONVERSION),                          // 64DD Conversion Rom
-    MATCH_ID("NFZ", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // F-Zero X (U + E)
-    MATCH_ID("NG6", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Ganmare Goemon: Dero Dero Douchuu Obake Tenkomori
-    MATCH_ID("NGP", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Goemon: Mononoke Sugoroku
-    MATCH_ID("NHY", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // Hybrid Heaven (J)
-    MATCH_ID("NIB", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Itoi Shigesato no Bass Tsuri No. 1 Kettei Ban!
-    MATCH_ID("NJ5", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu 5
-    MATCH_ID("NJG", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Jinsei Game 64
-    MATCH_ID("NKG", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // Major League Baseball featuring Ken Griffey Jr.
-    MATCH_ID("NMF", SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_TPAK),                                                 // Mario Golf 64
-    MATCH_ID("NOB", SAVE_TYPE_SRAM, FEAT_NONE),                                                             // Ogre Battle 64: Person of Lordly Caliber
-    MATCH_ID("NP4", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu 4
-    MATCH_ID("NP6", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_TPAK),                                                 // Jikkyou Powerful Pro Yakyuu 6
-    MATCH_ID("NPA", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_TPAK),                                                 // Jikkyou Powerful Pro Yakyuu 2000
-    MATCH_ID("NPE", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu Basic Ban 2001
-    MATCH_ID("NPM", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Premier Manager 64
-    MATCH_ID("NPS", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // Jikkyou J.League 1999: Perfect Striker 2
-    MATCH_ID("NRE", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Resident Evil 2
-    MATCH_ID("NRI", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // New Tetris, The
-    MATCH_ID("NS4", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_TPAK),                                                 // Super Robot Taisen 64
-    MATCH_ID("NSI", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Fushigi no Dungeon: Fuurai no Shiren 2
-    MATCH_ID("NT3", SAVE_TYPE_SRAM, FEAT_CPAK),                                                             // Shin Nihon Pro Wrestling - Toukon Road 2 - The Next Generation (J)
-    MATCH_ID("NTE", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // 1080 Snowboarding
-    MATCH_ID("NUM", SAVE_TYPE_SRAM, FEAT_RPAK | FEAT_TPAK),                                                 // Nushi Zuri 64: Shiokaze ni Notte
-    MATCH_ID("NUT", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK),                                     // Nushi Zuri 64
-    MATCH_ID("NVB", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Bass Rush - ECOGEAR PowerWorm Championship (J)
-    MATCH_ID("NVP", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // Virtual Pro Wrestling 64
-    MATCH_ID("NW2", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // WCW-nWo Revenge
-    MATCH_ID("NWL", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Waialae Country Club: True Golf Classics
-    MATCH_ID("NWX", SAVE_TYPE_SRAM, FEAT_CPAK | FEAT_RPAK),                                                 // WWF WrestleMania 2000
-    MATCH_ID("NYW", SAVE_TYPE_SRAM, FEAT_NONE),                                                             // Harvest Moon 64
-    MATCH_ID("NZL", SAVE_TYPE_SRAM, FEAT_RPAK),                                                             // Legend of Zelda: Ocarina of Time (E)
+    MATCH_ID("CFZ", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                        // F-Zero X (J)
+    MATCH_ID("CPS", SAVE_TYPE_SRAM_256KBIT, FEAT_TPAK | FEAT_64DD_ENHANCED),                                        // Pocket Monsters Stadium (J)
+    MATCH_ID("CZL", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                        // Legend of Zelda: Ocarina of Time [Zelda no Densetsu - Toki no Ocarina (J)]
+    MATCH_ID("NA2", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // Virtual Pro Wrestling 2
+    MATCH_ID("NAL", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Super Smash Bros. [Nintendo All-Star! Dairantou Smash Brothers (J)]
+    MATCH_ID("NB5", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Biohazard 2 (J)
+    MATCH_ID("NDD", SAVE_TYPE_SRAM_256KBIT, FEAT_EXP_PAK_REQUIRED | FEAT_64DD_CONVERSION),                          // 64DD Conversion Rom
+    MATCH_ID("NFZ", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // F-Zero X (U + E)
+    MATCH_ID("NG6", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Ganmare Goemon: Dero Dero Douchuu Obake Tenkomori
+    MATCH_ID("NGP", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Goemon: Mononoke Sugoroku
+    MATCH_ID("NHY", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // Hybrid Heaven (J)
+    MATCH_ID("NIB", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Itoi Shigesato no Bass Tsuri No. 1 Kettei Ban!
+    MATCH_ID("NJ5", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu 5
+    MATCH_ID("NJG", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Jinsei Game 64
+    MATCH_ID("NKG", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // Major League Baseball featuring Ken Griffey Jr.
+    MATCH_ID("NMF", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_TPAK),                                                 // Mario Golf 64
+    MATCH_ID("NOB", SAVE_TYPE_SRAM_256KBIT, FEAT_NONE),                                                             // Ogre Battle 64: Person of Lordly Caliber
+    MATCH_ID("NP4", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu 4
+    MATCH_ID("NP6", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_TPAK),                                                 // Jikkyou Powerful Pro Yakyuu 6
+    MATCH_ID("NPA", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_TPAK),                                                 // Jikkyou Powerful Pro Yakyuu 2000
+    MATCH_ID("NPE", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Jikkyou Powerful Pro Yakyuu Basic Ban 2001
+    MATCH_ID("NPM", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Premier Manager 64
+    MATCH_ID("NPS", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // Jikkyou J.League 1999: Perfect Striker 2
+    MATCH_ID("NRE", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Resident Evil 2
+    MATCH_ID("NRI", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // New Tetris, The
+    MATCH_ID("NS4", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_TPAK),                                                 // Super Robot Taisen 64
+    MATCH_ID("NSI", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Fushigi no Dungeon: Fuurai no Shiren 2
+    MATCH_ID("NT3", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK),                                                             // Shin Nihon Pro Wrestling - Toukon Road 2 - The Next Generation (J)
+    MATCH_ID("NTE", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // 1080 Snowboarding
+    MATCH_ID("NUM", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_TPAK),                                                 // Nushi Zuri 64: Shiokaze ni Notte
+    MATCH_ID("NUT", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK),                                     // Nushi Zuri 64
+    MATCH_ID("NVB", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Bass Rush - ECOGEAR PowerWorm Championship (J)
+    MATCH_ID("NVP", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // Virtual Pro Wrestling 64
+    MATCH_ID("NW2", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // WCW-nWo Revenge
+    MATCH_ID("NWL", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Waialae Country Club: True Golf Classics
+    MATCH_ID("NWX", SAVE_TYPE_SRAM_256KBIT, FEAT_CPAK | FEAT_RPAK),                                                 // WWF WrestleMania 2000
+    MATCH_ID("NYW", SAVE_TYPE_SRAM_256KBIT, FEAT_NONE),                                                             // Harvest Moon 64
+    MATCH_ID("NZL", SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                                             // Legend of Zelda: Ocarina of Time (E)
 
     // SRAM 768K
     MATCH_ID("CDZ", SAVE_TYPE_SRAM_BANKED, FEAT_RPAK | FEAT_64DD_ENHANCED),                                 // Dezaemon 3D
 
     // FLASHRAM
-    MATCH_ID("CP2", SAVE_TYPE_FLASHRAM, FEAT_TPAK | FEAT_64DD_ENHANCED),                                    // Pocket Monsters Stadium 2 (J)
-    MATCH_ID("NAF", SAVE_TYPE_FLASHRAM, FEAT_CPAK | FEAT_RTC),                                              // Doubutsu no Mori
-    MATCH_ID("NCC", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Command & Conquer
-    MATCH_ID("NCV", SAVE_TYPE_FLASHRAM, FEAT_NONE),                                                         // Cubivore (Translation)
-    MATCH_ID("NCK", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // NBA Courtside 2 featuring Kobe Bryant
-    MATCH_ID("NDA", SAVE_TYPE_FLASHRAM, FEAT_CPAK),                                                         // Derby Stallion 64
-    MATCH_ID("NDP", SAVE_TYPE_FLASHRAM, FEAT_EXP_PAK_REQUIRED),                                             // Dinosaur Planet (Unlicensed)
-    MATCH_ID("NJF", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Jet Force Gemini [Star Twins (J)]
-    MATCH_ID("NKJ", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Ken Griffey Jr.'s Slugfest
-    MATCH_ID("NM6", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Mega Man 64
-    MATCH_ID("NMQ", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Paper Mario
-    MATCH_ID("NPF", SAVE_TYPE_FLASHRAM, FEAT_NONE),                                                         // Pokemon Snap [Pocket Monsters Snap (J)]
-    MATCH_ID("NPN", SAVE_TYPE_FLASHRAM, FEAT_NONE),                                                         // Pokemon Puzzle League
-    MATCH_ID("NPO", SAVE_TYPE_FLASHRAM, FEAT_TPAK),                                                         // Pokemon Stadium
-    MATCH_ID("NRH", SAVE_TYPE_FLASHRAM, FEAT_RPAK),                                                         // Rockman Dash - Hagane no Boukenshin (J)
-    MATCH_ID("NSQ", SAVE_TYPE_FLASHRAM, FEAT_RPAK | FEAT_EXP_PAK_RECOMMENDED),                              // StarCraft 64
-    MATCH_ID("NT9", SAVE_TYPE_FLASHRAM, FEAT_NONE),                                                         // Tigger's Honey Hunt
-    MATCH_ID("NW4", SAVE_TYPE_FLASHRAM, FEAT_CPAK | FEAT_RPAK),                                             // WWF No Mercy
-    MATCH_ID("NZS", SAVE_TYPE_FLASHRAM, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                                 // Legend of Zelda: Majora's Mask [Zelda no Densetsu - Mujura no Kamen (J)]
+    MATCH_ID("CP2", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_TPAK | FEAT_64DD_ENHANCED),                                    // Pocket Monsters Stadium 2 (J)
+    MATCH_ID("NAF", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_CPAK | FEAT_RTC),                                              // Doubutsu no Mori
+    MATCH_ID("NCC", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Command & Conquer
+    MATCH_ID("NCV", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                                         // Cubivore (Translation)
+    MATCH_ID("NCK", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // NBA Courtside 2 featuring Kobe Bryant
+    MATCH_ID("NDA", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_CPAK),                                                         // Derby Stallion 64
+    MATCH_ID("NDP", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_EXP_PAK_REQUIRED),                                             // Dinosaur Planet (Unlicensed)
+    MATCH_ID("NJF", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Jet Force Gemini [Star Twins (J)]
+    MATCH_ID("NKJ", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Ken Griffey Jr.'s Slugfest
+    MATCH_ID("NM6", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Mega Man 64
+    MATCH_ID("NMQ", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Paper Mario
+    MATCH_ID("NPF", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                                         // Pokemon Snap [Pocket Monsters Snap (J)]
+    MATCH_ID("NPN", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                                         // Pokemon Puzzle League
+    MATCH_ID("NPO", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_TPAK),                                                         // Pokemon Stadium
+    MATCH_ID("NRH", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK),                                                         // Rockman Dash - Hagane no Boukenshin (J)
+    MATCH_ID("NSQ", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK | FEAT_EXP_PAK_RECOMMENDED),                              // StarCraft 64
+    MATCH_ID("NT9", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_NONE),                                                         // Tigger's Honey Hunt
+    MATCH_ID("NW4", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_CPAK | FEAT_RPAK),                                             // WWF No Mercy
+    MATCH_ID("NZS", SAVE_TYPE_FLASHRAM_1MBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),                                 // Legend of Zelda: Majora's Mask [Zelda no Densetsu - Mujura no Kamen (J)]
 
     MATCH_ID("NP3", SAVE_TYPE_FLASHRAM_PKST2, FEAT_TPAK),                                                   // Pokemon Stadium 2 [Pocket Monsters Stadium - Kin Gin (J)]
 
@@ -463,7 +463,7 @@ static const match_t database[] = {
     MATCH_ID("NH9", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // NHL Breakaway '99
     MATCH_ID("NHC", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Hercules - The Legendary Journeys
     MATCH_ID("NHG", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // F-1 Pole Position 64
-    MATCH_ID("NHG", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Human Grand Prix - New Generation 
+    MATCH_ID("NHG", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Human Grand Prix - New Generation
     MATCH_ID("NHK", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Hiryuu no Ken Twin
     MATCH_ID("NHL", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // NHL Breakaway '98
     MATCH_ID("NHM", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Mia Hamm Soccer 64
@@ -474,7 +474,7 @@ static const match_t database[] = {
     MATCH_ID("NHV", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Hybrid Heaven (U + E)
     MATCH_ID("NHW", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Hot Wheels Turbo Racing
     MATCH_ID("NHX", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Hexen
-    MATCH_ID("NIS", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // International Superstar Soccer 2000 
+    MATCH_ID("NIS", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // International Superstar Soccer 2000
     MATCH_ID("NIV", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                 // Space Invaders
     MATCH_ID("NJ2", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Wonder Project J2 - Koruro no Mori no Jozet (J)
     MATCH_ID("NJ3", SAVE_TYPE_NONE, FEAT_CPAK),                                                             // Jikkyou World Soccer 3
@@ -750,12 +750,12 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         }
         switch ((rom_header->version & 0xF0) >> 4) {
             case 0: match->data.save = SAVE_TYPE_NONE; break;
-            case 1: match->data.save = SAVE_TYPE_EEPROM_4K; break;
-            case 2: match->data.save = SAVE_TYPE_EEPROM_16K; break;
-            case 3: match->data.save = SAVE_TYPE_SRAM; break;
+            case 1: match->data.save = SAVE_TYPE_EEPROM_4KBIT; break;
+            case 2: match->data.save = SAVE_TYPE_EEPROM_16KBIT; break;
+            case 3: match->data.save = SAVE_TYPE_SRAM_256KBIT; break;
             case 4: match->data.save = SAVE_TYPE_SRAM_BANKED; break;
-            case 5: match->data.save = SAVE_TYPE_FLASHRAM; break;
-            case 6: match->data.save = SAVE_TYPE_SRAM_128K; break;
+            case 5: match->data.save = SAVE_TYPE_FLASHRAM_1MBIT; break;
+            case 6: match->data.save = SAVE_TYPE_SRAM_1MBIT; break;
             default: match->data.save = SAVE_TYPE_NONE; break;
         }
     }

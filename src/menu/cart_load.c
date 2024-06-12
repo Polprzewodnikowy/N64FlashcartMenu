@@ -35,12 +35,12 @@ static bool create_saves_subdirectory (path_t *path) {
 
 static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
     switch (save_type) {
-        case SAVE_TYPE_EEPROM_4K: return FLASHCART_SAVE_TYPE_EEPROM_4K;
-        case SAVE_TYPE_EEPROM_16K: return FLASHCART_SAVE_TYPE_EEPROM_16K;
-        case SAVE_TYPE_SRAM: return FLASHCART_SAVE_TYPE_SRAM;
+        case SAVE_TYPE_EEPROM_4KBIT: return FLASHCART_SAVE_TYPE_EEPROM_4KBIT;
+        case SAVE_TYPE_EEPROM_16KBIT: return FLASHCART_SAVE_TYPE_EEPROM_16KBIT;
+        case SAVE_TYPE_SRAM_256KBIT: return FLASHCART_SAVE_TYPE_SRAM_256KBIT;
         case SAVE_TYPE_SRAM_BANKED: return FLASHCART_SAVE_TYPE_SRAM_BANKED;
-        case SAVE_TYPE_SRAM_128K: return FLASHCART_SAVE_TYPE_SRAM_128K;
-        case SAVE_TYPE_FLASHRAM: return FLASHCART_SAVE_TYPE_FLASHRAM;
+        case SAVE_TYPE_SRAM_1MBIT: return FLASHCART_SAVE_TYPE_SRAM_1MBIT;
+        case SAVE_TYPE_FLASHRAM_1MBIT: return FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
         case SAVE_TYPE_FLASHRAM_PKST2: return FLASHCART_SAVE_TYPE_FLASHRAM_PKST2;
         default: return FLASHCART_SAVE_TYPE_NONE;
     }
@@ -166,19 +166,19 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM;
+            save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM;
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "TotalSMS.z64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM;
+            save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
     }
 

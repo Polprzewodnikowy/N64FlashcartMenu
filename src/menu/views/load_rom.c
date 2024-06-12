@@ -68,12 +68,12 @@ static const char *format_rom_destination_market (rom_destination_type_t market_
 static const char *format_rom_save_type (rom_save_type_t save_type) {
     switch (save_type) {
         case SAVE_TYPE_NONE: return "None";
-        case SAVE_TYPE_EEPROM_4K: return "EEPROM 4K";
-        case SAVE_TYPE_EEPROM_16K: return "EEPROM 16K";
-        case SAVE_TYPE_SRAM: return "SRAM";
-        case SAVE_TYPE_SRAM_BANKED: return "SRAM Banked";
-        case SAVE_TYPE_SRAM_128K: return "SRAM 128K";
-        case SAVE_TYPE_FLASHRAM: return "FlashRAM";
+        case SAVE_TYPE_EEPROM_4KBIT: return "EEPROM 4kbit";
+        case SAVE_TYPE_EEPROM_16KBIT: return "EEPROM 16kbit";
+        case SAVE_TYPE_SRAM_256KBIT: return "SRAM 256kbit";
+        case SAVE_TYPE_SRAM_BANKED: return "SRAM 768kbit / 3 banks";
+        case SAVE_TYPE_SRAM_1MBIT: return "SRAM 1Mbit";
+        case SAVE_TYPE_FLASHRAM_1MBIT: return "FlashRAM 1Mbit";
         case SAVE_TYPE_FLASHRAM_PKST2: return "FlashRAM (Pokemon Stadium 2)";
         default: return "Unknown";
     }
@@ -165,12 +165,12 @@ static component_context_menu_t set_cic_type_context_menu = { .list = {
 static component_context_menu_t set_save_type_context_menu = { .list = {
     { .text = "Automatic", .action = set_save_type, .arg = (void *) (SAVE_TYPE_AUTOMATIC) },
     { .text = "None", .action = set_save_type, .arg = (void *) (SAVE_TYPE_NONE) },
-    { .text = "EEPROM 4kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_4K) },
-    { .text = "EEPROM 16kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_16K) },
-    { .text = "SRAM 256kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM) },
-    { .text = "SRAM 768kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_BANKED) },
-    { .text = "SRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_128K) },
-    { .text = "FlashRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_FLASHRAM) },
+    { .text = "EEPROM 4kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_4KBIT) },
+    { .text = "EEPROM 16kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_EEPROM_16KBIT) },
+    { .text = "SRAM 256kbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_256KBIT) },
+    { .text = "SRAM 768kbit / 3 banks", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_BANKED) },
+    { .text = "SRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_1MBIT) },
+    { .text = "FlashRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_FLASHRAM_1MBIT) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

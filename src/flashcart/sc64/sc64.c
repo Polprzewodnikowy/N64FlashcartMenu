@@ -388,12 +388,12 @@ static flashcart_err_t sc64_load_save (char *save_path) {
     sc64_save_type_t type = (sc64_save_type_t) (value);
 
     switch (type) {
-        case SAVE_TYPE_EEPROM_4K:
-        case SAVE_TYPE_EEPROM_16K:
+        case SAVE_TYPE_EEPROM_4KBIT:
+        case SAVE_TYPE_EEPROM_16KBIT:
             address = (void *) (EEPROM_ADDRESS);
             break;
-        case SAVE_TYPE_SRAM:
-        case SAVE_TYPE_FLASHRAM:
+        case SAVE_TYPE_SRAM_256KBIT:
+        case SAVE_TYPE_FLASHRAM_1MBIT:
         case SAVE_TYPE_SRAM_BANKED:
             address = (void *) (SRAM_FLASHRAM_ADDRESS);
             break;
@@ -515,26 +515,26 @@ static flashcart_err_t sc64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_NONE:
             type = SAVE_TYPE_NONE;
             break;
-        case FLASHCART_SAVE_TYPE_EEPROM_4K:
-            type = SAVE_TYPE_EEPROM_4K;
+        case FLASHCART_SAVE_TYPE_EEPROM_4KBIT:
+            type = SAVE_TYPE_EEPROM_4KBIT;
             break;
-        case FLASHCART_SAVE_TYPE_EEPROM_16K:
-            type = SAVE_TYPE_EEPROM_16K;
+        case FLASHCART_SAVE_TYPE_EEPROM_16KBIT:
+            type = SAVE_TYPE_EEPROM_16KBIT;
             break;
-        case FLASHCART_SAVE_TYPE_SRAM:
-            type = SAVE_TYPE_SRAM;
+        case FLASHCART_SAVE_TYPE_SRAM_256KBIT:
+            type = SAVE_TYPE_SRAM_256KBIT;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_BANKED:
             type = SAVE_TYPE_SRAM_BANKED;
             break;
-        case FLASHCART_SAVE_TYPE_SRAM_128K:
-            type = SAVE_TYPE_SRAM_128K;
+        case FLASHCART_SAVE_TYPE_SRAM_1MBIT:
+            type = SAVE_TYPE_SRAM_1MBIT;
             break;
-        case FLASHCART_SAVE_TYPE_FLASHRAM:
-            type = SAVE_TYPE_FLASHRAM;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT:
+            type = SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
-            type = SAVE_TYPE_FLASHRAM;
+            type = SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         default:
             return FLASHCART_ERR_ARGS;

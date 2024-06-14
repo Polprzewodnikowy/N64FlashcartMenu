@@ -114,12 +114,12 @@ typedef enum {
 typedef enum {
     /** @brief There is no expected save type. */
     SAVE_TYPE_NONE = 0,
-    SAVE_TYPE_EEPROM_4K = 1,
-    SAVE_TYPE_EEPROM_16K = 2,
-    SAVE_TYPE_SRAM = 3,
+    SAVE_TYPE_EEPROM_4KBIT = 1,
+    SAVE_TYPE_EEPROM_16KBIT = 2,
+    SAVE_TYPE_SRAM_256KBIT = 3,
     SAVE_TYPE_SRAM_BANKED = 4,
-    SAVE_TYPE_SRAM_128K = 5,
-    SAVE_TYPE_FLASHRAM = 6,
+    SAVE_TYPE_SRAM_1MBIT = 5,
+    SAVE_TYPE_FLASHRAM_1MBIT = 6,
     SAVE_TYPE_FLASHRAM_PKST2 = 7,
     SAVE_TYPE_AUTOMATIC = -1,
 } rom_save_type_t;

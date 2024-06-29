@@ -26,7 +26,14 @@ static const char *hidden_paths[] = {
     "/ED64",
     "/ED64P",
     "/sc64menu.n64",
+    // Windows garbage
     "/System Volume Information",
+    // macOS garbage
+    "/.fseventsd",
+    "/.Spotlight-V100",
+    "/.Trashes",
+    "/.VolumeIcon.icns",
+    "/.metadata_never_index",
     NULL,
 };
 

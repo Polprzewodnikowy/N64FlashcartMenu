@@ -28,13 +28,14 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-static void set_bgm_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.bgm_enabled = (bool) (arg);
+static void set_sound_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.sound_enabled = (bool) (arg);
     settings_save(&menu->settings);
 }
 
-static void set_sound_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.sound_enabled = (bool) (arg);
+#ifdef BETA_SETTINGS
+static void set_bgm_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.bgm_enabled = (bool) (arg);
     settings_save(&menu->settings);
 }
 
@@ -47,6 +48,7 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 //     // FIXME: add implementation
 //     menu->browser.reload = true;
 // }
+#endif
 
 
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
@@ -73,6 +75,7 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+#ifdef BETA_SETTINGS
 static component_context_menu_t set_bgm_enabled_type_context_menu = { .list = {
     {.text = "On", .action = set_bgm_enabled_type, .arg = (void *) (true) },
     {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *) (false) },
@@ -84,15 +87,18 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
     {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *) (false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
+#endif
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_sound_enabled_type_context_menu },
+    { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+#ifdef BETA_SETTINGS
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
-    { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     // { .text = "Restore Defaults", .action = set_use_default_settings },
+#endif
 
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
@@ -134,19 +140,23 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "**   Sound Effects     : %s\n"
-        "***  Background Music  : %s\n"
-        "***  Rumble Feedback   : %s\n\n\n"
+#ifdef BETA_SETTINGS
+        "     Background Music  : %s\n"
+        "     Rumble Feedback   : %s\n\n\n"
+#endif
         "Note: Certain settings have the following caveats:\n\n"
         "*    Settable from file browser options.\n"
-        "**   Requires a flashcart reboot.\n"
-        "***  Not currently supported.\n",
+        "**   Requires a flashcart reboot.\n",
         menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.sound_enabled),
+        format_switch(menu->settings.sound_enabled)
+#ifdef BETA_SETTINGS
+        ,
         format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
+#endif
     );
 
 

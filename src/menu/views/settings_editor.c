@@ -138,8 +138,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "Rumble Feedback***:      %s\n\n"
         "Note: Certain settings are only adjustable\n"
         "directly in the 'menu/config.ini' file.\n\n"
-        "*  Set using browser submenu.\n"
-        "** Currently requires a flashcart reboot.\n"
+        "*   Set using browser submenu.\n"
+        "**  Currently requires a flashcart reboot.\n"
         "*** Not currently supported.\n",
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),

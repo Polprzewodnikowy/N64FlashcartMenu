@@ -135,9 +135,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "    Use Saves folder:       %s\n"
         "**  Menu Sound Effects:     %s\n"
         "*** Background Music:       %s\n"
-        "*** Rumble Feedback:        %s\n\n"
-        "Note: Certain settings are only adjustable\n"
-        "directly in the 'menu/config.ini' file.\n\n"
+        "*** Rumble Feedback:        %s\n\n\n"
+        "Note: Certain settings have the following caveats:\n\n"
         "*   Set using browser submenu.\n"
         "**  Currently requires a flashcart reboot.\n"
         "*** Not currently supported.\n",

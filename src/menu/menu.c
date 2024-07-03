@@ -67,9 +67,6 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
-    // Ensure that any joypad rumble pak is in a good state when loading the menu.
-    // this can be especially important if a previous ROM has crashed or the console
-    // was reset and left it in an active state.
     JOYPAD_PORT_FOREACH (port) {
         joypad_set_rumble_active(port, false);
     }

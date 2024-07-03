@@ -108,6 +108,7 @@ static void process (menu_t *menu) {
         if (settings_changed) {
             settings_save(&menu->settings);
             settings_changed = false;
+            sound_play_effect(SFX_ENTER);
         }
     }
 }

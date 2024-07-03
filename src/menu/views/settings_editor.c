@@ -127,18 +127,20 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "\n"
-        "To change the settings, press 'R'.\n\n"
-        "Note: Certain settings are only adjustable\n"
-        "directly in the 'menu/config.ini' file.\n\n"
+        "\n\n"
+        "To change the settings, press 'A'.\n\n"
         "pal60_enabled:          %s\n"
         "show_protected_entries: %s\n"
-        "default_directory:      %s\n"
+        "default_directory*:     %s\n"
         "use_saves_folder:       %s\n"
         "bgm_enabled:            %s\n"
-        "sound_enabled:          %s\n"
-        "rumble_enabled:         %s\n",
+        "sound_enabled**:        %s\n"
+        "rumble_enabled:         %s\n\n"
+        "Note: Certain settings are only adjustable\n"
+        "directly in the 'menu/config.ini' file.\n\n"
+        "*  Set using other menu.\n"
+        "** Currently requires a flashcart reboot.\n\n"
+        "To write the settings permanently, press 'R`.\n",
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         menu->settings.default_directory,

@@ -129,24 +129,24 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "To change the menu settings, press 'A'.\n\n"
-        "PAL60 Mode:              %s\n"
-        "Show Hidden Files:       %s\n"
-        "Default Menu Directory*: %s\n"
-        "Use Saves folder:        %s\n"
-        "Background Music***:     %s\n"
-        "Menu Sound Effects**:    %s\n"
-        "Rumble Feedback***:      %s\n\n"
+        "*   Default Menu Directory: %s\n"
+        "    PAL60 Mode:             %s\n"
+        "    Show Hidden Files:      %s\n"
+        "    Use Saves folder:       %s\n"
+        "**  Menu Sound Effects:     %s\n"
+        "*** Background Music:       %s\n"
+        "*** Rumble Feedback:        %s\n\n"
         "Note: Certain settings are only adjustable\n"
         "directly in the 'menu/config.ini' file.\n\n"
         "*   Set using browser submenu.\n"
         "**  Currently requires a flashcart reboot.\n"
         "*** Not currently supported.\n",
+        menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
-        menu->settings.default_directory,
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.sound_enabled),
+        format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
     );
 

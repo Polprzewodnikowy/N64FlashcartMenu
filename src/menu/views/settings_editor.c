@@ -142,8 +142,9 @@ static void draw (menu_t *menu, surface_t *d) {
         "**   Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "     Background Music  : %s\n"
-        "     Rumble Feedback   : %s\n\n\n"
+        "     Rumble Feedback   : %s\n"
 #endif
+        "\n\n"
         "Note: Certain settings have the following caveats:\n\n"
         "*    Settable from file browser options.\n"
         "**   Requires a flashcart reboot.\n",

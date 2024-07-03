@@ -23,13 +23,23 @@ static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void set_use_saves_folder_type (menu_t *menu, void *arg) {
+    menu->settings.use_saves_folder = (bool) (arg);
+    settings_save(&menu->settings);
+}
+
+static void set_bgm_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.bgm_enabled = (bool) (arg);
+    settings_save(&menu->settings);
+}
+
 static void set_sound_enabled_type (menu_t *menu, void *arg) {
     menu->settings.sound_enabled = (bool) (arg);
     settings_save(&menu->settings);
 }
 
-static void set_use_saves_folder_type (menu_t *menu, void *arg) {
-    menu->settings.use_saves_folder = (bool) (arg);
+static void set_rumble_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.rumble_enabled = (bool) (arg);
     settings_save(&menu->settings);
 }
 
@@ -63,12 +73,26 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+static component_context_menu_t set_bgm_enabled_type_context_menu = { .list = {
+    {.text = "On", .action = set_bgm_enabled_type, .arg = (void *) (true) },
+    {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *) (false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_rumble_enabled_type_context_menu = { .list = {
+    {.text = "On", .action = set_rumble_enabled_type, .arg = (void *) (true) },
+    {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *) (false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Set PAL60 Mode", .submenu = &set_pal60_type_context_menu },
+    { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
-    { .text = "Set Menu Sound", .submenu = &set_sound_enabled_type_context_menu },
-    { .text = "Use saves folder", .submenu = &set_use_saves_folder_type_context_menu },
-    // { .text = "Restore defaults", .action = set_use_default_settings },
+    { .text = "Sound Effects", .submenu = &set_sound_enabled_type_context_menu },
+    { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
+    { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
+    { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+    // { .text = "Restore Defaults", .action = set_use_default_settings },
 
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
@@ -97,25 +121,26 @@ static void draw (menu_t *menu, surface_t *d) {
 
 	component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
-        "SETTINGS EDITOR\n"
+        "MENU SETTINGS EDITOR\n"
         "\n"
     );
 
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
-        "To change the settings, press 'A'.\n\n"
-        "pal60_enabled:          %s\n"
-        "show_protected_entries: %s\n"
-        "default_directory*:     %s\n"
-        "use_saves_folder:       %s\n"
-        "bgm_enabled:            %s\n"
-        "sound_enabled**:        %s\n"
-        "rumble_enabled:         %s\n\n"
+        "To change the menu settings, press 'A'.\n\n"
+        "PAL60 Mode:              %s\n"
+        "Show Hidden Files:       %s\n"
+        "Default Menu Directory*: %s\n"
+        "Use Saves folder:        %s\n"
+        "Background Music***:     %s\n"
+        "Menu Sound Effects**:    %s\n"
+        "Rumble Feedback***:      %s\n\n"
         "Note: Certain settings are only adjustable\n"
         "directly in the 'menu/config.ini' file.\n\n"
         "*  Set using browser submenu.\n"
-        "** Currently requires a flashcart reboot.\n",
+        "** Currently requires a flashcart reboot.\n"
+        "*** Not currently supported.\n",
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         menu->settings.default_directory,

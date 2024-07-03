@@ -3,7 +3,6 @@
 #include "../settings.h"
 #include "views.h"
 
-static bool settings_changed = false;
 
 static const char *format_switch (bool state) {
     switch (state) {
@@ -13,49 +12,32 @@ static const char *format_switch (bool state) {
 }
 
 static void set_pal60_type (menu_t *menu, void *arg) {
-    bool initial_setting_val = menu->settings.pal60_enabled;
     menu->settings.pal60_enabled = (bool) (arg);
-    if (initial_setting_val != menu->settings.pal60_enabled) {
-        settings_changed = true;
-    }
-    
-    menu->browser.reload = true;
+    settings_save(&menu->settings);
 }
 
 static void set_protected_entries_type (menu_t *menu, void *arg) {
-    bool initial_setting_val = menu->settings.show_protected_entries;
     menu->settings.show_protected_entries = (bool) (arg);
-    if (initial_setting_val != menu->settings.show_protected_entries) {
-        settings_changed = true;
-    }
+    settings_save(&menu->settings);
 
     menu->browser.reload = true;
 }
 
 static void set_sound_enabled_type (menu_t *menu, void *arg) {
-    bool initial_setting_val = menu->settings.sound_enabled;
     menu->settings.sound_enabled = (bool) (arg);
-    if (initial_setting_val != menu->settings.sound_enabled) {
-        settings_changed = true;
-    }
-
-    menu->browser.reload = true;
+    settings_save(&menu->settings);
 }
 
 static void set_use_saves_folder_type (menu_t *menu, void *arg) {
-    bool initial_setting_val = menu->settings.use_saves_folder;
     menu->settings.use_saves_folder = (bool) (arg);
-    if (initial_setting_val != menu->settings.use_saves_folder) {
-        settings_changed = true;
-    }
-
-    menu->browser.reload = true;
+    settings_save(&menu->settings);
 }
 
 // static void set_use_default_settings (menu_t *menu, void *arg) {
 //     // FIXME: add implementation
 //     menu->browser.reload = true;
 // }
+
 
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *) (true) },
@@ -101,15 +83,8 @@ static void process (menu_t *menu) {
         component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
-        // FIXME: should we allow preview in the menu, or forget them?
         menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
-    } else if (menu->actions.options) {
-        if (settings_changed) {
-            settings_save(&menu->settings);
-            settings_changed = false;
-            sound_play_effect(SFX_ENTER);
-        }
     }
 }
 
@@ -140,8 +115,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Note: Certain settings are only adjustable\n"
         "directly in the 'menu/config.ini' file.\n\n"
         "*  Set using other menu.\n"
-        "** Currently requires a flashcart reboot.\n\n"
-        "To write the settings permanently, press 'R`.\n",
+        "** Currently requires a flashcart reboot.\n",
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         menu->settings.default_directory,
@@ -157,14 +131,6 @@ static void draw (menu_t *menu, surface_t *d) {
         "A: Change\n"
         "B: Back"
     );
-
-    if (settings_changed) {
-        component_actions_bar_text_draw(
-                ALIGN_RIGHT, VALIGN_TOP,
-                "\n"
-                "R: Save"
-            );
-    }
 
     component_context_menu_draw(&options_context_menu);
 

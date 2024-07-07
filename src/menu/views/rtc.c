@@ -119,6 +119,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "ADJUST REAL TIME CLOCK\n"
         "\n"
         "\n"
+        "To set the date and time, please use the PC terminal\n"
+        "application and set via USB or a game that uses it.\n\n"
         "Current date & time: %s\n",
         menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
     );

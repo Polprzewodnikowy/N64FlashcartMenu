@@ -136,7 +136,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
-        "To change the menu settings, press 'A'.\n\n"
+        "To change the following menu settings, press 'A':\n"
         "     PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"

@@ -140,7 +140,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "     PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
-        "*    Sound Effects     : %s\n"
+        "     Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"

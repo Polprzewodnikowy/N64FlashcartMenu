@@ -67,6 +67,10 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
+    JOYPAD_PORT_FOREACH (port) {
+        joypad_set_rumble_active(port, false);
+    }
+
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 

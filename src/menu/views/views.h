@@ -10,6 +10,7 @@
 
 #include "../components.h"
 #include "../menu_state.h"
+#include <libdragon.h>
 
 
 /**

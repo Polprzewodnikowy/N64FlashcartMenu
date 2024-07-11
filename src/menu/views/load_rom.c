@@ -237,7 +237,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "Description:\n\n None.\n\n\n"
+            "Description:\n None.\n\n\n"
             "Title:              %.20s\n"
             "Game code:          %c%c%c%c\n"
             "Media type:         %s\n"
@@ -247,6 +247,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "TV type:            %s\n"
             "Expansion PAK:      %s\n"
             "CIC:                %s\n"
+            "Patches:            Off\n"
             "GS/AR Cheats:       Off\n",
             menu->load.rom_info.title,
             menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],

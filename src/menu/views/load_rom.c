@@ -275,7 +275,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_boxart_draw(boxart);
 
-            if (show_extra_info_message) {
+        if (show_extra_info_message) {
             component_messagebox_draw(
                 "EXTRA ROM INFO\n"
                 "\n"

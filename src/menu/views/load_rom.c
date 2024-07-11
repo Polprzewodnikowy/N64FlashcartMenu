@@ -4,7 +4,7 @@
 #include "../sound.h"
 #include "views.h"
 
-
+static bool show_extra_info_message = false;
 static bool load_pending;
 static component_boxart_t *boxart;
 
@@ -203,6 +203,13 @@ static void process (menu_t *menu) {
     } else if (menu->actions.options) {
         component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.lz_context) {
+        if (show_extra_info_message) {
+            show_extra_info_message = false;
+        } else {
+            show_extra_info_message = true;
+        }
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -240,10 +247,7 @@ static void draw (menu_t *menu, surface_t *d) {
             " Save type: %s\n"
             " TV type: %s\n"
             " Expansion PAK: %s\n"
-            " CIC: %s\n"
-            " Boot address: 0x%08lX\n"
-            " SDK version: %.1f%c\n"
-            " Clock Rate: %.2fMHz\n",
+            " CIC: %s\n",
             format_rom_endianness(menu->load.rom_info.endianness),
             menu->load.rom_info.title,
             menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
@@ -254,10 +258,7 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
-            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
-            menu->load.rom_info.boot_address,
-            (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
-            menu->load.rom_info.clock_rate
+            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info))
         );
 
         component_actions_bar_text_draw(
@@ -268,11 +269,25 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
-            "\n"
-            "R: Options"
+            "L|Z: Extra Info\n"
+            "R:    Options"
         );
 
         component_boxart_draw(boxart);
+
+            if (show_extra_info_message) {
+            component_messagebox_draw(
+                "EXTRA ROM INFO\n"
+                "\n"
+                " Boot address: 0x%08lX\n"
+                " SDK version: %.1f%c\n"
+                " Clock Rate: %.2fMHz\n\n\n"
+                "Press L|Z to return.\n",
+                menu->load.rom_info.boot_address,
+                (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
+                menu->load.rom_info.clock_rate
+            );
+        }
 
         component_context_menu_draw(&options_context_menu);
     }

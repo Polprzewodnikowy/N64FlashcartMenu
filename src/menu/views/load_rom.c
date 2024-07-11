@@ -247,7 +247,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "TV type:            %s\n"
             "Expansion PAK:      %s\n"
             "CIC:                %s\n"
-            "Cheats:             Off\n",
+            "GS/AR Cheats:       Off\n",
             menu->load.rom_info.title,
             menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
             format_rom_media_type(menu->load.rom_info.category_code),

@@ -260,7 +260,7 @@ static void draw (menu_t *menu, surface_t *d) {
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
-            "B: Exit"
+            "B: Back"
         );
 
         component_actions_bar_text_draw(

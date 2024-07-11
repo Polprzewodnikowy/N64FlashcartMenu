@@ -237,6 +237,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
+            "Description:\n\n None.\n\n"
             "Title:              %.20s\n"
             "Game code:          %c%c%c%c\n"
             "Media type:         %s\n"

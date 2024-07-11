@@ -238,12 +238,12 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Description:\n None.\n\n\n\n\n\n\n\n"
-            "Expansion PAK:      %s\n"
-            "TV type:            %s\n"
-            "CIC:                %s\n"
-            "GS/AR Cheats:       Off\n"
-            "Patches:            Off\n"
-            "Save type:          %s\n",
+            "Expansion PAK: %s\n"
+            "TV type:       %s\n"
+            "CIC:           %s\n"
+            "GS/AR Cheats:  Off\n"
+            "Patches:       Off\n"
+            "Save type:     %s\n",
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),

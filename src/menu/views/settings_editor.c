@@ -137,7 +137,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n\n"
         "  Default Directory : %s\n\n"
         "To change the following menu settings, press 'A':\n"
-        "     PAL60 Mode        : %s\n"
+        "*    PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Sound Effects     : %s\n"
@@ -145,6 +145,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
 #endif
+        "Note: Certain settings have the following caveats:\n\n"
+        "*    Requires a flashcart reboot.\n",
         "\n",
         menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),

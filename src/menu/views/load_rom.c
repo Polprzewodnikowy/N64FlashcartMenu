@@ -237,34 +237,23 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            " Endianness: %s\n"
-            " Title: %.20s\n"
-            " Game code: %c%c%c%c\n"
-            " Media type: %s\n"
-            " Destination market: %s\n"
-            " Version: %hhu\n"
-            " Check code: 0x%016llX\n"
-            " Save type: %s\n"
-            " TV type: %s\n"
-            " Expansion PAK: %s\n"
-            " CIC: %s\n",
-            format_rom_endianness(menu->load.rom_info.endianness),
-            menu->load.rom_info.title,
-            menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
-            format_rom_media_type(menu->load.rom_info.category_code),
-            format_rom_destination_market(menu->load.rom_info.destination_code),
-            menu->load.rom_info.version,
-            menu->load.rom_info.check_code,
+            "Description:\n None.\n\n\n\n\n\n\n\n"
+            "Expansion PAK:      %s\n"
+            "Save type:          %s\n"
+            "TV type:            %s\n"
+            "CIC:                %s\n"
+            "GS/AR Cheats:       Off\n"
+            "Patches:            Off\n",
+            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
-            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_cic_type(rom_info_get_cic_type(&menu->load.rom_info))
         );
 
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
-            "B: Exit"
+            "B: Back"
         );
 
         component_actions_bar_text_draw(
@@ -279,10 +268,24 @@ static void draw (menu_t *menu, surface_t *d) {
             component_messagebox_draw(
                 "EXTRA ROM INFO\n"
                 "\n"
-                " Boot address: 0x%08lX\n"
-                " SDK version: %.1f%c\n"
-                " Clock Rate: %.2fMHz\n\n\n"
+                "Endianness: %s\n"
+                "Title: %.20s\n"
+                "Game code: %c%c%c%c\n"
+                "Media type: %s\n"
+                "Variant: %s\n"
+                "Version: %hhu\n"
+                "Check code: 0x%016llX\n"
+                "Boot address: 0x%08lX\n"
+                "SDK version: %.1f%c\n"
+                "Clock Rate: %.2fMHz\n\n\n"
                 "Press L|Z to return.\n",
+                format_rom_endianness(menu->load.rom_info.endianness),
+                menu->load.rom_info.title,
+                menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
+                format_rom_media_type(menu->load.rom_info.category_code),
+                format_rom_destination_market(menu->load.rom_info.destination_code),
+                menu->load.rom_info.version,
+                menu->load.rom_info.check_code,
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
                 menu->load.rom_info.clock_rate

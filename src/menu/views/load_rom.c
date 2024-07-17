@@ -66,16 +66,16 @@ static const char *format_rom_destination_market (rom_destination_type_t market_
     }
 }
 
-static const char *format_rom_save_type (rom_save_type_t save_type) {
+static const char *format_rom_save_type (rom_save_type_t save_type, bool supports_cpak) {
     switch (save_type) {
-        case SAVE_TYPE_NONE: return "None";
-        case SAVE_TYPE_EEPROM_4KBIT: return "EEPROM 4kbit";
-        case SAVE_TYPE_EEPROM_16KBIT: return "EEPROM 16kbit";
-        case SAVE_TYPE_SRAM_256KBIT: return "SRAM 256kbit";
-        case SAVE_TYPE_SRAM_BANKED: return "SRAM 768kbit / 3 banks";
-        case SAVE_TYPE_SRAM_1MBIT: return "SRAM 1Mbit";
-        case SAVE_TYPE_FLASHRAM_1MBIT: return "FlashRAM 1Mbit";
-        case SAVE_TYPE_FLASHRAM_PKST2: return "FlashRAM (Pokemon Stadium 2)";
+        case SAVE_TYPE_NONE: return supports_cpak ? "Controller PAK" : "None";
+        case SAVE_TYPE_EEPROM_4KBIT: return supports_cpak ?   "EEPROM 4kbit | Controller PAK" : "EEPROM 4kbit";
+        case SAVE_TYPE_EEPROM_16KBIT: return supports_cpak ?  "EEPROM 16kbit | Controller PAK" : "EEPROM 16kbit";
+        case SAVE_TYPE_SRAM_256KBIT: return supports_cpak ?   "SRAM 256kbit | Controller PAK" : "SRAM 256kbit";
+        case SAVE_TYPE_SRAM_BANKED: return supports_cpak ?    "SRAM 768kbit / 3 banks | Controller PAK" : "SRAM 768kbit / 3 banks";
+        case SAVE_TYPE_SRAM_1MBIT: return supports_cpak ?     "SRAM 1Mbit | Controller PAK" : "SRAM 1Mbit";
+        case SAVE_TYPE_FLASHRAM_1MBIT: return supports_cpak ? "FlashRAM 1Mbit | Controller PAK" : "FlashRAM 1Mbit";
+        case SAVE_TYPE_FLASHRAM_PKST2: return supports_cpak ? "FlashRAM (Pokemon Stadium 2) | Controller PAK" : "FlashRAM (Pokemon Stadium 2)";
         default: return "Unknown";
     }
 }
@@ -238,16 +238,16 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Description:\n None.\n\n\n\n\n\n\n\n"
-            "Expansion PAK:      %s\n"
-            "Save type:          %s\n"
-            "TV type:            %s\n"
-            "CIC:                %s\n"
-            "GS/AR Cheats:       Off\n"
-            "Patches:            Off\n",
+            "Expansion PAK: %s\n"
+            "TV type:       %s\n"
+            "CIC:           %s\n"
+            "GS/AR Cheats:  Off\n"
+            "Patches:       Off\n"
+            "Save type:     %s\n",
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
-            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
-            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info))
+            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
+            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
         component_actions_bar_text_draw(

@@ -30,6 +30,7 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
 
 static void set_sound_enabled_type (menu_t *menu, void *arg) {
     menu->settings.sound_enabled = (bool) (arg);
+    sound_use_sfx(menu->settings.sound_enabled);
     settings_save(&menu->settings);
 }
 
@@ -134,19 +135,19 @@ static void draw (menu_t *menu, surface_t *d) {
     component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
-        "     Default Directory : %s\n\n"
-        "To change the menu settings, press 'A'.\n\n"
-        "     PAL60 Mode        : %s\n"
+        "  Default Directory : %s\n\n"
+        "To change the following menu settings, press 'A':\n"
+        "*    PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
-        "*    Sound Effects     : %s\n"
+        "     Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
 #endif
-        "\n\n"
         "Note: Certain settings have the following caveats:\n\n"
         "*    Requires a flashcart reboot.\n",
+        "\n",
         menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),

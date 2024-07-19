@@ -4,7 +4,7 @@
 #include "../sound.h"
 #include "views.h"
 
-
+static bool show_extra_info_message = false;
 static bool load_pending;
 static component_boxart_t *boxart;
 
@@ -66,16 +66,16 @@ static const char *format_rom_destination_market (rom_destination_type_t market_
     }
 }
 
-static const char *format_rom_save_type (rom_save_type_t save_type) {
+static const char *format_rom_save_type (rom_save_type_t save_type, bool supports_cpak) {
     switch (save_type) {
-        case SAVE_TYPE_NONE: return "None";
-        case SAVE_TYPE_EEPROM_4KBIT: return "EEPROM 4kbit";
-        case SAVE_TYPE_EEPROM_16KBIT: return "EEPROM 16kbit";
-        case SAVE_TYPE_SRAM_256KBIT: return "SRAM 256kbit";
-        case SAVE_TYPE_SRAM_BANKED: return "SRAM 768kbit / 3 banks";
-        case SAVE_TYPE_SRAM_1MBIT: return "SRAM 1Mbit";
-        case SAVE_TYPE_FLASHRAM_1MBIT: return "FlashRAM 1Mbit";
-        case SAVE_TYPE_FLASHRAM_PKST2: return "FlashRAM (Pokemon Stadium 2)";
+        case SAVE_TYPE_NONE: return supports_cpak ? "Controller PAK" : "None";
+        case SAVE_TYPE_EEPROM_4KBIT: return supports_cpak ?   "EEPROM 4kbit | Controller PAK" : "EEPROM 4kbit";
+        case SAVE_TYPE_EEPROM_16KBIT: return supports_cpak ?  "EEPROM 16kbit | Controller PAK" : "EEPROM 16kbit";
+        case SAVE_TYPE_SRAM_256KBIT: return supports_cpak ?   "SRAM 256kbit | Controller PAK" : "SRAM 256kbit";
+        case SAVE_TYPE_SRAM_BANKED: return supports_cpak ?    "SRAM 768kbit / 3 banks | Controller PAK" : "SRAM 768kbit / 3 banks";
+        case SAVE_TYPE_SRAM_1MBIT: return supports_cpak ?     "SRAM 1Mbit | Controller PAK" : "SRAM 1Mbit";
+        case SAVE_TYPE_FLASHRAM_1MBIT: return supports_cpak ? "FlashRAM 1Mbit | Controller PAK" : "FlashRAM 1Mbit";
+        case SAVE_TYPE_FLASHRAM_PKST2: return supports_cpak ? "FlashRAM (Pokemon Stadium 2) | Controller PAK" : "FlashRAM (Pokemon Stadium 2)";
         default: return "Unknown";
     }
 }
@@ -203,6 +203,13 @@ static void process (menu_t *menu) {
     } else if (menu->actions.options) {
         component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.lz_context) {
+        if (show_extra_info_message) {
+            show_extra_info_message = false;
+        } else {
+            show_extra_info_message = true;
+        }
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -230,49 +237,60 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            " Endianness: %s\n"
-            " Title: %.20s\n"
-            " Game code: %c%c%c%c\n"
-            " Media type: %s\n"
-            " Destination market: %s\n"
-            " Version: %hhu\n"
-            " Check code: 0x%016llX\n"
-            " Save type: %s\n"
-            " TV type: %s\n"
-            " Expansion PAK: %s\n"
-            " CIC: %s\n"
-            " Boot address: 0x%08lX\n"
-            " SDK version: %.1f%c\n"
-            " Clock Rate: %.2fMHz\n",
-            format_rom_endianness(menu->load.rom_info.endianness),
-            menu->load.rom_info.title,
-            menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
-            format_rom_media_type(menu->load.rom_info.category_code),
-            format_rom_destination_market(menu->load.rom_info.destination_code),
-            menu->load.rom_info.version,
-            menu->load.rom_info.check_code,
-            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info)),
-            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
+            "Description:\n None.\n\n\n\n\n\n\n\n"
+            "Expansion PAK: %s\n"
+            "TV type:       %s\n"
+            "CIC:           %s\n"
+            "GS/AR Cheats:  Off\n"
+            "Patches:       Off\n"
+            "Save type:     %s\n",
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
+            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
-            menu->load.rom_info.boot_address,
-            (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
-            menu->load.rom_info.clock_rate
+            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
-            "B: Exit"
+            "B: Back"
         );
 
         component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
-            "\n"
-            "R: Options"
+            "L|Z: Extra Info\n"
+            "R:    Options"
         );
 
         component_boxart_draw(boxart);
+
+        if (show_extra_info_message) {
+            component_messagebox_draw(
+                "EXTRA ROM INFO\n"
+                "\n"
+                "Endianness: %s\n"
+                "Title: %.20s\n"
+                "Game code: %c%c%c%c\n"
+                "Media type: %s\n"
+                "Variant: %s\n"
+                "Version: %hhu\n"
+                "Check code: 0x%016llX\n"
+                "Boot address: 0x%08lX\n"
+                "SDK version: %.1f%c\n"
+                "Clock Rate: %.2fMHz\n\n\n"
+                "Press L|Z to return.\n",
+                format_rom_endianness(menu->load.rom_info.endianness),
+                menu->load.rom_info.title,
+                menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
+                format_rom_media_type(menu->load.rom_info.category_code),
+                format_rom_destination_market(menu->load.rom_info.destination_code),
+                menu->load.rom_info.version,
+                menu->load.rom_info.check_code,
+                menu->load.rom_info.boot_address,
+                (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
+                menu->load.rom_info.clock_rate
+            );
+        }
 
         component_context_menu_draw(&options_context_menu);
     }

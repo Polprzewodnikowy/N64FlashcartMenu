@@ -27,9 +27,7 @@ static void exec_cpak_backup(menu_t *menu, uint8_t port) {
     path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
     directory_create(path_get(path));
 
-    // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
-    sprintf(file_name, "%s-%s.%s", CPAK_BACKUP_FILE_PREFIX, "1", CPAK_BACKUP_FILE_EXT);
-
+    sprintf(file_name, "%s-%lld.%s", CPAK_BACKUP_FILE_PREFIX, time( NULL ), CPAK_BACKUP_FILE_EXT);
 
     path_push(path, file_name);
 

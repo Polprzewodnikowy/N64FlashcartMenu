@@ -23,7 +23,7 @@ cpak_err_t cpak_info_load(uint8_t port, cpak_info_t *cpak_info)
         cpak_info->entries[j] = entry;
     }
 
-    cpak_info->free_space = get_mempak_free_space(port);
+    cpak_info->free_pages = get_mempak_free_space(port);
 
     return CONTROLLER_PAK_OK;
 }

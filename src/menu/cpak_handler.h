@@ -21,7 +21,7 @@ typedef enum {
 /** @brief Controller Pak Information Structure. */
 typedef struct {
     entry_structure_t entries[16];
-    int free_space;
+    int free_pages;
 
 } cpak_info_t;
 

@@ -4,28 +4,49 @@
 
 #define CPAK_BACKUP_DIRECTORY    "/cpak"
 #define CPAK_BACKUP_FILE_PREFIX  "cpak_backup"
-#define CPAK_BACKUP_FILE_EXT     ".pak"
+#define CPAK_BACKUP_FILE_EXT     "pak"
 
 
 static int accessory_is_cpak[4];
 static cpak_info_t cpak_info;
+static bool backup_in_progress = false;
 
+
+static void exec_cpak_backup(menu_t *menu) {
+    backup_in_progress = true;
+    char file_name[128];
+                
+    path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
+    directory_create(path_get(path));
+
+    // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
+    sprintf(file_name, "%s-%s.%s", CPAK_BACKUP_FILE_PREFIX, "1", CPAK_BACKUP_FILE_EXT);
+
+
+    path_push(path, file_name);
+
+    //int res = 
+    cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
+
+    // TODO: draw progress bar or error!
+    // if (res == CONTROLLER_PAK_OK) {
+        
+    // }
+    // else {
+        
+    // }
+
+    path_free(path);
+
+    backup_in_progress = false;
+}
 
 static void process (menu_t *menu) {
-
 
     if (menu->actions.enter) {
         // TODO: handle all ports
         if (accessory_is_cpak[JOYPAD_PORT_1]) {
-            // TODO: draw progress bar!
-            // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
-            path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
-            directory_create(path_get(path));
-
-            path_push(path, CPAK_BACKUP_FILE_PREFIX CPAK_BACKUP_FILE_EXT);
-
-            cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
-            path_free(path);
+            exec_cpak_backup(menu);         
         }
     }
 
@@ -56,8 +77,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Controller Pak (1).\n"
-            "Free space: %d/123 pages. \n",
-            cpak_info.free_space
+            "Pages: %d/123. \n"
+            "Notes: ?/16. \n", // "Notes: %d/16. \n",
+            cpak_info.free_pages
         );
     }
     else {
@@ -83,6 +105,10 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "B: Back"
         );
+    }
+
+    if (backup_in_progress) {
+        component_messagebox_draw("Saving...");
     }
 
     rdpq_detach_show();

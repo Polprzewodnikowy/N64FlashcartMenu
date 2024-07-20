@@ -1,12 +1,15 @@
 #include "views.h"
 #include "../cpak_handler.h"
+#include "utils/fs.h"
 
 #define CPAK_BACKUP_DIRECTORY    "/cpak"
-#define CPAK_BACKUP_FILE         "cpak_backup.pak"
+#define CPAK_BACKUP_FILE_PREFIX  "cpak_backup"
+#define CPAK_BACKUP_FILE_EXT     ".pak"
 
 
 static int accessory_is_cpak[4];
 static cpak_info_t cpak_info;
+
 
 static void process (menu_t *menu) {
 
@@ -14,11 +17,15 @@ static void process (menu_t *menu) {
     if (menu->actions.enter) {
         // TODO: handle all ports
         if (accessory_is_cpak[JOYPAD_PORT_1]) {
+            // TODO: draw progress bar!
             // TODO: preferably with the time added to the filename so it does not overwrite the existing one!
-            path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY"/"CPAK_BACKUP_FILE);
+            path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
+            directory_create(path_get(path));
+
+            path_push(path, CPAK_BACKUP_FILE_PREFIX CPAK_BACKUP_FILE_EXT);
+
             cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
             path_free(path);
-            component_messagebox_draw("Done");
         }
     }
 
@@ -49,7 +56,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Controller Pak (1).\n"
-            "Free space: %d blocks. \n",
+            "Free space: %d/123 pages. \n",
             cpak_info.free_space
         );
     }

@@ -2,7 +2,7 @@
 #include "../cpak_handler.h"
 #include "utils/fs.h"
 
-#define CPAK_BACKUP_DIRECTORY    "/cpak"
+#define CPAK_BACKUP_DIRECTORY    "/cpak_backups"
 #define CPAK_BACKUP_FILE_PREFIX  "cpak_backup"
 #define CPAK_BACKUP_FILE_EXT     "pak"
 
@@ -12,9 +12,17 @@ static cpak_info_t cpak_info;
 static bool backup_in_progress = false;
 
 
-static void exec_cpak_backup(menu_t *menu) {
+const static char *format_cpak_entries(entry_structure_t *entries) {
+    // TODO: either show the note descriptions, or show the notes used.
+    // for (int i = 0; i< 16; i++) {
+        
+    // }
+    return "?/16";
+}
+
+static void exec_cpak_backup(menu_t *menu, uint8_t port) {
     backup_in_progress = true;
-    char file_name[128];
+    char file_name[64];
                 
     path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
     directory_create(path_get(path));
@@ -26,7 +34,7 @@ static void exec_cpak_backup(menu_t *menu) {
     path_push(path, file_name);
 
     //int res = 
-    cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
+    cpak_clone_contents_to_file(path_get(path), port);
 
     // TODO: draw progress bar or error!
     // if (res == CONTROLLER_PAK_OK) {
@@ -46,7 +54,7 @@ static void process (menu_t *menu) {
     if (menu->actions.enter) {
         // TODO: handle all ports
         if (accessory_is_cpak[JOYPAD_PORT_1]) {
-            exec_cpak_backup(menu);         
+            exec_cpak_backup(menu, JOYPAD_PORT_1);         
         }
     }
 
@@ -62,29 +70,37 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_layout_draw();
 
+    // TODO: Backup from other ports, restore from SD, and/or Repair functions.
 	component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "CONTROLLER PAK MENU\n"
         "\n"
-        "\n"
+        "This menu only supports cloning the\n"
+        "Controller Pak connected to JoyPad 1.\n"
     );
 
-    // TODO: Backup from other ports, restore from SD, and/or Repair functions.
     // Bonus would be to handle individual per game entries!
     if (accessory_is_cpak[0]) {
         component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
+            "\n"
+            "\n"
+            "\n"
             "Controller Pak (1).\n"
-            "Pages: %d/123. \n"
-            "Notes: ?/16. \n", // "Notes: %d/16. \n",
-            cpak_info.free_pages
+            "  Pages: %d/123. \n"
+            "  Notes: %s.",
+            cpak_info.free_pages,
+            format_cpak_entries(cpak_info.entries)
         );
     }
     else {
         component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "\n"
+            "\n"
             "\n"
             "\n"
             "Controller Pak (1).\n"
@@ -95,7 +111,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (accessory_is_cpak[0]) {
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Clone\n"
+            "A: Clone to SD Card\n"
             "B: Back"
         );
     }
@@ -116,12 +132,16 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_joypad_controller_pak_init (menu_t *menu){
 
+    //TODO: handle all paks.
     // check which paks are available
-    JOYPAD_PORT_FOREACH (port) {
-        accessory_is_cpak[port] = joypad_get_accessory_type(port) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
-    }
+    // JOYPAD_PORT_FOREACH (port) {
+    //     accessory_is_cpak[port] = joypad_get_accessory_type(port) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
+    // }
 
-    cpak_info_load(JOYPAD_PORT_1, &cpak_info);
+    if (joypad_get_accessory_type(JOYPAD_PORT_1) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK) {
+        accessory_is_cpak[JOYPAD_PORT_1] = JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
+        cpak_info_load(JOYPAD_PORT_1, &cpak_info);
+    }
 }
 
 void view_joypad_controller_pak_display (menu_t *menu, surface_t *display) {

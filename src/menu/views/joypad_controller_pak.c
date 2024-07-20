@@ -2,6 +2,8 @@
 #include "../cpak_handler.h"
 #include "utils/fs.h"
 
+#define CPAK_MAX_PAGES 123
+#define CPAK_MAX_NOTES 16
 #define CPAK_BACKUP_DIRECTORY    "/cpak_backups"
 #define CPAK_BACKUP_FILE_PREFIX  "cpak_backup"
 #define CPAK_BACKUP_FILE_EXT     "pak"
@@ -17,12 +19,12 @@ const static char *format_cpak_entries(entry_structure_t *entries) {
     // for (int i = 0; i< 16; i++) {
         
     // }
-    return "?/16";
+    return "?/16"; //CPAK_MAX_NOTES
 }
 
 static void exec_cpak_backup(menu_t *menu, uint8_t port) {
     backup_in_progress = true;
-    char file_name[64];
+    char file_name[32];
                 
     path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY);
     directory_create(path_get(path));
@@ -54,9 +56,7 @@ static void process (menu_t *menu) {
         if (accessory_is_cpak[JOYPAD_PORT_1]) {
             exec_cpak_backup(menu, JOYPAD_PORT_1);         
         }
-    }
-
-    if (menu->actions.back) {
+    } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
     }
 }
@@ -65,6 +65,10 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     component_background_draw();
+
+    if (backup_in_progress) {
+        component_messagebox_draw("Saving...");
+    }
 
     component_layout_draw();
 
@@ -87,9 +91,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Controller Pak (1).\n"
-            "  Pages: %d/123. \n"
+            "  Pages: %d/%d. \n"
             "  Notes: %s.",
-            cpak_info.free_pages,
+            cpak_info.free_pages, CPAK_MAX_PAGES,
             format_cpak_entries(cpak_info.entries)
         );
     }
@@ -103,6 +107,8 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "Controller Pak (1).\n"
             "  Not inserted.\n"
+            "  - If it is, retry inserting it a few times.\n"
+            "  - Load another ROM that has a Controller Pak manager.\n"
         );
     }
 
@@ -119,10 +125,6 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "B: Back"
         );
-    }
-
-    if (backup_in_progress) {
-        component_messagebox_draw("Saving...");
     }
 
     rdpq_detach_show();

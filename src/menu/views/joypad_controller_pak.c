@@ -10,12 +10,6 @@ static cpak_info_t cpak_info;
 
 static void process (menu_t *menu) {
 
-    // check which paks are available
-    JOYPAD_PORT_FOREACH (port) {
-        accessory_is_cpak[port] = joypad_get_accessory_type(port) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
-    }
-
-    cpak_info_load(JOYPAD_PORT_1, &cpak_info);
 
     if (menu->actions.enter) {
         // TODO: handle all ports
@@ -24,6 +18,7 @@ static void process (menu_t *menu) {
             path_t *path = path_init(menu->storage_prefix, CPAK_BACKUP_DIRECTORY"/"CPAK_BACKUP_FILE);
             cpak_clone_contents_to_file(path_get(path), JOYPAD_PORT_1);
             path_free(path);
+            component_messagebox_draw("Done");
         }
     }
 
@@ -87,7 +82,13 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 void view_joypad_controller_pak_init (menu_t *menu){
-    // Nothing to initialize (yet)
+
+    // check which paks are available
+    JOYPAD_PORT_FOREACH (port) {
+        accessory_is_cpak[port] = joypad_get_accessory_type(port) == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
+    }
+
+    cpak_info_load(JOYPAD_PORT_1, &cpak_info);
 }
 
 void view_joypad_controller_pak_display (menu_t *menu, surface_t *display) {

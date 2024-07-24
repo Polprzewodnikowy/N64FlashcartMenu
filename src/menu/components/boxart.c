@@ -65,7 +65,7 @@ void component_boxart_free (component_boxart_t *b) {
 }
 
 void component_boxart_draw (component_boxart_t *b) {
-    if (b && b->image && b->image->width && b->image->height) {
+    if (b && b->image) {
         rdpq_mode_push();
             rdpq_set_mode_copy(false);
             rdpq_tex_blit(

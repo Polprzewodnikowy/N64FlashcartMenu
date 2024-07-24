@@ -61,7 +61,11 @@ To use boxart, you need to place png files of size 158x112 in the folder `/menu/
 Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
 i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
-A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
+You can download this boxart packs:
+
+[American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
+[European Boxart](https://mega.nz/file/nrYBiZDJ#ut-ulHglbsbTSsC1aV07N60eF6rzYBkOQO-pX86c24k).
+[64DD Boxart](https://mega.nz/file/CzByCCiC#YObsq4x-A5Q4E96ZJ5pf7bJ51MpiZjjXnXFxlRudWnE).
 
 
 ### Emulator support

@@ -7,6 +7,7 @@
 
 static bool load_pending;
 static bool load_rom;
+static component_boxart_t *boxart;
 
 
 static char *convert_error_message (disk_err_t err) {
@@ -94,6 +95,8 @@ static void draw (menu_t *menu, surface_t *d) {
         }
     }
 
+    component_boxart_draw_dd(boxart);
+
     rdpq_detach_show();
 }
 
@@ -163,6 +166,8 @@ void view_load_disk_init (menu_t *menu) {
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
+
+    boxart = component_boxart_init_dd(menu->storage_prefix, menu->load.disk_info.id);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

@@ -65,10 +65,8 @@ typedef struct {
 } component_boxart_t;
 
 component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code);
-component_boxart_t *component_boxart_init_dd (const char *storage_prefix, char *game_code);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
-void component_boxart_draw_dd (component_boxart_t *b);
 
 /** @} */ /* menu_components */
 

@@ -51,33 +51,6 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     return NULL;
 }
 
-component_boxart_t *component_boxart_init_dd (const char *storage_prefix, char *game_code) {
-    component_boxart_t *b;
-    char file_name[8];
-
-    if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
-        return NULL;
-    }
-
-    b->loading = true;
-
-    path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
-
-    sprintf(file_name, "%.3s.png", game_code);
-    path_push(path, file_name);
-    if (png_decoder_start(path_get(path), BOXART_WIDTH_DD, BOXART_HEIGHT_DD, png_decoder_callback, b) == PNG_OK) {
-        path_free(path);
-        return b;
-    }
-    path_pop(path);
-    
-    path_free(path);
-    free(b);
-
-    return NULL;
-}
-
-
 void component_boxart_free (component_boxart_t *b) {
     if (b) {
         if (b->loading) {
@@ -92,7 +65,7 @@ void component_boxart_free (component_boxart_t *b) {
 }
 
 void component_boxart_draw (component_boxart_t *b) {
-    if (b && b->image && b->image->width == BOXART_WIDTH && b->image->height == BOXART_HEIGHT) {
+    if (b && b->image && b->image->width && b->image->height) {
         rdpq_mode_push();
             rdpq_set_mode_copy(false);
             rdpq_tex_blit(
@@ -112,26 +85,3 @@ void component_boxart_draw (component_boxart_t *b) {
         );
     }
 }
-
-void component_boxart_draw_dd (component_boxart_t *b) {
-    if (b && b->image && b->image->width == BOXART_WIDTH_DD && b->image->height == BOXART_HEIGHT_DD) {
-        rdpq_mode_push();
-            rdpq_set_mode_copy(false);
-            rdpq_tex_blit(
-                b->image,
-                BOXART_X_DD,
-                BOXART_Y_DD,
-                NULL
-            );
-        rdpq_mode_pop();
-    } else {
-        component_box_draw(
-            BOXART_X_DD,
-            BOXART_Y_DD,
-            BOXART_X_DD + BOXART_WIDTH_DD,
-            BOXART_Y_DD + BOXART_HEIGHT_DD,
-            BOXART_LOADING_COLOR
-        );
-    }
-}
-

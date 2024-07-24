@@ -78,15 +78,6 @@
 /** @brief The box art position on the Y axis. */
 #define BOXART_Y                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT - 24)
 
-/** @brief The boxart picture width (64DD). */
-#define BOXART_WIDTH_DD                    (129)
-/** @brief The boxart picture height. */
-#define BOXART_HEIGHT_DD                   (112)
-/** @brief The box art position on the X axis. */
-#define BOXART_X_DD                        (VISIBLE_AREA_X1 - BOXART_WIDTH_DD - 24)
-/** @brief The box art position on the Y axis. */
-#define BOXART_Y_DD                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_DD - 24)
-
 /** @brief The scroll bar width. */
 #define LIST_SCROLLBAR_WIDTH            (12)
 /** @brief The scroll bar height. */

@@ -93,9 +93,9 @@ static void draw (menu_t *menu, surface_t *d) {
                 "R: Load with ROM"
             );
         }
-    }
 
-    component_boxart_draw(boxart);
+        component_boxart_draw(boxart);
+    }
 
     rdpq_detach_show();
 }

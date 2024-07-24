@@ -63,9 +63,9 @@ i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 You can download this boxart packs:
 
-[American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
-[European Boxart](https://mega.nz/file/nrYBiZDJ#ut-ulHglbsbTSsC1aV07N60eF6rzYBkOQO-pX86c24k).
-[64DD Boxart](https://mega.nz/file/CzByCCiC#YObsq4x-A5Q4E96ZJ5pf7bJ51MpiZjjXnXFxlRudWnE).
+[American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
+[European Boxart](https://mega.nz/file/nrYBiZDJ#ut-ulHglbsbTSsC1aV07N60eF6rzYBkOQO-pX86c24k)
+[64DD Boxart](https://mega.nz/file/CzByCCiC#YObsq4x-A5Q4E96ZJ5pf7bJ51MpiZjjXnXFxlRudWnE)
 
 
 ### Emulator support

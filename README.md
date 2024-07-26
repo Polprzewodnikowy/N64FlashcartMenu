@@ -65,9 +65,9 @@ You can download this boxart packs:
 
 [American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
 
-[European Boxart](https://mega.nz/file/nrYBiZDJ#ut-ulHglbsbTSsC1aV07N60eF6rzYBkOQO-pX86c24k)
+[European Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
 
-[64DD Boxart](https://mega.nz/file/CzByCCiC#YObsq4x-A5Q4E96ZJ5pf7bJ51MpiZjjXnXFxlRudWnE)
+[64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
 
 
 ### Emulator support

@@ -83,6 +83,8 @@
 #define BOXART_X                        (VISIBLE_AREA_X1 - BOXART_WIDTH - 24)
 /** @brief The box art position on the Y axis. */
 #define BOXART_Y                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT - 24)
+/** @brief The box art position on the X axis for japanese caratules.*/
+#define BOXART_X_JP                     (VISIBLE_AREA_X1 - BOXART_WIDTH_MAX + 21)
 /** @brief The box art position on the Y axis for japanese caratules. */
 #define BOXART_Y_JP                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_MAX - 24)
 

@@ -72,7 +72,7 @@ void component_boxart_draw (component_boxart_t *b) {
             {
                 rdpq_tex_blit(
                     b->image,
-                    BOXART_X,
+                    BOXART_X_JP,
                     BOXART_Y_JP,
                     NULL
                 );

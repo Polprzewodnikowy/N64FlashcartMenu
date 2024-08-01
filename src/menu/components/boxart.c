@@ -12,22 +12,22 @@
 /** @brief ROM Boxart Enumeration. */
 typedef enum {
     // Image from the front
-    FRONT,
+    BOXART_IMAGE_FRONT,
 
     // Image from the back
-    BACK,
+    BOXART_IMAGE_BACK,
 
     // Image from the top
-    TOP,
+    BOXART_IMAGE_TOP,
 
     // Image from the bottom
-    BOTTOM,
+    BOXART_IMAGE_BOTTOM,
 
     // Image from the left side
-    LEFT,
+    BOXART_IMAGE_LEFT,
 
     // Image from the right side
-    RIGHT,
+    BOXART_IMAGE_RIGHT,
 
     // List end marker
     BOXART_TYPE_END
@@ -43,7 +43,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 
 component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code) {
     component_boxart_t *b;
-    char boxart_path[8];
+    char boxart_id_path[8];
 
     if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
         return NULL;
@@ -53,8 +53,8 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
 
     path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
 
-    sprintf(boxart_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
-    path_push(path, boxart_path);
+    sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+    path_push(path, boxart_id_path);
     if (directory_exists(path_get(path))) {
         // if (back_art) {
         //   path_push(path, "back.png");

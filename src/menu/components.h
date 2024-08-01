@@ -11,29 +11,34 @@
 #include <libdragon.h>
 #include "menu_state.h"
 
-/** @brief ROM Boxart Enumeration. */
+/** @brief File image Enumeration. */
 typedef enum {
+
+    // Image thumbnail
+    IMAGE_THUMBNAIL,
+
     // Image from the front
-    BOXART_IMAGE_FRONT,
+    IMAGE_BOXART_FRONT,
 
     // Image from the back
-    BOXART_IMAGE_BACK,
+    IMAGE_BOXART_BACK,
 
     // Image from the top
-    BOXART_IMAGE_TOP,
+    IMAGE_BOXART_TOP,
 
     // Image from the bottom
-    BOXART_IMAGE_BOTTOM,
+    IMAGE_BOXART_BOTTOM,
 
     // Image from the left side
-    BOXART_IMAGE_LEFT,
+    IMAGE_BOXART_LEFT,
 
     // Image from the right side
-    BOXART_IMAGE_RIGHT,
+    IMAGE_BOXART_RIGHT,
 
     // List end marker
-    BOXART_TYPE_END
-} boxart_type_t;
+    IMAGE_TYPE_END
+
+} file_image_type_t;
 
 
 /**
@@ -88,7 +93,7 @@ typedef struct {
     surface_t *image;
 } component_boxart_t;
 
-component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, boxart_type_t current_image_view);
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
 

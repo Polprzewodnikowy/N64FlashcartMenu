@@ -17,7 +17,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 
-component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, boxart_type_t current_image_view) {
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view) {
     component_boxart_t *b;
     char boxart_id_path[8];
 
@@ -33,19 +33,19 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     path_push(path, boxart_id_path);
 
     if (directory_exists(path_get(path))) {
-        if (current_image_view == BOXART_IMAGE_BACK) {
+        if (current_image_view == IMAGE_BOXART_BACK) {
             path_push(path, "back.png");
         }
-        else if (current_image_view == BOXART_IMAGE_LEFT) {
+        else if (current_image_view == IMAGE_BOXART_LEFT) {
             path_push(path, "left.png");
         }
-        else if (current_image_view == BOXART_IMAGE_RIGHT) {
+        else if (current_image_view == IMAGE_BOXART_RIGHT) {
             path_push(path, "right.png");
         }
-        else if (current_image_view == BOXART_IMAGE_BOTTOM) {
+        else if (current_image_view == IMAGE_BOXART_BOTTOM) {
             path_push(path, "bottom.png");
         }
-        else if (current_image_view == BOXART_IMAGE_TOP) {
+        else if (current_image_view == IMAGE_BOXART_TOP) {
             path_push(path, "top.png");
         }
         else {

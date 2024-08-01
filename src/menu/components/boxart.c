@@ -77,7 +77,7 @@ void component_boxart_draw (component_boxart_t *b) {
                     NULL
                 );
             }
-            else if(b->image->width == BOXART_WIDTH_DD  && b->image->height == BOXART_HEIGHT_DD )
+            else if(b->image->width == BOXART_WIDTH_DD && b->image->height == BOXART_HEIGHT_DD )
             {
                 rdpq_tex_blit(
                     b->image,

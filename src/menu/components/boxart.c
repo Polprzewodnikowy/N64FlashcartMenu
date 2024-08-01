@@ -9,30 +9,6 @@
 
 #define BOXART_DIRECTORY    "menu/boxart"
 
-/** @brief ROM Boxart Enumeration. */
-typedef enum {
-    // Image from the front
-    BOXART_IMAGE_FRONT,
-
-    // Image from the back
-    BOXART_IMAGE_BACK,
-
-    // Image from the top
-    BOXART_IMAGE_TOP,
-
-    // Image from the bottom
-    BOXART_IMAGE_BOTTOM,
-
-    // Image from the left side
-    BOXART_IMAGE_LEFT,
-
-    // Image from the right side
-    BOXART_IMAGE_RIGHT,
-
-    // List end marker
-    BOXART_TYPE_END
-} boxart_type_t;
-
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
     component_boxart_t *b = (component_boxart_t *) (callback_data);
@@ -41,7 +17,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 
-component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code) {
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, boxart_type_t current_image_view) {
     component_boxart_t *b;
     char boxart_id_path[8];
 
@@ -55,25 +31,26 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
 
     sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
     path_push(path, boxart_id_path);
+
     if (directory_exists(path_get(path))) {
-        // if (back_art) {
-        //   path_push(path, "back.png");
-        // }
-        // else if (left_side_art) {
-        //   path_push(path, "left.png");
-        // }
-        // else if (right_side_art) {
-        //   path_push(path, "right.png");
-        // }
-        // else if (bottom_side_art {
-        //   path_push(path, "bottom.png");
-        // }
-        // else if (top_side_art {
-        //   path_push(path, "top.png");
-        // }
-        // else {
-        path_push(path, "front.png");
-        // }
+        if (current_image_view == BOXART_IMAGE_BACK) {
+            path_push(path, "back.png");
+        }
+        else if (current_image_view == BOXART_IMAGE_LEFT) {
+            path_push(path, "left.png");
+        }
+        else if (current_image_view == BOXART_IMAGE_RIGHT) {
+            path_push(path, "right.png");
+        }
+        else if (current_image_view == BOXART_IMAGE_BOTTOM) {
+            path_push(path, "bottom.png");
+        }
+        else if (current_image_view == BOXART_IMAGE_TOP) {
+            path_push(path, "top.png");
+        }
+        else {
+            path_push(path, "front.png");
+        }
         if (file_exists(path_get(path))) { 
             if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
                 path_free(path);

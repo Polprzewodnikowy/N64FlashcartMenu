@@ -11,6 +11,30 @@
 #include <libdragon.h>
 #include "menu_state.h"
 
+/** @brief ROM Boxart Enumeration. */
+typedef enum {
+    // Image from the front
+    BOXART_IMAGE_FRONT,
+
+    // Image from the back
+    BOXART_IMAGE_BACK,
+
+    // Image from the top
+    BOXART_IMAGE_TOP,
+
+    // Image from the bottom
+    BOXART_IMAGE_BOTTOM,
+
+    // Image from the left side
+    BOXART_IMAGE_LEFT,
+
+    // Image from the right side
+    BOXART_IMAGE_RIGHT,
+
+    // List end marker
+    BOXART_TYPE_END
+} boxart_type_t;
+
 
 /**
  * @addtogroup 
@@ -64,7 +88,7 @@ typedef struct {
     surface_t *image;
 } component_boxart_t;
 
-component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code);
+component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, boxart_type_t current_image_view);
 void component_boxart_free (component_boxart_t *b);
 void component_boxart_draw (component_boxart_t *b);
 

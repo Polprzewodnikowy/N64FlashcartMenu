@@ -29,7 +29,7 @@ For the ability to load and run 64DD disk images, you need to place required 64D
 For more details follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
 
 
-### So what would the layout of the SD Card look like?
+#### So what would the layout of the SD Card look like?
 ```SD:\
 │
 ├── sc64menu.n64

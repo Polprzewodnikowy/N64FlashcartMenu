@@ -1,4 +1,4 @@
-
+# Menu Controls
 
 ## Fast scroll
 Use the C-Up and C-Down buttons

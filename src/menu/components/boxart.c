@@ -19,7 +19,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 
 component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code) {
     component_boxart_t *b;
-    char file_name[8];
+    char boxart_path[8];
 
     if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
         return NULL;
@@ -29,21 +29,67 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
 
     path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
 
-    sprintf(file_name, "%.3s.png", game_code);
-    path_push(path, file_name);
-    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
-        path_free(path);
-        return b;
+    sprintf(boxart_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+    path_push(path, boxart_path);
+    if (directory_exists(path_get(path))) {
+        // if (back_art) {
+        //   path_push(path, "back.png");
+        // }
+        // else if (left_side_art) {
+        //   path_push(path, "left.png");
+        // }
+        // else if (right_side_art) {
+        //   path_push(path, "right.png");
+        // }
+        // else if (bottom_side_art {
+        //   path_push(path, "bottom.png");
+        // }
+        // else if (top_side_art {
+        //   path_push(path, "top.png");
+        // }
+        // else {
+        path_push(path, "front.png");
+        // }
+        if (file_exists(path_get(path))) { 
+            if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+                path_free(path);
+                return b;
+            }
+        }
     }
-    path_pop(path);
+    else { // compatibility mode
 
-    // TODO: This is bad, we should only check for 3 letter codes
-    sprintf(file_name, "%.2s.png", game_code + 1);
-    path_push(path, file_name);
-    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
-        path_free(path);
-        return b;
+        //TODO: this could be path_pop one by one to find the generic image?!
+        char file_name[8];
+
+        // undo the dir path used for the boxart previously.
+        path_pop(path);
+        path_pop(path);
+        path_pop(path);
+        path_pop(path);
+
+        sprintf(file_name, "%c%c%c.png", game_code[0], game_code[1], game_code[2]);
+        path_push(path, file_name);
+        if (file_exists(path_get(path))) {      
+            if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+                path_free(path);
+                return b;
+            }
+        }
+        else {
+            path_pop(path);
+
+            sprintf(file_name, "%c%c.png", game_code[1], game_code[2]);
+            path_push(path, file_name);
+            if (file_exists(path_get(path))) {
+                if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+                    path_free(path);
+                    return b;
+                }
+            }
+        }
     }
+    // TODO: return default image.
 
     path_free(path);
     free(b);

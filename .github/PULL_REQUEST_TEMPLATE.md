@@ -21,6 +21,7 @@
 - [ ] Improvement (non-breaking change that adds a new feature)
 - [ ] Bug fix (fixes an issue)
 - [ ] Breaking change (breaking change)
+- [ ] Documentation Improvement
 - [ ] Config and build (change in the configuration and build system, has no impact on code or features)
 
 ## Checklist:

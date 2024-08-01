@@ -9,6 +9,30 @@
 
 #define BOXART_DIRECTORY    "menu/boxart"
 
+/** @brief ROM Boxart Enumeration. */
+typedef enum {
+    // Image from the front
+    FRONT,
+
+    // Image from the back
+    BACK,
+
+    // Image from the top
+    TOP,
+
+    // Image from the bottom
+    BOTTOM,
+
+    // Image from the left side
+    LEFT,
+
+    // Image from the right side
+    RIGHT,
+
+    // List end marker
+    BOXART_TYPE_END
+} boxart_type_t;
+
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
     component_boxart_t *b = (component_boxart_t *) (callback_data);

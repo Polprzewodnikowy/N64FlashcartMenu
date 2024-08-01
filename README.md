@@ -63,17 +63,17 @@ If required, you can manually adjust the file on the SD card using your computer
 
 ## Flashcart specific
 
-### SC64 Specific
+### SC64
 - Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 - Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
 
-### 64drive Specific
+### 64drive
 - Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
 - Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
 
 
-### ED64 & ED64P Specific
+### ED64 & ED64P
 Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
 
 The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).

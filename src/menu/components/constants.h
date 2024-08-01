@@ -74,6 +74,11 @@
 /** @brief The boxart picture height. */
 #define BOXART_HEIGHT                   (112)
 
+/** @brief The boxart picture width (64DD). */
+#define BOXART_WIDTH_DD                    (129)
+/** @brief The boxart picture height. */
+#define BOXART_HEIGHT_DD                   (112)
+
 /** @brief The boxart picture maximum width. */
 #define BOXART_WIDTH_MAX                (158)
 /** @brief The boxart picture maximum height. */
@@ -87,6 +92,11 @@
 #define BOXART_X_JP                     (VISIBLE_AREA_X1 - BOXART_WIDTH_MAX + 21)
 /** @brief The box art position on the Y axis for japanese caratules. */
 #define BOXART_Y_JP                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_MAX - 24)
+
+/** @brief The box art position on the X axis for 64DD caratules.*/
+#define BOXART_X_DD                     (VISIBLE_AREA_X1 - BOXART_WIDTH_DD - 23)
+/** @brief The box art position on the Y axis for 64DD caratules. */
+#define BOXART_Y_DD                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_DD - 24)
 
 /** @brief The scroll bar width. */
 #define LIST_SCROLLBAR_WIDTH            (12)

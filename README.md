@@ -27,7 +27,12 @@ An open source menu for N64 flashcarts.
 * Music playback (MP3).
 
 
-### Video showcase (as of Oct 12 2023)
+## Documentation
+* [Getting started guide](./docs/00_getting_started_sd.md)
+* [Menu controls](./docs/01_menu_controls.md)
+* [Developer guide](./docs/99_developer_guide.md)
+
+## Video showcase (as of Oct 12 2023)
 
 [![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
 
@@ -40,20 +45,8 @@ An open source menu for N64 flashcarts.
 * Support as many common mods and features as possible.
 
 
-## Getting started
-Using your PC, insert the SD card and ensure it is formatted for compatibility (We recommend FAT32 in most instances, though EXFAT is fully supported on the SummerCart64).
-
-### Save files
-By default, all save files (whether `FlashRam`, `SRAM` or `EEPROM`) use the `.sav` extension and match the filename of the ROM.
-
-Each save file can be found in the `/saves` folder located in the same directory as the ROM and shares the same file name, apart from the extension.
-
-If transfering a file from a different flashcart such as the ED64, it will be necessary to change the extension of the file to `sav`.
-
-i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (USA).sav`
-
-**NOTE:** certain emulator saves or saves created for a different ROM version or region may be incompatible.
-
+## Experimental features
+These features are subject to change:
 
 ### ROM Boxart
 To use boxart, you need to place png files of size 158x112 in the folder `/menu/boxart` on the SD card.
@@ -63,99 +56,32 @@ i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 A known set of PNG files using 2 letter ID's can be downloaded [here](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w).
 
 
-### Emulator support
-Emulators should be added to the `/menu/emulators` directory on the SD card.
-
-Menu currently supports the following emulators and associated ROM file names:
- - **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
- - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
- - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64` ("Download Emulator" button)
-
 ### Menu Settings
 The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
-Currently these are read-only (can be viewed in the menu by pressing `L` on the Joypad).
 If required, you can manually adjust the file on the SD card using your computer.
 
-### SC64 Specific
-- Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-- Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
-##### 64DD disk support
-For the ability to load and run 64DD disk images, you need to place required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
-For more details follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
+## Flashcart specific
 
-Note: to load an expansion disk (e.g. F-Zero X) browse to the N64 ROM and load it (but not start it) and then browse to the DD expansion file and press the `R` button.
+### SC64
+* Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
+* Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
 
 
-### 64drive Specific
-- Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
-- Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
+### 64drive
+* Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
+* Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
 
 
-### ED64 & ED64P Specific
+### ED64 & ED64P
 Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
 
 The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
 
 
-# Developer documentation
-
-You can use a dev container in VSCode to ease development.
-
-
-## To deploy:
-### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip)
-* Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
-
-Make sure that your firmware is compatible (currently v2.18.0+)
-See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
-
-#### From the devcontainer
-It is not currently possible to directly communicate with USB devices.
-BUT, as a work around you can use a proxy TCP/IP connection
-Set up a proxy: open a terminal window, `cd ./tools/sc64` and then `./sc64deployer.exe server`
-
-Then in the dev container, use `make run` or `make run-debug`
-
-
-#### From your host (Windows) OS
-
-* Run `./localdeploy.bat` from the terminal
-
-Toggle the N64 power switch to load the ROM.
-
-`ms-vscode.makefile-tools` will help (installed automatically in dev container).
-TODO: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/
-WORKAROUND: in the dev container terminal, use make directly, i.e.: `make`
-The ROM can be found in the `output` directory.
-
-NOTE: a "release" version of the SC64 menu is called `sc64menu.n64` and can be created for when you want to add it directly to the SDCard. This is generated by running `make all` or running `make sc64`.
-
-### Ares Emulator
-For ease of development and debugging, the menu ROM is able to run in the Ares emulator (without most flashcart features).
-
-* Ensure you have the Ares emulator on you computer.
-* Load the `N64FlashcartMenu.n64` ROM.
-
-### Others
-* Add the required file to the correct folder on your SD card.
-
-
-# Update Libdragon submodule
-This repo currently uses the `preview` branch as a submodule at a specific commit.
-To update to the latest version, use `git submodule update --remote ` from the terminal.
-
-# Generate documentation
-Run `doxygen` from the dev container terminal.
-Make sure you fix the warnings before creating a PR!
-Generated documentation is located in `output/docs` folder and auto published to the `gh-pages` branch when merged with `main`.
-
-Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
-
 # Open source software and licenses used
- - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
- - [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
- - [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
- - [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
- - [miniz](https://github.com/richgel999/miniz) (MIT License)
+* [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
+* [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
+* [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
+* [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
+* [miniz](https://github.com/richgel999/miniz) (MIT License)

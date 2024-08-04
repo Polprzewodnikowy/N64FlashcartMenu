@@ -77,7 +77,8 @@ jobs:
         with:
           name: Rolling release
           body: Rolling release built from latest commit on `main` branch.
-          tag_name: rolling-release
+          tag_name: 'rolling_release'
+          make_latest: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin
@@ -90,9 +91,10 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/develop'
         with:
-          name: 'Rolling dev release-V${{ github.run_id }}'
-          body: Rolling dev prerelease built from latest commit on `develop` branch.
-          tag_name: prerelease-dev
+          name: 'Rolling pre-release'
+          body: Experimental pre-release built from latest commit on `develop` branch.
+          target_commitish: develop
+          tag_name: 'pre-release_V${{ github.run_number }}'
           prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64

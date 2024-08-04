@@ -26,7 +26,7 @@ Then in the dev container, use `make run` or `make run-debug`
 Toggle the N64 power switch to load the ROM.
 
 `ms-vscode.makefile-tools` will help (installed automatically in dev container).
-NOTE: it does not yet work with `F5`: see https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/
+NOTE: it does not yet work with `F5`: see [this blog post](https://devblogs.microsoft.com/cppblog/now-announcing-makefile-support-in-visual-studio-code/)
 WORKAROUND: in the dev container terminal, use make directly, i.e.: `make`
 The ROM can be found in the `output` directory.
 
@@ -49,7 +49,7 @@ To update to the latest version, use `git submodule update --remote` from the te
 ## Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
-Generated documentation is located in `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
+Generated documentation is located in the `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
 
 ### Test generated docs in dev-container
 Install Prerequisites:

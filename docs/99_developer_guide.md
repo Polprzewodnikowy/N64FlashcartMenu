@@ -2,7 +2,7 @@
 
 You can use a dev container in VSCode to ease development.
 
-### A quickstart video tutorial on how to setup your environment 
+### A quickstart video tutorial on how to set up your environment 
 [![Devcontainer quickstart guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Devcontainer quickstart guide").
 
 

@@ -147,7 +147,6 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         "Note: Certain settings have the following caveats:\n\n"
         "*    Requires a flashcart reboot.\n",
-        "\n",
         menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),

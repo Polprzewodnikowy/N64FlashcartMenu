@@ -28,9 +28,9 @@ An open source menu for N64 flashcarts.
 
 
 ## Documentation
-- [Getting started guide](docs/00_getting_started_sd.md#getting-started)
-- [Menu controls](docs/01_menu_controls.md#menu-controls)
-- [Developer guide](docs/99_developer_guide.md#developer-documentation)
+- [Getting started guide](./docs/00_getting_started_sd.md)
+- [Menu controls](./docs/01_menu_controls.md)
+- [Developer guide](./docs/99_developer_guide.md)
 
 ## Video showcase (as of Oct 12 2023)
 

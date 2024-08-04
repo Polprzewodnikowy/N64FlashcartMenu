@@ -4,7 +4,7 @@ Using your PC, insert the SD card and ensure it is formatted for compatibility w
 
 - Download the latest `sc64menu.n64` (assuming you are using an *sc64*) file from the releases page, then put it in the root directory of your SD card.
 - Create a folder in the root of your SD card called `menu`.
-- Place your ROM's on the SD Card, in any folder (**except for `menu`**).
+- Place your ROMs on the SD Card, in any folder (**except for `menu`**).
 
 
 ### Emulator support

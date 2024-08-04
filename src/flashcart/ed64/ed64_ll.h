@@ -54,32 +54,90 @@
 
 
 typedef enum {
-    SAVE_TYPE_NONE = 0,
-    SAVE_TYPE_SRAM = 1,
-    SAVE_TYPE_SRAM_128K = 2,
-    SAVE_TYPE_EEPROM_4K = 3,
-    SAVE_TYPE_EEPROM_16K = 4,
-    SAVE_TYPE_FLASHRAM = 5,
-    SAVE_TYPE_CPAK = 8,
-    SAVE_TYPE_DD64_CART_PORT = 16,
+    SAVE_TYPE_NONE = 0,        // No save type
+    SAVE_TYPE_SRAM = 1,        // SRAM save type
+    SAVE_TYPE_SRAM_128K = 2,   // 128K SRAM save type
+    SAVE_TYPE_EEPROM_4K = 3,   // 4K EEPROM save type
+    SAVE_TYPE_EEPROM_16K = 4,  // 16K EEPROM save type
+    SAVE_TYPE_FLASHRAM = 5,    // FlashRAM save type
+    SAVE_TYPE_CPAK = 8,        // Controller Pak save type
+    SAVE_TYPE_DD64_CART_PORT = 16, // 64DD cart port save type
 } ed64_save_type_t;
 
 #define ROM_ADDRESS  (0xB0000000)
 
 /* Save functions */
+
+/**
+ * @brief Initialize SRAM.
+ */
 void pi_initialize_sram (void);
+
+/**
+ * @brief Invalidate all data caches.
+ */
 void _data_cache_invalidate_all (void);
+
+/**
+ * @brief Set the SRAM bank.
+ * @param bank The SRAM bank to set.
+ */
 void ed64_ll_set_sram_bank (uint8_t bank);
-ed64_save_type_t ed64_ll_get_save_type ();
+
+/**
+ * @brief Get the current save type.
+ * @return The current save type.
+ */
+ed64_save_type_t ed64_ll_get_save_type (void);
+
+/**
+ * @brief Set the save type.
+ * @param type The save type to set.
+ */
 void ed64_ll_set_save_type (ed64_save_type_t type);
 
+/**
+ * @brief Get SRAM data.
+ * @param buffer The buffer to store the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_get_sram (uint8_t *buffer, int size);
+
+/**
+ * @brief Get EEPROM data.
+ * @param buffer The buffer to store the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_get_eeprom (uint8_t *buffer, int size);
+
+/**
+ * @brief Get FRAM data.
+ * @param buffer The buffer to store the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_get_fram (uint8_t *buffer, int size);
 
+/**
+ * @brief Set SRAM data.
+ * @param buffer The buffer containing the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_set_sram (uint8_t *buffer, int size);
+
+/**
+ * @brief Set EEPROM data.
+ * @param buffer The buffer containing the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_set_eeprom (uint8_t *buffer, int size);
+
+/**
+ * @brief Set FRAM data.
+ * @param buffer The buffer containing the data.
+ * @param size The size of the buffer.
+ */
 void ed64_ll_set_fram (uint8_t *buffer, int size);
+
 
 /** @} */ /* ed64 */
 #endif

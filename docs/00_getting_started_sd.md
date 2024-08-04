@@ -8,7 +8,7 @@
 
 ## First time setup of SD card
 
-Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart (*FAT32 and EXFAT is fully supported on the SC64*).
+Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart (*FAT32 and EXFAT are fully supported on the SC64*).
 
 - Download the latest `sc64menu.n64` (assuming you are using an *sc64*) file from the releases page, then put it in the root directory of your SD card.
 - Create a folder in the root of your SD card called `menu`.
@@ -25,8 +25,8 @@ Menu currently supports the following emulators and associated ROM file names:
 
 
 ### 64DD disk support
-For the ability to load and run 64DD disk images, you need to place required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
-For more details follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
+For the ability to load and run 64DD disk images, you need to place the required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
+For more details, follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
 
 
 #### So what would the layout of the SD Card look like?
@@ -78,7 +78,7 @@ These files are created and modified when a "game" saves.
 ```
 
 ### Transfering saves from an ED64
-If transfering a file from a different flashcart such as the ED64, it will be necessary to change the extension of the file to `sav`.
+If transfering a file from a different flashcart, such as the ED64, it will be necessary to change the extension of the file to `sav`.
 
 i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (USA).sav`
 

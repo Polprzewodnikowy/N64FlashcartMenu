@@ -13,7 +13,7 @@ See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/0
 
 #### From the devcontainer
 It is not currently possible to directly communicate with USB devices.
-BUT, as a work around you can use a proxy TCP/IP connection
+BUT, as a workaround you can use a proxy TCP/IP connection
 Set up a proxy: open a terminal window, `cd ./tools/sc64` and then `./sc64deployer.exe server`
 
 Then in the dev container, use `make run` or `make run-debug`
@@ -35,7 +35,7 @@ NOTE: a "release" version of the SC64 menu is called `sc64menu.n64` and can be c
 ### Ares Emulator
 For ease of development and debugging, the menu ROM is able to run in the Ares emulator (without most flashcart features).
 
-* Ensure you have the Ares emulator on you computer.
+* Ensure you have the Ares emulator on your computer.
 * Load the `N64FlashcartMenu.n64` ROM.
 
 ### Others
@@ -49,6 +49,6 @@ To update to the latest version, use `git submodule update --remote ` from the t
 # Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
-Generated documentation is located in `output/docs` folder and auto published to the `gh-pages` branch when merged with `main`.
+Generated documentation is located in `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
 
 Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)

@@ -65,12 +65,12 @@ If required, you can manually adjust the file on the SD card using your computer
 
 ### SC64
 * Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-* Download the latest `sc64menu.n64` file from the releases page, then put it in the root directory of your SD card.
+* Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
 ### 64drive
 * Ensure the cart has the latest [firmware](https://64drive.retroactive.be/support.php) installed.
-* Download the latest `menu.bin` file from the releases page, then put it in the root directory of your SD card.
+* Download the latest `menu.bin` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
 ### ED64 & ED64P

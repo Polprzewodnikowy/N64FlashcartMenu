@@ -2,7 +2,7 @@
 
 Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart (*FAT32 and EXFAT are fully supported on the SC64*).
 
-- Download the latest `sc64menu.n64` (assuming you are using an *sc64*) file from the releases page, then put it in the root directory of your SD card.
+- Download the latest `sc64menu.n64` (assuming you are using an *sc64*) file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 - Create a folder in the root of your SD card called `menu`.
 - Place your ROMs on the SD Card, in any folder (**except for `menu`**).
 

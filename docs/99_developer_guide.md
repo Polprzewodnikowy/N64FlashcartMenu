@@ -44,14 +44,14 @@ For ease of development and debugging, the menu ROM is able to run in the Ares e
 
 ## Update Libdragon submodule
 This repo currently uses the `preview` branch as a submodule at a specific commit.
-To update to the latest version, use `git submodule update --remote ` from the terminal.
+To update to the latest version, use `git submodule update --remote` from the terminal.
 
 ## Generate documentation
 Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
 Generated documentation is located in `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
 
-### Test generated docs
+#### Test generated docs
 `cd output/docs`
 `jekyll serve`
 

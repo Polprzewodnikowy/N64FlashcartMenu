@@ -80,8 +80,8 @@ The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [E
 
 
 # Open source software and licenses used
- - [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
- - [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
- - [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
- - [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
- - [miniz](https://github.com/richgel999/miniz) (MIT License)
+- [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)
+- [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
+- [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
+- [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
+- [miniz](https://github.com/richgel999/miniz) (MIT License)

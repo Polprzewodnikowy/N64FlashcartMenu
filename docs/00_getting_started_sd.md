@@ -11,9 +11,9 @@ Using your PC, insert the SD card and ensure it is formatted for compatibility w
 Emulators should be added to the `/menu/emulators` directory on the SD card.
 
 Menu currently supports the following emulators and associated ROM file names:
- - **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
- - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
- - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64` ("Download Emulator" button)
+- **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
+- **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
+- **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64` ("Download Emulator" button)
 
 
 ### 64DD disk support
@@ -22,7 +22,7 @@ For more details, follow [this guide on the 64dd.org website](https://64dd.org/t
 
 
 #### So what would the layout of the SD Card look like?
-```
+```plaintext
 SD:\
 │
 ├── sc64menu.n64
@@ -61,7 +61,7 @@ All save files (whether `FlashRam`, `SRAM` or `EEPROM`) use the `.sav` extension
 Each save file can be found in the `/saves` folder located in the **same directory** as the ROM and shares the same file name, apart from the extension.
 These files are created and modified when a "game" saves.
 
-```
+```plaintext
 ├── (some folder with roms)\
     ├── a_rom.z64
     ├── b_rom.n64
@@ -71,7 +71,7 @@ These files are created and modified when a "game" saves.
 ```
 
 ### Transfering saves from an ED64
-If transfering a file from a different flashcart, such as the ED64, it will be necessary to change the extension of the file to `sav`.
+If transferring a file from a different flashcart, such as the ED64, it will be necessary to change the extension of the file to `sav`.
 
 i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (USA).sav`
 

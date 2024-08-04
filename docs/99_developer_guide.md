@@ -51,7 +51,11 @@ Run `doxygen` from the dev container terminal.
 Make sure you fix the warnings before creating a PR!
 Generated documentation is located in `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
 
-### Test generated docs
+### Test generated docs in dev-container
+Install Prerequisites:
+`apt-get install ruby-full build-essential zlib1g-dev`
+`gem install jekyll bundler`
+You can then serve the webpage:
 `cd output/docs`
 `jekyll serve`
 

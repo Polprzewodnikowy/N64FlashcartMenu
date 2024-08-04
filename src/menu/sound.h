@@ -7,6 +7,7 @@
 #ifndef SOUND_H__
 #define SOUND_H__
 
+#include <stdbool.h>
 
 #define SOUND_MP3_PLAYER_CHANNEL    (0)
 #define SOUND_SFX_CHANNEL           (2)
@@ -23,6 +24,7 @@ typedef enum {
 void sound_init_default (void);
 void sound_init_mp3_playback (void);
 void sound_init_sfx (void);
+void sound_use_sfx(bool);
 void sound_play_effect(sound_effect_t sfx);
 void sound_deinit (void);
 void sound_poll (void);

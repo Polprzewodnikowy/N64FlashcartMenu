@@ -50,6 +50,14 @@ void sound_init_sfx (void) {
     sfx_enabled = true;
 }
 
+void sound_use_sfx(bool state) {
+    if (state) {
+        sfx_enabled = true;
+    }
+    else {
+        sfx_enabled = false;
+    }
+}
 
 void sound_play_effect(sound_effect_t sfx) {
     if(sfx_enabled) {

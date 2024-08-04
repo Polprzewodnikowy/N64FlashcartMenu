@@ -85,6 +85,7 @@ typedef struct {
         bool back;
         bool options;
         bool settings;
+        bool lz_context;
     } actions;
 
     struct {

@@ -21,6 +21,7 @@ static void actions_clear (menu_t *menu) {
     menu->actions.back = false;
     menu->actions.options = false;
     menu->actions.settings = false;
+    menu->actions.lz_context = false;
 }
 
 static void actions_update_direction (menu_t *menu) {
@@ -91,6 +92,8 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.options = true;
     } else if (pressed.start) {
         menu->actions.settings = true;
+    } else if (pressed.l || pressed.z) {
+        menu->actions.lz_context = true;
     }
 }
 

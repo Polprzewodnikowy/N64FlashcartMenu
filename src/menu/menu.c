@@ -67,6 +67,10 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_init_default();
 
+    JOYPAD_PORT_FOREACH (port) {
+        joypad_set_rumble_active(port, false);
+    }
+
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 
@@ -115,8 +119,9 @@ static void menu_init (boot_params_t *boot_params) {
         __boot_tvtype = TV_NTSC;
     }
 
+    sound_init_sfx();
     if (menu->settings.sound_enabled) {
-        sound_init_sfx();
+        sound_use_sfx(true);
     }
 
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);

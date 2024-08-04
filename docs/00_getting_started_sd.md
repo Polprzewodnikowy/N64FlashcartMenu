@@ -1,11 +1,3 @@
-- [First time setup of SD Card](#first-time-setup-of-sd-card)
-- [Save Files](#save-files)
-
----
-
-# Getting started
-
-
 ## First time setup of SD card
 
 Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart (*FAT32 and EXFAT are fully supported on the SC64*).
@@ -30,7 +22,8 @@ For more details, follow [this guide on the 64dd.org website](https://64dd.org/t
 
 
 #### So what would the layout of the SD Card look like?
-```SD:\
+```
+SD:\
 │
 ├── sc64menu.n64
 │
@@ -87,4 +80,3 @@ You may also need to pad/trim the files to their original size:
 - For others, use a tool such as Ninjiteu's N64 Save converter.
 
 **NOTE:** certain emulator saves or saves created for a different ROM version or region may be incompatible.
-

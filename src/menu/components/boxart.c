@@ -65,36 +65,20 @@ void component_boxart_free (component_boxart_t *b) {
 }
 
 void component_boxart_draw (component_boxart_t *b) {
+    int box_x = BOXART_X;
+    int box_y = BOXART_Y;
+
     if (b && b->image  && b->image->width <= BOXART_WIDTH_MAX && b->image->height <= BOXART_HEIGHT_MAX) {
         rdpq_mode_push();
             rdpq_set_mode_copy(false);
-            if(b->image->height == BOXART_HEIGHT_MAX)
-            {
-                rdpq_tex_blit(
-                    b->image,
-                    BOXART_X_JP,
-                    BOXART_Y_JP,
-                    NULL
-                );
+            if (b->image->height == BOXART_HEIGHT_MAX) {
+                box_x = BOXART_X_JP;
+                box_y = BOXART_Y_JP;
+            } else if (b->image->width == BOXART_WIDTH_DD && b->image->height == BOXART_HEIGHT_DD) {
+                box_x = BOXART_X_DD;
+                box_y = BOXART_Y_DD;
             }
-            else if(b->image->width == BOXART_WIDTH_DD && b->image->height == BOXART_HEIGHT_DD )
-            {
-                rdpq_tex_blit(
-                    b->image,
-                    BOXART_X_DD,
-                    BOXART_Y_DD,
-                    NULL
-                );
-            }
-            else
-            {
-                rdpq_tex_blit(
-                    b->image,
-                    BOXART_X,
-                    BOXART_Y,
-                    NULL
-                );
-            }
+            rdpq_tex_blit(b->image, box_x, box_y, NULL);
         rdpq_mode_pop();
     } else {
         component_box_draw(

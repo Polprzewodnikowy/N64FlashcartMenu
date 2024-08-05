@@ -57,11 +57,15 @@ i.e. for `Glover (USA).eep` you would need to change the extension to `Glover (U
 
 
 ### ROM Boxart
-To use boxart, you need to place png files of size 158x112, (64DD covers: 129x112), (Japanese covers: 112x158) in the folder `/menu/boxart` on the SD card.
+To use boxart, place PNG files in the `/menu/boxart` folder on the SD card with the following dimensions:
+ - Standard covers: 158x112
+ - 64DD covers: 129x112
+ - Japanese covers: 112x158
+ 
 Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
 i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
-You can download this boxart packs:
+You can download these boxart packs:
 
 [American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
 

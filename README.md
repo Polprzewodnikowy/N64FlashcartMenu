@@ -62,18 +62,16 @@ They must use the following dimensions:
 * Japanese covers: 112x158
 
 
-*** Note: *** for future support, boxart images should also include: `back.png`, `top.png`, `bottom.png`, `left.png`, `right.png`, `thumb.png`.
+**Note:** For future support, boxart images should also include: `back.png`, `top.png`, `bottom.png`, `left.png`, `right.png`, `thumb.png`.
 
 #### Compatibilty mode
 If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
 
 Each file must be named according to the 2,3 or 4 letter Game ID.
-
-i.e. for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
-
-i.e. for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
-
-i.e. for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png`.
+i.e.
+* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
+* for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
+* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png`.
 
 You can try these boxart packs:
 

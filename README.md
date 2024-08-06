@@ -67,11 +67,12 @@ They must use the following dimensions:
 #### Compatibilty mode
 If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
 
-Each file must be named according to the 2,3 or 4 letter Game ID.
+Each file must be named according to the 2,3 or 4 letter Game ID (matched in this order).
 i.e.
-* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
+* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png` and/or `sd:/menu/boxart/NGEP.png`.
 * for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
-* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png`.
+* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
+
 
 You can try these boxart packs:
 

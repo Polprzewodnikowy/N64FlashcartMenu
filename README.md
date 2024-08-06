@@ -50,14 +50,15 @@ An open source menu for N64 flashcarts.
 These features are subject to change:
 
 ### ROM Boxart
-To use boxart, place PNG files in the `/menu/boxart` folder on the SD card with the following dimensions:
+To use boxart, place PNG files within the `sd:/menu/boxart/` folder.
+
+They must use the following dimensions:
 * Standard covers: 158x112
 * 64DD covers: 129x112
 * Japanese covers: 112x158
- 
-Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
+
+Each file must be named according to the 2 letter ROM ID.
 i.e. for GoldenEye 2 letters, this would be `GE.png`.
-i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 You can download these boxart packs:
 
 [American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
@@ -65,6 +66,10 @@ You can download these boxart packs:
 [European Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
 
 [64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
+
+To improve the loading of the boxart images, and/or to ensure correct boxart images, these can be loaded by directories by each character of the full 4 character Game Code.
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/front.png`.
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/front.png`.
 
 
 ### Menu Settings

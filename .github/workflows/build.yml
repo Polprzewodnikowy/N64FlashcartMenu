@@ -94,7 +94,7 @@ jobs:
           name: 'Rolling pre-release'
           body: Experimental pre-release built from latest commit on `develop` branch.
           target_commitish: develop
-          tag_name: 'pre-release_V${{ github.run_number }}'
+          tag_name: 'rolling_pre-release'
           prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64

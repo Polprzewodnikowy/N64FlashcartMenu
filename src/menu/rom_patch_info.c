@@ -121,7 +121,21 @@ rom_patch_load_err_t rom_patch_info_load (char *path)
     // Though needs conversion from JS to C
     // apply patch dependent on extension.
 
-    rom_patch_type_t patch_ext_type = PATCH_TYPE_IPS; // FIXME: should be the extension of the file!
+    rom_patch_type_t patch_ext_type;
+    // Determine patch type based on file extension
+    if (file_has_extension(path, "bps")) {
+        patch_ext_type = PATCH_TYPE_BPS;
+    } else if (file_has_extension(path, "ips")) {
+        patch_ext_type = PATCH_TYPE_IPS;
+    } else if (file_has_extension(path, "aps")) {
+        patch_ext_type = PATCH_TYPE_APS;
+    } else if (file_has_extension(path, "ups")) {
+        patch_ext_type = PATCH_TYPE_UPS;
+    } else if (file_has_extension(path, "xdelta")) {
+        patch_ext_type = PATCH_TYPE_XDELTA;
+    } else {
+        return PATCH_ERR_UNSUPPORTED;
+    }
 
     switch (patch_ext_type)
     {

@@ -12,6 +12,7 @@
 
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 
 static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
@@ -109,9 +110,11 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             break;
 
         case CART_EDX:  // Series X EverDrive-64
+            //flashcart = ed64x_get_flashcart();
             break;
 
         case CART_ED:   // Original EverDrive-64
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64

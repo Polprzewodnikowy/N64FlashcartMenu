@@ -84,10 +84,12 @@ If required, you can manually adjust the file on the SD card using your computer
 * Download the latest `menu.bin` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
-### ED64 & ED64P
-Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+### ED64
+#### ED64 (V or X series)
+Download the `OS64.v64` ROM from the latest action run assets and place it in the `/ED64` folder.
 
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+#### ED64 (P clone)
+Download the `OS64P.v64` ROM from the latest action run assets and place it in the `/ED64P` folder.
 
 
 # Open source software and licenses used

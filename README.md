@@ -52,24 +52,29 @@ These features are subject to change:
 ### ROM Boxart
 To use boxart, place PNG files within the `sd:/menu/boxart/` folder.
 
+To ensure correct boxart images, these can be loaded by directories for each character of the full 4 character Game Code.
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/front.png`.
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/front.png`.
+
 They must use the following dimensions:
 * Standard covers: 158x112
 * 64DD covers: 129x112
 * Japanese covers: 112x158
 
-Each file must be named according to the 2 letter ROM ID.
-i.e. for GoldenEye 2 letters, this would be `GE.png`.
-You can download these boxart packs:
+*** Note: boxart images should also include: `back.png`, `top.png`, `bottom.png`, `left.png`, `right.png`, `thumb.png` for future support. ***
 
-[American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
+#### Compatibilty mode
+If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
+Each file must be named according to the 2,3 or 4 letter Game ID.
+i.e. for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
+i.e. for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
+i.e. for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png`.
 
-[European Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
+You can try these boxart packs:
 
-[64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
-
-To improve the loading of the boxart images, and/or to ensure correct boxart images, these can be loaded by directories by each character of the full 4 character Game Code.
-i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/front.png`.
-i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/front.png`.
+* [American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
+* [European Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
+* [64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
 
 
 ### Menu Settings

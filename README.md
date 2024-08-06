@@ -50,11 +50,11 @@ An open source menu for N64 flashcarts.
 These features are subject to change:
 
 ### ROM Boxart
-To use N64 Game boxart, place PNG files within the `sd:/menu/boxart/n64/` folder.
+To use N64 Game boxart, place PNG files within the `sd:/menu/boxart/` folder.
 
 To ensure correct boxart images, these can be loaded by directories for each character of the full 4 character Game Code.
-i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/n64/N/G/E/E/front.png`.
-i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/n64/N/G/E/P/front.png`.
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/front.png`.
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/front.png`.
 
 They must use the following dimensions:
 * Standard covers: 158x112
@@ -69,9 +69,9 @@ If you cannot yet satisfy the correct boxart layout, The menu still has **deprec
 
 Each file must be named according to the 2,3 or 4 letter Game ID (matched in this order).
 i.e.
-* for GoldenEye 4 letters, this would be `sd:/menu/boxart/n64/NGEE.png` and/or `sd:/menu/boxart/n64/NGEP.png`.
-* for GoldenEye 3 letters, this would be `sd:/menu/boxart/n64/NGE.png`.
-* for GoldenEye 2 letters, this would be `sd:/menu/boxart/n64/GE.png`.
+* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png` and/or `sd:/menu/boxart/NGEP.png`.
+* for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
+* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
 
 
 You can try these boxart packs:

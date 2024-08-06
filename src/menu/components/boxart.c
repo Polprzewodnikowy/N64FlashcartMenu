@@ -7,7 +7,7 @@
 #include "utils/fs.h"
 
 
-#define BOXART_DIRECTORY    "menu/boxart/n64" // TODO: handle emulator ROMs
+#define BOXART_DIRECTORY    "menu/boxart"
 
 
 static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {

@@ -75,9 +75,9 @@
 #define BOXART_HEIGHT                   (112)
 
 /** @brief The boxart picture width (64DD). */
-#define BOXART_WIDTH_DD                    (129)
+#define BOXART_WIDTH_DD              (129)
 /** @brief The boxart picture height. */
-#define BOXART_HEIGHT_DD                   (112)
+#define BOXART_HEIGHT_DD               (112)
 
 /** @brief The boxart picture maximum width. */
 #define BOXART_WIDTH_MAX                (158)

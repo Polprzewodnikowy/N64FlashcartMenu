@@ -118,7 +118,8 @@ void component_messagebox_draw (char *fmt, ...) {
         .height = VISIBLE_AREA_HEIGHT,
         .align = ALIGN_CENTER,
         .valign = VALIGN_CENTER,
-        .wrap = WRAP_WORD
+        .wrap = WRAP_WORD,
+        .line_spacing = TEXT_LINE_SPACING_ADJUST,
     }, FNT_DEFAULT, formatted, &paragraph_nbytes);
 
     if (formatted != buffer) {
@@ -151,10 +152,11 @@ void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *f
             .align = align,
             .valign = valign,
             .wrap = WRAP_ELLIPSES,
+            .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,
         VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL,
+        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL,
         formatted,
         nbytes
     );
@@ -180,10 +182,11 @@ void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, 
             .align = align,
             .valign = valign,
             .wrap = WRAP_ELLIPSES,
+            .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,
         VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-        LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL,
+        LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL,
         formatted,
         nbytes
     );

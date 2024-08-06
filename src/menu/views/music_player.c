@@ -42,11 +42,13 @@ static void process (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.enter) {
         err = mp3player_toggle();
         if (err != MP3PLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
+        sound_play_effect(SFX_ENTER);
     } else if (menu->actions.go_left || menu->actions.go_right) {
         int seconds = menu->actions.go_fast ? SEEK_SECONDS_FAST : SEEK_SECONDS;
         err = mp3player_seek(menu->actions.go_left ? (-seconds) : seconds);

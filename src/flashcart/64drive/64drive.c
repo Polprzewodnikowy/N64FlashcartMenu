@@ -170,7 +170,7 @@ static flashcart_err_t d64_load_save (char *save_path) {
 
     size_t save_size = f_size(&fil);
 
-    bool is_eeprom_save = (current_save_type == SAVE_TYPE_EEPROM_4K || current_save_type == SAVE_TYPE_EEPROM_16K);
+    bool is_eeprom_save = (current_save_type == SAVE_TYPE_EEPROM_4KBIT || current_save_type == SAVE_TYPE_EEPROM_16KBIT);
 
     void *address = (void *) (SAVE_ADDRESS_DEV_B);
     if (is_eeprom_save) {
@@ -212,27 +212,27 @@ static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_NONE:
             type = SAVE_TYPE_NONE;
             break;
-        case FLASHCART_SAVE_TYPE_EEPROM_4K:
-            type = SAVE_TYPE_EEPROM_4K;
+        case FLASHCART_SAVE_TYPE_EEPROM_4KBIT:
+            type = SAVE_TYPE_EEPROM_4KBIT;
             break;
-        case FLASHCART_SAVE_TYPE_EEPROM_16K:
-            type = SAVE_TYPE_EEPROM_16K;
+        case FLASHCART_SAVE_TYPE_EEPROM_16KBIT:
+            type = SAVE_TYPE_EEPROM_16KBIT;
             break;
-        case FLASHCART_SAVE_TYPE_SRAM:
-            type = SAVE_TYPE_SRAM;
+        case FLASHCART_SAVE_TYPE_SRAM_256KBIT:
+            type = SAVE_TYPE_SRAM_256KBIT;
             break;
         case FLASHCART_SAVE_TYPE_SRAM_BANKED:
             type = SAVE_TYPE_SRAM_BANKED;
             break;
-        case FLASHCART_SAVE_TYPE_SRAM_128K:
+        case FLASHCART_SAVE_TYPE_SRAM_1MBIT:
             // NOTE: 64drive doesn't support 128 kiB SRAM save type, fallback to 32 kiB SRAM save type
-            type = SAVE_TYPE_SRAM;
+            type = SAVE_TYPE_SRAM_256KBIT;
             break;
-        case FLASHCART_SAVE_TYPE_FLASHRAM:
-            type = SAVE_TYPE_FLASHRAM;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT:
+            type = SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
-            type = (device_variant == DEVICE_VARIANT_A) ? SAVE_TYPE_FLASHRAM_PKST2 : SAVE_TYPE_FLASHRAM;
+            type = (device_variant == DEVICE_VARIANT_A) ? SAVE_TYPE_FLASHRAM_PKST2 : SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         default:
             return FLASHCART_ERR_ARGS;

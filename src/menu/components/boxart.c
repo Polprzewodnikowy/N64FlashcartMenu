@@ -31,7 +31,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
 
     sprintf(file_name, "%.3s.png", game_code);
     path_push(path, file_name);
-    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+    if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
         path_free(path);
         return b;
     }
@@ -40,7 +40,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     // TODO: This is bad, we should only check for 3 letter codes
     sprintf(file_name, "%.2s.png", game_code + 1);
     path_push(path, file_name);
-    if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+    if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
         path_free(path);
         return b;
     }
@@ -65,15 +65,20 @@ void component_boxart_free (component_boxart_t *b) {
 }
 
 void component_boxart_draw (component_boxart_t *b) {
-    if (b && b->image && b->image->width == BOXART_WIDTH && b->image->height == BOXART_HEIGHT) {
+    int box_x = BOXART_X;
+    int box_y = BOXART_Y;
+
+    if (b && b->image  && b->image->width <= BOXART_WIDTH_MAX && b->image->height <= BOXART_HEIGHT_MAX) {
         rdpq_mode_push();
             rdpq_set_mode_copy(false);
-            rdpq_tex_blit(
-                b->image,
-                BOXART_X,
-                BOXART_Y,
-                NULL
-            );
+            if (b->image->height == BOXART_HEIGHT_MAX) {
+                box_x = BOXART_X_JP;
+                box_y = BOXART_Y_JP;
+            } else if (b->image->width == BOXART_WIDTH_DD && b->image->height == BOXART_HEIGHT_DD) {
+                box_x = BOXART_X_DD;
+                box_y = BOXART_Y_DD;
+            }
+            rdpq_tex_blit(b->image, box_x, box_y, NULL);
         rdpq_mode_pop();
     } else {
         component_box_draw(

@@ -1,4 +1,5 @@
 #include <sys/stat.h>
+#include "../sound.h"
 
 #include "utils/fs.h"
 #include "views.h"
@@ -12,8 +13,8 @@ static const char *patch_extensions[] = { "aps", "bps", "ips", "pps", "ups", "xd
 static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NULL };
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
-static const char *dexdrive_extensions[] = { "mpk", NULL };
-static const char *emulator_extensions[] = { "emu", NULL };
+static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
+static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", NULL };
 
 
 static struct stat st;
@@ -38,10 +39,10 @@ static char *format_file_type (char *name, bool is_directory) {
         return " Type: Image file\n";
     } else if (file_has_extensions(name, music_extensions)) {
         return " Type: Music file\n";
-    } else if (file_has_extensions(name, dexdrive_extensions)) {
-        return " Type: DexDrive CPak backup file\n";
+    } else if (file_has_extensions(name, controller_pak_extensions)) {
+        return " Type: Controller Pak file\n";
     } else if (file_has_extensions(name, emulator_extensions)) {
-        return " Type: Emulator file\n";
+        return " Type: Emulator ROM file\n";
     }
     return " Type: Unknown file\n";
 }
@@ -50,6 +51,7 @@ static char *format_file_type (char *name, bool is_directory) {
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
     }
 }
 

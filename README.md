@@ -61,8 +61,8 @@ i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 You can download these boxart packs:
 
 * [Japan Boxart](https://mega.nz/file/OiBihI7S#t22Cjy0ckNOnfC1G_pWqHbf1xhea2_Z9ApjcEMO8zG4)
-* [American Boxart](https://mega.nz/file/TroAzSJI#FzrMJFCa_9giF4XVdgtXMC5sQYnHHqg1No3esUXcofo)
-* [European Boxart](https://mega.nz/file/67IFHaIZ#7TUvQrv5Q0POxRR04bEli1Vy05GOriCsKVpUOCvEncQ)
+* [American Boxart](https://mega.nz/file/zuYxQTqL#mAKD6_i6MKOytVf7E6Bd8HabK796B4LIqjHmU5kSxiw)
+* [European Boxart](https://mega.nz/file/mqhThDjD#Pqnjh4N64hctyeGP_Wv_-Qo-GyqbtTwl2ZUJKjWLun4)
 * [64DD Boxart](https://mega.nz/file/zu5QzY4Y#EwzBxEBLCDl0UVg4p20NJXhmOuX5Nzzdm5snOAXUgdQ)
 
 

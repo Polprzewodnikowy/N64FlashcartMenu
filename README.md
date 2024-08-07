@@ -63,7 +63,7 @@ You can download these boxart packs:
 * [Japan Boxart](https://mega.nz/file/OiBihI7S#t22Cjy0ckNOnfC1G_pWqHbf1xhea2_Z9ApjcEMO8zG4)
 * [American Boxart](https://mega.nz/file/TroAzSJI#FzrMJFCa_9giF4XVdgtXMC5sQYnHHqg1No3esUXcofo)
 * [European Boxart](https://mega.nz/file/67IFHaIZ#7TUvQrv5Q0POxRR04bEli1Vy05GOriCsKVpUOCvEncQ)
-* [64DD Boxart](https://mega.nz/file/6rARGaQS#8bdy_VyVPgw-02Xt_NJZ3raXMiyMIdQDnjmDXLppdsg)
+* [64DD Boxart](https://mega.nz/file/zu5QzY4Y#EwzBxEBLCDl0UVg4p20NJXhmOuX5Nzzdm5snOAXUgdQ)
 
 
 ### Menu Settings

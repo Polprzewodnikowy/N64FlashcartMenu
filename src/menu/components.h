@@ -38,8 +38,8 @@ void component_background_draw (void);
 void component_file_list_draw (entry_t *list, int entries, int selected);
 
 typedef struct component_context_menu {
-    int count;
-    int selected;
+    int row_count;
+    int row_selected;
     bool hide_pending;
     struct component_context_menu *parent;
     struct component_context_menu *submenu;

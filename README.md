@@ -60,10 +60,10 @@ i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
 You can download these boxart packs:
 
-* [Japan Boxart](https://mega.nz/file/SzISVTRC#1fplLM7VizQoDPMRGdiqc5j3PuAA_7DoX-Wq_yXd3wU)
-* [American Boxart](https://mega.nz/file/zuYxQTqL#mAKD6_i6MKOytVf7E6Bd8HabK796B4LIqjHmU5kSxiw)
-* [European Boxart](https://mega.nz/file/mqhThDjD#Pqnjh4N64hctyeGP_Wv_-Qo-GyqbtTwl2ZUJKjWLun4)
-* [64DD Boxart](https://mega.nz/file/zu5QzY4Y#EwzBxEBLCDl0UVg4p20NJXhmOuX5Nzzdm5snOAXUgdQ)
+* [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)
+* [American Boxart](https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc)
+* [European Boxart](https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ)
+* [64DD Boxart](https://mega.nz/file/ay5wQIxJ#k3PF-VMLrZJxJTr-BOaOKa2TBIK7c2t4zwbdshsQl40)
 
 
 ### Menu Settings

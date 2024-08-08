@@ -33,24 +33,31 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     path_push(path, boxart_id_path);
 
     if (directory_exists(path_get(path))) {
-        if (current_image_view == IMAGE_BOXART_BACK) {
-            path_push(path, "back.png");
+        if (current_image_view == IMAGE_GAMEPAK_FRONT) {
+            path_push(path, "gamepak_front.png");
+        }
+        else if (current_image_view == IMAGE_GAMEPAK_BACK) {
+            path_push(path, "gamepak_back.png");
+        }
+        else if (current_image_view == IMAGE_BOXART_BACK) {
+            path_push(path, "boxart_back.png");
         }
         else if (current_image_view == IMAGE_BOXART_LEFT) {
-            path_push(path, "left.png");
+            path_push(path, "boxart_left.png");
         }
         else if (current_image_view == IMAGE_BOXART_RIGHT) {
-            path_push(path, "right.png");
+            path_push(path, "boxart_right.png");
         }
         else if (current_image_view == IMAGE_BOXART_BOTTOM) {
-            path_push(path, "bottom.png");
+            path_push(path, "boxart_bottom.png");
         }
         else if (current_image_view == IMAGE_BOXART_TOP) {
-            path_push(path, "top.png");
+            path_push(path, "boxart_top.png");
         }
         else {
-            path_push(path, "front.png");
+            path_push(path, "boxart_front.png");
         }
+        
         if (file_exists(path_get(path))) { 
             if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                 path_free(path);

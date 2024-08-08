@@ -1,4 +1,5 @@
 #include <libdragon.h>
+#include <stdbool.h>
 #include "utils/fs.h"
 #include "rom_patch_info.h"
 #include "rom_info.h"
@@ -68,9 +69,60 @@ rom_patch_load_err_t apply_patch_type_ips(FILE *f)
 {
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
+    char header_magic[5];
+    fread(header_magic, 5, 1, f);
 
-    // FIXME: we are not yet implementing it, but should be the first one!
-    return PATCH_ERR_INVALID;
+    // Check the header is valid.
+    if (strcmp(header_magic, PATCH_IPS_MAGIC) != 0) {
+        return PATCH_ERR_INVALID;
+    }
+
+    // while (true) {
+    //     uint8_t offset_bytes[3];
+    //     fread(offset_bytes, 3, 1, f);
+    //     uint32_t offset = (offset_bytes[0] << 16) | (offset_bytes[1] << 8) | offset_bytes[2];
+
+    //     // Check for end-of-file marker.
+    //     if (offset == 0x454F46) { // "EOF" in ASCII (big endian?)
+    //         break;
+    //     }
+
+    //     uint16_t size;
+    //     fread(&size, 2, 1, f);
+    //     size = (size >> 8) | (size << 8); // Convert to big-endian
+
+    //     if (size == 0) {
+    //         // RLE record
+    //         uint16_t rle_size;
+    //         uint8_t rle_byte;
+    //         fread(&rle_size, 2, 1, f);
+    //         fread(&rle_byte, 1, 1, f);
+    //         rle_size = (rle_size >> 8) | (rle_size << 8); // Convert to big-endian
+
+    //         // Apply RLE patch
+    //         for (int i = 0; i < rle_size; i++) {
+    //             // Write rle_byte to the ROM at the given offset
+    //             // (Assuming a function write_byte_to_rom exists)
+    //             //write_byte_to_rom(offset + i, rle_byte);
+    //         }
+    //     } else {
+    //         // Normal record
+    //         uint8_t *data = malloc(size);
+    //         fread(data, size, 1, f);
+
+    //         // Apply patch
+    //         for (int i = 0; i < size; i++) {
+    //             // Write data[i] to the ROM at the given offset
+    //             // (Assuming a function write_byte_to_rom exists)
+    //             //write_byte_to_rom(offset + i, data[i]);
+    //         }
+
+    //         free(data);
+    //     }
+    // }
+
+    // FIXME: we are not yet applying it!
+    return PATCH_OK;
 }
 
 rom_patch_load_err_t apply_patch_type_aps(FILE *f)

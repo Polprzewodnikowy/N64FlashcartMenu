@@ -49,39 +49,42 @@ An open source menu for N64 flashcarts.
 ## Experimental features
 These features are subject to change:
 
-### ROM Boxart
-To use N64 Game boxart, place PNG files within the `sd:/menu/boxart/` folder.
 
-To ensure correct boxart images, these can be loaded by directories for each character of the full 4 character Game Code.
+### GamePak sprites
+To use N64 `GamePak` sprites, place `PNG` files within the `sd:/menu/boxart/` folder.
+
+
+#### Supported sprites
+These must be `PNG` files that use the following dimensions:
+* Standard N64 GamePak boxart sprites: 158x112
+* Japanese N64 GamePak boxart sprites: 112x158
+* 64DD boxart sprites: 129x112
+
+They will be loaded by directories using each character of the full 4 character Game Code (as identified in the menus ROM information).
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 
-To improve compatibility, you can exclued the region ID (last directory) for certain ROMs to match with 3 letter IDs instead:
+To improve compatibility between regions, you may exclued the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
+**Note:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
 
-They must use the following dimensions:
-* Standard covers: 158x112
-* 64DD covers: 129x112
-* Japanese covers: 112x158
-
-
-**Note:** For future support, boxart images should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
 
 #### Compatibilty mode
 If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
 
-Each file must be named according to the 2,3 or 4 letter Game ID (matched in this order).
+**Note:** This will add a noticeable delay for displaying parts of the menu.
+
+Each file must be named according to the 2,3 or 4 letter GamePak ID (matched in this order).
 i.e.
 * for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png` and/or `sd:/menu/boxart/NGEP.png`.
 * for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
 * for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
 
 
-You can try these boxart packs:
-
-* [American Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
-* [European Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
+As a starting point, here are some links to boxart packs:
+* [American GamePak Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
+* [European GamePak Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
 * [64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
 
 

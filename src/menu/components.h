@@ -14,34 +14,34 @@
 /** @brief File image Enumeration. */
 typedef enum {
 
-    /* Image thumbnail */
-    IMAGE_THUMBNAIL,
-
-    /* Boxart image from the front */
+    /** @brief Boxart image from the front */
     IMAGE_BOXART_FRONT,
 
-    /* Boxart image from the back */
+    /** @brief Boxart image from the back */
     IMAGE_BOXART_BACK,
 
-    /* Boxart image from the top */
+    /** @brief Boxart image from the top */
     IMAGE_BOXART_TOP,
 
-    /* Boxart image from the bottom */
+    /** @brief Boxart image from the bottom */
     IMAGE_BOXART_BOTTOM,
 
-    /* Boxart image from the left side */
+    /** @brief Boxart image from the left side */
     IMAGE_BOXART_LEFT,
 
-    /* Boxart image from the right side */
+    /** @brief Boxart image from the right side */
     IMAGE_BOXART_RIGHT,
 
-    /* GamePak image from the front */
+    /** @brief GamePak image from the front */
     IMAGE_GAMEPAK_FRONT,
 
-    /* GamePak image from the back */
+    /** @brief GamePak image from the back */
     IMAGE_GAMEPAK_BACK,
 
-    /* List end marker */
+    /** @brief File image thumbnail */
+    IMAGE_THUMBNAIL,
+
+    /** @brief List end marker */
     IMAGE_TYPE_END
 
 } file_image_type_t;

@@ -52,7 +52,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
             path_push(path, "front.png");
         }
         if (file_exists(path_get(path))) { 
-            if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                 path_free(path);
                 return b;
             }
@@ -73,7 +73,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
         path_push(path, file_name);
 
         if (file_exists(path_get(path))) {
-            if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                 path_free(path);
                 return b;
             }
@@ -85,7 +85,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
 
         if (file_exists(path_get(path))) {
             if (file_exists(path_get(path))) {
-                if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+                if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                     path_free(path);
                     return b;
                 }
@@ -97,7 +97,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
             sprintf(file_name, "%c%c.png", game_code[1], game_code[2]);
             path_push(path, file_name);
             if (file_exists(path_get(path))) {
-                if (png_decoder_start(path_get(path), BOXART_WIDTH, BOXART_HEIGHT, png_decoder_callback, b) == PNG_OK) {
+                if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                     path_free(path);
                     return b;
                 }

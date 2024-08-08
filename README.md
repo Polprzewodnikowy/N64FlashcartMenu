@@ -55,9 +55,10 @@ To use boxart, place PNG files in the `/menu/boxart` folder on the SD card with 
 * 64DD covers: 129x112
 * Japanese covers: 112x158
  
-Each file must be named according to the 2 letter ROM ID, or 3 letter ROM ID including media type.
+Each file must be named according to the 2, 3, 4 letter ROM ID including media type.
 i.e. for GoldenEye 2 letters, this would be `GE.png`.
 i.e. for GoldenEye 3 letters, this would be `NGE.png`.
+i.e. for GoldenEye 4 letters, this would be `NGEE.png`.
 You can download these boxart packs:
 
 * [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)

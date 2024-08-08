@@ -7,6 +7,7 @@
 
 static bool load_pending;
 static bool load_rom;
+static component_boxart_t *boxart;
 
 
 static char *convert_error_message (disk_err_t err) {
@@ -92,6 +93,8 @@ static void draw (menu_t *menu, surface_t *d) {
                 "R: Load with ROM"
             );
         }
+
+        component_boxart_draw(boxart);
     }
 
     rdpq_detach_show();
@@ -148,6 +151,9 @@ static void load (menu_t *menu) {
     }
 }
 
+static void deinit (void) {
+    component_boxart_free(boxart);
+}
 
 void view_load_disk_init (menu_t *menu) {
     if (menu->load.disk_path) {
@@ -163,6 +169,8 @@ void view_load_disk_init (menu_t *menu) {
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
+
+    boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {
@@ -173,5 +181,9 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
     if (load_pending) {
         load_pending = false;
         load(menu);
+    }
+
+    if (menu->next_mode != MENU_MODE_LOAD_DISK) {
+        deinit();
     }
 }

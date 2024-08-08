@@ -1,8 +1,14 @@
-#include <fatfs/ff.h>
 #include <libdragon.h>
 #include "utils/fs.h"
 #include "rom_patch_info.h"
 #include "rom_info.h"
+
+
+static const char *patch_rom_bps_extensions[] = { "aps", NULL };
+static const char *patch_rom_ips_extensions[] = { "ips", NULL };
+static const char *patch_rom_aps_extensions[] = { "aps", NULL };
+static const char *patch_rom_ups_extensions[] = { "ups", NULL };
+static const char *patch_rom_xdelta_extensions[] = { "xdelta", NULL };
 
 
 typedef struct
@@ -51,67 +57,47 @@ typedef struct
 } aps_patch_record_rle_t;
 
 
-rom_patch_load_err_t apply_patch_type_bps(FIL *fil)
+rom_patch_load_err_t apply_patch_type_bps(FILE *f)
 {
     // https://github.com/Alcaro/Flips/blob/master/bps_spec.md
     // https://www.romhacking.net/documents/746/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patch_load_err_t apply_patch_type_ips(FIL *fil)
+rom_patch_load_err_t apply_patch_type_ips(FILE *f)
 {
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
-    UINT bytes_read = 0;
-    char header_magic[5];
-    f_read(fil, header_magic, 5, &bytes_read);
 
-    // Check the header is valid.
-    if (strcmp(header_magic, PATCH_IPS_MAGIC) != 0) {
-        return PATCH_ERR_INVALID;
-    }
-
-    //ips_patch_record_t records;
-    //ips_patch_record_rle_t records_rle;
-
-    // FIXME: we are not yet doing the patch write!
-    return PATCH_OK;
-}
-
-rom_patch_load_err_t apply_patch_type_aps(FIL *fil)
-{
-    // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
-
-    UINT bytes_read = 0;
-    aps_patch_header_t aps_patch_header;
-    f_read(fil, &aps_patch_header, sizeof(aps_patch_header_t), &bytes_read);
-
-    // Check the header is valid.
-    if (strcmp(aps_patch_header.header_magic, PATCH_APS_MAGIC_N64) != 0) {
-        return PATCH_ERR_INVALID;
-    }
-
+    // FIXME: we are not yet implementing it, but should be the first one!
     return PATCH_ERR_INVALID;
 }
 
-rom_patch_load_err_t apply_patch_type_ups(FIL *fil)
+rom_patch_load_err_t apply_patch_type_aps(FILE *f)
+{
+    // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
+
+    return PATCH_ERR_UNSUPPORTED;
+}
+
+rom_patch_load_err_t apply_patch_type_ups(FILE *f)
 {
     // http://www.romhacking.net/documents/392/
     return PATCH_ERR_UNSUPPORTED;
 }
 
-rom_patch_load_err_t apply_patch_type_xdelta(FIL *fil)
+rom_patch_load_err_t apply_patch_type_xdelta(FILE *f)
 {
     return PATCH_ERR_UNSUPPORTED;
 }
 
 
-rom_patch_load_err_t rom_patch_info_load (char *path)
+rom_patch_load_err_t rom_patch_info_load (path_t *path)
 {
-    FIL fil;
+    FILE *f;
     rom_patch_load_err_t err;
 
-    if (f_open(&fil, strip_fs_prefix(path), FA_READ) != FR_OK) {
+    if ((f = fopen(path_get(path), "rb")) == NULL) {
         return PATCH_ERR_NO_FILE;
     }
 
@@ -123,15 +109,15 @@ rom_patch_load_err_t rom_patch_info_load (char *path)
 
     rom_patch_type_t patch_ext_type;
     // Determine patch type based on file extension
-    if (file_has_extension(path, "bps")) {
+    if (file_has_extensions(path_get(path), patch_rom_bps_extensions)) {
         patch_ext_type = PATCH_TYPE_BPS;
-    } else if (file_has_extension(path, "ips")) {
+    } else if (file_has_extensions(path_get(path), patch_rom_ips_extensions)) {
         patch_ext_type = PATCH_TYPE_IPS;
-    } else if (file_has_extension(path, "aps")) {
+    } else if (file_has_extensions(path_get(path), patch_rom_aps_extensions)) {
         patch_ext_type = PATCH_TYPE_APS;
-    } else if (file_has_extension(path, "ups")) {
+    } else if (file_has_extensions(path_get(path), patch_rom_ups_extensions)) {
         patch_ext_type = PATCH_TYPE_UPS;
-    } else if (file_has_extension(path, "xdelta")) {
+    } else if (file_has_extensions(path_get(path), patch_rom_xdelta_extensions)) {
         patch_ext_type = PATCH_TYPE_XDELTA;
     } else {
         return PATCH_ERR_UNSUPPORTED;
@@ -140,26 +126,26 @@ rom_patch_load_err_t rom_patch_info_load (char *path)
     switch (patch_ext_type)
     {
         case PATCH_TYPE_BPS:
-            err = apply_patch_type_bps(&fil);
+            err = apply_patch_type_bps(f);
             break;
         case PATCH_TYPE_IPS:
-            err = apply_patch_type_ips(&fil);
+            err = apply_patch_type_ips(f);
             break;
         case PATCH_TYPE_APS:
-            err = apply_patch_type_aps(&fil);
+            err = apply_patch_type_aps(f);
             break;
         case PATCH_TYPE_UPS:
-            err = apply_patch_type_ups(&fil);
+            err = apply_patch_type_ups(f);
             break;
         case PATCH_TYPE_XDELTA:
-            err = apply_patch_type_xdelta(&fil);
+            err = apply_patch_type_xdelta(f);
             break;
         default:
             return PATCH_ERR_UNSUPPORTED;
     }
 
 
-    if (f_close(&fil) != FR_OK) {
+    if (fclose(f)) {
         return PATCH_ERR_IO;
     }
 

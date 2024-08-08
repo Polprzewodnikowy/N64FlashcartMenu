@@ -32,6 +32,10 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
     path_push(path, boxart_id_path);
 
+    if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
+        path_pop(path);
+    }
+
     if (directory_exists(path_get(path))) {
         if (current_image_view == IMAGE_GAMEPAK_FRONT) {
             path_push(path, "gamepak_front.png");
@@ -57,7 +61,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
         else {
             path_push(path, "boxart_front.png");
         }
-        
+
         if (file_exists(path_get(path))) { 
             if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
                 path_free(path);
@@ -67,14 +71,10 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     }
     else { // compatibility mode
 
-        //TODO: this could be path_pop one by one to find the generic image?!
         char file_name[8];
 
-        // undo the dir path used for the boxart previously.
-        path_pop(path);
-        path_pop(path);
-        path_pop(path);
-        path_pop(path);
+        // reset the directory path used for boxart.
+        path = path_init(storage_prefix, BOXART_DIRECTORY);
 
         sprintf(file_name, "%c%c%c%c.png", game_code[0], game_code[1], game_code[2], game_code[3]);
         path_push(path, file_name);

@@ -53,8 +53,12 @@ These features are subject to change:
 To use N64 Game boxart, place PNG files within the `sd:/menu/boxart/` folder.
 
 To ensure correct boxart images, these can be loaded by directories for each character of the full 4 character Game Code.
-i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/front.png`.
-i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/front.png`.
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
+
+To improve compatibility, you can exclued the region ID (last directory) for certain ROMs to match with 3 letter IDs instead:
+i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
+
 
 They must use the following dimensions:
 * Standard covers: 158x112
@@ -62,7 +66,7 @@ They must use the following dimensions:
 * Japanese covers: 112x158
 
 
-**Note:** For future support, boxart images should also include: `back.png`, `top.png`, `bottom.png`, `left.png`, `right.png`, `thumb.png`.
+**Note:** For future support, boxart images should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
 
 #### Compatibilty mode
 If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.

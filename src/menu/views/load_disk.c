@@ -170,7 +170,7 @@ void view_load_disk_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id);
+    boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

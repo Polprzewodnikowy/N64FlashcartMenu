@@ -13,12 +13,13 @@
 #include "ed64x.h"
 
 typedef enum {
-    // ED64_V1_0 = 1,
-    // ED64_V2_0 = 2,
-    // ED64_V2_5 = 2.5,
-    // ED64_V3_0 = 3,
     ED64_X5 = 5,
     ED64_X7 = 7,
+    // potentially handle if the firmware supports it...
+    // ED64_V1_0 = 10,
+    // ED64_V2_0 = 20,
+    // ED64_V2_5 = 25,
+    // ED64_V3_0 = 30,
     ED64_UKNOWN = 0,
 } ed64x_device_variant_t;
 

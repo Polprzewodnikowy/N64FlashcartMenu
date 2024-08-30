@@ -11,7 +11,7 @@
 #include "flashcart_utils.h"
 
 #include "64drive/64drive.h"
-#include "ed64x/ed64x.h"
+#include "ed64/ed64x.h"
 #include "sc64/sc64.h"
 
 

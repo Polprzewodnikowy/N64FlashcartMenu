@@ -48,8 +48,9 @@ static bool ed64x_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_RTC: return is_model_x7 ? true : false;
         case FLASHCART_FEATURE_USB: return is_model_x7 ? true : false;
-        case FLASHCART_FEATURE_AUTO_CIC: return true;
         case FLASHCART_FEATURE_64DD: return false;
+        case FLASHCART_FEATURE_AUTO_CIC: return true;
+        case FLASHCART_FEATURE_AUTO_REGION: return true;
         default: return false;
     }
 }

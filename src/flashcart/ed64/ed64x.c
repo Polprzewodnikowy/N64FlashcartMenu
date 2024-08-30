@@ -13,13 +13,13 @@
 #include "ed64x.h"
 
 typedef enum {
-    ED64_X5 = 5,
-    ED64_X7 = 7,
     // potentially handle if the firmware supports it...
-    // ED64_V1_0 = 10,
-    // ED64_V2_0 = 20,
-    // ED64_V2_5 = 25,
-    // ED64_V3_0 = 30,
+    // ED64_V1_0 = 110,
+    // ED64_V2_0 = 320,
+    // ED64_V2_5 = 325,
+    // ED64_V3_0 = 330,
+    ED64_X5_0 = 450,
+    ED64_X7_0 = 470,
     ED64_UKNOWN = 0,
 } ed64x_device_variant_t;
 
@@ -39,12 +39,12 @@ static flashcart_err_t ed64x_deinit (void) {
 }
 
 static ed64x_device_variant_t get_cart_model() {
-    ed64x_device_variant_t variant = ED64_X7; // FIXME: check cart model from ll for better feature handling.
+    ed64x_device_variant_t variant = ED64_X7_0; // FIXME: check cart model from ll for better feature handling.
     return variant;
 }
 
 static bool ed64x_has_feature (flashcart_features_t feature) {
-    bool is_model_x7 = (get_cart_model() == ED64_X7); 
+    bool is_model_x7 = (get_cart_model() == ED64_X7_0); 
     switch (feature) {
         case FLASHCART_FEATURE_RTC: return is_model_x7 ? true : false;
         case FLASHCART_FEATURE_USB: return is_model_x7 ? true : false;

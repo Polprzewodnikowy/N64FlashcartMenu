@@ -36,7 +36,7 @@ SD:\
 │   │    ├── NDDJ2.n64
 │   │    └── NDXJ0.n64
 │   │    
-│   └── emulators
+│   └── emulators\
 │        ├── neon64bu.rom
 │        ├── sodium64.z64
 │        ├── gb.v64

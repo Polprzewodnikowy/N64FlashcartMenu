@@ -64,10 +64,11 @@ They will be loaded by directories using each character of the full 4 character 
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 
-To improve compatibility between regions, you may exclued the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
+To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
-**Note:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
+**Note1:** Excluding the region ID may show the wrong boxart.
+**Note2:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
 
 
 #### Compatibilty mode

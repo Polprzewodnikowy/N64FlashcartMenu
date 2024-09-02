@@ -18,8 +18,8 @@ typedef enum {
     // ED64_V2_0 = 320,
     // ED64_V2_5 = 325,
     // ED64_V3_0 = 330,
-    ED64_X5_0 = 450,
-    ED64_X7_0 = 470,
+    ED64_X5_0 = 550,
+    ED64_X7_0 = 570,
     ED64_UKNOWN = 0,
 } ed64x_device_variant_t;
 

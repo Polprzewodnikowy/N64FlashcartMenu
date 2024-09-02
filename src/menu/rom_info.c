@@ -186,6 +186,9 @@ static const match_t database[] = {
 
     MATCH_ID_REGION("NDKJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                 // Dark Rift [Space Dynamites (J)]
 
+    MATCH_ID_REGION("NPDJ", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK | FEAT_EXP_PAK_REQUIRED),// Perfect Dark (J)
+    MATCH_ID("NPD", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK | FEAT_EXP_PAK_RECOMMENDED),     // Perfect Dark
+
     MATCH_ID_REGION("NSVE", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                 // Space Station Silicon Valley
     MATCH_ID("NSV", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_EXP_PAK_BROKEN),                                   // Space Station Silicon Valley
 
@@ -305,7 +308,6 @@ static const match_t database[] = {
     MATCH_ID("NMV", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                        // Mario Party 3
     MATCH_ID("NMX", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Excitebike 64
     MATCH_ID("NNB", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK),                                            // Kobe Bryant in NBA Courtside
-    MATCH_ID("NPD", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK | FEAT_RPAK | FEAT_TPAK | FEAT_EXP_PAK_RECOMMENDED),     // Perfect Dark
     MATCH_ID("NPP", SAVE_TYPE_EEPROM_16KBIT, FEAT_CPAK),                                                        // Parlor! Pro 64: Pachinko Jikki Simulation Game
     MATCH_ID("NR7", SAVE_TYPE_EEPROM_16KBIT, FEAT_TPAK),                                                        // Robot Poncots 64: 7tsu no Umi no Caramel
     MATCH_ID("NRZ", SAVE_TYPE_EEPROM_16KBIT, FEAT_RPAK),                                                        // Ridge Racer 64

@@ -136,6 +136,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
+        "  Autoload ROM      : %s\n"
+        "  Autoload ROM Path : %s\n"
         "To change the following menu settings, press 'A':\n"
         "*    PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
@@ -148,6 +150,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "Note: Certain settings have the following caveats:\n\n"
         "*    Requires a flashcart reboot.\n",
         menu->settings.default_directory,
+        format_switch(menu->settings.rom_autoload_enabled),
+        menu->settings.rom_autoload_path,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),

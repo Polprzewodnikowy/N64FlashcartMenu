@@ -145,6 +145,14 @@ static void set_tv_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void set_autoload_type (menu_t *menu, void *arg) {
+    menu->settings.rom_autoload_path = path_get(menu->load.rom_path);
+    // FIXME: add a confirmation box here! (press start on reboot)
+    menu->settings.rom_autoload_enabled = true;
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -187,6 +195,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+    { .text = "Set ROM to autoload", .action = set_autoload_type },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

@@ -14,7 +14,9 @@ static settings_t init = {
     .default_directory = "/",
     .use_saves_folder = true,
     .sound_enabled = true,
-
+    .rom_autoload_enabled = false,
+    .rom_autoload_path = "",
+    
     /* Beta feature flags (should always init to off) */
     .bgm_enabled = false,
     .rumble_enabled = false,
@@ -41,9 +43,14 @@ void settings_load (settings_t *settings) {
     settings->use_saves_folder = mini_get_bool(ini, "menu", "use_saves_folder", init.use_saves_folder);
     settings->sound_enabled = mini_get_bool(ini, "menu", "sound_enabled", init.sound_enabled);
 
+    settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
+    settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
+
     /* Beta feature flags, they might not be in the file */
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     settings->rumble_enabled = mini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
+    // settings->rom_favourites = mini_get_strings(ini, "menu_favourite_roms", "path", init.rom_favourites);
+    // settings->roms_recent = mini_get_strings(ini, "menu_recent_roms", "path", init.roms_recent);
 
     mini_free(ini);
 }
@@ -56,6 +63,8 @@ void settings_save (settings_t *settings) {
     mini_set_string(ini, "menu", "default_directory", settings->default_directory);
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
     mini_set_bool(ini, "menu", "sound_enabled", settings->sound_enabled);
+    mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
+    mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);
 
     /* Beta feature flags, they should not save until production ready! */
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", settings->bgm_enabled);

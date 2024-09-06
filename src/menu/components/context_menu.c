@@ -66,7 +66,19 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
             cm->selected = (cm->count - 1);
         }
         sound_play_effect(SFX_CURSOR);
-    }
+    } //else if (menu->actions.go_right) {
+    //     tm->selected += 1;
+    //     if (tm->selected >= tm->count) {
+    //         tm->selected = (tm->count - 1);
+    //     }
+    //     sound_play_effect(SFX_CURSOR);
+    // } else if (menu->actions.go_left) {
+    //     tm->selected -= 1;
+    //     if (tm->selected < 0) {
+    //         tm->selected = 0;
+    //     }
+    //     sound_play_effect(SFX_CURSOR);
+    // }
 
     return true;
 }

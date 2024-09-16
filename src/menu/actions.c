@@ -36,7 +36,6 @@ static void actions_update_direction (menu_t *menu) {
         }
     }
 
-
     if (fast_dir != JOYPAD_8WAY_NONE) {
         held_dir = fast_dir;
         menu->actions.go_fast = true;
@@ -113,6 +112,12 @@ static void actions_update_buttons (menu_t *menu) {
     }
 }
 
+
+void actions_init (void) {
+    JOYPAD_PORT_FOREACH (port) {
+        joypad_set_rumble_active(port, false);
+    }
+}
 
 void actions_update (menu_t *menu) {
     joypad_poll();

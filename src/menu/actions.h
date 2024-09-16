@@ -11,6 +11,7 @@
 #include "menu_state.h"
 
 
+void actions_init (void);
 void actions_update (menu_t *menu);
 
 

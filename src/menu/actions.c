@@ -24,8 +24,21 @@ static void actions_clear (menu_t *menu) {
 }
 
 static void actions_update_direction (menu_t *menu) {
-    joypad_8way_t held_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_DPAD | JOYPAD_2D_STICK);
-    joypad_8way_t fast_dir = joypad_get_direction(JOYPAD_PORT_1, JOYPAD_2D_C);
+    int prevPad = -1;
+    joypad_8way_t held_dir = JOYPAD_8WAY_NONE;
+    joypad_8way_t fast_dir = JOYPAD_8WAY_NONE;
+
+    JOYPAD_PORT_FOREACH (i) {
+        joypad_8way_t held_dir_temp = joypad_get_direction(i, JOYPAD_2D_DPAD | JOYPAD_2D_STICK);
+        joypad_8way_t fast_dir_temp = joypad_get_direction(i, JOYPAD_2D_C);
+        if ((held_dir_temp != JOYPAD_8WAY_NONE || prevPad == i) && held_dir_temp != held_dir) {
+            held_dir = held_dir_temp;
+            fast_dir = fast_dir_temp;
+            prevPad = i;
+            break;
+        }
+    }
+
 
     if (fast_dir != JOYPAD_8WAY_NONE) {
         held_dir = fast_dir;
@@ -81,7 +94,16 @@ static void actions_update_direction (menu_t *menu) {
 }
 
 static void actions_update_buttons (menu_t *menu) {    
-    joypad_buttons_t pressed = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+    int prevPad = -1;
+    joypad_buttons_t pressed = {0};
+
+    JOYPAD_PORT_FOREACH (i) {
+        joypad_buttons_t pressed_temp = joypad_get_buttons_pressed(i);
+        if ((pressed_temp.raw || prevPad == i) && pressed_temp.raw != pressed.raw) {
+            pressed.raw = pressed_temp.raw;
+            break;
+        }
+    }
 
     if (pressed.a) {
         menu->actions.enter = true;

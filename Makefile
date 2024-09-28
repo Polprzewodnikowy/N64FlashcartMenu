@@ -98,7 +98,6 @@ $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fc
 $(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 80-1FF -r 2026-2026 --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
-
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 
 $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf

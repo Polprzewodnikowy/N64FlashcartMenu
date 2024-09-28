@@ -29,6 +29,8 @@ typedef enum {
     FLASHCART_FEATURE_64DD,
     FLASHCART_FEATURE_RTC,
     FLASHCART_FEATURE_USB,
+    FLASHCART_FEATURE_AUTO_CIC,
+    FLASHCART_FEATURE_AUTO_REGION,
 } flashcart_features_t;
 
 /** @brief Flashcart save type enumeration */

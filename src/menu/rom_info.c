@@ -4,6 +4,8 @@
 
 #include <mini.c/src/mini.h>
 
+#include "views/views.h"
+
 #include "boot/cic.h"
 #include "rom_info.h"
 #include "utils/fs.h"
@@ -17,6 +19,10 @@
 #define PI_CONFIG_64DD_IPL      (0x80270740)
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
+
+#ifndef GAMEPAK_CONFIG_SUBDIRECTORY
+#define GAMEPAK_CONFIG_SUBDIRECTORY     "config"
+#endif
 
 
 /** @brief ROM File Information Structure. */
@@ -794,7 +800,21 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 }
 
+static bool create_gamepak_config_subdirectory (path_t *path) {
+    path_t *gamepak_config_path = path_clone(path);
+    path_pop(gamepak_config_path);
+    path_push(gamepak_config_path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    bool error = directory_create(path_get(gamepak_config_path));
+    path_free(gamepak_config_path);
+    return error;
+}
+
 static void load_overrides (path_t *path, rom_info_t *rom_info) {
+
+    if ( menu->settings.use_gamepak_config_folder) {
+        path_push_subdir(path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    }
+
     path_t *overrides_path = path_clone(path);
 
     path_ext_replace(overrides_path, "ini");
@@ -828,6 +848,15 @@ static void load_overrides (path_t *path, rom_info_t *rom_info) {
 }
 
 static rom_err_t save_override (path_t *path, const char *id, int value, int default_value) {
+
+    if ( menu->settings.use_gamepak_config_folder) {
+        // if the sub dir does not exist, create it
+        // TODO: would it be quicker to check it exists first?
+        create_gamepak_config_subdirectory(path);
+
+        path_push_subdir(path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    }
+
     path_t *overrides_path = path_clone(path);
 
     path_ext_replace(overrides_path, "ini");

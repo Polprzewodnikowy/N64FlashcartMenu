@@ -84,9 +84,10 @@ i.e.
 
 
 As a starting point, here are some links to boxart packs:
-* [American GamePak Boxart](https://mega.nz/file/6cNGwSqI#8X5ukb65n3YMlGaUtSOGXkKo9HxVnnMOgqn94Epcr7w)
-* [European GamePak Boxart](https://mega.nz/file/O7AjDbRJ#VnVU10dq8HQvBUQptppI6PAcQMb8-Zembqav8WtAQ_M)
-* [64DD Boxart](https://mega.nz/file/O3JzwD7B#BYl1aV-pbrJ-MxWUbM_K0yGVIRbmSoxJJZqQInRzZyM)
+* [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)
+* [American Boxart](https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc)
+* [European Boxart](https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ)
+* [64DD Boxart](https://mega.nz/file/ay5wQIxJ#k3PF-VMLrZJxJTr-BOaOKa2TBIK7c2t4zwbdshsQl40)
 
 
 ### Menu Settings

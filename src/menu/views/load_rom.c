@@ -364,7 +364,7 @@ void view_load_rom_init (menu_t *menu) {
         return;
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code);
+    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
 
     component_context_menu_init(&options_context_menu);
 }

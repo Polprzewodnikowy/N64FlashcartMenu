@@ -30,6 +30,7 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
 
 static void set_use_gamepak_custom_config_folder_type (menu_t *menu, void *arg) {
     menu->settings.use_gamepak_custom_config_folder = (bool) (arg);
+    rom_info_use_config_folder(menu->settings.use_gamepak_custom_config_folder);
     settings_save(&menu->settings);
 }
 

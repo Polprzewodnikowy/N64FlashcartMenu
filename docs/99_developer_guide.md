@@ -8,11 +8,11 @@ You can use a dev container in VSCode to ease development.
 
 ### To deploy:
 #### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip)
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.20.0/sc64-deployer-windows-v2.20.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.18.0+)
-See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
+Make sure that your firmware is compatible (currently v2.20.0+)
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.20.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 ##### From the devcontainer
 It is not currently possible to directly communicate with USB devices.

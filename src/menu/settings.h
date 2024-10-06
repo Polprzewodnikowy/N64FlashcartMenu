@@ -22,6 +22,9 @@ typedef struct {
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
 
+    /** @brief Put custom GamePak configs into separate directory */
+    bool use_gamepak_custom_config_folder;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 

@@ -99,6 +99,10 @@ static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_
     }
 }
 
+static const char *format_rom_description(char *description) {
+    return description[0] == '\0' ? "None." : description;
+}
+
 static const char *format_cic_type (rom_cic_type_t cic_type) {
     switch (cic_type) {
         case ROM_CIC_TYPE_5101: return "5101";
@@ -116,6 +120,10 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
         case ROM_CIC_TYPE_8501: return "8501";
         default: return "Unknown";
     }
+}
+
+static const char *format_boolean_type (bool bool_value) {
+    return bool_value ? "On" : "Off";
 }
 
 static void set_cic_type (menu_t *menu, void *arg) {
@@ -237,16 +245,20 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "Description:\n None.\n\n\n\n\n\n\n\n"
+            "Description:\n %s\n"
+            "\n\n\n\n\n\n\n"
             "Expansion PAK: %s\n"
             "TV type:       %s\n"
             "CIC:           %s\n"
-            "GS/AR Cheats:  Off\n"
-            "Patches:       Off\n"
+            "GS/AR Cheats:  %s\n"
+            "Patches:       %s\n"
             "Save type:     %s\n",
+            format_rom_description(menu->load.rom_info.metadata.description),
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
+            format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
+            format_boolean_type(menu->load.rom_info.settings.patches_enabled),
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 

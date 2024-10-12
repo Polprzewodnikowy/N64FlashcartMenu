@@ -47,7 +47,8 @@ For ease of development and debugging, the menu ROM can run in the [Ares emulato
 
 ## Update Libdragon submodule
 This repo currently uses the `preview` branch as a submodule at a specific commit.
-To update to the latest version, use `git submodule update --remote` from the terminal.
+* To update to the latest version, use `git submodule update --remote` from the terminal.
+* To ensure your local instance is building against it `cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd ..`
 
 ## Generate documentation
 Run `doxygen` from the dev container terminal.

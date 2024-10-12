@@ -65,7 +65,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     }
     else { // compatibility mode
 
-        char file_name[8];
+        char file_name[9];
 
         // reset the directory path used for boxart.
         path = path_init(storage_prefix, BOXART_DIRECTORY);

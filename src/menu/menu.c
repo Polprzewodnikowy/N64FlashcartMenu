@@ -193,8 +193,8 @@ void menu_run (boot_params_t *boot_params) {
         } else if (menu->settings.rom_autoload_enabled) {
 
             menu->load.rom_path = path_init(menu->settings.rom_autoload_path, "");
-            rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
-            if (err != ROM_OK) {
+            rom_err_t err_rom_info = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
+            if (err_rom_info != ROM_OK) {
                 path_free(menu->load.rom_path);
                 menu->load.rom_path = NULL;
                 menu_show_error(menu, "ROM info load error");
@@ -203,9 +203,9 @@ void menu_run (boot_params_t *boot_params) {
 
             menu->next_mode = MENU_MODE_BOOT;
 
-            cart_load_err_t err2 = cart_load_n64_rom_and_save(menu, draw_progress);
-            if (err2 != CART_LOAD_OK) {
-                menu_show_error(menu, cart_load_convert_error_message(err));
+            cart_load_err_t err_cart_load = cart_load_n64_rom_and_save(menu, draw_progress);
+            if (err_cart_load != CART_LOAD_OK) {
+                menu_show_error(menu, cart_load_convert_error_message(err_cart_load));
                 return;
             }
 

@@ -192,7 +192,7 @@ void menu_run (boot_params_t *boot_params) {
             settings_save(&menu->settings);
         } else if (menu->settings.rom_autoload_enabled) {
 
-            menu->load.rom_path = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+            menu->load.rom_path = path_init(menu->settings.rom_autoload_path, "");
             rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
             if (err != ROM_OK) {
                 path_free(menu->load.rom_path);

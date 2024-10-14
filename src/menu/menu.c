@@ -191,24 +191,28 @@ void menu_run (boot_params_t *boot_params) {
             menu->settings.rom_autoload_path = "";
             settings_save(&menu->settings);
         } else if (menu->settings.rom_autoload_enabled) {
-            // FIXME: currently errors with Corrupted rompak TOC: entry size too big (0xe6320000)
-            // menu->load.rom_path = path_init("", menu->settings.rom_autoload_path);
-            // menu->next_mode = MENU_MODE_BOOT;
-            // menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-            // menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
-            // menu->boot_params->detect_cic_seed = true;
-            // menu->boot_params->cheat_list = NULL;
 
-            // cart_load_err_t err = cart_load_n64_rom_and_save(menu, draw_progress);
-            // if (err != CART_LOAD_OK) {
-            //     menu_show_error(menu, cart_load_convert_error_message(err));
-            //     return;
-            // }
+            menu->load.rom_path = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+            rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
+            if (err != ROM_OK) {
+                path_free(menu->load.rom_path);
+                menu->load.rom_path = NULL;
+                menu_show_error(menu, "ROM info load error");
+                return;
+            }
 
-            // path_free(menu->load.rom_path);
+            menu->next_mode = MENU_MODE_BOOT;
 
-            // menu_deinit(menu);
-            // return;
+            cart_load_err_t err2 = cart_load_n64_rom_and_save(menu, draw_progress);
+            if (err2 != CART_LOAD_OK) {
+                menu_show_error(menu, cart_load_convert_error_message(err));
+                return;
+            }
+
+            path_free(menu->load.rom_path);
+
+            menu_deinit(menu);
+            return;
         }
     }
 

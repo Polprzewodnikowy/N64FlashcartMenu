@@ -49,8 +49,6 @@ void settings_load (settings_t *settings) {
     /* Beta feature flags, they might not be in the file */
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     settings->rumble_enabled = mini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
-    // settings->rom_favourites = mini_get_strings(ini, "menu_favourite_roms", "path", init.rom_favourites);
-    // settings->roms_recent = mini_get_strings(ini, "menu_recent_roms", "path", init.roms_recent);
 
     mini_free(ini);
 }

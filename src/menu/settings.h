@@ -37,11 +37,6 @@ typedef struct {
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
 
-    /** @brief Enable favourite roms */
-    char *rom_favourites[15];
-
-    /** @brief Enable recent roms */
-    char *roms_recent[15];
 } settings_t;
 
 

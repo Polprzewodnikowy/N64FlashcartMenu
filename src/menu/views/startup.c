@@ -9,6 +9,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_startup_init (menu_t *menu) {
+    if (menu->settings.rom_autoload_enabled) {
+        //load_rom();
+    }
     menu->next_mode = MENU_MODE_BROWSER;
 }
 

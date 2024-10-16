@@ -3,6 +3,8 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
+#include <string.h>
+#include "utils/fs.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -145,7 +147,7 @@ static void set_tv_type (menu_t *menu, void *arg) {
 }
 
 static void set_autoload_type (menu_t *menu, void *arg) {
-    menu->settings.rom_autoload_path = path_get(menu->browser.directory);
+    menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
     menu->settings.rom_autoload_filename = menu->browser.entry->name;
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.rom_autoload_enabled = true;

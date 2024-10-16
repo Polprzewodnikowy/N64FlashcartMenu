@@ -1,6 +1,5 @@
 #include "utils/fs.h"
 #include "views.h"
-#include <libdragon.h>
 
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -11,7 +10,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_startup_init (menu_t *menu) {
     // FIXME: rather than use a controller button, would it be better to use the cart button?
-    JOYPAD_PORT_FOREACH (port) { // FIXME: is this the best code location
+    JOYPAD_PORT_FOREACH (port) {
         for (int i = 0; i < 50; i++) { // something like this is needed to poll enough.
             joypad_poll();
         }
@@ -27,8 +26,10 @@ void view_startup_init (menu_t *menu) {
     if (menu->settings.rom_autoload_enabled) {
         menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
         menu->browser.entry->name = menu->settings.rom_autoload_filename;
+
         menu->rom_load_pending = true;
         menu->next_mode = MENU_MODE_LOAD_ROM;
+
     }
     
     menu->next_mode = MENU_MODE_BROWSER;

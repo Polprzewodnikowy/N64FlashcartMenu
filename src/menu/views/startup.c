@@ -31,6 +31,7 @@ void view_startup_init (menu_t *menu) {
         menu->next_mode = MENU_MODE_LOAD_ROM;
     }
     
+    menu->next_mode = MENU_MODE_BROWSER;
 }
 
 void view_startup_display (menu_t *menu, surface_t *display) {

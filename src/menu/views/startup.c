@@ -9,10 +9,27 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_startup_init (menu_t *menu) {
-    if (menu->settings.rom_autoload_enabled) {
-        //load_rom();
+    // FIXME: rather than use a controller button, would it be better to use the cart button?
+    JOYPAD_PORT_FOREACH (port) { // FIXME: is this the best code location
+        for (int i = 0; i < 50; i++) { // something like this is needed to poll enough.
+            joypad_poll();
+        }
+        joypad_buttons_t b_held = joypad_get_buttons_held(port);
+
+        if (menu->settings.rom_autoload_enabled && b_held.start) {
+            menu->settings.rom_autoload_enabled = false;
+            menu->settings.rom_autoload_path = "";
+            menu->settings.rom_autoload_filename = "";
+            settings_save(&menu->settings);
+        }
     }
-    menu->next_mode = MENU_MODE_BROWSER;
+    if (menu->settings.rom_autoload_enabled) {
+        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+        menu->browser.entry->name = menu->settings.rom_autoload_filename;
+        menu->load_pending = true;
+        menu->next_mode = MENU_MODE_LOAD_ROM;
+    }
+    
 }
 
 void view_startup_display (menu_t *menu, surface_t *display) {

@@ -37,6 +37,9 @@ typedef struct {
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
 
+    /** @brief A filename of the autoloaded ROM */
+    char *rom_autoload_filename;
+
 } settings_t;
 
 

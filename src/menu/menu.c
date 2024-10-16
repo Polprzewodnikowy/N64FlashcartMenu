@@ -18,7 +18,6 @@
 #include "usb_comm.h"
 #include "utils/fs.h"
 #include "views/views.h"
-#include "cart_load.h"
 
 
 #define MENU_DIRECTORY          "/menu"
@@ -162,60 +161,9 @@ static view_t *menu_get_view (menu_mode_t id) {
     return NULL;
 }
 
-static void draw_progress (float progress) {
-    surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
-
-    if (d) {
-        rdpq_attach(d, NULL);
-
-        component_background_draw();
-
-        component_loader_draw(progress);
-
-        rdpq_detach_show();
-    }
-}
 
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
-
-    // FIXME: rather than use a controller button, would it be better to use the cart button?
-    JOYPAD_PORT_FOREACH (port) { // FIXME: is this the best code location
-        for (int i = 0; i < 50; i++) { // something like this is needed to poll enough.
-            joypad_poll();
-        }
-        joypad_buttons_t b_held = joypad_get_buttons_held(port);
-
-        if (menu->settings.rom_autoload_enabled && b_held.start) {
-            menu->settings.rom_autoload_enabled = false;
-            menu->settings.rom_autoload_path = "";
-            settings_save(&menu->settings);
-        } else if (menu->settings.rom_autoload_enabled) {
-
-            menu->load.rom_path = path_init(menu->settings.rom_autoload_path, "");
-            rom_err_t err_rom_info = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
-            if (err_rom_info != ROM_OK) {
-                path_free(menu->load.rom_path);
-                menu->load.rom_path = NULL;
-                menu_show_error(menu, "ROM info load error");
-                return;
-            }
-
-            menu->next_mode = MENU_MODE_BOOT;
-
-            cart_load_err_t err_cart_load = cart_load_n64_rom_and_save(menu, draw_progress);
-            if (err_cart_load != CART_LOAD_OK) {
-                menu_show_error(menu, cart_load_convert_error_message(err_cart_load));
-                return;
-            }
-
-            path_free(menu->load.rom_path);
-
-            settings_free(&menu->settings);
-            menu_deinit(menu);
-            return;
-        }
-    }
 
     while (true) {
         surface_t *display = display_try_get();

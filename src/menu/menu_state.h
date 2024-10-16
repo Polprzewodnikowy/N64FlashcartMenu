@@ -68,7 +68,7 @@ typedef struct {
     const char *storage_prefix;
     settings_t settings;
     boot_params_t *boot_params;
-    bool load_pending;
+    bool rom_load_pending;
 
     char *error_message;
     flashcart_err_t flashcart_err;

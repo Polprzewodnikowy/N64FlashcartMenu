@@ -1,5 +1,6 @@
 #include "utils/fs.h"
 #include "views.h"
+#include <libdragon.h>
 
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -26,7 +27,7 @@ void view_startup_init (menu_t *menu) {
     if (menu->settings.rom_autoload_enabled) {
         menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
         menu->browser.entry->name = menu->settings.rom_autoload_filename;
-        menu->load_pending = true;
+        menu->rom_load_pending = true;
         menu->next_mode = MENU_MODE_LOAD_ROM;
     }
     

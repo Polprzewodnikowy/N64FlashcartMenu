@@ -205,7 +205,7 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->load_pending = true;
+        menu->rom_load_pending = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
@@ -227,7 +227,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (menu->load_pending) {
+    if (menu->rom_load_pending) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -348,7 +348,7 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    menu->load_pending = false;
+    menu->rom_load_pending = false;
 
     if (menu->load.rom_path) {
         path_free(menu->load.rom_path);
@@ -374,8 +374,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->load_pending) {
-        menu->load_pending = false;
+    if (menu->rom_load_pending) {
+        menu->rom_load_pending = false;
         load(menu);
     }
 

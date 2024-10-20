@@ -5,7 +5,6 @@
 #include "views.h"
 
 static bool show_extra_info_message = false;
-static bool load_pending;
 static component_boxart_t *boxart;
 
 
@@ -145,6 +144,14 @@ static void set_tv_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void set_autoload_type (menu_t *menu, void *arg) {
+    menu->settings.rom_autoload_path = path_get(menu->load.rom_path);
+    // FIXME: add a confirmation box here! (press start on reboot)
+    menu->settings.rom_autoload_enabled = true;
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -187,6 +194,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+    { .text = "Set ROM to autoload", .action = set_autoload_type },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -196,7 +204,7 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        load_pending = true;
+        menu->load_pending = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
@@ -218,7 +226,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (load_pending) {
+    if (menu->load_pending) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -339,7 +347,7 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    load_pending = false;
+    menu->load_pending = false;
 
     if (menu->load.rom_path) {
         path_free(menu->load.rom_path);
@@ -365,8 +373,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (load_pending) {
-        load_pending = false;
+    if (menu->load_pending) {
+        menu->load_pending = false;
         load(menu);
     }
 

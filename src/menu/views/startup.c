@@ -11,9 +11,7 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_startup_init (menu_t *menu) {
     // FIXME: rather than use a controller button, would it be better to use the cart button?
     JOYPAD_PORT_FOREACH (port) {
-        for (int i = 0; i < 50; i++) { // something like this is needed to poll enough.
-            joypad_poll();
-        }
+        joypad_poll();
         joypad_buttons_t b_held = joypad_get_buttons_held(port);
 
         if (menu->settings.rom_autoload_enabled && b_held.start) {
@@ -25,11 +23,15 @@ void view_startup_init (menu_t *menu) {
     }
     if (menu->settings.rom_autoload_enabled) {
         menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
-        menu->browser.entry->name = menu->settings.rom_autoload_filename;
+        entry_t autoload_entry;
+        autoload_entry.name = menu->settings.rom_autoload_filename;
+        autoload_entry.type = ENTRY_TYPE_ROM;
+        menu->browser.entry = &autoload_entry;
 
         menu->rom_load_pending = true;
         menu->next_mode = MENU_MODE_LOAD_ROM;
-
+        
+        return;
     }
     
     menu->next_mode = MENU_MODE_BROWSER;

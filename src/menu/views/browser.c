@@ -11,6 +11,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
+static const char *patch_extensions[] = { "bps", "ips", "aps", "ups", "xdelta", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
@@ -53,6 +54,10 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_DISK) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DISK) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_ROM_PATCH) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_ROM_PATCH) {
             return 1;
         } else if (a->type == ENTRY_TYPE_EMULATOR) {
             return -1;
@@ -139,6 +144,8 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_DISK;
             }else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
+            } else if (file_has_extensions(entry->name, patch_extensions)) {
+            entry->type = ENTRY_TYPE_ROM_PATCH;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;
             } else if (file_has_extensions(entry->name, image_extensions)) {
@@ -333,6 +340,9 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_EMULATOR:
                 menu->next_mode = MENU_MODE_LOAD_EMULATOR;
                 break;
+            case ENTRY_TYPE_ROM_PATCH:
+                menu->next_mode = MENU_MODE_LOAD_ROM_PATCH;
+                break;
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;
                 break;
@@ -378,6 +388,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
+            case ENTRY_TYPE_ROM_PATCH: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;

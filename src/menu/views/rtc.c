@@ -36,7 +36,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "\n"
         "To set the date and time, please use the PC terminal\n"
-        "application and set via USB or a game that uses it.\n\n"
+        "application and set via USB,\n or a N64 game with RTC support.\n\n"
         "Current date & time: %s\n",
         menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
     );

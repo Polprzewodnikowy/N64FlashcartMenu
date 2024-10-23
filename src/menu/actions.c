@@ -25,8 +25,8 @@ static void actions_clear (menu_t *menu) {
 }
 
 static void actions_update_direction (menu_t *menu) {
-    joypad_8way_t held_dir;
-    joypad_8way_t fast_dir;
+    joypad_8way_t held_dir = JOYPAD_8WAY_NONE;
+    joypad_8way_t fast_dir = JOYPAD_8WAY_NONE;
 
     JOYPAD_PORT_FOREACH (i) {
         held_dir = joypad_get_direction(i, JOYPAD_2D_DPAD | JOYPAD_2D_STICK);
@@ -90,7 +90,7 @@ static void actions_update_direction (menu_t *menu) {
 }
 
 static void actions_update_buttons (menu_t *menu) {    
-    joypad_buttons_t pressed;
+    joypad_buttons_t pressed = {0};
 
     JOYPAD_PORT_FOREACH (i) {
         pressed = joypad_get_buttons_pressed(i);

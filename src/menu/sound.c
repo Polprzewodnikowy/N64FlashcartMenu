@@ -99,7 +99,7 @@ void sound_deinit (void) {
 void sound_poll (void) {
     if (sound_initialized && audio_can_write()) {
         short *audio_buffer = audio_write_begin();
-        mixer_poll(audio_buffer, audio_get_buffer_length());
+        //mixer_poll(audio_buffer, audio_get_buffer_length());
         audio_write_end();
     }
 }

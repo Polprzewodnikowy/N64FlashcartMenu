@@ -94,7 +94,9 @@ static void draw (menu_t *menu, surface_t *d) {
             );
         }
 
-        component_boxart_draw(boxart);
+        if (boxart != NULL) {
+            component_boxart_draw(boxart);
+        }
     }
 
     rdpq_detach_show();

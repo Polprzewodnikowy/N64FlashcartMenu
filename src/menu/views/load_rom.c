@@ -273,7 +273,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "R:    Options"
         );
 
-        component_boxart_draw(boxart);
+        if (boxart != NULL) {
+            component_boxart_draw(boxart);
+        }
 
         if (show_extra_info_message) {
             component_messagebox_draw(
@@ -346,6 +348,7 @@ static void load (menu_t *menu) {
 
 static void deinit (void) {
     component_boxart_free(boxart);
+    boxart = NULL;
 }
 
 

@@ -40,20 +40,28 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
         switch (current_image_view) {
             case IMAGE_GAMEPAK_FRONT:
                 path_push(path, "gamepak_front.png");
+                break;
             case IMAGE_GAMEPAK_BACK:
                 path_push(path, "gamepak_back.png");
+                break;
             case IMAGE_BOXART_BACK:
                 path_push(path, "boxart_back.png");
+                break;
             case IMAGE_BOXART_LEFT:
                 path_push(path, "boxart_left.png");
+                break;
             case IMAGE_BOXART_RIGHT:
                 path_push(path, "boxart_right.png");
+                break;
             case IMAGE_BOXART_BOTTOM:
                 path_push(path, "boxart_bottom.png");
+                break;
             case IMAGE_BOXART_TOP:
                 path_push(path, "boxart_top.png");
+                break;
             default:
                 path_push(path, "boxart_front.png");
+                break;
         }
 
         if (file_exists(path_get(path))) { 
@@ -65,12 +73,13 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     }
     else { // compatibility mode
 
-        char file_name[8];
+        char file_name[9];
 
         // reset the directory path used for boxart.
+        path_free(path);
         path = path_init(storage_prefix, BOXART_DIRECTORY);
 
-        sprintf(file_name, "%c%c%c%c.png", game_code[0], game_code[1], game_code[2], game_code[3]);
+        snprintf(file_name, sizeof(file_name), "%c%c%c%c.png", game_code[0], game_code[1], game_code[2], game_code[3]);
         path_push(path, file_name);
 
         if (file_exists(path_get(path))) {
@@ -81,21 +90,19 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
         }
 
         path_pop(path);
-        sprintf(file_name, "%c%c%c.png", game_code[0], game_code[1], game_code[2]);
+        snprintf(file_name, sizeof(file_name), "%c%c%c.png", game_code[0], game_code[1], game_code[2]);
         path_push(path, file_name);
 
         if (file_exists(path_get(path))) {
-            if (file_exists(path_get(path))) {
-                if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
-                    path_free(path);
-                    return b;
-                }
+            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
+                path_free(path);
+                return b;
             }
         }
         else {
             path_pop(path);
 
-            sprintf(file_name, "%c%c.png", game_code[1], game_code[2]);
+            snprintf(file_name, sizeof(file_name), "%c%c.png", game_code[1], game_code[2]);
             path_push(path, file_name);
             if (file_exists(path_get(path))) {
                 if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {

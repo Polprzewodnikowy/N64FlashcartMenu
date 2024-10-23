@@ -57,6 +57,8 @@ Generated documentation is located in the `output/docs` folder and auto-publishe
 Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
 
 ### Test generated docs in the dev-container
+Testing the documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.
+
 Install Prerequisites:
 ```bash
 apt-get install ruby-full build-essential zlib1g-dev

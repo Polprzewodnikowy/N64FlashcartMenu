@@ -232,7 +232,7 @@ static flashcart_err_t sc64_init (void) {
         { CFG_ID_ROM_EXTENDED_ENABLE, false },
     };
 
-    for (int i = 0; i < sizeof(default_config) / sizeof(default_config[0]); i++) {
+    for (unsigned int i = 0; i < sizeof(default_config) / sizeof(default_config[0]); i++) {
         if (sc64_ll_set_config(default_config[i].id, default_config[i].value) != SC64_OK) {
             return FLASHCART_ERR_INT;
         }
@@ -285,7 +285,7 @@ static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callbac
     size_t extended_size = extended_enabled ? rom_size - MiB(64) : 0;
 
     size_t chunk_size = KiB(128);
-    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+    for (unsigned int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
@@ -447,7 +447,7 @@ static flashcart_err_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_ca
     }
 
     size_t chunk_size = KiB(128);
-    for (int offset = 0; offset < ipl_size; offset += chunk_size) {
+    for (unsigned int offset = 0; offset < ipl_size; offset += chunk_size) {
         size_t block_size = MIN(ipl_size - offset, chunk_size);
         if (f_read(&fil, (void *) (IPL_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
@@ -501,7 +501,7 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
         { CFG_ID_BUTTON_MODE, BUTTON_MODE_DD_DISK_SWAP },
     };
 
-    for (int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
+    for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
         if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
             return FLASHCART_ERR_INT;
         }

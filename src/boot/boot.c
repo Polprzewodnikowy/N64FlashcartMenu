@@ -95,7 +95,7 @@ void boot (boot_params_t *params) {
     io32_t *reboot_dst = SP_MEM->IMEM;
     size_t reboot_instructions = (size_t) (&reboot_size) / sizeof(uint32_t);
 
-    for (int i = 0; i < reboot_instructions; i++) {
+    for (unsigned int i = 0; i < reboot_instructions; i++) {
         cpu_io_write(&reboot_dst[i], reboot_src[i]);
     }
 

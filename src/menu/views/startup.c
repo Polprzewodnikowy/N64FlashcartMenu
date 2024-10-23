@@ -9,6 +9,31 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_startup_init (menu_t *menu) {
+    // FIXME: rather than use a controller button, would it be better to use the cart button?
+    JOYPAD_PORT_FOREACH (port) {
+        joypad_poll();
+        joypad_buttons_t b_held = joypad_get_buttons_held(port);
+
+        if (menu->settings.rom_autoload_enabled && b_held.start) {
+            menu->settings.rom_autoload_enabled = false;
+            menu->settings.rom_autoload_path = "";
+            menu->settings.rom_autoload_filename = "";
+            settings_save(&menu->settings);
+        }
+    }
+    if (menu->settings.rom_autoload_enabled) {
+        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+        entry_t autoload_entry;
+        autoload_entry.name = menu->settings.rom_autoload_filename;
+        autoload_entry.type = ENTRY_TYPE_ROM;
+        menu->browser.entry = &autoload_entry;
+
+        menu->rom_load_pending = true;
+        menu->next_mode = MENU_MODE_LOAD_ROM;
+        
+        return;
+    }
+    
     menu->next_mode = MENU_MODE_BROWSER;
 }
 

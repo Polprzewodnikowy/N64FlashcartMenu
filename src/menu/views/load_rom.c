@@ -122,7 +122,7 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
-static const char *format_boolean_type (bool bool_value) {
+static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
 

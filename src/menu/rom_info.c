@@ -846,7 +846,7 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
     mini_t *ini = mini_try_load(path_get(rom_info_path));
 
     if (!ini) {
-        path_free(overrides_path);
+        path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
 

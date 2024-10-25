@@ -97,7 +97,7 @@ void sound_deinit (void) {
 }
 
 void sound_poll (void) {
-    if (sound_initialized ) {
+    if (sound_initialized) {
         mixer_try_play();
     }
 }

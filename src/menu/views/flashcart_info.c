@@ -2,6 +2,10 @@
 #include "../sound.h"
 
 
+static inline const char *format_boolean_type (bool bool_value) {
+    return bool_value ? "Supported" : "Unsupported";
+}
+
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
@@ -18,23 +22,39 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
-        "FLASHCART INFORMATION\n"
+        "FLASHCART INFORMATION"
         "\n"
         "\n"
-        "This feature is not yet supported.\n\n"
+    );
+
+    component_main_text_draw(
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
+        "\n"
+        "Type:\n"
+        "  %s\n\n"
+        "Firmware:\n"
+        "  %s\n\n"
+        "Features:\n"
+        "  Virtual 64DD:     %s.\n"
+        "  Real Time Clock:  %s.\n"
+        "  USB Debugging:    %s.\n"
+        "  CIC Detection:    %s.\n"
+        "  Region Detection: %s.\n"
+        "\n\n",
+        "SummerCart64",
+        "V?.?.?",
+        format_boolean_type(true),
+        format_boolean_type(true),
+        format_boolean_type(true),
+        format_boolean_type(true),
+        format_boolean_type(true)
     );
 
     // FIXME: Display:
     // * cart_type
     // * Firmware version
     // * supported features (flashcart_features_t)
-
-
-    component_main_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "\n"
-    );
 
 
     component_actions_bar_text_draw(

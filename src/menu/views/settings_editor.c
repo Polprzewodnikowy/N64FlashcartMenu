@@ -12,36 +12,36 @@ static const char *format_switch (bool state) {
 }
 
 static void set_pal60_type (menu_t *menu, void *arg) {
-    menu->settings.pal60_enabled = (bool) (arg);
+    menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
 static void set_protected_entries_type (menu_t *menu, void *arg) {
-    menu->settings.show_protected_entries = (bool) (arg);
+    menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 
     menu->browser.reload = true;
 }
 
 static void set_use_saves_folder_type (menu_t *menu, void *arg) {
-    menu->settings.use_saves_folder = (bool) (arg);
+    menu->settings.use_saves_folder = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
 static void set_sound_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.sound_enabled = (bool) (arg);
+    menu->settings.sound_enabled = (bool)(uintptr_t)(arg);
     sound_use_sfx(menu->settings.sound_enabled);
     settings_save(&menu->settings);
 }
 
 #ifdef BETA_SETTINGS
 static void set_bgm_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.bgm_enabled = (bool) (arg);
+    menu->settings.bgm_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
 static void set_rumble_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.rumble_enabled = (bool) (arg);
+    menu->settings.rumble_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
@@ -53,39 +53,39 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 
 
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
-    {.text = "On", .action = set_pal60_type, .arg = (void *) (true) },
+    {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_pal60_type, .arg = (void *) (false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 static component_context_menu_t set_protected_entries_type_context_menu = { .list = {
-    {.text = "On", .action = set_protected_entries_type, .arg = (void *) (true) },
-    {.text = "Off", .action = set_protected_entries_type, .arg = (void *) (false) },
+    {.text = "On", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 static component_context_menu_t set_sound_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_sound_enabled_type, .arg = (void *) (true) },
-    {.text = "Off", .action = set_sound_enabled_type, .arg = (void *) (false) },
+    {.text = "On", .action = set_sound_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_sound_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 static component_context_menu_t set_use_saves_folder_type_context_menu = { .list = {
-    {.text = "On", .action = set_use_saves_folder_type, .arg = (void *) (true) },
-    {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *) (false) },
+    {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_bgm_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_bgm_enabled_type, .arg = (void *) (true) },
-    {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *) (false) },
+    {.text = "On", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 static component_context_menu_t set_rumble_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_rumble_enabled_type, .arg = (void *) (true) },
-    {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *) (false) },
+    {.text = "On", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif

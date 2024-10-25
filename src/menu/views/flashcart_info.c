@@ -59,22 +59,23 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Virtual 64DD:     %s.\n"
         "  Real Time Clock:  %s.\n"
         "  USB Debugging:    %s.\n"
-        "  CIC Detection:    %s.\n"
+        "  Automatic CIC:    %s.\n"
         "  Region Detection: %s.\n"
-        "  Battery Health:   %s.\n"
         "  Save Writeback:   %s.\n"
         "  Update from menu: %s.\n"
         "\n\n",
         format_cart_type(),
-        "Not Available",
+        "Not Available", // TODO get cart firmware version(s).
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_64DD)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_RTC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_USB)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_CIC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_REGION)),
-        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BATTERY_HEALTH)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_SAVE_WRITEBACK)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU))
+
+        //TODO: display the battery and temperature information (if available).
+        //format_diagnostic_data(flashcart_has_feature(FLASHCART_FEATURE_DIAGNOSTIC_DATA))
     );
 
     component_actions_bar_text_draw(

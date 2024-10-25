@@ -38,8 +38,8 @@ static void process (menu_t *menu) {
         load_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
 }
 
@@ -94,7 +94,9 @@ static void draw (menu_t *menu, surface_t *d) {
             );
         }
 
-        component_boxart_draw(boxart);
+        if (boxart != NULL) {
+            component_boxart_draw(boxart);
+        }
     }
 
     rdpq_detach_show();

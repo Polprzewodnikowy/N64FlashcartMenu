@@ -198,8 +198,8 @@ static void process (menu_t *menu) {
     if (menu->actions.enter) {
         load_pending = true;
     } else if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.options) {
         component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
@@ -262,7 +262,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "R:    Options"
         );
 
-        component_boxart_draw(boxart);
+        if (boxart != NULL) {
+            component_boxart_draw(boxart);
+        }
 
         if (show_extra_info_message) {
             component_messagebox_draw(
@@ -335,6 +337,7 @@ static void load (menu_t *menu) {
 
 static void deinit (void) {
     component_boxart_free(boxart);
+    boxart = NULL;
 }
 
 

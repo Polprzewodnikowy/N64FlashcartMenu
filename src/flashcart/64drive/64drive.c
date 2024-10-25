@@ -77,6 +77,7 @@ static bool d64_has_feature (flashcart_features_t feature) {
         case FLASHCART_FEATURE_USB: return true;
         case FLASHCART_FEATURE_AUTO_CIC: return true;
         case FLASHCART_FEATURE_AUTO_REGION: return true;
+        case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
         default: return false;
     }
 }
@@ -101,7 +102,7 @@ static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback
     size_t sdram_size = MiB(64);
 
     size_t chunk_size = KiB(128);
-    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+    for (unsigned int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);

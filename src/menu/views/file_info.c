@@ -50,8 +50,8 @@ static char *format_file_type (char *name, bool is_directory) {
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
 }
 
@@ -84,7 +84,7 @@ static void draw (menu_t *menu, surface_t *d) {
         S_ISDIR(st.st_mode) ? "Directory" : "File",
         st.st_mode & S_IWUSR ? "" : "(Read only)",
         format_file_type(menu->browser.entry->name, S_ISDIR(st.st_mode)),
-        ctime(&st.st_mtim.tv_sec)
+        ctime(&st.st_mtime)
     );
 
     component_actions_bar_text_draw(

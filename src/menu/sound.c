@@ -86,6 +86,13 @@ void sound_play_effect(sound_effect_t sfx) {
 
 void sound_deinit (void) {
     if (sound_initialized) {
+        if (sfx_enabled) {
+            wav64_close(&sfx_cursor);
+            wav64_close(&sfx_exit);
+            wav64_close(&sfx_setting);
+            wav64_close(&sfx_enter);
+            wav64_close(&sfx_error);
+        }
         mixer_close();
         audio_close();
         sound_initialized = false;
@@ -93,9 +100,7 @@ void sound_deinit (void) {
 }
 
 void sound_poll (void) {
-    if (sound_initialized && audio_can_write()) {
-        short *audio_buffer = audio_write_begin();
-        mixer_poll(audio_buffer, audio_get_buffer_length());
-        audio_write_end();
+    if (sound_initialized) {
+        mixer_try_play();
     }
 }

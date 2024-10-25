@@ -8,11 +8,11 @@ You can use a dev container in VSCode to ease development.
 
 ### To deploy:
 #### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.18.0/sc64-deployer-windows-v2.18.0.zip)
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.20.0/sc64-deployer-windows-v2.20.0.zip)
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.18.0+)
-See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.18.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
+Make sure that your firmware is compatible (currently v2.20.0+)
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.20.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 ##### From the devcontainer
 It is not currently possible to directly communicate with USB devices.
@@ -45,9 +45,12 @@ For ease of development and debugging, the menu ROM can run in the [Ares emulato
 * Add the required file to the correct folder on your SD card.
 
 
-## Update Libdragon submodule
-This repo currently uses the `preview` branch as a submodule at a specific commit.
+## Update submodules
 To update to the latest version, use `git submodule update --remote` from the terminal.
+
+### libdragon
+This repo currently uses the `preview` branch as a submodule at a specific commit.
+* To ensure your local instance is building against it, use `cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd ..`
 
 ## Generate documentation
 Run `doxygen` from the dev container terminal.
@@ -57,6 +60,8 @@ Generated documentation is located in the `output/docs` folder and auto-publishe
 Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
 
 ### Test generated docs in the dev-container
+Testing the documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.
+
 Install Prerequisites:
 ```bash
 apt-get install ruby-full build-essential zlib1g-dev

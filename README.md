@@ -70,7 +70,7 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 **Note1:** Excluding the region ID may show the wrong boxart.
 **Note2:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
 
-As a starting point, here are is a link to a boxart pack following the structure, only including `boxart_back.png`:
+As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
 * [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 

@@ -61,6 +61,9 @@ static void draw (menu_t *menu, surface_t *d) {
         "  USB Debugging:    %s.\n"
         "  CIC Detection:    %s.\n"
         "  Region Detection: %s.\n"
+        "  Battery Health:   %s.\n"
+        "  Save Writeback:   %s.\n"
+        "  Update from menu: %s.\n"
         "\n\n",
         format_cart_type(),
         "Not Available",
@@ -68,7 +71,10 @@ static void draw (menu_t *menu, surface_t *d) {
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_RTC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_USB)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_CIC)),
-        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_REGION))
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_REGION)),
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BATTERY_HEALTH)),
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_SAVE_WRITEBACK)),
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU))
     );
 
     component_actions_bar_text_draw(

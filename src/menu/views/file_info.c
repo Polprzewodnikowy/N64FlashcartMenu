@@ -84,7 +84,7 @@ static void draw (menu_t *menu, surface_t *d) {
         S_ISDIR(st.st_mode) ? "Directory" : "File",
         st.st_mode & S_IWUSR ? "" : "(Read only)",
         format_file_type(menu->browser.entry->name, S_ISDIR(st.st_mode)),
-        ctime(&st.st_mtim.tv_sec)
+        ctime(&st.st_mtime)
     );
 
     component_actions_bar_text_draw(

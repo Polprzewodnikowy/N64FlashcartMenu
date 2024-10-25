@@ -19,10 +19,7 @@ static bool sfx_enabled = false;
 
 static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
-        if (sound_initialized) {
-            mixer_close();
-            audio_close();
-        }
+        sound_deinit();
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
         mp3player_mixer_init();
@@ -86,6 +83,13 @@ void sound_play_effect(sound_effect_t sfx) {
 
 void sound_deinit (void) {
     if (sound_initialized) {
+        if (sfx_enabled) {
+            wav64_close(&sfx_cursor);
+            wav64_close(&sfx_exit);
+            wav64_close(&sfx_setting);
+            wav64_close(&sfx_enter);
+            wav64_close(&sfx_error);
+        }
         mixer_close();
         audio_close();
         sound_initialized = false;

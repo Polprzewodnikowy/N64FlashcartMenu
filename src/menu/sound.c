@@ -19,7 +19,10 @@ static bool sfx_enabled = false;
 
 static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
-        sound_deinit();
+        if (sound_initialized) {
+            mixer_close();
+            audio_close();
+        }
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
         mp3player_mixer_init();
@@ -97,9 +100,7 @@ void sound_deinit (void) {
 }
 
 void sound_poll (void) {
-    if (sound_initialized && audio_can_write()) {
-        short *audio_buffer = audio_write_begin();
-        mixer_poll(audio_buffer, audio_get_buffer_length());
-        audio_write_end();
+    if (sound_initialized) {
+        mixer_try_play();
     }
 }

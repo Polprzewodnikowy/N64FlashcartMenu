@@ -55,8 +55,8 @@ static void perform_vertical_scroll (int lines) {
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     } else if (text) {
         if (menu->actions.go_up) {
             perform_vertical_scroll(menu->actions.go_fast ? -10 : -1);

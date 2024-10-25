@@ -145,8 +145,9 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
 #endif
-        "Note: Certain settings have the following caveats:\n\n"
-        "*    Requires a flashcart reboot.\n",
+        "\n\n"
+        "Note: Certain settings have the following caveats:\n"
+        "*    Requires rebooting the N64 Console.\n",
         menu->settings.default_directory,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),

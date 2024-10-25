@@ -70,8 +70,8 @@ void adjust_rtc_time( struct tm *t, int incr )
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         is_editing_mode = false;
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
     else if (menu->actions.enter) { // FIXME: rtc_is_writable()
         is_editing_mode = true;

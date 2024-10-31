@@ -151,7 +151,7 @@ void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *f
             .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
             .align = align,
             .valign = valign,
-            .wrap = WRAP_ELLIPSES,
+            .wrap = WRAP_WORD,
             .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,

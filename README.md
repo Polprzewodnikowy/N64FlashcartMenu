@@ -60,7 +60,7 @@ These must be `PNG` files that use the following dimensions:
 * Japanese N64 GamePak boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
 
-They will be loaded by directories using each character of the full 4 character Game Code (as identified in the menus ROM information).
+They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 

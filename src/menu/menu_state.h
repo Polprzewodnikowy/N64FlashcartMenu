@@ -105,6 +105,12 @@ typedef struct {
         path_t *disk_path;
         disk_info_t disk_info;
     } load;
+
+    struct {
+        bool rom_file;
+        bool disk_file;
+        bool emulator_file;
+    } boot_pending;
 } menu_t;
 
 

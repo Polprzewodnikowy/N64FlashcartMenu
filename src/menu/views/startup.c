@@ -28,7 +28,7 @@ void view_startup_init (menu_t *menu) {
         autoload_entry.type = ENTRY_TYPE_ROM;
         menu->browser.entry = &autoload_entry;
 
-        menu->rom_load_pending = true;
+        menu->boot_pending.rom_file = true;
         menu->next_mode = MENU_MODE_LOAD_ROM;
         
         return;

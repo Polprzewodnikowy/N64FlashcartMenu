@@ -5,7 +5,6 @@
 #include "views.h"
 
 
-static bool load_disk_file_boot_pending;
 static bool load_disk_with_rom;
 static component_boxart_t *boxart;
 
@@ -31,10 +30,10 @@ static char *format_disk_region (disk_region_t region) {
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
-        load_disk_file_boot_pending = true;
+        menu->boot_pending.disk_file = true;
         load_disk_with_rom = false;
     } else if (menu->actions.options && menu->load.rom_path) {
-        load_disk_file_boot_pending = true;
+        menu->boot_pending.disk_file = true;
         load_disk_with_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
@@ -48,7 +47,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (load_disk_file_boot_pending) {
+    if (menu->boot_pending.disk_file) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -163,7 +162,7 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.disk_path = NULL;
     }
 
-    load_disk_file_boot_pending = false;
+    menu->boot_pending.disk_file = false;
 
     menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -180,8 +179,8 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (load_disk_file_boot_pending) {
-        load_disk_file_boot_pending = false;
+    if (menu->boot_pending.disk_file) {
+        menu->boot_pending.disk_file = false;
         load(menu);
     }
 

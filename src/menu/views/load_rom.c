@@ -5,9 +5,7 @@
 #include "views.h"
 
 static bool show_extra_info_message = false;
-static bool load_rom_file_boot_pending;
 static component_boxart_t *boxart;
-
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -196,7 +194,7 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        load_rom_file_boot_pending = true;
+        menu->boot_pending.rom_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -218,7 +216,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (load_rom_file_boot_pending) {
+    if (menu->boot_pending.rom_file) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -342,7 +340,7 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    load_rom_file_boot_pending = false;
+    menu->boot_pending.rom_file = false;
 
     if (menu->load.rom_path) {
         path_free(menu->load.rom_path);
@@ -368,8 +366,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (load_rom_file_boot_pending) {
-        load_rom_file_boot_pending = false;
+    if (menu->boot_pending.rom_file) {
+        menu->boot_pending.rom_file = false;
         load(menu);
     }
 

@@ -25,7 +25,7 @@ static const char* const DAYS_OF_WEEK[7] =
     { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
 static struct tm rtc_tm = {0};
-//static bool rtc_detected = false;
+static bool rtc_detected = false;
 //static bool rtc_persistent = false;
 static bool is_editing_mode = false;
 static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
@@ -73,10 +73,11 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
-    else if (menu->actions.enter) { // FIXME: rtc_is_writable()
+    else if (menu->actions.enter && rtc_detected) {
         is_editing_mode = true;
     }
-    else if (is_editing_mode) {
+    
+    if (is_editing_mode) {
         if (menu->actions.go_left) {
             if ( editing_field_type <= RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
             else { menu->next_mode = editing_field_type - 1; }
@@ -95,15 +96,15 @@ static void process (menu_t *menu) {
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        // else if (menu->actions.enter) { // save
-        //     is_editing_mode = false;
-        //     //rtc_set( &rtc_time ); // FIXME: requires setting it!
-        //     menu->next_mode = MENU_MODE_BROWSER;
-        // }
-        // else if (menu->actions.back) { // cancel
-        //     is_editing_mode = false;
-        //     menu->next_mode = MENU_MODE_BROWSER;
-        // }
+        else if (menu->actions.enter) { // save
+            is_editing_mode = false;
+            //rtc_set( &rtc_time ); // FIXME: requires setting it!
+            //menu->next_mode = MENU_MODE_BROWSER;
+        }
+        else if (menu->actions.back) { // cancel
+            is_editing_mode = false;
+            //menu->next_mode = MENU_MODE_BROWSER;
+        }
     }
 }
 
@@ -131,7 +132,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
     );
 
-    if (!is_editing_mode ) { // FIXME: rtc_is_writable()
+    if (!is_editing_mode && rtc_detected) {
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Change\n"
@@ -146,7 +147,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
-    if (is_editing_mode) { // FIXME: rtc_is_writable()
+    if (is_editing_mode && rtc_detected) {
         // show msgbox for RTC edit
         /* Format RTC date/time as strings */
         char full_dt[19];
@@ -167,7 +168,10 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_rtc_init (menu_t *menu) {
-    // Nothing to initialize (yet)
+    is_editing_mode = false;
+    if (rtc_is_writable()) {
+        rtc_detected = true;
+    }
 }
 
 void view_rtc_display (menu_t *menu, surface_t *display) {

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <libdragon.h>
 #include <sys/time.h>
+#include <time.h>
 #include "../sound.h"
 #include "views.h"
 
@@ -98,7 +99,8 @@ static void process (menu_t *menu) {
         }
         else if (menu->actions.enter) { // save
             is_editing_mode = false;
-            //rtc_set( &rtc_time ); // FIXME: requires setting it!
+            //time_t current_time = mktime(&rtc_tm);
+            //settimeofday(current_time, NULL); // FIXME: requires setting it!
             //menu->next_mode = MENU_MODE_BROWSER;
         }
         else if (menu->actions.back) { // cancel

@@ -146,8 +146,10 @@ static void set_tv_type (menu_t *menu, void *arg) {
 }
 
 static void set_autoload_type (menu_t *menu, void *arg) {
+    free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
-    menu->settings.rom_autoload_filename = menu->browser.entry->name;
+    free(menu->settings.rom_autoload_filename);
+    menu->settings.rom_autoload_filename = strdup(menu->browser.entry->name);
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.rom_autoload_enabled = true;
     settings_save(&menu->settings);

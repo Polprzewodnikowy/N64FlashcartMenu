@@ -76,8 +76,8 @@ void settings_save (settings_t *settings) {
     mini_free(ini);
 }
 
-void settings_free (settings_t *settings) {
-    free(settings->default_directory);
-    free(settings->rom_autoload_path);
-    free(settings->rom_autoload_filename);
-}
+// void settings_free (settings_t *settings) {
+//     free(settings->default_directory);
+//     free(settings->rom_autoload_path);
+//     free(settings->rom_autoload_filename);
+// }

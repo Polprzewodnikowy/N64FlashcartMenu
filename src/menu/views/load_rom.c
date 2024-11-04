@@ -354,7 +354,6 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    //menu->boot_pending.rom_file = false;
 
     if (!menu->settings.rom_autoload_enabled) {
         if (menu->load.rom_path) {

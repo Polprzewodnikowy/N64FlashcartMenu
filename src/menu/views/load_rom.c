@@ -354,13 +354,15 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    menu->boot_pending.rom_file = false;
+    //menu->boot_pending.rom_file = false;
 
-    if (menu->load.rom_path) {
-        path_free(menu->load.rom_path);
+    if (!menu->settings.rom_autoload_enabled) {
+        if (menu->load.rom_path) {
+            path_free(menu->load.rom_path);
+        }
+
+        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
-
-    menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
@@ -370,15 +372,19 @@ void view_load_rom_init (menu_t *menu) {
         return;
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+    if (!menu->settings.rom_autoload_enabled) {
+        boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
 
-    component_context_menu_init(&options_context_menu);
+        component_context_menu_init(&options_context_menu);
+    }
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
-    process(menu);
+    //if (!menu->settings.rom_autoload_enabled) {
+        process(menu);
 
-    draw(menu, display);
+        draw(menu, display);
+    //}
 
     if (menu->boot_pending.rom_file) {
         menu->boot_pending.rom_file = false;

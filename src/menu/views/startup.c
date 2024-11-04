@@ -22,9 +22,8 @@ void view_startup_init (menu_t *menu) {
         }
     }
     if (menu->settings.rom_autoload_enabled) {
-        path_t *path = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
 
-        menu->browser.directory = path_clone(path);
+        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
 
         menu->load.rom_path = path_clone_push(menu->browser.directory, menu->settings.rom_autoload_filename);
 

@@ -380,11 +380,10 @@ void view_load_rom_init (menu_t *menu) {
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
-    //if (!menu->settings.rom_autoload_enabled) {
-        process(menu);
 
-        draw(menu, display);
-    //}
+    process(menu);
+
+    draw(menu, display);
 
     if (menu->boot_pending.rom_file) {
         menu->boot_pending.rom_file = false;

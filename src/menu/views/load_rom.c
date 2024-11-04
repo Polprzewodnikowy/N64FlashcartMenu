@@ -354,7 +354,6 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-
     if (!menu->settings.rom_autoload_enabled) {
         if (menu->load.rom_path) {
             path_free(menu->load.rom_path);

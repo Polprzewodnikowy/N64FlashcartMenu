@@ -374,13 +374,11 @@ void view_load_rom_init (menu_t *menu) {
 
     if (!menu->settings.rom_autoload_enabled) {
         boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
-
         component_context_menu_init(&options_context_menu);
     }
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
-
     process(menu);
 
     draw(menu, display);

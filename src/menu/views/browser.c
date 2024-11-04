@@ -19,6 +19,7 @@ static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
 static const char *hidden_paths[] = {
+    "/saves",
     "/menu.bin",
     "/menu",
     "/N64FlashcartMenu.n64",

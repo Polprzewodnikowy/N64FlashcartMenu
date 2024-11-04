@@ -203,7 +203,6 @@ void menu_run (boot_params_t *boot_params) {
         usb_comm_poll(menu);
     }
 
-    //settings_free(&menu->settings);
     menu_deinit(menu);
 
     while (exception_reset_time() > 0) {

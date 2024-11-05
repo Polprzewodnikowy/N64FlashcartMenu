@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <libdragon.h>
-//#include <sys/time.h>
+#include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
 

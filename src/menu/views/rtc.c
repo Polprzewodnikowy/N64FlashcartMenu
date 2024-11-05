@@ -68,7 +68,8 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
-    else if (menu->actions.enter) {
+    else if (menu->actions.enter && !is_editing_mode) {
+        rtc_tm = *gmtime(&menu->current_time);
         is_editing_mode = true;
     }
     

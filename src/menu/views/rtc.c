@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <libdragon.h>
 //#include <sys/time.h>
-#include <time.h>
 #include "../sound.h"
 #include "views.h"
 
@@ -94,9 +93,12 @@ static void process (menu_t *menu) {
         }
         else if (menu->actions.lz_context) { // save
             if(rtc_is_writable()) {
-                //time_t current_time = mktime(&rtc_tm);
-                //settimeofday(current_time, NULL); // FIXME: requires setting it!
-                menu_show_error(menu, "Failed to set RTC time");
+                struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
+                // FIXME: settimeofday does not seem available in libdragon
+                // int res = settimeofday(&new_time, NULL);
+                // if (res) {
+                    menu_show_error(menu, "Failed to set RTC time");
+                // }
             }
             else {
                 menu_show_error(menu, "RTC is not writable");

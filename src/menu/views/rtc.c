@@ -154,7 +154,7 @@ static void draw (menu_t *menu, surface_t *d) {
         // show msgbox for RTC edit
         /* Format RTC date/time as strings */
         char full_dt[35];
-        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d - %s",
+        sprintf( full_dt, "|%04d|%02d|%02d:%02d:%02d:%02d| %s",
             CLAMP(rtc_tm.tm_year + 1900, YEAR_MIN, YEAR_MAX),
             CLAMP(rtc_tm.tm_mon + 1, 1, 12),
             CLAMP(rtc_tm.tm_mday, 1, 31),
@@ -163,7 +163,7 @@ static void draw (menu_t *menu, surface_t *d) {
             CLAMP(rtc_tm.tm_sec, 0, 59),
             DAYS_OF_WEEK[CLAMP(rtc_tm.tm_wday, 0, 6)]
             );
-        component_messagebox_draw("YYYY|MM|DD|HH|MM|SS|  DOW\n----|--|--|--|--|--|-----\n%s\n", full_dt);
+        component_messagebox_draw("|YYYY|MM|DD|HH|MM|SS| DOW\n|----|--|--|--|--|--|----\n%s\n", full_dt);
     }
 
     rdpq_detach_show();

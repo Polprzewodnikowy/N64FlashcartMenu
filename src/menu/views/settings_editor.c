@@ -114,8 +114,8 @@ static void process (menu_t *menu) {
         component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
 }
 
@@ -136,6 +136,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
+        "  Autoload ROM      : %s\n"
         "To change the following menu settings, press 'A':\n"
         "*    PAL60 Mode        : %s\n"
         "     Show Hidden Files : %s\n"
@@ -145,9 +146,11 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
 #endif
-        "Note: Certain settings have the following caveats:\n\n"
-        "*    Requires a flashcart reboot.\n",
+        "\n\n"
+        "Note: Certain settings have the following caveats:\n"
+        "*    Requires rebooting the N64 Console.\n",
         menu->settings.default_directory,
+        format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),

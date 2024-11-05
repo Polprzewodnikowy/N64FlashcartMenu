@@ -48,8 +48,8 @@ typedef enum {
 
 
 /**
- * @addtogroup 
- * @{ menu_gui_components
+ * @addtogroup menu_gui_components
+ * @{
  */
 
 void gui_component_box_draw (int x0, int y0, int x1, int y1, color_t color);

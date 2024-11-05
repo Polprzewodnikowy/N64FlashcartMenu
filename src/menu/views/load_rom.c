@@ -3,6 +3,8 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
+#include <string.h>
+#include "utils/fs.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -143,6 +145,17 @@ static void set_tv_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void set_autoload_type (menu_t *menu, void *arg) {
+    free(menu->settings.rom_autoload_path);
+    menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
+    free(menu->settings.rom_autoload_filename);
+    menu->settings.rom_autoload_filename = strdup(menu->browser.entry->name);
+    // FIXME: add a confirmation box here! (press start on reboot)
+    menu->settings.rom_autoload_enabled = true;
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -185,6 +198,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+    { .text = "Set ROM to autoload", .action = set_autoload_type },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -340,13 +354,13 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-    menu->boot_pending.rom_file = false;
+    if (!menu->settings.rom_autoload_enabled) {
+        if (menu->load.rom_path) {
+            path_free(menu->load.rom_path);
+        }
 
-    if (menu->load.rom_path) {
-        path_free(menu->load.rom_path);
+        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
-
-    menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
@@ -356,9 +370,10 @@ void view_load_rom_init (menu_t *menu) {
         return;
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
-
-    component_context_menu_init(&options_context_menu);
+    if (!menu->settings.rom_autoload_enabled) {
+        boxart = component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+        component_context_menu_init(&options_context_menu);
+    }
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

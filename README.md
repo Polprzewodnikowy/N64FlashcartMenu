@@ -26,6 +26,7 @@ An open source menu for N64 flashcarts.
 * Real Time Clock support.
 * Music playback (MP3).
 * Menu sound effects.
+* N64 ROM autoload.
 
 
 ## Documentation
@@ -49,6 +50,9 @@ An open source menu for N64 flashcarts.
 ## Experimental features
 These features are subject to change:
 
+### N64 ROM autoload
+To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
+NOTE: to return to the menu, hold joypad `start` button whilst powering on the console. 
 
 ### GamePak sprites
 To use N64 `GamePak` sprites, place `PNG` files within the `sd:/menu/boxart/` folder.
@@ -69,6 +73,9 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
 **Note1:** Excluding the region ID may show the wrong boxart.
 **Note2:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
+
+As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
+* [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 
 #### Compatibilty mode

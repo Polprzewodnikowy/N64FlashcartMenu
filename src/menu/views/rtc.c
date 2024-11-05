@@ -22,8 +22,7 @@ typedef enum {
     RTC_EDIT_SEC,
 } rtc_field_t;
 
-static const char* const DAYS_OF_WEEK[7] =
-    { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+static const char* const DAYS_OF_WEEK[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
 static struct tm rtc_tm = {0};
 static bool rtc_detected = false;
@@ -31,15 +30,13 @@ static bool rtc_detected = false;
 static bool is_editing_mode = false;
 static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
 
-int wrap( uint16_t val, uint16_t min, uint16_t max )
-{
+int wrap( uint16_t val, uint16_t min, uint16_t max ) {
     if( val < min ) return max;
     if( val > max ) return min;
     return val;
 }
 
-void adjust_rtc_time( struct tm *t, int incr )
-{
+void adjust_rtc_time( struct tm *t, int incr ) {
     //uint8_t expected_day = 0; // FIXME: if required.
     switch(editing_field_type)
     {

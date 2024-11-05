@@ -3,37 +3,47 @@
 
 #include <stdint.h>
 
+/**
+ * @brief VR4300 Instruction Structure
+ * 
+ * This structure represents a VR4300 instruction, which can be of different types (R-type, I-type, J-type, etc.).
+ */
 typedef union {
-    uint32_t raw;
+    uint32_t raw; /**< Raw 32-bit instruction */
 
     struct {
-        uint32_t op : 6;
-        uint32_t rs : 5;
-        uint32_t rt : 5;
-        uint32_t imm : 16;
-    } i_type;
+        uint32_t op : 6;    /**< Opcode field */
+        uint32_t rs : 5;    /**< Source register */
+        uint32_t rt : 5;    /**< Target register */
+        uint32_t imm : 16; /**< Immediate value */
+    } i_type; /**< I-type instruction format */
 
     struct {
-        uint32_t op : 6;
-        uint32_t target : 26;
-    } j_type;
+        uint32_t op : 6;    /**< Opcode field */
+        uint32_t target : 26; /**< Target Address field */
+    } j_type; /**< J-type instruction format */
 
     struct {
-        uint32_t op : 6;
-        uint32_t rs : 5;
-        uint32_t rt : 5;
-        uint32_t rd : 5;
-        uint32_t sa : 5;
-        uint32_t funct : 6;
-    } r_type;
+        uint32_t op : 6;    /**< Opcode field */
+        uint32_t rs : 5;    /**< Source register */
+        uint32_t rt : 5;    /**< Target register */
+        uint32_t rd : 5;    /**< Destination register */
+        uint32_t sa : 5;    /**< Shift amount */
+        uint32_t funct : 6; /**< Function field */
+    } r_type; /**< Alternate R-type instruction format */
 
     struct {
-        uint32_t op : 6;
-        uint32_t co : 1;
-        uint32_t funct : 25;
-    } c_type;
+        uint32_t op : 6;    /**< Opcode field */
+        uint32_t co : 1;    /**< Coprocessor operation bit */
+        uint32_t funct : 25; /**< Function field */
+    } c_type; /**< C-type instruction format */
 } vr4300_instruction_t;
 
+/**
+ * @brief VR4300 Opcode Enumeration
+ * 
+ * Enumeration for different opcodes used in VR4300 instructions.
+ */
 typedef enum {
     OP_SPECIAL,
     OP_REGIMM,
@@ -394,4 +404,4 @@ typedef enum {
 #define I_SRL(rd, rt, sa) __ASM_R_INST(OP_SPECIAL, 0, rt, rd, sa, FUNCT_SRL)
 #define I_SW(rt, offset, base) __ASM_I_INST(OP_SW, base, rt, offset)
 
-#endif
+#endif /* VR4300_ASM_H__ */

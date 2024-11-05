@@ -92,20 +92,19 @@ static void process (menu_t *menu) {
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        // FIXME: implement save
-        // else if (menu->actions.enter) { // save
-        //     is_editing_mode = false;
-        //     if(rtc_is_writable()) {
-
-        //     }
-        //     //time_t current_time = mktime(&rtc_tm);
-        //     //settimeofday(current_time, NULL); // FIXME: requires setting it!
-        //     //menu->next_mode = MENU_MODE_BROWSER;
-        // }
-        // else 
-        if (menu->actions.back) { // cancel
+        else if (menu->actions.lz_context) { // save
+            if(rtc_is_writable()) {
+                //time_t current_time = mktime(&rtc_tm);
+                //settimeofday(current_time, NULL); // FIXME: requires setting it!
+                menu_show_error(menu, "Failed to set RTC time");
+            }
+            else {
+                menu_show_error(menu, "RTC is not writable");
+            }
             is_editing_mode = false;
-            //menu->next_mode = MENU_MODE_BROWSER;
+        }
+        else if (menu->actions.back) { // cancel
+            is_editing_mode = false;
         }
     }
 }
@@ -146,7 +145,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Save\n"
+            "L/Z: Save\n"
             "B: Back"
         );
     }

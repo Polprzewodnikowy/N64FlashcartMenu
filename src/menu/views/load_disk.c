@@ -5,8 +5,7 @@
 #include "views.h"
 
 
-static bool load_pending;
-static bool load_rom;
+static bool load_disk_with_rom;
 static component_boxart_t *boxart;
 
 
@@ -31,11 +30,11 @@ static char *format_disk_region (disk_region_t region) {
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
-        load_pending = true;
-        load_rom = false;
+        menu->boot_pending.disk_file = true;
+        load_disk_with_rom = false;
     } else if (menu->actions.options && menu->load.rom_path) {
-        load_pending = true;
-        load_rom = true;
+        menu->boot_pending.disk_file = true;
+        load_disk_with_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -48,7 +47,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (load_pending) {
+    if (menu->boot_pending.disk_file) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -119,7 +118,7 @@ static void draw_progress (float progress) {
 static void load (menu_t *menu) {
     cart_load_err_t err;
 
-    if (menu->load.rom_path && load_rom) {
+    if (menu->load.rom_path && load_disk_with_rom) {
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
@@ -135,7 +134,7 @@ static void load (menu_t *menu) {
 
     menu->next_mode = MENU_MODE_BOOT;
 
-    if (load_rom) {
+    if (load_disk_with_rom) {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
         menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
         switch (rom_info_get_tv_type(&menu->load.rom_info)) {
@@ -163,7 +162,7 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.disk_path = NULL;
     }
 
-    load_pending = false;
+    menu->boot_pending.disk_file = false;
 
     menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -180,8 +179,8 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (load_pending) {
-        load_pending = false;
+    if (menu->boot_pending.disk_file) {
+        menu->boot_pending.disk_file = false;
         load(menu);
     }
 

@@ -30,6 +30,16 @@ typedef struct {
 
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
+
+    /** @brief Enable the ability to bypass the menu and instantly load a ROM */
+    bool rom_autoload_enabled;
+
+    /** @brief A path to the autoloaded ROM */
+    char *rom_autoload_path;
+
+    /** @brief A filename of the autoloaded ROM */
+    char *rom_autoload_filename;
+
 } settings_t;
 
 
@@ -39,6 +49,5 @@ void settings_init (char *path);
 void settings_load (settings_t *settings);
 /** @brief The settings to save */
 void settings_save (settings_t *settings);
-
 
 #endif

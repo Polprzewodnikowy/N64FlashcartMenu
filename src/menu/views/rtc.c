@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <libdragon.h>
-#include <sys/time.h>
+//#include <sys/time.h>
 #include <time.h>
 #include "../sound.h"
 #include "views.h"
@@ -25,9 +25,7 @@ typedef enum {
 static const char* const DAYS_OF_WEEK[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
 static struct tm rtc_tm = {0};
-static bool rtc_detected = false;
-//static bool rtc_persistent = false;
-static bool is_editing_mode = false;
+static bool is_editing_mode;
 static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
 
 int wrap( uint16_t val, uint16_t min, uint16_t max ) {
@@ -66,23 +64,22 @@ void adjust_rtc_time( struct tm *t, int incr ) {
 }
 
 static void process (menu_t *menu) {
-    if (menu->actions.back) {
-        is_editing_mode = false;
+    if (menu->actions.back && !is_editing_mode) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
-    else if (menu->actions.enter && rtc_detected) {
+    else if (menu->actions.enter) {
         is_editing_mode = true;
     }
     
     if (is_editing_mode) {
         if (menu->actions.go_left) {
             if ( editing_field_type <= RTC_EDIT_YEAR ) { editing_field_type = RTC_EDIT_SEC; }
-            else { menu->next_mode = editing_field_type - 1; }
+            else { editing_field_type = editing_field_type - 1; }
         }
         else if (menu->actions.go_right) {
             if ( editing_field_type >= RTC_EDIT_SEC ) { editing_field_type = RTC_EDIT_YEAR; }
-            else { menu->next_mode = editing_field_type + 1; }
+            else { editing_field_type = editing_field_type + 1; }
         }
         else if (menu->actions.go_up) {
             adjust_rtc_time( &rtc_tm, +1 );
@@ -94,13 +91,18 @@ static void process (menu_t *menu) {
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        else if (menu->actions.enter) { // save
-            is_editing_mode = false;
-            //time_t current_time = mktime(&rtc_tm);
-            //settimeofday(current_time, NULL); // FIXME: requires setting it!
-            //menu->next_mode = MENU_MODE_BROWSER;
-        }
-        else if (menu->actions.back) { // cancel
+        // FIXME: implement save
+        // else if (menu->actions.enter) { // save
+        //     is_editing_mode = false;
+        //     if(rtc_is_writable()) {
+
+        //     }
+        //     //time_t current_time = mktime(&rtc_tm);
+        //     //settimeofday(current_time, NULL); // FIXME: requires setting it!
+        //     //menu->next_mode = MENU_MODE_BROWSER;
+        // }
+        // else 
+        if (menu->actions.back) { // cancel
             is_editing_mode = false;
             //menu->next_mode = MENU_MODE_BROWSER;
         }
@@ -120,9 +122,10 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "\n"
         "To set the date and time, please use the PC terminal\n"
-        "application and set via USB,\n or a N64 game with RTC support.\n\n"
-        "Current date & time: %s\n",
-        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
+        "application and set via USB,\n or an N64 game with RTC support.\n\n"
+        "Current date & time: %s",
+        "\n",
+        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
     );
 
     component_main_text_draw(
@@ -131,7 +134,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
     );
 
-    if (!is_editing_mode && rtc_detected) {
+    if (!is_editing_mode) {
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Change\n"
@@ -140,17 +143,22 @@ static void draw (menu_t *menu, surface_t *d) {
     }
     else {
         component_actions_bar_text_draw(
+            ALIGN_RIGHT, VALIGN_TOP,
+            "Up/Down: Adjust Field\n"
+            "Left/Right: Change Field"
+        );
+        component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "\n"
+            "A: Save\n"
             "B: Back"
         );
     }
 
-    if (is_editing_mode && rtc_detected) {
+    if (is_editing_mode) {
         // show msgbox for RTC edit
         /* Format RTC date/time as strings */
-        char full_dt[19];
-        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d - %s",
+        char full_dt[36];
+        sprintf( full_dt, "%04d | %02d | %02d : %02d : %02d : %02d - %s",
             CLAMP(rtc_tm.tm_year + 1900, YEAR_MIN, YEAR_MAX),
             CLAMP(rtc_tm.tm_mon + 1, 1, 12),
             CLAMP(rtc_tm.tm_mday, 1, 31),
@@ -159,6 +167,7 @@ static void draw (menu_t *menu, surface_t *d) {
             CLAMP(rtc_tm.tm_sec, 0, 59),
             DAYS_OF_WEEK[CLAMP(rtc_tm.tm_wday, 0, 6)]
             );
+        // FIXME: component_dialogbox_draw("YYYY | MM | DD | HH | MM | SS | DOW\n %s", full_dt);
         component_messagebox_draw(full_dt);
     }
 
@@ -168,9 +177,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_rtc_init (menu_t *menu) {
     is_editing_mode = false;
-    if (rtc_is_writable()) {
-        rtc_detected = true;
-    }
 }
 
 void view_rtc_display (menu_t *menu, surface_t *display) {

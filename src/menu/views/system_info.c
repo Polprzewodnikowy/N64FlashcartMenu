@@ -57,7 +57,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Joypad 2 is %sconnected %s\n"
         "Joypad 3 is %sconnected %s\n"
         "Joypad 4 is %sconnected %s\n",
-        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n",
+        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown",
         is_memory_expanded() ? "" : "not ",
         (joypad[0]) ? "" : "not ", format_accessory(0),
         (joypad[1]) ? "" : "not ", format_accessory(1),

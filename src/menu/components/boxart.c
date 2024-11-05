@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "../gui_components.h"
+#include "gui_components.h"
 #include "../path.h"
 #include "../png_decoder.h"
 #include "gui_constants.h"

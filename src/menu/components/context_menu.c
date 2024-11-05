@@ -1,4 +1,4 @@
-#include "../gui_components.h"
+#include "gui_components.h"
 #include "../fonts.h"
 #include "../sound.h"
 #include "gui_constants.h"

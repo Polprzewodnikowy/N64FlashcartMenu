@@ -9,7 +9,7 @@
 
 
 #include <libdragon.h>
-#include "menu_state.h"
+#include "../menu_state.h"
 
 /** @brief File image Enumeration. */
 typedef enum {

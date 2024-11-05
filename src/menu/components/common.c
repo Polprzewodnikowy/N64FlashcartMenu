@@ -1,6 +1,6 @@
 #include <stdarg.h>
 
-#include "../gui_components.h"
+#include "gui_components.h"
 #include "../fonts.h"
 #include "gui_constants.h"
 

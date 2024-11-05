@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../gui_components.h"
+#include "gui_components.h"
 #include "gui_constants.h"
 #include "utils/fs.h"
 

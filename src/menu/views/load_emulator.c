@@ -43,19 +43,19 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
     if (menu->boot_pending.emulator_file) {
-        component_loader_draw(0.0f);
+        gui_component_loader_draw(0.0f);
     } else {
-        component_layout_draw();
+        gui_component_layout_draw();
 
-        component_main_text_draw(
+        gui_component_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "Load Emulated ROM\n"
         );
 
-        component_main_text_draw(
+        gui_component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -65,7 +65,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->browser.entry->name
         );
 
-        component_actions_bar_text_draw(
+        gui_component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run Emulated ROM\n"
             "B: Exit"
@@ -81,9 +81,9 @@ static void draw_progress (float progress) {
     if (d) {
         rdpq_attach(d, NULL);
 
-        component_background_draw();
+        gui_component_background_draw();
 
-        component_loader_draw(progress);
+        gui_component_loader_draw(progress);
 
         rdpq_detach_show();
     }

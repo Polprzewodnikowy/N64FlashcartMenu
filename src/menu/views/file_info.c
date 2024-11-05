@@ -58,11 +58,11 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
-    component_layout_draw();
+    gui_component_layout_draw();
 
-    component_main_text_draw(
+    gui_component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "ENTRY INFORMATION\n"
         "\n"
@@ -70,7 +70,7 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->browser.entry->name
     );
 
-    component_main_text_draw(
+    gui_component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -87,7 +87,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ctime(&st.st_mtime)
     );
 
-    component_actions_bar_text_draw(
+    gui_component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Exit"

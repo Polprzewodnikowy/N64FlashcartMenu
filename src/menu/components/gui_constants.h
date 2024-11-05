@@ -1,11 +1,11 @@
 /**
- * @file constants.h
- * @brief Menu components constants
+ * @file gui_constants.h
+ * @brief Menu Graphical User interface component constants
  * @ingroup menu
  */
 
-#ifndef COMPONENTS_CONSTANTS_H__
-#define COMPONENTS_CONSTANTS_H__
+#ifndef GUI_COMPONENT_CONSTANTS_H__
+#define GUI_COMPONENT_CONSTANTS_H__
 
 /** @brief The display width. */
 #define DISPLAY_WIDTH                   (640)

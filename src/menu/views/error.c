@@ -12,12 +12,12 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
     if (menu->error_message) {
-        component_messagebox_draw(menu->error_message);
+        gui_component_messagebox_draw(menu->error_message);
     } else {
-        component_messagebox_draw("Unspecified error");
+        gui_component_messagebox_draw("Unspecified error");
     }
 
     rdpq_detach_show();

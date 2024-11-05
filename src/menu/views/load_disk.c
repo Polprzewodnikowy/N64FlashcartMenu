@@ -45,14 +45,14 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
     if (menu->boot_pending.disk_file) {
-        component_loader_draw(0.0f);
+        gui_component_loader_draw(0.0f);
     } else {
-        component_layout_draw();
+        gui_component_layout_draw();
 
-        component_main_text_draw(
+        gui_component_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "64DD disk information\n"
             "\n"
@@ -60,7 +60,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->browser.entry->name
         );
 
-        component_main_text_draw(
+        gui_component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -80,21 +80,21 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
         );
 
-        component_actions_bar_text_draw(
+        gui_component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run 64DD disk\n"
             "B: Exit"
         );
 
         if (menu->load.rom_path) {
-            component_actions_bar_text_draw(
+            gui_component_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
                 "R: Load with ROM"
             );
         }
 
         if (boxart != NULL) {
-            component_boxart_draw(boxart);
+            gui_component_boxart_draw(boxart);
         }
     }
 
@@ -107,9 +107,9 @@ static void draw_progress (float progress) {
     if (d) {
         rdpq_attach(d, NULL);
 
-        component_background_draw();
+        gui_component_background_draw();
 
-        component_loader_draw(progress);
+        gui_component_loader_draw(progress);
 
         rdpq_detach_show();
     }
@@ -153,7 +153,7 @@ static void load (menu_t *menu) {
 }
 
 static void deinit (void) {
-    component_boxart_free(boxart);
+    gui_component_boxart_free(boxart);
 }
 
 void view_load_disk_init (menu_t *menu) {
@@ -171,7 +171,7 @@ void view_load_disk_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
+    boxart = gui_component_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

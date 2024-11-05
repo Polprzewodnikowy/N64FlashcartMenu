@@ -8,7 +8,7 @@
 #define VIEWS_H__
 
 
-#include "../components.h"
+#include "../gui_components.h"
 #include "../menu_state.h"
 
 

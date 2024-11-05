@@ -13,7 +13,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "SummerCart64: 2.17.0+"
     );
 
-    component_messagebox_draw(
+    gui_component_messagebox_draw(
         "UNRECOVERABLE ERROR\n"
         "\n"
         "%s\n"

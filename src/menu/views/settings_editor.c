@@ -106,12 +106,12 @@ static component_context_menu_t options_context_menu = { .list = {
 
 
 static void process (menu_t *menu) {
-    if (component_context_menu_process(menu, &options_context_menu)) {
+    if (gui_component_context_menu_process(menu, &options_context_menu)) {
         return;
     }
 
     if (menu->actions.enter) {
-        component_context_menu_show(&options_context_menu);
+        gui_component_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -122,17 +122,17 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
-    component_layout_draw();
+    gui_component_layout_draw();
 
-	component_main_text_draw(
+	gui_component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "MENU SETTINGS EDITOR\n"
         "\n"
     );
 
-    component_main_text_draw(
+    gui_component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
@@ -163,13 +163,13 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
 
-    component_actions_bar_text_draw(
+    gui_component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "A: Change\n"
         "B: Back"
     );
 
-    component_context_menu_draw(&options_context_menu);
+    gui_component_context_menu_draw(&options_context_menu);
 
     rdpq_detach_show();
 }
@@ -177,7 +177,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_settings_init (menu_t *menu) {
     
-    component_context_menu_init(&options_context_menu);
+    gui_component_context_menu_init(&options_context_menu);
 
 }
 

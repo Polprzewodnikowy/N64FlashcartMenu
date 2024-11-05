@@ -26,11 +26,11 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    gui_component_background_draw();
 
-    component_layout_draw();
+    gui_component_layout_draw();
 
-	component_main_text_draw(
+	gui_component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "ADJUST REAL TIME CLOCK\n"
         "\n"
@@ -41,14 +41,14 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown\n"
     );
 
-    component_main_text_draw(
+    gui_component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
     );
 
 
-    component_actions_bar_text_draw(
+    gui_component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n" // "A: Save\n"
         "B: Back"

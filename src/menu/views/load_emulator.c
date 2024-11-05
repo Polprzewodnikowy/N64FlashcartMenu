@@ -11,7 +11,6 @@ static const char *emu_gameboy_rom_extensions[] = { "gb", NULL };
 static const char *emu_gameboy_color_rom_extensions[] = { "gbc", NULL };
 static const char *emu_sega_8bit_rom_extensions[] = { "sms", "gg", "sg", NULL };
 
-static bool load_pending;
 static cart_load_emu_type_t emu_type;
 
 static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
@@ -34,7 +33,7 @@ static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
-        load_pending = true;
+        menu->boot_pending.emulator_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -46,7 +45,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_background_draw();
 
-    if (load_pending) {
+    if (menu->boot_pending.emulator_file) {
         component_loader_draw(0.0f);
     } else {
         component_layout_draw();
@@ -107,7 +106,7 @@ static void load (menu_t *menu) {
 
 
 void view_load_emulator_init (menu_t *menu) {
-    load_pending = false;
+    menu->boot_pending.emulator_file = false;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -133,8 +132,8 @@ void view_load_emulator_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (load_pending) {
-        load_pending = false;
+    if (menu->boot_pending.emulator_file) {
+        menu->boot_pending.emulator_file = false;
         load(menu);
     }
 }

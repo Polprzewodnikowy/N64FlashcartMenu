@@ -121,17 +121,13 @@ static void draw (menu_t *menu, surface_t *d) {
         "ADJUST REAL TIME CLOCK\n"
         "\n"
         "\n"
-        "To set the date and time, please use the PC terminal\n"
-        "application and set via USB,\n or an N64 game with RTC support.\n\n"
-        "Current date & time: %s",
+        "To set the RTC date and time, Press A.\n"
+        "You can also use the PC terminal application via USB,\n"
+        "or even an N64 game with RTC support.\n"
+        "\n"
+        "Current date & time: %s\n"
         "\n",
         menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
-    );
-
-    component_main_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "\n"
     );
 
     if (!is_editing_mode) {
@@ -157,8 +153,8 @@ static void draw (menu_t *menu, surface_t *d) {
     if (is_editing_mode) {
         // show msgbox for RTC edit
         /* Format RTC date/time as strings */
-        char full_dt[36];
-        sprintf( full_dt, "%04d | %02d | %02d : %02d : %02d : %02d - %s",
+        char full_dt[35];
+        sprintf( full_dt, "%04d|%02d|%02d:%02d:%02d:%02d - %s",
             CLAMP(rtc_tm.tm_year + 1900, YEAR_MIN, YEAR_MAX),
             CLAMP(rtc_tm.tm_mon + 1, 1, 12),
             CLAMP(rtc_tm.tm_mday, 1, 31),
@@ -167,8 +163,7 @@ static void draw (menu_t *menu, surface_t *d) {
             CLAMP(rtc_tm.tm_sec, 0, 59),
             DAYS_OF_WEEK[CLAMP(rtc_tm.tm_wday, 0, 6)]
             );
-        // FIXME: component_dialogbox_draw("YYYY | MM | DD | HH | MM | SS | DOW\n %s", full_dt);
-        component_messagebox_draw(full_dt);
+        component_messagebox_draw("YYYY|MM|DD|HH|MM|SS|  DOW\n----|--|--|--|--|--|-----\n%s\n", full_dt);
     }
 
     rdpq_detach_show();

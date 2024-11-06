@@ -33,6 +33,18 @@ int wrap( uint16_t val, uint16_t min, uint16_t max ) {
     return val;
 }
 
+rtc_time_t rtc_time_from_tm( struct tm *time ) {
+    return(rtc_time_t){
+        .year = CLAMP(time->tm_year + 1900, YEAR_MIN, YEAR_MAX),
+        .month = CLAMP(time->tm_mon + 1, 1, 11),
+        .day = CLAMP(time->tm_mday, 1, 31),
+        .hour = CLAMP(time->tm_hour, 0, 23),
+        .min = CLAMP(time->tm_min, 0, 59),
+        .sec = CLAMP(time->tm_sec, 0, 59),
+        .week_day = CLAMP(time->tm_wday, 0, 6),
+    };
+}
+
 void adjust_rtc_time( struct tm *t, int incr ) {
     //uint8_t expected_day = 0; // FIXME: if required.
     switch(editing_field_type)
@@ -91,14 +103,17 @@ static void process (menu_t *menu) {
             /* Add a delay so you can just hold the direction */
             wait_ms( 100 );
         }
-        else if (menu->actions.lz_context) { // save
+        else if (menu->actions.options) { // R button = save
             if(rtc_is_writable()) {
-                struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
-                // FIXME: settimeofday does not seem available in libdragon
+                // FIXME: settimeofday is not available in libdragon yet.
+                // struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
                 // int res = settimeofday(&new_time, NULL);
-                // if (res) {
+
+                rtc_time_t rtc_time = rtc_time_from_tm(&rtc_tm);
+                int res = rtc_set(&rtc_time);
+                if (res != 1) {
                     menu_show_error(menu, "Failed to set RTC time");
-                // }
+                }
             }
             else {
                 menu_show_error(menu, "RTC is not writable");
@@ -147,7 +162,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "L/Z: Save\n"
+            "R: Save\n"
             "B: Back"
         );
     }

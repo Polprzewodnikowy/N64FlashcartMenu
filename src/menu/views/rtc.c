@@ -25,7 +25,7 @@ static const char* const DAYS_OF_WEEK[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", 
 
 static struct tm rtc_tm = {0};
 static bool is_editing_mode;
-static rtc_field_t editing_field_type = RTC_EDIT_YEAR;
+static rtc_field_t editing_field_type;
 
 int wrap( uint16_t val, uint16_t min, uint16_t max ) {
     if( val < min ) return max;
@@ -72,20 +72,45 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     *t = *gmtime( &timestamp );
 }
 
-static void component_editdatetime_draw ( void ) {
-        // FIXME: move this to components.c once improved.
-        /* Format RTC date/time as strings */
-        char full_dt[35];
-        sprintf( full_dt, ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
-            rtc_tm.tm_year + 1900,
-            rtc_tm.tm_mon + 1,
-            rtc_tm.tm_mday,
-            rtc_tm.tm_hour,
-            rtc_tm.tm_min,
-            rtc_tm.tm_sec,
-            DAYS_OF_WEEK[rtc_tm.tm_wday]
-            );
-        component_messagebox_draw("|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n", full_dt);
+static void component_editdatetime_draw ( struct tm t ) {
+    // FIXME: move this to components.c once improved.
+    /* Format RTC date/time as strings */
+    char full_dt[30];
+    char current_selection_chars[30];
+
+    snprintf( full_dt, sizeof(full_dt), ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
+        t.tm_year + 1900,
+        t.tm_mon + 1,
+        t.tm_mday,
+        t.tm_hour,
+        t.tm_min,
+        t.tm_sec,
+        DAYS_OF_WEEK[t.tm_wday]
+        );
+        
+    switch(editing_field_type)
+    {
+        case RTC_EDIT_YEAR:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "*^^^^^^^^********************");
+            break;
+        case RTC_EDIT_MONTH:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "******^^^^*****************");
+            break;
+        case RTC_EDIT_DAY:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "*********^^^^**************");
+            break;
+        case RTC_EDIT_HOUR:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "************^^^^***********");
+            break;
+        case RTC_EDIT_MIN:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "***************^^^^********");
+            break;
+        case RTC_EDIT_SEC:
+            snprintf( current_selection_chars, sizeof(current_selection_chars), "******************^^^^*****");
+            break;
+    }
+        component_messagebox_draw(
+            "|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n%s\n", full_dt, current_selection_chars);
 }
 
 static void process (menu_t *menu) {
@@ -182,7 +207,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (is_editing_mode) {
-        component_editdatetime_draw();
+        component_editdatetime_draw(rtc_tm);
     }
 
     rdpq_detach_show();
@@ -191,6 +216,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_rtc_init (menu_t *menu) {
     is_editing_mode = false;
+    editing_field_type = RTC_EDIT_YEAR;
 }
 
 void view_rtc_display (menu_t *menu, surface_t *display) {

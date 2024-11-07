@@ -169,6 +169,7 @@ void view_load_disk_init (menu_t *menu) {
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
+        return;
     }
 
     boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);

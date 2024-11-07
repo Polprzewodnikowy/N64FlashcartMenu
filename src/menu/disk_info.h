@@ -52,7 +52,17 @@ typedef struct {
 } disk_info_t;
 
 
+/**
+ * @brief Loads disk information from the specified path.
+ *
+ * This function reads the disk information from the given path and populates
+ * the provided disk_info structure with the relevant data.
+ *
+ * @param path A pointer to a path_t structure that specifies the path to the disk.
+ * @param disk_info A pointer to a disk_info_t structure where the disk information will be stored.
+ * @return A disk_err_t value indicating the success or failure of the operation.
+ */
 disk_err_t disk_info_load (path_t *path, disk_info_t *disk_info);
 
 
-#endif
+#endif /* DISK_INFO_H__ */

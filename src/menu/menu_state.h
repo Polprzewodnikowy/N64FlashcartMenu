@@ -109,6 +109,12 @@ typedef struct {
         path_t *rom_patch_path;
         rom_patch_info_t rom_patch_info;
     } load;
+
+    struct {
+        bool rom_file;
+        bool disk_file;
+        bool emulator_file;
+    } boot_pending;
 } menu_t;
 
 

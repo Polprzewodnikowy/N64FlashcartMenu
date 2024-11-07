@@ -90,6 +90,7 @@ void component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
         
     switch(selected_field)
     {
+        // Note: for what ever reason, hat chars need to be duplicated to display correctly. This will be solved when there is a decent UI for it.
         case RTC_EDIT_YEAR:
             snprintf( current_selection_chars, sizeof(current_selection_chars), "*^^^^^^^^********************");
             break;
@@ -193,7 +194,7 @@ static void draw (menu_t *menu, surface_t *d) {
         component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
             "Up/Down: Adjust Field\n"
-            "Left/Right: Change Field"
+            "Left/Right: Switch Field"
         );
         component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,

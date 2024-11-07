@@ -134,13 +134,9 @@ static void process (menu_t *menu) {
         }
         else if (menu->actions.go_up) {
             adjust_rtc_time( &rtc_tm, +1 );
-            /* Add a delay so you can just hold the direction */
-            wait_ms( 100 );
         }
         else if (menu->actions.go_down) {
             adjust_rtc_time( &rtc_tm, -1 );
-            /* Add a delay so you can just hold the direction */
-            wait_ms( 100 );
         }
         else if (menu->actions.options) { // R button = save
             if(rtc_is_writable()) {

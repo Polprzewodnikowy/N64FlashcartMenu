@@ -72,7 +72,7 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     *t = *gmtime( &timestamp );
 }
 
-static void component_editdatetime_draw ( struct tm t ) {
+void component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
     // FIXME: move this to components.c once improved.
     /* Format RTC date/time as strings */
     char full_dt[30];
@@ -88,7 +88,7 @@ static void component_editdatetime_draw ( struct tm t ) {
         DAYS_OF_WEEK[t.tm_wday]
         );
         
-    switch(editing_field_type)
+    switch(selected_field)
     {
         case RTC_EDIT_YEAR:
             snprintf( current_selection_chars, sizeof(current_selection_chars), "*^^^^^^^^********************");
@@ -203,7 +203,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (is_editing_mode) {
-        component_editdatetime_draw(rtc_tm);
+        component_editdatetime_draw(rtc_tm, editing_field_type);
     }
 
     rdpq_detach_show();

@@ -46,11 +46,9 @@ rtc_time_t rtc_time_from_tm( struct tm *time ) {
 }
 
 void adjust_rtc_time( struct tm *t, int incr ) {
-    //uint8_t expected_day = 0; // FIXME: if required.
     switch(editing_field_type)
     {
         case RTC_EDIT_YEAR:
-            /* TODO Figure out if the max supported year is larger */
             t->tm_year = wrap( t->tm_year + incr, YEAR_MIN - 1900, YEAR_MAX - 1900 );
             break;
         case RTC_EDIT_MONTH:

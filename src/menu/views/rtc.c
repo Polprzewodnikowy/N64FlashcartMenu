@@ -36,7 +36,7 @@ int wrap( uint16_t val, uint16_t min, uint16_t max ) {
 rtc_time_t rtc_time_from_tm( struct tm *time ) {
     return(rtc_time_t){
         .year = CLAMP(time->tm_year + 1900, YEAR_MIN, YEAR_MAX),
-        .month = CLAMP(time->tm_mon + 1, 1, 11),
+        .month = CLAMP(time->tm_mon, 1, 12),
         .day = CLAMP(time->tm_mday, 1, 31),
         .hour = CLAMP(time->tm_hour, 0, 23),
         .min = CLAMP(time->tm_min, 0, 59),
@@ -70,6 +70,22 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     // Recalculate day-of-week and day-of-year
     time_t timestamp = mktime( t );
     *t = *gmtime( &timestamp );
+}
+
+static void component_editdatetime_draw ( void ) {
+        // FIXME: move this to components.c once improved.
+        /* Format RTC date/time as strings */
+        char full_dt[35];
+        sprintf( full_dt, ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
+            rtc_tm.tm_year + 1900,
+            rtc_tm.tm_mon + 1,
+            rtc_tm.tm_mday,
+            rtc_tm.tm_hour,
+            rtc_tm.tm_min,
+            rtc_tm.tm_sec,
+            DAYS_OF_WEEK[rtc_tm.tm_wday]
+            );
+        component_messagebox_draw("|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n", full_dt);
 }
 
 static void process (menu_t *menu) {
@@ -166,19 +182,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (is_editing_mode) {
-        // show msgbox for RTC edit
-        /* Format RTC date/time as strings */
-        char full_dt[35];
-        sprintf( full_dt, "|%04d|%02d|%02d:%02d:%02d:%02d| %s",
-            CLAMP(rtc_tm.tm_year + 1900, YEAR_MIN, YEAR_MAX),
-            CLAMP(rtc_tm.tm_mon + 1, 1, 12),
-            CLAMP(rtc_tm.tm_mday, 1, 31),
-            CLAMP(rtc_tm.tm_hour, 0, 23),
-            CLAMP(rtc_tm.tm_min, 0, 59),
-            CLAMP(rtc_tm.tm_sec, 0, 59),
-            DAYS_OF_WEEK[CLAMP(rtc_tm.tm_wday, 0, 6)]
-            );
-        component_messagebox_draw("|YYYY|MM|DD|HH|MM|SS| DOW\n|----|--|--|--|--|--|----\n%s\n", full_dt);
+        component_editdatetime_draw();
     }
 
     rdpq_detach_show();

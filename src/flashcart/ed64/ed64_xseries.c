@@ -9,41 +9,37 @@
 #include "utils/utils.h"
 
 #include "../flashcart_utils.h"
-#include "ed64x_ll.h"
-#include "ed64x.h"
+#include "ed64_xseries_ll.h"
+#include "ed64_xseries.h"
 
 typedef enum {
     // potentially handle if the firmware supports it...
-    // ED64_V1_0 = 110,
-    // ED64_V2_0 = 320,
-    // ED64_V2_5 = 325,
-    // ED64_V3_0 = 330,
     ED64_X5_0 = 550,
     ED64_X7_0 = 570,
     ED64_UKNOWN = 0,
-} ed64x_device_variant_t;
+} ed64_xseries_device_variant_t;
 
 /* ED64 save location base address  */
 #define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
-static flashcart_err_t ed64x_init (void) {
+static flashcart_err_t ed64_xseries_init (void) {
 
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64x_deinit (void) {
+static flashcart_err_t ed64_xseries_deinit (void) {
 
     return FLASHCART_OK;
 }
 
-static ed64x_device_variant_t get_cart_model() {
-    ed64x_device_variant_t variant = ED64_X7_0; // FIXME: check cart model from ll for better feature handling.
+static ed64_xseries_device_variant_t get_cart_model() {
+    ed64_xseries_device_variant_t variant = ED64_X7_0; // FIXME: check cart model from ll for better feature handling.
     return variant;
 }
 
-static bool ed64x_has_feature (flashcart_features_t feature) {
+static bool ed64_xseries_has_feature (flashcart_features_t feature) {
     bool is_model_x7 = (get_cart_model() == ED64_X7_0); 
     switch (feature) {
         case FLASHCART_FEATURE_RTC: return is_model_x7 ? true : false;
@@ -55,7 +51,7 @@ static bool ed64x_has_feature (flashcart_features_t feature) {
     }
 }
 
-static flashcart_err_t ed64x_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
@@ -97,7 +93,7 @@ static flashcart_err_t ed64x_load_rom (char *rom_path, flashcart_progress_callba
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64x_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
@@ -135,32 +131,32 @@ static flashcart_err_t ed64x_load_file (char *file_path, uint32_t rom_offset, ui
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64x_load_save (char *save_path) {
+static flashcart_err_t ed64_xseries_load_save (char *save_path) {
 
 
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64x_set_save_type (flashcart_save_type_t save_type) {
+static flashcart_err_t ed64_xseries_set_save_type (flashcart_save_type_t save_type) {
     
 
     return FLASHCART_OK;
 }
 
-static flashcart_t flashcart_ed64x = {
-    .init = ed64x_init,
-    .deinit = ed64x_deinit,
-    .has_feature = ed64x_has_feature,
-    .load_rom = ed64x_load_rom,
-    .load_file = ed64x_load_file,
-    .load_save = ed64x_load_save,
+static flashcart_t flashcart_ed64_xseries = {
+    .init = ed64_xseries_init,
+    .deinit = ed64_xseries_deinit,
+    .has_feature = ed64_xseries_has_feature,
+    .load_rom = ed64_xseries_load_rom,
+    .load_file = ed64_xseries_load_file,
+    .load_save = ed64_xseries_load_save,
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
-    .set_save_type = ed64x_set_save_type,
+    .set_save_type = ed64_xseries_set_save_type,
     .set_save_writeback = NULL,
 };
 
 
-flashcart_t *ed64x_get_flashcart (void) {
-    return &flashcart_ed64x;
+flashcart_t *ed64_xseries_get_flashcart (void) {
+    return &flashcart_ed64_xseries;
 }

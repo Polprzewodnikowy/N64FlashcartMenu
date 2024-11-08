@@ -119,7 +119,7 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
-    else if (menu->actions.enter && !is_editing_mode) {
+    else if (menu->actions.enter && !is_editing_mode && menu->current_time >= 0) {
         rtc_tm = *gmtime(&menu->current_time);
         is_editing_mode = true;
     }
@@ -169,26 +169,49 @@ static void draw (menu_t *menu, surface_t *d) {
 
     component_layout_draw();
 
-    component_main_text_draw(
-        ALIGN_CENTER, VALIGN_TOP,
-        "ADJUST REAL TIME CLOCK\n"
-        "\n"
-        "\n"
-        "To set the RTC date and time, Press A.\n"
-        "You can also use the PC terminal application via USB,\n"
-        "or even an N64 game with RTC support.\n"
-        "\n"
-        "Current date & time: %s\n"
-        "\n",
-        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
-    );
-
     if (!is_editing_mode) {
-        component_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP,
-            "A: Change\n"
-            "B: Back"
-        );
+         if( menu->current_time >= 0 ) {
+
+            component_main_text_draw(
+                ALIGN_CENTER, VALIGN_TOP,
+                "ADJUST REAL TIME CLOCK\n"
+                "\n"
+                "\n"
+                "To set the RTC date and time, Press A.\n"
+                "You can also use the PC terminal application via USB,\n"
+                "or even an N64 game with RTC support.\n"
+                "\n"
+                "Current date & time: %s\n"
+                "\n",
+                menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
+            );
+
+            component_actions_bar_text_draw(
+                ALIGN_LEFT, VALIGN_TOP,
+                "A: Change\n"
+                "B: Back"
+            );
+         }
+         else {
+
+            component_main_text_draw(
+                ALIGN_CENTER, VALIGN_TOP,
+                "ADJUST REAL TIME CLOCK\n"
+                "\n"
+                "\n"
+                "This cart does not support a real time clock."
+                "\n"
+                "Current date & time: %s\n"
+                "\n",
+                menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
+            );
+
+            component_actions_bar_text_draw(
+                ALIGN_LEFT, VALIGN_TOP,
+                "\n"
+                "B: Back"
+            );
+         }
     }
     else {
         component_actions_bar_text_draw(

@@ -26,6 +26,7 @@ An open source menu for N64 flashcarts.
 * Real Time Clock support.
 * Music playback (MP3).
 * Menu sound effects.
+* N64 ROM autoload.
 
 
 ## Documentation
@@ -49,6 +50,9 @@ An open source menu for N64 flashcarts.
 ## Experimental features
 These features are subject to change:
 
+### N64 ROM autoload
+To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
+NOTE: to return to the menu, hold joypad `start` button whilst powering on the console. 
 
 ### GamePak sprites
 To use N64 `GamePak` sprites, place `PNG` files within the `sd:/menu/boxart/` folder.
@@ -60,7 +64,7 @@ These must be `PNG` files that use the following dimensions:
 * Japanese N64 GamePak boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
 
-They will be loaded by directories using each character of the full 4 character Game Code (as identified in the menus ROM information).
+They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 
@@ -69,6 +73,9 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
 **Note1:** Excluding the region ID may show the wrong boxart.
 **Note2:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
+
+As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
+* [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 
 #### Compatibilty mode
@@ -107,10 +114,20 @@ If required, you can manually adjust the file on the SD card using your computer
 * Download the latest `menu.bin` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
-### ED64 & ED64P
+### ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
 Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+NOTE: The menu may be able to load ROM's but not perform saves and may break existing ones..
 
-The aim is to replace [Altra64](https://github.com/networkfusion/altra64) and [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries).
+#### ED64 (Vseries)
+The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries) / [ED64-OfficialOS](https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/).
+Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
+
+#### ED64 (X series)
+X Series support is currently awaiting fixes, in the meantime use the official [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) instead.
+
+#### ED64 (P clone)
+Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.
+The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
 
 
 # Open source software and licenses used

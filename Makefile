@@ -96,6 +96,10 @@ JOYPAD_IMAGES = \
 	d_left.png \
 	d_right.png \
 	d_up.png \
+	j_down.png \
+	j_left.png \
+	j_right.png \
+	j_up.png \
 	l.png \
 	r.png \
 	start.png \

@@ -96,10 +96,10 @@ JOYPAD_IMAGES = \
 	d_left.png \
 	d_right.png \
 	d_up.png \
-	j_down.png \
-	j_left.png \
-	j_right.png \
-	j_up.png \
+	j_east.png \
+	j_north.png \
+	j_south.png \
+	j_west.png \
 	l.png \
 	r.png \
 	start.png \
@@ -130,7 +130,7 @@ $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/joypad/%.png
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/joypad/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 

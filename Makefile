@@ -86,20 +86,20 @@ SOUNDS = \
 	settings.wav
 
 JOYPAD_IMAGES = \
-	AButton.png \
-	BButton.png \
-	CDown.png \
-	CLeft.png \
-	CRight.png \
-	CUp.png \
-	DDown.png \
-	DLeft.png \
-	DRight.png \
-	DUp.png \
-	LTrigger.png \
-	RTrigger.png \
-	StartButton.png \
-	ZTrigger.png
+	a.png \
+	b.png \
+	c_down.png \
+	c_left.png \
+	c_right.png \
+	c_up.png \
+	d_down.png \
+	d_left.png \
+	d_right.png \
+	d_up.png \
+	l.png \
+	r.png \
+	start.png \
+	z.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

@@ -96,14 +96,18 @@ JOYPAD_IMAGES = \
 	d_left.png \
 	d_right.png \
 	d_up.png \
-	j_east.png \
-	j_north.png \
-	j_south.png \
-	j_west.png \
 	l.png \
 	r.png \
 	start.png \
 	z.png
+# j_east.png \
+# j_north.png \
+# j_northeast.png \
+# j_northwest.png \
+# j_south.png \
+# j_southeast.png \
+# j_southwest.png \
+# j_west.png \
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

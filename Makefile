@@ -86,28 +86,28 @@ SOUNDS = \
 	settings.wav
 
 JOYPAD_IMAGES = \
-	a.png \
-	b.png \
-	c_down.png \
-	c_left.png \
-	c_right.png \
-	c_up.png \
-	d_down.png \
-	d_left.png \
-	d_right.png \
-	d_up.png \
-	l.png \
-	r.png \
-	start.png \
-	z.png
-# j_east.png \
-# j_north.png \
-# j_northeast.png \
-# j_northwest.png \
-# j_south.png \
-# j_southeast.png \
-# j_southwest.png \
-# j_west.png \
+	joypad_a.png \
+	joypad_b.png \
+	joypad_c_down.png \
+	joypad_c_left.png \
+	joypad_c_right.png \
+	joypad_c_up.png \
+	joypad_d_down.png \
+	joypad_d_left.png \
+	joypad_d_right.png \
+	joypad_d_up.png \
+	joypad_l.png \
+	joypad_r.png \
+	joypad_start.png \
+	joypad_z.png
+# joypad_j_east.png \
+# joypad_j_north.png \
+# joypad_j_northeast.png \
+# joypad_j_northwest.png \
+# joypad_j_south.png \
+# joypad_j_southeast.png \
+# joypad_j_southwest.png \
+# joypad_j_west.png \
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

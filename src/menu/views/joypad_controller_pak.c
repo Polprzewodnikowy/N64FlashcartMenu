@@ -64,7 +64,7 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    ui_component_background_draw();
+    ui_components_background_draw();
 
     if (backup_in_progress) {
         ui_components_messagebox_draw("Saving...");

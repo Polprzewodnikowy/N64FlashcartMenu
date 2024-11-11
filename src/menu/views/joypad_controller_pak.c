@@ -73,7 +73,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_layout_draw();
 
     // TODO: Backup from other ports, restore from SD, and/or Repair functions.
-	ui_component_main_text_draw(
+	ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "CONTROLLER PAK MENU\n"
         "\n"

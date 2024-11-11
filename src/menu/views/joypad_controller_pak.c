@@ -67,7 +67,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_component_background_draw();
 
     if (backup_in_progress) {
-        ui_component_messagebox_draw("Saving...");
+        ui_components_messagebox_draw("Saving...");
     }
 
     ui_component_layout_draw();

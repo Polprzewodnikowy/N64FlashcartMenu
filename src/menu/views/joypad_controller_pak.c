@@ -83,7 +83,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     // Bonus would be to handle individual per game entries!
     if (accessory_is_cpak[0]) {
-        ui_component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"

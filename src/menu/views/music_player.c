@@ -61,13 +61,13 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    ui_component_background_draw();
+    ui_components_background_draw();
 
-    ui_component_layout_draw();
+    ui_components_layout_draw();
 
-    ui_component_seekbar_draw(mp3player_get_progress());
+    ui_components_seekbar_draw(mp3player_get_progress());
 
-    ui_component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "MUSIC PLAYER\n"
         "\n"
@@ -83,7 +83,7 @@ static void draw (menu_t *menu, surface_t *d) {
         mp3player_get_duration()
     );
 
-    ui_component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -102,7 +102,7 @@ static void draw (menu_t *menu, surface_t *d) {
         mp3player_get_samplerate()
     );
 
-    ui_component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "A: %s\n"
         "B: Exit | Left / Right: Rewind / Fast forward",

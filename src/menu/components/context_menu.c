@@ -12,7 +12,7 @@ static component_context_menu_t *get_current_submenu (component_context_menu_t *
 }
 
 
-void ui_component_context_menu_init (component_context_menu_t *cm) {
+void ui_components_context_menu_init (component_context_menu_t *cm) {
     cm->row_selected = -1;
     cm->row_count = 0;
     cm->hide_pending = false;
@@ -22,12 +22,12 @@ void ui_component_context_menu_init (component_context_menu_t *cm) {
     }
 }
 
-void ui_component_context_menu_show (component_context_menu_t *cm) {
+void ui_components_context_menu_show (component_context_menu_t *cm) {
     cm->row_selected = 0;
     cm->submenu = NULL;
 }
 
-bool ui_component_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
+bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return false;
     }
@@ -46,7 +46,7 @@ bool ui_component_context_menu_process (menu_t *menu, component_context_menu_t *
     } else if (menu->actions.enter) {
         if (cm->list[cm->row_selected].submenu) {
             cm->submenu = cm->list[cm->row_selected].submenu;
-            ui_component_context_menu_init(cm->submenu);
+            ui_components_context_menu_init(cm->submenu);
             cm->submenu->row_selected = 0;
             cm->submenu->parent = cm;
         } else if (cm->list[cm->row_selected].action) {
@@ -71,7 +71,7 @@ bool ui_component_context_menu_process (menu_t *menu, component_context_menu_t *
     return true;
 }
 
-void ui_component_context_menu_draw (component_context_menu_t *cm) {
+void ui_components_context_menu_draw (component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return;
     }
@@ -105,14 +105,14 @@ void ui_component_context_menu_draw (component_context_menu_t *cm) {
     int width = layout->bbox.x1 - layout->bbox.x0 + MESSAGEBOX_MARGIN;
     int height = layout->bbox.y1 - layout->bbox.y0 + MESSAGEBOX_MARGIN;
 
-    ui_component_dialog_draw(width, height);
+    ui_components_dialog_draw(width, height);
 
     int highlight_x0 = DISPLAY_CENTER_X - (width / 2);
     int highlight_x1 = DISPLAY_CENTER_X + (width / 2);
     int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
     int highlight_y = VISIBLE_AREA_Y0 + layout->bbox.y0 + ((cm->row_selected) * highlight_height);
 
-    ui_component_box_draw(
+    ui_components_box_draw(
         highlight_x0,
         highlight_y,
         highlight_x1,

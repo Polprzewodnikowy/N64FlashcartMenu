@@ -203,7 +203,7 @@ static component_context_menu_t options_context_menu = { .list = {
 }};
 
 static void process (menu_t *menu) {
-    if (ui_component_context_menu_process(menu, &options_context_menu)) {
+    if (ui_components_context_menu_process(menu, &options_context_menu)) {
         return;
     }
 
@@ -213,7 +213,7 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.options) {
-        ui_component_context_menu_show(&options_context_menu);
+        ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.lz_context) {
         if (show_extra_info_message) {
@@ -228,14 +228,14 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    ui_component_background_draw();
+    ui_components_background_draw();
 
     if (menu->boot_pending.rom_file) {
-        ui_component_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f);
     } else {
-        ui_component_layout_draw();
+        ui_components_layout_draw();
 
-        ui_component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "N64 ROM information\n"
             "\n"
@@ -243,7 +243,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->browser.entry->name
         );
 
-        ui_component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -262,24 +262,24 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
-        ui_component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
             "B: Back"
         );
 
-        ui_component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R:    Options"
         );
 
         if (boxart != NULL) {
-            ui_component_boxart_draw(boxart);
+            ui_components_boxart_draw(boxart);
         }
 
         if (show_extra_info_message) {
-            ui_component_messagebox_draw(
+            ui_components_messagebox_draw(
                 "EXTRA ROM INFO\n"
                 "\n"
                 "Endianness: %s\n"
@@ -306,7 +306,7 @@ static void draw (menu_t *menu, surface_t *d) {
             );
         }
 
-        ui_component_context_menu_draw(&options_context_menu);
+        ui_components_context_menu_draw(&options_context_menu);
     }
 
     rdpq_detach_show();
@@ -318,9 +318,9 @@ static void draw_progress (float progress) {
     if (d) {
         rdpq_attach(d, NULL);
 
-        ui_component_background_draw();
+        ui_components_background_draw();
 
-        ui_component_loader_draw(progress);
+        ui_components_loader_draw(progress);
 
         rdpq_detach_show();
     }
@@ -348,7 +348,7 @@ static void load (menu_t *menu) {
 }
 
 static void deinit (void) {
-    ui_component_boxart_free(boxart);
+    ui_components_boxart_free(boxart);
     boxart = NULL;
 }
 
@@ -371,8 +371,8 @@ void view_load_rom_init (menu_t *menu) {
     }
 
     if (!menu->settings.rom_autoload_enabled) {
-        boxart = ui_component_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
-        ui_component_context_menu_init(&options_context_menu);
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+        ui_components_context_menu_init(&options_context_menu);
     }
 }
 

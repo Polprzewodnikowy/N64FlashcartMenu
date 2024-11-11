@@ -36,18 +36,18 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    ui_component_background_draw();
+    ui_components_background_draw();
 
-    ui_component_layout_draw();
+    ui_components_layout_draw();
 
-    ui_component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "FLASHCART INFORMATION"
         "\n"
         "\n"
     );
 
-    ui_component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -78,7 +78,7 @@ static void draw (menu_t *menu, surface_t *d) {
         //format_diagnostic_data(flashcart_has_feature(FLASHCART_FEATURE_DIAGNOSTIC_DATA))
     );
 
-    ui_component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Back"

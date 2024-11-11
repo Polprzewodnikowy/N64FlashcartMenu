@@ -64,16 +64,16 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_component_background_draw();
 
     if (backup_in_progress) {
-        component_messagebox_draw("Saving...");
+        ui_component_messagebox_draw("Saving...");
     }
 
-    component_layout_draw();
+    ui_component_layout_draw();
 
     // TODO: Backup from other ports, restore from SD, and/or Repair functions.
-	component_main_text_draw(
+	ui_component_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "CONTROLLER PAK MENU\n"
         "\n"
@@ -83,7 +83,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     // Bonus would be to handle individual per game entries!
     if (accessory_is_cpak[0]) {
-        component_main_text_draw(
+        ui_component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -98,7 +98,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
     else {
-        component_main_text_draw(
+        ui_component_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -113,14 +113,14 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (accessory_is_cpak[0]) {
-        component_actions_bar_text_draw(
+        ui_component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Clone to SD Card\n"
             "B: Back"
         );
     }
     else {
-        component_actions_bar_text_draw(
+        ui_component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "B: Back"

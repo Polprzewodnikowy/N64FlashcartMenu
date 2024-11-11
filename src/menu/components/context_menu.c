@@ -1,4 +1,4 @@
-#include "../components.h"
+#include "../ui_components.h"
 #include "../fonts.h"
 #include "../sound.h"
 #include "constants.h"

@@ -1,5 +1,5 @@
 /**
- * @file components.h
+ * @file ui_components.h
  * @brief Menu Graphical User Interface Components
  * @ingroup menu
  */

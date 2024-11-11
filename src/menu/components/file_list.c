@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "../components.h"
+#include "../ui_components.h"
 #include "../fonts.h"
 #include "constants.h"
 

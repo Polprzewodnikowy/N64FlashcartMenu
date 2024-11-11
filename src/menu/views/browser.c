@@ -290,11 +290,11 @@ static component_context_menu_t settings_context_menu = {
 };
 
 static void process (menu_t *menu) {
-    if (component_context_menu_process(menu, &entry_context_menu)) {
+    if (ui_components_context_menu_process(menu, &entry_context_menu)) {
         return;
     }
 
-    if (component_context_menu_process(menu, &settings_context_menu)) {
+    if (ui_components_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -355,10 +355,10 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
-        component_context_menu_show(&entry_context_menu);
+        ui_components_context_menu_show(&entry_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
-        component_context_menu_show(&settings_context_menu);
+        ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
     }
 }
@@ -367,11 +367,11 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
     const char *action = NULL;
 
@@ -387,7 +387,7 @@ static void draw (menu_t *menu, surface_t *d) {
         }
     }
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -395,7 +395,7 @@ static void draw (menu_t *menu, surface_t *d) {
         path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "Start: Settings\n"
         "^%02XR: Options^00",
@@ -403,7 +403,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     if (menu->current_time >= 0) {
-        component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "\n"
             "%s",
@@ -411,9 +411,9 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
-    component_context_menu_draw(&entry_context_menu);
+    ui_components_context_menu_draw(&entry_context_menu);
 
-    component_context_menu_draw(&settings_context_menu);
+    ui_components_context_menu_draw(&settings_context_menu);
 
     rdpq_detach_show();
 }
@@ -421,8 +421,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
-        component_context_menu_init(&entry_context_menu);
-        component_context_menu_init(&settings_context_menu);
+        ui_components_context_menu_init(&entry_context_menu);
+        ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");

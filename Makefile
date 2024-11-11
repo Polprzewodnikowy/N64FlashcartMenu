@@ -41,12 +41,12 @@ SRCS = \
 	libs/miniz/miniz.c \
 	menu/actions.c \
 	menu/cart_load.c \
-	menu/components/background.c \
-	menu/components/boxart.c \
-	menu/components/common.c \
-	menu/components/context_menu.c \
-	menu/components/file_list.c \
 	menu/cpak_handler.c \
+	menu/ui_components/background.c \
+	menu/ui_components/boxart.c \
+	menu/ui_components/common.c \
+	menu/ui_components/context_menu.c \
+	menu/ui_components/file_list.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \

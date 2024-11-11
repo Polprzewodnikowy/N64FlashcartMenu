@@ -17,7 +17,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 
-component_boxart_t *component_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view) {
+component_boxart_t *ui_component_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view) {
     component_boxart_t *b;
     char boxart_id_path[8];
 
@@ -120,7 +120,7 @@ component_boxart_t *component_boxart_init (const char *storage_prefix, char *gam
     return NULL;
 }
 
-void component_boxart_free (component_boxart_t *b) {
+void ui_component_boxart_free (component_boxart_t *b) {
     if (b) {
         if (b->loading) {
             png_decoder_abort();
@@ -133,7 +133,7 @@ void component_boxart_free (component_boxart_t *b) {
     }
 }
 
-void component_boxart_draw (component_boxart_t *b) {
+void ui_component_boxart_draw (component_boxart_t *b) {
     int box_x = BOXART_X;
     int box_y = BOXART_Y;
 
@@ -150,7 +150,7 @@ void component_boxart_draw (component_boxart_t *b) {
             rdpq_tex_blit(b->image, box_x, box_y, NULL);
         rdpq_mode_pop();
     } else {
-        component_box_draw(
+        ui_component_box_draw(
             BOXART_X,
             BOXART_Y,
             BOXART_X + BOXART_WIDTH,

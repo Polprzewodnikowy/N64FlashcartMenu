@@ -110,7 +110,7 @@ void component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
             snprintf( current_selection_chars, sizeof(current_selection_chars), "******************^^^^*****");
             break;
     }
-        component_messagebox_draw(
+        ui_component_messagebox_draw(
             "|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n%s\n", full_dt, current_selection_chars);
 }
 
@@ -165,14 +165,14 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_component_background_draw();
 
-    component_layout_draw();
+    ui_component_layout_draw();
 
     if (!is_editing_mode) {
          if( menu->current_time >= 0 ) {
 
-            component_main_text_draw(
+            ui_component_main_text_draw(
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -186,7 +186,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
             );
 
-            component_actions_bar_text_draw(
+            ui_component_actions_bar_text_draw(
                 ALIGN_LEFT, VALIGN_TOP,
                 "A: Change\n"
                 "B: Back"
@@ -194,7 +194,7 @@ static void draw (menu_t *menu, surface_t *d) {
          }
          else {
 
-            component_main_text_draw(
+            ui_component_main_text_draw(
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -206,7 +206,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
             );
 
-            component_actions_bar_text_draw(
+            ui_component_actions_bar_text_draw(
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
                 "B: Back"
@@ -214,12 +214,12 @@ static void draw (menu_t *menu, surface_t *d) {
          }
     }
     else {
-        component_actions_bar_text_draw(
+        ui_component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
             "Up/Down: Adjust Field\n"
             "Left/Right: Switch Field"
         );
-        component_actions_bar_text_draw(
+        ui_component_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "R: Save\n"
             "B: Back"

@@ -157,7 +157,7 @@ static void display_list_free (void *arg) {
 }
 
 
-void component_background_init (char *cache_location) {
+void ui_component_background_init (char *cache_location) {
     if (!background) {
         background = calloc(1, sizeof(component_background_t));
         background->cache_location = strdup(cache_location);
@@ -166,7 +166,7 @@ void component_background_init (char *cache_location) {
     }
 }
 
-void component_background_free (void) {
+void ui_component_background_free (void) {
     if (background) {
         if (background->image) {
             surface_free(background->image);
@@ -185,7 +185,7 @@ void component_background_free (void) {
     }
 }
 
-void component_background_replace_image (surface_t *image) {
+void ui_component_background_replace_image (surface_t *image) {
     if (!background) {
         return;
     }
@@ -206,7 +206,7 @@ void component_background_replace_image (surface_t *image) {
     prepare_background(background);
 }
 
-void component_background_draw (void) {
+void ui_component_background_draw (void) {
     if (background && background->image_display_list) {
         rspq_block_run(background->image_display_list);
     } else {

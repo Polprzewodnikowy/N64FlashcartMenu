@@ -69,19 +69,19 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_component_background_draw();
 
-    component_layout_draw();
+    ui_component_layout_draw();
 
-    component_main_text_draw(
+    ui_component_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n",
         text->contents + text->offset
     );
 
-    component_list_scrollbar_draw(text->current_line, text->lines, LIST_ENTRIES);
+    ui_component_list_scrollbar_draw(text->current_line, text->lines, LIST_ENTRIES);
 
-    component_actions_bar_text_draw(
+    ui_component_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "^%02XUp / Down: Scroll^00\n"
         "B: Back",

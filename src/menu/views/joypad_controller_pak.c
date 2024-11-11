@@ -98,7 +98,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
     else {
-        ui_component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"

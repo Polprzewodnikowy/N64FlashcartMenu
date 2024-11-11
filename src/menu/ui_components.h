@@ -10,10 +10,6 @@
 #include <libdragon.h>
 #include "menu_state.h"
 
-/**
- * @addtogroup menu_ui_components
- * @{
- */
 
 /** 
  * @brief File image Enumeration.
@@ -255,7 +251,5 @@ void ui_components_boxart_free(component_boxart_t *b);
  * @param b Pointer to the box art component.
  */
 void ui_components_boxart_draw(component_boxart_t *b);
-
-/** @} */ /* menu_ui_components */
 
 #endif /* UI_COMPONENTS_H__ */

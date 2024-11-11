@@ -41,11 +41,6 @@ SRCS = \
 	libs/miniz/miniz.c \
 	menu/actions.c \
 	menu/cart_load.c \
-	menu/ui_components/background.c \
-	menu/ui_components/boxart.c \
-	menu/ui_components/common.c \
-	menu/ui_components/context_menu.c \
-	menu/ui_components/file_list.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -56,6 +51,11 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/ui_components/background.c \
+	menu/ui_components/boxart.c \
+	menu/ui_components/common.c \
+	menu/ui_components/context_menu.c \
+	menu/ui_components/file_list.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \

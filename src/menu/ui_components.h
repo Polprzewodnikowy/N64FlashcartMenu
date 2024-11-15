@@ -1,24 +1,20 @@
 /**
- * @file components.h
+ * @file ui_components.h
  * @brief Menu Graphical User Interface Components
  * @ingroup menu
  */
 
-#ifndef COMPONENTS_H__
-#define COMPONENTS_H__
+#ifndef UI_COMPONENTS_H__
+#define UI_COMPONENTS_H__
 
 #include <libdragon.h>
 #include "menu_state.h"
 
-/**
- * @addtogroup menu_ui_components
- * @{
- */
 
 /** 
  * @brief File image Enumeration.
  * 
- * Enumeration for different types of file images used in the GUI.
+ * Enumeration for different types of file images used in the user interface.
  */
 typedef enum {
     IMAGE_BOXART_FRONT,    /**< Boxart image from the front */
@@ -42,7 +38,7 @@ typedef enum {
  * @param y1 Ending y-coordinate.
  * @param color Color of the box.
  */
-void component_box_draw(int x0, int y0, int x1, int y1, color_t color);
+void ui_components_box_draw(int x0, int y0, int x1, int y1, color_t color);
 
 /**
  * @brief Draw a border component.
@@ -52,12 +48,12 @@ void component_box_draw(int x0, int y0, int x1, int y1, color_t color);
  * @param x1 Ending x-coordinate.
  * @param y1 Ending y-coordinate.
  */
-void component_border_draw(int x0, int y0, int x1, int y1);
+void ui_components_border_draw(int x0, int y0, int x1, int y1);
 
 /**
  * @brief Draw the layout component.
  */
-void component_layout_draw(void);
+void ui_components_layout_draw(void);
 
 /**
  * @brief Draw a progress bar component.
@@ -68,21 +64,21 @@ void component_layout_draw(void);
  * @param y1 Ending y-coordinate.
  * @param progress Progress value (0.0 to 1.0).
  */
-void component_progressbar_draw(int x0, int y0, int x1, int y1, float progress);
+void ui_components_progressbar_draw(int x0, int y0, int x1, int y1, float progress);
 
 /**
  * @brief Draw a seek bar component.
  * 
  * @param progress Progress value (0.0 to 1.0).
  */
-void component_seekbar_draw(float progress);
+void ui_components_seekbar_draw(float progress);
 
 /**
  * @brief Draw a loader component.
  * 
  * @param position Position value (0.0 to 1.0).
  */
-void component_loader_draw(float position);
+void ui_components_loader_draw(float position);
 
 /**
  * @brief Draw a scrollbar component.
@@ -95,7 +91,7 @@ void component_loader_draw(float position);
  * @param items Total number of items.
  * @param visible_items Number of visible items.
  */
-void component_scrollbar_draw(int x, int y, int width, int height, int position, int items, int visible_items);
+void ui_components_scrollbar_draw(int x, int y, int width, int height, int position, int items, int visible_items);
 
 /**
  * @brief Draw a list scrollbar component.
@@ -104,7 +100,7 @@ void component_scrollbar_draw(int x, int y, int width, int height, int position,
  * @param items Total number of items.
  * @param visible_items Number of visible items.
  */
-void component_list_scrollbar_draw(int position, int items, int visible_items);
+void ui_components_list_scrollbar_draw(int position, int items, int visible_items);
 
 /**
  * @brief Draw a dialog component.
@@ -112,7 +108,7 @@ void component_list_scrollbar_draw(int position, int items, int visible_items);
  * @param width Width of the dialog.
  * @param height Height of the dialog.
  */
-void component_dialog_draw(int width, int height);
+void ui_components_dialog_draw(int width, int height);
 
 /**
  * @brief Draw a message box component.
@@ -120,7 +116,7 @@ void component_dialog_draw(int width, int height);
  * @param fmt Format string for the message.
  * @param ... Additional arguments for the format string.
  */
-void component_messagebox_draw(char *fmt, ...);
+void ui_components_messagebox_draw(char *fmt, ...);
 
 /**
  * @brief Draw the main text component.
@@ -130,7 +126,7 @@ void component_messagebox_draw(char *fmt, ...);
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void component_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+void ui_components_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
 
 /**
  * @brief Draw the actions bar text component.
@@ -140,31 +136,31 @@ void component_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fm
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void component_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
 
 /**
  * @brief Initialize the background component.
  * 
  * @param cache_location Location of the cache.
  */
-void component_background_init(char *cache_location);
+void ui_components_background_init(char *cache_location);
 
 /**
  * @brief Free the background component resources.
  */
-void component_background_free(void);
+void ui_components_background_free(void);
 
 /**
  * @brief Replace the background image.
  * 
  * @param image New background image.
  */
-void component_background_replace_image(surface_t *image);
+void ui_components_background_replace_image(surface_t *image);
 
 /**
  * @brief Draw the background component.
  */
-void component_background_draw(void);
+void ui_components_background_draw(void);
 
 /**
  * @brief Draw the file list component.
@@ -173,7 +169,7 @@ void component_background_draw(void);
  * @param entries Number of entries.
  * @param selected Index of the selected entry.
  */
-void component_file_list_draw(entry_t *list, int entries, int selected);
+void ui_components_file_list_draw(entry_t *list, int entries, int selected);
 
 /**
  * @brief Context menu structure.
@@ -199,14 +195,14 @@ typedef struct component_context_menu {
  * 
  * @param cm Pointer to the context menu structure.
  */
-void component_context_menu_init(component_context_menu_t *cm);
+void ui_components_context_menu_init(component_context_menu_t *cm);
 
 /**
  * @brief Show the context menu component.
  * 
  * @param cm Pointer to the context menu structure.
  */
-void component_context_menu_show(component_context_menu_t *cm);
+void ui_components_context_menu_show(component_context_menu_t *cm);
 
 /**
  * @brief Process the context menu component.
@@ -215,14 +211,14 @@ void component_context_menu_show(component_context_menu_t *cm);
  * @param cm Pointer to the context menu structure.
  * @return True if the context menu was processed, false otherwise.
  */
-bool component_context_menu_process(menu_t *menu, component_context_menu_t *cm);
+bool ui_components_context_menu_process(menu_t *menu, component_context_menu_t *cm);
 
 /**
  * @brief Draw the context menu component.
  * 
  * @param cm Pointer to the context menu structure.
  */
-void component_context_menu_draw(component_context_menu_t *cm);
+void ui_components_context_menu_draw(component_context_menu_t *cm);
 
 /**
  * @brief Box Art Structure.
@@ -240,22 +236,20 @@ typedef struct {
  * @param current_image_view Current image view type.
  * @return Pointer to the initialized box art component.
  */
-component_boxart_t *component_boxart_init(const char *storage_prefix, char *game_code, file_image_type_t current_image_view);
+component_boxart_t *ui_components_boxart_init(const char *storage_prefix, char *game_code, file_image_type_t current_image_view);
 
 /**
  * @brief Free the box art component resources.
  * 
  * @param b Pointer to the box art component.
  */
-void component_boxart_free(component_boxart_t *b);
+void ui_components_boxart_free(component_boxart_t *b);
 
 /**
  * @brief Draw the box art component.
  * 
  * @param b Pointer to the box art component.
  */
-void component_boxart_draw(component_boxart_t *b);
+void ui_components_boxart_draw(component_boxart_t *b);
 
-/** @} */ /* menu_ui_components */
-
-#endif /* COMPONENTS_H__ */
+#endif /* UI_COMPONENTS_H__ */

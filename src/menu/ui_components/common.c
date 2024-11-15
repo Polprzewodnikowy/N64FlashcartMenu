@@ -175,6 +175,9 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
     va_end(va);
 
+    // FIXME: if there is a button to draw, we should add it!
+    // FIXME: take into account action bar line
+
     rdpq_text_printn(
         &(rdpq_textparms_t) {
             .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),

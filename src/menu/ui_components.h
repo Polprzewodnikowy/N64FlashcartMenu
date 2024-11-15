@@ -57,7 +57,7 @@ typedef enum {
 typedef enum {
     ACTION_BAR_LINE_ONE,
     ACTION_BAR_LINE_TWO,
-    ACTION_BAR_LINE_END
+    ACTION_BAR_LINE_END         /**< List end marker */
 } action_bar_line_t;
 
 
@@ -168,7 +168,7 @@ void ui_components_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, sprite_joypad_button_type_t context_button, char *fmt, ...);
+void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, sprite_joypad_button_type_t action_button, char *fmt, ...);
 
 /**
  * @brief Initialize the background component.

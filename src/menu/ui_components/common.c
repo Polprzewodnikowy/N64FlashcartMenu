@@ -166,7 +166,7 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
     }
 }
 
-void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, sprite_joypad_button_type_t context_button, char *fmt, ...) {
+void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, sprite_joypad_button_type_t action_button, char *fmt, ...) {
     char buffer[256];
     size_t nbytes = sizeof(buffer);
 
@@ -175,7 +175,7 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
     va_end(va);
 
-    // FIXME: if there is a button to draw, we should add it!
+    // FIXME: if there is an action button to draw, we should add it!
     // FIXME: take into account action bar line
 
     rdpq_text_printn(

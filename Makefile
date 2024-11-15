@@ -56,7 +56,7 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
-	menu/ui_components/joypad_buttons.c \
+	menu/ui_components/sprites.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \

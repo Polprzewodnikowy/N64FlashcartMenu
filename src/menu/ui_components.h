@@ -284,4 +284,10 @@ void ui_components_boxart_free(component_boxart_t *b);
  */
 void ui_components_boxart_draw(component_boxart_t *b);
 
+
+void ui_components_sprites_init(void);
+
+void ui_components_joypad_buttons_draw (sprite_joypad_button_type_t button, float pos_x, float pos_y);
+
+
 #endif /* UI_COMPONENTS_H__ */

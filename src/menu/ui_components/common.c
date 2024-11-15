@@ -175,10 +175,19 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
     va_end(va);
 
-    // FIXME: take into account action bar line
-
-    if(action_button != SPRITE_JOYPAD_BUTTON_NONE) {
-        ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL);
+    // FIXME: take into account action bar align
+    if(action_button != SPRITE_JOYPAD_BUTTON_NONE && align == ALIGN_LEFT) {
+        switch (line)
+        {
+        case ACTION_BAR_LINE_ONE:
+            ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL);
+            break;
+        case ACTION_BAR_LINE_TWO:
+            ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + 18);
+            break;
+        default:
+            break;
+        }
     }
 
     rdpq_text_printn(

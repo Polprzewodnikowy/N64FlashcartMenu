@@ -81,14 +81,18 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run 64DD disk\n"
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            "A: Load and run 64DD disk"
+        );
+        ui_components_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            "\n"
             "B: Exit"
         );
 
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
-                ALIGN_RIGHT, VALIGN_TOP,
+                ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
                 "R: Load with ROM"
             );
         }

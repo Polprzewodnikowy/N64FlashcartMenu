@@ -82,10 +82,15 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_list_scrollbar_draw(text->current_line, text->lines, LIST_ENTRIES);
 
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "^%02XUp / Down: Scroll^00\n"
-        "B: Back",
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+        "^%02XUp / Down: Scroll^00",
         text->vertical_scroll_possible ? STL_DEFAULT : STL_GRAY
+    );
+
+    ui_components_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+        "\n"
+        "B: Back"
     );
 
     rdpq_detach_show();

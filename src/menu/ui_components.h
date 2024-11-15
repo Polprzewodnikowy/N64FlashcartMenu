@@ -29,6 +29,36 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+/** 
+ * @brief joypad button sprite Enumeration.
+ * 
+ * Enumeration for different types of joypad button sprites used in the user interface.
+ */
+typedef enum {
+    SPRITE_JOYPAD_BUTTON_A,
+    SPRITE_JOYPAD_BUTTON_B,
+    SPRITE_JOYPAD_BUTTON_C_DOWN,
+    SPRITE_JOYPAD_BUTTON_C_LEFT,
+    SPRITE_JOYPAD_BUTTON_C_RIGHT,
+    SPRITE_JOYPAD_BUTTON_C_UP,
+    SPRITE_JOYPAD_BUTTON_D_DOWN,
+    SPRITE_JOYPAD_BUTTON_D_LEFT,
+    SPRITE_JOYPAD_BUTTON_D_RIGHT,
+    SPRITE_JOYPAD_BUTTON_D_UP,
+    SPRITE_JOYPAD_BUTTON_L,
+    SPRITE_JOYPAD_BUTTON_R,
+    SPRITE_JOYPAD_BUTTON_Z,
+    SPRITE_JOYPAD_BUTTON_TYPE_END         /**< List end marker */
+} sprite_joypad_button_type_t;
+
+
+typedef enum {
+    ACTION_BAR_LINE_ONE,
+    ACTION_BAR_LINE_TWO,
+    ACTION_BAR_LINE_END
+} action_bar_line_t;
+
+
 /**
  * @brief Draw a box component.
  * 
@@ -136,7 +166,7 @@ void ui_components_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, char *fmt, ...);
 
 /**
  * @brief Initialize the background component.

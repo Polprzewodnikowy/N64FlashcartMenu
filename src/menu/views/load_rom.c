@@ -263,14 +263,22 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run ROM\n"
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            "A: Load and run ROM"
+        );
+        ui_components_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            "\n"
             "B: Back"
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Extra Info\n"
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            "L|Z: Extra Info"
+        );
+        ui_components_actions_bar_text_draw(
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            "\n"
             "R:    Options"
         );
 

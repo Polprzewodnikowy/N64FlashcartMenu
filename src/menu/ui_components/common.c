@@ -166,7 +166,7 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
     }
 }
 
-void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
+void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, char *fmt, ...) {
     char buffer[256];
     size_t nbytes = sizeof(buffer);
 

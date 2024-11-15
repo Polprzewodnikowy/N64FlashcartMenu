@@ -187,8 +187,12 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
-                ALIGN_LEFT, VALIGN_TOP,
-                "A: Change\n"
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+                "A: Change"
+            );
+            ui_components_actions_bar_text_draw(
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+                "\n"
                 "B: Back"
             );
          }
@@ -207,7 +211,7 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
-                ALIGN_LEFT, VALIGN_TOP,
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
                 "\n"
                 "B: Back"
             );
@@ -215,13 +219,21 @@ static void draw (menu_t *menu, surface_t *d) {
     }
     else {
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP,
-            "Up/Down: Adjust Field\n"
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            "Up/Down: Adjust Field"
+        );
+        ui_components_actions_bar_text_draw(
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            "\n"
             "Left/Right: Switch Field"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP,
-            "R: Save\n"
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            "R: Save"
+        );
+        ui_components_actions_bar_text_draw(
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            "\n"
             "B: Back"
         );
     }

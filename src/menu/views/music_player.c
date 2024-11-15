@@ -103,10 +103,14 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "A: %s\n"
-        "B: Exit | Left / Right: Rewind / Fast forward",
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+        "A: %s",
         mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
+    );
+    ui_components_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+        "\n"
+        "B: Exit | Left / Right: Rewind / Fast forward"
     );
 
     rdpq_detach_show();

@@ -187,11 +187,11 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
-                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
                 "A: Change"
             );
             ui_components_actions_bar_text_draw(
-                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
                 "\n"
                 "B: Back"
             );
@@ -211,7 +211,7 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
-                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+                ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
                 "\n"
                 "B: Back"
             );
@@ -219,20 +219,20 @@ static void draw (menu_t *menu, surface_t *d) {
     }
     else {
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_NONE,
             "Up/Down: Adjust Field"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_NONE,
             "\n"
             "Left/Right: Switch Field"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_R,
             "R: Save"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
             "\n"
             "B: Back"
         );

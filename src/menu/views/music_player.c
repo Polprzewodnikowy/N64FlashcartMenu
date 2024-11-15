@@ -103,12 +103,12 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
         "A: %s",
         mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
     );
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
         "\n"
         "B: Exit | Left / Right: Rewind / Fast forward"
     );

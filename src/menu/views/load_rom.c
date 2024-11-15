@@ -263,21 +263,21 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
             "A: Load and run ROM"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
             "\n"
             "B: Back"
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_L,
             "L|Z: Extra Info"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_R,
             "\n"
             "R:    Options"
         );

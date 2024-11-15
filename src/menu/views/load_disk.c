@@ -81,18 +81,18 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
             "A: Load and run 64DD disk"
         );
         ui_components_actions_bar_text_draw(
-            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO,
+            ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
             "\n"
             "B: Exit"
         );
 
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
-                ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE,
+                ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_R,
                 "R: Load with ROM"
             );
         }

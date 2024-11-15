@@ -35,6 +35,7 @@ typedef enum {
  * Enumeration for different types of joypad button sprites used in the user interface.
  */
 typedef enum {
+    SPRITE_JOYPAD_BUTTON_NONE,
     SPRITE_JOYPAD_BUTTON_A,
     SPRITE_JOYPAD_BUTTON_B,
     SPRITE_JOYPAD_BUTTON_C_DOWN,
@@ -47,6 +48,7 @@ typedef enum {
     SPRITE_JOYPAD_BUTTON_D_UP,
     SPRITE_JOYPAD_BUTTON_L,
     SPRITE_JOYPAD_BUTTON_R,
+    SPRITE_JOYPAD_BUTTON_START,
     SPRITE_JOYPAD_BUTTON_Z,
     SPRITE_JOYPAD_BUTTON_TYPE_END         /**< List end marker */
 } sprite_joypad_button_type_t;
@@ -166,7 +168,7 @@ void ui_components_main_text_draw(rdpq_align_t align, rdpq_valign_t valign, char
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, char *fmt, ...);
+void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, action_bar_line_t line, sprite_joypad_button_type_t context_button, char *fmt, ...);
 
 /**
  * @brief Initialize the background component.

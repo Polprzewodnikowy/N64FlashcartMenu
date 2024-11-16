@@ -76,7 +76,7 @@ void ui_components_joypad_buttons_draw (sprite_joypad_button_type_t button, floa
             current_button = sprite_joypad_r;
             break;
         case SPRITE_JOYPAD_BUTTON_START:
-            current_button = sprite_joypad_z;
+            current_button = sprite_joypad_start;
             break;
         case SPRITE_JOYPAD_BUTTON_Z:
             current_button = sprite_joypad_z;

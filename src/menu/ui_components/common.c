@@ -175,19 +175,21 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
     va_end(va);
 
-    // FIXME: take into account action bar align
-    if(action_button != SPRITE_JOYPAD_BUTTON_NONE && align == ALIGN_LEFT) {
-        switch (line)
-        {
-        case ACTION_BAR_LINE_ONE:
-            ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL);
-            break;
-        case ACTION_BAR_LINE_TWO:
-            ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + 18);
-            break;
-        default:
-            break;
-        }
+    uint16_t btn_offset_x = 0;
+    uint16_t btn_offset_y = 0;
+
+
+    // FIXME: improve bar align and line offsets. Currently they are just best guesses!
+    if (line == ACTION_BAR_LINE_TWO) {
+        btn_offset_y = 18;
+    }
+
+    if (align == ALIGN_RIGHT) {
+        btn_offset_x = 450;
+    }
+
+    if(action_button != SPRITE_JOYPAD_BUTTON_NONE) {
+        ui_components_joypad_buttons_draw(action_button, VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL + btn_offset_x, LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + btn_offset_y);
     }
 
     rdpq_text_printn(

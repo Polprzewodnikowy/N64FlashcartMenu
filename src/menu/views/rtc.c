@@ -5,8 +5,8 @@
 #include "../sound.h"
 #include "views.h"
 
-#define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
-#define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
+#define MAX(a,b)  (((a) > (b)) ? (a) : (b))
+#define MIN(a,b)  (((a) < (b)) ? (a) : (b))
 #define CLAMP(x, min, max) (MIN(MAX((x), (min)), (max)))
 
 #define YEAR_MIN 1996
@@ -27,7 +27,7 @@ static struct tm rtc_tm = {0};
 static bool is_editing_mode;
 static rtc_field_t editing_field_type;
 
-int wrap( uint16_t val, uint16_t min, uint16_t max ) {
+int wrap( int val, uint16_t min, uint16_t max ) {
     if( val < min ) return max;
     if( val > max ) return min;
     return val;

@@ -72,8 +72,8 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     *t = *gmtime( &timestamp );
 }
 
-void component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
-    // FIXME: move this to components.c once improved.
+void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
+    // FIXME: move this to ui_components.c once improved.
     /* Format RTC date/time as strings */
     char full_dt[30];
     char current_selection_chars[30];
@@ -227,7 +227,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (is_editing_mode) {
-        component_editdatetime_draw(rtc_tm, editing_field_type);
+        rtc_ui_component_editdatetime_draw(rtc_tm, editing_field_type);
     }
 
     rdpq_detach_show();

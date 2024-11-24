@@ -83,8 +83,8 @@ static void menu_init (boot_params_t *boot_params) {
     if (menu->settings.hdmi_pal60_compatibility_mode) {
         tv_type = get_tv_type();
         if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
-            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-            __boot_tvtype = TV_NTSC;
+            // HACK: Set TV type to MPAL, so PAL console would output 60 Hz signal instead.
+            __boot_tvtype = TV_MPAL;
         }
     }
 

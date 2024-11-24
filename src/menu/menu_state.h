@@ -106,7 +106,7 @@ typedef struct {
         path_t *rom_path;
         rom_info_t rom_info;
         path_t *disk_path;
-        disk_info_t disk_info;                
+        disk_info_t disk_info;
     } load;
 
     struct {

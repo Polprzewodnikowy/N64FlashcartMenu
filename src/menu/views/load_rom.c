@@ -343,7 +343,7 @@ void view_load_rom_init (menu_t *menu) {
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
-        menu->load.rom_path = NULL;        
+        menu->load.rom_path = NULL;
         menu_show_error(menu, convert_error_message(err));
         return;
     }
@@ -359,7 +359,7 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     draw(menu, display);
 
     if (load_pending) {
-        load_pending = false;        
+        load_pending = false;
         load(menu);
     }
 

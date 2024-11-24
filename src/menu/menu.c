@@ -73,13 +73,6 @@ static void menu_init (boot_params_t *boot_params) {
     settings_load(&menu->settings);
     path_pop(path);
 
-    resolution_t resolution = {
-        .width = 640,
-        .height = 480,
-        .interlaced = INTERLACED ? INTERLACE_HALF : INTERLACE_OFF,
-        .pal60 = (!menu->settings.hdmi_pal60_compatibility_mode && menu->settings.pal60_enabled),
-    };
-
     if (menu->settings.hdmi_pal60_compatibility_mode) {
         tv_type = get_tv_type();
         if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
@@ -87,6 +80,13 @@ static void menu_init (boot_params_t *boot_params) {
             __boot_tvtype = TV_MPAL;
         }
     }
+
+    resolution_t resolution = {
+        .width = 640,
+        .height = 480,
+        .interlaced = INTERLACED ? INTERLACE_HALF : INTERLACE_OFF,
+        .pal60 = menu->settings.pal60_enabled,
+    };
 
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, INTERLACED ? FILTERS_DISABLED : FILTERS_RESAMPLE);
     display_set_fps_limit(FPS_LIMIT);

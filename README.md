@@ -18,7 +18,7 @@ An open source menu for N64 flashcarts.
 * Fully Open Source.
 * Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
-* Emulator support (NES, SNES, GB, GBC) ROMs.
+* Emulator support (NES, SNES, GB, GBC, SMS, GG) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
 * Comprehensive ROM save database (including HomeBrew headers).

@@ -16,6 +16,11 @@ static void set_pal60_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_hdmi_pal60_compatibility_type (menu_t *menu, void *arg) {
+    menu->settings.hdmi_pal60_compatibility_mode = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -54,7 +59,13 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_pal60_type, .arg = (void *) (false) },
+    {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_pal60_hdmi_compatibility_type_context_menu = { .list = {
+    {.text = "On", .action = set_hdmi_pal60_compatibility_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_hdmi_pal60_compatibility_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -92,6 +103,7 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
+    { .text = "PAL60 HDMI Compat", .submenu = &set_pal60_hdmi_compatibility_type_context_menu },
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_sound_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
@@ -139,6 +151,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Autoload ROM      : %s\n"
         "To change the following menu settings, press 'A':\n"
         "*    PAL60 Mode        : %s\n"
+        "*    PAL60 HDMI Compat : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Sound Effects     : %s\n"
@@ -152,6 +165,7 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->settings.default_directory,
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.pal60_enabled),
+        format_switch(menu->settings.hdmi_pal60_compatibility_mode),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.sound_enabled)

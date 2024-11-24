@@ -6,7 +6,7 @@
 
 static bool load_pending;
 static component_boxart_t *boxart;
-static char* entryName;
+static char* entry_name;
 
 
 static char *convert_error_message (rom_err_t err) {
@@ -219,7 +219,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s",
-            entryName
+            entry_name
         );
 
         component_main_text_draw(
@@ -266,7 +266,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
-            "C-Right: Favorite"
+            "C-R: Favorite\n"
             "R: Options"
         ); 
 
@@ -300,7 +300,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_set_last_rom(&menu->history, menu->load.rom_path);
+    history_set_last(&menu->history, menu->load.rom_path, NULL);
 
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -327,16 +327,13 @@ void view_load_rom_init (menu_t *menu) {
         path_free(menu->load.rom_path);
     }
 
-    if(menu->favourite.loadLast)
-    {
-        entryName = path_last_get(menu->history.last_rom);
+    if(menu->favourite.loadLast) {
+        entry_name = path_last_get(menu->history.last_rom);
         menu->load.rom_path = path_clone(menu->history.last_rom);
 
         menu->favourite.loadLast = false;
-    }
-    else
-    {
-        entryName = menu->browser.entry->name;
+    } else {
+        entry_name = menu->browser.entry->name;
         menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
     

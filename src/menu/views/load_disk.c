@@ -7,6 +7,7 @@
 
 static bool load_pending;
 static bool load_rom;
+static char* entry_name;
 
 
 static char *convert_error_message (disk_err_t err) {
@@ -55,7 +56,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "64DD disk information\n"
             "\n"
             "%s",
-            menu->browser.entry->name
+            entry_name
         );
 
         component_main_text_draw(
@@ -126,7 +127,8 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_set_last_disk(&menu->history, menu->load.disk_path, menu->load.rom_path);
+    // Save the history so if they loaded with rom, it will remember the rom for next time.
+    history_set_last(&menu->history, menu->load.disk_path, load_rom ? menu->load.rom_path :  NULL);
 
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -157,7 +159,33 @@ void view_load_disk_init (menu_t *menu) {
 
     load_pending = false;
 
-    menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    if(menu->favourite.loadLast) {        
+        menu->load.disk_path = path_clone(menu->history.last_disk);
+        entry_name = path_last_get(menu->load.disk_path);
+
+        if(path_has_value(menu->history.last_rom)) {
+            if (menu->load.rom_path) {
+                path_free(menu->load.rom_path);
+                menu->load.rom_path = NULL;
+            }
+
+            menu->load.rom_path = path_clone(menu->history.last_rom);
+
+            // need to load in the rom info might need to turn this into a function to call.
+            rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
+            if (err != ROM_OK) {
+                path_free(menu->load.rom_path);
+                menu->load.rom_path = NULL;
+                menu_show_error(menu, convert_error_message(err));
+                return;
+            }
+        }
+
+        menu->favourite.loadLast = false;
+    } else {
+        menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        entry_name = menu->browser.entry->name;
+    }
 
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {

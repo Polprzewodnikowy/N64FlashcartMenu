@@ -27,10 +27,7 @@ void history_load (history_t *history);
 /** @brief The history to save */
 void history_save (history_t *history);
 
-
-void history_set_last_rom(history_t *history, path_t* path);
-void history_set_last_disk(history_t *history, path_t* disk_path, path_t* rom_path);
-
+void history_set_last(history_t *history, path_t* disk_path, path_t* rom_path);
 
 void history_add_favorite(history_t *history, path_t* rom, path_t* disk);
 

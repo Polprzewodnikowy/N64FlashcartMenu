@@ -290,8 +290,11 @@ static bool handle_load_last(menu_t *menu)
 {
     if(menu->actions.last_game)
     {
-        if(path_has_value(menu->history.last_rom))
-        {
+        if(path_has_value(menu->history.last_disk)) {
+            menu->favourite.loadLast = true;
+            menu->next_mode = MENU_MODE_LOAD_DISK;
+            return true;
+        } else if(path_has_value(menu->history.last_rom)) {
             menu->favourite.loadLast = true;
             menu->next_mode = MENU_MODE_LOAD_ROM;
             return true;
@@ -415,7 +418,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "C-Left: Last Game | C-Right: Favorites\n"
+            "C-L: Last | C-R: Fav\n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -424,7 +427,7 @@ static void draw (menu_t *menu, surface_t *d) {
     {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "C-Left: Last Game | C-Right: Favorites\n"
+            "C-L: Last | C-R: Fav\n"
             ""
         );
     }

@@ -22,6 +22,7 @@ Menu currently supports the following emulators and associated ROM file names:
 - **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
 - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
 - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64` ("Download Emulator" button)
+- **SMS** / **GG**: [smsPlus64](https://github.com/fhoedemakers/smsplus64/releases) by *fhoedmakers* - `smsPlus64.z64`
 
 
 ### 64DD disk support
@@ -48,7 +49,8 @@ SD:\
 │        ├── neon64bu.rom
 │        ├── sodium64.z64
 │        ├── gb.v64
-│        └── gbc.v64
+│        ├── gbc.v64
+│        └── smsPlus64.z64
 │
 ├── (a rom).z64
 ├── (a rom).n64

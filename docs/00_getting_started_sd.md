@@ -50,7 +50,7 @@ SD:\
 │        ├── sodium64.z64
 │        ├── gb.v64
 │        ├── gbc.v64
-│        └── smsPlus64.v64
+│        └── smsPlus64.z64
 │
 ├── (a rom).z64
 ├── (a rom).n64

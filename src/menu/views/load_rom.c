@@ -327,11 +327,11 @@ void view_load_rom_init (menu_t *menu) {
         path_free(menu->load.rom_path);
     }
 
-    if(menu->favourite.loadLast) {
+    if(menu->favourite.load_last) {
         entry_name = path_last_get(menu->history.last_rom);
         menu->load.rom_path = path_clone(menu->history.last_rom);
 
-        menu->favourite.loadLast = false;
+        menu->favourite.load_last = false;
     } else {
         entry_name = menu->browser.entry->name;
         menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);

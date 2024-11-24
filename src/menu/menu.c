@@ -96,8 +96,8 @@ static void menu_init (boot_params_t *boot_params) {
     path_push(path, MENU_HISTORY_FILE);
     history_init(path_get(path));
     history_load(&menu->history);
-    menu->favourite.loadLast = false;
-    menu->favourite.loadFavourite = -1;
+    menu->favourite.load_last = false;
+    menu->favourite.load_favorite = -1;
     path_pop(path);
 
 

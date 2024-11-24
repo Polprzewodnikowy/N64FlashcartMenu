@@ -89,7 +89,7 @@ typedef struct {
         bool settings;
 
         bool last_game;
-        bool favourite;
+        bool favorite;
     } actions;
 
     struct {
@@ -110,8 +110,8 @@ typedef struct {
     } load;
 
     struct {
-        bool loadLast;
-        int loadFavourite;
+        bool load_last;
+        int load_favorite;
     } favourite;
 } menu_t;
 

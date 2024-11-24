@@ -286,16 +286,15 @@ static component_context_menu_t settings_context_menu = {
     }
 };
 
-static bool handle_load_last(menu_t *menu)
-{
+static bool handle_load_last(menu_t *menu) {
     if(menu->actions.last_game)
     {
         if(path_has_value(menu->history.last_disk)) {
-            menu->favourite.loadLast = true;
+            menu->favourite.load_last = true;
             menu->next_mode = MENU_MODE_LOAD_DISK;
             return true;
         } else if(path_has_value(menu->history.last_rom)) {
-            menu->favourite.loadLast = true;
+            menu->favourite.load_last = true;
             menu->next_mode = MENU_MODE_LOAD_ROM;
             return true;
         }

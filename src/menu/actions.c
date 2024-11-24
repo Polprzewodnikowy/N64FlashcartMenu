@@ -22,7 +22,7 @@ static void actions_clear (menu_t *menu) {
     menu->actions.options = false;
     menu->actions.settings = false;
     menu->actions.last_game = false;
-    menu->actions.favourite = false;
+    menu->actions.favorite = false;
 }
 
 static void actions_update_direction (menu_t *menu) {
@@ -96,7 +96,7 @@ static void actions_update_buttons (menu_t *menu) {
     } else if (pressed.c_left) {
         menu->actions.last_game = true;
     } else if (pressed.c_right) {
-        menu->actions.favourite = true;
+        menu->actions.favorite = true;
     }
 }
 

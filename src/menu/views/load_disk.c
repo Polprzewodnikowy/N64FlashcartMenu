@@ -159,7 +159,7 @@ void view_load_disk_init (menu_t *menu) {
 
     load_pending = false;
 
-    if(menu->favourite.loadLast) {        
+    if(menu->favourite.load_last) {        
         menu->load.disk_path = path_clone(menu->history.last_disk);
         entry_name = path_last_get(menu->load.disk_path);
 
@@ -181,7 +181,7 @@ void view_load_disk_init (menu_t *menu) {
             }
         }
 
-        menu->favourite.loadLast = false;
+        menu->favourite.load_last = false;
     } else {
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         entry_name = menu->browser.entry->name;

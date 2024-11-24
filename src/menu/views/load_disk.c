@@ -2,6 +2,7 @@
 #include "../disk_info.h"
 #include "boot/boot.h"
 #include "views.h"
+#include "../history.h"
 
 
 static bool load_pending;
@@ -124,6 +125,8 @@ static void load (menu_t *menu) {
         menu_show_error(menu, cart_load_convert_error_message(err));
         return;
     }
+
+    history_set_last_disk(&menu->history, menu->load.disk_path, menu->load.rom_path);
 
     menu->next_mode = MENU_MODE_BOOT;
 

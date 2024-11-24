@@ -72,7 +72,8 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
-	utils/fs.c
+	utils/fs.c \
+	menu/history.c
 
 FONTS = \
 	FiraMonoBold.ttf

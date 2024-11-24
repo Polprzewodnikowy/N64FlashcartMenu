@@ -6,6 +6,7 @@
 
 static bool load_pending;
 static component_boxart_t *boxart;
+static char* entryName;
 
 
 static char *convert_error_message (rom_err_t err) {
@@ -218,7 +219,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s",
-            menu->browser.entry->name
+            entryName
         );
 
         component_main_text_draw(
@@ -265,9 +266,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
         component_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
-            "\n"
+            "C-Right: Favorite"
             "R: Options"
-        );
+        ); 
 
         component_boxart_draw(boxart);
 
@@ -299,6 +300,8 @@ static void load (menu_t *menu) {
         return;
     }
 
+    history_set_last_rom(&menu->history, menu->load.rom_path);
+
     menu->next_mode = MENU_MODE_BOOT;
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
@@ -324,12 +327,23 @@ void view_load_rom_init (menu_t *menu) {
         path_free(menu->load.rom_path);
     }
 
-    menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    if(menu->favourite.loadLast)
+    {
+        entryName = path_last_get(menu->history.last_rom);
+        menu->load.rom_path = path_clone(menu->history.last_rom);
 
+        menu->favourite.loadLast = false;
+    }
+    else
+    {
+        entryName = menu->browser.entry->name;
+        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    }
+    
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
-        menu->load.rom_path = NULL;
+        menu->load.rom_path = NULL;        
         menu_show_error(menu, convert_error_message(err));
         return;
     }
@@ -345,7 +359,7 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     draw(menu, display);
 
     if (load_pending) {
-        load_pending = false;
+        load_pending = false;        
         load(menu);
     }
 

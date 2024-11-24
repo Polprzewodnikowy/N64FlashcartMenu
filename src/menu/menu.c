@@ -18,11 +18,13 @@
 #include "usb_comm.h"
 #include "utils/fs.h"
 #include "views/views.h"
+#include "history.h"
 
 
 #define MENU_DIRECTORY          "/menu"
 #define MENU_SETTINGS_FILE      "config.ini"
 #define MENU_CUSTOM_FONT_FILE   "custom.font64"
+#define MENU_HISTORY_FILE       "history.ini"
 
 #define MENU_CACHE_DIRECTORY    "cache"
 #define BACKGROUND_CACHE_FILE   "background.data"
@@ -90,6 +92,14 @@ static void menu_init (boot_params_t *boot_params) {
     settings_init(path_get(path));
     settings_load(&menu->settings);
     path_pop(path);
+
+    path_push(path, MENU_HISTORY_FILE);
+    history_init(path_get(path));
+    history_load(&menu->history);
+    menu->favourite.loadLast = false;
+    menu->favourite.loadFavourite = -1;
+    path_pop(path);
+
 
     path_push(path, MENU_CUSTOM_FONT_FILE);
     fonts_init(path_get(path));

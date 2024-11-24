@@ -286,12 +286,31 @@ static component_context_menu_t settings_context_menu = {
     }
 };
 
+static bool handle_load_last(menu_t *menu)
+{
+    if(menu->actions.last_game)
+    {
+        if(path_has_value(menu->history.last_rom))
+        {
+            menu->favourite.loadLast = true;
+            menu->next_mode = MENU_MODE_LOAD_ROM;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static void process (menu_t *menu) {
     if (component_context_menu_process(menu, &entry_context_menu)) {
         return;
     }
 
     if (component_context_menu_process(menu, &settings_context_menu)) {
+        return;
+    }
+
+    if(handle_load_last(menu)) {
         return;
     }
 
@@ -396,11 +415,20 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         component_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "C-Left: Last Game | C-Right: Favorites\n"
             "%s",
             ctime(&menu->current_time)
         );
     }
+    else
+    {
+        component_actions_bar_text_draw(
+            ALIGN_CENTER, VALIGN_TOP,
+            "C-Left: Last Game | C-Right: Favorites\n"
+            ""
+        );
+    }
+
 
     component_context_menu_draw(&entry_context_menu);
 

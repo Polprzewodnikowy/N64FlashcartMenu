@@ -91,6 +91,10 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.options = true;
     } else if (pressed.start) {
         menu->actions.settings = true;
+    } else if (pressed.c_left) {
+        menu->actions.last_game = true;
+    } else if (pressed.c_right) {
+        menu->actions.favourite = true;
     }
 }
 

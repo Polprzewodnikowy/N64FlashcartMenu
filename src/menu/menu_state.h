@@ -16,6 +16,7 @@
 #include "path.h"
 #include "rom_info.h"
 #include "settings.h"
+#include "history.h"
 
 
 /** @brief Menu mode enumeration */
@@ -67,6 +68,7 @@ typedef struct {
 
     const char *storage_prefix;
     settings_t settings;
+    history_t history;
     boot_params_t *boot_params;
 
     char *error_message;
@@ -85,6 +87,9 @@ typedef struct {
         bool back;
         bool options;
         bool settings;
+
+        bool last_game;
+        bool favourite;
     } actions;
 
     struct {
@@ -101,8 +106,13 @@ typedef struct {
         path_t *rom_path;
         rom_info_t rom_info;
         path_t *disk_path;
-        disk_info_t disk_info;
+        disk_info_t disk_info;                
     } load;
+
+    struct {
+        bool loadLast;
+        int loadFavourite;
+    } favourite;
 } menu_t;
 
 

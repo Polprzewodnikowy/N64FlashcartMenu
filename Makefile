@@ -52,6 +52,7 @@ SRCS = \
 	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
+	menu/rom_history.c \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
@@ -59,6 +60,7 @@ SRCS = \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
+	menu/views/favorite.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/image_viewer.c \
@@ -72,8 +74,7 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
-	utils/fs.c \
-	menu/history.c
+	utils/fs.c	
 
 FONTS = \
 	FiraMonoBold.ttf

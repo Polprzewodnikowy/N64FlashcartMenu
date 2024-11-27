@@ -372,6 +372,8 @@ static void process (menu_t *menu) {
         component_context_menu_show(&entry_context_menu);
     } else if (menu->actions.settings) {
         component_context_menu_show(&settings_context_menu);
+    } else if(menu->actions.favorite) {
+        menu->next_mode = MENU_MODE_FAVORITE;
     }
 }
 

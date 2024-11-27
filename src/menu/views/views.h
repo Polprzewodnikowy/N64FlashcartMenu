@@ -67,6 +67,8 @@ void view_fault_display (menu_t *menu, surface_t *display);
 
 void menu_show_error (menu_t *menu, char *error_message);
 
+void view_favorite_init (menu_t *menu);
+void view_favorite_display (menu_t *menu, surface_t *display);
 /** @} */ /* view */
 
 

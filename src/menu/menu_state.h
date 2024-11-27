@@ -16,7 +16,7 @@
 #include "path.h"
 #include "rom_info.h"
 #include "settings.h"
-#include "history.h"
+#include "rom_history.h"
 
 
 /** @brief Menu mode enumeration */
@@ -39,6 +39,7 @@ typedef enum {
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
+    MENU_MODE_FAVORITE
 } menu_mode_t;
 
 /** @brief File entry type enumeration */

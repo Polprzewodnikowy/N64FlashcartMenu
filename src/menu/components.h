@@ -28,6 +28,7 @@ void component_list_scrollbar_draw (int position, int items, int visible_items);
 void component_dialog_draw (int width, int height);
 void component_messagebox_draw (char *fmt, ...);
 void component_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+void component_main_text_draw_location (float x, float y, char *fmt, ...);
 void component_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
 
 void component_background_init (char *cache_location);

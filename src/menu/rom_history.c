@@ -1,14 +1,15 @@
 #include <libdragon.h>
 #include <mini.c/src/mini.h>
 
-#include "history.h"
+#include "rom_history.h"
 #include "utils/fs.h"
 #include "path.h"
 
+#define EMULATOR_TEST false
 
 static char *history_path = NULL;
 
-
+static path_t* empty_path = NULL;
 static history_t init;
 
 /** @brief Init history path */
@@ -17,6 +18,7 @@ void history_init (char *path) {
         free(history_path);
     }
     history_path = strdup(path);
+    empty_path = path_create("");
 }
 
 /** @brief The history to load */
@@ -29,18 +31,26 @@ void history_load (history_t *history) {
     history->last_rom = path_create(mini_get_string(ini, "history", "last_rom", ""));
     history->last_disk = path_create(mini_get_string(ini, "history", "last_disk", ""));
 
-
-    // xfavorite_Rom
-    char buf[20];
+    char buffer[1024];
 
     for(int i=0;i<FAVORITES_COUNT;i++) {
-        sprintf(buf,"%dfavorite_rom", i);
-        history->favorites_rom[i] = path_create(mini_get_string(ini, "favorite", buf, ""));
+#if EMULATOR_TEST
+        sprintf(buffer, "test:\\somepaths\\blah\\rom - %d.n64", i);
+        history->favorites_rom[i] = path_create(buffer);
+#else
+        sprintf(buffer,"%dfavorite_rom", i);
+        history->favorites_rom[i] = path_create(mini_get_string(ini, "favorite", buffer, ""));
+#endif
     }
     
     for(int i=0;i<FAVORITES_COUNT;i++) {
-        sprintf(buf,"0%davorite_disk", i);
-        history->favorites_disk[i] = path_create(mini_get_string(ini, "favorite", buf, ""));
+#if EMULATOR_TEST
+        sprintf(buffer, "test:\\aother\\foo\\disk - %d.dd", i);
+        history->favorites_disk[i] = path_create(buffer);
+#else
+        sprintf(buffer,"%dfavorite_disk", i);
+        history->favorites_disk[i] = path_create(mini_get_string(ini, "favorite", buffer, ""));
+#endif        
     }
 
     mini_free(ini);
@@ -62,13 +72,13 @@ void history_save (history_t *history)
     }
 
     for(int i=0;i<FAVORITES_COUNT;i++) {
-        sprintf(buf,"%davorite_disk", i);
+        sprintf(buf,"%dfavorite_disk", i);
         path_t* path = history->favorites_disk[i];
         mini_set_string(ini, "favorite", buf, path != NULL ? path_get(path) : "");        
     }
 
     mini_save(ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
-    mini_free(ini);
+    mini_free(ini);    
 }
 
 
@@ -153,7 +163,7 @@ static bool history_check_match(path_t* left, path_t* right) {
         matches = true;
     } else {
         if(left != NULL && right != NULL) {
-            matches = strcmp(path_get(left), path_get(right));
+            matches = (strcmp(path_get(left), path_get(right)) == 0);
         }
     }  
 
@@ -175,6 +185,14 @@ static bool history_has_favorite(history_t *history, path_t* rom, path_t* disk) 
 
 void history_add_favorite(history_t *history, path_t* rom, path_t* disk) {
     // if the game is already in the favorite list then don't add again
+
+    if(rom == NULL) {
+        rom = empty_path;
+    }
+    if(disk == NULL) {
+        disk = empty_path;
+    }
+
     if(history_has_favorite(history, rom, disk)) {
         return;
     }
@@ -197,4 +215,19 @@ void history_add_favorite(history_t *history, path_t* rom, path_t* disk) {
 
     history_insert_favorite(history, place, rom, disk);
     history_save(history);
+}
+
+void history_remove_favorite(history_t *history, int location)
+{
+    if(location >= 0 && location < FAVORITES_COUNT) {
+        if(path_has_value(history->favorites_rom[location])) {
+            path_free(history->favorites_rom[location]);
+            history->favorites_rom[location] = path_create("");
+        }
+        
+        if(path_has_value(history->favorites_disk[location])) {
+            path_free(history->favorites_disk[location]);
+            history->favorites_disk[location] = path_create("");
+        }
+    }
 }

@@ -18,7 +18,7 @@
 #include "usb_comm.h"
 #include "utils/fs.h"
 #include "views/views.h"
-#include "history.h"
+#include "rom_history.h"
 
 
 #define MENU_DIRECTORY          "/menu"
@@ -189,6 +189,7 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
+    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display}
 };
 
 static view_t *menu_get_view (menu_mode_t id) {

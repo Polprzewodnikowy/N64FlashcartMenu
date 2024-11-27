@@ -201,6 +201,8 @@ static void process (menu_t *menu) {
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.options) {
         component_context_menu_show(&options_context_menu);
+    } else if(menu->actions.favorite) {
+        history_add_favorite(&menu->history, menu->load.rom_path, NULL);
     }
 }
 
@@ -328,14 +330,17 @@ void view_load_rom_init (menu_t *menu) {
     }
 
     if(menu->favourite.load_last) {
-        entry_name = path_last_get(menu->history.last_rom);
         menu->load.rom_path = path_clone(menu->history.last_rom);
-
         menu->favourite.load_last = false;
+    } else if (menu->favourite.load_favorite != -1) {
+        menu->load.rom_path = path_clone(menu->history.favorites_rom[menu->favourite.load_favorite]);    
+        menu->favourite.load_favorite = -1;
     } else {
-        entry_name = menu->browser.entry->name;
         menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
+    
+    entry_name = path_last_get(menu->load.rom_path);
+
     
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

@@ -1,8 +1,9 @@
 #include "../cart_load.h"
 #include "../disk_info.h"
+#include "../rom_history.h"
 #include "boot/boot.h"
 #include "views.h"
-#include "../history.h"
+#include "../rom_history.h"
 
 
 static bool load_pending;
@@ -38,6 +39,8 @@ static void process (menu_t *menu) {
         load_rom = true;
     } else if (menu->actions.back) {
         menu->next_mode = MENU_MODE_BROWSER;
+    } else if(menu->actions.favorite) {
+        history_add_favorite(&menu->history, menu->load.rom_path, menu->load.disk_path);
     }
 }
 
@@ -88,7 +91,14 @@ static void draw (menu_t *menu, surface_t *d) {
         if (menu->load.rom_path) {
             component_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
+                "C-R: Favorite\n"
                 "R: Load with ROM"
+            );
+        } else {
+            component_actions_bar_text_draw(
+                ALIGN_RIGHT, VALIGN_TOP,
+                "C-R: Favorite\n"
+                ""
             );
         }
     }
@@ -151,6 +161,27 @@ static void load (menu_t *menu) {
 }
 
 
+static void load_disk_rom(menu_t* menu, path_t* rom_path)
+{
+    if(path_has_value(rom_path)) {
+        if (menu->load.rom_path) {
+            path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
+        }
+
+        menu->load.rom_path = path_clone(rom_path);
+
+        // need to load in the rom info might need to turn this into a function to call.
+        rom_err_t err = rom_info_load(rom_path, &menu->load.rom_info);
+        if (err != ROM_OK) {
+            path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
+            menu_show_error(menu, convert_error_message(err));
+            return;
+        }
+    }
+}
+
 void view_load_disk_init (menu_t *menu) {
     if (menu->load.disk_path) {
         path_free(menu->load.disk_path);
@@ -161,31 +192,19 @@ void view_load_disk_init (menu_t *menu) {
 
     if(menu->favourite.load_last) {        
         menu->load.disk_path = path_clone(menu->history.last_disk);
-        entry_name = path_last_get(menu->load.disk_path);
-
-        if(path_has_value(menu->history.last_rom)) {
-            if (menu->load.rom_path) {
-                path_free(menu->load.rom_path);
-                menu->load.rom_path = NULL;
-            }
-
-            menu->load.rom_path = path_clone(menu->history.last_rom);
-
-            // need to load in the rom info might need to turn this into a function to call.
-            rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
-            if (err != ROM_OK) {
-                path_free(menu->load.rom_path);
-                menu->load.rom_path = NULL;
-                menu_show_error(menu, convert_error_message(err));
-                return;
-            }
-        }
+        load_disk_rom(menu, menu->history.last_rom);
 
         menu->favourite.load_last = false;
+    } else if (menu->favourite.load_favorite != -1) {
+        menu->load.disk_path = path_clone(menu->history.favorites_disk[menu->favourite.load_favorite]);
+        load_disk_rom(menu, menu->history.favorites_rom[menu->favourite.load_favorite]);
+
+        menu->favourite.load_favorite = -1;
     } else {
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-        entry_name = menu->browser.entry->name;
     }
+
+    entry_name = path_last_get(menu->load.disk_path);
 
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {

@@ -31,4 +31,6 @@ void history_set_last(history_t *history, path_t* disk_path, path_t* rom_path);
 
 void history_add_favorite(history_t *history, path_t* rom, path_t* disk);
 
+void history_remove_favorite(history_t *history, int location);
+
 #endif

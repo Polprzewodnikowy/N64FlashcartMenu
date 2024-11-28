@@ -83,12 +83,12 @@ static void draw_favorites(menu_t *menu, surface_t *display) {
     {
         component_main_text_draw_location(x, y, "%d  :", (i+1));
         if(path_has_value(menu->history.favorites_rom[i])) {
-            component_main_text_draw_location(x + 64, y, "%s", path_get(menu->history.favorites_rom[i]));
+            component_main_text_draw_location(x + 64, y, "%s", path_last_get(menu->history.favorites_rom[i]));
         }
         y += 16;
         
         if(path_has_value(menu->history.favorites_disk[i])) {
-            component_main_text_draw_location(x + 64, y,"%s", path_get(menu->history.favorites_disk[i]));
+            component_main_text_draw_location(x + 64, y,"%s", path_last_get(menu->history.favorites_disk[i]));
         }
         y += 16;
     }

@@ -3,6 +3,7 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
+#include "../rom_history.h"
 
 
 static bool load_disk_with_rom;
@@ -39,6 +40,8 @@ static void process (menu_t *menu) {
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
+    } else if (menu->actions.favorite) {
+        history_favorite_add(&menu->history, menu->load.rom_path, NULL);
     }
 }
 
@@ -84,6 +87,12 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run 64DD disk\n"
             "B: Exit"
+        );
+
+        ui_components_actions_bar_text_draw(
+            ALIGN_CENTER, VALIGN_TOP,
+            "\n"
+            "C>: Favorite"
         );
 
         if (menu->load.rom_path) {
@@ -132,6 +141,7 @@ static void load (menu_t *menu) {
         return;
     }
 
+    history_last_rom_set(&menu->history, menu->load.rom_path, menu->load.disk_path);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (load_disk_with_rom) {

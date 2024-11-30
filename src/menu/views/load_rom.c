@@ -5,9 +5,11 @@
 #include "views.h"
 #include <string.h>
 #include "utils/fs.h"
+#include "../rom_history.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
+static char* name = NULL;
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -240,7 +242,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s",
-            menu->browser.entry->name
+            name
         );
 
         ui_components_main_text_draw(
@@ -334,6 +336,8 @@ static void load (menu_t *menu) {
         return;
     }
 
+    history_last_rom_set(&menu->history, menu->load.rom_path, NULL);
+
     menu->next_mode = MENU_MODE_BOOT;
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
@@ -359,8 +363,16 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-    }
+        if(menu->load.load_last) {
+            menu->load.rom_path = path_clone(menu->history.last_rom);
+        } else if(menu->load.load_favorite != -1) {
+            menu->load.rom_path = path_clone(menu->history.favorites_rom[menu->load.load_favorite]);
+        } else {
+            menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        }
+
+        name = path_last_get(menu->load.rom_path);
+    }    
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

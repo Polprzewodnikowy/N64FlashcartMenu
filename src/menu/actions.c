@@ -22,6 +22,8 @@ static void actions_clear (menu_t *menu) {
     menu->actions.options = false;
     menu->actions.settings = false;
     menu->actions.lz_context = false;
+    menu->actions.favorite = false;
+    menu->actions.load_last = false;
 }
 
 static void actions_update_direction (menu_t *menu) {
@@ -109,6 +111,10 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.settings = true;
     } else if (pressed.l || pressed.z) {
         menu->actions.lz_context = true;
+    } else if (pressed.c_left) {
+        menu->actions.load_last = true;
+    } else if (pressed.c_right) {
+        menu->actions.favorite = true;
     }
 }
 

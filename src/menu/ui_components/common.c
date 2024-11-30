@@ -195,3 +195,33 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
         free(formatted);
     }
 }
+
+void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
+    char buffer[1024];
+    size_t nbytes = sizeof(buffer);
+
+    va_list va;
+    va_start(va, fmt);
+    char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
+    va_end(va);
+
+    rdpq_text_printn(
+        &(rdpq_textparms_t) {
+            .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
+            .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
+            .align = ALIGN_LEFT,
+            .valign = VALIGN_TOP,
+            .wrap = WRAP_ELLIPSES,
+            .line_spacing = TEXT_LINE_SPACING_ADJUST,
+        },
+        FNT_DEFAULT,
+        VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL + x,
+        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + y,
+        formatted,
+        nbytes
+    );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
+}

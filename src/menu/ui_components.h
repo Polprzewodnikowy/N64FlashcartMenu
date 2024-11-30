@@ -252,4 +252,6 @@ void ui_components_boxart_free(component_boxart_t *b);
  */
 void ui_components_boxart_draw(component_boxart_t *b);
 
+
+void ui_components_main_text_draw_location (float x, float y, char *fmt, ...);
 #endif /* UI_COMPONENTS_H__ */

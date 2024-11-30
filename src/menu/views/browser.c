@@ -358,6 +358,19 @@ static void process (menu_t *menu) {
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.favorite) {
+        menu->next_mode = MENU_MODE_FAVORITE;
+        sound_play_effect(SFX_ENTER);
+    } else if (menu->actions.load_last) {
+        if(path_has_value(menu->history.last_disk)) {
+            menu->load.load_last = true;
+            menu->next_mode = MENU_MODE_LOAD_DISK;
+            sound_play_effect(SFX_ENTER);
+        } else if (path_has_value(menu->history.last_rom)) {
+            menu->load.load_last = true;
+            menu->next_mode = MENU_MODE_LOAD_ROM;
+            sound_play_effect(SFX_ENTER);
+        }
     }
 }
 
@@ -403,11 +416,15 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
             "%s",
             ctime(&menu->current_time)
         );
     }
+
+    ui_components_actions_bar_text_draw(
+        ALIGN_CENTER, VALIGN_BOTTOM,
+        "<C Load Last | C> Favorite"
+    );
 
     ui_components_context_menu_draw(&entry_context_menu);
 

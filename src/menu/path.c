@@ -19,7 +19,7 @@ static void path_resize (path_t *path, size_t min_length) {
     assert(path->buffer != NULL);
 }
 
-static path_t *path_create (const char *string) {
+path_t *path_create (const char *string) {
     if (string == NULL) {
         string = "";
     }
@@ -140,4 +140,13 @@ void path_ext_replace (path_t *path, char *ext) {
     path_ext_remove(path);
     path_append(path, ".");
     path_append(path, ext);
+}
+
+bool path_has_value(path_t *path) {
+    if(path != NULL) {
+        if(strlen(path->buffer) > 0) {
+            return true;
+        }
+    }
+    return false;
 }

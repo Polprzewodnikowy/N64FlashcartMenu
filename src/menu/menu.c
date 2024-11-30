@@ -23,6 +23,7 @@
 #define MENU_DIRECTORY          "/menu"
 #define MENU_SETTINGS_FILE      "config.ini"
 #define MENU_CUSTOM_FONT_FILE   "custom.font64"
+#define MENU_HISTORY_FILE       "history.ini"
 
 #define MENU_CACHE_DIRECTORY    "cache"
 #define BACKGROUND_CACHE_FILE   "background.data"
@@ -68,6 +69,13 @@ static void menu_init (boot_params_t *boot_params) {
     path_push(path, MENU_SETTINGS_FILE);
     settings_init(path_get(path));
     settings_load(&menu->settings);
+    path_pop(path);
+
+    path_push(path, MENU_HISTORY_FILE);
+    history_init(path_get(path));
+    history_load(&menu->history);
+    menu->load.load_last = false;
+    menu->load.load_favorite = -1;
     path_pop(path);
 
     resolution_t resolution = {
@@ -150,6 +158,8 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
+    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
+    {}
 };
 
 static view_t *menu_get_view (menu_mode_t id) {

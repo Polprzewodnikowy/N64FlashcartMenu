@@ -416,15 +416,19 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "%s",
+            "%s" //ctime includes a newline
+            "<C Load Last | C> Favorite",
             ctime(&menu->current_time)
         );
-    }
-
-    ui_components_actions_bar_text_draw(
-        ALIGN_CENTER, VALIGN_BOTTOM,
+    } else {
+        ui_components_actions_bar_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "\n"
         "<C Load Last | C> Favorite"
-    );
+        );
+    }    
+
+    
 
     ui_components_context_menu_draw(&entry_context_menu);
 

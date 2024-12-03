@@ -224,6 +224,9 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.favorite) {
+        history_favorite_add(&menu->history, menu->load.rom_path, NULL);
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -275,6 +278,12 @@ static void draw (menu_t *menu, surface_t *d) {
             "L|Z: Extra Info\n"
             "R:    Options"
         );
+
+        ui_components_actions_bar_text_draw(
+            ALIGN_CENTER, VALIGN_TOP,
+            "\n"
+            "C>: Favorite"
+        );        
 
         if (boxart != NULL) {
             ui_components_boxart_draw(boxart);
@@ -336,7 +345,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_last_rom_set(&menu->history, menu->load.rom_path, NULL);
+    history_last_rom_set(&menu->history, NULL, menu->load.rom_path);
 
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -373,6 +382,9 @@ void view_load_rom_init (menu_t *menu) {
 
         name = path_last_get(menu->load.rom_path);
     }    
+
+    menu->load.load_favorite = -1;
+    menu->load.load_last = false;
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

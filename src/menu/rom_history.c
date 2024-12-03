@@ -5,7 +5,7 @@
 #include "utils/fs.h"
 #include "path.h"
 
-#define EMULATOR_TEST true
+#define EMULATOR_TEST false
 
 static char *history_path = NULL;
 

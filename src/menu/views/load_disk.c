@@ -8,7 +8,7 @@
 
 static bool load_disk_with_rom;
 static component_boxart_t *boxart;
-
+static char* name;
 
 static char *convert_error_message (disk_err_t err) {
     switch (err) {
@@ -41,7 +41,8 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.favorite) {
-        history_favorite_add(&menu->history, menu->load.rom_path, NULL);
+        history_favorite_add(&menu->history, menu->load.rom_path, menu->load.disk_path);
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -60,7 +61,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "64DD disk information\n"
             "\n"
             "%s",
-            menu->browser.entry->name
+            name
         );
 
         ui_components_main_text_draw(
@@ -141,7 +142,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_last_rom_set(&menu->history, menu->load.rom_path, menu->load.disk_path);
+    history_last_rom_set(&menu->history, menu->load.disk_path, menu->load.rom_path);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (load_disk_with_rom) {
@@ -166,6 +167,27 @@ static void deinit (void) {
     ui_components_boxart_free(boxart);
 }
 
+static bool load_rom(menu_t* menu, path_t* rom_path) {
+    if(path_has_value(rom_path)) {
+        if (menu->load.rom_path) {
+            path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
+        }
+
+        menu->load.rom_path = path_clone(rom_path);
+
+        rom_err_t err = rom_info_load(rom_path, &menu->load.rom_info);
+        if (err != ROM_OK) {
+            path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
+            menu_show_error(menu, convert_error_message(err));
+            return false;
+        }        
+    }
+
+    return true;
+}
+
 void view_load_disk_init (menu_t *menu) {
     if (menu->load.disk_path) {
         path_free(menu->load.disk_path);
@@ -174,10 +196,29 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->boot_pending.disk_file = false;
 
-    menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    if(menu->load.load_last) {
+        menu->load.disk_path = path_clone(menu->history.last_disk);
 
+        if(!load_rom(menu, menu->history.last_rom)) {
+            return;
+        }
+    } else if(menu->load.load_favorite != -1) {
+        menu->load.disk_path = path_clone(menu->history.favorites_disk[menu->load.load_favorite]);
+
+        if(!load_rom(menu, menu->history.favorites_rom[menu->load.load_favorite])) {
+            return;
+        }
+    } else {
+        menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
+    }
+
+    menu->load.load_favorite = -1;
+    menu->load.load_last = false;
+
+    name = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
+        //snprintf(error, 256, "path : '%s' error: '%s'", path_get(menu->load.disk_path), convert_error_message(err));
         menu_show_error(menu, convert_error_message(err));
         return;
     }

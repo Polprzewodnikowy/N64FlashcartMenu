@@ -110,7 +110,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.disk_info.version,
             menu->load.disk_info.disk_type,
             menu->load.rom_path ? "Expansion ROM: " : "",
-            menu->load.rom_path ? path_last_get(menu->load.rom_path) : "" // We should check this against the ROM DB to see if it is expandable?!
+            menu->load.rom_path ? path_last_get(menu->load.rom_path) : "" // We should check this against the ROM DB to see if it is FEAT_64DD_ENHANCED from extract_rom_info?!
         );
 
         ui_components_actions_bar_text_draw(
@@ -160,7 +160,7 @@ static void load (menu_t *menu) {
 
     if (menu->load.rom_path && menu->load.combined_disk_rom) {
         // FIXME: if the ROM is not a DD expansion ROM, it will just load the ROM. We need to check and warn!
-        // something involving: menu->load.rom_info.game_code[0] != 'C' or 'E' or homebrew ...
+        // something involving: menu->load.rom_info.game_code[0] != 'C' or 'E' or homebrew ... (FEAT_64DD_ENHANCED) from extract_rom_info
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));

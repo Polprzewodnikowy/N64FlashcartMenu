@@ -145,18 +145,20 @@ static void draw_progress (float progress) {
 static void load (menu_t *menu) {
     cart_load_err_t err;
 
+    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
+    }
+
     if (menu->load.rom_path && load_disk_with_rom) {
+        // FIXME: if the ROM is not a DD expansion ROM, it will just load the ROM. We need to check and warn!
+        // something involving: menu->load.rom_info.game_code[0] != 'C' or 'E' or homebrew ...
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
             return;
         }
-    }
-
-    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
-    if (err != CART_LOAD_OK) {
-        menu_show_error(menu, cart_load_convert_error_message(err));
-        return;
     }
 
     menu->next_mode = MENU_MODE_BOOT;

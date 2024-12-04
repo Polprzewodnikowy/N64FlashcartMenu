@@ -158,6 +158,10 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void add_favorite (menu_t *menu, void *arg) {
+    history_favorite_add(&menu->history, menu->load.rom_path, NULL);
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -201,6 +205,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+    { .text = "Add To Favorite", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -223,9 +228,6 @@ static void process (menu_t *menu) {
         } else {
             show_extra_info_message = true;
         }
-        sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.favorite) {
-        history_favorite_add(&menu->history, menu->load.rom_path, NULL);
         sound_play_effect(SFX_SETTING);
     }
 }
@@ -277,13 +279,7 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R:    Options"
-        );
-
-        ui_components_actions_bar_text_draw(
-            ALIGN_CENTER, VALIGN_TOP,
-            "\n"
-            "C>: Favorite"
-        );        
+        );  
 
         if (boxart != NULL) {
             ui_components_boxart_draw(boxart);

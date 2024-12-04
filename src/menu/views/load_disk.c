@@ -35,7 +35,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.disk_autoload_filename);
     menu->settings.disk_autoload_filename = strdup(menu->browser.entry->name);
     // FIXME: add a confirmation box here! (press start on reboot)
-    menu->settings.rom_autoload_enabled = true;
+    menu->settings.disk_autoload_enabled = true;
     settings_save(&menu->settings);
     menu->browser.reload = true;
 }

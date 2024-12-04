@@ -34,6 +34,9 @@ typedef struct {
     /** @brief Enable the ability to bypass the menu and instantly load a ROM */
     bool rom_autoload_enabled;
 
+    /** @brief Enable the ability to bypass the menu and instantly load a Disk (with ROM if also enabled) */
+    bool disk_autoload_enabled;
+
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
 
@@ -45,9 +48,6 @@ typedef struct {
 
     /** @brief A filename of the autoloaded DD image */
     char *disk_autoload_filename;
-
-    /** @brief Load a DD image with a ROM compatible with expansion */
-    bool autoload_disk_uses_rom;
 
 } settings_t;
 

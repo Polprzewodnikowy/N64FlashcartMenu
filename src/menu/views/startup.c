@@ -14,10 +14,13 @@ void view_startup_init (menu_t *menu) {
         joypad_poll();
         joypad_buttons_t b_held = joypad_get_buttons_held(port);
 
-        if (menu->settings.rom_autoload_enabled && b_held.start) {
+        if ((menu->settings.rom_autoload_enabled || menu->settings.disk_autoload_enabled) && b_held.start) {
             menu->settings.rom_autoload_enabled = false;
+            menu->settings.disk_autoload_enabled = false;
             menu->settings.rom_autoload_path = "";
+            menu->settings.disk_autoload_path = "";
             menu->settings.rom_autoload_filename = "";
+            menu->settings.disk_autoload_filename = "";
             settings_save(&menu->settings);
         }
     }
@@ -26,6 +29,14 @@ void view_startup_init (menu_t *menu) {
         menu->load.rom_path = path_clone_push(menu->browser.directory, menu->settings.rom_autoload_filename);
         menu->boot_pending.rom_file = true;
         menu->next_mode = MENU_MODE_LOAD_ROM;
+
+        return;
+    }
+    else if (menu->settings.disk_autoload_enabled) {
+        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.disk_autoload_path);
+        menu->load.disk_path = path_clone_push(menu->browser.directory, menu->settings.disk_autoload_filename);
+        menu->boot_pending.disk_file = true;
+        menu->next_mode = MENU_MODE_LOAD_DISK;
 
         return;
     }

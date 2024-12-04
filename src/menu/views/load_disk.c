@@ -40,7 +40,13 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void set_load_with_rom_type(menu_t *menu, void *arg) {
+    menu->boot_pending.disk_file = true;
+    load_disk_with_rom = true;
+}
+
 static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Load with ROM", .action = set_load_with_rom_type },
     { .text = "Set disk to autoload", .action = set_autoload_type },
     //{ .text = "Set DD Exp to autoload", .action = set_autoload_type }, // FIXME: handle ROM expansions!
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -54,8 +60,7 @@ static void process (menu_t *menu) {
         ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        menu->boot_pending.disk_file = true;
-        load_disk_with_rom = true;
+        set_load_with_rom_type(menu, NULL);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -97,13 +102,13 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.disk_info.id,
             menu->load.disk_info.version,
             menu->load.disk_info.disk_type,
-            menu->load.rom_path ? "Associated ROM: " : "",
-            menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
+            menu->load.rom_path ? "Expansion ROM: " : "",
+            menu->load.rom_path ? path_last_get(menu->load.rom_path) : "" // We should check this against the ROM DB to see if it is expandable?!
         );
 
         ui_components_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run 64DD disk\n"
+            "A: Boot 64DD disk\n"
             "B: Exit"
         );
 

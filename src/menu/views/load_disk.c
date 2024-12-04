@@ -3,6 +3,8 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
+#include <string.h>
+#include "utils/fs.h"
 
 
 static bool load_disk_with_rom;
@@ -27,12 +29,31 @@ static char *format_disk_region (disk_region_t region) {
     }
 }
 
+static void set_autoload_type (menu_t *menu, void *arg) {
+    free(menu->settings.disk_autoload_path);
+    menu->settings.disk_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
+    free(menu->settings.disk_autoload_filename);
+    menu->settings.disk_autoload_filename = strdup(menu->browser.entry->name);
+    // FIXME: add a confirmation box here! (press start on reboot)
+    menu->settings.rom_autoload_enabled = true;
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
+static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Set disk to autoload", .action = set_autoload_type },
+    //{ .text = "Set DD Exp to autoload", .action = set_autoload_type }, // FIXME: handle ROM expansions!
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
         load_disk_with_rom = false;
-    } else if (menu->actions.options && menu->load.rom_path) {
+    } else if (menu->actions.options) {
+        ui_components_context_menu_show(&options_context_menu);
+        sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.lz_context && menu->load.rom_path) {
         menu->boot_pending.disk_file = true;
         load_disk_with_rom = true;
         sound_play_effect(SFX_SETTING);
@@ -76,7 +97,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.disk_info.id,
             menu->load.disk_info.version,
             menu->load.disk_info.disk_type,
-            menu->load.rom_path ? "ROM: " : "",
+            menu->load.rom_path ? "Associated ROM: " : "",
             menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
         );
 
@@ -89,7 +110,8 @@ static void draw (menu_t *menu, surface_t *d) {
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load with ROM"
+                "L|Z: Load with ROM"
+                "R:    Options"
             );
         }
 

@@ -37,8 +37,17 @@ typedef struct {
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
 
+    /** @brief A path to the autoloaded DD image */
+    char *disk_autoload_path;
+
     /** @brief A filename of the autoloaded ROM */
     char *rom_autoload_filename;
+
+    /** @brief A filename of the autoloaded DD image */
+    char *disk_autoload_filename;
+
+    /** @brief Load a DD image with a ROM compatible with expansion */
+    bool autoload_disk_uses_rom;
 
 } settings_t;
 

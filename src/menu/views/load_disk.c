@@ -5,6 +5,7 @@
 #include "views.h"
 #include <string.h>
 #include "utils/fs.h"
+#include <stdbool.h>
 
 
 static component_boxart_t *boxart;
@@ -29,10 +30,17 @@ static char *format_disk_region (disk_region_t region) {
 }
 
 static void set_autoload_type (menu_t *menu, void *arg) {
+    bool combined_disk_rom = (bool)(uintptr_t)(arg);
     free(menu->settings.disk_autoload_path);
     menu->settings.disk_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
     free(menu->settings.disk_autoload_filename);
     menu->settings.disk_autoload_filename = strdup(menu->browser.entry->name);
+    if (combined_disk_rom) { // FIXME: we need to get this from menu->load.rom_path
+        // free(menu->settings.rom_autoload_path);
+        // menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory))); // path_last_get(menu->load.rom_path)
+        // free(menu->settings.rom_autoload_filename);
+        // menu->settings.rom_autoload_filename = strdup(menu->browser.entry->name);
+    }
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.disk_autoload_enabled = true;
     settings_save(&menu->settings);
@@ -45,9 +53,9 @@ static void set_load_combined_disk_rom_type(menu_t *menu, void *arg) {
 }
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Load with ROM", .action = set_load_combined_disk_rom_type },
-    { .text = "Set disk to autoload", .action = set_autoload_type },
-    //{ .text = "Set DD Exp to autoload", .action = set_autoload_type }, // FIXME: handle ROM expansions!
+    { .text = "Load with ROM", .action = set_load_combined_disk_rom_type }, // TODO: this is for backwards compatibility, is it really needed?!
+    { .text = "Set disk to autoload", .action = set_autoload_type, .arg = (void *)(uintptr_t)(false) },
+    //{ .text = "Set disk & ROM to autoload", .action = set_autoload_type, .arg = (void *)(uintptr_t)(true) }, // FIXME: handle ROM expansions!
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

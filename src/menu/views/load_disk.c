@@ -7,7 +7,6 @@
 #include "utils/fs.h"
 
 
-static bool load_disk_with_rom;
 static component_boxart_t *boxart;
 
 
@@ -40,13 +39,13 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
-static void set_load_with_rom_type(menu_t *menu, void *arg) {
+static void set_load_combined_disk_rom_type(menu_t *menu, void *arg) {
     menu->boot_pending.disk_file = true;
-    load_disk_with_rom = true;
+    menu->load.combined_disk_rom = true;
 }
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Load with ROM", .action = set_load_with_rom_type },
+    { .text = "Load with ROM", .action = set_load_combined_disk_rom_type },
     { .text = "Set disk to autoload", .action = set_autoload_type },
     //{ .text = "Set DD Exp to autoload", .action = set_autoload_type }, // FIXME: handle ROM expansions!
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -55,12 +54,12 @@ static component_context_menu_t options_context_menu = { .list = {
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
-        load_disk_with_rom = false;
+        menu->load.combined_disk_rom = false;
     } else if (menu->actions.options) {
         ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        set_load_with_rom_type(menu, NULL);
+        set_load_combined_disk_rom_type(menu, NULL);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -151,7 +150,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    if (menu->load.rom_path && load_disk_with_rom) {
+    if (menu->load.rom_path && menu->load.combined_disk_rom) {
         // FIXME: if the ROM is not a DD expansion ROM, it will just load the ROM. We need to check and warn!
         // something involving: menu->load.rom_info.game_code[0] != 'C' or 'E' or homebrew ...
         err = cart_load_n64_rom_and_save(menu, draw_progress);
@@ -163,7 +162,7 @@ static void load (menu_t *menu) {
 
     menu->next_mode = MENU_MODE_BOOT;
 
-    if (load_disk_with_rom) {
+    if (menu->load.combined_disk_rom) {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
         menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
         switch (rom_info_get_tv_type(&menu->load.rom_info)) {

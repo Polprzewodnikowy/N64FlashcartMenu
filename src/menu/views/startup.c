@@ -28,6 +28,11 @@ void view_startup_init (menu_t *menu) {
         menu->browser.directory = path_init(menu->storage_prefix, menu->settings.disk_autoload_path);
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->settings.disk_autoload_filename);
         menu->boot_pending.disk_file = true;
+        if (menu->settings.rom_autoload_enabled) {
+            menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+            menu->load.rom_path = path_clone_push(menu->browser.directory, menu->settings.rom_autoload_filename);
+            menu->load.combined_disk_rom = true;
+        }
         menu->next_mode = MENU_MODE_LOAD_DISK;
 
         return;

@@ -24,19 +24,19 @@ void view_startup_init (menu_t *menu) {
             settings_save(&menu->settings);
         }
     }
-    if (menu->settings.rom_autoload_enabled) {
-        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
-        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->settings.rom_autoload_filename);
-        menu->boot_pending.rom_file = true;
-        menu->next_mode = MENU_MODE_LOAD_ROM;
-
-        return;
-    }
-    else if (menu->settings.disk_autoload_enabled) {
+    if (menu->settings.disk_autoload_enabled) { // Disk takes priority over ROM, especially when both are enabled.
         menu->browser.directory = path_init(menu->storage_prefix, menu->settings.disk_autoload_path);
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->settings.disk_autoload_filename);
         menu->boot_pending.disk_file = true;
         menu->next_mode = MENU_MODE_LOAD_DISK;
+
+        return;
+    }
+    else if (menu->settings.rom_autoload_enabled) {
+        menu->browser.directory = path_init(menu->storage_prefix, menu->settings.rom_autoload_path);
+        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->settings.rom_autoload_filename);
+        menu->boot_pending.rom_file = true;
+        menu->next_mode = MENU_MODE_LOAD_ROM;
 
         return;
     }

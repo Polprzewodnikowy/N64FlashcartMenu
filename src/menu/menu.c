@@ -72,9 +72,9 @@ static void menu_init (boot_params_t *boot_params) {
     path_pop(path);
 
     path_push(path, MENU_HISTORY_FILE);
-    history_init(path_get(path));
-    history_load(&menu->history);
-    menu->load.load_last = false;
+    bookkeeping_init(path_get(path));
+    bookkeeping_load(&menu->history);
+    menu->load.load_history = -1;
     menu->load.load_favorite = -1;
     path_pop(path);
 
@@ -158,7 +158,8 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
-    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display }
+    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
+    { MENU_MODE_HISTORY, view_history_init, view_history_display }
 };
 
 static view_t *menu_get_view (menu_mode_t id) {

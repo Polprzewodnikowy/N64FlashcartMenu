@@ -358,31 +358,23 @@ static void process (menu_t *menu) {
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.favorite) {
+    } else if (menu->actions.next_tab) {
+        menu->next_mode = MENU_MODE_HISTORY;
+    } else if (menu->actions.previous_tab) {
         menu->next_mode = MENU_MODE_FAVORITE;
-        sound_play_effect(SFX_ENTER);
-    } else if (menu->actions.load_last) {
-        if(path_has_value(menu->history.last_disk)) {
-            menu->load.load_last = true;
-            menu->next_mode = MENU_MODE_LOAD_DISK;
-            sound_play_effect(SFX_ENTER);
-        } else if (path_has_value(menu->history.last_rom)) {
-            menu->load.load_last = true;
-            menu->next_mode = MENU_MODE_LOAD_ROM;
-            sound_play_effect(SFX_ENTER);
-        }
     }
 }
-
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
 
-    ui_components_layout_draw();
+    ui_components_layout_draw();    
 
     ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+
+    ui_compontents_tabs_common_draw(0);
 
     const char *action = NULL;
 
@@ -417,14 +409,14 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "%s" //ctime includes a newline
-            "<C Load Last | C> Favorite",
+            "<C Change Tabs C>",
             ctime(&menu->current_time)
         );
     } else {
         ui_components_actions_bar_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
-        "<C Load Last | C> Favorite"
+        "<C Tabs C>"
         );
     }    
 

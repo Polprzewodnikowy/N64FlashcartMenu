@@ -7,6 +7,10 @@
 #ifndef COMPONENTS_CONSTANTS_H__
 #define COMPONENTS_CONSTANTS_H__
 
+#define TAB_HEIGHT                      (20)
+/** @brief The thickness of borders. */
+#define BORDER_THICKNESS                (4)
+
 /** @brief The display width. */
 #define DISPLAY_WIDTH                   (640)
 /** @brief The display height. */
@@ -25,7 +29,7 @@
 /** @brief The start position of the visible display on the X axis. */
 #define VISIBLE_AREA_X0                 (OVERSCAN_WIDTH)
 /** @brief The start position of the visible display on the Y axis. */
-#define VISIBLE_AREA_Y0                 (OVERSCAN_HEIGHT)
+#define VISIBLE_AREA_Y0                 (OVERSCAN_HEIGHT + TAB_HEIGHT + BORDER_THICKNESS)
 /** @brief The end position of the visible display on the X axis. */
 #define VISIBLE_AREA_X1                 (DISPLAY_WIDTH - OVERSCAN_WIDTH)
 /** @brief The end position of the visible display on the Y axis. */
@@ -36,8 +40,7 @@
 /** @brief The height of the visible display. */
 #define VISIBLE_AREA_HEIGHT             (VISIBLE_AREA_Y1 - VISIBLE_AREA_Y0)
 
-/** @brief The thickness of borders. */
-#define BORDER_THICKNESS                (4)
+
 
 #define LAYOUT_ACTIONS_SEPARATOR_Y      (400)
 
@@ -101,14 +104,14 @@
 /** @brief The scroll bar width. */
 #define LIST_SCROLLBAR_WIDTH            (12)
 /** @brief The scroll bar height. */
-#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT)
+#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - TAB_HEIGHT)
 /** @brief The scroll bar position on the X axis. */
 #define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
 /** @brief The scroll bar position on the Y axis. */
 #define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0)
 
 /** @brief The maximum amount of file list entries. */
-#define LIST_ENTRIES                    (19)
+#define LIST_ENTRIES                    (18)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
 #define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)
@@ -146,5 +149,11 @@
 /** @brief The menu highlight colour. */
 #define CONTEXT_MENU_HIGHLIGHT_COLOR    RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
+
+#define TAB_INACTIVE_BORDER_COLOR       RGBA32(0x5F, 0x5F, 0x5F, 0xFF)
+#define TAB_ACTIVE_BORDER_COLOR         RGBA32(0x00, 0x00, 0xFF, 0xFF)
+
+#define TAB_INACTIVE_BACKGROUND_COLOR   RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
+#define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
 #endif

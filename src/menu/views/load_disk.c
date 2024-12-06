@@ -40,9 +40,6 @@ static void process (menu_t *menu) {
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
-    } else if (menu->actions.favorite) {
-        history_favorite_add(&menu->history, menu->load.rom_path, menu->load.disk_path);
-        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -142,7 +139,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_last_rom_set(&menu->history, menu->load.disk_path, menu->load.rom_path);
+    bookkeeping_history_add(&menu->history, menu->load.disk_path, menu->load.rom_path, HISTORY_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (load_disk_with_rom) {
@@ -196,24 +193,29 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->boot_pending.disk_file = false;
 
-    if(menu->load.load_last) {
-        menu->load.disk_path = path_clone(menu->history.last_disk);
+    if(menu->load.load_history != -1 || menu->load.load_favorite != -1) {
+        int id = -1;
+        bookkeeping_item_t* items;
 
-        if(!load_rom(menu, menu->history.last_rom)) {
+        if(menu->load.load_history != -1) {
+            id = menu->load.load_history;
+            items = menu->history.history_items;
+        } else if (menu->load.load_favorite != -1) {
+            id = menu->load.load_favorite;
+            items = menu->history.favorite_items;
+        }
+
+        menu->load.disk_path = path_clone(items[id].primary_path);
+        if(!load_rom(menu, items[id].secondary_path)) {
             return;
         }
-    } else if(menu->load.load_favorite != -1) {
-        menu->load.disk_path = path_clone(menu->history.favorites_disk[menu->load.load_favorite]);
 
-        if(!load_rom(menu, menu->history.favorites_rom[menu->load.load_favorite])) {
-            return;
-        }
     } else {
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
     }
 
     menu->load.load_favorite = -1;
-    menu->load.load_last = false;
+    menu->load.load_history = -1;
 
     name = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);

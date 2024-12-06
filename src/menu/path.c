@@ -150,3 +150,13 @@ bool path_has_value(path_t *path) {
     }
     return false;
 }
+
+bool path_are_match(path_t *left, path_t *right) {
+    if(!path_has_value(left) && !path_has_value(right)) {
+        return true;
+    } else if(path_has_value(left) && path_has_value(right)) {
+        return (strcmp(path_get(left), path_get(right)) == 0);
+    } else {
+        return false;
+    }
+}

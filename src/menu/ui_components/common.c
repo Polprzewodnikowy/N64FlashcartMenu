@@ -13,9 +13,10 @@ void ui_components_box_draw (int x0, int y0, int x1, int y1, color_t color) {
     rdpq_mode_pop();
 }
 
-void ui_components_border_draw (int x0, int y0, int x1, int y1) {
+
+static void ui_components_border_draw_interal (int x0, int y0, int x1, int y1, color_t color) {
     rdpq_mode_push();
-        rdpq_set_mode_fill(BORDER_COLOR);
+        rdpq_set_mode_fill(color);
 
         rdpq_fill_rectangle(x0 - BORDER_THICKNESS, y0 - BORDER_THICKNESS, x1 + BORDER_THICKNESS, y0);
         rdpq_fill_rectangle(x0 - BORDER_THICKNESS, y1, x1 + BORDER_THICKNESS, y1 + BORDER_THICKNESS);
@@ -23,6 +24,10 @@ void ui_components_border_draw (int x0, int y0, int x1, int y1) {
         rdpq_fill_rectangle(x0 - BORDER_THICKNESS, y0, x0, y1);
         rdpq_fill_rectangle(x1, y0, x1 + BORDER_THICKNESS, y1);
     rdpq_mode_pop();
+}
+
+void ui_components_border_draw (int x0, int y0, int x1, int y1) {
+    ui_components_border_draw_interal(x0, y0, x1, y1, BORDER_COLOR);
 }
 
 void ui_components_layout_draw (void) {
@@ -215,13 +220,81 @@ void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
             .line_spacing = TEXT_LINE_SPACING_ADJUST,
         },
         FNT_DEFAULT,
-        VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL + x,
-        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + y,
+        x,
+        y,
+        ///VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL + x,
+        //VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + y,
         formatted,
         nbytes
     );
 
     if (formatted != buffer) {
         free(formatted);
+    }
+}
+
+
+void ui_components_tabs_draw(const char** text, int count, int selected ) {
+
+    ui_components_box_draw(
+        VISIBLE_AREA_X0,
+        LAYOUT_ACTIONS_SEPARATOR_Y,
+        VISIBLE_AREA_X1,
+        LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS,
+        BORDER_COLOR
+    );
+
+    int x = VISIBLE_AREA_X0;
+    int y = OVERSCAN_HEIGHT;
+    int width = 14 * 8;
+    int height = TAB_HEIGHT;
+
+    // first draw the tabs that are not selected
+    for(int i=0;i< count;i++) {
+        if(i != selected) {
+
+            ui_components_box_draw(
+                x,
+                y,
+                x + width,
+                y + height,
+                TAB_INACTIVE_BACKGROUND_COLOR
+            );
+
+            ui_components_border_draw_interal(
+                x,
+                y,
+                x + width,
+                y + height,
+                TAB_INACTIVE_BORDER_COLOR
+            );
+
+            ui_components_main_text_draw_location(x + 8, y, (char*)text[i]);
+        }
+
+        x += width;
+    }
+    // draw the selected tab
+
+    if(selected >= 0 && selected < count) {
+        x = VISIBLE_AREA_X0 + (width * selected);
+
+        ui_components_box_draw(
+            x,
+            y,
+            x + width,
+            y + height,
+            TAB_ACTIVE_BACKGROUND_COLOR
+        );
+
+        ui_components_border_draw_interal(
+            x,
+            y,
+            x + width,
+            y + height,
+            TAB_ACTIVE_BORDER_COLOR
+        );
+
+        ui_components_main_text_draw_location(x + 8, y, (char*)text[selected]);
     }
 }

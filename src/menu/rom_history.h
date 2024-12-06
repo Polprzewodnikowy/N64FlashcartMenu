@@ -9,27 +9,48 @@
 
 #include "path.h"
 
+
 #define FAVORITES_COUNT 5
+#define HISTORY_COUNT 5
 
-/** @brief Settings Structure */
+typedef enum {
+    HISTORY_TYPE_EMPTY,
+    HISTORY_TYPE_ROM,
+    HISTORY_TYPE_DISK,
+} bookkeeping_item_types_t;
+
 typedef struct {
-    path_t* last_rom;
-    path_t* last_disk;
+    path_t* primary_path;
+    path_t* secondary_path;
 
-    path_t* favorites_rom[FAVORITES_COUNT];    
-    path_t* favorites_disk[FAVORITES_COUNT];
-} history_t;
+    bookkeeping_item_types_t bookkeeping_type;
+
+} bookkeeping_item_t;
+
+/** @brief history Structure */
+typedef struct {
+    bookkeeping_item_t history_items[HISTORY_COUNT];
+
+    bookkeeping_item_t favorite_items[HISTORY_COUNT];
+} bookkeeping_t;
+
 
 /** @brief Init history path */
-void history_init (char *path);
+void bookkeeping_init (char *path);
+
 /** @brief The history to load */
-void history_load (history_t *history);
+void bookkeeping_load (bookkeeping_t *history);
+
 /** @brief The history to save */
-void history_save (history_t *history);
+void bookkeeping_save (bookkeeping_t *history);
 
-void history_last_rom_set(history_t *history, path_t* disk_path, path_t* rom_path);
+//void history_last_rom_set(bookkeeping_t *history, path_t* disk_path, path_t* rom_path);
 
-void history_favorite_add(history_t *history, path_t* rom, path_t* disk);
-void history_favorite_remove(history_t *history, int location);
+//void history_favorite_add(bookkeeping_t *history, path_t* rom, path_t* disk);
+//void history_favorite_remove(bookkeeping_t *history, int location);
+
+
+void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
 
 #endif

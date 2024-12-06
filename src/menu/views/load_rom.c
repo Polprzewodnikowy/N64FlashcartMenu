@@ -159,7 +159,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 
 static void add_favorite (menu_t *menu, void *arg) {
-    history_favorite_add(&menu->history, menu->load.rom_path, NULL);
+    bookkeeping_favorite_add(&menu->history, menu->load.rom_path, NULL, HISTORY_TYPE_ROM);
 }
 
 static component_context_menu_t set_cic_type_context_menu = { .list = {
@@ -341,7 +341,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    history_last_rom_set(&menu->history, NULL, menu->load.rom_path);
+    bookkeeping_history_add(&menu->history, menu->load.rom_path, NULL, HISTORY_TYPE_ROM);
 
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -368,10 +368,10 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        if(menu->load.load_last) {
-            menu->load.rom_path = path_clone(menu->history.last_rom);
+        if(menu->load.load_history != -1) {
+            menu->load.rom_path = path_clone(menu->history.history_items[menu->load.load_history].primary_path);
         } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->history.favorites_rom[menu->load.load_favorite]);
+            menu->load.rom_path = path_clone(menu->history.favorite_items[menu->load.load_history].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
@@ -380,7 +380,7 @@ void view_load_rom_init (menu_t *menu) {
     }    
 
     menu->load.load_favorite = -1;
-    menu->load.load_last = false;
+    menu->load.load_history = -1;
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

@@ -34,5 +34,6 @@ char *path_ext_get (path_t *path);
 void path_ext_remove (path_t *path);
 void path_ext_replace (path_t *path, char *ext);
 bool path_has_value(path_t *path);
+bool path_are_match(path_t *left, path_t *right);
 
 #endif

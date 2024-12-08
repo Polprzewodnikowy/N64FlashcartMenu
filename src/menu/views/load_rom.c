@@ -159,7 +159,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 
 static void add_favorite (menu_t *menu, void *arg) {
-    bookkeeping_favorite_add(&menu->history, menu->load.rom_path, NULL, HISTORY_TYPE_ROM);
+    bookkeeping_favorite_add(&menu->history, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
 static component_context_menu_t set_cic_type_context_menu = { .list = {
@@ -256,7 +256,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "Description:\n None.\n\n\n\n\n\n\n\n"
+            "Description:\n None.\n\n\n\n\n\n\n"
             "Expansion PAK: %s\n"
             "TV type:       %s\n"
             "CIC:           %s\n"
@@ -341,7 +341,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->history, menu->load.rom_path, NULL, HISTORY_TYPE_ROM);
+    bookkeeping_history_add(&menu->history, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 
     menu->next_mode = MENU_MODE_BOOT;
 

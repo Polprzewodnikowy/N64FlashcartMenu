@@ -139,7 +139,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->history, menu->load.disk_path, menu->load.rom_path, HISTORY_TYPE_DISK);
+    bookkeeping_history_add(&menu->history, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (load_disk_with_rom) {

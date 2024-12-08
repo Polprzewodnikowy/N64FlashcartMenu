@@ -33,7 +33,7 @@ void bookkeeping_ini_load_list(bookkeeping_item_t* list, int count, mini_t* ini,
         list[i].secondary_path = path_create(mini_get_string(ini, group, buf, ""));
         
         sprintf(buf,"%d_type", i);
-        list[i].bookkeeping_type = mini_get_int(ini, group, buf, HISTORY_TYPE_EMPTY);
+        list[i].bookkeeping_type = mini_get_int(ini, group, buf, BOOKKEEPING_TYPE_EMPTY);
     }
 }
 
@@ -88,18 +88,30 @@ static bool bookkeeping_item_match(bookkeeping_item_t* left, bookkeeping_item_t*
     return false;
 }
 
-static void bookkeeping_clear_item(bookkeeping_item_t* item) {
+static void bookkeeping_clear_item(bookkeeping_item_t* item, bool leave_null) {
     if(item->primary_path != NULL){
         path_free(item->primary_path);
+
+        if(leave_null) {
+            item->primary_path = NULL;
+        } else {
+            item->primary_path = path_create("");
+        }
     }
     if(item->secondary_path != NULL){
         path_free(item->secondary_path);
+
+        if(leave_null) {
+            item->secondary_path = NULL;
+        } else {
+            item->secondary_path = path_create("");
+        }
     }
-    item->bookkeeping_type = HISTORY_TYPE_EMPTY;
+    item->bookkeeping_type = BOOKKEEPING_TYPE_EMPTY;
 }
 
 static void bookkeeping_copy_item(bookkeeping_item_t* source, bookkeeping_item_t* destination){
-    bookkeeping_clear_item(destination);
+    bookkeeping_clear_item(destination, true);
 
     destination->primary_path = path_clone(source->primary_path);    
     destination->secondary_path = source->secondary_path != NULL ? path_clone(source->secondary_path) : path_create("");
@@ -120,6 +132,19 @@ static void bookkeeping_move_items_down(bookkeeping_item_t* list, int start, int
 }
 
 
+static void bookkeeping_move_items_up(bookkeeping_item_t* list, int start, int end) {
+    int current = start;
+
+    do {
+        if(current > end) {
+            break;
+        }        
+
+        bookkeeping_copy_item(&list[current + 1], &list[current]);
+        current++;
+    } while(true);
+}
+
 
 static void bookkeeping_insert_top(bookkeeping_item_t* list, int count, bookkeeping_item_t* new_item) {
     // if it matches the top of the list already then nothing to do
@@ -128,7 +153,7 @@ static void bookkeeping_insert_top(bookkeeping_item_t* list, int count, bookkeep
     }
 
     // if the top isn't empty then we need to move things around
-    if(list[0].bookkeeping_type != HISTORY_TYPE_EMPTY) {
+    if(list[0].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
         int found_at = -1;
         for(int i=1; i < count; i++) {
             if(bookkeeping_item_match(&list[i], new_item)){
@@ -168,4 +193,14 @@ void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, 
 
     bookkeeping_insert_top(bookkeeping->favorite_items, FAVORITES_COUNT,  &new_item);
     bookkeeping_save(bookkeeping);
+}
+
+void bookkeeping_favorite_remove(bookkeeping_t *bookkeeping, int selection) {
+    if(bookkeeping->favorite_items[selection].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
+
+        bookkeeping_move_items_up(bookkeeping->favorite_items, selection, FAVORITES_COUNT -1);
+        bookkeeping_clear_item(&bookkeeping->favorite_items[FAVORITES_COUNT -1], false);
+
+        bookkeeping_save(bookkeeping);
+    }
 }

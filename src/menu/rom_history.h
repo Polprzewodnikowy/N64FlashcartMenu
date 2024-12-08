@@ -14,9 +14,9 @@
 #define HISTORY_COUNT 5
 
 typedef enum {
-    HISTORY_TYPE_EMPTY,
-    HISTORY_TYPE_ROM,
-    HISTORY_TYPE_DISK,
+    BOOKKEEPING_TYPE_EMPTY,
+    BOOKKEEPING_TYPE_ROM,
+    BOOKKEEPING_TYPE_DISK,
 } bookkeeping_item_types_t;
 
 typedef struct {
@@ -51,6 +51,8 @@ void bookkeeping_save (bookkeeping_t *history);
 
 
 void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
+
 void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_favorite_remove(bookkeeping_t *bookkeeping, int selection);
 
 #endif

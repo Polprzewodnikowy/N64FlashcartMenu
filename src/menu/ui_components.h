@@ -261,7 +261,7 @@ void ui_components_main_text_draw_location (float x, float y, char *fmt, ...);
 /**
  * 
  */
-void ui_components_tabs_draw(const char** text, int count, int selected );
+void ui_components_tabs_draw(const char** text, int count, int selected, int width );
 
 /**
  * 

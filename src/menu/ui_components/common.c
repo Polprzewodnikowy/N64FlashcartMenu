@@ -202,7 +202,7 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
 }
 
 void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
-    char buffer[1024];
+    char buffer[256];
     size_t nbytes = sizeof(buffer);
 
     va_list va;
@@ -234,7 +234,38 @@ void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
 }
 
 
-void ui_components_tabs_draw(const char** text, int count, int selected ) {
+
+static void ui_components_main_text_draw_tab (float x, float y, float width, char *fmt, ...) {
+    char buffer[256];
+    size_t nbytes = sizeof(buffer);
+
+    va_list va;
+    va_start(va, fmt);
+    char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
+    va_end(va);
+
+    rdpq_text_printn(
+        &(rdpq_textparms_t) {
+            .width = width,
+            .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
+            .align = ALIGN_CENTER,
+            .valign = VALIGN_TOP,
+            .wrap = WRAP_ELLIPSES,
+            .line_spacing = TEXT_OFFSET_VERTICAL,
+        },
+        FNT_DEFAULT,
+        x,
+        y,
+        formatted,
+        nbytes
+    );
+
+    if (formatted != buffer) {
+        free(formatted);
+    }
+}
+
+void ui_components_tabs_draw(const char** text, int count, int selected, int width ) {
 
     ui_components_box_draw(
         VISIBLE_AREA_X0,
@@ -244,10 +275,12 @@ void ui_components_tabs_draw(const char** text, int count, int selected ) {
         BORDER_COLOR
     );
 
-    int x = VISIBLE_AREA_X0;
-    int y = OVERSCAN_HEIGHT;
-    int width = 14 * 8;
+    int starting_x = VISIBLE_AREA_X0 + 4;
+
+    int x = starting_x;
+    int y = OVERSCAN_HEIGHT;    
     int height = TAB_HEIGHT;
+    int half_width = width / 2;
 
     // first draw the tabs that are not selected
     for(int i=0;i< count;i++) {
@@ -269,7 +302,7 @@ void ui_components_tabs_draw(const char** text, int count, int selected ) {
                 TAB_INACTIVE_BORDER_COLOR
             );
 
-            ui_components_main_text_draw_location(x + 8, y, (char*)text[i]);
+            ui_components_main_text_draw_tab(x + 4, y, width, (char*)text[i]);
         }
 
         x += width;
@@ -277,7 +310,7 @@ void ui_components_tabs_draw(const char** text, int count, int selected ) {
     // draw the selected tab
 
     if(selected >= 0 && selected < count) {
-        x = VISIBLE_AREA_X0 + (width * selected);
+        x = starting_x + (width * selected);
 
         ui_components_box_draw(
             x,
@@ -295,6 +328,7 @@ void ui_components_tabs_draw(const char** text, int count, int selected ) {
             TAB_ACTIVE_BORDER_COLOR
         );
 
-        ui_components_main_text_draw_location(x + 8, y, (char*)text[selected]);
+
+        ui_components_main_text_draw_tab(x + 4, y, width, (char*)text[selected]);
     }
 }

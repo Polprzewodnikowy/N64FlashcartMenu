@@ -41,7 +41,7 @@
 #define VISIBLE_AREA_HEIGHT             (VISIBLE_AREA_Y1 - VISIBLE_AREA_Y0)
 
 
-
+// 400
 #define LAYOUT_ACTIONS_SEPARATOR_Y      (400)
 
 /** @brief The seek bar height. */
@@ -111,7 +111,7 @@
 #define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0)
 
 /** @brief The maximum amount of file list entries. */
-#define LIST_ENTRIES                    (18)
+#define LIST_ENTRIES                    (17)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
 #define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)

@@ -3,7 +3,7 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
-#include "../rom_history.h"
+#include "../bookkeeping.h"
 
 
 static bool load_disk_with_rom;
@@ -139,7 +139,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->history, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (load_disk_with_rom) {
@@ -199,10 +199,10 @@ void view_load_disk_init (menu_t *menu) {
 
         if(menu->load.load_history != -1) {
             id = menu->load.load_history;
-            items = menu->history.history_items;
+            items = menu->bookkeeping.history_items;
         } else if (menu->load.load_favorite != -1) {
             id = menu->load.load_favorite;
-            items = menu->history.favorite_items;
+            items = menu->bookkeeping.favorite_items;
         }
 
         menu->load.disk_path = path_clone(items[id].primary_path);

@@ -5,7 +5,7 @@
 #include "views.h"
 #include <string.h>
 #include "utils/fs.h"
-#include "../rom_history.h"
+#include "../bookkeeping.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -159,7 +159,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 
 static void add_favorite (menu_t *menu, void *arg) {
-    bookkeeping_favorite_add(&menu->history, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
 static component_context_menu_t set_cic_type_context_menu = { .list = {
@@ -341,7 +341,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->history, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -369,9 +369,9 @@ void view_load_rom_init (menu_t *menu) {
         }
 
         if(menu->load.load_history != -1) {
-            menu->load.rom_path = path_clone(menu->history.history_items[menu->load.load_history].primary_path);
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
         } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->history.favorite_items[menu->load.load_history].primary_path);
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_history].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }

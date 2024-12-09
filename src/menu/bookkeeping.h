@@ -44,12 +44,6 @@ void bookkeeping_load (bookkeeping_t *history);
 /** @brief The history to save */
 void bookkeeping_save (bookkeeping_t *history);
 
-//void history_last_rom_set(bookkeeping_t *history, path_t* disk_path, path_t* rom_path);
-
-//void history_favorite_add(bookkeeping_t *history, path_t* rom, path_t* disk);
-//void history_favorite_remove(bookkeeping_t *history, int location);
-
-
 void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
 
 void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );

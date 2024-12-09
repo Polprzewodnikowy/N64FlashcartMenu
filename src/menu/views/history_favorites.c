@@ -1,6 +1,6 @@
 #include <stdarg.h>
 #include "views.h"
-#include "../rom_history.h"
+#include "../bookkeeping.h"
 #include "../fonts.h"
 #include "../ui_components/constants.h"
 #include "../sound.h"
@@ -100,7 +100,7 @@ static void process(menu_t* menu) {
             menu->next_mode = MENU_MODE_FAVORITE;
         }
     }else if(IS_FAVORITE && menu->actions.options && selected_item != -1) {
-        bookkeeping_favorite_remove(&menu->history, selected_item);
+        bookkeeping_favorite_remove(&menu->bookkeeping, selected_item);
         reset_selected(menu);
         sound_play_effect(SFX_SETTING);
     }
@@ -198,7 +198,7 @@ static void draw(menu_t *menu, surface_t *display) {
 
 void view_favorite_init (menu_t *menu) {
     screen_mode = BOOKKEEPING_SCREEN_MODE_FAVORITE;
-    item_list = menu->history.favorite_items;
+    item_list = menu->bookkeeping.favorite_items;
     item_max = FAVORITES_COUNT;
 
     reset_selected(menu);
@@ -213,7 +213,7 @@ void view_favorite_display (menu_t *menu, surface_t *display) {
 
 void view_history_init (menu_t *menu) {
     screen_mode = BOOKKEEPING_SCREEN_MODE_HISTORY;
-    item_list = menu->history.history_items;
+    item_list = menu->bookkeeping.history_items;
     item_max = HISTORY_COUNT;
 
     reset_selected(menu);

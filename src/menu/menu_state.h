@@ -16,7 +16,7 @@
 #include "path.h"
 #include "rom_info.h"
 #include "settings.h"
-#include "rom_history.h"
+#include "bookkeeping.h"
 
 
 /** @brief Menu mode enumeration */
@@ -70,7 +70,7 @@ typedef struct {
 
     const char *storage_prefix;
     settings_t settings;
-    bookkeeping_t history;
+    bookkeeping_t bookkeeping;
     boot_params_t *boot_params;
 
     char *error_message;

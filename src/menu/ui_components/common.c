@@ -280,7 +280,6 @@ void ui_components_tabs_draw(const char** text, int count, int selected, int wid
     int x = starting_x;
     int y = OVERSCAN_HEIGHT;    
     int height = TAB_HEIGHT;
-    int half_width = width / 2;
 
     // first draw the tabs that are not selected
     for(int i=0;i< count;i++) {

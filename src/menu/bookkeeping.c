@@ -1,11 +1,9 @@
 #include <libdragon.h>
 #include <mini.c/src/mini.h>
 
-#include "rom_history.h"
+#include "bookkeeping.h"
 #include "utils/fs.h"
 #include "path.h"
-
-#define EMULATOR_TEST false
 
 static char *history_path = NULL;
 
@@ -110,7 +108,7 @@ static void bookkeeping_clear_item(bookkeeping_item_t* item, bool leave_null) {
     item->bookkeeping_type = BOOKKEEPING_TYPE_EMPTY;
 }
 
-static void bookkeeping_copy_item(bookkeeping_item_t* source, bookkeeping_item_t* destination){
+static void bookkeeping_copy_item(bookkeeping_item_t* source, bookkeeping_item_t* destination) {
     bookkeeping_clear_item(destination, true);
 
     destination->primary_path = path_clone(source->primary_path);    

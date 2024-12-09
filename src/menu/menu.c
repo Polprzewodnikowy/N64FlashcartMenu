@@ -73,7 +73,7 @@ static void menu_init (boot_params_t *boot_params) {
 
     path_push(path, MENU_HISTORY_FILE);
     bookkeeping_init(path_get(path));
-    bookkeeping_load(&menu->history);
+    bookkeeping_load(&menu->bookkeeping);
     menu->load.load_history = -1;
     menu->load.load_favorite = -1;
     path_pop(path);

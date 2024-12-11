@@ -4,7 +4,7 @@
 
 static const char* tabs[3] =
 {
-    "Browser",
+    "Files",
     "History",
     "Favorites"
 };

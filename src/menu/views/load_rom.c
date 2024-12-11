@@ -205,7 +205,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
     { .text = "Set ROM to autoload", .action = set_autoload_type },
-    { .text = "Add To Favorite", .action = add_favorite },
+    { .text = "Add to favorite", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -279,7 +279,7 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R:    Options"
-        );  
+        );
 
         if (boxart != NULL) {
             ui_components_boxart_draw(boxart);

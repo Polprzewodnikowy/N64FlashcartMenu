@@ -62,7 +62,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Automatic CIC:    %s.\n"
         "  Region Detection: %s.\n"
         "  Save Writeback:   %s.\n"
-        "  Update from menu: %s.\n"
+        "  Auto F/W Updates: %s.\n"
         "\n\n",
         format_cart_type(),
         "Not Available", // TODO get cart firmware version(s).

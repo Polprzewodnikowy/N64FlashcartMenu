@@ -18,6 +18,10 @@
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
 
+#ifndef GAMEPAK_CONFIG_SUBDIRECTORY
+#define GAMEPAK_CONFIG_SUBDIRECTORY     "config"
+#endif
+
 
 /** @brief ROM File Information Structure. */
 typedef struct  __attribute__((packed)) {
@@ -606,6 +610,19 @@ static const match_t database[] = {
 // clang-format on
 
 
+static bool gamepak_config_folder_enabled = false;
+
+
+void rom_info_use_config_folder(bool state) {
+    if (state) {
+        gamepak_config_folder_enabled = true;
+    }
+    else {
+        gamepak_config_folder_enabled = false;
+    }
+}
+
+
 static void fix_rom_header_endianness (rom_header_t *rom_header, rom_info_t *rom_info) {
     uint8_t *raw = (uint8_t *) (rom_header);
 
@@ -794,7 +811,21 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 }
 
-static void load_overrides (path_t *path, rom_info_t *rom_info) {
+static bool create_gamepak_config_subdirectory (path_t *path) {
+    path_t *gamepak_config_path = path_clone(path);
+    path_pop(gamepak_config_path);
+    path_push(gamepak_config_path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    bool error = directory_create(path_get(gamepak_config_path));
+    path_free(gamepak_config_path);
+    return error;
+}
+
+static void load_rom_config_overrides (path_t *path, rom_info_t *rom_info) {
+
+    if ( gamepak_config_folder_enabled ) {
+        path_push_subdir(path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    }
+
     path_t *overrides_path = path_clone(path);
 
     path_ext_replace(overrides_path, "ini");
@@ -827,7 +858,16 @@ static void load_overrides (path_t *path, rom_info_t *rom_info) {
     path_free(overrides_path);
 }
 
-static rom_err_t save_override (path_t *path, const char *id, int value, int default_value) {
+static rom_err_t save_rom_config_overrides (path_t *path, const char *id, int value, int default_value) {
+
+    if ( gamepak_config_folder_enabled ) {
+        // if the sub dir does not exist, create it
+        // TODO: would it be quicker to check it exists first?
+        create_gamepak_config_subdirectory(path);
+
+        path_push_subdir(path, GAMEPAK_CONFIG_SUBDIRECTORY);
+    }
+
     path_t *overrides_path = path_clone(path);
 
     path_ext_replace(overrides_path, "ini");
@@ -915,7 +955,7 @@ rom_err_t rom_info_override_cic_type (path_t *path, rom_info_t *rom_info, rom_ci
     rom_info->override.cic = (cic_type != ROM_CIC_TYPE_AUTOMATIC);
     rom_info->override.cic_type = cic_type;
 
-    return save_override(path, "cic_type", rom_info->override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
+    return save_rom_config_overrides(path, "cic_type", rom_info->override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
 }
 
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
@@ -930,7 +970,7 @@ rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_s
     rom_info->override.save = (save_type != SAVE_TYPE_AUTOMATIC);
     rom_info->override.save_type = save_type;
 
-    return save_override(path, "save_type", rom_info->override.save_type, SAVE_TYPE_AUTOMATIC);
+    return save_rom_config_overrides(path, "save_type", rom_info->override.save_type, SAVE_TYPE_AUTOMATIC);
 }
 
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
@@ -945,7 +985,7 @@ rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_
     rom_info->override.tv = (tv_type != ROM_TV_TYPE_AUTOMATIC);
     rom_info->override.tv_type = tv_type;
 
-    return save_override(path, "tv_type", rom_info->override.tv_type, ROM_TV_TYPE_AUTOMATIC);
+    return save_rom_config_overrides(path, "tv_type", rom_info->override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
@@ -970,7 +1010,7 @@ rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
 
     extract_rom_info(&match, &rom_header, rom_info);
 
-    load_overrides(path, rom_info);
+    load_rom_config_overrides(path, rom_info);
 
     return ROM_OK;
 }

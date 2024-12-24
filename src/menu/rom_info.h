@@ -237,5 +237,7 @@ rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_
 
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info);
 
+void rom_info_use_config_folder(bool state);
+
 
 #endif

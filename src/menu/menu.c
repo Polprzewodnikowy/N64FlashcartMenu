@@ -93,6 +93,8 @@ static void menu_init (boot_params_t *boot_params) {
 
     sound_use_sfx(menu->settings.sound_enabled);
 
+    rom_info_use_config_folder(menu->settings.use_gamepak_custom_config_folder);
+
     menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
     if (!directory_exists(path_get(menu->browser.directory))) {
         path_free(menu->browser.directory);

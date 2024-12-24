@@ -23,6 +23,12 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_use_gamepak_custom_config_folder_type (menu_t *menu, void *arg) {
+    menu->settings.use_gamepak_custom_config_folder = (bool) (arg);
+    rom_info_use_config_folder(menu->settings.use_gamepak_custom_config_folder);
+    settings_save(&menu->settings);
+}
+
 static void set_sound_enabled_type (menu_t *menu, void *arg) {
     menu->settings.sound_enabled = (bool)(uintptr_t)(arg);
     sound_use_sfx(menu->settings.sound_enabled);
@@ -70,6 +76,12 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+static component_context_menu_t set_use_gamepak_custom_config_folder_type_context_menu = { .list = {
+    {.text = "On", .action = set_use_gamepak_custom_config_folder_type, .arg = (void *) (true) },
+    {.text = "Off", .action = set_use_gamepak_custom_config_folder_type, .arg = (void *) (false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
@@ -94,6 +106,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_sound_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+    { .text = "Use Game Config Folder", .submenu = &set_use_gamepak_custom_config_folder_type_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
@@ -140,6 +153,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "To change the following menu settings, press 'A':\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
+        "     Use config folder : %s\n"
         "     Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
@@ -154,6 +168,7 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
+        format_switch(menu->settings.use_gamepak_custom_config_folder),
         format_switch(menu->settings.sound_enabled)
 #ifdef BETA_SETTINGS
         ,

@@ -29,17 +29,35 @@ static char *format_disk_region (disk_region_t region) {
 }
 
 
+static void add_favorite (menu_t *menu, void *arg) {
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+}
+
+static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Add to favorite", .action = add_favorite },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+
+
 static void process (menu_t *menu) {
+    if (ui_components_context_menu_process(menu, &options_context_menu)) {
+        return;
+    }
+
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
         load_disk_with_rom = false;
-    } else if (menu->actions.options && menu->load.rom_path) {
+    } else if (menu->actions.lz_context && menu->load.rom_path) {
         menu->boot_pending.disk_file = true;
         load_disk_with_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
+    } else if (menu->actions.options) {
+        ui_components_context_menu_show(&options_context_menu);
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -87,26 +105,32 @@ static void draw (menu_t *menu, surface_t *d) {
             "B: Exit"
         );
 
-        ui_components_actions_bar_text_draw(
-            ALIGN_CENTER, VALIGN_TOP,
-            "\n"
-            "C>: Favorite"
-        );
-
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load with ROM"
+                "L|Z: Load with ROM\n"
+                "R:   Options"
+            );
+        } else {
+            ui_components_actions_bar_text_draw(
+                ALIGN_RIGHT, VALIGN_TOP,
+                "\n"
+                "R:   Options"
             );
         }
+
 
         if (boxart != NULL) {
             ui_components_boxart_draw(boxart);
         }
+
+        ui_components_context_menu_draw(&options_context_menu);
     }
 
     rdpq_detach_show();
 }
+
+
 
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
@@ -225,6 +249,7 @@ void view_load_disk_init (menu_t *menu) {
         return;
     }
 
+    ui_components_context_menu_init(&options_context_menu);
     boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
 }
 

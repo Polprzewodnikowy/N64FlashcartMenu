@@ -235,14 +235,8 @@ void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
 
 
 
-static void ui_components_main_text_draw_tab (float x, float y, float width, char *fmt, ...) {
-    char buffer[256];
-    size_t nbytes = sizeof(buffer);
-
-    va_list va;
-    va_start(va, fmt);
-    char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
-    va_end(va);
+static void ui_components_main_text_draw_tab (float x, float y, float width,char* message) {
+    size_t nbytes = strlen(message);
 
     rdpq_text_printn(
         &(rdpq_textparms_t) {
@@ -256,13 +250,9 @@ static void ui_components_main_text_draw_tab (float x, float y, float width, cha
         FNT_DEFAULT,
         x,
         y,
-        formatted,
+        message,
         nbytes
     );
-
-    if (formatted != buffer) {
-        free(formatted);
-    }
 }
 
 void ui_components_tabs_draw(const char** text, int count, int selected, int width ) {

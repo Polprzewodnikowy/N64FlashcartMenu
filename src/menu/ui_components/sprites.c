@@ -9,7 +9,7 @@ void ui_components_sprites_init(void) {
     sprite_defboxart = sprite_load("rom:/defboxart.sprite");
 }
 
-void ui_components_sprite_draw (sprite_joypad_button_type_t sprite, float pos_x, float pos_y) {
+void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y) {
     sprite_t *current_sprite;
 
     switch (sprite) {

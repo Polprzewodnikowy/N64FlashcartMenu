@@ -35,9 +35,9 @@ typedef enum {
  * Enumeration for different types of joypad button sprites used in the user interface.
  */
 typedef enum {
-    SPRITE_BOXART_DEFAULT,  /**< Default boxart sprite */
-    SPRITE_JOYPAD_BUTTON_TYPE_END         /**< List end marker */
-} sprite_joypad_button_type_t;
+    SPRITE_BOXART_DEFAULT,    /**< Default boxart sprite */
+    SPRITE_SPRITE_END         /**< List end marker */
+} sprite_type_t;
 
 /**
  * @brief Draw a box component.
@@ -264,6 +264,6 @@ void ui_components_boxart_draw(component_boxart_t *b);
 
 void ui_components_sprites_init(void);
 
-void ui_components_sprite_draw (sprite_joypad_button_type_t sprite, float pos_x, float pos_y);
+void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 #endif /* UI_COMPONENTS_H__ */

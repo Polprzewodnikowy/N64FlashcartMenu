@@ -87,7 +87,7 @@ SOUNDS = \
 	settings.wav
 
 IMAGES = \
-	defboxart.png
+	boxart/defboxart.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -114,7 +114,7 @@ $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/*/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 

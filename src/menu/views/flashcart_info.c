@@ -65,7 +65,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Auto F/W Updates: %s.\n"
         "\n\n",
         format_cart_type(),
-        "Not Available", // TODO get cart firmware version(s).
+        "Feature coming soon.", // TODO get cart firmware version(s).
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_64DD)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_RTC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_USB)),

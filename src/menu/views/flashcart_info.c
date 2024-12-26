@@ -27,11 +27,10 @@ static const char *format_cart_type () {
 }
 
 static const char *format_cart_version () {
-    // FIXME: show the returned firmware version info.
-    // flashcart_firmware_version_t version;
-    // version = flashcart_get_firmware_version();
-
-    return "Feature coming soon.";
+    flashcart_firmware_version_t version = flashcart_get_firmware_version();
+    static char buffer[16];
+    sprintf(buffer, "%u.%u.%lu", version.major, version.minor, version.revision);
+    return buffer;
 }
 
 static void process (menu_t *menu) {

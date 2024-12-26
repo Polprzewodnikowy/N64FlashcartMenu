@@ -30,7 +30,7 @@ static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
-    } else if (menu->actions.options && menu->load.rom_path) {
+    } else if (menu->actions.lz_context && menu->load.rom_path) {
         menu->boot_pending.disk_file = true;
         menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
@@ -87,7 +87,7 @@ static void draw (menu_t *menu, surface_t *d) {
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load with ROM"
+                "L|Z: Load with ROM\n"
             );
         }
 

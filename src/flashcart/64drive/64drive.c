@@ -82,14 +82,30 @@ static bool d64_has_feature (flashcart_features_t feature) {
     }
 }
 
-// FIXME: show the returned firmware version info.
-// static flashcart_firmware_version_t d64_get_firmware_version (void) {
-//     flashcart_firmware_version_t version_info;
+/**
+ * @brief Retrieves the firmware version of the 64drive device.
+ *
+ * The firmware version is returned as a flashcart_firmware_version_t structure, with each field
+ * including the major, minor, and revision numbers.
+ * The major version is set to 1 for 64drive variant A, and 2 for 64drive variant B.
+ *
+ * @return A flashcart_firmware_version_t structure containing the firmware version information.
+ */
+static flashcart_firmware_version_t d64_get_firmware_version (void) {
+    flashcart_firmware_version_t version_info;
 
-//     d64_ll_get_version(&version_info.major, &version_info.minor, &version_info.revision);
+    d64_ll_get_version(&device_variant, &version_info.minor, &version_info.revision);
 
-//     return version_info;
-// }
+    if (device_variant == DEVICE_VARIANT_A) {
+        version_info.major = 1;
+    } else if (device_variant == DEVICE_VARIANT_B) {
+        version_info.major = 2;
+    } else {
+        version_info.major = 0;
+    }
+
+    return version_info;
+}
 
 static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
@@ -286,7 +302,7 @@ static flashcart_t flashcart_d64 = {
     .init = d64_init,
     .deinit = d64_deinit,
     .has_feature = d64_has_feature,
-    .get_firmware_version = NULL, // d64_get_firmware_version,
+    .get_firmware_version = d64_get_firmware_version,
     .load_rom = d64_load_rom,
     .load_file = d64_load_file,
     .load_save = d64_load_save,

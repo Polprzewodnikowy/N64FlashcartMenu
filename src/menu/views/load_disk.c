@@ -5,8 +5,6 @@
 #include "views.h"
 #include "../bookkeeping.h"
 
-
-static bool load_disk_with_rom;
 static component_boxart_t *boxart;
 static char* name;
 
@@ -47,10 +45,10 @@ static void process (menu_t *menu) {
 
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
-        load_disk_with_rom = false;
+        menu->load.combined_disk_rom = false;
     } else if (menu->actions.lz_context && menu->load.rom_path) {
         menu->boot_pending.disk_file = true;
-        load_disk_with_rom = true;
+        menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -149,7 +147,7 @@ static void draw_progress (float progress) {
 static void load (menu_t *menu) {
     cart_load_err_t err;
 
-    if (menu->load.rom_path && load_disk_with_rom) {
+    if (menu->load.rom_path && menu->load.combined_disk_rom) {
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
@@ -166,7 +164,7 @@ static void load (menu_t *menu) {
     bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
-    if (load_disk_with_rom) {
+    if (menu->load.combined_disk_rom) {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
         menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
         switch (rom_info_get_tv_type(&menu->load.rom_info)) {

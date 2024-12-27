@@ -111,6 +111,7 @@ typedef struct {
         disk_info_t disk_info;
         int load_history;
         int load_favorite;
+        bool combined_disk_rom;
     } load;
 
     struct {

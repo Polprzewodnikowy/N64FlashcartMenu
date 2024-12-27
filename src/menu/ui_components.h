@@ -252,16 +252,10 @@ void ui_components_boxart_free(component_boxart_t *b);
  */
 void ui_components_boxart_draw(component_boxart_t *b);
 
-
 /**
  * 
  */
-void ui_components_main_text_draw_location (float x, float y, char *fmt, ...);
-
-/**
- * 
- */
-void ui_components_tabs_draw(const char** text, int count, int selected, int width );
+void ui_components_tabs_draw(const char** text, int count, int selected, float width );
 
 /**
  * 

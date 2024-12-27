@@ -201,75 +201,12 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     }
 }
 
-void ui_components_main_text_draw_location (float x, float y, char *fmt, ...) {
-    char buffer[256];
-    size_t nbytes = sizeof(buffer);
+void ui_components_tabs_draw(const char** text, int count, int selected, float width ) {
+    float starting_x = VISIBLE_AREA_X0 + 4;
 
-    va_list va;
-    va_start(va, fmt);
-    char *formatted = vasnprintf(buffer, &nbytes, fmt, va);
-    va_end(va);
-
-    rdpq_text_printn(
-        &(rdpq_textparms_t) {
-            .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
-            .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
-            .align = ALIGN_LEFT,
-            .valign = VALIGN_TOP,
-            .wrap = WRAP_ELLIPSES,
-            .line_spacing = TEXT_LINE_SPACING_ADJUST,
-        },
-        FNT_DEFAULT,
-        x,
-        y,
-        ///VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL + x,
-        //VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + y,
-        formatted,
-        nbytes
-    );
-
-    if (formatted != buffer) {
-        free(formatted);
-    }
-}
-
-
-
-static void ui_components_main_text_draw_tab (float x, float y, float width,char* message) {
-    size_t nbytes = strlen(message);
-
-    rdpq_text_printn(
-        &(rdpq_textparms_t) {
-            .width = width,
-            .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
-            .align = ALIGN_CENTER,
-            .valign = VALIGN_TOP,
-            .wrap = WRAP_ELLIPSES,
-            .line_spacing = TEXT_OFFSET_VERTICAL,
-        },
-        FNT_DEFAULT,
-        x,
-        y,
-        message,
-        nbytes
-    );
-}
-
-void ui_components_tabs_draw(const char** text, int count, int selected, int width ) {
-
-    ui_components_box_draw(
-        VISIBLE_AREA_X0,
-        LAYOUT_ACTIONS_SEPARATOR_Y,
-        VISIBLE_AREA_X1,
-        LAYOUT_ACTIONS_SEPARATOR_Y + BORDER_THICKNESS,
-        BORDER_COLOR
-    );
-
-    int starting_x = VISIBLE_AREA_X0 + 4;
-
-    int x = starting_x;
-    int y = OVERSCAN_HEIGHT;    
-    int height = TAB_HEIGHT;
+    float x = starting_x;
+    float y = OVERSCAN_HEIGHT;    
+    float height = TAB_HEIGHT;
 
     // first draw the tabs that are not selected
     for(int i=0;i< count;i++) {
@@ -290,14 +227,11 @@ void ui_components_tabs_draw(const char** text, int count, int selected, int wid
                 y + height,
                 TAB_INACTIVE_BORDER_COLOR
             );
-
-            ui_components_main_text_draw_tab(x + 4, y, width, (char*)text[i]);
         }
-
         x += width;
     }
-    // draw the selected tab
-
+    
+    // draw the selected tab (so it shows up on top of the others)
     if(selected >= 0 && selected < count) {
         x = starting_x + (width * selected);
 
@@ -316,8 +250,24 @@ void ui_components_tabs_draw(const char** text, int count, int selected, int wid
             y + height,
             TAB_ACTIVE_BORDER_COLOR
         );
-
-
-        ui_components_main_text_draw_tab(x + 4, y, width, (char*)text[selected]);
+    }
+        
+    // write the text on the tabs
+    rdpq_textparms_t tab_textparms = {
+        .width = width,
+        .height = 24,
+        .align = ALIGN_CENTER,
+        .wrap = WRAP_NONE
+    };
+    x = starting_x;
+    for(int i=0;i< count;i++) {
+        rdpq_text_print(
+            &tab_textparms,
+            FNT_DEFAULT,
+            x,
+            y,
+            text[i]
+        );
+        x += width;
     }
 }

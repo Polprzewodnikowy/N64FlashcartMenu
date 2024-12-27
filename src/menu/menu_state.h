@@ -103,6 +103,7 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
+        bool combined_disk_rom;
     } load;
 
     struct {

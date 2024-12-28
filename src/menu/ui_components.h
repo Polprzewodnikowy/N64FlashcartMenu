@@ -30,13 +30,13 @@ typedef enum {
 } file_image_type_t;
 
 /** 
- * @brief joypad button sprite Enumeration.
+ * @brief Sprites Enumeration.
  * 
- * Enumeration for different types of joypad button sprites used in the user interface.
+ * Enumeration for different types of sprites used in the user interface.
  */
 typedef enum {
     SPRITE_BOXART_DEFAULT,    /**< Default boxart sprite */
-    SPRITE_SPRITE_END         /**< List end marker */
+    SPRITE_LIST_END         /**< List end marker */
 } sprite_type_t;
 
 /**

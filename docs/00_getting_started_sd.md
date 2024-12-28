@@ -1,5 +1,6 @@
 ## First time setup of SD card
 
+### Flashcarts
 Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart
 #### SC64
 - FAT32 and EXFAT are fully supported.

@@ -177,7 +177,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_settings_init (menu_t *menu) {
-    
     ui_components_context_menu_init(&options_context_menu);
 
 }

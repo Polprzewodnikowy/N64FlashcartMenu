@@ -1,6 +1,9 @@
 ## First time setup of SD card
 
-Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart
+### Flashcarts
+Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart.
+**warning** Filenames are expected to be part of the ASCII character set. Unicode characters are not fully supported and may cause a crash screen.
+
 #### SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.

@@ -11,7 +11,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
-static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
+static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", "rzx", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
 static const char *image_extensions[] = { "png", NULL };

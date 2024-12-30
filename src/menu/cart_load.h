@@ -56,6 +56,8 @@ typedef enum {
     CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT,
     /** @brief The ROM is designed for a Fairchild Channel F system. */
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
+    /** @brief The ROM is designed for a Sinclair ZX Spectrum system. */
+    CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM,
 } cart_load_emu_type_t;
 
 
@@ -63,6 +65,5 @@ char *cart_load_convert_error_message (cart_load_err_t err);
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress);
 cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress);
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress);
-
 
 #endif

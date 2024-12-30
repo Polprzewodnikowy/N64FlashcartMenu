@@ -26,6 +26,13 @@ static const char *format_cart_type () {
     }
 }
 
+static const char *format_cart_version () {
+    flashcart_firmware_version_t version = flashcart_get_firmware_version();
+    static char buffer[16];
+    sprintf(buffer, "%u.%u.%lu", version.major, version.minor, version.revision);
+    return buffer;
+}
+
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -54,7 +61,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Type:\n"
         "  %s\n\n"
         "Firmware:\n"
-        "  %s\n\n"
+        "  Version: %s\n\n"
         "Features:\n"
         "  Virtual 64DD:     %s.\n"
         "  Real Time Clock:  %s.\n"
@@ -62,10 +69,10 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Automatic CIC:    %s.\n"
         "  Region Detection: %s.\n"
         "  Save Writeback:   %s.\n"
-        "  Update from menu: %s.\n"
+        "  Auto F/W Updates: %s.\n"
         "\n\n",
         format_cart_type(),
-        "Not Available", // TODO get cart firmware version(s).
+        format_cart_version(),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_64DD)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_RTC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_USB)),

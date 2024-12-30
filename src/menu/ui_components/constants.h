@@ -7,7 +7,9 @@
 #ifndef COMPONENTS_CONSTANTS_H__
 #define COMPONENTS_CONSTANTS_H__
 
+/** @brief the height of the tabs in the main menu */
 #define TAB_HEIGHT                      (20)
+
 /** @brief The thickness of borders. */
 #define BORDER_THICKNESS                (4)
 

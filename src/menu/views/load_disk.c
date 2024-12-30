@@ -227,6 +227,9 @@ void view_load_disk_init (menu_t *menu) {
             items = menu->bookkeeping.favorite_items;
         }
 
+        menu->load.load_history = -1;
+        menu->load.load_favorite = -1;
+
         menu->load.disk_path = path_clone(items[id].primary_path);
         if(!load_rom(menu, items[id].secondary_path)) {
             return;

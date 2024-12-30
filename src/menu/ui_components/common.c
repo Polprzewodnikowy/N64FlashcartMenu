@@ -251,7 +251,7 @@ void ui_components_tabs_draw(const char** text, int count, int selected, float w
             TAB_ACTIVE_BORDER_COLOR
         );
     }
-        
+
     // write the text on the tabs
     rdpq_textparms_t tab_textparms = {
         .width = width,

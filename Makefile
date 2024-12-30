@@ -85,30 +85,6 @@ SOUNDS = \
 	error.wav \
 	settings.wav
 
-JOYPAD_IMAGES = \
-	joypad_a.png \
-	joypad_b.png \
-	joypad_c_down.png \
-	joypad_c_left.png \
-	joypad_c_right.png \
-	joypad_c_up.png \
-	joypad_d_down.png \
-	joypad_d_left.png \
-	joypad_d_right.png \
-	joypad_d_up.png \
-	joypad_l.png \
-	joypad_r.png \
-	joypad_start.png \
-	joypad_z.png
-# joypad_j_east.png \
-# joypad_j_north.png \
-# joypad_j_northeast.png \
-# joypad_j_northwest.png \
-# joypad_j_south.png \
-# joypad_j_southeast.png \
-# joypad_j_southwest.png \
-# joypad_j_west.png \
-
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
@@ -117,11 +93,11 @@ DEPS = $(OBJS:.o=.d)
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(JOYPAD_IMAGES:%.png=%.sprite)))
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 80-1FF -r 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
@@ -134,7 +110,7 @@ $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/joypad/%.png
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 

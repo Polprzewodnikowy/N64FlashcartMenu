@@ -79,10 +79,10 @@ the "cartridge save memory".
 ```plaintext
 ├── (some folder with roms)\
     ├── a_rom.z64
-    ├── b_rom_whatevs.n64
+    ├── b_rom_whatever.n64
     └── saves\
         ├── a_rom.sav
-        └── b_rom_whatevs.sav
+        └── b_rom_whatever.sav
 ```
 
 ### Transfering Saves From An ED64

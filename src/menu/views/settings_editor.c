@@ -23,9 +23,9 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-static void set_sound_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.sound_enabled = (bool)(uintptr_t)(arg);
-    sound_use_sfx(menu->settings.sound_enabled);
+static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.soundfx_enabled = (bool)(uintptr_t)(arg);
+    sound_use_sfx(menu->settings.soundfx_enabled);
     settings_save(&menu->settings);
 }
 
@@ -58,9 +58,9 @@ static component_context_menu_t set_protected_entries_type_context_menu = { .lis
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_sound_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_sound_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_sound_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static component_context_menu_t set_soundfx_enabled_type_context_menu = { .list = {
+    {.text = "On", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -92,7 +92,7 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
-    { .text = "Sound Effects", .submenu = &set_sound_enabled_type_context_menu },
+    { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
@@ -154,7 +154,7 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.sound_enabled)
+        format_switch(menu->settings.soundfx_enabled)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),
@@ -177,7 +177,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_settings_init (menu_t *menu) {
-    
     ui_components_context_menu_init(&options_context_menu);
 
 }

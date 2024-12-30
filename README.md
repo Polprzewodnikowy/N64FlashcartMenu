@@ -32,7 +32,7 @@ An open source menu for N64 flashcarts.
 ## Documentation
 * [Getting started guide](./docs/00_getting_started_sd.md)
 * [Menu controls](./docs/01_menu_controls.md)
-* [Menu customizations](./docs/07_menu_customizations.md)
+* [Menu customization](./docs/07_menu_customization.md)
 * [Developer guide](./docs/99_developer_guide.md)
 
 ## Video showcase (as of Oct 12 2023)
@@ -53,17 +53,21 @@ These features are subject to change:
 
 ### N64 ROM autoload
 To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
-NOTE: to return to the menu, hold joypad `start` button whilst powering on the console. 
+The autoload setting is stored in `config.ini` and persists until changed. This feature may slightly increase boot time as the menu needs to check for the Start button state.
+NOTE: To return to the menu, hold the joypad `Start` button while powering on the console.
 
 ### GamePak sprites
-To use N64 `GamePak` sprites, place `PNG` files within the `sd:/menu/boxart/` folder.
-
+To use N64 GamePak sprites, place PNG files within the `sd:/menu/boxart/` folder.
 
 #### Supported sprites
 These must be `PNG` files that use the following dimensions:
 * Standard N64 GamePak boxart sprites: 158x112
 * Japanese N64 GamePak boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
+
+Supported PNG formats:
+* RGB/RGBA color formats
+* 8-bit color depth
 
 They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
@@ -72,8 +76,13 @@ i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_fro
 To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
-**Note1:** Excluding the region ID may show the wrong boxart.
-**Note2:** For future support, boxart sprites should also include: `boxart_back.png`, `boxart_top.png`, `boxart_bottom.png`, `boxart_left.png`, `boxart_right.png`.
+**Warning**: Excluding the region ID may show the wrong boxart.
+**Note**: For future support, boxart sprites should also include:
+* `boxart_back.png`
+* `boxart_top.png`
+* `boxart_bottom.png`
+* `boxart_left.png`
+* `boxart_right.png`
 
 As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
 * [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
@@ -117,14 +126,14 @@ If required, you can manually adjust the file on the SD card using your computer
 
 ### ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
 Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
-NOTE: The menu may be able to load ROM's but not perform saves and may break existing ones..
+**Warning**: The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
 
 #### ED64 (Vseries)
 The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries) / [ED64-OfficialOS](https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/).
 Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
 
 #### ED64 (X series)
-X Series support is currently awaiting fixes, in the meantime use the official [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) instead.
+X Series support is currently awaiting fixes. Please use the official [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
 
 #### ED64 (P clone)
 Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.

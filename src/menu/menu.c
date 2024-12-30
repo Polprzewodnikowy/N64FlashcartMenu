@@ -93,7 +93,7 @@ static void menu_init (boot_params_t *boot_params) {
 
     path_free(path);
 
-    sound_use_sfx(menu->settings.sound_enabled);
+    sound_use_sfx(menu->settings.soundfx_enabled);
 
     menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
     if (!directory_exists(path_get(menu->browser.directory))) {

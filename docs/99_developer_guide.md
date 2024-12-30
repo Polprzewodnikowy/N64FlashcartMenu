@@ -6,7 +6,7 @@ You can use a dev container in VSCode to ease development.
 [![Devcontainer quickstart guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Devcontainer quickstart guide").
 
 
-### To deploy:
+### How to deploy
 #### SC64
 * Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.20.0/sc64-deployer-windows-v2.20.0.zip).
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.

@@ -2,7 +2,7 @@
 
 ### First Steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
-**WARNING:** Filenames are expected to be written in ASCII. Unicode characters, such as accented characters or non-Latin based languages, such as Russian, Chinese, Japanese, Korean, etc., are not fully supported and may cause a crash screen.
+**WARNING:** Filenames are expected to be written in ASCII. Unicode characters, such as accented characters or characters from languages such as Russian, Chinese, Japanese, Korean, etc., are not fully supported and may cause a crash screen.
 
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
@@ -93,5 +93,5 @@ You may also need to pad/trim the files to their original size:
 - For EEPROM 4Kbit games, remove the padding.
 - For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
 
-**WARNING:** saves created with certain emulators, or created for a different ROM version (as in revisions of the same game) 
+**WARNING:** Saves created with certain emulators, or created for a different ROM version (as in revisions of the same game) 
 or region (as in between NTSC and PAL versions of a same game) may be incompatible.

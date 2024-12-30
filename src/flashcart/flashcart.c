@@ -156,6 +156,10 @@ bool flashcart_has_feature (flashcart_features_t feature) {
     return flashcart->has_feature(feature);
 }
 
+flashcart_firmware_version_t flashcart_get_firmware_version (void) {
+    return flashcart->get_firmware_version();
+}
+
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
     flashcart_err_t err;
 

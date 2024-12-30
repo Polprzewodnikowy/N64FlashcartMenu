@@ -54,6 +54,8 @@ typedef enum {
     CART_LOAD_EMU_TYPE_GAMEBOY_COLOR,
     /** @brief The ROM is designed for a Sega 8Bit system (Game Gear or Master System). */
     CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT,
+    /** @brief The ROM is designed for a Fairchild Channel F system. */
+    CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
 } cart_load_emu_type_t;
 
 

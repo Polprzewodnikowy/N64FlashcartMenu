@@ -42,7 +42,7 @@ static void draw (menu_t *menu, surface_t *d) {
         " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Credits:\n"
-        " N64Brew / libdragon contributors\n"
+        " N64Brew / libDragon contributors\n"
         "\n"
         "OSS software used:\n"
         " libdragon (UNLICENSE License)\n"

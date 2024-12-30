@@ -29,6 +29,11 @@ typedef enum {
     FLASHCART_FEATURE_64DD,
     FLASHCART_FEATURE_RTC,
     FLASHCART_FEATURE_USB,
+    FLASHCART_FEATURE_AUTO_CIC,
+    FLASHCART_FEATURE_AUTO_REGION,
+    FLASHCART_FEATURE_DIAGNOSTIC_DATA,
+    FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU,
+    FLASHCART_FEATURE_SAVE_WRITEBACK
 } flashcart_features_t;
 
 /** @brief Flashcart save type enumeration */
@@ -52,6 +57,13 @@ typedef struct {
     uint8_t defect_tracks[16][12];
 } flashcart_disk_parameters_t;
 
+/** @brief Flashcart Firmware version Structure. */
+typedef struct {
+    uint16_t major;
+    uint16_t minor;
+    uint32_t revision;
+} flashcart_firmware_version_t;
+
 typedef void flashcart_progress_callback_t (float progress);
 
 /** @brief Flashcart Structure */
@@ -62,6 +74,8 @@ typedef struct {
     flashcart_err_t (*deinit) (void);
     /** @brief The flashcart feature function */
     bool (*has_feature) (flashcart_features_t feature);
+    /** @brief The flashcart firmware version function */
+    flashcart_firmware_version_t (*get_firmware_version) (void);
     /** @brief The flashcart ROM load function */
     flashcart_err_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
     /** @brief The flashcart file load function */
@@ -83,6 +97,7 @@ char *flashcart_convert_error_message (flashcart_err_t err);
 flashcart_err_t flashcart_init (const char **storage_prefix);
 flashcart_err_t flashcart_deinit (void);
 bool flashcart_has_feature (flashcart_features_t feature);
+flashcart_firmware_version_t flashcart_get_firmware_version (void);
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
 flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset);
 flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);

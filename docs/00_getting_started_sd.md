@@ -1,10 +1,21 @@
 ## First time setup of SD card
 
-Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart (*FAT32 and EXFAT are fully supported on the SC64*).
+### Flashcarts
+Using your PC, insert the SD card and ensure it is formatted for compatibility with your flashcart.
+**warning** Filenames are expected to be part of the ASCII character set. Unicode characters are not fully supported and may cause a crash screen.
+
+#### SC64
+- FAT32 and EXFAT are fully supported.
+- An SD formatted with 128 kiB cluster size is recommended.
 
 - Download the latest `sc64menu.n64` (assuming you are using an *sc64*) file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 - Create a folder in the root of your SD card called `menu`.
 - Place your ROMs on the SD Card, in any folder (**except for `menu`**).
+
+#### Other supported flashcarts
+- FAT32 recommended.
+- An SD formatted with default cluster size is recommended.
+
 
 
 ### Emulator support
@@ -14,6 +25,8 @@ Menu currently supports the following emulators and associated ROM file names:
 - **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
 - **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
 - **Game Boy** / **GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64` / `gbc.v64` ("Download Emulator" button)
+- **SMS** / **GG**: [smsPlus64](https://github.com/fhoedemakers/smsplus64/releases) by *fhoedmakers* - `smsPlus64.z64`
+- **Fairchild Channel F**: [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra/releases) by *celerizer* - `Press-F.z64`
 
 
 ### 64DD disk support
@@ -40,7 +53,9 @@ SD:\
 │        ├── neon64bu.rom
 │        ├── sodium64.z64
 │        ├── gb.v64
-│        └── gbc.v64
+│        ├── gbc.v64
+│        ├── smsPlus64.z64
+│        └── Press-F.z64
 │
 ├── (a rom).z64
 ├── (a rom).n64

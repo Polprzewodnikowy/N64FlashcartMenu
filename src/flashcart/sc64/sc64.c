@@ -187,6 +187,14 @@ static bool disk_load_sector_table (char *path, uint32_t *sector_table_offset, u
     return false;
 }
 
+static flashcart_firmware_version_t sc64_get_firmware_version (void) {
+    flashcart_firmware_version_t version_info;
+
+    sc64_ll_get_version(&version_info.major, &version_info.minor, &version_info.revision);
+
+    return version_info;
+}
+
 
 static flashcart_err_t sc64_init (void) {
     uint16_t major;
@@ -254,6 +262,10 @@ static bool sc64_has_feature (flashcart_features_t feature) {
         case FLASHCART_FEATURE_64DD: return true;
         case FLASHCART_FEATURE_RTC: return true;
         case FLASHCART_FEATURE_USB: return true;
+        case FLASHCART_FEATURE_AUTO_CIC: return true;
+        case FLASHCART_FEATURE_AUTO_REGION: return true;
+        case FLASHCART_FEATURE_DIAGNOSTIC_DATA: return true;
+        case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
         default: return false;
     }
 }
@@ -568,6 +580,7 @@ static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
     .has_feature = sc64_has_feature,
+    .get_firmware_version = sc64_get_firmware_version,
     .load_rom = sc64_load_rom,
     .load_file = sc64_load_file,
     .load_save = sc64_load_save,

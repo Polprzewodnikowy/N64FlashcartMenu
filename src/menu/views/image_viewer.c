@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "../sound.h"
 
 #include "../png_decoder.h"
 #include "views.h"
@@ -40,6 +41,7 @@ static void process (menu_t *menu) {
         } else {
             menu->next_mode = MENU_MODE_BROWSER;
         }
+        sound_play_effect(SFX_EXIT);
     } else if (menu->actions.enter && image) {
         if (show_message) {
             show_message = false;
@@ -48,6 +50,7 @@ static void process (menu_t *menu) {
         } else {
             show_message = true;
         }
+        sound_play_effect(SFX_ENTER);
     }
 }
 
@@ -55,9 +58,9 @@ static void draw (menu_t *menu, surface_t *d) {
     if (!image) {
         rdpq_attach(d, NULL);
 
-        component_background_draw();
+        ui_components_background_draw();
 
-        component_loader_draw(png_decoder_get_progress());
+        ui_components_loader_draw(png_decoder_get_progress());
     } else {
         rdpq_attach_clear(d, NULL);
 
@@ -70,13 +73,13 @@ static void draw (menu_t *menu, surface_t *d) {
         rdpq_mode_pop();
 
         if (show_message) {
-            component_messagebox_draw(
+            ui_components_messagebox_draw(
                 "Set \"%s\" as background image?\n\n"
                 "A: Yes, B: Back",
                 menu->browser.entry->name
             );
         } else if (image_set_as_background) {
-            component_messagebox_draw("Preparing background…");
+            ui_components_messagebox_draw("Preparing background…");
         }
     }
 
@@ -90,7 +93,7 @@ static void deinit (menu_t *menu) {
 
     if (image) {
         if (image_set_as_background) {
-            component_background_replace_image(image);
+            ui_components_background_replace_image(image);
         } else {
             surface_free(image);
             free(image);

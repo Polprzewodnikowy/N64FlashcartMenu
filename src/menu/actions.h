@@ -10,7 +10,10 @@
 
 #include "menu_state.h"
 
-
+/**
+ * @brief Initialize the actions module
+ */
+void actions_init (void);
 void actions_update (menu_t *menu);
 
 

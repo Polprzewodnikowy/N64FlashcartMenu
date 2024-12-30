@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include "../sound.h"
 
 #ifndef MENU_VERSION
 #define MENU_VERSION "Unknown"
@@ -12,23 +12,24 @@
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
+        sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER; 
     }
 }
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "MENU INFORMATION"
     );
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -41,7 +42,7 @@ static void draw (menu_t *menu, surface_t *d) {
         " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Credits:\n"
-        " N64Brew / libdragon contributors\n"
+        " N64Brew / libDragon contributors\n"
         "\n"
         "OSS software used:\n"
         " libdragon (UNLICENSE License)\n"
@@ -53,7 +54,7 @@ static void draw (menu_t *menu, surface_t *d) {
         BUILD_TIMESTAMP
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Exit"

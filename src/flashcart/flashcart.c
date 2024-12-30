@@ -10,6 +10,7 @@
 #include "flashcart.h"
 #include "flashcart_utils.h"
 
+#include "ed64/ed64_vseries.h"
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
@@ -108,10 +109,13 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             flashcart = d64_get_flashcart();
             break;
 
-        case CART_EDX:  // Series X EverDrive-64
-            break;
+        // FIXME: this is commented out awaiting a fix from libcart.
+        // case CART_EDX:  // Series X EverDrive-64
+        //     flashcart = ed64_xseries_get_flashcart();
+        //     break;
 
-        case CART_ED:   // Original EverDrive-64
+        case CART_ED:   // Series V EverDrive-64 or clone
+            flashcart = ed64_vseries_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64
@@ -150,6 +154,10 @@ flashcart_err_t flashcart_deinit (void) {
 
 bool flashcart_has_feature (flashcart_features_t feature) {
     return flashcart->has_feature(feature);
+}
+
+flashcart_firmware_version_t flashcart_get_firmware_version (void) {
+    return flashcart->get_firmware_version();
 }
 
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {

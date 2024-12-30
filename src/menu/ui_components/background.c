@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../components.h"
+#include "../ui_components.h"
 #include "constants.h"
 #include "utils/fs.h"
 
@@ -98,9 +98,6 @@ static void prepare_background (component_background_t *c) {
         return;
     }
 
-    uint16_t image_center_x = (c->image->width / 2);
-    uint16_t image_center_y = (c->image->height / 2);
-
     // Darken the image
     rdpq_attach(c->image, NULL);
     rdpq_mode_push();
@@ -108,14 +105,12 @@ static void prepare_background (component_background_t *c) {
         rdpq_set_prim_color(BACKGROUND_OVERLAY_COLOR);
         rdpq_mode_combiner(RDPQ_COMBINER_FLAT);
         rdpq_mode_blender(RDPQ_BLENDER_MULTIPLY);
-        rdpq_fill_rectangle(
-            0 - (DISPLAY_CENTER_X - image_center_x),
-            0 - (DISPLAY_CENTER_Y - image_center_y),
-            DISPLAY_WIDTH - (DISPLAY_CENTER_X - image_center_x),
-            DISPLAY_HEIGHT - (DISPLAY_CENTER_Y - image_center_y)
-        );
+        rdpq_fill_rectangle(0, 0, c->image->width, c->image->height);
     rdpq_mode_pop();
     rdpq_detach();
+
+    uint16_t image_center_x = (c->image->width / 2);
+    uint16_t image_center_y = (c->image->height / 2);
 
     // Prepare display list
     rspq_block_begin();
@@ -162,7 +157,7 @@ static void display_list_free (void *arg) {
 }
 
 
-void component_background_init (char *cache_location) {
+void ui_components_background_init (char *cache_location) {
     if (!background) {
         background = calloc(1, sizeof(component_background_t));
         background->cache_location = strdup(cache_location);
@@ -171,7 +166,7 @@ void component_background_init (char *cache_location) {
     }
 }
 
-void component_background_free (void) {
+void ui_components_background_free (void) {
     if (background) {
         if (background->image) {
             surface_free(background->image);
@@ -190,7 +185,7 @@ void component_background_free (void) {
     }
 }
 
-void component_background_replace_image (surface_t *image) {
+void ui_components_background_replace_image (surface_t *image) {
     if (!background) {
         return;
     }
@@ -211,7 +206,7 @@ void component_background_replace_image (surface_t *image) {
     prepare_background(background);
 }
 
-void component_background_draw (void) {
+void ui_components_background_draw (void) {
     if (background && background->image_display_list) {
         rspq_block_run(background->image_display_list);
     } else {

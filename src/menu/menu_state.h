@@ -85,6 +85,7 @@ typedef struct {
         bool back;
         bool options;
         bool settings;
+        bool lz_context;
     } actions;
 
     struct {
@@ -102,7 +103,14 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
+        bool combined_disk_rom;
     } load;
+
+    struct {
+        bool rom_file;
+        bool disk_file;
+        bool emulator_file;
+    } boot_pending;
 } menu_t;
 
 

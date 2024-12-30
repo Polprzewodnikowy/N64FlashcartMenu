@@ -45,9 +45,12 @@ For ease of development and debugging, the menu ROM can run in the [Ares emulato
 * Add the required file to the correct folder on your SD card.
 
 
-## Update Libdragon submodule
-This repo currently uses the `preview` branch as a submodule at a specific commit.
+## Update submodules
 To update to the latest version, use `git submodule update --remote` from the terminal.
+
+### libdragon
+This repo currently uses the `preview` branch as a submodule at a specific commit.
+* To ensure your local instance is building against it, use `cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd ..`
 
 ## Generate documentation
 Run `doxygen` from the dev container terminal.
@@ -57,6 +60,8 @@ Generated documentation is located in the `output/docs` folder and auto-publishe
 Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/)
 
 ### Test generated docs in the dev-container
+Testing the documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.
+
 Install Prerequisites:
 ```bash
 apt-get install ruby-full build-essential zlib1g-dev

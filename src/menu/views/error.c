@@ -1,8 +1,10 @@
 #include "views.h"
+#include "../sound.h"
 
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
+        sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
 }
@@ -10,12 +12,12 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
     if (menu->error_message) {
-        component_messagebox_draw(menu->error_message);
+        ui_components_messagebox_draw(menu->error_message);
     } else {
-        component_messagebox_draw("Unspecified error");
+        ui_components_messagebox_draw("Unspecified error");
     }
 
     rdpq_detach_show();
@@ -48,6 +50,7 @@ void view_error_display (menu_t *menu, surface_t *display) {
 }
 
 void menu_show_error (menu_t *menu, char *error_message) {
+    sound_play_effect(SFX_ERROR);
     menu->next_mode = MENU_MODE_ERROR;
     menu->error_message = error_message;
 }

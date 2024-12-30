@@ -140,6 +140,7 @@ static flashcart_t flashcart_ed64_vseries = {
     .init = ed64_vseries_init,
     .deinit = ed64_vseries_deinit,
     .has_feature = ed64_vseries_has_feature,
+    .get_firmware_version = NULL, // FIXME: show the returned firmware version info.
     .load_rom = ed64_vseries_load_rom,
     .load_file = ed64_vseries_load_file,
     .load_save = ed64_vseries_load_save,

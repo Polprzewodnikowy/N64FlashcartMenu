@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['v_5fintr_0',['V_INTR',['../boot__io_8h.html#af3a2374353eaa0de3c38607693057cfa',1,'vi_regs_t']]],
+  ['v_5flimits_1',['V_LIMITS',['../boot__io_8h.html#a8a17677bc1236677903d6312d64b73b8',1,'vi_regs_t']]],
+  ['v_5fscale_2',['V_SCALE',['../boot__io_8h.html#ad640b8c4be56e5e183f09f78368e2328',1,'vi_regs_t']]],
+  ['v_5fsync_3',['V_SYNC',['../boot__io_8h.html#ac7797f5ba82e82db9cda5c459a8a7cea',1,'vi_regs_t']]],
+  ['variable_20storage_20register_4',['&quot;Persistent variable storage&quot; register',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md26',1,'']]],
+  ['version_5',['version',['../rom__info_8h.html#a2af72f100c356273d46284f6fd1dfc08',1,'rom_info_t.libultra::version'],['../rom__info_8h.html#aa4fa4e1a40bd152b26b22bceeeb72baf',1,'rom_info_t::version']]],
+  ['vi_5fregs_5ft_6',['vi_regs_t',['../boot__io_8h.html#structvi__regs__t',1,'']]],
+  ['video_20showcase_20as_20of_20oct_2012_202023_7',['Video showcase (as of Oct 12 2023)',['../index.html#autotoc_md6',1,'']]],
+  ['video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_8',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md49',1,'']]],
+  ['view_9',['View',['../group__view.html',1,'']]],
+  ['view_5ft_10',['view_t',['../structview__t.html',1,'']]],
+  ['views_2eh_11',['views.h',['../views_8h.html',1,'']]],
+  ['visible_5farea_5fheight_12',['VISIBLE_AREA_HEIGHT',['../constants_8h.html#a3900f3b23135d3bc0a4a199a0d1e050a',1,'constants.h']]],
+  ['visible_5farea_5fwidth_13',['VISIBLE_AREA_WIDTH',['../constants_8h.html#a6372292a7f4e97871a7cbb8acd5530c7',1,'constants.h']]],
+  ['visible_5farea_5fx0_14',['VISIBLE_AREA_X0',['../constants_8h.html#a9b677c2a6549810814fa608f4697910a',1,'constants.h']]],
+  ['visible_5farea_5fx1_15',['VISIBLE_AREA_X1',['../constants_8h.html#ab42ef3a06ea6594861bb1dfe41d4cbfc',1,'constants.h']]],
+  ['visible_5farea_5fy0_16',['VISIBLE_AREA_Y0',['../constants_8h.html#a599519b46c499c0b6ee7591ad1443700',1,'constants.h']]],
+  ['visible_5farea_5fy1_17',['VISIBLE_AREA_Y1',['../constants_8h.html#a993f4bc0369a4835a2cddd44f38241ee',1,'constants.h']]],
+  ['vr4300_5finstruction_5ft_18',['vr4300_instruction_t',['../unionvr4300__instruction__t.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ec_5ftype_19',['vr4300_instruction_t.c_type',['../structvr4300__instruction__t_8c__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ei_5ftype_20',['vr4300_instruction_t.i_type',['../structvr4300__instruction__t_8i__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2ej_5ftype_21',['vr4300_instruction_t.j_type',['../structvr4300__instruction__t_8j__type.html',1,'']]],
+  ['vr4300_5finstruction_5ft_2er_5ftype_22',['vr4300_instruction_t.r_type',['../structvr4300__instruction__t_8r__type.html',1,'']]],
+  ['vseries_23',['ED64 (Vseries)',['../index.html#autotoc_md18',1,'']]]
+];

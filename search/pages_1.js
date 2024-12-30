@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['first_20time_20setup_20of_20sd_20card_0',['First time setup of SD card',['../md_docs_00_getting_started_sd.html',1,'']]]
+  ['developer_20documentation_0',['Developer documentation',['../md_docs_299__developer__guide.html',1,'']]],
+  ['documentation_1',['Developer documentation',['../md_docs_299__developer__guide.html',1,'']]]
 ];

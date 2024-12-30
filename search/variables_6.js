@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['id_0',['id',['../structusb__comm__command__t.html#ae0741a1da89998c28a1ed41e79341997',1,'usb_comm_command_t']]],
-  ['init_1',['init',['../structflashcart__t.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t']]]
+  ['game_5fcode_0',['game_code',['../rom__info_8h.html#a4f17ea269979c808050cd0de5aa32afa',1,'rom_info_t.__unnamed22__']]],
+  ['get_5ffirmware_5fversion_1',['get_firmware_version',['../structflashcart__t.html#af5b584e89ac94844a234ef9ae56dfff3',1,'flashcart_t']]]
 ];

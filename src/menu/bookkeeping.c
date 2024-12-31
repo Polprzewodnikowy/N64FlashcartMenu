@@ -7,7 +7,7 @@
 
 static char *history_path = NULL;
 
-static path_t* empty_path = NULL;
+static path_t *empty_path = NULL;
 static bookkeeping_t init;
 
 /** @brief Init history path */
@@ -20,7 +20,7 @@ void bookkeeping_init (char *path) {
 }
 
 
-void bookkeeping_ini_load_list(bookkeeping_item_t* list, int count, mini_t* ini, const char* group)
+void bookkeeping_ini_load_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group)
 {
     char buf[64];
     for(int i=0;i<count; i++) {
@@ -49,7 +49,7 @@ void bookkeeping_load (bookkeeping_t *history) {
     mini_free(ini);
 }
 
-static void bookkeeping_ini_save_list(bookkeeping_item_t* list, int count, mini_t* ini, const char* group)
+static void bookkeeping_ini_save_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group)
 {
     char buf[64];
     for(int i=0;i<count; i++) {
@@ -78,7 +78,7 @@ void bookkeeping_save (bookkeeping_t *history)
     mini_free(ini);    
 }
 
-static bool bookkeeping_item_match(bookkeeping_item_t* left, bookkeeping_item_t* right) {
+static bool bookkeeping_item_match(bookkeeping_item_t *left, bookkeeping_item_t *right) {
     if(left != NULL && right != NULL) {
         return path_are_match(left->primary_path, right->primary_path) && path_are_match(left->secondary_path, right->secondary_path) && left->bookkeeping_type == right->bookkeeping_type;
     }
@@ -86,7 +86,7 @@ static bool bookkeeping_item_match(bookkeeping_item_t* left, bookkeeping_item_t*
     return false;
 }
 
-static void bookkeeping_clear_item(bookkeeping_item_t* item, bool leave_null) {
+static void bookkeeping_clear_item(bookkeeping_item_t *item, bool leave_null) {
     if(item->primary_path != NULL){
         path_free(item->primary_path);
 
@@ -108,7 +108,7 @@ static void bookkeeping_clear_item(bookkeeping_item_t* item, bool leave_null) {
     item->bookkeeping_type = BOOKKEEPING_TYPE_EMPTY;
 }
 
-static void bookkeeping_copy_item(bookkeeping_item_t* source, bookkeeping_item_t* destination) {
+static void bookkeeping_copy_item(bookkeeping_item_t *source, bookkeeping_item_t *destination) {
     bookkeeping_clear_item(destination, true);
 
     destination->primary_path = path_clone(source->primary_path);    
@@ -116,7 +116,7 @@ static void bookkeeping_copy_item(bookkeeping_item_t* source, bookkeeping_item_t
     destination->bookkeeping_type = source->bookkeeping_type;
 }
 
-static void bookkeeping_move_items_down(bookkeeping_item_t* list, int start, int end) {
+static void bookkeeping_move_items_down(bookkeeping_item_t *list, int start, int end) {
     int current = end;
 
     do {
@@ -130,7 +130,7 @@ static void bookkeeping_move_items_down(bookkeeping_item_t* list, int start, int
 }
 
 
-static void bookkeeping_move_items_up(bookkeeping_item_t* list, int start, int end) {
+static void bookkeeping_move_items_up(bookkeeping_item_t *list, int start, int end) {
     int current = start;
 
     do {
@@ -144,7 +144,7 @@ static void bookkeeping_move_items_up(bookkeeping_item_t* list, int start, int e
 }
 
 
-static void bookkeeping_insert_top(bookkeeping_item_t* list, int count, bookkeeping_item_t* new_item) {
+static void bookkeeping_insert_top(bookkeeping_item_t *list, int count, bookkeeping_item_t *new_item) {
     // if it matches the top of the list already then nothing to do
     if(bookkeeping_item_match(&list[0], new_item)) {
         return;
@@ -170,7 +170,7 @@ static void bookkeeping_insert_top(bookkeeping_item_t* list, int count, bookkeep
     bookkeeping_copy_item(new_item, &list[0]);
 }
 
-void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type ) {
+void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type ) {
     bookkeeping_item_t new_item = {
         .primary_path = primary_path,
         .secondary_path = secondary_path,
@@ -182,7 +182,7 @@ void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, p
 }
 
 
-void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type ) {
+void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type ) {
     bookkeeping_item_t new_item = {
         .primary_path = primary_path,
         .secondary_path = secondary_path,

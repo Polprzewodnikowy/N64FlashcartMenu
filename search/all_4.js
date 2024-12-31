@@ -26,5 +26,6 @@ var searchData=
   ['boxart_5fy_23',['BOXART_Y',['../constants_8h.html#a42e7d267ca14ca1060cab46284922dea',1,'constants.h']]],
   ['boxart_5fy_5fdd_24',['BOXART_Y_DD',['../constants_8h.html#aa6c714745010c0c56c59122639644a18',1,'constants.h']]],
   ['boxart_5fy_5fjp_25',['BOXART_Y_JP',['../constants_8h.html#a409fb72df45fb8225b31d6b9dbb413a6',1,'constants.h']]],
-  ['byteswap_20on_20load_20command_26',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md28',1,'']]]
+  ['browser_20options_26',['Browser options',['../md_docs_201__menu__controls.html#autotoc_md45',1,'']]],
+  ['byteswap_20on_20load_20command_27',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md28',1,'']]]
 ];

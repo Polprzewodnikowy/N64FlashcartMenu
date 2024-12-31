@@ -27,7 +27,7 @@ var searchData=
   ['match_5ft_2efields_2e_5f_5funnamed19_5f_5f_24',['match_t.fields.__unnamed19__',['../structmatch__t_8fields_8____unnamed19____.html',1,'']]],
   ['menu_25',['N64 Flashcart Menu',['../index.html#autotoc_md0',1,'']]],
   ['menu_20controls_26',['Menu Controls',['../md_docs_201__menu__controls.html',1,'']]],
-  ['menu_20customization_27',['Menu customization',['../md_docs_207__menu__customization.html',1,'']]],
+  ['menu_20customization_27',['Menu Customization',['../md_docs_207__menu__customization.html',1,'']]],
   ['menu_20features_28',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]],
   ['menu_20settings_29',['Menu Settings',['../index.html#autotoc_md13',1,'']]],
   ['menu_2eh_30',['menu.h',['../menu_8h.html',1,'']]],

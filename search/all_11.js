@@ -24,8 +24,10 @@ var searchData=
   ['png_5ferr_5fout_5fof_5fmem_21',['PNG_ERR_OUT_OF_MEM',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4ad5fedd800328fc1e25145b1f3a08b4a9',1,'png_decoder.h']]],
   ['png_5ferr_5ft_22',['png_err_t',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4',1,'png_decoder.h']]],
   ['png_5fok_23',['PNG_OK',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4a4dd699113fbe010c8db17e53d985ee36',1,'png_decoder.h']]],
-  ['progress_24',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
-  ['progressbar_5fbg_5fcolor_25',['PROGRESSBAR_BG_COLOR',['../constants_8h.html#a5ab464068eb9e8f6c60aa357ef311571',1,'constants.h']]],
-  ['progressbar_5fdone_5fcolor_26',['PROGRESSBAR_DONE_COLOR',['../constants_8h.html#a3f1a94f2927dd17b0fd77ccb23b33ddc',1,'constants.h']]],
-  ['pwd_27',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
+  ['preparations_20for_20other_20supported_20flashcarts_24',['Preparations for other supported flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'']]],
+  ['preparations_20for_20sc64_25',['Preparations for SC64',['../md_docs_200__getting__started__sd.html#autotoc_md34',1,'']]],
+  ['progress_26',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
+  ['progressbar_5fbg_5fcolor_27',['PROGRESSBAR_BG_COLOR',['../constants_8h.html#a5ab464068eb9e8f6c60aa357ef311571',1,'constants.h']]],
+  ['progressbar_5fdone_5fcolor_28',['PROGRESSBAR_DONE_COLOR',['../constants_8h.html#a3f1a94f2927dd17b0fd77ccb23b33ddc',1,'constants.h']]],
+  ['pwd_29',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
 ];

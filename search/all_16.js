@@ -29,13 +29,12 @@ var searchData=
   ['unique_5fcode_26',['unique_code',['../rom__info_8h.html#aa1e3ff593f139ee836b46892bd5f799f',1,'rom_info_t.__unnamed22__.__unnamed26__']]],
   ['unsupported_20use_20at_20own_20risk_27',['ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md17',1,'']]],
   ['untested_20and_20unsupported_20use_20at_20own_20risk_28',['ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md17',1,'']]],
-  ['up_20your_20environment_29',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md49',1,'']]],
-  ['update_20submodules_30',['Update submodules',['../md_docs_299__developer__guide.html#autotoc_md56',1,'']]],
+  ['up_20your_20environment_29',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md53',1,'']]],
+  ['update_20submodules_30',['Update submodules',['../md_docs_299__developer__guide.html#autotoc_md60',1,'']]],
   ['usb_5fcomm_2eh_31',['usb_comm.h',['../usb__comm_8h.html',1,'']]],
   ['usb_5fcomm_5fcommand_5ft_32',['usb_comm_command_t',['../structusb__comm__command__t.html',1,'']]],
   ['usb_5fcomm_5fpoll_33',['usb_comm_poll',['../usb__comm_8h.html#af0661dedfab86268071a3733e0755c21',1,'usb_comm.c']]],
   ['use_20at_20own_20risk_34',['ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md17',1,'']]],
   ['use_5fsaves_5ffolder_35',['use_saves_folder',['../settings_8h.html#abf8e54596905858b3ada7f163b07d6a6',1,'settings_t']]],
-  ['used_36',['Open source software and licenses used',['../index.html#autotoc_md21',1,'']]],
-  ['using_20a_20custom_20font_37',['Using a custom font',['../md_docs_207__menu__customization.html#autotoc_md47',1,'']]]
+  ['used_36',['Open source software and licenses used',['../index.html#autotoc_md21',1,'']]]
 ];

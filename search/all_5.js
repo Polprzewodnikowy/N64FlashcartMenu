@@ -2,8 +2,8 @@ var searchData=
 [
   ['c_5ftype_0',['c_type',['../unionvr4300__instruction__t.html#aaf29855c20146346d88b2b49494df059',1,'vr4300_instruction_t']]],
   ['cache_5fmetadata_5ft_1',['cache_metadata_t',['../structcache__metadata__t.html',1,'']]],
-  ['card_2',['First time setup of SD card',['../md_docs_200__getting__started__sd.html',1,'']]],
-  ['card_20look_20like_3',['So what would the layout of the SD Card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
+  ['card_2',['Initial Setup of SD Card',['../md_docs_200__getting__started__sd.html',1,'']]],
+  ['card_20look_20like_3',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
   ['cart_5fload_2eh_4',['cart_load.h',['../cart__load_8h.html',1,'']]],
   ['cart_5fload_5femu_5ftype_5ffairchild_5fchannelf_5',['CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfab3115e09e2ebd0bbb62c65c2d2e437b5',1,'cart_load.h']]],
   ['cart_5fload_5femu_5ftype_5fgameboy_6',['CART_LOAD_EMU_TYPE_GAMEBOY',['../cart__load_8h.html#abe82a7d601e4b10ab65184b8aebde2bfab0ff2ec231e699a01af2d0aa130a394d',1,'cart_load.h']]],
@@ -42,12 +42,13 @@ var searchData=
   ['component_5fcontext_5fmenu_5ft_39',['component_context_menu_t',['../ui__components_8h.html#structcomponent__context__menu__t',1,'']]],
   ['component_5fcontext_5fmenu_5ft_2elist_40',['component_context_menu_t.list',['../structcomponent__context__menu__t_8list.html',1,'']]],
   ['constants_2eh_41',['constants.h',['../constants_8h.html',1,'']]],
-  ['container_42',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md59',1,'']]],
+  ['container_42',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md63',1,'']]],
   ['context_5fmenu_5fhighlight_5fcolor_43',['CONTEXT_MENU_HIGHLIGHT_COLOR',['../constants_8h.html#aaf6ba3542bb494f77f96f266bd96226f',1,'constants.h']]],
-  ['controls_44',['Menu Controls',['../md_docs_201__menu__controls.html',1,'']]],
-  ['cr_45',['cr',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
-  ['curr_5fline_46',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]],
-  ['current_20notable_20menu_20features_47',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]],
-  ['custom_20font_48',['Using a custom font',['../md_docs_207__menu__customization.html#autotoc_md47',1,'']]],
-  ['customization_49',['Menu customization',['../md_docs_207__menu__customization.html',1,'']]]
+  ['control_20information_44',['Additional Control Information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'']]],
+  ['controls_45',['Menu Controls',['../md_docs_201__menu__controls.html',1,'']]],
+  ['cr_46',['cr',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
+  ['curr_5fline_47',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]],
+  ['current_20notable_20menu_20features_48',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]],
+  ['customization_49',['Menu Customization',['../md_docs_207__menu__customization.html',1,'']]],
+  ['customizing_20the_20font_50',['Customizing the font',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]]
 ];

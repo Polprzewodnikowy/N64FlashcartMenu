@@ -8,5 +8,6 @@ var searchData=
   ['n64_5fdisk_5',['N64_DISK',['../rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a4892177cc838193ba4b53d904d91af25',1,'rom_info.h']]],
   ['n64_5fdisk_5fexpandable_6',['N64_DISK_EXPANDABLE',['../rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a0b98dff1eb797c2684050e4d430d8722',1,'rom_info.h']]],
   ['n64flashcartmenu_7',['N64FlashcartMenu',['../index.html',1,'']]],
-  ['notable_20menu_20features_8',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]]
+  ['n64flashcartmenu_20settings_8',['N64FlashcartMenu settings',['../md_docs_201__menu__controls.html#autotoc_md44',1,'']]],
+  ['notable_20menu_20features_9',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]]
 ];

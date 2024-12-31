@@ -1,11 +1,11 @@
 var searchData=
 [
   ['lat_0',['LAT',['../boot__io_8h.html#ac4a8afa234be2060691c81928eb1b701',1,'pi_regs_t.DOM']]],
-  ['layout_20of_20the_20sd_20card_20look_20like_1',['So what would the layout of the SD Card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
+  ['layout_20of_20the_20sd_20card_20look_20like_1',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
   ['len_2',['LEN',['../boot__io_8h.html#ac0676d4e820604efc8b5414be5d39f18',1,'ai_regs_t']]],
-  ['libdragon_3',['libdragon',['../md_docs_299__developer__guide.html#autotoc_md57',1,'']]],
+  ['libdragon_3',['libdragon',['../md_docs_299__developer__guide.html#autotoc_md61',1,'']]],
   ['licenses_20used_4',['Open source software and licenses used',['../index.html#autotoc_md21',1,'']]],
-  ['like_5',['So what would the layout of the SD Card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
+  ['like_5',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
   ['list_6',['list',['../ui__components_8h.html#a9632da4ab3d71d8085e1d81bc6d710b9',1,'component_context_menu_t']]],
   ['list_5fentries_7',['LIST_ENTRIES',['../constants_8h.html#ab066fe75e795cd65e59e2d47e89f7695',1,'constants.h']]],
   ['list_5fscrollbar_5fheight_8',['LIST_SCROLLBAR_HEIGHT',['../constants_8h.html#a85bdb7c6baeb55445fc1e649c6b64a02',1,'constants.h']]],
@@ -24,5 +24,5 @@ var searchData=
   ['loader_5fy_21',['LOADER_Y',['../constants_8h.html#a6fe7c15551efdf4f66c74d5decd72f43',1,'constants.h']]],
   ['loading_22',['loading',['../ui__components_8h.html#a6ef3e230917241f16f9ba164c40cf247',1,'component_boxart_t']]],
   ['location_20offset_20in_20sdram_23',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md25',1,'']]],
-  ['look_20like_24',['So what would the layout of the SD Card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]]
+  ['look_20like_24',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]]
 ];

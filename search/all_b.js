@@ -17,8 +17,10 @@ var searchData=
   ['imm_14',['imm',['../structvr4300__instruction__t_8i__type.html#aa9c69f2215acca631d4656a30b52db93',1,'vr4300_instruction_t.i_type']]],
   ['in_20progress_15',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
   ['in_20sdram_16',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md25',1,'']]],
-  ['in_20the_20dev_20container_17',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md59',1,'']]],
-  ['init_18',['init',['../structflashcart__t.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t']]],
-  ['io32_5ft_19',['io32_t',['../boot__io_8h.html#a11897bf990e7e4ef15affa6c838eb642',1,'boot_io.h']]],
-  ['io8_5ft_20',['io8_t',['../boot__io_8h.html#a4db5781f97aeba9fc73d2215905e0a4b',1,'boot_io.h']]]
+  ['in_20the_20dev_20container_17',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md63',1,'']]],
+  ['information_18',['information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'Additional Control Information'],['../md_docs_201__menu__controls.html#autotoc_md46',1,'Additional ROM information']]],
+  ['init_19',['init',['../structflashcart__t.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t']]],
+  ['initial_20setup_20of_20sd_20card_20',['Initial Setup of SD Card',['../md_docs_200__getting__started__sd.html',1,'']]],
+  ['io32_5ft_21',['io32_t',['../boot__io_8h.html#a11897bf990e7e4ef15affa6c838eb642',1,'boot_io.h']]],
+  ['io8_5ft_22',['io8_t',['../boot__io_8h.html#a4db5781f97aeba9fc73d2215905e0a4b',1,'boot_io.h']]]
 ];

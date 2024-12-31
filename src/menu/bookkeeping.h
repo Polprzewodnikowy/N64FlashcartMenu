@@ -20,8 +20,8 @@ typedef enum {
 } bookkeeping_item_types_t;
 
 typedef struct {
-    path_t* primary_path;
-    path_t* secondary_path;
+    path_t *primary_path;
+    path_t *secondary_path;
 
     bookkeeping_item_types_t bookkeeping_type;
 
@@ -44,9 +44,9 @@ void bookkeeping_load (bookkeeping_t *history);
 /** @brief The history to save */
 void bookkeeping_save (bookkeeping_t *history);
 
-void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type );
 
-void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t* primary_path, path_t* secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type );
 void bookkeeping_favorite_remove(bookkeeping_t *bookkeeping, int selection);
 
 #endif

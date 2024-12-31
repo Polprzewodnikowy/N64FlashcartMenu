@@ -56,6 +56,7 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
+	menu/ui_components/sprites.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
@@ -85,6 +86,25 @@ SOUNDS = \
 	error.wav \
 	settings.wav
 
+IMAGES = \
+	boxart/defboxart.png \
+	buttons/joypad_a.png \
+	buttons/joypad_b.png \
+	buttons/joypad_c_down.png \
+	buttons/joypad_c_left.png \
+	buttons/joypad_c_right.png \
+	buttons/joypad_c_up.png \
+	buttons/joypad_d_down.png \
+	buttons/joypad_d_left.png \
+	buttons/joypad_d_right.png \
+	buttons/joypad_d_up.png \
+	buttons/joypad_l.png \
+	buttons/joypad_r.png \
+	buttons/joypad_start.png \
+	buttons/joypad_z.png \
+	background/defbg.png
+
+
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
@@ -110,7 +130,7 @@ $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/*/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 

@@ -31,7 +31,7 @@ N64FlashcartMenu currently supports the following emulators and associated ROM f
 
 
 ### 64DD Disk Support
-In order to be able to load and run 64DD disk images, you need to place the required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
+To load and run 64DD disk images, place the required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
 For more details, follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
 
 
@@ -87,7 +87,7 @@ the "cartridge save memory".
 
 ### Transfering Saves From An ED64
 If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
-For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` in order to work with N64FlashcartMenu.
+For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 
 You may also need to pad/trim the files to their original size:
 - For EEPROM 4Kbit games, remove the padding.

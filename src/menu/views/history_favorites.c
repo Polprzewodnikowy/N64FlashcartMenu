@@ -23,7 +23,7 @@ static void reset_selected(menu_t *menu) {
     selected_item = -1;
 
     for(int i=0;i<item_max;i++) {
-        if(item_list[selected_item].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
+        if(item_list[i].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
             selected_item = i;
             break;
         }

@@ -20,16 +20,16 @@
 #include "views/views.h"
 
 
-#define MENU_DIRECTORY          "/menu"
-#define MENU_SETTINGS_FILE      "config.ini"
-#define MENU_CUSTOM_FONT_FILE   "custom.font64"
-#define MENU_HISTORY_FILE       "history.ini"
+#define MENU_DIRECTORY              "/menu"
+#define MENU_SETTINGS_FILE          "config.ini"
+#define MENU_CUSTOM_FONT_FILE       "custom.font64"
+#define MENU_ROM_LOAD_HISTORY_FILE  "history.ini"
 
-#define MENU_CACHE_DIRECTORY    "cache"
-#define BACKGROUND_CACHE_FILE   "background.data"
+#define MENU_CACHE_DIRECTORY        "cache"
+#define BACKGROUND_CACHE_FILE       "background.data"
 
-#define INTERLACED              (true)
-#define FPS_LIMIT               (30.0f)
+#define INTERLACED                  (true)
+#define FPS_LIMIT                   (30.0f)
 
 
 static menu_t *menu;
@@ -71,7 +71,7 @@ static void menu_init (boot_params_t *boot_params) {
     settings_load(&menu->settings);
     path_pop(path);
 
-    path_push(path, MENU_HISTORY_FILE);
+    path_push(path, MENU_ROM_LOAD_HISTORY_FILE);
     bookkeeping_init(path_get(path));
     bookkeeping_load(&menu->bookkeeping);
     menu->load.load_history = -1;

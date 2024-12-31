@@ -253,12 +253,20 @@ void ui_components_boxart_free(component_boxart_t *b);
 void ui_components_boxart_draw(component_boxart_t *b);
 
 /**
+ * @brief Draw the tabs component.
  * 
+ * @param text Array of tab labels.
+ * @param count Number of tabs.
+ * @param selected Index of the selected tab.
+ * @param width Width of the tabs.
  */
-void ui_components_tabs_draw(const char** text, int count, int selected, float width );
+void ui_components_tabs_draw(const char **text, int count, int selected, float width );
 
 /**
+ * @brief Draw the common part of the tabs component.
  * 
+ * @param selected Index of the selected tab.
  */
-void ui_compontents_tabs_common_draw(int selected);
+void ui_components_tabs_common_draw(int selected);
+
 #endif /* UI_COMPONENTS_H__ */

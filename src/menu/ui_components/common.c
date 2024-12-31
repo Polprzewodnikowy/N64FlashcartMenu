@@ -201,8 +201,8 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
     }
 }
 
-void ui_components_tabs_draw(const char** text, int count, int selected, float width ) {
-    float starting_x = VISIBLE_AREA_X0 + 4;
+void ui_components_tabs_draw(const char **text, int count, int selected, float width ) {
+    float starting_x = VISIBLE_AREA_X0;
 
     float x = starting_x;
     float y = OVERSCAN_HEIGHT;    

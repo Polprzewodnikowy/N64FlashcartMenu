@@ -3,14 +3,21 @@
 
 
 // Common tabs used for the main menu
-static const char* tabs[3] = {
+static const char* tabs[] = {
     "Files",
     "History",
-    "Favorites"
+    "Favorites",
+    NULL
 };
 
-void ui_compontents_tabs_common_draw(int selected) {
-    // setup to fit between the box around the main menu
-    float width = (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - 8.0f) / 3.0f;
-    ui_components_tabs_draw(tabs, 3, selected, width);
+/**
+ * Draws the common tabs used for the main menu.
+ * 
+ * @param selected The index of the currently selected tab.
+ */
+void ui_components_tabs_common_draw(int selected)
+{
+    uint8_t tabs_count = 3;
+    float width = (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - 8.0f) / (tabs_count + 1 * 0.5f);
+    ui_components_tabs_draw(tabs, tabs_count, selected, width);
 }

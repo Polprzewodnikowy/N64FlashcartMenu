@@ -13,13 +13,13 @@ typedef enum {
 
 static bookkeeping_screen_modes_t screen_mode = -1;
 static int selected_item = -1;
-static bookkeeping_item_t* item_list;
+static bookkeeping_item_t *item_list;
 static int item_max;
 
 #define IS_FAVORITE (screen_mode == BOOKKEEPING_SCREEN_MODE_FAVORITE)
 #define IS_HISTORY (screen_mode == BOOKKEEPING_SCREEN_MODE_HISTORY)
 
-static void reset_selected(menu_t* menu) {
+static void reset_selected(menu_t *menu) {
     selected_item = -1;
 
     for(int i=0;i<item_max;i++) {
@@ -67,7 +67,7 @@ static void move_back() {
 
 
 
-static void process(menu_t* menu) {
+static void process(menu_t *menu) {
     if(menu->actions.go_down) {
         move_next();   
     } else if(menu->actions.go_up) {
@@ -163,9 +163,9 @@ static void draw(menu_t *menu, surface_t *display) {
     ui_components_layout_draw();
 
     if(IS_FAVORITE) {
-        ui_compontents_tabs_common_draw(2);
+        ui_components_tabs_common_draw(2);
     } else if(IS_HISTORY) {
-        ui_compontents_tabs_common_draw(1);
+        ui_components_tabs_common_draw(1);
     } 
 
     draw_list(menu, display);
@@ -173,21 +173,23 @@ static void draw(menu_t *menu, surface_t *display) {
     if(selected_item != -1) {
         ui_components_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load Game"
+            "A: Load Game\n"
+            "\n"
         );
         
         if(IS_FAVORITE && selected_item != -1) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Remove Favorite"
+                "R: Remove item\n"
+                "\n"
             );
         }
     }
 
     ui_components_actions_bar_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
+        "<C Change Tab C>\n"
         "\n"
-        "<C Change Tab C>"
     );    
 
     rdpq_detach_show();   

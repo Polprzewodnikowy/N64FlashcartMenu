@@ -374,7 +374,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
-    ui_compontents_tabs_common_draw(0);
+    ui_components_tabs_common_draw(0);
 
     const char *action = NULL;
 
@@ -400,7 +400,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
+        "^%02XStart: Settings^00\n"
         "^%02XR: Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
@@ -408,15 +408,15 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "%s" //ctime includes a newline
-            "<C Change Tab C>",
+            "<C Change Tab C>\n"
+            "%s",
             ctime(&menu->current_time)
         );
     } else {
         ui_components_actions_bar_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
+        "<C Change Tab C>\n"
         "\n"
-        "<C Change Tab C>"
         );
     }
 

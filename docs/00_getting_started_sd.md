@@ -2,7 +2,7 @@
 
 ### First Steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
-**WARNING:** Filenames are expected to be written in ASCII. Unicode characters, such as accented characters or characters from languages such as Russian, Chinese, Japanese, Korean, etc., are not fully supported and may cause a crash screen.
+**WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and will not be displayed.
 
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.

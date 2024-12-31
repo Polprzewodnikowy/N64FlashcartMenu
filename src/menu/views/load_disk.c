@@ -6,7 +6,7 @@
 #include "../bookkeeping.h"
 
 static component_boxart_t *boxart;
-static char* name;
+static char *name;
 
 static char *convert_error_message (disk_err_t err) {
     switch (err) {
@@ -35,7 +35,6 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Add to favorite", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
-
 
 
 static void process (menu_t *menu) {
@@ -127,7 +126,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
     rdpq_detach_show();
 }
-
 
 
 static void draw_progress (float progress) {

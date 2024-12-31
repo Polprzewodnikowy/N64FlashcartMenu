@@ -2,8 +2,8 @@
 #include "constants.h"
 
 
-// Common tabs used for the main menu
-static const char* tabs[] = {
+/* Common tabs used for the main menu */
+static const char *tabs[] = {
     "Files",
     "History",
     "Favorites",

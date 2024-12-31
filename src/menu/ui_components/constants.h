@@ -42,8 +42,7 @@
 /** @brief The height of the visible display. */
 #define VISIBLE_AREA_HEIGHT             (VISIBLE_AREA_Y1 - VISIBLE_AREA_Y0)
 
-
-// 400
+/** @brief The layout actions seperator y. */
 #define LAYOUT_ACTIONS_SEPARATOR_Y      (400)
 
 /** @brief The seek bar height. */
@@ -151,11 +150,13 @@
 /** @brief The menu highlight colour. */
 #define CONTEXT_MENU_HIGHLIGHT_COLOR    RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
-
+/** @brief The tab inactive border colour. */
 #define TAB_INACTIVE_BORDER_COLOR       RGBA32(0x5F, 0x5F, 0x5F, 0xFF)
+/** @brief The tab active border colour. */
 #define TAB_ACTIVE_BORDER_COLOR         RGBA32(0xFF, 0xFF, 0xFF, 0xFF)
-
+/** @brief The tab inactive background colour. */
 #define TAB_INACTIVE_BACKGROUND_COLOR   RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
+/** @brief The tab active background colour. */
 #define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
 #endif

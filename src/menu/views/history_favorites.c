@@ -31,7 +31,6 @@ static void reset_selected(menu_t *menu) {
 }
 
 
-
 static void move_next() {
     int last = selected_item;
 
@@ -64,7 +63,6 @@ static void move_back() {
         }
     } while (true);
 }
-
 
 
 static void process(menu_t *menu) {
@@ -196,8 +194,6 @@ static void draw(menu_t *menu, surface_t *display) {
 }
 
 
-
-
 void view_favorite_init (menu_t *menu) {
     screen_mode = BOOKKEEPING_SCREEN_MODE_FAVORITE;
     item_list = menu->bookkeeping.favorite_items;
@@ -210,7 +206,6 @@ void view_favorite_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display); 
 }
-
 
 
 void view_history_init (menu_t *menu) {

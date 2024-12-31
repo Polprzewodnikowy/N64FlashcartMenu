@@ -100,7 +100,7 @@ static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_
 }
 
 static const char *format_rom_description(char *description) {
-    return description[0] == '\0' ? "None." : description;
+    return description[0] == '\0' ? "None.\n\n\n\n\n\n" : description;
 }
 
 static const char *format_cic_type (rom_cic_type_t cic_type) {
@@ -247,7 +247,7 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_CENTER, VALIGN_TOP,
             "N64 ROM information\n"
             "\n"
-            "%s",
+            "%s\n",
             menu->browser.entry->name
         );
 
@@ -258,7 +258,6 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "Description:\n %s\n"
-            "\n\n\n\n\n\n\n"
             "Expansion PAK: %s\n"
             "TV type:       %s\n"
             "CIC:           %s\n"
@@ -277,13 +276,13 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
-            "B: Back"
+            "B: Back\n"
         );
 
         ui_components_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
-            "R:    Options"
+            "R:    Options\n"
         );
 
         if (boxart != NULL) {

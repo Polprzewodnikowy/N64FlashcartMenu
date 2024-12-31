@@ -371,7 +371,7 @@ void view_load_rom_init (menu_t *menu) {
         if(menu->load.load_history != -1) {
             menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
         } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_history].primary_path);
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }

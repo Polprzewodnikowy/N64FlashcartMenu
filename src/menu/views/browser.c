@@ -386,23 +386,31 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "%s\n"
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
+        "%s",
+        menu->browser.entries == 0 ? "" : action
+    );
+    ui_components_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
+        "\n"
         "^%02XB: Back^00",
-        menu->browser.entries == 0 ? "" : action,
         path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
     ui_components_actions_bar_text_draw(
-        ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
+        ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_START,
+        "Start: Settings"
+    );
+    ui_components_actions_bar_text_draw(
+        ALIGN_RIGHT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_R,
+        "\n"
         "^%02XR: Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
-            ALIGN_CENTER, VALIGN_TOP,
+            ALIGN_CENTER, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_NONE,
             "\n"
             "%s",
             ctime(&menu->current_time)

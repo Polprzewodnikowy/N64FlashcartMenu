@@ -165,8 +165,13 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
     ui_components_actions_bar_text_draw(
-        ALIGN_LEFT, VALIGN_TOP,
-        "A: Change\n"
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_ONE, SPRITE_JOYPAD_BUTTON_A,
+        "A: Change"
+    );
+
+    ui_components_actions_bar_text_draw(
+        ALIGN_LEFT, VALIGN_TOP, ACTION_BAR_LINE_TWO, SPRITE_JOYPAD_BUTTON_B,
+        "\n"
         "B: Back"
     );
 

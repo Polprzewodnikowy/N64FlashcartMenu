@@ -87,6 +87,7 @@ SOUNDS = \
 	settings.wav
 
 IMAGES = \
+	background/defbg.png \
 	boxart/defboxart.png \
 	buttons/joypad_a.png \
 	buttons/joypad_b.png \
@@ -101,8 +102,7 @@ IMAGES = \
 	buttons/joypad_l.png \
 	buttons/joypad_r.png \
 	buttons/joypad_start.png \
-	buttons/joypad_z.png \
-	background/defbg.png
+	buttons/joypad_z.png 
 
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))

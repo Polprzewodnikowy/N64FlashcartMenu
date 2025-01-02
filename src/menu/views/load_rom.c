@@ -9,7 +9,7 @@
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
-static char* name = NULL;
+static char *rom_filename = NULL;
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -251,7 +251,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s\n",
-            name
+            rom_filename
         );
 
         ui_components_main_text_draw(
@@ -385,7 +385,7 @@ void view_load_rom_init (menu_t *menu) {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
 
-        name = path_last_get(menu->load.rom_path);
+        rom_filename = path_last_get(menu->load.rom_path);
     }    
 
     menu->load.load_favorite = -1;

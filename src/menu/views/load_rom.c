@@ -249,21 +249,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "\n"
-            "\n"
-            "\n"
-            "\n"
-            "Description:\n %s\n\n",
+            "\n\n\n\n"
+            "Description:\n %s\n",
             menu->load.rom_info.metadata.description
         );
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "\n"
-            "\n"
-            "\n"
-            "\n"
-            "\n\n\n\n\n\n\n\n\n"
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Expansion PAK: %s\n"
             "TV type:       %s\n"
             "CIC:           %s\n"

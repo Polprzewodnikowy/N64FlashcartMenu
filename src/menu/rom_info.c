@@ -805,14 +805,14 @@ static void load_rom_info_from_file (path_t *path, rom_info_t *rom_info) {
 
     mini_t *rom_info_ini = mini_load(path_get(rom_info_path));
 
-    const char *rom_description = "None.\n\n\n\n\n\n\0";
+    const char *rom_description = "None.\n\0";
 
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
     rom_info->boot_override.tv = false;
 
     if (rom_info_ini) {
-        rom_description = mini_get_string(rom_info_ini, "metadata", "description", "None.\n\n\n\n\n\n\0");
+        rom_description = mini_get_string(rom_info_ini, "metadata", "description", "None.\n\0");
 
         rom_info->boot_override.cic_type = mini_get_int(rom_info_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
         if (rom_info->boot_override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {

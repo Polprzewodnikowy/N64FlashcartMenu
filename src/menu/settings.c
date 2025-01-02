@@ -15,8 +15,11 @@ static settings_t init = {
     .use_saves_folder = true,
     .soundfx_enabled = false,
     .rom_autoload_enabled = false,
+    .disk_autoload_enabled = false,
     .rom_autoload_path = "",
+    .disk_autoload_path = "",
     .rom_autoload_filename = "",
+    .disk_autoload_filename = "",
     
     /* Beta feature flags (should always init to off) */
     .bgm_enabled = false,
@@ -45,8 +48,11 @@ void settings_load (settings_t *settings) {
     settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
 
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
+    settings->disk_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
     settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
+    settings->disk_autoload_path = strdup(mini_get_string(ini, "autoload", "disk_path", init.disk_autoload_path));
     settings->rom_autoload_filename = strdup(mini_get_string(ini, "autoload", "rom_filename", init.rom_autoload_filename));
+    settings->disk_autoload_filename = strdup(mini_get_string(ini, "autoload", "disk_filename", init.disk_autoload_filename));
 
     /* Beta feature flags, they might not be in the file */
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
@@ -64,8 +70,11 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
+    mini_set_bool(ini, "menu", "autoload_disk_enabled", settings->disk_autoload_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);
+    mini_set_string(ini, "autoload", "disk_path", settings->disk_autoload_path);
     mini_set_string(ini, "autoload", "rom_filename", settings->rom_autoload_filename);
+    mini_set_string(ini, "autoload", "disk_filename", settings->disk_autoload_filename);
 
     /* Beta feature flags, they should not save until production ready! */
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", settings->bgm_enabled);

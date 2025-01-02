@@ -803,37 +803,40 @@ static void load_rom_info_from_file (path_t *path, rom_info_t *rom_info) {
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *ini = mini_load(path_get(rom_info_path));
+    mini_t *rom_info_ini = mini_load(path_get(rom_info_path));
+
+    const char *rom_description = "None.\n\n\n\n\n\n\0";
 
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
     rom_info->boot_override.tv = false;
 
-    if (ini) {
+    if (rom_info_ini) {
+        rom_description = mini_get_string(rom_info_ini, "metadata", "description", "None.\n\n\n\n\n\n\0");
 
-        const char *rom_description = mini_get_string(ini, "metadata", "description", "");
-        memcpy(rom_info->metadata.description , rom_description, sizeof(rom_info->metadata.description));
-
-        rom_info->boot_override.cic_type = mini_get_int(ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
+        rom_info->boot_override.cic_type = mini_get_int(rom_info_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
         if (rom_info->boot_override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {
             rom_info->boot_override.cic = true;
         }
 
-        rom_info->boot_override.save_type = mini_get_int(ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
+        rom_info->boot_override.save_type = mini_get_int(rom_info_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
         if (rom_info->boot_override.save_type != SAVE_TYPE_AUTOMATIC) {
             rom_info->boot_override.save = true;
         }
 
-        rom_info->boot_override.tv_type = mini_get_int(ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
+        rom_info->boot_override.tv_type = mini_get_int(rom_info_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
         if (rom_info->boot_override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
             rom_info->boot_override.tv = true;
         }
 
-        rom_info->settings.cheats_enabled = mini_get_bool(ini, NULL, "cheats_enabled", false);
-        rom_info->settings.patches_enabled = mini_get_bool(ini, NULL, "patches_enabled", false);
+        rom_info->settings.cheats_enabled = mini_get_bool(rom_info_ini, NULL, "cheats_enabled", false);
+        rom_info->settings.patches_enabled = mini_get_bool(rom_info_ini, NULL, "patches_enabled", false);
 
-        mini_free(ini);
+        mini_free(rom_info_ini);
     }
+
+    strncpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description) - 1);
+    rom_info->metadata.description[sizeof(rom_info->metadata.description) - 1] = '\0';
 
     path_free(rom_info_path);
 }
@@ -843,9 +846,9 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *ini = mini_try_load(path_get(rom_info_path));
+    mini_t *rom_info_ini = mini_try_load(path_get(rom_info_path));
 
-    if (!ini) {
+    if (!rom_info_ini) {
         path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
@@ -853,28 +856,28 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
     int mini_err;
 
     if (value == default_value) {
-        mini_err = mini_delete_value(ini, "custom_boot", id);
+        mini_err = mini_delete_value(rom_info_ini, "custom_boot", id);
     } else {
-        mini_err = mini_set_int(ini, "custom_boot", id, value);
+        mini_err = mini_set_int(rom_info_ini, "custom_boot", id, value);
     }
 
     if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
         path_free(rom_info_path);
-        mini_free(ini);
+        mini_free(rom_info_ini);
         return ROM_ERR_SAVE_IO;
     }
 
-    bool empty = mini_empty(ini);
+    bool empty = mini_empty(rom_info_ini);
 
     if (!empty) {
-        if (mini_save(ini, MINI_FLAGS_NONE) != MINI_OK) {
+        if (mini_save(rom_info_ini, MINI_FLAGS_NONE) != MINI_OK) {
             path_free(rom_info_path);
-            mini_free(ini);
+            mini_free(rom_info_ini);
             return ROM_ERR_SAVE_IO;
         }
     }
 
-    mini_free(ini);
+    mini_free(rom_info_ini);
 
     if (empty) {
         if (remove(path_get(rom_info_path)) && (errno != ENOENT)) {

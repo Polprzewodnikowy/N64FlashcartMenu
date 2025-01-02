@@ -231,7 +231,7 @@ typedef struct {
 
     /** @brief The ROM metadata. */
     struct {
-        char description[256];
+        char description[300];
     } metadata;
 } rom_info_t;
 

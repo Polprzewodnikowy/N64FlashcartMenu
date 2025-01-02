@@ -835,7 +835,8 @@ static void load_rom_info_from_file (path_t *path, rom_info_t *rom_info) {
         mini_free(rom_info_ini);
     }
 
-    strncpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description));
+    strncpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description)-1);
+    rom_info->metadata.description[sizeof(rom_info->metadata.description) - 1] = '\0';
 
     path_free(rom_info_path);
 }

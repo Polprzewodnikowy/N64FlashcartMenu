@@ -51,6 +51,14 @@ An open source menu for N64 flashcarts.
 ## Experimental features
 These features are subject to change:
 
+### ROM Info descriptions
+To add a ROM description (shown when loading a ROM), add a file with the content
+```
+[metadata]
+Description=This is the ROM description that does X Y Z.
+```
+The file line endings must use the linux `LF` endings only (CRLF is not supported).
+
 ### N64 ROM autoload
 To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
 The autoload setting is stored in `config.ini` and persists until changed. This feature may slightly increase boot time as the menu needs to check for the Start button state.

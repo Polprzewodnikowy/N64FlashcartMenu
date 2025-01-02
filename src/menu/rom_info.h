@@ -199,7 +199,7 @@ typedef struct {
     /** @brief The TV type required by the ROM. */
     rom_tv_type_t tv_type;
 
-    /** @brief Overrides of auto-detected CIC/save/TV types. */
+    /** @brief Overrides the auto-detected CIC/save/TV types during rom boot. */
     struct {
         bool cic;
         rom_cic_type_t cic_type;
@@ -209,7 +209,7 @@ typedef struct {
 
         bool tv;
         rom_tv_type_t tv_type;
-    } override;
+    } boot_override;
 
     /** @brief The supported ROM accessories. */
     struct {
@@ -222,11 +222,23 @@ typedef struct {
         bool combo_rom_disk_game;
         rom_expansion_pak_t expansion_pak;
     } features;
+
+    /** @brief The ROM settings. */
+    struct {
+        bool cheats_enabled;
+        bool patches_enabled;
+    } settings;
+
+    /** @brief The ROM metadata. */
+    struct {
+        char description[300];
+    } metadata;
 } rom_info_t;
 
+bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed);
+rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info);
 
 rom_cic_type_t rom_info_get_cic_type (rom_info_t *rom_info);
-bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed);
 rom_err_t rom_info_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type);
 
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info);
@@ -234,8 +246,5 @@ rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_s
 
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info);
 rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
-
-rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info);
-
 
 #endif

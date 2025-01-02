@@ -55,7 +55,7 @@ These features are subject to change:
 To add a ROM description (shown when loading a ROM), add a file with the content
 ```
 [metadata]
-Description=This is the ROM description that does X Y Z.
+description=This is the ROM description that does X Y Z.
 ```
 The file line endings must use the linux `LF` endings only (CRLF is not supported).
 

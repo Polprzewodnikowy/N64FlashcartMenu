@@ -87,11 +87,11 @@ static void menu_init (boot_params_t *boot_params) {
     directory_create(path_get(path));
 
     path_push(path, BACKGROUND_CACHE_FILE);
-    component_background_init(path_get(path));
+    ui_components_background_init(path_get(path));
 
     path_free(path);
 
-    sound_use_sfx(menu->settings.sound_enabled);
+    sound_use_sfx(menu->settings.soundfx_enabled);
 
     menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
     if (!directory_exists(path_get(menu->browser.directory))) {
@@ -103,7 +103,7 @@ static void menu_init (boot_params_t *boot_params) {
 static void menu_deinit (menu_t *menu) {
     hdmi_send_game_id(menu->boot_params);
 
-    component_background_free();
+    ui_components_background_free();
 
     path_free(menu->load.disk_path);
     path_free(menu->load.rom_path);

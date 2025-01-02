@@ -4,8 +4,6 @@
 #include "../sound.h"
 #include "views.h"
 
-
-static bool load_disk_with_rom;
 static component_boxart_t *boxart;
 
 
@@ -31,10 +29,10 @@ static char *format_disk_region (disk_region_t region) {
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
-        load_disk_with_rom = false;
-    } else if (menu->actions.options && menu->load.rom_path) {
+        menu->load.combined_disk_rom = false;
+    } else if (menu->actions.lz_context && menu->load.rom_path) {
         menu->boot_pending.disk_file = true;
-        load_disk_with_rom = true;
+        menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -45,14 +43,14 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
     if (menu->boot_pending.disk_file) {
-        component_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f);
     } else {
-        component_layout_draw();
+        ui_components_layout_draw();
 
-        component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "64DD disk information\n"
             "\n"
@@ -60,7 +58,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->browser.entry->name
         );
 
-        component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -80,21 +78,22 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
         );
 
-        component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run 64DD disk\n"
-            "B: Exit"
+            "B: Exit\n"
         );
 
         if (menu->load.rom_path) {
-            component_actions_bar_text_draw(
+            ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load with ROM"
+                "L|Z: Load with ROM\n"
+                "\n"
             );
         }
 
         if (boxart != NULL) {
-            component_boxart_draw(boxart);
+            ui_components_boxart_draw(boxart);
         }
     }
 
@@ -107,9 +106,9 @@ static void draw_progress (float progress) {
     if (d) {
         rdpq_attach(d, NULL);
 
-        component_background_draw();
+        ui_components_background_draw();
 
-        component_loader_draw(progress);
+        ui_components_loader_draw(progress);
 
         rdpq_detach_show();
     }
@@ -118,7 +117,7 @@ static void draw_progress (float progress) {
 static void load (menu_t *menu) {
     cart_load_err_t err;
 
-    if (menu->load.rom_path && load_disk_with_rom) {
+    if (menu->load.rom_path && menu->load.combined_disk_rom) {
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
@@ -134,7 +133,7 @@ static void load (menu_t *menu) {
 
     menu->next_mode = MENU_MODE_BOOT;
 
-    if (load_disk_with_rom) {
+    if (menu->load.combined_disk_rom) {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
         menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
         switch (rom_info_get_tv_type(&menu->load.rom_info)) {
@@ -153,7 +152,7 @@ static void load (menu_t *menu) {
 }
 
 static void deinit (void) {
-    component_boxart_free(boxart);
+    ui_components_boxart_free(boxart);
 }
 
 void view_load_disk_init (menu_t *menu) {
@@ -169,9 +168,10 @@ void view_load_disk_init (menu_t *menu) {
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
+        return;
     }
 
-    boxart = component_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

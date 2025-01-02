@@ -11,7 +11,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
-static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
+static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
 static const char *image_extensions[] = { "png", NULL };
@@ -279,21 +279,21 @@ static void set_menu_next_mode (menu_t *menu, void *arg) {
 
 static component_context_menu_t settings_context_menu = {
     .list = {
-        { .text = "Edit settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
-        { .text = "Show system info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
-        { .text = "Show credits", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
-        { .text = "Adjust RTC", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
-        { .text = "Show cart info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
+        { .text = "Menu settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
+        { .text = "Time (RTC) settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
+        { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
+        { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
+        { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
 
 static void process (menu_t *menu) {
-    if (component_context_menu_process(menu, &entry_context_menu)) {
+    if (ui_components_context_menu_process(menu, &entry_context_menu)) {
         return;
     }
 
-    if (component_context_menu_process(menu, &settings_context_menu)) {
+    if (ui_components_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -354,10 +354,10 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
-        component_context_menu_show(&entry_context_menu);
+        ui_components_context_menu_show(&entry_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
-        component_context_menu_show(&settings_context_menu);
+        ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
     }
 }
@@ -366,11 +366,11 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
     const char *action = NULL;
 
@@ -386,7 +386,7 @@ static void draw (menu_t *menu, surface_t *d) {
         }
     }
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -394,7 +394,7 @@ static void draw (menu_t *menu, surface_t *d) {
         path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "Start: Settings\n"
         "^%02XR: Options^00",
@@ -402,7 +402,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     if (menu->current_time >= 0) {
-        component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
             "\n"
             "%s",
@@ -410,9 +410,9 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
-    component_context_menu_draw(&entry_context_menu);
+    ui_components_context_menu_draw(&entry_context_menu);
 
-    component_context_menu_draw(&settings_context_menu);
+    ui_components_context_menu_draw(&settings_context_menu);
 
     rdpq_detach_show();
 }
@@ -420,8 +420,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
-        component_context_menu_init(&entry_context_menu);
-        component_context_menu_init(&settings_context_menu);
+        ui_components_context_menu_init(&entry_context_menu);
+        ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");

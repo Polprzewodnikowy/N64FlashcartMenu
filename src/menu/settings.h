@@ -26,7 +26,7 @@ typedef struct {
     bool bgm_enabled;
 
     /** @brief Enable Sounds */
-    bool sound_enabled;
+    bool soundfx_enabled;
 
     /** @brief Enable rumble feedback */
     bool rumble_enabled;

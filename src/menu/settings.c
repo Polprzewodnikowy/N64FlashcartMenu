@@ -13,7 +13,7 @@ static settings_t init = {
     .show_protected_entries = false,
     .default_directory = "/",
     .use_saves_folder = true,
-    .sound_enabled = true,
+    .soundfx_enabled = false,
     .rom_autoload_enabled = false,
     .disk_autoload_enabled = false,
     .rom_autoload_path = "",
@@ -45,7 +45,7 @@ void settings_load (settings_t *settings) {
     settings->show_protected_entries = mini_get_bool(ini, "menu", "show_protected_entries", init.show_protected_entries);
     settings->default_directory = strdup(mini_get_string(ini, "menu", "default_directory", init.default_directory));
     settings->use_saves_folder = mini_get_bool(ini, "menu", "use_saves_folder", init.use_saves_folder);
-    settings->sound_enabled = mini_get_bool(ini, "menu", "sound_enabled", init.sound_enabled);
+    settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
 
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
     settings->disk_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
@@ -68,7 +68,7 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "show_protected_entries", settings->show_protected_entries);
     mini_set_string(ini, "menu", "default_directory", settings->default_directory);
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
-    mini_set_bool(ini, "menu", "sound_enabled", settings->sound_enabled);
+    mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
     mini_set_bool(ini, "menu", "autoload_disk_enabled", settings->disk_autoload_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);

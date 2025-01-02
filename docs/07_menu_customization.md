@@ -1,5 +1,4 @@
-# Menu customization
+## Menu Customization
 
-## Using a custom font
-Add a `font64` file to the root directory called "custom.font64"
-This can be build using `libdragon` tools.
+### Customizing the font
+Add a `font64` file to the root directory called "custom.font64". You can build a font64 file with the `libdragon` tools.

@@ -14,7 +14,7 @@ void ui_components_box_draw (int x0, int y0, int x1, int y1, color_t color) {
 }
 
 
-static void ui_components_border_draw_interal (int x0, int y0, int x1, int y1, color_t color) {
+static void ui_components_border_draw_internal (int x0, int y0, int x1, int y1, color_t color) {
     rdpq_mode_push();
         rdpq_set_mode_fill(color);
 
@@ -27,7 +27,7 @@ static void ui_components_border_draw_interal (int x0, int y0, int x1, int y1, c
 }
 
 void ui_components_border_draw (int x0, int y0, int x1, int y1) {
-    ui_components_border_draw_interal(x0, y0, x1, y1, BORDER_COLOR);
+    ui_components_border_draw_internal(x0, y0, x1, y1, BORDER_COLOR);
 }
 
 void ui_components_layout_draw (void) {
@@ -220,7 +220,7 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
                 TAB_INACTIVE_BACKGROUND_COLOR
             );
 
-            ui_components_border_draw_interal(
+            ui_components_border_draw_internal(
                 x,
                 y,
                 x + width,
@@ -243,7 +243,7 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
             TAB_ACTIVE_BACKGROUND_COLOR
         );
 
-        ui_components_border_draw_interal(
+        ui_components_border_draw_internal(
             x,
             y,
             x + width,

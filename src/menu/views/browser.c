@@ -420,8 +420,6 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
-    
-
     ui_components_context_menu_draw(&entry_context_menu);
 
     ui_components_context_menu_draw(&settings_context_menu);

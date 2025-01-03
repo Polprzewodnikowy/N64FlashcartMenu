@@ -6,7 +6,7 @@
 #include "../bookkeeping.h"
 
 static component_boxart_t *boxart;
-static char *name;
+static char *disk_filename;
 
 static char *convert_error_message (disk_err_t err) {
     switch (err) {
@@ -32,7 +32,7 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Add to favorite", .action = add_favorite },
+    { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -73,7 +73,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "64DD disk information\n"
             "\n"
             "%s",
-            name
+            disk_filename
         );
 
         ui_components_main_text_draw(
@@ -239,7 +239,7 @@ void view_load_disk_init (menu_t *menu) {
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;
 
-    name = path_last_get(menu->load.disk_path);
+    disk_filename = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         //snprintf(error, 256, "path : '%s' error: '%s'", path_get(menu->load.disk_path), convert_error_message(err));

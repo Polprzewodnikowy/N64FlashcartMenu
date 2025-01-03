@@ -209,7 +209,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
     { .text = "Set ROM to autoload", .action = set_autoload_type },
-    { .text = "Add to favorite", .action = add_favorite },
+    { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

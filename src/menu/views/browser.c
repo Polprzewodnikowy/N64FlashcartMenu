@@ -370,11 +370,11 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
+    ui_components_tabs_common_draw(0);
+
     ui_components_layout_draw();
 
     ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
-
-    ui_components_tabs_common_draw(0);
 
     const char *action = NULL;
 

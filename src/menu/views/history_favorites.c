@@ -158,13 +158,13 @@ static void draw(menu_t *menu, surface_t *display) {
 
     ui_components_background_draw();
 
-    ui_components_layout_draw();
-
     if(IS_FAVORITE) {
         ui_components_tabs_common_draw(2);
     } else if(IS_HISTORY) {
         ui_components_tabs_common_draw(1);
-    } 
+    }
+
+    ui_components_layout_draw();
 
     draw_list(menu, display);
 

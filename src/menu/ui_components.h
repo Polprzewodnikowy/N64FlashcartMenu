@@ -29,6 +29,17 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+/** 
+ * @brief Sprites Enumeration.
+ * 
+ * Enumeration for different types of sprites used in the user interface.
+ */
+typedef enum {
+    SPRITE_BOXART_DEFAULT,        /**< Default background sprite */
+    SPRITE_BACKGROUND_DEFAULT,    /**< Default boxart sprite */
+    SPRITE_LIST_END               /**< List end marker */
+} sprite_type_t;
+
 /**
  * @brief Draw a box component.
  * 
@@ -251,5 +262,9 @@ void ui_components_boxart_free(component_boxart_t *b);
  * @param b Pointer to the box art component.
  */
 void ui_components_boxart_draw(component_boxart_t *b);
+
+void ui_components_sprites_init(void);
+
+void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 #endif /* UI_COMPONENTS_H__ */

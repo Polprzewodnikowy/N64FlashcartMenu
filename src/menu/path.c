@@ -19,7 +19,7 @@ static void path_resize (path_t *path, size_t min_length) {
     assert(path->buffer != NULL);
 }
 
-static path_t *path_create (const char *string) {
+path_t *path_create (const char *string) {
     if (string == NULL) {
         string = "";
     }
@@ -140,4 +140,23 @@ void path_ext_replace (path_t *path, char *ext) {
     path_ext_remove(path);
     path_append(path, ".");
     path_append(path, ext);
+}
+
+bool path_has_value(path_t *path) {
+    if(path != NULL) {
+        if(strlen(path->buffer) > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool path_are_match(path_t *left, path_t *right) {
+    if(!path_has_value(left) && !path_has_value(right)) {
+        return true;
+    } else if(path_has_value(left) && path_has_value(right)) {
+        return (strcmp(path_get(left), path_get(right)) == 0);
+    } else {
+        return false;
+    }
 }

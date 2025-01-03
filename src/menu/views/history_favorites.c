@@ -11,25 +11,27 @@ typedef enum {
     BOOKKEEPING_SCREEN_MODE_FAVORITE
 } bookkeeping_screen_modes_t;
 
+
 static bookkeeping_screen_modes_t screen_mode = -1;
 static int selected_item = -1;
 static bookkeeping_item_t *item_list;
 static int item_max;
 
+
 #define IS_FAVORITE (screen_mode == BOOKKEEPING_SCREEN_MODE_FAVORITE)
 #define IS_HISTORY (screen_mode == BOOKKEEPING_SCREEN_MODE_HISTORY)
+
 
 static void reset_selected(menu_t *menu) {
     selected_item = -1;
 
-    for(int i=0;i<item_max;i++) {
+    for(unsigned int i=0; i<item_max; i++) {
         if(item_list[i].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
             selected_item = i;
             break;
         }
     }  
 }
-
 
 static void move_next() {
     int last = selected_item;
@@ -63,7 +65,6 @@ static void move_back() {
         }
     } while (true);
 }
-
 
 static void process(menu_t *menu) {
     if(menu->actions.go_down) {
@@ -117,11 +118,10 @@ static void draw_list(menu_t *menu, surface_t *display) {
         );
     }
 
-
     char buffer[1024];
     buffer[0] = 0;
 
-    for(int i=0;i < item_max; i++) {   
+    for(unsigned int i=0; i < item_max; i++) {   
         if(path_has_value(item_list[i].primary_path)) {
             sprintf(buffer, "%s%d  : %s\n",buffer ,(i+1), path_last_get(item_list[i].primary_path));
         } else {
@@ -193,7 +193,6 @@ static void draw(menu_t *menu, surface_t *display) {
     rdpq_detach_show();   
 }
 
-
 void view_favorite_init (menu_t *menu) {
     screen_mode = BOOKKEEPING_SCREEN_MODE_FAVORITE;
     item_list = menu->bookkeeping.favorite_items;
@@ -206,7 +205,6 @@ void view_favorite_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display); 
 }
-
 
 void view_history_init (menu_t *menu) {
     screen_mode = BOOKKEEPING_SCREEN_MODE_HISTORY;

@@ -35,7 +35,7 @@ var searchData=
   ['co_32',['co',['../structvr4300__instruction__t_8c__type.html#aab6c040066603ef2519d512b21dce9ab',1,'vr4300_instruction_t.c_type']]],
   ['color_5fburst_33',['COLOR_BURST',['../boot__io_8h.html#ac2f4fd1da8557ce8056df383b8c1da22',1,'vi_regs_t']]],
   ['command_34',['command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md28',1,'&quot;Enable/disable byteswap on load&quot; command'],['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md29',1,'&quot;Enable/disable extended address mode&quot; command'],['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md27',1,'&quot;Enable/disable save writeback&quot; command']]],
-  ['compatibilty_20mode_35',['Compatibilty mode',['../index.html#autotoc_md12',1,'']]],
+  ['compatibility_20mode_35',['Compatibility mode',['../index.html#autotoc_md12',1,'']]],
   ['component_5fbackground_5ft_36',['component_background_t',['../structcomponent__background__t.html',1,'']]],
   ['component_5fboxart_5ft_37',['component_boxart_t',['../ui__components_8h.html#structcomponent__boxart__t',1,'']]],
   ['component_5fcontext_5fmenu_5flist_5fend_38',['COMPONENT_CONTEXT_MENU_LIST_END',['../ui__components_8h.html#aed8b55a844b1419369ca727617ed9930',1,'ui_components.h']]],

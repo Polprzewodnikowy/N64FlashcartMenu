@@ -42,7 +42,7 @@ var searchData=
   ['menu_5ft_2eload_39',['menu_t.load',['../menu__state_8h.html#structmenu__t_8load',1,'']]],
   ['messagebox_5fmargin_40',['MESSAGEBOX_MARGIN',['../constants_8h.html#ab8b02a9ebb78a66fa1c36c8604295116',1,'constants.h']]],
   ['messagebox_5fmax_5fwidth_41',['MESSAGEBOX_MAX_WIDTH',['../constants_8h.html#a2c5ad0e537cf5c0c34f8107a4bbd7add',1,'constants.h']]],
-  ['mode_42',['Compatibilty mode',['../index.html#autotoc_md12',1,'']]],
+  ['mode_42',['Compatibility mode',['../index.html#autotoc_md12',1,'']]],
   ['mode_20command_43',['&quot;Enable/disable extended address mode&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md29',1,'']]],
   ['mp3_5fplayer_2eh_44',['mp3_player.h',['../mp3__player_8h.html',1,'']]],
   ['mp3player_5fdeinit_45',['mp3player_deinit',['../mp3__player_8h.html#a27e96628429f1bf334a8bdc8aa78771f',1,'mp3_player.c']]],

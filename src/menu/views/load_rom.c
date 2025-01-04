@@ -5,9 +5,11 @@
 #include "views.h"
 #include <string.h>
 #include "utils/fs.h"
+#include "../bookkeeping.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
+static char *rom_filename = NULL;
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -160,6 +162,10 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+static void add_favorite (menu_t *menu, void *arg) {
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -203,6 +209,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+    { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -244,7 +251,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "N64 ROM information\n"
             "\n"
             "%s\n",
-            menu->browser.entry->name
+            rom_filename
         );
 
         ui_components_main_text_draw(
@@ -343,6 +350,8 @@ static void load (menu_t *menu) {
         return;
     }
 
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
+
     menu->next_mode = MENU_MODE_BOOT;
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
@@ -368,8 +377,19 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-    }
+        if(menu->load.load_history != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
+        } else if(menu->load.load_favorite != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
+        } else {
+            menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        }
+
+        rom_filename = path_last_get(menu->load.rom_path);
+    }    
+
+    menu->load.load_favorite = -1;
+    menu->load.load_history = -1;
 
     rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

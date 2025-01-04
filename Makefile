@@ -40,6 +40,7 @@ SRCS = \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
 	menu/actions.c \
+	menu/bookkeeping.c \
 	menu/cart_load.c \
 	menu/cpak_handler.c \
 	menu/disk_info.c \
@@ -57,12 +58,14 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
+	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
+	menu/views/history_favorites.c \
 	menu/views/image_viewer.c \
 	menu/views/joypad_controller_pak.c \
 	menu/views/text_viewer.c \

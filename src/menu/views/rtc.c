@@ -36,7 +36,7 @@ int wrap( int val, uint16_t min, uint16_t max ) {
 rtc_time_t rtc_time_from_tm( struct tm *time ) {
     return(rtc_time_t){
         .year = CLAMP(time->tm_year + 1900, YEAR_MIN, YEAR_MAX),
-        .month = CLAMP(time->tm_mon, 1, 12),
+        .month = CLAMP(time->tm_mon, 0, 11),
         .day = CLAMP(time->tm_mday, 1, 31),
         .hour = CLAMP(time->tm_hour, 0, 23),
         .min = CLAMP(time->tm_min, 0, 59),

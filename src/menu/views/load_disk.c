@@ -241,7 +241,6 @@ void view_load_disk_init (menu_t *menu) {
     disk_filename = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
     if (err != DISK_OK) {
-        //snprintf(error, 256, "path : '%s' error: '%s'", path_get(menu->load.disk_path), convert_error_message(err));
         menu_show_error(menu, convert_error_message(err));
         return;
     }

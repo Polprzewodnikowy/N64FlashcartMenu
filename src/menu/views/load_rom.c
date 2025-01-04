@@ -257,19 +257,19 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n"
-            "Description:\n %s\n",
+            "Description:\n\t%s\n",
             menu->load.rom_info.metadata.description
         );
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            "Expansion PAK: %s\n"
-            "TV type:       %s\n"
-            "CIC:           %s\n"
-            "Datel Cheats:  %s\n"
-            "Patches:       %s\n"
-            "Save type:     %s\n",
+            "Expansion PAK:\t%s\n"
+            "TV type:\t\t\t%s\n"
+            "CIC:\t\t\t\t%s\n"
+            "Datel Cheats:\t%s\n"
+            "Patches:\t\t\t%s\n"
+            "Save type:\t\t%s\n",
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),

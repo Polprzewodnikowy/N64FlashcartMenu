@@ -105,7 +105,7 @@
 /** @brief The scroll bar width. */
 #define LIST_SCROLLBAR_WIDTH            (12)
 /** @brief The scroll bar height. */
-#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - TAB_HEIGHT)
+#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - TAB_HEIGHT - BORDER_THICKNESS)
 /** @brief The scroll bar position on the X axis. */
 #define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
 /** @brief The scroll bar position on the Y axis. */

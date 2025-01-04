@@ -7,19 +7,16 @@
 
 
 typedef enum {
-    BOOKKEEPING_SCREEN_MODE_HISTORY,
-    BOOKKEEPING_SCREEN_MODE_FAVORITE
-} bookkeeping_screen_modes_t;
+    BOOKKEEPING_TAB_CONTEXT_HISTORY,
+    BOOKKEEPING_TAB_CONTEXT_FAVORITE,
+    BOOKKEEPING_TAB_CONTEXT_NONE
+} bookkeeping_tab_context_t;
 
 
-static bookkeeping_screen_modes_t screen_mode = -1;
+static bookkeeping_tab_context_t tab_context = BOOKKEEPING_TAB_CONTEXT_NONE;
 static int selected_item = -1;
 static bookkeeping_item_t *item_list;
 static int item_max;
-
-
-#define IS_FAVORITE (screen_mode == BOOKKEEPING_SCREEN_MODE_FAVORITE)
-#define IS_HISTORY (screen_mode == BOOKKEEPING_SCREEN_MODE_HISTORY)
 
 
 static void reset_selected(menu_t *menu) {
@@ -73,9 +70,9 @@ static void process(menu_t *menu) {
         move_back();
     } else if(menu->actions.enter && selected_item != -1) {
                 
-        if(IS_FAVORITE) {
+        if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
             menu->load.load_favorite = selected_item;
-        } else if(IS_HISTORY) {
+        } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
             menu->load.load_history = selected_item;
         }           
 
@@ -87,18 +84,18 @@ static void process(menu_t *menu) {
             sound_play_effect(SFX_ENTER);
         }
     } else if (menu->actions.previous_tab) {
-        if(IS_FAVORITE) {
+        if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
             menu->next_mode = MENU_MODE_HISTORY;
-        } else if(IS_HISTORY) {
+        } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
             menu->next_mode = MENU_MODE_BROWSER;
         }        
     } else if (menu->actions.next_tab) {
-        if(IS_FAVORITE) {
+        if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
             menu->next_mode = MENU_MODE_BROWSER;
-        } else if(IS_HISTORY) {
+        } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
             menu->next_mode = MENU_MODE_FAVORITE;
         }
-    }else if(IS_FAVORITE && menu->actions.options && selected_item != -1) {
+    }else if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE && menu->actions.options && selected_item != -1) {
         bookkeeping_favorite_remove(&menu->bookkeeping, selected_item);
         reset_selected(menu);
         sound_play_effect(SFX_SETTING);
@@ -158,9 +155,9 @@ static void draw(menu_t *menu, surface_t *display) {
 
     ui_components_background_draw();
 
-    if(IS_FAVORITE) {
+    if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
         ui_components_tabs_common_draw(2);
-    } else if(IS_HISTORY) {
+    } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
         ui_components_tabs_common_draw(1);
     }
 
@@ -175,7 +172,7 @@ static void draw(menu_t *menu, surface_t *display) {
             "\n"
         );
         
-        if(IS_FAVORITE && selected_item != -1) {
+        if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE && selected_item != -1) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
                 "R: Remove item\n"
@@ -194,7 +191,7 @@ static void draw(menu_t *menu, surface_t *display) {
 }
 
 void view_favorite_init (menu_t *menu) {
-    screen_mode = BOOKKEEPING_SCREEN_MODE_FAVORITE;
+    tab_context = BOOKKEEPING_TAB_CONTEXT_FAVORITE;
     item_list = menu->bookkeeping.favorite_items;
     item_max = FAVORITES_COUNT;
 
@@ -207,7 +204,7 @@ void view_favorite_display (menu_t *menu, surface_t *display) {
 }
 
 void view_history_init (menu_t *menu) {
-    screen_mode = BOOKKEEPING_SCREEN_MODE_HISTORY;
+    tab_context = BOOKKEEPING_TAB_CONTEXT_HISTORY;
     item_list = menu->bookkeeping.history_items;
     item_max = HISTORY_COUNT;
 

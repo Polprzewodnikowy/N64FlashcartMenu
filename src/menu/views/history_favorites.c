@@ -109,7 +109,7 @@ static void draw_list(menu_t *menu, surface_t *display) {
         ui_components_box_draw(
             VISIBLE_AREA_X0,
             highlight_y,
-            VISIBLE_AREA_X0 + FILE_LIST_HIGHLIGHT_WIDTH,
+            VISIBLE_AREA_X0 + FILE_LIST_HIGHLIGHT_WIDTH + LIST_SCROLLBAR_WIDTH,
             highlight_y + 40,
             FILE_LIST_HIGHLIGHT_COLOR
         );

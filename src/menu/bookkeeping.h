@@ -10,8 +10,8 @@
 #include "path.h"
 
 
-#define FAVORITES_COUNT 5
-#define HISTORY_COUNT 5
+#define FAVORITES_COUNT 8
+#define HISTORY_COUNT 8
 
 typedef enum {
     BOOKKEEPING_TYPE_EMPTY,

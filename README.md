@@ -16,12 +16,12 @@ An open source menu for N64 flashcarts.
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
+* Loads all known N64 games (including iQue and Aleck64 ROMs), even if they are byteswapped.
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
-* Comprehensive ROM save database (including HomeBrew headers).
+* Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
 * Real Time Clock support.
 * Music playback (MP3).
@@ -42,7 +42,7 @@ An open source menu for N64 flashcarts.
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
-* Be open source, using permissive licensed third party licensed libraries.
+* Be open source, using permissively licensed third-party libraries.
 * Be testable, using unit and smoke tests in ares emulated environment.
 * Encourage active development from community members and N64 FlashCart owners.
 * Support as many common mods and features as possible.
@@ -92,11 +92,11 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 * `boxart_left.png`
 * `boxart_right.png`
 
-As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
+As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and fallback images:
 * [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 
-#### Compatibilty mode
+#### Compatibility mode
 If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
 
 **Note:** This will add a noticeable delay for displaying parts of the menu.
@@ -133,7 +133,7 @@ If required, you can manually adjust the file on the SD card using your computer
 
 
 ### ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
-Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+Currently not supported, but work is in progress (See [PRs](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
 **Warning**: The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
 
 #### ED64 (Vseries)
@@ -159,5 +159,5 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 ## Sounds
 See [License](https://pixabay.com/en/service/license-summary/) for the following sounds:
 * [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
-* [Actions (Enter, back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
+* [Actions (Enter, Back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
 * [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)

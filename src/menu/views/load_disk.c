@@ -82,9 +82,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            " Region: %s\n"
+            " Region:    %s\n"
             " Unique ID: %.4s\n"
-            " Version: %hhu\n"
+            " Version:   %hhu\n"
             " Disk type: %d\n"
             "\n"
             " %s%s",
@@ -92,7 +92,7 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.disk_info.id,
             menu->load.disk_info.version,
             menu->load.disk_info.disk_type,
-            menu->load.rom_path ? "ROM: " : "",
+            menu->load.rom_path ? "ROM:       " : "",
             menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
         );
 

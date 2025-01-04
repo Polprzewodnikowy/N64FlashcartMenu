@@ -115,7 +115,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         layout = rdpq_paragraph_builder_end();
 
         int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
-        int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
+        int highlight_y = VISIBLE_AREA_Y0 + TAB_HEIGHT + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
 
         ui_components_box_draw(
             FILE_LIST_HIGHLIGHT_X,
@@ -128,7 +128,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);
@@ -166,7 +166,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);

@@ -27,6 +27,8 @@ An open source menu for N64 flashcarts.
 * Music playback (MP3).
 * Menu sound effects.
 * N64 ROM autoload.
+* ROM information descriptions.
+* ROM history and favorites.
 
 
 ## Documentation

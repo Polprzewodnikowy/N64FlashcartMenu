@@ -31,7 +31,7 @@
 /** @brief The start position of the visible display on the X axis. */
 #define VISIBLE_AREA_X0                 (OVERSCAN_WIDTH)
 /** @brief The start position of the visible display on the Y axis. */
-#define VISIBLE_AREA_Y0                 (OVERSCAN_HEIGHT + TAB_HEIGHT + BORDER_THICKNESS)
+#define VISIBLE_AREA_Y0                 (OVERSCAN_HEIGHT)
 /** @brief The end position of the visible display on the X axis. */
 #define VISIBLE_AREA_X1                 (DISPLAY_WIDTH - OVERSCAN_WIDTH)
 /** @brief The end position of the visible display on the Y axis. */
@@ -109,10 +109,10 @@
 /** @brief The scroll bar position on the X axis. */
 #define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
 /** @brief The scroll bar position on the Y axis. */
-#define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0)
+#define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
 
 /** @brief The maximum amount of file list entries. */
-#define LIST_ENTRIES                    (17)
+#define LIST_ENTRIES                    (18)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
 #define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)

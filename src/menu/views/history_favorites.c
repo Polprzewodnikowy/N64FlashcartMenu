@@ -107,7 +107,7 @@ static void process(menu_t *menu) {
 
 static void draw_list(menu_t *menu, surface_t *display) {    
     if(selected_item != -1) {    
-        float highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + (selected_item * 20 * 2);
+        float highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT +  TEXT_OFFSET_VERTICAL + (selected_item * 20 * 2);
 
         ui_components_box_draw(
             VISIBLE_AREA_X0,
@@ -147,7 +147,7 @@ static void draw_list(menu_t *menu, surface_t *display) {
         },
         FNT_DEFAULT,
         VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL,
+        VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT +  TEXT_OFFSET_VERTICAL,
         buffer,
         nbytes
     );           
@@ -164,7 +164,7 @@ static void draw(menu_t *menu, surface_t *display) {
         ui_components_tabs_common_draw(1);
     }
 
-    ui_components_layout_draw();
+    ui_components_layout_draw_tabbed();
 
     draw_list(menu, display);
 

@@ -51,6 +51,11 @@ void ui_components_box_draw(int x0, int y0, int x1, int y1, color_t color);
 void ui_components_border_draw(int x0, int y0, int x1, int y1);
 
 /**
+ * @brief Draw the layout component with tabs.
+ */
+void ui_components_layout_draw_tabbed(void);
+
+/**
  * @brief Draw the layout component.
  */
 void ui_components_layout_draw(void);

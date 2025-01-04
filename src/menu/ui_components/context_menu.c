@@ -83,7 +83,7 @@ void ui_components_context_menu_draw (component_context_menu_t *cm) {
     rdpq_paragraph_builder_begin(
         &(rdpq_textparms_t) {
             .width = VISIBLE_AREA_WIDTH,
-            .height = VISIBLE_AREA_HEIGHT - TAB_HEIGHT,
+            .height = VISIBLE_AREA_HEIGHT,
             .align = ALIGN_CENTER,
             .valign = VALIGN_CENTER,
             .line_spacing = TEXT_LINE_SPACING_ADJUST,

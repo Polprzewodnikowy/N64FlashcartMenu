@@ -23,7 +23,7 @@ void bookkeeping_init (char *path) {
 void bookkeeping_ini_load_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group)
 {
     char buf[64];
-    for(int i=0;i<count; i++) {
+    for(int i=0; i<count; i++) {
         sprintf(buf,"%d_primary_path", i);
         list[i].primary_path = path_create(mini_get_string(ini, group, buf, ""));
 
@@ -41,23 +41,23 @@ void bookkeeping_load (bookkeeping_t *history) {
         bookkeeping_save(&init);
     }
 
-    mini_t *ini = mini_try_load(history_path);
-    bookkeeping_ini_load_list(history->history_items, HISTORY_COUNT, ini, "history");
-    bookkeeping_ini_load_list(history->favorite_items, HISTORY_COUNT, ini, "favorite");
+    mini_t *bookkeeping_ini = mini_try_load(history_path);
+    bookkeeping_ini_load_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
+    bookkeeping_ini_load_list(history->favorite_items, HISTORY_COUNT, bookkeeping_ini, "favorite");
 
 
-    mini_free(ini);
+    mini_free(bookkeeping_ini);
 }
 
 static void bookkeeping_ini_save_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group)
 {
     char buf[64];
-    for(int i=0;i<count; i++) {
-        sprintf(buf,"%d_primary_path", i);
+    for(int i=0; i<count; i++) {
+        sprintf(buf, "%d_primary_path", i);
         path_t* path = list[i].primary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
-        sprintf(buf,"%d_secondary_path", i);
+        sprintf(buf, "%d_secondary_path", i);
         path = list[i].secondary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
@@ -69,13 +69,13 @@ static void bookkeeping_ini_save_list(bookkeeping_item_t *list, int count, mini_
 /** @brief The history to save */
 void bookkeeping_save (bookkeeping_t *history)
 {
-    mini_t *ini = mini_create(history_path);
+    mini_t *bookkeeping_ini = mini_create(history_path);
 
-    bookkeeping_ini_save_list(history->history_items, HISTORY_COUNT, ini, "history");
-    bookkeeping_ini_save_list(history->favorite_items, FAVORITES_COUNT, ini, "favorite");
+    bookkeeping_ini_save_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
+    bookkeeping_ini_save_list(history->favorite_items, FAVORITES_COUNT, bookkeeping_ini, "favorite");
 
-    mini_save(ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
-    mini_free(ini);    
+    mini_save(bookkeeping_ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
+    mini_free(bookkeeping_ini);    
 }
 
 static bool bookkeeping_item_match(bookkeeping_item_t *left, bookkeeping_item_t *right) {

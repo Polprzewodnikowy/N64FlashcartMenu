@@ -116,7 +116,6 @@ static void draw (menu_t *menu, surface_t *d) {
             );
         }
 
-
         if (boxart != NULL) {
             ui_components_boxart_draw(boxart);
         }

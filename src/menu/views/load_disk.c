@@ -3,6 +3,10 @@
 #include "boot/boot.h"
 #include "../sound.h"
 #include "views.h"
+#include <string.h>
+#include "utils/fs.h"
+#include <stdbool.h>
+
 
 static component_boxart_t *boxart;
 
@@ -25,14 +29,45 @@ static char *format_disk_region (disk_region_t region) {
     }
 }
 
+static void set_autoload_type (menu_t *menu, void *arg) {
+    bool combined_disk_rom = (bool)(uintptr_t)(arg);
+    free(menu->settings.disk_autoload_path);
+    menu->settings.disk_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
+    free(menu->settings.disk_autoload_filename);
+    menu->settings.disk_autoload_filename = strdup(menu->browser.entry->name);
+    if (combined_disk_rom) { // FIXME: we need to get this from menu->load.rom_path
+        // free(menu->settings.rom_autoload_path);
+        // menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory))); // path_last_get(menu->load.rom_path)
+        // free(menu->settings.rom_autoload_filename);
+        // menu->settings.rom_autoload_filename = strdup(menu->browser.entry->name);
+    }
+    // FIXME: add a confirmation box here! (press start on reboot)
+    menu->settings.disk_autoload_enabled = true;
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
+static void set_load_combined_disk_rom_type(menu_t *menu, void *arg) {
+    menu->boot_pending.disk_file = true;
+    menu->load.combined_disk_rom = true;
+}
+
+static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Load with ROM", .action = set_load_combined_disk_rom_type }, // TODO: this is for backwards compatibility, is it really needed?!
+    { .text = "Set disk to autoload", .action = set_autoload_type, .arg = (void *)(uintptr_t)(false) },
+    //{ .text = "Set disk & ROM to autoload", .action = set_autoload_type, .arg = (void *)(uintptr_t)(true) }, // FIXME: handle ROM expansions!
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->boot_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
+    } else if (menu->actions.options) {
+        ui_components_context_menu_show(&options_context_menu);
+        sound_play_effect(SFX_SETTING);
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        menu->boot_pending.disk_file = true;
-        menu->load.combined_disk_rom = true;
+        set_load_combined_disk_rom_type(menu, NULL);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -74,8 +109,8 @@ static void draw (menu_t *menu, surface_t *d) {
             menu->load.disk_info.id,
             menu->load.disk_info.version,
             menu->load.disk_info.disk_type,
-            menu->load.rom_path ? "ROM: " : "",
-            menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
+            menu->load.rom_path ? "Expansion ROM: " : "",
+            menu->load.rom_path ? path_last_get(menu->load.rom_path) : "" // We should check this against the ROM DB to see if it is FEAT_64DD_ENHANCED from extract_rom_info?!
         );
 
         ui_components_actions_bar_text_draw(
@@ -88,7 +123,7 @@ static void draw (menu_t *menu, surface_t *d) {
             ui_components_actions_bar_text_draw(
                 ALIGN_RIGHT, VALIGN_TOP,
                 "L|Z: Load with ROM\n"
-                "\n"
+                "R:    Options\n"
             );
         }
 
@@ -117,18 +152,20 @@ static void draw_progress (float progress) {
 static void load (menu_t *menu) {
     cart_load_err_t err;
 
+    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
+    }
+
     if (menu->load.rom_path && menu->load.combined_disk_rom) {
+        // FIXME: if the ROM is not a DD expansion ROM, it will just load the ROM. We need to check and warn!
+        // something involving: menu->load.rom_info.game_code[0] != 'C' or 'E' or homebrew ... (FEAT_64DD_ENHANCED) from extract_rom_info
         err = cart_load_n64_rom_and_save(menu, draw_progress);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
             return;
         }
-    }
-
-    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
-    if (err != CART_LOAD_OK) {
-        menu_show_error(menu, cart_load_convert_error_message(err));
-        return;
     }
 
     menu->next_mode = MENU_MODE_BOOT;

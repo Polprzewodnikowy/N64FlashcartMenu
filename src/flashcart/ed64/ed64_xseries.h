@@ -16,7 +16,7 @@
  * @{
  */
 
-flashcart_t *ed64xseries_get_flashcart (void);
+flashcart_t *ed64_xseries_get_flashcart (void);
 
 /** @} */ /* ED64_Xseries */
 

@@ -34,6 +34,15 @@ body:
     validations:
       required: false
 
+  - type: input
+    id: n64_region
+    attributes:
+      label: N64 console region
+      description: PAL, NTSC-U, NTSC-J, MPAL, etc.
+      placeholder: NTSC
+    validations:
+      required: false
+
   - type: textarea
     id: description
     attributes:
@@ -68,6 +77,16 @@ body:
       label: Screenshots
       description: Very helpful if you send along a few screenshots to help visualize the issue!
       placeholder: drag and drop here, if applicable
+    validations:
+      required: false
+
+  - type: textarea
+    id: configuration_file
+    attributes:
+      label: configuration file(s)
+      description: The text of the configuration file(s) used. If applicable.
+      placeholder: |
+        for example paste the content of the configuration file (config.ini) here.
     validations:
       required: false
 

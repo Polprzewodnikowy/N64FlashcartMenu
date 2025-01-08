@@ -78,22 +78,32 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
+            "\n\n\n\n"
+            "%s%s\n",
+            menu->load.rom_path ? "Loaded ROM:\t" : "",
+            menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
+        );
+
+        ui_components_main_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n\n\n\n\n\n"
+            "Description:\n\t%s\n",
+            "None."
+        );
+
+        ui_components_main_text_draw(
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n\n\n\n\n\n\n\n\n\n\n\n"
+            " Region:\t\t%s\n"
+            " Unique ID:\t%.4s\n"
+            " Version:\t%hhu\n"
+            " Disk type:\t%d\n"
             "\n"
-            "\n"
-            "\n"
-            "\n"
-            " Region:    %s\n"
-            " Unique ID: %.4s\n"
-            " Version:   %hhu\n"
-            " Disk type: %d\n"
-            "\n"
-            " %s%s",
+            ,
             format_disk_region(menu->load.disk_info.region),
             menu->load.disk_info.id,
             menu->load.disk_info.version,
-            menu->load.disk_info.disk_type,
-            menu->load.rom_path ? "ROM:       " : "",
-            menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
+            menu->load.disk_info.disk_type
         );
 
         ui_components_actions_bar_text_draw(

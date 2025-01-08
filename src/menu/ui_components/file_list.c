@@ -40,6 +40,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
     if (entries == 0) {
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
+            "\n"
             "^%02X** empty directory **",
             STL_GRAY
         );

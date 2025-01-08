@@ -76,7 +76,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           name: Rolling release
-          body: Rolling release built from latest commit on `main` branch.
+          body_path: ${{ github.workspace }}/CHANGELOG.md
           tag_name: 'rolling_release'
           make_latest: true
           files: |
@@ -92,7 +92,7 @@ jobs:
         if: github.ref == 'refs/heads/develop'
         with:
           name: 'Rolling pre-release'
-          body: Experimental pre-release built from latest commit on `develop` branch.
+          body: Experimental pre-release built from latest commit on `develop` branch. Check the commit history for more details.
           target_commitish: develop
           tag_name: 'rolling_pre-release'
           prerelease: true

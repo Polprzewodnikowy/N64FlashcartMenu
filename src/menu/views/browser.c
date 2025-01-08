@@ -358,16 +358,21 @@ static void process (menu_t *menu) {
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.next_tab) {
+        menu->next_mode = MENU_MODE_HISTORY;
+    } else if (menu->actions.previous_tab) {
+        menu->next_mode = MENU_MODE_FAVORITE;
     }
 }
-
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
 
-    ui_components_layout_draw();
+    ui_components_tabs_common_draw(0);
+
+    ui_components_layout_draw_tabbed();
 
     ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
@@ -395,7 +400,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
+        "^%02XStart: Settings^00\n"
         "^%02XR: Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
@@ -403,9 +408,15 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "<C Change Tab C>\n"
             "%s",
             ctime(&menu->current_time)
+        );
+    } else {
+        ui_components_actions_bar_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "<C Change Tab C>\n"
+        "\n"
         );
     }
 

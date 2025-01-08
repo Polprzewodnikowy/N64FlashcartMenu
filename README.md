@@ -16,17 +16,19 @@ An open source menu for N64 flashcarts.
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and Aleck64 ROMs (even if they are byteswapped)).
+* Loads all known N64 games (including iQue and Aleck64 ROMs), even if they are byteswapped.
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.
 * N64 ROM box image support.
 * Background image (PNG) support.
-* Comprehensive ROM save database (including HomeBrew headers).
+* Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
 * Real Time Clock support.
 * Music playback (MP3).
 * Menu sound effects.
 * N64 ROM autoload.
+* ROM information descriptions.
+* ROM history and favorites.
 
 
 ## Documentation
@@ -42,7 +44,7 @@ An open source menu for N64 flashcarts.
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
-* Be open source, using permissive licensed third party licensed libraries.
+* Be open source, using permissively licensed third-party libraries.
 * Be testable, using unit and smoke tests in ares emulated environment.
 * Encourage active development from community members and N64 FlashCart owners.
 * Support as many common mods and features as possible.
@@ -50,6 +52,14 @@ An open source menu for N64 flashcarts.
 
 ## Experimental features
 These features are subject to change:
+
+### ROM Info descriptions
+To add a ROM description (shown when loading a ROM), add a file with the content
+```
+[metadata]
+description=This is the ROM description that does X Y Z.
+```
+The file line endings must use the linux `LF` endings only (CRLF is not supported) and is limited to 300 characters.
 
 ### N64 ROM autoload
 To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
@@ -65,10 +75,6 @@ These must be `PNG` files that use the following dimensions:
 * Japanese N64 GamePak boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
 
-Supported PNG formats:
-* RGB/RGBA color formats
-* 8-bit color depth
-
 They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
@@ -83,33 +89,20 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 * `boxart_bottom.png`
 * `boxart_left.png`
 * `boxart_right.png`
+* `gamepak_front.png`
+* `gamepak_back.png`
 
-As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and failback images:
-* [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
-
-
-#### Compatibilty mode
-If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
-
-**Note:** This will add a noticeable delay for displaying parts of the menu.
-
-Each file must be named according to the 2,3 or 4 letter GamePak ID (matched in this order).
-i.e.
-* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png` and/or `sd:/menu/boxart/NGEP.png`.
-* for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
-* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
-
-
-As a starting point, here are some links to boxart packs:
-* [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)
-* [American Boxart](https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc)
-* [European Boxart](https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ)
-* [64DD Boxart](https://mega.nz/file/ay5wQIxJ#k3PF-VMLrZJxJTr-BOaOKa2TBIK7c2t4zwbdshsQl40)
+As a starting point, here is a link to a boxart pack, that has `boxart_front.png`:
+* [boxart](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 
 ### Menu Settings
-The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
+The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used and can be set within the menu.
 If required, you can manually adjust the file on the SD card using your computer.
+
+### Datel cheats
+(Action Replay and GameShark codes)
+Supported, but no GUI available (yet) to edit them.
 
 
 ## Flashcart specific
@@ -125,7 +118,7 @@ If required, you can manually adjust the file on the SD card using your computer
 
 
 ### ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
-Currently not supported, but work is in progress (See [PR's](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
+Currently not supported, but work is in progress (See [PRs](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
 **Warning**: The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
 
 #### ED64 (Vseries)
@@ -151,5 +144,5 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 ## Sounds
 See [License](https://pixabay.com/en/service/license-summary/) for the following sounds:
 * [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
-* [Actions (Enter, back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
+* [Actions (Enter, Back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
 * [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)

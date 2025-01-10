@@ -4,6 +4,7 @@
 An open source menu for N64 flashcarts.
 
 ## Supported Flashcarts
+This menu aims to support as many N64 flashcarts as possible.
 
 ### Fully supported
 * SummerCart64
@@ -16,10 +17,10 @@ An open source menu for N64 flashcarts.
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and Aleck64 ROMs), even if they are byteswapped.
+* Loads all known N64 games, even if they are byteswapped.
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.
-* N64 ROM box image support.
+* N64 ROM box art image support.
 * Background image (PNG) support.
 * Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
@@ -36,14 +37,13 @@ An open source menu for N64 flashcarts.
 * [Developer guide](./docs/99_developer_guide.md)
 
 ## Video showcase (as of Oct 12 2023)
-
 [![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
 
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
 * Be open source, using permissively licensed third-party libraries.
-* Be testable, using unit and smoke tests in ares emulated environment.
+* Be testable in an emulated environment (Ares).
 * Encourage active development from community members and N64 FlashCart owners.
 * Support as many common mods and features as possible.
 
@@ -69,11 +69,11 @@ Supported PNG formats:
 * RGB/RGBA color formats
 * 8-bit color depth
 
-They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).
-i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.
-i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
+They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).  
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.  
 
-To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
+To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:  
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
 **Warning**: Excluding the region ID may show the wrong boxart.
@@ -85,7 +85,7 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 * `boxart_right.png`
 
 As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and fallback images:
-* [Link](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
+* [Recommended Boxart](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
 
 #### Compatibility mode
@@ -100,7 +100,7 @@ i.e.
 * for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
 
 
-As a starting point, here are some links to boxart packs:
+As a starting point, here are some links to boxart image packs:
 * [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)
 * [American Boxart](https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc)
 * [European Boxart](https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ)
@@ -109,7 +109,7 @@ As a starting point, here are some links to boxart packs:
 
 ### Menu Settings
 The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
-If required, you can manually adjust the file on the SD card using your computer.
+These can be updated using the settings editor, but if required, you can also manually adjust the file on the SD card using your computer.
 
 
 ## Flashcart specific

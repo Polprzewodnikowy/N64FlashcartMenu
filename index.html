@@ -78,6 +78,7 @@ N64 Flashcart Menu</h1>
 <p>An open source menu for N64 flashcarts.</p>
 <h2><a class="anchor" id="autotoc_md1"></a>
 Supported Flashcarts</h2>
+<p>This menu aims to support as many N64 flashcarts as possible.</p>
 <h3><a class="anchor" id="autotoc_md2"></a>
 Fully supported</h3>
 <ul>
@@ -94,10 +95,10 @@ Work in Progress</h3>
 Current (notable) menu features</h2>
 <ul>
 <li>Fully Open Source.</li>
-<li>Loads all known N64 games (including iQue and Aleck64 ROMs), even if they are byteswapped.</li>
+<li>Loads all known N64 games, even if they are byteswapped.</li>
 <li>Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).</li>
 <li>Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.</li>
-<li>N64 ROM box image support.</li>
+<li>N64 ROM box art image support.</li>
 <li>Background image (PNG) support.</li>
 <li>Comprehensive ROM save database (including homebrew headers).</li>
 <li>Comprehensive ROM information display.</li>
@@ -122,7 +123,7 @@ Aims</h2>
 <ul>
 <li>Support as many N64 FlashCarts as possible.</li>
 <li>Be open source, using permissively licensed third-party libraries.</li>
-<li>Be testable, using unit and smoke tests in ares emulated environment.</li>
+<li>Be testable in an emulated environment (Ares).</li>
 <li>Encourage active development from community members and N64 FlashCart owners.</li>
 <li>Support as many common mods and features as possible.</li>
 </ul>
@@ -146,8 +147,12 @@ Supported sprites</h4>
 <li>RGB/RGBA color formats</li>
 <li>8-bit color depth</li>
 </ul>
-<p>They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information). i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/boxart/N/G/E/E/boxart_front.png</code>. i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/boxart/N/G/E/P/boxart_front.png</code>.</p>
-<p>To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead: i.e. for GoldenEye, this would be <code>sd:/menu/boxart/N/G/E/boxart_front.png</code>.</p>
+<p>They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information). <br  />
+ i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/boxart/N/G/E/E/boxart_front.png</code>. <br  />
+ i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/boxart/N/G/E/P/boxart_front.png</code>. <br  />
+</p>
+<p>To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead: <br  />
+ i.e. for GoldenEye, this would be <code>sd:/menu/boxart/N/G/E/boxart_front.png</code>.</p>
 <p><b>Warning</b>: Excluding the region ID may show the wrong boxart. <b>Note</b>: For future support, boxart sprites should also include:</p><ul>
 <li><code>boxart_back.png</code></li>
 <li><code>boxart_top.png</code></li>
@@ -156,7 +161,7 @@ Supported sprites</h4>
 <li><code>boxart_right.png</code></li>
 </ul>
 <p>As a starting point, here is a link to a boxart pack following the new structure, including <code>boxart_front.png</code> and fallback images:</p><ul>
-<li><a href="https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link">Link</a></li>
+<li><a href="https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link">Recommended Boxart</a></li>
 </ul>
 <h4><a class="anchor" id="autotoc_md12"></a>
 Compatibility mode</h4>
@@ -167,7 +172,7 @@ Compatibility mode</h4>
 <li>for GoldenEye 3 letters, this would be <code>sd:/menu/boxart/NGE.png</code>.</li>
 <li>for GoldenEye 2 letters, this would be <code>sd:/menu/boxart/GE.png</code>.</li>
 </ul>
-<p>As a starting point, here are some links to boxart packs:</p><ul>
+<p>As a starting point, here are some links to boxart image packs:</p><ul>
 <li><a href="https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0">Japan Boxart</a></li>
 <li><a href="https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc">American Boxart</a></li>
 <li><a href="https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ">European Boxart</a></li>
@@ -175,7 +180,7 @@ Compatibility mode</h4>
 </ul>
 <h3><a class="anchor" id="autotoc_md13"></a>
 Menu Settings</h3>
-<p>The Menu creates a <code>config.ini</code> file in <code>sd:/menu/</code> which contains various settings that are used by the menu. If required, you can manually adjust the file on the SD card using your computer.</p>
+<p>The Menu creates a <code>config.ini</code> file in <code>sd:/menu/</code> which contains various settings that are used by the menu. These can be updated using the settings editor, but if required, you can also manually adjust the file on the SD card using your computer.</p>
 <h2><a class="anchor" id="autotoc_md14"></a>
 Flashcart specific</h2>
 <h3><a class="anchor" id="autotoc_md15"></a>
@@ -222,7 +227,7 @@ Sounds</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jan 10 2025 22:19:01 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
+Generated on Fri Jan 10 2025 23:53:37 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8
 </small></address>
 </body>
 </html>

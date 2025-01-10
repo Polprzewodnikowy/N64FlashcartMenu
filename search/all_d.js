@@ -3,7 +3,7 @@ var searchData=
   ['lat_0',['LAT',['../boot__io_8h.html#ac4a8afa234be2060691c81928eb1b701',1,'pi_regs_t.DOM']]],
   ['layout_20of_20the_20sd_20card_20look_20like_1',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
   ['len_2',['LEN',['../boot__io_8h.html#ac0676d4e820604efc8b5414be5d39f18',1,'ai_regs_t']]],
-  ['libdragon_3',['libdragon',['../md_docs_299__developer__guide.html#autotoc_md61',1,'']]],
+  ['libdragon_3',['libdragon',['../md_docs_299__developer__guide.html#autotoc_md62',1,'']]],
   ['licenses_20used_4',['Open source software and licenses used',['../index.html#autotoc_md21',1,'']]],
   ['like_5',['So what would the layout of the SD card look like?',['../md_docs_200__getting__started__sd.html#autotoc_md38',1,'']]],
   ['list_6',['list',['../ui__components_8h.html#a9632da4ab3d71d8085e1d81bc6d710b9',1,'component_context_menu_t']]],

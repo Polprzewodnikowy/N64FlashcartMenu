@@ -8,7 +8,7 @@ var searchData=
   ['version_5',['version',['../rom__info_8h.html#a2af72f100c356273d46284f6fd1dfc08',1,'rom_info_t.libultra::version'],['../rom__info_8h.html#aa4fa4e1a40bd152b26b22bceeeb72baf',1,'rom_info_t::version']]],
   ['vi_5fregs_5ft_6',['vi_regs_t',['../boot__io_8h.html#structvi__regs__t',1,'']]],
   ['video_20showcase_20as_20of_20oct_2012_202023_7',['Video showcase (as of Oct 12 2023)',['../index.html#autotoc_md6',1,'']]],
-  ['video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_8',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md53',1,'']]],
+  ['video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_8',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md54',1,'']]],
   ['view_9',['View',['../group__view.html',1,'']]],
   ['view_5ft_10',['view_t',['../structview__t.html',1,'']]],
   ['views_2eh_11',['views.h',['../views_8h.html',1,'']]],

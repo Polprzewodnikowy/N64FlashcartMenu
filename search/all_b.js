@@ -2,7 +2,7 @@ var searchData=
 [
   ['i_5ftype_0',['i_type',['../unionvr4300__instruction__t.html#a4408317a91ed6af564fed0d60dcb5f49',1,'vr4300_instruction_t']]],
   ['id_1',['id',['../structusb__comm__command__t.html#ae0741a1da89998c28a1ed41e79341997',1,'usb_comm_command_t']]],
-  ['image_2',['image',['../ui__components_8h.html#a1b40bed1ca761e7243cc82e2ab700150',1,'component_boxart_t']]],
+  ['image_2',['image',['../md_docs_207__menu__customization.html#autotoc_md52',1,'Adding a background image'],['../ui__components_8h.html#a1b40bed1ca761e7243cc82e2ab700150',1,'component_boxart_t::image']]],
   ['image_5fboxart_5fback_3',['IMAGE_BOXART_BACK',['../ui__components_8h.html#aa77ed4c6e4f6494fea90d148786d15e0a168c1c65c7a71060f51b90f4c72eebb6',1,'ui_components.h']]],
   ['image_5fboxart_5fbottom_4',['IMAGE_BOXART_BOTTOM',['../ui__components_8h.html#aa77ed4c6e4f6494fea90d148786d15e0aa94ad56ce027265773b773ae281e96c2',1,'ui_components.h']]],
   ['image_5fboxart_5ffront_5',['IMAGE_BOXART_FRONT',['../ui__components_8h.html#aa77ed4c6e4f6494fea90d148786d15e0ad59d41948ca8c475c75c4b2df95aed3c',1,'ui_components.h']]],
@@ -17,7 +17,7 @@ var searchData=
   ['imm_14',['imm',['../structvr4300__instruction__t_8i__type.html#aa9c69f2215acca631d4656a30b52db93',1,'vr4300_instruction_t.i_type']]],
   ['in_20progress_15',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
   ['in_20sdram_16',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md25',1,'']]],
-  ['in_20the_20dev_20container_17',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md63',1,'']]],
+  ['in_20the_20dev_20container_17',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]],
   ['information_18',['information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'Additional Control Information'],['../md_docs_201__menu__controls.html#autotoc_md46',1,'Additional ROM information']]],
   ['init_19',['init',['../structflashcart__t.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t']]],
   ['initial_20setup_20of_20sd_20card_20',['Initial Setup of SD Card',['../md_docs_200__getting__started__sd.html',1,'']]],

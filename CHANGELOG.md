@@ -1,16 +1,17 @@
-Rolling release built from latest commit on main branch.  
+# Rolling release
+built from latest commit on main branch.  
 **Note**: the attached source code files may be out of date.
 
-For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
-For the 64Drive, use the `menu.bin` file in the root of your SD card.
-For the ares emulator, use the `N64FlashcartMenu.n64` file.
+- For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
+- For the 64Drive, use the `menu.bin` file in the root of your SD card.
+- For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-# Release Notes 2025-01-10
+## Release Notes 2025-01-10
 
 - **Bug Fixes**
 	- Fixed menu display (PAL60) by reverted libdragon to a known working point and re-applying old hacks.
 
-## Current known Issues
+### Current known Issues
 * The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 [Pre-release menu]:
@@ -19,7 +20,7 @@ For the ares emulator, use the `N64FlashcartMenu.n64` file.
 * ALPHA_FEATURE: ED64 V Series only supports loading ROMs (however this is not a problem as not tag released asset).
 
 
-# Release Notes 2024-12-30
+## Release Notes 2024-12-30
 
 - **New Features**
 	- Introduced menu sound effects for enhanced user experience (the default is off).
@@ -51,12 +52,12 @@ For the ares emulator, use the `N64FlashcartMenu.n64` file.
 	- Streamlined the loading state management for ROMs and disks within the menu system.
 	- Improved clarity and usability of the developer guide and other documentation files.
 
-## Current known Issues
+### Current known Issues
 * BETA_SETTING: PAL60 when using HDMI mods has regressed (awaiting libdragon fix).
 * The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * ALPHA_FEATURE: ED64 X Series detection does not occur properly (however this is not a problem as not tag released asset).
 * ALPHA_FEATURE: ED64 V Series only supports loading ROMs (however this is not a problem as not tag released asset).
 
-## Breaking changes
+### Breaking changes
 * Disk drive expansion ROMs are now loaded with `Z|L` instead of `R` to align with ROM info context menu (and future functionality).

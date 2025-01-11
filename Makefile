@@ -91,22 +91,7 @@ SOUNDS = \
 
 IMAGES = \
 	background/defbg.png \
-	boxart/defboxart.png \
-	buttons/joypad_a.png \
-	buttons/joypad_b.png \
-	buttons/joypad_c_down.png \
-	buttons/joypad_c_left.png \
-	buttons/joypad_c_right.png \
-	buttons/joypad_c_up.png \
-	buttons/joypad_d_down.png \
-	buttons/joypad_d_left.png \
-	buttons/joypad_d_right.png \
-	buttons/joypad_d_up.png \
-	buttons/joypad_l.png \
-	buttons/joypad_r.png \
-	buttons/joypad_start.png \
-	buttons/joypad_z.png 
-
+	boxart/defboxart.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

@@ -2,6 +2,7 @@
 
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
+![N64FlashcartMenu menu information](./docs/images/menu-information.png)
 
 ## Supported Flashcarts
 This menu aims to support as many N64 flashcarts as possible.
@@ -117,6 +118,8 @@ These can be updated using the settings editor, but if required, you can also ma
 ### SC64
 * Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 * Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
+
+![SC64 flashcart information](./docs/images/sc64-flashcart-information.png)
 
 
 ### 64drive

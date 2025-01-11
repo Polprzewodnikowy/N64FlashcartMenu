@@ -1,4 +1,8 @@
 ![Build](https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg)
+![GitHub Org's stars](https://img.shields.io/github/stars/Polprzewodnikowy/N64FlashcartMenu)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Percentage of issues still open")
+[![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts.
@@ -52,9 +56,8 @@ This menu aims to support as many N64 flashcarts as possible.
 These features are subject to change:
 
 ### N64 ROM autoload
-To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
-The autoload setting is stored in `config.ini` and persists until changed. This feature may slightly increase boot time as the menu needs to check for the Start button state.
-NOTE: To return to the menu, hold the joypad `Start` button while powering on the console.
+To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.  
+**NOTE:** To return to the menu, hold the joypad `Start` button while powering on the console.
 
 ### GamePak sprites
 To use N64 GamePak sprites, place PNG files within the `sd:/menu/boxart/` folder.

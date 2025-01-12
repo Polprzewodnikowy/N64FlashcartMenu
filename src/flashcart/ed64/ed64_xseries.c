@@ -24,6 +24,18 @@ typedef enum {
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
+static flashcart_firmware_version_t ed64_xseries_get_firmware_version (void) {
+    flashcart_firmware_version_t version_info;
+    // FIXME: get version from ll
+    version_info.major = 1;
+    version_info.minor = 1;
+    version_info.revision = 0;
+
+    //ed64_ll_get_version(&version_info.major, &version_info.minor, &version_info.revision);
+
+    return version_info;
+}
+
 static flashcart_err_t ed64_xseries_init (void) {
 
     return FLASHCART_OK;
@@ -147,6 +159,7 @@ static flashcart_t flashcart_ed64_xseries = {
     .init = ed64_xseries_init,
     .deinit = ed64_xseries_deinit,
     .has_feature = ed64_xseries_has_feature,
+    .get_firmware_version = ed64_xseries_get_firmware_version,
     .load_rom = ed64_xseries_load_rom,
     .load_file = ed64_xseries_load_file,
     .load_save = ed64_xseries_load_save,

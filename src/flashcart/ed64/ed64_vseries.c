@@ -9,6 +9,7 @@
 #include "utils/utils.h"
 
 #include "../flashcart_utils.h"
+#include "ed64_vseries_ll.h"
 #include "ed64_vseries.h"
 
 typedef enum {

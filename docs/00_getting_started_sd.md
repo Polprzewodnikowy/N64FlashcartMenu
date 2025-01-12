@@ -14,7 +14,8 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 - Create a folder in the root of your SD card called `menu`.
-- Place your ROM files on the SD card, **in any folder except `menu`**.
+- Place your ROM files on the SD card, **in any folder except `menu`**.  
+**NOTE:** byteswapped ROM's will increase load times.
 
 
 #### Preparations for other supported flashcarts

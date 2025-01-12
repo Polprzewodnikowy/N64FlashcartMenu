@@ -6,9 +6,10 @@
 Press either the `C-Up` or `C-Down` buttons to scroll by pages, rather than by elements.
 
 #### N64FlashcartMenu settings
-Press the `START` button on the browser screen to open the Settings window. From here you can edit some of the N64FlashcartMenu settings, 
-see information about either the console, the flashcart you are using or N64FlashcartMenu itself, and if your cart has Real-Time Clock (RTC) support, 
-you can also change its date and time.
+Press the `START` button on the browser screen to open the Settings window.  
+![Browser context menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/docs/images/main-context-menu.png)  
+From here you can edit some of the N64FlashcartMenu settings, 
+see information about either the console, the flashcart you are using or N64FlashcartMenu itself, and if your cart has Real-Time Clock (RTC) support, you can also change its date and time.
 
 #### Browser options
 Press the `R` button to open the Browser Options window. Here you can see a ROM's properties, delete it from your SD card or establish the default folder 

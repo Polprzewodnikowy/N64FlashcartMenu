@@ -4,6 +4,10 @@
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
 **WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
 
+**Note:** It is advised to use ROM's in the Big Endian format. Although the menu auto converts them, the load time will be increased.  
+
+**Note:** On macOS, if you have extracted ROM's from zips run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles so they are not shown in the menu.  
+
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.
@@ -12,7 +16,6 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 - Create a folder in the root of your SD card called `menu`.
 - Place your ROM files on the SD card, **in any folder except `menu`**.
 
-**Note:** On macOS, if you have extracted ROM's from zips run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles so they are not shown in the menu.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.

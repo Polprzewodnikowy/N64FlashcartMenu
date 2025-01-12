@@ -12,6 +12,8 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 - Create a folder in the root of your SD card called `menu`.
 - Place your ROM files on the SD card, **in any folder except `menu`**.
 
+**Note:** On macOS, if you have extracted ROM's from zips run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles so they are not shown in the menu.
+
 #### Preparations for other supported flashcarts
 - FAT32 recommended.
 - An SD formatted with the default cluster size is recommended.

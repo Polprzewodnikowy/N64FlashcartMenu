@@ -1,10 +1,11 @@
+[..](./00_index.md)
 ## Initial Setup of SD Card
 
 ### First Steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
 **WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
 
-**Note:** It is advised to use ROM's in the Big Endian format. Although the menu auto converts them, the load time will be increased.  
+**Note:** It is advised to use ROM's in the Big Endian (default) format. Although the menu auto converts byteswapped ROM's, the load time will be increased.  
 
 **Note:** On macOS, if you have extracted ROM's from zips run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles so they are not shown in the menu.  
 
@@ -13,31 +14,21 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 - An SD formatted with 128 kiB cluster size is recommended.
 
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-- Create a folder in the root of your SD card called `menu`.
-- Place your ROM files on the SD card, **in any folder except `menu`**.
+- Place your ROM files on the SD card, **in any folder except `menu`**.  
 
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.
 - An SD formatted with the default cluster size is recommended.
-
-(TBW)
+- Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
 
 
 ### Emulator Support
-Emulators should be added to the `/menu/emulators` directory on the SD card.
-
-N64FlashcartMenu currently supports the following emulators and associated ROM file names:
-- **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
-- **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
-- **Game Boy**/**GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64`/`gbc.v64` ("Download Emulator" button)
-- **SMS**/**GG**: [smsPlus64](https://github.com/fhoedemakers/smsplus64/releases) by *fhoedmakers* - `smsPlus64.z64`
-- **Fairchild Channel F**: [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra/releases) by *celerizer* - `Press-F.z64`
+see [here](./18_emulators.md)
 
 
 ### 64DD Disk Support
-To load and run 64DD disk images, place the required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
-For more details, follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
+See [here](./17_64dd.md)
 
 
 #### So what would the layout of the SD card look like?

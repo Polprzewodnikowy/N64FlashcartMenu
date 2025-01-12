@@ -6,6 +6,8 @@
 #include "path.h"
 #include "utils/fs.h"
 #include "utils/utils.h"
+#include <stdio.h>
+#include <sys/stat.h>
 
 #ifndef SAVES_SUBDIRECTORY
 #define SAVES_SUBDIRECTORY      "saves"
@@ -66,6 +68,173 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
     }
 }
 
+size_t	strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	if (!dst || !src)
+		return (0);
+	if (size > 0)
+	{
+		while (--size && src[i])
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
+	}
+	while (src[i])
+		i++;
+	return (i);
+}
+
+static int	find_str(char const *s, char c)
+{
+	int	i;
+	int	nb_str;
+
+	i = 0;
+	nb_str = 0;
+	if (!s[0])
+		return (0);
+	while (s[i] && s[i] == c)
+		i++;
+	while (s[i])
+	{
+		if (s[i] == c)
+		{
+			nb_str++;
+			while (s[i] && s[i] == c)
+				i++;
+			continue ;
+		}
+		i++;
+	}
+	if (s[i - 1] != c)
+		nb_str++;
+	return (nb_str);
+}
+
+static void	get_next_str(char **next_str, size_t *next_strlen, char c)
+{
+	size_t	i;
+
+	*next_str += *next_strlen;
+	*next_strlen = 0;
+	i = 0;
+	while (**next_str && **next_str == c)
+		(*next_str)++;
+	while ((*next_str)[i])
+	{
+		if ((*next_str)[i] == c)
+			return ;
+		(*next_strlen)++;
+		i++;
+	}
+}
+
+static char	**free_tab(char **tab)
+{
+	int	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+	return (NULL);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**tab;
+	char	*next_str;
+	size_t	next_strlen;
+	int		i;
+
+	i = -1;
+	if (!s)
+		return (NULL);
+	tab = malloc(sizeof(char *) * (find_str(s, c) + 1));
+	if (!tab)
+		return (NULL);
+	next_str = (char *)s;
+	next_strlen = 0;
+	while (++i < find_str(s, c))
+	{
+		get_next_str(&next_str, &next_strlen, c);
+		tab[i] = (char *)malloc(sizeof(char) * (next_strlen + 1));
+		if (!tab[i])
+			return (free_tab(tab));
+		strlcpy(tab[i], next_str, next_strlen + 1);
+	}
+	tab[i] = NULL;
+	return (tab);
+}
+
+static void load_cheats(menu_t *menu, path_t *path) {
+    FILE *cheatsFile;
+    struct stat st;
+    size_t cheatsLength;
+
+    //Parse cheats from file
+    path_ext_replace(path, "cht");
+    if((cheatsFile = fopen(path_get(path), "rb")) == NULL)
+        return;
+
+    if (fstat(fileno(cheatsFile), &st))
+        return;
+
+    cheatsLength = st.st_size;
+    if (cheatsLength <= 0)
+        return;
+    if (cheatsLength > KiB(128))
+        return;
+
+    char *cheatsContent = NULL;
+    if((cheatsContent = malloc((cheatsLength + 1) * sizeof(char))) == NULL)
+        return;
+    if(fread(cheatsContent, cheatsLength, 1, cheatsFile) != 1)
+        return;
+
+    cheatsContent[cheatsLength] = '\0';
+    if(fclose(cheatsFile))
+        return;
+    cheatsFile = NULL;
+ 
+    char **tab = ft_split(cheatsContent, '\n');
+    free(cheatsContent);
+    //should have good tab here
+    //we will assume line number = total cheat size. doesnt really matter
+    uint32_t  *cheats = (uint32_t*)malloc(((sizeof(tab) * sizeof(uint32_t)) * 2) + 2);
+    size_t cheatIndex = 0;
+    for(size_t i = 0; tab[i] != NULL; i++) {
+        //ignore titles and lines that could be too long for an actual cheat
+        if (tab[i][0] == '#') {
+            continue;
+        }
+        //gameshark codes are exactly this length
+        if (strlen(tab[i]) != 13) {
+            continue;
+        }
+        char **splitCheat = ft_split(tab[i], ' ');
+        long cheatValue1 = strtol(splitCheat[0], NULL, 16);
+        long cheatValue2 = strtol(splitCheat[1], NULL, 16);
+        cheats[cheatIndex] = cheatValue1;
+        cheats[cheatIndex + 1] = cheatValue2;
+        free_tab(splitCheat);
+        cheatIndex += 2;
+    }
+    free_tab(tab);
+
+    cheats[cheatIndex] = 0;
+    cheats[cheatIndex + 1] = 0;
+    menu->boot_params->cheat_list = cheats;
+}
+
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
     path_t *path = path_clone(menu->load.rom_path);
 
@@ -93,8 +262,9 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }
 
-    path_free(path);
+    load_cheats(menu, path);
 
+    path_free(path);
     return CART_LOAD_OK;
 }
 

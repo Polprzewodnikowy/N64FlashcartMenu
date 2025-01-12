@@ -9,22 +9,22 @@
 #include "utils/utils.h"
 
 #include "../flashcart_utils.h"
-#include "ed64_vseries_ll.h"
-#include "ed64_vseries.h"
+#include "ed64_xseries_ll.h"
+#include "ed64_xseries.h"
 
 typedef enum {
-    ED64_V1_0 = 110,
-    ED64_V2_0 = 320,
-    ED64_V2_5 = 325,
-    ED64_V3_0 = 330,
-} ed64_vseries_device_variant_t;
+    // potentially handle if the firmware supports it...
+    ED64_X5_0 = 550,
+    ED64_X7_0 = 570,
+    ED64_UKNOWN = 0,
+} ed64_xseries_device_variant_t;
 
 /* ED64 save location base address  */
 #define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
-static flashcart_firmware_version_t ed64_vseries_get_firmware_version (void) {
+static flashcart_firmware_version_t ed64_xseries_get_firmware_version (void) {
     flashcart_firmware_version_t version_info;
     // FIXME: get version from ll
     version_info.major = 1;
@@ -36,30 +36,34 @@ static flashcart_firmware_version_t ed64_vseries_get_firmware_version (void) {
     return version_info;
 }
 
-static flashcart_err_t ed64_vseries_init (void) {
+static flashcart_err_t ed64_xseries_init (void) {
+
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64_vseries_deinit (void) {
+static flashcart_err_t ed64_xseries_deinit (void) {
+
     return FLASHCART_OK;
 }
 
-static ed64_vseries_device_variant_t get_cart_model() {
-    ed64_vseries_device_variant_t variant = ED64_V1_0; // FIXME: check cart model from ll for better feature handling.
+static ed64_xseries_device_variant_t get_cart_model() {
+    ed64_xseries_device_variant_t variant = ED64_X7_0; // FIXME: check cart model from ll for better feature handling.
     return variant;
 }
 
-static bool ed64_vseries_has_feature (flashcart_features_t feature) {
-    bool is_model_v3 = (get_cart_model() == ED64_V3_0); 
+static bool ed64_xseries_has_feature (flashcart_features_t feature) {
+    bool is_model_x7 = (get_cart_model() == ED64_X7_0); 
     switch (feature) {
-        case FLASHCART_FEATURE_RTC: return is_model_v3 ? true : false;
-        case FLASHCART_FEATURE_USB: return is_model_v3 ? true : false;
-        case FLASHCART_FEATURE_AUTO_CIC: return is_model_v3 ? true : false;
+        case FLASHCART_FEATURE_RTC: return is_model_x7 ? true : false;
+        case FLASHCART_FEATURE_USB: return is_model_x7 ? true : false;
+        case FLASHCART_FEATURE_64DD: return false;
+        case FLASHCART_FEATURE_AUTO_CIC: return true;
+        case FLASHCART_FEATURE_AUTO_REGION: return true;
         default: return false;
     }
 }
 
-static flashcart_err_t ed64_vseries_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
 
@@ -101,7 +105,7 @@ static flashcart_err_t ed64_vseries_load_rom (char *rom_path, flashcart_progress
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64_vseries_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
 
@@ -139,31 +143,33 @@ static flashcart_err_t ed64_vseries_load_file (char *file_path, uint32_t rom_off
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64_vseries_load_save (char *save_path) {
-    // FIXME: the savetype will be none.
+static flashcart_err_t ed64_xseries_load_save (char *save_path) {
+
+
     return FLASHCART_OK;
 }
 
-static flashcart_err_t ed64_vseries_set_save_type (flashcart_save_type_t save_type) {
-    // FIXME: the savetype will be none.
+static flashcart_err_t ed64_xseries_set_save_type (flashcart_save_type_t save_type) {
+    
+
     return FLASHCART_OK;
 }
 
-static flashcart_t flashcart_ed64_vseries = {
-    .init = ed64_vseries_init,
-    .deinit = ed64_vseries_deinit,
-    .has_feature = ed64_vseries_has_feature,
-    .get_firmware_version = ed64_vseries_get_firmware_version,
-    .load_rom = ed64_vseries_load_rom,
-    .load_file = ed64_vseries_load_file,
-    .load_save = ed64_vseries_load_save,
+static flashcart_t flashcart_ed64_xseries = {
+    .init = ed64_xseries_init,
+    .deinit = ed64_xseries_deinit,
+    .has_feature = ed64_xseries_has_feature,
+    .get_firmware_version = ed64_xseries_get_firmware_version,
+    .load_rom = ed64_xseries_load_rom,
+    .load_file = ed64_xseries_load_file,
+    .load_save = ed64_xseries_load_save,
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
-    .set_save_type = ed64_vseries_set_save_type,
+    .set_save_type = ed64_xseries_set_save_type,
     .set_save_writeback = NULL,
 };
 
 
-flashcart_t *ed64_vseries_get_flashcart (void) {
-    return &flashcart_ed64_vseries;
+flashcart_t *ed64_xseries_get_flashcart (void) {
+    return &flashcart_ed64_xseries;
 }

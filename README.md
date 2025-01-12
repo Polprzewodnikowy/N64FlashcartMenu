@@ -126,7 +126,8 @@ The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n
 Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
 
 #### ED64 (X series)
-X Series support is currently awaiting fixes. Please use the official [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
+The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
+Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
 
 #### ED64 (P clone)
 Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.

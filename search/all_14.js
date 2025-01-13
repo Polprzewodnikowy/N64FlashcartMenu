@@ -82,7 +82,7 @@ var searchData=
   ['submenu_79',['submenu',['../structcomponent__context__menu__t_8list.html#a7662837116dd5f902c5934e710b051c4',1,'component_context_menu_t.list::submenu'],['../ui__components_8h.html#ad4f2b342246c13cee51a157e581dd2b0',1,'component_context_menu_t::submenu']]],
   ['submodules_80',['Update submodules',['../md_docs_299__developer__guide.html#autotoc_md61',1,'']]],
   ['support_81',['support',['../md_docs_200__getting__started__sd.html#autotoc_md37',1,'64DD Disk Support'],['../md_docs_200__getting__started__sd.html#autotoc_md36',1,'Emulator Support']]],
-  ['supported_82',['Fully supported',['../index.html#autotoc_md2',1,'']]],
+  ['supported_82',['Supported',['../index.html#autotoc_md2',1,'']]],
   ['supported_20flashcarts_83',['supported flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'Preparations for other supported flashcarts'],['../index.html#autotoc_md1',1,'Supported Flashcarts']]],
   ['supported_20sprites_84',['Supported sprites',['../index.html#autotoc_md11',1,'']]],
   ['swapping_85',['Disk swapping',['../md_docs_201__menu__controls.html#autotoc_md49',1,'']]]

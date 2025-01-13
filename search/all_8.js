@@ -27,6 +27,5 @@ var searchData=
   ['from_20an_20ed64_24',['Transfering Saves From An ED64',['../md_docs_200__getting__started__sd.html#autotoc_md40',1,'']]],
   ['from_20the_20devcontainer_25',['From the devcontainer',['../md_docs_299__developer__guide.html#autotoc_md57',1,'']]],
   ['from_20your_20host_20windows_20os_26',['From your host (Windows) OS',['../md_docs_299__developer__guide.html#autotoc_md58',1,'']]],
-  ['fully_20supported_27',['Fully supported',['../index.html#autotoc_md2',1,'']]],
-  ['funct_28',['funct',['../structvr4300__instruction__t_8c__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.c_type::funct'],['../structvr4300__instruction__t_8r__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.r_type::funct']]]
+  ['funct_27',['funct',['../structvr4300__instruction__t_8c__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.c_type::funct'],['../structvr4300__instruction__t_8r__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.r_type::funct']]]
 ];

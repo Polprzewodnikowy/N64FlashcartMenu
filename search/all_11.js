@@ -1,7 +1,7 @@
 var searchData=
 [
   ['p_20clone_0',['ED64 (P clone)',['../index.html#autotoc_md20',1,'']]],
-  ['paddr_1',['paddr',['../boot__io_8h.html#ae7d837b8be7b32681c1004e945362163',1,'sp_regs_t::PADDR'],['../boot__io_8h.html#a39dcd01f99c2ca546737cff58821a43d',1,'pi_regs_t::PADDR']]],
+  ['paddr_1',['paddr',['../boot__io_8h.html#a39dcd01f99c2ca546737cff58821a43d',1,'pi_regs_t::PADDR'],['../boot__io_8h.html#ae7d837b8be7b32681c1004e945362163',1,'sp_regs_t::PADDR']]],
   ['pal60_5fenabled_2',['pal60_enabled',['../settings_8h.html#ad88eea6bf7e99f89f316513306a07506',1,'settings_t']]],
   ['parent_3',['parent',['../ui__components_8h.html#a62ed882efa35b7570bc0dbfef044b627',1,'component_context_menu_t']]],
   ['path_2eh_4',['path.h',['../path_8h.html',1,'']]],
@@ -24,10 +24,11 @@ var searchData=
   ['png_5ferr_5fout_5fof_5fmem_21',['PNG_ERR_OUT_OF_MEM',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4ad5fedd800328fc1e25145b1f3a08b4a9',1,'png_decoder.h']]],
   ['png_5ferr_5ft_22',['png_err_t',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4',1,'png_decoder.h']]],
   ['png_5fok_23',['PNG_OK',['../png__decoder_8h.html#ac5fcb9a8ef757c913a1529c94c7436d4a4dd699113fbe010c8db17e53d985ee36',1,'png_decoder.h']]],
-  ['preparations_20for_20other_20supported_20flashcarts_24',['Preparations for other supported flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'']]],
-  ['preparations_20for_20sc64_25',['Preparations for SC64',['../md_docs_200__getting__started__sd.html#autotoc_md34',1,'']]],
-  ['progress_26',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
-  ['progressbar_5fbg_5fcolor_27',['PROGRESSBAR_BG_COLOR',['../constants_8h.html#a5ab464068eb9e8f6c60aa357ef311571',1,'constants.h']]],
-  ['progressbar_5fdone_5fcolor_28',['PROGRESSBAR_DONE_COLOR',['../constants_8h.html#a3f1a94f2927dd17b0fd77ccb23b33ddc',1,'constants.h']]],
-  ['pwd_29',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
+  ['pre_20release_20only_24',['Work in Progress (pre-release only)',['../index.html#autotoc_md3',1,'']]],
+  ['preparations_20for_20other_20supported_20flashcarts_25',['Preparations for other supported flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'']]],
+  ['preparations_20for_20sc64_26',['Preparations for SC64',['../md_docs_200__getting__started__sd.html#autotoc_md34',1,'']]],
+  ['progress_20pre_20release_20only_27',['Work in Progress (pre-release only)',['../index.html#autotoc_md3',1,'']]],
+  ['progressbar_5fbg_5fcolor_28',['PROGRESSBAR_BG_COLOR',['../constants_8h.html#a5ab464068eb9e8f6c60aa357ef311571',1,'constants.h']]],
+  ['progressbar_5fdone_5fcolor_29',['PROGRESSBAR_DONE_COLOR',['../constants_8h.html#a3f1a94f2927dd17b0fd77ccb23b33ddc',1,'constants.h']]],
+  ['pwd_30',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
 ];

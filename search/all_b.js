@@ -15,7 +15,7 @@ var searchData=
   ['image_5ftype_5fend_12',['IMAGE_TYPE_END',['../ui__components_8h.html#aa77ed4c6e4f6494fea90d148786d15e0a70ee32ccb4ffff891ff0f614dc829e43',1,'ui_components.h']]],
   ['imem_13',['IMEM',['../boot__io_8h.html#a902eb2ad7b99b7f94e5d09a81e516a48',1,'sp_mem_t']]],
   ['imm_14',['imm',['../structvr4300__instruction__t_8i__type.html#aa9c69f2215acca631d4656a30b52db93',1,'vr4300_instruction_t.i_type']]],
-  ['in_20progress_15',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
+  ['in_20progress_20pre_20release_20only_15',['Work in Progress (pre-release only)',['../index.html#autotoc_md3',1,'']]],
   ['in_20sdram_16',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md25',1,'']]],
   ['in_20the_20dev_20container_17',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]],
   ['information_18',['information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'Additional Control Information'],['../md_docs_201__menu__controls.html#autotoc_md46',1,'Additional ROM information']]],

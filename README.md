@@ -5,17 +5,18 @@
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts.  
-![<img src="docs/images/menu-information.png" />](docs/images/menu-information.png)  
+An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
+**This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
+![example menu information](./docs/images/menu-information.png "example menu information") 
 
 ## Supported Flashcarts
 This menu aims to support as many N64 flashcarts as possible.
 
-### Fully supported
+### Supported
 * SummerCart64
 * 64Drive
 
-### Work in Progress
+### Work in Progress (pre-release only)
 * ED64
 * ED64P
 
@@ -69,10 +70,6 @@ These must be `PNG` files that use the following dimensions:
 * Japanese N64 GamePak boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
 
-Supported PNG formats:
-* RGB/RGBA color formats
-* 8-bit color depth
-
 They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).  
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.  
@@ -122,7 +119,7 @@ These can be updated using the settings editor, but if required, you can also ma
 * Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 * Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
-![<img src="docs/images/sc64-flashcart-information.png" />](docs/images/sc64-flashcart-information.png)  
+![SC64 flashcart information](./docs/images/sc64-flashcart-information.png "example SC64 flashcart information")  
 
 
 ### 64drive

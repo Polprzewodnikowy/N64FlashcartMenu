@@ -39,8 +39,6 @@ static void menu_init (boot_params_t *boot_params) {
     assert(menu != NULL);
 
     menu->boot_params = boot_params;
-    menu->boot_params->cheat_list = NULL;
-
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 

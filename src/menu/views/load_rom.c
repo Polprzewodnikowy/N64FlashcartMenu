@@ -352,11 +352,14 @@ static void load (menu_t *menu) {
     }
     //TODO remove this once cheats work
     uint32_t cheats[] = {
-        0x8033B21D,
-        0x0064,
+        0xD01F9B91,
+        0x0020,
+        0x803FDA3F,
+        0x0002,
         0,
         0,
     };
+    
     menu->boot_params->cheat_list = cheats;
 }
 

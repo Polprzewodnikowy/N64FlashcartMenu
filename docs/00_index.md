@@ -26,6 +26,8 @@
 - [MP3 player](./41_mp3_player.md)
 - [Advanced customization](./61_advanced_customization.md)
 - [Hardware mods](./62_hardware_mods.md)
+- [FAQ](./81_faq.md)
+
 #### Experimental Features
 Subject to change  
 - [Experimental Features](./65_experimental.md)

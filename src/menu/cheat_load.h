@@ -18,7 +18,8 @@ typedef enum {
     CHEAT_LOAD_ERR_CHEAT_TOO_LARGE,
     CHEAT_LOAD_ERR_MALLOC_FAILED,
     CHEAT_LOAD_ERR_READ_FAILED,
-    CHEAT_LOAD_ERR_CLOSE_FAILED
+    CHEAT_LOAD_ERR_CLOSE_FAILED,
+    CHEAT_LOAD_ERR_UNKNOWN_ERROR
 } cheat_load_err_t;
 
 cheat_load_err_t load_cheats(menu_t *menu);

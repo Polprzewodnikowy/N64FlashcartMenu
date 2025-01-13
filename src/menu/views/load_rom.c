@@ -350,7 +350,14 @@ static void load (menu_t *menu) {
         menu_show_error(menu, cheat_load_convert_error_message(cheat_err));
         return;
     }
-    //menu->boot_params->cheat_list = NULL;
+    //TODO remove this once cheats work
+    uint32_t cheats[] = {
+        0x8033B21D,
+        0x0064,
+        0,
+        0,
+    };
+    menu->boot_params->cheat_list = cheats;
 }
 
 static void deinit (void) {

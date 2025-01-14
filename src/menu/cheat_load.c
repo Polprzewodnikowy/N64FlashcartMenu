@@ -208,8 +208,8 @@ cheat_load_err_t load_cheats(menu_t *menu) {
             continue;
         }
         char **splitCheat = ft_split(tab[i], ' ');
-        long cheatValue1 = strtol(splitCheat[0], NULL, 16);
-        long cheatValue2 = strtol(splitCheat[1], NULL, 16);
+        uint32_t cheatValue1 = strtoul(splitCheat[0], NULL, 16);
+        uint32_t cheatValue2 = strtoul(splitCheat[1], NULL, 16);
         cheats[cheatIndex] = cheatValue1;
         cheats[cheatIndex + 1] = cheatValue2;
         free_tab(splitCheat);

@@ -1,25 +1,35 @@
 ![Build](https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg)
+![GitHub Org's stars](https://img.shields.io/github/stars/Polprzewodnikowy/N64FlashcartMenu)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Percentage of issues still open")
+[![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts.
+An open source menu for N64 flashcarts and aims to support as many as possible.  
+The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features. It MUST be updated independently of any (current) flashcart frmware.  
+
+**This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
+
+![example menu information](./docs/images/menu-information.png "example menu information") 
 
 ## Supported Flashcarts
+This menu aims to support as many N64 flashcarts as possible.
 
-### Fully supported
+### Supported
 * SummerCart64
 * 64Drive
 
-### Work in Progress
+### Work in Progress (pre-release only)
 * ED64
 * ED64P
 
 
 ## Current (notable) menu features
 * Fully Open Source.
-* Loads all known N64 games (including iQue and Aleck64 ROMs), even if they are byteswapped.
+* Loads all known N64 games, even if they are byteswapped.
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.
-* N64 ROM box image support.
+* N64 ROM box art image support.
 * Background image (PNG) support.
 * Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
@@ -38,14 +48,13 @@ An open source menu for N64 flashcarts.
 * [Developer guide](./docs/99_developer_guide.md)
 
 ## Video showcase (as of Oct 12 2023)
-
 [![N64FlashcartMenu Showcase](http://img.youtube.com/vi/6CKImHTifDA/0.jpg)](http://www.youtube.com/watch?v=6CKImHTifDA "N64FlashcartMenu Showcase (Oct 12 2023)")
 
 
 ## Aims
 * Support as many N64 FlashCarts as possible.
 * Be open source, using permissively licensed third-party libraries.
-* Be testable, using unit and smoke tests in ares emulated environment.
+* Be testable in an emulated environment (Ares).
 * Encourage active development from community members and N64 FlashCart owners.
 * Support as many common mods and features as possible.
 
@@ -62,9 +71,8 @@ description=This is the ROM description that does X Y Z.
 The file line endings must use the linux `LF` endings only (CRLF is not supported) and is limited to 300 characters.
 
 ### N64 ROM autoload
-To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.
-The autoload setting is stored in `config.ini` and persists until changed. This feature may slightly increase boot time as the menu needs to check for the Start button state.
-NOTE: To return to the menu, hold the joypad `Start` button while powering on the console.
+To use the autoload function, while on the `N64 ROM information` display, press the `R` button on your joypad and select the `Set ROM to autoload` option. When you restart the console, it will now only load the selected ROM rather than the menu.  
+**NOTE:** To return to the menu, hold the joypad `Start` button while powering on the console.
 
 ### GamePak sprites
 To use N64 GamePak sprites, place PNG files within the `sd:/menu/boxart/` folder.
@@ -80,6 +88,13 @@ i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxar
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 
 To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:
+
+They will be loaded by directories using each character (case-sensitive) of the full 4 character Game Code (as identified in the menu ROM information).  
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.  
+
+To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3 letter IDs instead:  
+
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
 **Warning**: Excluding the region ID may show the wrong boxart.
@@ -92,6 +107,7 @@ i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 * `gamepak_front.png`
 * `gamepak_back.png`
 
+
 As a starting point, here is a link to a boxart pack, that has `boxart_front.png`:
 * [boxart](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
 
@@ -99,6 +115,34 @@ As a starting point, here is a link to a boxart pack, that has `boxart_front.png
 ### Menu Settings
 The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used and can be set within the menu.
 If required, you can manually adjust the file on the SD card using your computer.
+
+As a starting point, here is a link to a boxart pack following the new structure, including `boxart_front.png` and fallback images:
+* [Recommended Boxart](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
+
+
+#### Compatibility mode
+If you cannot yet satisfy the correct boxart layout, The menu still has **deprecated** support for filenames containing the Game ID.
+
+**Note:** This will add a noticeable delay for displaying parts of the menu.
+
+Each file must be named according to the 2,3 or 4 letter GamePak ID (matched in this order).
+i.e.
+* for GoldenEye 4 letters, this would be `sd:/menu/boxart/NGEE.png` and/or `sd:/menu/boxart/NGEP.png`.
+* for GoldenEye 3 letters, this would be `sd:/menu/boxart/NGE.png`.
+* for GoldenEye 2 letters, this would be `sd:/menu/boxart/GE.png`.
+
+
+As a starting point, here are some links to boxart image packs:
+* [Japan Boxart](https://mega.nz/file/KyJR0B6B#ERabLautAVPaqJTIdBSv4ghbudNhK7hnEr2ZS1Q6ub0)
+* [American Boxart](https://mega.nz/file/rugAFYSQ#JHfgCU2amzNVpC4S6enP3vg--wtAAwsziKa7cej6QCc)
+* [European Boxart](https://mega.nz/file/OmIV3aAK#kOWdutK1_41ffN64R6thbU7HEPR_M9qO0YM2mNG6RbQ)
+* [64DD Boxart](https://mega.nz/file/ay5wQIxJ#k3PF-VMLrZJxJTr-BOaOKa2TBIK7c2t4zwbdshsQl40)
+
+
+### Menu Settings
+The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used by the menu.
+These can be updated using the settings editor, but if required, you can also manually adjust the file on the SD card using your computer.
+
 
 ### Datel cheats
 (Action Replay and GameShark codes)
@@ -110,6 +154,8 @@ Supported, but no GUI available (yet) to edit them.
 ### SC64
 * Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 * Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
+
+![SC64 flashcart information](./docs/images/sc64-flashcart-information.png "example SC64 flashcart information")  
 
 
 ### 64drive

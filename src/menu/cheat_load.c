@@ -8,6 +8,11 @@
 #include "cheat_load.h"
 #include "../utils/fs.h"
 
+/**
+ * Frontend cheat support
+ * 
+ * Made by Mena and XLuma
+ */
 
 char *cheat_load_convert_error_message (cheat_load_err_t err) {
     switch (err) {

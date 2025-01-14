@@ -28,29 +28,7 @@ char *cheat_load_convert_error_message (cheat_load_err_t err) {
     }
 }
 
-/*
-static size_t   strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	i;
-
-	i = 0;
-	if (!dst || !src)
-		return (0);
-	if (size > 0)
-	{
-		while (--size && src[i])
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	while (src[i])
-		i++;
-	return (i);
-}
-*/
-static int	find_str(char const *s, char c)
+static int find_str(char const *s, char c)
 {
 	int	i;
 	int	nb_str;

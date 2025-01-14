@@ -1,12 +1,11 @@
+#include "cheat_load.h"
+#include "../utils/fs.h"
+
 #include <string.h>
-
 #include <libdragon.h>
-
 #include <stdio.h>
 #include <sys/stat.h>
 #include "views/views.h"
-#include "cheat_load.h"
-#include "../utils/fs.h"
 
 /**
  * Frontend cheat support

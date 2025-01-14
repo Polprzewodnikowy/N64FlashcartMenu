@@ -140,44 +140,37 @@ cheat_load_err_t load_cheats(menu_t *menu) {
     //Parse cheats from file
     path_ext_replace(path, "cht");
     if((cheatsFile = fopen(path_get(path), "rb")) == NULL) {
-        //menu_show_error(menu, "Could not open cheat file.");
 		path_free(path);
-        return CHEAT_LOAD_OK;//no file is not an error. //CHEAT_LOAD_ERR_NO_CHEAT_FILE;
+        return CHEAT_LOAD_OK;//no file is not an error.
     }
 
     if (fstat(fileno(cheatsFile), &st)){
-        //menu_show_error(menu, "Could not get cheat file size.");
 		path_free(path);
         return CHEAT_LOAD_ERR_SIZE_FAILED;
     }
 
     cheatsLength = st.st_size;
     if (cheatsLength <= 0) {
-       // menu_show_error(menu, "Cheat file is empty");
 	   path_free(path);
         return CHEAT_LOAD_ERR_CHEAT_EMPTY;
     }
     if (cheatsLength > KiB(128)) {
-        //menu_show_error(menu, "Cheat file is too large");
 		path_free(path);
         return CHEAT_LOAD_ERR_CHEAT_TOO_LARGE;
     }
 
     char *cheatsContent = NULL;
     if((cheatsContent = malloc((cheatsLength + 1) * sizeof(char))) == NULL) {
-        //menu_show_error(menu, "Couldnt allocate memory for file.");
 		path_free(path);
         return CHEAT_LOAD_ERR_MALLOC_FAILED;
     }
     if(fread(cheatsContent, cheatsLength, 1, cheatsFile) != 1) {
-       // menu_show_error(menu, "Could not read cheat file.");
 	   	path_free(path);
         return CHEAT_LOAD_ERR_READ_FAILED;
     }
 
     cheatsContent[cheatsLength] = '\0';
     if(fclose(cheatsFile) != 0){
-        //menu_show_error(menu, "Could not close cheat file.");
 		path_free(path);
         return CHEAT_LOAD_ERR_CLOSE_FAILED;
     }
@@ -188,26 +181,23 @@ cheat_load_err_t load_cheats(menu_t *menu) {
 	for (size_t i = 0; tab[i] != NULL; i++) {
 		lines++;
 	}
-    //if (sizeof(tab) < 1 || sizeof(tab) > 3) {
-       // menu_show_error(menu, "Cheat file split failed");
-    //    return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
-    //}
+
     free(cheatsContent);
-    //should have good tab here
-    //we will assume line number = total cheat size. doesnt really matter
+
     uint32_t  *cheats = (uint32_t*)malloc(((lines * sizeof(uint32_t)) * 2) + 2);
 	memset(cheats, 0, ((lines * sizeof(uint32_t)) * 2) + 2);
     size_t cheatIndex = 0;
     for(size_t i = 0; tab[i] != NULL; i++) {
-        //ignore titles and lines that could be too long for an actual cheat
+        //ignore titles 
         if (tab[i][0] == '#') {
             continue;
         }
-        //gameshark codes are exactly this length
+		//ignore empty, too small or too big lines
         if (strlen(tab[i]) < 12 || strlen(tab[i]) > 15) {
             continue;
         }
         char **splitCheat = ft_split(tab[i], ' ');
+		//thank you mena for checking my fucky wucky
         uint32_t cheatValue1 = strtoul(splitCheat[0], NULL, 16);
         uint32_t cheatValue2 = strtoul(splitCheat[1], NULL, 16);
         cheats[cheatIndex] = cheatValue1;

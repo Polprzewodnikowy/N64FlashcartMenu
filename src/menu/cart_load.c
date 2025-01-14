@@ -93,6 +93,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
         path_free(path);
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }
+
     path_free(path);
 
     return CART_LOAD_OK;

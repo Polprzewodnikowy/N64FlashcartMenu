@@ -54,7 +54,7 @@ static int find_str(char const *s, char c)
     return (nb_str);
 }
 
-static void	get_next_str(char **next_str, size_t *next_strlen, char c)
+static void get_next_str(char **next_str, size_t *next_strlen, char c)
 {
     size_t	i;
 
@@ -86,12 +86,12 @@ static char **free_tab(char **tab)
     return (NULL);
 }
 
-char    **ft_split(char const *s, char c)
+char **ft_split(char const *s, char c)
 {
-    char    **tab;
-    char    *next_str;
-    size_t  next_strlen;
-    int	    i;
+    char **tab;
+    char *next_str;
+    size_t next_strlen;
+    int i;
 
     i = -1;
     if (!s)

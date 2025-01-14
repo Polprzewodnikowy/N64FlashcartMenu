@@ -136,12 +136,12 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
-        "  Autoload ROM      : %s\n\n"
+        "  Autoload ROM      : %s\n"
+        "  ROM Loading Bar   : %s\n\n"
         "To change the following menu settings, press 'A':\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Sound Effects     : %s\n"
-        "     Loading Progress  : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
         "     Background Music  : %s\n"
@@ -153,10 +153,10 @@ static void draw (menu_t *menu, surface_t *d) {
         ,
         menu->settings.default_directory,
         format_switch(menu->settings.rom_autoload_enabled),
+        format_switch(menu->settings.loading_progress_bar_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.soundfx_enabled),
-        format_switch(menu->settings.loading_progress_bar_enabled)
+        format_switch(menu->settings.soundfx_enabled)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

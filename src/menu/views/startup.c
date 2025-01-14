@@ -31,8 +31,9 @@ void view_startup_init (menu_t *menu) {
     }
     
     if (menu->settings.first_run) {
-        menu->next_mode = MENU_MODE_CREDITS;
         menu->settings.first_run = false;
+        settings_save(&menu->settings);
+        menu->next_mode = MENU_MODE_CREDITS;
     }
     else {
         menu->next_mode = MENU_MODE_BROWSER;

@@ -118,9 +118,10 @@ typedef enum {
     SAVE_TYPE_EEPROM_16KBIT = 2,
     SAVE_TYPE_SRAM_256KBIT = 3,
     SAVE_TYPE_SRAM_BANKED = 4,
-    SAVE_TYPE_SRAM_1MBIT = 5,
+    SAVE_TYPE_SRAM_1MBIT = 5, // Not a real save type, but used for some ROMs due to ED64 support.
     SAVE_TYPE_FLASHRAM_1MBIT = 6,
     SAVE_TYPE_FLASHRAM_PKST2 = 7,
+    SAVE_TYPE_FLASHRAM_NONCOMPLIANT = 8, // Not a real save type, but used for some ROMs due to ED64 support.
     SAVE_TYPE_AUTOMATIC = -1,
 } rom_save_type_t;
 

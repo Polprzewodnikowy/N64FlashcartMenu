@@ -42,6 +42,7 @@ static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
         case SAVE_TYPE_SRAM_1MBIT: return FLASHCART_SAVE_TYPE_SRAM_1MBIT;
         case SAVE_TYPE_FLASHRAM_1MBIT: return FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
         case SAVE_TYPE_FLASHRAM_PKST2: return FLASHCART_SAVE_TYPE_FLASHRAM_PKST2;
+        case SAVE_TYPE_FLASHRAM_NONCOMPLIANT: return FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
         default: return FLASHCART_SAVE_TYPE_NONE;
     }
 }

@@ -78,6 +78,7 @@ static const char *format_rom_save_type (rom_save_type_t save_type, bool support
         case SAVE_TYPE_SRAM_1MBIT: return supports_cpak ?     "SRAM 1Mbit | Controller PAK" : "SRAM 1Mbit";
         case SAVE_TYPE_FLASHRAM_1MBIT: return supports_cpak ? "FlashRAM 1Mbit | Controller PAK" : "FlashRAM 1Mbit";
         case SAVE_TYPE_FLASHRAM_PKST2: return supports_cpak ? "FlashRAM (Pokemon Stadium 2) | Controller PAK" : "FlashRAM (Pokemon Stadium 2)";
+        case SAVE_TYPE_FLASHRAM_NONCOMPLIANT: return supports_cpak ? "FlashRAM (Wrongly implemented) | Controller PAK" : "FlashRAM (Wrongly implemented)";
         default: return "Unknown";
     }
 }
@@ -193,6 +194,7 @@ static component_context_menu_t set_save_type_context_menu = { .list = {
     { .text = "SRAM 768kbit / 3 banks", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_BANKED) },
     { .text = "SRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_SRAM_1MBIT) },
     { .text = "FlashRAM 1Mbit", .action = set_save_type, .arg = (void *) (SAVE_TYPE_FLASHRAM_1MBIT) },
+    { .text = "FlashRAM Non-compliant", .action = set_save_type, .arg = (void *) (SAVE_TYPE_FLASHRAM_NONCOMPLIANT) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 

@@ -11,24 +11,6 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
-
-// // Example cheat codes for the game "Majoras Mask USA"
-// uint32_t cheats[] = {
-//     // Enable Code
-//     0xF1096820,
-//     0x2400,
-//     0xFF000220,
-//     0x0000,
-//     // Inventory Editor (assigned to L)
-//     0xD01F9B91,
-//     0x0020,
-//     0x803FDA3F,
-//     0x0002,
-//     // Last 2 entrys must be 0
-//     0,
-//     0,
-// };
-
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
         case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
@@ -259,7 +241,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.rom_file) {
+    if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f);
     } else {
         ui_components_layout_draw();
@@ -385,7 +367,7 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
-    menu->boot_params->cheat_list = NULL; // TODO: cheats;
+    menu->boot_params->cheat_list = NULL;
 }
 
 static void deinit (void) {

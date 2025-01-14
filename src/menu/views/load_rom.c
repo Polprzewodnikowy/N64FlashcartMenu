@@ -6,6 +6,7 @@
 #include <string.h>
 #include "utils/fs.h"
 #include "../bookkeeping.h"
+#include "../cheat_load.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -362,7 +363,14 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
-    menu->boot_params->cheat_list = NULL;
+    cheat_load_err_t cheat_err = load_cheats(menu);
+    if (cheat_err != CHEAT_LOAD_OK) {
+        menu_show_error(menu, cheat_load_convert_error_message(cheat_err));
+        return;
+    }
+    //TODO remove this once cheats work
+    
+    menu->boot_params->cheat_list = cheats;
 }
 
 static void deinit (void) {

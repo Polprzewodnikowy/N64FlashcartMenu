@@ -141,6 +141,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Sound Effects     : %s\n"
+        "     Loading Progress  : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
         "     Background Music  : %s\n"
@@ -154,7 +155,8 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.soundfx_enabled)
+        format_switch(menu->settings.soundfx_enabled),
+        format_switch(menu->settings.loading_progress_bar_enabled)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

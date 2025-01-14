@@ -10,6 +10,9 @@
 
 /** @brief Settings Structure */
 typedef struct {
+    /** @brief First run of the menu */
+    bool first_run;
+
     /** @brief Use 60 Hz refresh rate on a PAL console */
     bool pal60_enabled;
 
@@ -30,6 +33,9 @@ typedef struct {
 
     /** @brief Enable rumble feedback */
     bool rumble_enabled;
+
+    /** @brief Show progress bar when loading a ROM */
+    bool loading_progress_bar_enabled;
 
     /** @brief Enable the ability to bypass the menu and instantly load a ROM */
     bool rom_autoload_enabled;

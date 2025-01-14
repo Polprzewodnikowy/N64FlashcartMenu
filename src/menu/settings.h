@@ -10,6 +10,9 @@
 
 /** @brief Settings Structure */
 typedef struct {
+    /** @brief Settings version */
+    int schema_revision;
+
     /** @brief First run of the menu */
     bool first_run;
 

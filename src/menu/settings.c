@@ -9,6 +9,7 @@ static char *settings_path = NULL;
 
 
 static settings_t init = {
+    .schema_revision = 1,
     .first_run = true,
     .pal60_enabled = false,
     .show_protected_entries = false,
@@ -39,6 +40,8 @@ void settings_load (settings_t *settings) {
     }
 
     mini_t *ini = mini_try_load(settings_path);
+
+    settings->schema_revision = mini_get_int(ini, "menu", "schema_revision", init.schema_revision);
     settings->first_run = mini_get_bool(ini, "menu", "first_run", init.first_run);
     settings->pal60_enabled = mini_get_bool(ini, "menu", "pal60", init.pal60_enabled); // TODO: consider changing file setting name
     settings->show_protected_entries = mini_get_bool(ini, "menu", "show_protected_entries", init.show_protected_entries);
@@ -61,6 +64,7 @@ void settings_load (settings_t *settings) {
 void settings_save (settings_t *settings) {
     mini_t *ini = mini_create(settings_path);
 
+    mini_set_int(ini, "menu", "schema_revision", settings->schema_revision);
     mini_set_bool(ini, "menu", "first_run", settings->first_run);
     mini_set_bool(ini, "menu", "pal60", settings->pal60_enabled);
     mini_set_bool(ini, "menu", "show_protected_entries", settings->show_protected_entries);

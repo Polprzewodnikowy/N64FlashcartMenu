@@ -85,6 +85,7 @@ static char **free_tab(char **tab)
     free(tab);
     return (NULL);
 }
+
 char    **ft_split(char const *s, char c)
 {
     char    **tab;

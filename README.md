@@ -5,8 +5,11 @@
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
+An open source menu for N64 flashcarts and aims to support as many as possible.  
+The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features. It MUST be updated independently of any (current) flashcart frmware.  
+
 **This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
+
 ![example menu information](./docs/images/menu-information.png "example menu information") 
 
 ## Supported Flashcarts

@@ -72,7 +72,7 @@ static void	get_next_str(char **next_str, size_t *next_strlen, char c)
     }
 }
 
-static char	**free_tab(char **tab)
+static char **free_tab(char **tab)
 {
     int	i;
 
@@ -85,13 +85,12 @@ static char	**free_tab(char **tab)
     free(tab);
     return (NULL);
 }
-
-char	**ft_split(char const *s, char c)
+char    **ft_split(char const *s, char c)
 {
-    char	**tab;
-    char	*next_str;
-    size_t	next_strlen;
-    int		i;
+    char    **tab;
+    char    *next_str;
+    size_t  next_strlen;
+    int	    i;
 
     i = -1;
     if (!s)

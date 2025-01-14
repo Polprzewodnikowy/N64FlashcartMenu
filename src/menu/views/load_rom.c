@@ -370,7 +370,7 @@ static void load (menu_t *menu) {
     }
     //TODO remove this once cheats work
     
-    menu->boot_params->cheat_list = cheats;
+    //menu->boot_params->cheat_list = cheats;
 }
 
 static void deinit (void) {

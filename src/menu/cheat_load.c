@@ -184,6 +184,10 @@ cheat_load_err_t load_cheats(menu_t *menu) {
     cheatsFile = NULL;
  
     char **tab = ft_split(cheatsContent, '\n');
+	size_t lines = 1;
+	for (size_t i = 0; tab[i] != NULL; i++) {
+		lines++;
+	}
     //if (sizeof(tab) < 1 || sizeof(tab) > 3) {
        // menu_show_error(menu, "Cheat file split failed");
     //    return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
@@ -191,8 +195,8 @@ cheat_load_err_t load_cheats(menu_t *menu) {
     free(cheatsContent);
     //should have good tab here
     //we will assume line number = total cheat size. doesnt really matter
-    uint32_t  *cheats = (uint32_t*)malloc(((sizeof(tab) * sizeof(uint32_t)) * 2) + 2);
-	memset(cheats, 0, sizeof(tab) * sizeof(uint32_t) * 2 + 2);
+    uint32_t  *cheats = (uint32_t*)malloc(((lines * sizeof(uint32_t)) * 2) + 2);
+	memset(cheats, 0, ((lines * sizeof(uint32_t)) * 2) + 2);
     size_t cheatIndex = 0;
     for(size_t i = 0; tab[i] != NULL; i++) {
         //ignore titles and lines that could be too long for an actual cheat

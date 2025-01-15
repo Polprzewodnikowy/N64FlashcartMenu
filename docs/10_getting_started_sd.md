@@ -1,35 +1,30 @@
-[..](./00_index.md)
-## Initial Setup of SD Card
+[Return to the index](./00_index.md)
+## Initial Setup of the SD Card
 
-### First Steps
+### First steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
 **WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
 
-**Note:** It is advised to use ROM's in the Big Endian (default) format. Although the menu auto converts byteswapped ROM's, the load time will be increased.  
+**Note:** It is advised to use ROM files in the Big Endian (default, also called "non-byteswapped") format. Although the menu auto-converts byteswapped ROM files, the load time will increase.
 
-**Note:** On macOS, if you have extracted ROM's from zips run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles so they are not shown in the menu.  
+**Note:** On macOS, if you have extracted ROM's from ZIP or other compressed files, run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles. That way, they will not show up in the menu.
 
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.
-
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-- Place your ROM files on the SD card, **in any folder except `menu`**.  
-
+- Place your ROM files on the SD card, **in any folder except `menu`**.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.
 - An SD formatted with the default cluster size is recommended.
 - Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
 
+### Emulator support
+See the [Emulators](./18_emulators.md) page.
 
-### Emulator Support
-see [here](./18_emulators.md)
-
-
-### 64DD Disk Support
-See [here](./17_64dd.md)
-
+### 64DD Disk support
+See the [64DD](./17_64dd.md) page.
 
 #### So what would the layout of the SD card look like?
 ```plaintext
@@ -56,8 +51,8 @@ SD:\
 │
 ├── (a rom).z64
 ├── (a rom).n64
-├── (some folder with roms)\
-        │   └── (some folder with roms)\
+├── (some folder with ROMs)\
+        │   └── (some folder with ROMs)\
         |       └── (some supported ROM files)
         │
         ├── (some supported ROM files)
@@ -73,7 +68,7 @@ and they must share the same file name, but use the `.sav` extension. `.sav` fil
 the "cartridge save memory".
 
 ```plaintext
-├── (some folder with roms)\
+├── (some folder with ROMs)\
     ├── a_rom.z64
     ├── b_rom_whatever.n64
     └── saves\
@@ -81,7 +76,7 @@ the "cartridge save memory".
         └── b_rom_whatever.sav
 ```
 
-### Transfering Saves From An ED64
+### Transferring saves from an ED64
 If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
 For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 

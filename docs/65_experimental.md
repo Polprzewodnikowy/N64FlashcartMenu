@@ -1,11 +1,10 @@
-[..](./00_index.md)
-## Experimental features
-These features are subject to change:
+[Return to the index](./00_index.md)
+## Experimental Features (Subject to change)
 
-### ROM Info descriptions (pre-release only)
-To add a ROM description (shown when loading a ROM), add a file with the content
+### ROM info descriptions (pre-release only)
+To show a ROM description in the N64 ROM information screen, add a `.TXT` file next to the game ROM file with the same name and the following content:
 ```
 [metadata]
 description=This is the ROM description that does X Y Z.
 ```
-The file line endings must use the linux `LF` endings only (CRLF is not supported) ASCII characters only and is limited to 300 characters.
+Text files must use ASCII characters only, Linux `LF` endings (CRLF is not supported) and the descriptions themselves must be limited to 300 characters.

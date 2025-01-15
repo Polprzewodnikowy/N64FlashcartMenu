@@ -1,3 +1,4 @@
-[..](./00_index.md)
-### MP3 Player
-The menu is able to play loaded MP3 files.
+[Return to the index](./00_index.md)
+## MP3 Player
+<!-- Can't write much of a feature that it's not available... -->
+The menu is able to play any MP3 files that are in the SD Card.

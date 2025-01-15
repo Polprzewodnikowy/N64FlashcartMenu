@@ -34,6 +34,9 @@
 
 static menu_t *menu;
 
+static tv_type_t tv_type;
+extern int __boot_tvtype;
+
 
 static void menu_init (boot_params_t *boot_params) {    
     menu = calloc(1, sizeof(menu_t));
@@ -77,6 +80,15 @@ static void menu_init (boot_params_t *boot_params) {
     menu->load.load_history = -1;
     menu->load.load_favorite = -1;
     path_pop(path);
+  
+    // Check if HDMI PAL60 compatibility mode is enabled
+    if (menu->settings.hdmi_pal60_compatibility_mode) {
+        tv_type = get_tv_type();
+        if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
+            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
+            __boot_tvtype = (int)TV_NTSC;
+        }
+    }
 
     resolution_t resolution = {
         .width = 640,
@@ -84,6 +96,7 @@ static void menu_init (boot_params_t *boot_params) {
         .interlaced = INTERLACED ? INTERLACE_HALF : INTERLACE_OFF,
         .pal60 = menu->settings.pal60_enabled
     };
+
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, INTERLACED ? FILTERS_DISABLED : FILTERS_RESAMPLE);
     display_set_fps_limit(FPS_LIMIT);
 
@@ -109,6 +122,7 @@ static void menu_init (boot_params_t *boot_params) {
 }
 
 static void menu_deinit (menu_t *menu) {
+    __boot_tvtype = (int)tv_type;
     hdmi_send_game_id(menu->boot_params);
 
     ui_components_background_free();

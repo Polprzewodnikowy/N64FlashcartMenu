@@ -213,7 +213,7 @@ static component_context_menu_t set_cheat_options_menu = { .list = {
     { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
     { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
     COMPONENT_CONTEXT_MENU_LIST_END,
-}}
+}};
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },

@@ -242,7 +242,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.rom_file) {
+    if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f);
     } else {
         ui_components_layout_draw();
@@ -344,7 +344,12 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
-    cart_load_err_t err = cart_load_n64_rom_and_save(menu, draw_progress);
+    cart_load_err_t err;
+    if (!menu->settings.loading_progress_bar_enabled) {
+        err = cart_load_n64_rom_and_save(menu, NULL);
+    } else  {
+        err = cart_load_n64_rom_and_save(menu, draw_progress);
+    }
 
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));

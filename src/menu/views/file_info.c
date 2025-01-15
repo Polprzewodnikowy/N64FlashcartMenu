@@ -14,7 +14,7 @@ static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NUL
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
 static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
-static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", NULL };
+static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", "rzx", NULL };
 
 
 static struct stat st;

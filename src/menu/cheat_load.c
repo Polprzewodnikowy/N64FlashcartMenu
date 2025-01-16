@@ -180,7 +180,6 @@ cheat_load_err_t load_cheats (menu_t *menu) {
             continue;
         }
         char **splitCheat = ft_split(tab[i], ' ');
-        // thank you mena for checking my fucky wucky
         uint32_t cheatValue1 = strtoul(splitCheat[0], NULL, 16);
         uint32_t cheatValue2 = strtoul(splitCheat[1], NULL, 16);
         cheats[cheatIndex] = cheatValue1;

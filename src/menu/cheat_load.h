@@ -22,5 +22,5 @@ typedef enum {
     CHEAT_LOAD_ERR_UNKNOWN_ERROR
 } cheat_load_err_t;
 
-cheat_load_err_t load_cheats(menu_t *menu);
+cheat_load_err_t load_cheats (menu_t *menu);
 char *cheat_load_convert_error_message (cheat_load_err_t err);

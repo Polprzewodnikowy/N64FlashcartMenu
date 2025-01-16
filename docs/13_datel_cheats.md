@@ -8,29 +8,39 @@ The N64 supports the peripherals
 
 It is not advised to connect the physical peripheral with most flashcarts.
 
-The menu has underlying support for these codes (when using an expansion pak), but is not yet exposed via the menu graphical user interface.
+The menu has underlying support for cheat codes when using an expansion pak.
+
+Caveats:
+- Something about GS and expansion paks 
 
 
+If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in menu->boot_params->cheat_list per the cheat backend API.
+
+Cheat files should be formatted this way:
 ```
-// Example cheat codes for the game "Majoras Mask USA"
-uint32_t cheats[] = {
-    // Enable code
-    0xF1096820,
-    0x2400,
-    0xFF000220,
-    0x0000,
-    // Inventory Editor (assigned to L)
-    0xD01F9B91,
-    0x0020,
-    0x803FDA3F,
-    0x0002,
-    // Last 2 entrys must be 0
-    0,
-    0,
-};
+# Super mario 64 infinite lives
+8033B21D 0064
+
+# 120 stars
+80207723 0001
+8020770B 00C7
+50001101 0000
+8020770C 00FF
 ```
 
-And pass this array as a boot parameter: `menu->boot_params->cheat_list = cheats;`
+Another example:
+```
+# Example cheat codes for the game "Majoras Mask USA"
+# Enable code
+F1096820 2400
+FF000220 0000
+# Inventory Editor (assigned to L)
+D01F9B91 0020
+803FDA3F 0002
+```
+
+The parser ignores lines that start with a `#`, are under 12 characters or over 15 characters. Every other line needs to be a valid cheat code input with the code on the left, and the value on the right separated by a space.
+
+The cheat file needs to be enabled (press `R` within the Rom Info).
 
 Check [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.
-

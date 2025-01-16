@@ -5,9 +5,11 @@ AKA InterAct (in certain regions)
 The N64 supports the peripherals
 - GameShark
 - Action Replay
-- Xploder
+
+Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are less likely to work.
 
 It is not advised to connect the physical peripheral with most flashcarts.
+
 
 The menu has underlying support for cheat codes based on datel carts when using an expansion pak.
 
@@ -20,7 +22,9 @@ The current code types are supported:
 - Fx (description here)
 
 The codes XX are not supported, because...
+- e.g. they rely on the button.
 
+### File parsing support
 
 If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in menu->boot_params->cheat_list per the cheat backend API.
 
@@ -51,4 +55,4 @@ D01F9B91 0020
 
 The cheat file needs to be enabled for the specific game (press `R` within the Rom Info).
 
-Check [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.
+Check [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI editor support.

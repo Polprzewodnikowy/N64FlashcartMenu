@@ -16,6 +16,8 @@ Caveats:
 
 If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in menu->boot_params->cheat_list per the cheat backend API.
 
+The parser ignores lines that start with a `#` or `$`, are under 12 characters or over 15 characters. Every other line needs to be a valid cheat code input with the code on the left, and the value on the right separated by a space.
+
 Cheat files should be formatted this way:
 ```
 # Super mario 64 infinite lives
@@ -39,8 +41,6 @@ D01F9B91 0020
 803FDA3F 0002
 ```
 
-The parser ignores lines that start with a `#`, are under 12 characters or over 15 characters. Every other line needs to be a valid cheat code input with the code on the left, and the value on the right separated by a space.
-
-The cheat file needs to be enabled (press `R` within the Rom Info).
+The cheat file needs to be enabled for the specific game (press `R` within the Rom Info).
 
 Check [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.

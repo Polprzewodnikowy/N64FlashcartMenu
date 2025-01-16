@@ -5,13 +5,21 @@ AKA InterAct (in certain regions)
 The N64 supports the peripherals
 - GameShark
 - Action Replay
+- Xploder
 
 It is not advised to connect the physical peripheral with most flashcarts.
 
-The menu has underlying support for cheat codes when using an expansion pak.
+The menu has underlying support for cheat codes based on datel carts when using an expansion pak.
 
 Caveats:
-- Something about GS and expansion paks 
+- Something about cheats and expansion paks.
+
+The current code types are supported:
+- 80 (description here)
+- D0 (description here)
+- Fx (description here)
+
+The codes XX are not supported, because...
 
 
 If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in menu->boot_params->cheat_list per the cheat backend API.

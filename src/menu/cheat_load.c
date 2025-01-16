@@ -171,7 +171,7 @@ cheat_load_err_t load_cheats(menu_t *menu) {
     size_t cheatIndex = 0;
     for(size_t i = 0; tab[i] != NULL; i++) {
         //ignore titles 
-        if (tab[i][0] == '#') {
+        if (tab[i][0] == '#' || tab[i][0] == '$') {
             continue;
         }
         //ignore empty, too small or too big lines

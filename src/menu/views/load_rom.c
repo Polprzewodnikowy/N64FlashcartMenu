@@ -168,7 +168,20 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static void set_cheat_option(menu_t *menu, void *arg) {
-    return;
+    bool enabled = (bool)arg;
+    if (enabled == true) {
+        cheat_load_err_t err = load_cheats(menu);
+        if (err != CHEAT_LOAD_OK) {
+            menu_show_error(menu, cheat_load_convert_error_message(err));
+        }
+    }
+    if (enabled == false) {
+        if (menu->boot_params->cheat_list != NULL) {
+            free(menu->boot_params->cheat_list);
+        }
+    }
+    rom_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
+    menu->browser.reload = true;
 }
 
 static component_context_menu_t set_cic_type_context_menu = { .list = {

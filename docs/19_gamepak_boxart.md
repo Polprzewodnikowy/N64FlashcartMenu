@@ -25,5 +25,5 @@ i.e. for GoldenEye, this would be `sd:/menu/box art/N/G/E/boxart_front.png`.
 * `gamepak_front.png`
 * `gamepak_back.png`
 
-As a starting point, here is a link to a box art pack, that has `box art_front.png`:  
+As a starting point, here is a link to a box art pack, that has `boxart_front.png`:  
 * [Third party box art](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)

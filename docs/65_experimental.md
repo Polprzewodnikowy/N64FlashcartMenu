@@ -3,7 +3,7 @@
 
 ### ROM info descriptions (pre-release only)
 To show a ROM description in the N64 ROM information screen, add a `.TXT` file next to the game ROM file with the same name and the following content:
-```
+```ini
 [metadata]
 description=This is the ROM description that does X Y Z.
 ```

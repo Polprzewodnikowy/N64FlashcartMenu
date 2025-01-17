@@ -1,14 +1,13 @@
-[..](./00_index.md)
-## Datel Cheats
-AKA InterAct (in certain regions)
+[Return to the index](./00_index.md)
+## Datel/InterAct Cheats
 
-The N64 supports the peripherals
+The N64 saw two cheat peripherals during its lifespan:
 - GameShark
 - Action Replay
 
-It is not advised to connect the physical peripheral with most flashcarts.
+WARNING: Do not connect a GameShark, Action Replay or similar cheat devices with most flashcarts.
 
-The menu has underlying support for these codes (when using an expansion pak), but is not yet exposed via the menu graphical user interface.
+N64FlashcartMenu has underlying support for these cheat codes (an Expansion Pak is required), but is not yet exposed via the graphical user interface.
 
 
 ```
@@ -24,7 +23,7 @@ uint32_t cheats[] = {
     0x0020,
     0x803FDA3F,
     0x0002,
-    // Last 2 entrys must be 0
+    // Last 2 entries must be 0
     0,
     0,
 };
@@ -32,5 +31,5 @@ uint32_t cheats[] = {
 
 And pass this array as a boot parameter: `menu->boot_params->cheat_list = cheats;`
 
-Check [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.
+Check the [Pull Requests section](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.
 

@@ -1,15 +1,28 @@
 [Return to the index](./00_index.md)
 ## Datel/InterAct Cheats
 
-The N64 saw a number of cheat peripherals during its lifespan:
+The N64FlashcartMenu supports the cheat code types made popular by the peripherals:
 - GameShark
 - Action Replay
-- Xplorer64
 
-WARNING: Do not connect a GameShark, Action Replay or similar cheat devices with most flashcarts.
+Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are less likely to work.
 
-N64FlashcartMenu has underlying support for these cheat codes (an Expansion Pak is required), but is not yet exposed via the graphical user interface.
+**WARNING**: It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
+
+The N64FlashcartMenu can only support cheat codes based on datel carts when also using an Expansion pak.
+
+Caveats:
+- Something about cheats and expansion paks.
+
+The current code types are supported:
+- 80 (description here)
+- D0 (description here)
+- Fx (description here)
+- ...
+
+The codes XX are not supported, because...
+- e.g. they rely on the button.
 
 ```
 // Example cheat codes for the game "Majoras Mask USA"
@@ -32,4 +45,4 @@ uint32_t cheats[] = {
 
 And pass this array as a boot parameter: `menu->boot_params->cheat_list = cheats;`
 
-Check the [Pull Requests section](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI support.
+Check the [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI editor support.

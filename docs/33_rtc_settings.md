@@ -2,7 +2,7 @@
 ## Real-Time Clock Settings
 
 <!-- The screenshot does not match the RTC, needs replacement, probably with a cropped File Browser with the RTC displayed -->
-![RTC information](./images/menu-information.png "RTC Information")  
+![RTC information](./images/rtc-information.png "RTC Information")  
 If your flashcart supports the Real-Time Clock (RTC from herein) feature, N64FlashcartMenu has the ability to read and set it.
 
 Press the `START` Button on the File Browser and select `Time (RTC) settings` to enter the Adjust Real-Time Clock screen. Here you will see a notice regarding other ways to change the RTC. If your flashcart is compatible, press the `A` Button to display the RTC change prompt.

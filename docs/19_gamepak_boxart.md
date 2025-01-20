@@ -17,13 +17,13 @@ i.e. for GoldenEye, this would be `sd:/menu/box art/N/G/E/boxart_front.png`.
 
 **Warning**: Excluding the region ID may show a box art of the wrong region.  
 **Note**: For future support, box art sprites should also include:  
-* `boxart_back.png`
-* `boxart_top.png`
-* `boxart_bottom.png`
-* `boxart_left.png`
-* `boxart_right.png`
-* `gamepak_front.png`
-* `gamepak_back.png`
+- `boxart_back.png`
+- `boxart_top.png`
+- `boxart_bottom.png`
+- `boxart_left.png`
+- `boxart_right.png`
+- `gamepak_front.png`
+- `gamepak_back.png`
 
 As a starting point, here is a link to a box art pack, that has `boxart_front.png`:  
-* [Third party box art](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
+- [Third party box art](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)

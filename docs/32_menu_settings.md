@@ -1,7 +1,7 @@
 [Return to the index](./00_index.md)
 ## Menu Settings
-N64FlashcartMenu creates a `config.ini` file in `sd:/menu/`, which contains various settings that can be set within the menu.
-If required, you can manually change the file on the SD card using your computer.
+N64FlashcartMenu automatically creates a `config.ini` file in `sd:/menu/`, which contains various settings that can be set within the menu's Settings editor.
+If required, you can manually adjust the file (required for some advanced settings) on the SD card using your computer.
 
 ### Show Hidden Files
 Shows any N64FlashcartMenu system-related files. This setting is OFF by default.

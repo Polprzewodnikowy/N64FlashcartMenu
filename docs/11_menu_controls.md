@@ -1,5 +1,6 @@
 [Return to the index](./00_index.md)
-## Additional Menu Controls
+## Menu Controls
+<!-- Could use a sample screenshot of the controller and labels here -->
 
 #### Fast scroll
 Press either the `C-Up` or `C-Down` buttons to scroll by pages, rather than by elements.

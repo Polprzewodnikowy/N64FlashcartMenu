@@ -13,7 +13,7 @@ i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxar
 i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
 
 To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead:  
-i.e. for GoldenEye, this would be `sd:/menu/box art/N/G/E/boxart_front.png`.
+i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
 **Warning**: Excluding the region ID may show a box art of the wrong region.  
 **Note**: For future support, box art sprites should also include:  

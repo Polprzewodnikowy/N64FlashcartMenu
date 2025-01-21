@@ -10,7 +10,7 @@ description=This is the ROM description that does X Y Z.
 Text files must use ASCII characters only, Linux `LF` endings (CRLF is not supported) and the descriptions themselves must be limited to 300 characters.
 
 ### Customizing the font
-The N64FlashcartMenu allows the ability to test new fonts without recompiling the menu. However the font is explicitly linked to the currently used version of the libdragon SDK. 
+The N64FlashcartMenu allows the ability to test new fonts or adding regional characters without recompiling the menu. However the font is explicitly linked to the currently used version of the libdragon SDK.  
 Add a `font64` file to the `sd:/menu/` directory called `custom.font64`.
 
 <!-- Would be best if we can just link to an actual copy of Mkfont executable file and not expect people to compile libdragon -->

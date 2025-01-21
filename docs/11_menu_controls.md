@@ -1,5 +1,5 @@
 [Return to the index](./00_index.md)
-## Menu Controls
+## Basic Controls
 <!-- Could use a sample screenshot of the controller and labels here -->
 
 #### Fast scroll
@@ -7,7 +7,7 @@ Press either the `C-Up` or `C-Down` buttons to scroll by pages, rather than by e
 
 #### N64FlashcartMenu settings
 Press the `START` button on the browser screen to open the Settings window.  
-![Browser context menu](./images/main-context-menu.png "Browser context menu")  
+![Main context menu](./images/main-context-menu.png "Main context menu")  
 From here you can edit some of the N64FlashcartMenu settings, see information about either the console, the flashcart you are using or N64FlashcartMenu itself, and if your cart has Real-Time Clock (RTC) support, you can also change its date and time.
 
 #### Browser options

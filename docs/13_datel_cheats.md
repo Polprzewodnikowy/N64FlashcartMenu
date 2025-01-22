@@ -9,22 +9,15 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 
 **WARNING**: It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
+
 The N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak.
 
 Caveats:
 - Something about cheats and expansion paks.
-
-The current code types are supported:
-- 80 (description here)
-- D0 (description here)
-- Fx (description here)
-- ...
-
-The codes XX are not supported, because...
 - e.g. they rely on the button.
 
 ### File parsing support
-If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in menu->boot_params->cheat_list per the cheat backend API.
+If a file named the same as the selected rom with the extension `.cht` is found, it will attempt to parse the file for cheat codes and place them in `menu->boot_params->cheat_list` per the cheat backend API.
 
 The parser ignores lines that start with a `#` or `$`, are under 12 characters or over 15 characters. Every other line needs to be a valid cheat code input with the code on the left, and the value on the right separated by a space.
 

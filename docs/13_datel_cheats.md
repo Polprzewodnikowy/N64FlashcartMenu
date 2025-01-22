@@ -1,6 +1,8 @@
 [Return to the index](./00_index.md)
 ## Cheats (Gameshark, etc.)
 
+**THIS FEATURE IS EXPERIMENTAL**
+
 The N64FlashcartMenu supports the cheat code types made popular by the peripherals:
 - GameShark
 - Action Replay

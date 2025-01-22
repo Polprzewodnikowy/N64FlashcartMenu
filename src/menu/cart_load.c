@@ -171,11 +171,11 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "smsPlus64.z64");

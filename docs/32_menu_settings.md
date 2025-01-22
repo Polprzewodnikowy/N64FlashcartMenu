@@ -1,16 +1,15 @@
-[..](./00_index.md)
+[Return to the index](./00_index.md)
 ## Menu Settings
-The Menu creates a `config.ini` file in `sd:/menu/` which contains various settings that are used and can be set within the menu.
-If required, you can manually adjust the file on the SD card using your computer.
-
+N64FlashcartMenu automatically creates a `config.ini` file in `sd:/menu/`, which contains various settings that can be set within the menu's Settings editor.
+If required, you can manually adjust the file (required for some advanced settings) on the SD card using your computer.
 
 ### Show Hidden Files
-The default is off.
+Shows any N64FlashcartMenu system-related files. This setting is OFF by default.
 
 ### Use Save Folders
-The default is on.
-ON: ROM saves are saved in a seperate subfolder (called saves).
+Controls whether N64FlashcartMenu should use `/saves` folders to store ROM save data. This setting is ON by default.
+ON: ROM saves are saved in separate subfolders (called `\saves`, will create one `\saves` subfolder per folder).
 OFF: ROM saves are saved alongside the ROM file.
 
-### Sound effects
-The menu has default sound effects to improve the experience that can be turned on in the settings menu (the default is off).
+### Sound Effects
+The menu has default sound effects to improve the user experience. This setting is OFF by default.

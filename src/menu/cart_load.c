@@ -6,7 +6,6 @@
 #include "path.h"
 #include "utils/fs.h"
 #include "utils/utils.h"
-#include "cheat_load.h"
 
 #ifndef SAVES_SUBDIRECTORY
 #define SAVES_SUBDIRECTORY      "saves"

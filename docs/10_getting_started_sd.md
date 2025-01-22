@@ -1,5 +1,5 @@
 [Return to the index](./00_index.md)
-## Initial Setup of the SD Card
+## Initial Setup of an SD Card
 
 ### First steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
@@ -14,6 +14,7 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 - An SD formatted with 128 kiB cluster size is recommended.
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 - Place your ROM files on the SD card, **in any folder except `menu`**.
+**NOTE:** byteswapped ROM's will increase load times.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.

@@ -1,5 +1,5 @@
 [Return to the index](./00_index.md)
-## Datel/InterAct Cheats
+## Cheats (Gameshark, etc.)
 
 The N64FlashcartMenu supports the cheat code types made popular by the peripherals:
 - GameShark
@@ -10,7 +10,7 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 **WARNING**: It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
 
-The N64FlashcartMenu can only support cheat codes based on datel carts when also using an Expansion pak.
+The N64FlashcartMenu can only support cheat codes based on Datel carts when also using an Expansion Pak.
 
 Caveats:
 - Something about cheats and expansion paks.

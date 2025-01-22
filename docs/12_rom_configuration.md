@@ -5,10 +5,9 @@ The N64FlashcartMenu allows overriding the ROM's default configuration that is p
 
 The internal database is contained within `rom_info.c`.
 
-The N64FlashcartMenu expects that you are using a flashcart that has an [ultra cic](https://n64brew.dev/wiki/Checking_Integrated_Circuit) available.
+The N64FlashcartMenu expects that you are using a flashcart that has an [UltraCIC](https://n64brew.dev/wiki/Checking_Integrated_Circuit) available.
 
-NOTE: Some old ROM hacks may have adjusted the ROM code to manipllate the expected CIC and save type in order to allow compatibility with more available chips (usually 6102) as was used on flashacarts prior to 2018. If it does, you may need to override the internal database using the override settings.
-
+NOTE: Some old ROM hacks may have adjusted the ROM code to manipulate the expected CIC and save type in order to allow compatibility with more available chips (usually 6102) as was used on flashcarts prior to 2018. If it does, you may need to override the internal database using the override settings.
 
 If you override the defaults and want to go back to the default ones, delete the `<rom name>.ini` file.
 

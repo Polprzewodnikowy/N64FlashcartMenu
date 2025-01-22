@@ -1,5 +1,5 @@
 [Return to the index](./00_index.md)
-## Real-Time Clock Settings
+## Date-Time (RTC) Settings
 
 ![RTC information](./images/rtc-information.png "RTC Information")  
 If your flashcart supports the Real-Time Clock (RTC from herein) feature, N64FlashcartMenu has the ability to read and set it.

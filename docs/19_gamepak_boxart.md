@@ -1,5 +1,5 @@
 [Return to the index](./00_index.md)
-## Game Box Art Images
+## Game Art Images
 To use N64 game box art images, place your PNG files within the `sd:/menu/boxart/` folder.
 
 #### Supported images

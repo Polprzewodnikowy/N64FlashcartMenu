@@ -857,6 +857,8 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
 
     if (value == default_value) {
         mini_err = mini_delete_value(rom_info_ini, "custom_boot", id);
+    } else if (strncmp(id, "cheat_codes", strlen("cheat_codes"))) {
+        mini_err = mini_set_bool(rom_info_ini, NULL, id, value);
     } else {
         mini_err = mini_set_int(rom_info_ini, "custom_boot", id, value);
     }
@@ -960,6 +962,11 @@ rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_
     rom_info->boot_override.tv_type = tv_type;
 
     return save_override(path, "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
+}
+
+rom_err_t rom_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
+    rom_info->settings.cheats_enabled = enabled;
+    return save_override(path, "cheat_codes", enabled, false);
 }
 
 rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {

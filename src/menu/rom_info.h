@@ -247,4 +247,6 @@ rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_s
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info);
 rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
 
+rom_err_t rom_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
+
 #endif

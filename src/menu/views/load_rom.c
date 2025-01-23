@@ -6,7 +6,6 @@
 #include <string.h>
 #include "utils/fs.h"
 #include "../bookkeeping.h"
-#include "../cheat_load.h"
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -167,23 +166,6 @@ static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
-static void set_cheat_option(menu_t *menu, void *arg) {
-    bool enabled = (bool)arg;
-    if (enabled == true) {
-        cheat_load_err_t err = load_cheats(menu);
-        if (err != CHEAT_LOAD_OK) {
-            menu_show_error(menu, cheat_load_convert_error_message(err));
-        }
-    }
-    if (enabled == false) {
-        if (menu->boot_params->cheat_list != NULL) {
-            free(menu->boot_params->cheat_list);
-        }
-    }
-    rom_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
-    menu->browser.reload = true;
-}
-
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -222,17 +204,10 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_cheat_options_menu = { .list = {
-    { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
-    { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
-    { .text = "Set Cheats", .submenu = &set_cheat_options_menu },
     { .text = "Set ROM to autoload", .action = set_autoload_type },
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -392,6 +367,7 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
+    menu->boot_params->cheat_list = NULL;
 }
 
 static void deinit (void) {

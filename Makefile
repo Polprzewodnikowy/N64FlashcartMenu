@@ -59,6 +59,7 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
+	menu/ui_components/sprites.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
@@ -90,6 +91,10 @@ SOUNDS = \
 	error.wav \
 	settings.wav
 
+IMAGES = \
+	background/defbg.png \
+	boxart/defboxart.png
+
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
@@ -115,7 +120,7 @@ $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/*/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 

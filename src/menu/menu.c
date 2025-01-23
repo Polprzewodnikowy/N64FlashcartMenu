@@ -56,6 +56,8 @@ static void menu_init (boot_params_t *boot_params) {
     rdpq_init();
     dfs_init(DFS_DEFAULT_LOCATION);
 
+    ui_components_sprites_init();
+
     actions_init();
     sound_init_default();
     sound_init_sfx();

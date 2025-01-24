@@ -43,6 +43,7 @@ SRCS = \
 	menu/actions.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
+	menu/cpak_handler.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -67,6 +68,7 @@ SRCS = \
 	menu/views/file_info.c \
 	menu/views/history_favorites.c \
 	menu/views/image_viewer.c \
+	menu/views/joypad_controller_pak.c \
 	menu/views/text_viewer.c \
 	menu/views/load_disk.c \
 	menu/views/load_emulator.c \

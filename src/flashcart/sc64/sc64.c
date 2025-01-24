@@ -570,7 +570,7 @@ static flashcart_err_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_ca
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
+static flashcart_err_t sc64_load_64dd_disk (char *primary_dd_disk_file_path, flashcart_disk_parameters_t *disk_parameters) { // , dd_swap_disk_filepaths *swap_disk_filepaths
     sc64_disk_mapping_t mapping;
     uint32_t mapping_offset = DISK_MAPPING_ROM_OFFSET;
     sc64_drive_type_t drive_type = (disk_parameters->development_drive ? DRIVE_TYPE_DEVELOPMENT : DRIVE_TYPE_RETAIL);
@@ -578,7 +578,7 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     // TODO: Support loading multiple disks
     for (mapping.count = 0; mapping.count < 1; mapping.count++) {
         disk_load_thb_table(disk_parameters++, &mapping.disks[mapping.count].thb_table, &mapping_offset);
-        if (disk_load_sector_table(disk_path++, &mapping.disks[mapping.count].sector_table, &mapping_offset)) {
+        if (disk_load_sector_table(primary_dd_disk_file_path++, &mapping.disks[mapping.count].sector_table, &mapping_offset)) {
             return FLASHCART_ERR_LOAD;
         }
     }

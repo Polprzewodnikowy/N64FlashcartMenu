@@ -93,7 +93,7 @@ typedef struct {
     /** @brief The flashcart disk bios load function */
     flashcart_err_t (*load_64dd_ipl) (char *ipl_path, flashcart_progress_callback_t *progress);
     /** @brief The flashcart disk load function */
-    flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+    flashcart_err_t (*load_64dd_disk) (char *primary_dd_disk_file_path, flashcart_disk_parameters_t *disk_parameters); // , dd_swap_disk_filepaths *swap_disk_filepaths
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
@@ -181,11 +181,11 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
 /**
  * @brief Load a 64DD disk onto the flashcart.
  * 
- * @param disk_path The path to the disk file.
+ * @param primary_dd_disk_file_path The path to the disk file.
  * @param disk_parameters Pointer to the disk parameters structure.
  * @return flashcart_err_t Error code.
  */
-flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+flashcart_err_t flashcart_load_64dd_disk (char *primary_dd_disk_file_path, flashcart_disk_parameters_t *disk_parameters); // , dd_swap_disk_filepaths *swap_disk_filepaths
 flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode);
 
 #endif /* FLASHCART_H__ */

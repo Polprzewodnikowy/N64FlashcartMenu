@@ -195,7 +195,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_path), &disk_parameters);
+    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.primary_dd_disk_file_path), &disk_parameters);  // , dd_swap_disk_filepaths *swap_disk_filepaths
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }

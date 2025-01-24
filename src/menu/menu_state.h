@@ -107,8 +107,13 @@ typedef struct {
     struct {
         path_t *rom_path;
         rom_info_t rom_info;
-        path_t *disk_path;
+        path_t *primary_dd_disk_file_path;
         disk_info_t disk_info;
+        struct {
+            path_t *disk_path_slot1;
+            path_t *disk_path_slot2;
+            path_t *disk_path_slot3;
+        } dd_swap_disk_filepaths;
         int load_history;
         int load_favorite;
         bool combined_disk_rom;

@@ -70,3 +70,6 @@ You can then serve the webpage:
 ```bash
 cd output/docs && jekyll serve
 ```
+
+### Test ability to Customize the font
+Add a `font64` file to the `menu` directory called "custom.font64". You can build a font64 file with the `libdragon` tools.

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['background_20image_0',['Adding a background image',['../md_docs_207__menu__customization.html#autotoc_md52',1,'']]],
+  ['background_20image_0',['Adding a background image',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]],
   ['background_5fempty_5fcolor_1',['BACKGROUND_EMPTY_COLOR',['../constants_8h.html#ad34ec4463c7da0f6da7f56f6d43f9f33',1,'constants.h']]],
   ['background_5foverlay_5fcolor_2',['BACKGROUND_OVERLAY_COLOR',['../constants_8h.html#ab399c3a31a6aacaea384ee5552292590',1,'constants.h']]],
   ['bgm_5fenabled_3',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],

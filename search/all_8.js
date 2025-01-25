@@ -19,13 +19,13 @@ var searchData=
   ['flashcart_5futils_2eh_16',['flashcart_utils.h',['../flashcart__utils_8h.html',1,'']]],
   ['flashcarts_17',['flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'Preparations for other supported flashcarts'],['../index.html#autotoc_md1',1,'Supported Flashcarts']]],
   ['fnt_5fdefault_18',['FNT_DEFAULT',['../fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5ba95374faefa5e69d3907d06c4d7c12df5',1,'fonts.h']]],
-  ['font_19',['Customizing the font',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]],
+  ['font_19',['Test ability to Customize the font',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]],
   ['fonts_2eh_20',['fonts.h',['../fonts_8h.html',1,'']]],
   ['fonts_5finit_21',['fonts_init',['../fonts_8h.html#a33d46c92981339eb74cc94f542f6b41c',1,'fonts.c']]],
   ['for_20other_20supported_20flashcarts_22',['Preparations for other supported flashcarts',['../md_docs_200__getting__started__sd.html#autotoc_md35',1,'']]],
   ['for_20sc64_23',['Preparations for SC64',['../md_docs_200__getting__started__sd.html#autotoc_md34',1,'']]],
   ['from_20an_20ed64_24',['Transfering Saves From An ED64',['../md_docs_200__getting__started__sd.html#autotoc_md40',1,'']]],
-  ['from_20the_20devcontainer_25',['From the devcontainer',['../md_docs_299__developer__guide.html#autotoc_md57',1,'']]],
-  ['from_20your_20host_20windows_20os_26',['From your host (Windows) OS',['../md_docs_299__developer__guide.html#autotoc_md58',1,'']]],
+  ['from_20the_20devcontainer_25',['From the devcontainer',['../md_docs_299__developer__guide.html#autotoc_md56',1,'']]],
+  ['from_20your_20host_20windows_20os_26',['From your host (Windows) OS',['../md_docs_299__developer__guide.html#autotoc_md57',1,'']]],
   ['funct_27',['funct',['../structvr4300__instruction__t_8c__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.c_type::funct'],['../structvr4300__instruction__t_8r__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.r_type::funct']]]
 ];

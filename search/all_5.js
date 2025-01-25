@@ -42,13 +42,13 @@ var searchData=
   ['component_5fcontext_5fmenu_5ft_39',['component_context_menu_t',['../ui__components_8h.html#structcomponent__context__menu__t',1,'']]],
   ['component_5fcontext_5fmenu_5ft_2elist_40',['component_context_menu_t.list',['../structcomponent__context__menu__t_8list.html',1,'']]],
   ['constants_2eh_41',['constants.h',['../constants_8h.html',1,'']]],
-  ['container_42',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]],
+  ['container_42',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md63',1,'']]],
   ['context_5fmenu_5fhighlight_5fcolor_43',['CONTEXT_MENU_HIGHLIGHT_COLOR',['../constants_8h.html#aaf6ba3542bb494f77f96f266bd96226f',1,'constants.h']]],
   ['control_20information_44',['Additional Control Information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'']]],
   ['controls_45',['Menu Controls',['../md_docs_201__menu__controls.html',1,'']]],
-  ['cr_46',['cr',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
+  ['cr_46',['cr',['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR'],['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR']]],
   ['curr_5fline_47',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]],
   ['current_20notable_20menu_20features_48',['Current (notable) menu features',['../index.html#autotoc_md4',1,'']]],
   ['customization_49',['Menu Customization',['../md_docs_207__menu__customization.html',1,'']]],
-  ['customizing_20the_20font_50',['Customizing the font',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]]
+  ['customize_20the_20font_50',['Test ability to Customize the font',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]]
 ];

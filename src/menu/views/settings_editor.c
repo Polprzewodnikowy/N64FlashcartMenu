@@ -29,6 +29,11 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 #ifdef BETA_SETTINGS
 static void set_pal60_type (menu_t *menu, void *arg) {
     menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
@@ -70,6 +75,12 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list = {
+    {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
@@ -94,6 +105,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+    { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },

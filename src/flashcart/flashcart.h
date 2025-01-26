@@ -114,6 +114,7 @@ flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint3
 flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type);
 flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress);
 flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode);
 
 
 #endif

@@ -18,6 +18,7 @@ static settings_t init = {
     .soundfx_enabled = false,
     .loading_progress_bar_enabled = true,
     .rom_autoload_enabled = false,
+    .rom_fast_reboot_enabled = false,
     .rom_autoload_path = "",
     .rom_autoload_filename = "",
     
@@ -51,6 +52,7 @@ void settings_load (settings_t *settings) {
     settings->loading_progress_bar_enabled = mini_get_bool(ini, "menu", "loading_progress_bar_enabled", init.loading_progress_bar_enabled);
 
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
+    settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "reboot_rom_enabled", init.rom_fast_reboot_enabled);
     settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
     settings->rom_autoload_filename = strdup(mini_get_string(ini, "autoload", "rom_filename", init.rom_autoload_filename));
 
@@ -73,6 +75,7 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
     mini_set_bool(ini, "menu", "loading_progress_bar_enabled", settings->loading_progress_bar_enabled);
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
+    mini_set_bool(ini, "menu", "reboot_rom_enabled", settings->rom_fast_reboot_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);
     mini_set_string(ini, "autoload", "rom_filename", settings->rom_autoload_filename);
 

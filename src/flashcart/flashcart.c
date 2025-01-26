@@ -246,7 +246,7 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
     return flashcart->load_64dd_disk(disk_path, disk_parameters);
 }
 
-flashcart_err_t set_next_boot_mode (flashcart_boot_mode_t boot_mode) {
+flashcart_err_t set_next_boot_mode (flashcart_reboot_mode_t boot_mode) {
     if (!flashcart->set_next_boot_mode) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }

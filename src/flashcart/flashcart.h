@@ -52,9 +52,11 @@ typedef enum {
 
 /** @brief Flashcart save type enumeration */
 typedef enum {
-    FLASHCART_BOOT_MODE_MENU,
-    FLASHCART_BOOT_MODE_ROM,
-} flashcart_boot_mode_t;
+    /** @brief The flashcart will reboot into the menu on soft reboot (using the RESET button) */
+    FLASHCART_REBOOT_MODE_MENU,
+    /** @brief The flashcart will reboot into the previous ROM on soft reboot (using the RESET button) */
+    FLASHCART_REBOOT_MODE_ROM,
+} flashcart_reboot_mode_t;
 
 /** @brief Flashcart Disk Parameter Structure. */
 typedef struct {
@@ -98,7 +100,7 @@ typedef struct {
     /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (char *save_path);
     /** @brief The flashcart set boot mode function */
-    flashcart_err_t (*set_next_boot_mode) (flashcart_boot_mode_t boot_mode);
+    flashcart_err_t (*set_next_boot_mode) (flashcart_reboot_mode_t boot_mode);
 } flashcart_t;
 
 

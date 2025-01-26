@@ -298,7 +298,7 @@ static flashcart_err_t d64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
-// static flashcart_err_t d64_set_bootmode (flashcart_boot_mode_t boot_mode) {
+// static flashcart_err_t d64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
 
 //     if (d64_ll_set_persistent_variable_storage(true, 0, 0)) {
 //         return FLASHCART_ERR_INT;

@@ -576,12 +576,12 @@ static flashcart_err_t sc64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_set_bootmode (flashcart_boot_mode_t boot_mode) {
+static flashcart_err_t sc64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
 
     sc64_boot_mode_t type = BOOT_MODE_MENU;
 
     switch (boot_mode) {
-        case FLASHCART_BOOT_MODE_ROM:
+        case FLASHCART_REBOOT_MODE_ROM:
             type = BOOT_MODE_ROM;
             break;
         default:

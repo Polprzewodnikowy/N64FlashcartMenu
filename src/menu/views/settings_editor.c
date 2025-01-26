@@ -149,9 +149,9 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n\n"
         "  Default Directory : %s\n\n"
         "  Autoload ROM      : %s\n"
-        "  Fast Reboot ROM   : %s\n"
         "  ROM Loading Bar   : %s\n\n"
         "To change the following menu settings, press 'A':\n"
+        "     Fast Reboot ROM   : %s\n"
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Sound Effects     : %s\n"
@@ -166,8 +166,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ,
         menu->settings.default_directory,
         format_switch(menu->settings.rom_autoload_enabled),
-        format_switch(menu->settings.rom_fast_reboot_enabled),
         format_switch(menu->settings.loading_progress_bar_enabled),
+        format_switch(menu->settings.rom_fast_reboot_enabled),
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.soundfx_enabled)

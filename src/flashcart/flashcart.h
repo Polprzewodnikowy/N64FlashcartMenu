@@ -50,6 +50,12 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END
 } flashcart_save_type_t;
 
+/** @brief Flashcart save type enumeration */
+typedef enum {
+    FLASHCART_BOOT_MODE_MENU,
+    FLASHCART_BOOT_MODE_ROM,
+} flashcart_boot_mode_t;
+
 /** @brief Flashcart Disk Parameter Structure. */
 typedef struct {
     bool development_drive;
@@ -92,7 +98,7 @@ typedef struct {
     /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (char *save_path);
     /** @brief The flashcart set boot mode function */
-    flashcart_err_t (*set_next_boot_mode) (uint8_t boot_mode);
+    flashcart_err_t (*set_next_boot_mode) (flashcart_boot_mode_t boot_mode);
 } flashcart_t;
 
 

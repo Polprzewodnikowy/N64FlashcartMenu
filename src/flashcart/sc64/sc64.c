@@ -589,6 +589,7 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_disk = sc64_load_64dd_disk,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,
+    .set_next_boot_mode = NULL,
 };
 
 

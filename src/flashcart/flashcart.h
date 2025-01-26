@@ -91,6 +91,8 @@ typedef struct {
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (char *save_path);
+    /** @brief The flashcart set boot mode function */
+    flashcart_err_t (*set_next_boot_mode) (uint8_t boot_mode);
 } flashcart_t;
 
 

@@ -66,6 +66,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_disk = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
+    .set_next_boot_mode = NULL,
 });
 
 #ifdef NDEBUG

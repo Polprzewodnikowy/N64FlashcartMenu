@@ -15,11 +15,11 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * SummerCart64
 * 64Drive
 
-### Work in Progress (pre-release only)
+### Work in Progress
 * ED64 (X and V series)
 * ED64P (clones)
 
-### Not planned
+### Not yet planned
 * Doctor V64
 * PicoCart
 * DaisyDrive

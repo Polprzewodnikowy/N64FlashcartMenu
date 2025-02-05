@@ -111,7 +111,7 @@ static void bookkeeping_clear_item(bookkeeping_item_t *item, bool leave_null) {
 static void bookkeeping_copy_item(bookkeeping_item_t *source, bookkeeping_item_t *destination) {
     bookkeeping_clear_item(destination, true);
 
-    destination->primary_path = path_clone(source->primary_path);    
+    destination->primary_path =  source->primary_path != NULL ? path_clone(source->primary_path) : path_create("");   
     destination->secondary_path = source->secondary_path != NULL ? path_clone(source->secondary_path) : path_create("");
     destination->bookkeeping_type = source->bookkeeping_type;
 }
@@ -134,7 +134,7 @@ static void bookkeeping_move_items_up(bookkeeping_item_t *list, int start, int e
     int current = start;
 
     do {
-        if(current > end) {
+        if(current >= end) {
             break;
         }        
 

@@ -17,3 +17,6 @@
 **/*.n64
 **/*.v64
 **/*.z64
+
+# Ignore macOS filesystem cruft
+.DS_Store

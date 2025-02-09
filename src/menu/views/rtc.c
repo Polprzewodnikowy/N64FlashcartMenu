@@ -66,13 +66,13 @@ void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_fiel
     char current_selection_chars[30];
 
     snprintf( full_dt, sizeof(full_dt), ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
-        t.tm_year + 1900,
-        t.tm_mon + 1,
-        t.tm_mday,
-        t.tm_hour,
-        t.tm_min,
-        t.tm_sec,
-        DAYS_OF_WEEK[t.tm_wday]
+        CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX),
+        CLAMP(t.tm_mon + 1, 1, 12),
+        CLAMP(t.tm_mday, 1, 31),
+        CLAMP(t.tm_hour, 0, 23),
+        CLAMP(t.tm_min, 0, 59),
+        CLAMP(t.tm_sec, 0, 59),
+        DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]
         );
         
     switch(selected_field)
@@ -131,7 +131,7 @@ static void process (menu_t *menu) {
                 struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
                 int res = settimeofday(&new_time, NULL);
 
-                if (res != 1) {
+                if (res != 0) {
                     menu_show_error(menu, "Failed to set RTC time");
                 }
             }
@@ -220,7 +220,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_rtc_init (menu_t *menu) {
     /* Resync the time from the hardware RTC */
-    //rtc_set_source( RTC_SOURCE_JOYBUS );
+    // rtc_set_source( RTC_SOURCE_JOYBUS ); // TODO: needs to be determined by the flashcart.
     is_editing_mode = false;
     editing_field_type = RTC_EDIT_YEAR;
 }

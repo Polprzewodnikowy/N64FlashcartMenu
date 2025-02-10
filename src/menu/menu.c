@@ -20,15 +20,16 @@
 #include "views/views.h"
 
 
-#define MENU_DIRECTORY          "/menu"
-#define MENU_SETTINGS_FILE      "config.ini"
-#define MENU_CUSTOM_FONT_FILE   "custom.font64"
+#define MENU_DIRECTORY              "/menu"
+#define MENU_SETTINGS_FILE          "config.ini"
+#define MENU_CUSTOM_FONT_FILE       "custom.font64"
+#define MENU_ROM_LOAD_HISTORY_FILE  "history.ini"
 
-#define MENU_CACHE_DIRECTORY    "cache"
-#define BACKGROUND_CACHE_FILE   "background.data"
+#define MENU_CACHE_DIRECTORY        "cache"
+#define BACKGROUND_CACHE_FILE       "background.data"
 
-#define INTERLACED              (true)
-#define FPS_LIMIT               (30.0f)
+#define INTERLACED                  (true)
+#define FPS_LIMIT                   (30.0f)
 
 
 static menu_t *menu;
@@ -70,11 +71,18 @@ static void menu_init (boot_params_t *boot_params) {
     settings_load(&menu->settings);
     path_pop(path);
 
+    path_push(path, MENU_ROM_LOAD_HISTORY_FILE);
+    bookkeeping_init(path_get(path));
+    bookkeeping_load(&menu->bookkeeping);
+    menu->load.load_history = -1;
+    menu->load.load_favorite = -1;
+    path_pop(path);
+
     resolution_t resolution = {
         .width = 640,
         .height = 480,
         .interlaced = INTERLACED ? INTERLACE_HALF : INTERLACE_OFF,
-        .pal60 = menu->settings.pal60_enabled,
+        .pal60 = menu->settings.pal60_enabled
     };
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, INTERLACED ? FILTERS_DISABLED : FILTERS_RESAMPLE);
     display_set_fps_limit(FPS_LIMIT);
@@ -150,6 +158,8 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
+    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
+    { MENU_MODE_HISTORY, view_history_init, view_history_display }
 };
 
 static view_t *menu_get_view (menu_mode_t id) {

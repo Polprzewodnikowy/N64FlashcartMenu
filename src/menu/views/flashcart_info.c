@@ -70,6 +70,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Region Detection: %s.\n"
         "  Save Writeback:   %s.\n"
         "  Auto F/W Updates: %s.\n"
+        "  Fast ROM Reboots: %s.\n"
         "\n\n",
         format_cart_type(),
         format_cart_version(),
@@ -79,7 +80,8 @@ static void draw (menu_t *menu, surface_t *d) {
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_CIC)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_REGION)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_SAVE_WRITEBACK)),
-        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU))
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU)),
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST))
 
         //TODO: display the battery and temperature information (if available).
         //format_diagnostic_data(flashcart_has_feature(FLASHCART_FEATURE_DIAGNOSTIC_DATA))

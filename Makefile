@@ -30,6 +30,7 @@ SRCS = \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
 	flashcart/ed64/ed64_vseries.c \
+	flashcart/ed64/ed64_xseries.c \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
@@ -40,6 +41,7 @@ SRCS = \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
 	menu/actions.c \
+	menu/bookkeeping.c \
 	menu/cart_load.c \
 	menu/disk_info.c \
 	menu/fonts.c \
@@ -56,12 +58,14 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
+	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
+	menu/views/history_favorites.c \
 	menu/views/image_viewer.c \
 	menu/views/text_viewer.c \
 	menu/views/load_disk.c \

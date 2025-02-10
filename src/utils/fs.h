@@ -11,6 +11,7 @@
 
 
 char *strip_fs_prefix (char *path);
+char *file_basename (char *path);
 
 bool file_exists (char *path);
 int64_t file_get_size (char *path);

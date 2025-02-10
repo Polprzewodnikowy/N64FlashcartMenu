@@ -19,7 +19,7 @@ typedef struct {
     size_t capacity;
 } path_t;
 
-
+path_t *path_create (const char *string);
 path_t *path_init (const char *prefix, char *string);
 void path_free (path_t *path);
 path_t *path_clone (path_t *string);
@@ -33,6 +33,7 @@ void path_push_subdir (path_t *path, char *string);
 char *path_ext_get (path_t *path);
 void path_ext_remove (path_t *path);
 void path_ext_replace (path_t *path, char *ext);
-
+bool path_has_value(path_t *path);
+bool path_are_match(path_t *left, path_t *right);
 
 #endif

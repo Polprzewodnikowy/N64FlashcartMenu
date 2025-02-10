@@ -19,7 +19,6 @@ static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
 static const char *hidden_paths[] = {
-    "/saves",
     "/menu.bin",
     "/menu",
     "/N64FlashcartMenu.n64",
@@ -48,6 +47,7 @@ static const struct substr hidden_basenames[] = {
 #define HIDDEN_BASENAMES_COUNT (sizeof(hidden_basenames) / sizeof(hidden_basenames[0]))
 
 static const struct substr hidden_prefixes[] = {
+    substr("/saves/"), // "Saved Games" directory
     substr("._"), // macOS "AppleDouble" metadata files
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))

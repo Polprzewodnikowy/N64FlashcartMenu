@@ -146,6 +146,11 @@ Download the `OS64P.v64` ROM from the latest [action run - assets] and place it 
 The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
 
 
+# License
+This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.
+For clarity, the flashcart is considered to be a server (the flashcart is a basic file server consumed by the N64 (as a client) to run Games etc.).
+
+
 # Open source software and licenses used
 
 * [libdragon](https://github.com/DragonMinded/libdragon) (UNLICENSE License)

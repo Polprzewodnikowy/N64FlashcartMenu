@@ -220,7 +220,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_rtc_init (menu_t *menu) {
     /* Resync the time from the hardware RTC */
-    // rtc_set_source( RTC_SOURCE_JOYBUS ); // TODO: needs to be determined by the flashcart.
+    rtc_set_source( rtc_get_source() );
     is_editing_mode = false;
     editing_field_type = RTC_EDIT_YEAR;
 }

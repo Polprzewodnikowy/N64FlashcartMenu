@@ -266,6 +266,7 @@ static bool sc64_has_feature (flashcart_features_t feature) {
         case FLASHCART_FEATURE_AUTO_REGION: return true;
         case FLASHCART_FEATURE_DIAGNOSTIC_DATA: return true;
         case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
+        case FLASHCART_FEATURE_ROM_REBOOT_FAST: return true;
         default: return false;
     }
 }

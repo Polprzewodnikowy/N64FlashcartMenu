@@ -40,6 +40,7 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * N64 ROM autoload.
 * ROM information descriptions.
 * ROM history and favorites (pre-release only).
+* ROM cheat file support (pre-release only).
 
 
 ## Documentation

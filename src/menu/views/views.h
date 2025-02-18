@@ -47,6 +47,9 @@ void view_settings_display (menu_t *menu, surface_t *display);
 void view_rtc_init (menu_t *menu);
 void view_rtc_display (menu_t *menu, surface_t *display);
 
+void view_joypad_controller_pak_init (menu_t *menu);
+void view_joypad_controller_pak_display (menu_t *menu, surface_t *display);
+
 void view_flashcart_info_init (menu_t *menu);
 void view_flashcart_info_display (menu_t *menu, surface_t *display);
 

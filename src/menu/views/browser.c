@@ -14,6 +14,7 @@ static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
+//static const char *joypad_accessory_save_extensions[] = { "cpak", "mpk", "pak", NULL };
 static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
@@ -322,6 +323,7 @@ static component_context_menu_t settings_context_menu = {
         { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
         { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
         { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
+        { .text = "CPak Management", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_JOYPAD_CPAK) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

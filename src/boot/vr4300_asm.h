@@ -1,3 +1,9 @@
+/**
+ * @file vr4300_asm.h
+ * @brief Header file for v4300 CPU-related definitions.
+ * @ingroup boot
+ */
+
 #ifndef VR4300_ASM_H__
 #define VR4300_ASM_H__
 

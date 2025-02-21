@@ -1,3 +1,9 @@
+/**
+ * @file menu.c
+ * @brief Menu system implementation
+ * @ingroup menu
+ */
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
@@ -19,7 +25,6 @@
 #include "utils/fs.h"
 #include "views/views.h"
 
-
 #define MENU_DIRECTORY              "/menu"
 #define MENU_SETTINGS_FILE          "config.ini"
 #define MENU_CUSTOM_FONT_FILE       "custom.font64"
@@ -31,10 +36,13 @@
 #define INTERLACED                  (true)
 #define FPS_LIMIT                   (30.0f)
 
-
 static menu_t *menu;
 
-
+/**
+ * @brief Initialize the menu system.
+ * 
+ * @param boot_params Pointer to the boot parameters structure.
+ */
 static void menu_init (boot_params_t *boot_params) {    
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
@@ -108,6 +116,11 @@ static void menu_init (boot_params_t *boot_params) {
     }
 }
 
+/**
+ * @brief Deinitialize the menu system.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 static void menu_deinit (menu_t *menu) {
     hdmi_send_game_id(menu->boot_params);
 
@@ -135,10 +148,13 @@ static void menu_deinit (menu_t *menu) {
     flashcart_deinit();
 }
 
+/**
+ * @brief View structure containing initialization and display functions.
+ */
 typedef const struct {
-    menu_mode_t id;
-    void (*init) (menu_t *menu);
-    void (*show) (menu_t *menu, surface_t *display);
+    menu_mode_t id; /**< View ID */
+    void (*init) (menu_t *menu); /**< Initialization function */
+    void (*show) (menu_t *menu, surface_t *display); /**< Display function */
 } view_t;
 
 static view_t menu_views[] = {
@@ -162,6 +178,12 @@ static view_t menu_views[] = {
     { MENU_MODE_HISTORY, view_history_init, view_history_display }
 };
 
+/**
+ * @brief Get the view structure for the specified menu mode.
+ * 
+ * @param id The menu mode ID.
+ * @return view_t* Pointer to the view structure.
+ */
 static view_t *menu_get_view (menu_mode_t id) {
     for (int i = 0; i < sizeof(menu_views) / sizeof(view_t); i++) {
         if (menu_views[i].id == id) {
@@ -171,7 +193,11 @@ static view_t *menu_get_view (menu_mode_t id) {
     return NULL;
 }
 
-
+/**
+ * @brief Run the menu system.
+ * 
+ * @param boot_params Pointer to the boot parameters structure.
+ */
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 

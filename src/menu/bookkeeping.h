@@ -1,6 +1,6 @@
 /**
  * @file bookkeeping.h
- * @brief Bookkeeping of loadded ROM's.
+ * @brief Bookkeeping of loaded ROMs.
  * @ingroup menu 
  */
 
@@ -9,40 +9,49 @@
 
 #include "path.h"
 
+#define FAVORITES_COUNT 8 /**< Maximum number of favorite items */
+#define HISTORY_COUNT 8 /**< Maximum number of history items */
 
-#define FAVORITES_COUNT 8
-#define HISTORY_COUNT 8
-
+/** @brief Bookkeeping item types enumeration */
 typedef enum {
-    BOOKKEEPING_TYPE_EMPTY,
-    BOOKKEEPING_TYPE_ROM,
-    BOOKKEEPING_TYPE_DISK,
+    BOOKKEEPING_TYPE_EMPTY, /**< Empty item */
+    BOOKKEEPING_TYPE_ROM, /**< ROM item */
+    BOOKKEEPING_TYPE_DISK, /**< Disk item */
 } bookkeeping_item_types_t;
 
+/** @brief Bookkeeping item structure */
 typedef struct {
-    path_t *primary_path;
-    path_t *secondary_path;
-
-    bookkeeping_item_types_t bookkeeping_type;
-
+    path_t *primary_path; /**< Primary path */
+    path_t *secondary_path; /**< Secondary path */
+    bookkeeping_item_types_t bookkeeping_type; /**< Bookkeeping item type */
 } bookkeeping_item_t;
 
-/** @brief ROM bookkeeping Structure */
+/** @brief ROM bookkeeping structure */
 typedef struct {
-    bookkeeping_item_t history_items[HISTORY_COUNT];
-
-    bookkeeping_item_t favorite_items[HISTORY_COUNT];
+    bookkeeping_item_t history_items[HISTORY_COUNT]; /**< History items */
+    bookkeeping_item_t favorite_items[FAVORITES_COUNT]; /**< Favorite items */
 } bookkeeping_t;
 
+/**
+ * @brief Initialize ROM bookkeeping path.
+ * 
+ * @param path The path to initialize.
+ */
+void bookkeeping_init(char *path);
 
-/** @brief Init ROM bookkeeping path */
-void bookkeeping_init (char *path);
+/**
+ * @brief Load ROM bookkeeping.
+ * 
+ * @param history Pointer to the bookkeeping structure to load.
+ */
+void bookkeeping_load(bookkeeping_t *history);
 
-/** @brief The ROM bookkeeping to load */
-void bookkeeping_load (bookkeeping_t *history);
-
-/** @brief The ROM bookkeeping to save */
-void bookkeeping_save (bookkeeping_t *history);
+/**
+ * @brief Save ROM bookkeeping.
+ * 
+ * @param history Pointer to the bookkeeping structure to save.
+ */
+void bookkeeping_save(bookkeeping_t *history);
 
 /**
  * @brief Add a ROM to the history.
@@ -52,7 +61,7 @@ void bookkeeping_save (bookkeeping_t *history);
  * @param secondary_path The secondary path of the ROM.
  * @param type The type of the bookkeeping item.
  */
-void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type);
 
 /**
  * @brief Add a ROM to the favorites.
@@ -62,7 +71,7 @@ void bookkeeping_history_add(bookkeeping_t *bookkeeping, path_t *primary_path, p
  * @param secondary_path The secondary path of the ROM.
  * @param type The type of the bookkeeping item.
  */
-void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type );
+void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, path_t *secondary_path, bookkeeping_item_types_t type);
 
 /**
  * @brief Remove a ROM from the favorites.
@@ -72,4 +81,4 @@ void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, 
  */
 void bookkeeping_favorite_remove(bookkeeping_t *bookkeeping, int selection);
 
-#endif
+#endif /* BOOKKEEPING_H__ */

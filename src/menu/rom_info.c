@@ -1,3 +1,10 @@
+/**
+ * @file rom_info.c
+ * @brief ROM Information component implementation
+ * @ingroup menu
+ */
+
+
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -47,91 +54,45 @@ typedef struct  __attribute__((packed)) {
 
 /** @brief ROM Information Match Type Enumeration. */
 typedef enum {
-    // Check only game code
-    MATCH_TYPE_ID,
-
-    // Check game code and region
-    MATCH_TYPE_ID_REGION,
-
-    // Check game code, region and version
-    MATCH_TYPE_ID_REGION_VERSION,
-
-    // Check game check code
-    MATCH_TYPE_CHECK_CODE,
-
-    // Check for homebrew header ID
-    MATCH_TYPE_HOMEBREW_HEADER,
-
-    // List end marker
-    MATCH_TYPE_END
+    MATCH_TYPE_ID, /**< Check only game code */
+    MATCH_TYPE_ID_REGION, /**< Check game code and region */
+    MATCH_TYPE_ID_REGION_VERSION, /**< Check game code, region and version */
+    MATCH_TYPE_CHECK_CODE, /**< Check game check code */
+    MATCH_TYPE_HOMEBREW_HEADER, /**< Check for homebrew header ID */
+    MATCH_TYPE_END /**< List end marker */
 } match_type_t;
 
+/** @brief ROM Features Enumeration. */
 typedef enum {
-    // No features supported
-    FEAT_NONE = 0,
-
-    // Controller Pak
-    FEAT_CPAK = (1 << 0),
-
-    // Rumble Pak
-    FEAT_RPAK = (1 << 1),
-
-    // Transfer Pak
-    FEAT_TPAK = (1 << 2),
-
-    // Voice Recognition Unit
-    FEAT_VRU = (1 << 3),
-
-    // Real Time Clock
-    FEAT_RTC = (1 << 4),
-
-    // Expansion Pak (for games that will not work without it inserted into the console)
-    FEAT_EXP_PAK_REQUIRED = (1 << 5),
-
-    // Expansion Pak (for games with game play enhancements)
-    FEAT_EXP_PAK_RECOMMENDED = (1 << 6),
-
-    // Expansion Pak (for games with visual (or other) enhancements)
-    FEAT_EXP_PAK_ENHANCED = (1 << 7),
-
-    // No Expansion Pak (for games "broken" with it inserted into the console)
-    FEAT_EXP_PAK_BROKEN = (1 << 8),
-
-    // 64DD disk to ROM conversion
-    FEAT_64DD_CONVERSION = (1 << 9),
-
-    // Combo ROM + Disk games
-    FEAT_64DD_ENHANCED = (1 << 10),
+    FEAT_NONE = 0, /**< No features supported */
+    FEAT_CPAK = (1 << 0), /**< Controller Pak */
+    FEAT_RPAK = (1 << 1), /**< Rumble Pak */
+    FEAT_TPAK = (1 << 2), /**< Transfer Pak */
+    FEAT_VRU = (1 << 3), /**< Voice Recognition Unit */
+    FEAT_RTC = (1 << 4), /**< Real Time Clock */
+    FEAT_EXP_PAK_REQUIRED = (1 << 5), /**< Expansion Pak required */
+    FEAT_EXP_PAK_RECOMMENDED = (1 << 6), /**< Expansion Pak recommended */
+    FEAT_EXP_PAK_ENHANCED = (1 << 7), /**< Expansion Pak enhanced */
+    FEAT_EXP_PAK_BROKEN = (1 << 8), /**< Expansion Pak broken */
+    FEAT_64DD_CONVERSION = (1 << 9), /**< 64DD disk to ROM conversion */
+    FEAT_64DD_ENHANCED = (1 << 10) /**< Combo ROM + Disk games */
 } feat_t;
 
+/** @brief ROM Match Structure. */
 typedef struct {
-    // Which fields to check
-    match_type_t type;
-
-    // Fields to check for matching
+    match_type_t type; /**< Match type */
     union {
         struct {
-            // Game code (with media type and optional region) or unique ID
-            const char *id;
-
-            // Game version
-            uint8_t version;
+            const char *id; /**< Game code or unique ID */
+            uint8_t version; /**< Game version */
         };
-
-        // Game check code
-        uint64_t check_code;
+        uint64_t check_code; /**< Game check code */
     } fields;
-
-    // Matched game metadata
     struct {
-        // Save type (only cartridge save types)
-        rom_save_type_t save;
-
-        // Supported features
-        feat_t feat;
+        rom_save_type_t save; /**< Save type */
+        feat_t feat; /**< Supported features */
     } data;
 } match_t;
-
 
 #define MATCH_ID(i, s, f)                       { .type = MATCH_TYPE_ID, .fields = { .id = i }, .data = { .save = s, .feat = f } }
 #define MATCH_ID_REGION(i, s, f)                { .type = MATCH_TYPE_ID_REGION, .fields = { .id = i }, .data = { .save = s, .feat = f } }

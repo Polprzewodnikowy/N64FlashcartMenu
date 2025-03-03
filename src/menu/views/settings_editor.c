@@ -156,7 +156,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
-        "*    PAL60 HDMI Compat : %s\n"
+        "*    PAL60 Mod Compat  : %s\n"
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
         "\n\n"

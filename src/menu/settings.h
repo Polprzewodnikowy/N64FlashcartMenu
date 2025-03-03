@@ -20,7 +20,7 @@ typedef struct {
     bool pal60_enabled;
     
     /** @brief Use 60 Hz refresh rate on a PAL console with certain HDMI mods that do not properly support it */
-    bool hdmi_pal60_compatibility_mode;
+    bool pal60_compatibility_mode;
 
     /** @brief Show files/directories that are filtered in the browser */
     bool show_protected_entries;

@@ -36,7 +36,7 @@ static void set_pal60_type (menu_t *menu, void *arg) {
 }
 
 static void set_hdmi_pal60_compatibility_type (menu_t *menu, void *arg) {
-    menu->settings.hdmi_pal60_compatibility_mode = (bool)(uintptr_t)(arg);
+    menu->settings.pal60_compatibility_mode = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
@@ -174,7 +174,7 @@ static void draw (menu_t *menu, surface_t *d) {
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),
-        format_switch(menu->settings.hdmi_pal60_compatibility_mode),
+        format_switch(menu->settings.pal60_compatibility_mode),
         format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
 #endif

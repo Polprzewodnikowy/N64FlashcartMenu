@@ -12,7 +12,7 @@ static settings_t init = {
     .schema_revision = 1,
     .first_run = true,
     .pal60_enabled = false,
-    .hdmi_pal60_compatibility_mode = false,
+    .pal60_compatibility_mode = false,
     .show_protected_entries = false,
     .default_directory = "/",
     .use_saves_folder = true,
@@ -46,7 +46,7 @@ void settings_load (settings_t *settings) {
     settings->schema_revision = mini_get_int(ini, "menu", "schema_revision", init.schema_revision);
     settings->first_run = mini_get_bool(ini, "menu", "first_run", init.first_run);
     settings->pal60_enabled = mini_get_bool(ini, "menu", "pal60", init.pal60_enabled); // TODO: consider changing file setting name
-    settings->hdmi_pal60_compatibility_mode = mini_get_bool(ini, "menu", "hdmi_pal60_compatibility_mode", init.hdmi_pal60_compatibility_mode);
+    settings->pal60_compatibility_mode = mini_get_bool(ini, "menu", "pal60_compatibility_mode", init.pal60_compatibility_mode);
     settings->show_protected_entries = mini_get_bool(ini, "menu", "show_protected_entries", init.show_protected_entries);
     settings->default_directory = strdup(mini_get_string(ini, "menu", "default_directory", init.default_directory));
     settings->use_saves_folder = mini_get_bool(ini, "menu", "use_saves_folder", init.use_saves_folder);
@@ -71,7 +71,7 @@ void settings_save (settings_t *settings) {
     mini_set_int(ini, "menu", "schema_revision", settings->schema_revision);
     mini_set_bool(ini, "menu", "first_run", settings->first_run);
     mini_set_bool(ini, "menu", "pal60", settings->pal60_enabled);
-    mini_set_bool(ini, "menu", "hdmi_pal60_compatibility_mode", settings->hdmi_pal60_compatibility_mode);
+    mini_set_bool(ini, "menu", "pal60_compatibility_mode", settings->pal60_compatibility_mode);
     mini_set_bool(ini, "menu", "show_protected_entries", settings->show_protected_entries);
     mini_set_string(ini, "menu", "default_directory", settings->default_directory);
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);

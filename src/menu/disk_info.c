@@ -1,3 +1,9 @@
+/**
+ * @file disk_info.c
+ * @brief Disk Information component implementation
+ * @ingroup menu
+ */
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -5,7 +11,6 @@
 
 #include "disk_info.h"
 #include "utils/fs.h"
-
 
 #define SECTORS_PER_BLOCK                   (85)
 #define DISK_ZONES                          (16)
@@ -27,7 +32,6 @@
 
 #define GET_U32(b)                          (((b)[0] << 24) | ((b)[1] << 16) | ((b)[2] << 8) | (b)[3])
 
-
 static const int tracks_per_zone[DISK_ZONES] = {
     158, 158, 149, 149, 149, 149, 149, 114, 158, 158, 149, 149, 149, 149, 149, 114
 };
@@ -38,7 +42,14 @@ static const int disk_id_lbas[DISK_ID_LBA_COUNT] = {
     15, 14
 };
 
-
+/**
+ * @brief Load a system area LBA from the disk.
+ * 
+ * @param f File pointer to the disk image.
+ * @param lba Logical block address to load.
+ * @param buffer Buffer to store the loaded data.
+ * @return true if an error occurred, false otherwise.
+ */
 static bool load_system_area_lba (FILE *f, int lba, uint8_t *buffer) {
     if (lba >= SYSTEM_AREA_LBA_COUNT) {
         return true;
@@ -52,6 +63,13 @@ static bool load_system_area_lba (FILE *f, int lba, uint8_t *buffer) {
     return false;
 }
 
+/**
+ * @brief Verify the integrity of a system area LBA.
+ * 
+ * @param buffer Buffer containing the LBA data.
+ * @param sector_length Length of each sector in the LBA.
+ * @return true if the LBA is valid, false otherwise.
+ */
 static bool verify_system_area_lba (uint8_t *buffer, int sector_length) {
     for (int sector = 1; sector < SECTORS_PER_BLOCK; sector++) {
         for (int i = 0; i < sector_length; i++) {
@@ -63,6 +81,12 @@ static bool verify_system_area_lba (uint8_t *buffer, int sector_length) {
     return true;
 }
 
+/**
+ * @brief Verify the integrity of a system data LBA.
+ * 
+ * @param buffer Buffer containing the LBA data.
+ * @return true if the LBA is valid, false otherwise.
+ */
 static bool verify_system_data_lba (uint8_t *buffer) {
     return (
         (buffer[4] == 0x10) &&
@@ -72,6 +96,13 @@ static bool verify_system_data_lba (uint8_t *buffer) {
     );
 }
 
+/**
+ * @brief Set the defect tracks for the disk.
+ * 
+ * @param buffer Buffer containing the defect track data.
+ * @param disk_info Pointer to the disk information structure.
+ * @return true if the defect tracks were set successfully, false otherwise.
+ */
 static bool set_defect_tracks (uint8_t *buffer, disk_info_t *disk_info) {
     for (int head_zone = 0; head_zone < DISK_ZONES; head_zone++) {
         uint8_t start = ((head_zone == 0) ? 0 : buffer[7 + head_zone]);
@@ -90,6 +121,11 @@ static bool set_defect_tracks (uint8_t *buffer, disk_info_t *disk_info) {
     return true;
 }
 
+/**
+ * @brief Update the bad system area LBAs for the disk.
+ * 
+ * @param disk_info Pointer to the disk information structure.
+ */
 static void update_bad_system_area_lbas (disk_info_t *disk_info) {
     if (disk_info->region == DISK_REGION_DEVELOPMENT) {
         disk_info->bad_system_area_lbas[0] = true;
@@ -109,6 +145,13 @@ static void update_bad_system_area_lbas (disk_info_t *disk_info) {
     }
 }
 
+/**
+ * @brief Load and verify the system data LBA from the disk.
+ * 
+ * @param f File pointer to the disk image.
+ * @param disk_info Pointer to the disk information structure.
+ * @return disk_err_t Error code.
+ */
 static disk_err_t load_and_verify_system_data_lba (FILE *f, disk_info_t *disk_info) {
     uint8_t buffer[SYSTEM_AREA_LBA_LENGTH];
     int sector_length;
@@ -151,6 +194,13 @@ static disk_err_t load_and_verify_system_data_lba (FILE *f, disk_info_t *disk_in
     return valid_system_data_lba_found ? DISK_OK : DISK_ERR_INVALID;
 }
 
+/**
+ * @brief Load and verify the disk ID LBA from the disk.
+ * 
+ * @param f File pointer to the disk image.
+ * @param disk_info Pointer to the disk information structure.
+ * @return disk_err_t Error code.
+ */
 static disk_err_t load_and_verify_disk_id_lba (FILE *f, disk_info_t *disk_info) {
     uint8_t buffer[SYSTEM_AREA_LBA_LENGTH];
 
@@ -175,7 +225,13 @@ static disk_err_t load_and_verify_disk_id_lba (FILE *f, disk_info_t *disk_info) 
     return valid_disk_id_lba_found ? DISK_OK : DISK_ERR_INVALID;
 }
 
-
+/**
+ * @brief Load the disk information from the specified path.
+ * 
+ * @param path Pointer to the path structure.
+ * @param disk_info Pointer to the disk information structure.
+ * @return disk_err_t Error code.
+ */
 disk_err_t disk_info_load (path_t *path, disk_info_t *disk_info) {
     FILE *f;
     disk_err_t err;

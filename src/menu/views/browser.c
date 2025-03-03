@@ -36,6 +36,52 @@ static const char *hidden_paths[] = {
     NULL,
 };
 
+struct substr { const char *str; size_t len; };
+#define substr(str) ((struct substr){ str, sizeof(str) - 1 })
+
+static const struct substr hidden_basenames[] = {
+    substr("desktop.ini"), // Windows Explorer settings
+    substr("Thumbs.db"),   // Windows Explorer thumbnails
+    substr(".DS_Store"),   // macOS Finder settings
+};
+#define HIDDEN_BASENAMES_COUNT (sizeof(hidden_basenames) / sizeof(hidden_basenames[0]))
+
+static const struct substr hidden_prefixes[] = {
+    substr("._"), // macOS "AppleDouble" metadata files
+};
+#define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
+
+
+static bool path_is_hidden (path_t *path) {
+    char *stripped_path = strip_fs_prefix(path_get(path));
+
+    // Check for hidden files based on full path
+    for (int i = 0; hidden_paths[i] != NULL; i++) {
+        if (strcmp(stripped_path, hidden_paths[i]) == 0) {
+            return true;
+        }
+    }
+
+    char *basename = file_basename(stripped_path);
+    int basename_len = strlen(basename);
+
+    // Check for hidden files based on filename
+    for (int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+        if (basename_len == hidden_basenames[i].len &&
+            strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
+            return true;
+        }
+    }
+    // Check for hidden files based on filename prefix
+    for (int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+        if (basename_len > hidden_prefixes[i].len &&
+            strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 static int compare_entry (const void *pa, const void *pb) {
     entry_t *a = (entry_t *) (pa);
@@ -108,14 +154,7 @@ static bool load_directory (menu_t *menu) {
 
         if (!menu->settings.show_protected_entries) {
             path_push(path, info.d_name);
-
-            for (int i = 0; hidden_paths[i] != NULL; i++) {
-                if (strcmp(strip_fs_prefix(path_get(path)), hidden_paths[i]) == 0) {
-                    hide = true;
-                    break;
-                }
-            }
-
+            hide = path_is_hidden(path);
             path_pop(path);
         }
 
@@ -358,16 +397,21 @@ static void process (menu_t *menu) {
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.next_tab) {
+        menu->next_mode = MENU_MODE_HISTORY;
+    } else if (menu->actions.previous_tab) {
+        menu->next_mode = MENU_MODE_FAVORITE;
     }
 }
-
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
 
-    ui_components_layout_draw();
+    ui_components_tabs_common_draw(0);
+
+    ui_components_layout_draw_tabbed();
 
     ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
@@ -395,7 +439,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
+        "^%02XStart: Settings^00\n"
         "^%02XR: Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
@@ -403,9 +447,15 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "<C Change Tab C>\n"
             "%s",
             ctime(&menu->current_time)
+        );
+    } else {
+        ui_components_actions_bar_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "<C Change Tab C>\n"
+        "\n"
         );
     }
 

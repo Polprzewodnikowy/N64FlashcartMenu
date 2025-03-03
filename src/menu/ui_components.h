@@ -51,6 +51,11 @@ void ui_components_box_draw(int x0, int y0, int x1, int y1, color_t color);
 void ui_components_border_draw(int x0, int y0, int x1, int y1);
 
 /**
+ * @brief Draw the layout component with tabs.
+ */
+void ui_components_layout_draw_tabbed(void);
+
+/**
  * @brief Draw the layout component.
  */
 void ui_components_layout_draw(void);
@@ -251,5 +256,22 @@ void ui_components_boxart_free(component_boxart_t *b);
  * @param b Pointer to the box art component.
  */
 void ui_components_boxart_draw(component_boxart_t *b);
+
+/**
+ * @brief Draw the tabs component.
+ * 
+ * @param text Array of tab labels.
+ * @param count Number of tabs.
+ * @param selected Index of the selected tab.
+ * @param width Width of the tabs.
+ */
+void ui_components_tabs_draw(const char **text, int count, int selected, float width );
+
+/**
+ * @brief Draw the common part of the tabs component.
+ * 
+ * @param selected Index of the selected tab.
+ */
+void ui_components_tabs_common_draw(int selected);
 
 #endif /* UI_COMPONENTS_H__ */

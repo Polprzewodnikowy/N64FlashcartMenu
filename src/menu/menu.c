@@ -93,7 +93,7 @@ static void menu_init (boot_params_t *boot_params) {
     menu->load.load_favorite = -1;
     path_pop(path);
   
-    if (menu->settings.pal60_compatibility_mode) { // hardware mods that dont really understand the VI output
+    if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output
         tv_type = get_tv_type();
         if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
             // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.

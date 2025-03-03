@@ -1,9 +1,20 @@
+/**
+ * @file context_menu.c
+ * @brief Context menu component implementation
+ * @ingroup ui_components
+ */
+
 #include "../ui_components.h"
 #include "../fonts.h"
 #include "../sound.h"
 #include "constants.h"
 
-
+/**
+ * @brief Get the current submenu.
+ * 
+ * @param cm Pointer to the context menu component.
+ * @return component_context_menu_t* Pointer to the current submenu.
+ */
 static component_context_menu_t *get_current_submenu (component_context_menu_t *cm) {
     while (cm->submenu != NULL) {
         cm = cm->submenu;
@@ -11,7 +22,11 @@ static component_context_menu_t *get_current_submenu (component_context_menu_t *
     return cm;
 }
 
-
+/**
+ * @brief Initialize the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
 void ui_components_context_menu_init (component_context_menu_t *cm) {
     cm->row_selected = -1;
     cm->row_count = 0;
@@ -22,11 +37,23 @@ void ui_components_context_menu_init (component_context_menu_t *cm) {
     }
 }
 
+/**
+ * @brief Show the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
 void ui_components_context_menu_show (component_context_menu_t *cm) {
     cm->row_selected = 0;
     cm->submenu = NULL;
 }
 
+/**
+ * @brief Process the context menu actions.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param cm Pointer to the context menu component.
+ * @return true if the context menu is processed, false otherwise.
+ */
 bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return false;
@@ -71,6 +98,11 @@ bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t 
     return true;
 }
 
+/**
+ * @brief Draw the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
 void ui_components_context_menu_draw (component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return;

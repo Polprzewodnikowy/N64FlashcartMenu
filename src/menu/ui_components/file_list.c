@@ -1,13 +1,24 @@
+/**
+ * @file file_list.c
+ * @brief File list component implementation
+ * @ingroup ui_components
+ */
+
 #include <stdlib.h>
 
 #include "../ui_components.h"
 #include "../fonts.h"
 #include "constants.h"
 
-
 static const char *dir_prefix = "/";
 
-
+/**
+ * @brief Format the file size into a human-readable string.
+ * 
+ * @param buffer Buffer to store the formatted string.
+ * @param size Size of the file.
+ * @return int Number of characters written to the buffer.
+ */
 static int format_file_size (char *buffer, int64_t size) {
     if (size < 0) {
         return sprintf(buffer, "unknown");
@@ -24,7 +35,13 @@ static int format_file_size (char *buffer, int64_t size) {
     }
 }
 
-
+/**
+ * @brief Draw the file list component.
+ * 
+ * @param list Pointer to the list of entries.
+ * @param entries Number of entries in the list.
+ * @param selected Index of the currently selected entry.
+ */
 void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
     int starting_position = 0;
 

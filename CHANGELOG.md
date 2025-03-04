@@ -1,4 +1,5 @@
-Rolling release built from latest commit on main branch.  
+# Rolling release
+built from latest commit on main branch.  
 **Note**: the attached source code files may be out of date.
 
 - For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.

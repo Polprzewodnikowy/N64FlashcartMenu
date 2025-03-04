@@ -35,6 +35,11 @@ static void set_pal60_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_mod_pal60_compatibility_type (menu_t *menu, void *arg) {
+    menu->settings.pal60_compatibility_mode = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 static void set_bgm_enabled_type (menu_t *menu, void *arg) {
     menu->settings.bgm_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -50,7 +55,6 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 //     menu->browser.reload = true;
 // }
 #endif
-
 
 static component_context_menu_t set_protected_entries_type_context_menu = { .list = {
     {.text = "On", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(true) },
@@ -73,7 +77,13 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_pal60_type, .arg = (void *) (false) },
+    {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_pal60_mod_compatibility_type_context_menu = { .list = {
+    {.text = "On", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -96,6 +106,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
+    { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
     // { .text = "Restore Defaults", .action = set_use_default_settings },
@@ -145,6 +156,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Sound Effects     : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
+        "*    PAL60 Mod Compat  : %s\n"
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
         "\n\n"
@@ -162,6 +174,7 @@ static void draw (menu_t *menu, surface_t *d) {
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),
+        format_switch(menu->settings.pal60_compatibility_mode),
         format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
 #endif

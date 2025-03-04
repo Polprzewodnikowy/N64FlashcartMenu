@@ -37,7 +37,6 @@
 #define FPS_LIMIT                   (30.0f)
 
 static menu_t *menu;
-static tv_type_t tv_type;
 
 /** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
  *  with hardware mods that don't really understand the VI output.
@@ -140,7 +139,6 @@ static void menu_init (boot_params_t *boot_params) {
  * @param menu Pointer to the menu structure.
  */
 static void menu_deinit (menu_t *menu) {
-    __boot_tvtype = tv_type;
     hdmi_send_game_id(menu->boot_params);
 
     ui_components_background_free();

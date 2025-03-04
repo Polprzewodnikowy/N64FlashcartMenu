@@ -38,11 +38,12 @@
 
 static menu_t *menu;
 
-// -- These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
-// with hardware mods that dont really understand the VI output.
+/** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
+ *  with hardware mods that don't really understand the VI output.
+ **/
 static tv_type_t tv_type;
 extern int __boot_tvtype;
-// --
+/* -- */
 
 
 /**

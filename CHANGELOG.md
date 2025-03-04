@@ -9,8 +9,8 @@ built from latest commit on main branch.
 ## Release Notes 2025-{Next}
 
 - **New Features**
-	- Introduced tabs in main menu for favorites and history.
-	- [beta] Introduces ROM descriptions.
+	- Introduced tabs in main menu for ROM favorites and history.
+	- BETA_FEATURE: Introduces ROM descriptions from files.
 	- Ignore macOS metadata.
 
 
@@ -21,15 +21,25 @@ built from latest commit on main branch.
 
 - **Documentation**
 	- Re-orginised user documentation.
-	- Added doxygen comments.
+	- Added a lot of doxygen compatible code comments.
 
 
 - **Refactor**
-	- RTC
+	- RTC subsystem.
+	- Boxart images (Deprecates old boxart image folder layout).
 
 ### Breaking changes
 * GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility.
-* For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in config.ini
+* For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
+
+
+### Current known Issues
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+[Pre-release menu]:
+* BETA_SETTING: PAL60 when using HDMI mods has regressed (awaiting libdragon fix).
+* ALPHA_FEATURE: ED64 X Series detection does not occur properly (however this is not a problem as not tag released asset).
+* ALPHA_FEATURE: ED64 V Series only supports loading ROMs (however this is not a problem as not tag released asset).
 
 
 ## Release Notes 2025-01-10

@@ -6,6 +6,32 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
+## Release Notes 2025-{Next}
+
+- **New Features**
+	- Introduced tabs in main menu for favorites and history.
+	- [beta] Introduces ROM descriptions.
+	- Ignore macOS metadata.
+
+
+- **Bug Fixes**
+	- SFX
+	- RTC
+
+
+- **Documentation**
+	- Re-orginised user documentation.
+	- Added doxygen comments.
+
+
+- **Refactor**
+	- RTC
+
+### Breaking changes
+* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility.
+* For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in config.ini
+
+
 ## Release Notes 2025-01-10
 
 - **Bug Fixes**

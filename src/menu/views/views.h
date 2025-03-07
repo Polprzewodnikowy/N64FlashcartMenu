@@ -165,6 +165,12 @@ void view_rtc_init(menu_t *menu);
  */
 void view_rtc_display(menu_t *menu, surface_t *display);
 
+void view_controller_pak_init (menu_t *menu);
+void view_controller_pak_display (menu_t *menu, surface_t *display);
+
+void view_controller_pak_dump_info_init (menu_t *menu);
+void view_controller_pak_dump_info_display (menu_t *menu, surface_t *display);
+
 /**
  * @brief Initialize the flashcart info view.
  * 

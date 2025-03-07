@@ -55,11 +55,10 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
     ui_components_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
 
     if (entries == 0) {
-        ui_components_main_text_draw(
+        ui_components_main_text_draw(STL_GRAY,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
-            "^%02X** empty directory **",
-            STL_GRAY
+            "** empty directory **"
         );
     } else {
         rdpq_paragraph_t *file_list_layout;

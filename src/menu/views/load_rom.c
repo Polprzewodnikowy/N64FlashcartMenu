@@ -246,7 +246,7 @@ static void draw (menu_t *menu, surface_t *d) {
     } else {
         ui_components_layout_draw();
 
-        ui_components_main_text_draw(
+        ui_components_main_text_draw(STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "N64 ROM information\n"
             "\n"
@@ -254,14 +254,14 @@ static void draw (menu_t *menu, surface_t *d) {
             rom_filename
         );
 
-        ui_components_main_text_draw(
+        ui_components_main_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n"
             "Description:\n\t%s\n",
             menu->load.rom_info.metadata.description
         );
 
-        ui_components_main_text_draw(
+        ui_components_main_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Expansion PAK:\t%s\n"
@@ -278,13 +278,13 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
-        ui_components_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
             "B: Back\n"
         );
 
-        ui_components_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R:    Options\n"

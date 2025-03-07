@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
+#include "../fonts.h"
 
 #define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
 #define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
@@ -156,7 +157,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (!is_editing_mode) {
          if( menu->current_time >= 0 ) {
 
-            ui_components_main_text_draw(
+            ui_components_main_text_draw(STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -170,7 +171,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
             );
 
-            ui_components_actions_bar_text_draw(
+            ui_components_actions_bar_text_draw(STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "A: Adjust time\n"
                 "B: Back"
@@ -178,7 +179,7 @@ static void draw (menu_t *menu, surface_t *d) {
          }
          else {
 
-            ui_components_main_text_draw(
+            ui_components_main_text_draw(STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -190,7 +191,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown"
             );
 
-            ui_components_actions_bar_text_draw(
+            ui_components_actions_bar_text_draw(STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
                 "B: Back"
@@ -198,12 +199,12 @@ static void draw (menu_t *menu, surface_t *d) {
          }
     }
     else {
-        ui_components_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "Up/Down: Adjust Field\n"
             "Left/Right: Switch Field"
         );
-        ui_components_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "R: Save\n"
             "B: Back"

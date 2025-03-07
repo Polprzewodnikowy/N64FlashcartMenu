@@ -1,6 +1,7 @@
 #include "views.h"
 #include "../sound.h"
 #include <libcart/cart.h>
+#include "../fonts.h"
 
 
 static inline const char *format_boolean_type (bool bool_value) {
@@ -47,14 +48,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw();
 
-    ui_components_main_text_draw(
+    ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "FLASHCART INFORMATION"
         "\n"
         "\n"
     );
 
-    ui_components_main_text_draw(
+    ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -87,7 +88,7 @@ static void draw (menu_t *menu, surface_t *d) {
         //format_diagnostic_data(flashcart_has_feature(FLASHCART_FEATURE_DIAGNOSTIC_DATA))
     );
 
-    ui_components_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Back"

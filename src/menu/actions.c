@@ -16,12 +16,19 @@ static void actions_clear (menu_t *menu) {
     menu->actions.go_left = false;
     menu->actions.go_right = false;
     menu->actions.go_fast = false;
+    menu->actions.go_c_up = false;
+    menu->actions.go_c_down = false;
+    menu->actions.go_c_left = false;
+    menu->actions.go_c_right = false;
 
     menu->actions.enter = false;
     menu->actions.back = false;
     menu->actions.options = false;
     menu->actions.settings = false;
     menu->actions.lz_context = false;
+    menu->actions.previous_tab = false;
+    menu->actions.next_tab = false;
+    menu->actions.l = false;
 }
 
 static void actions_update_direction (menu_t *menu) {
@@ -109,6 +116,22 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.settings = true;
     } else if (pressed.l || pressed.z) {
         menu->actions.lz_context = true;
+    } else if (pressed.c_left) {
+        menu->actions.previous_tab = true;
+    } else if (pressed.c_right) {
+        menu->actions.next_tab = true;
+    } else if (pressed.c_left) {
+        menu-> actions.go_c_left = true;
+    } else if (pressed.c_right) {
+        menu-> actions.go_c_right = true;
+    } else if (pressed.c_up) {
+        menu-> actions.go_c_up = true;
+    } else if (pressed.c_down) {
+        menu-> actions.go_c_down = true;
+    }
+    
+    if (pressed.l) {
+        menu-> actions.l = true;
     }
 }
 

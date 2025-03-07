@@ -2,6 +2,7 @@
 
 #include "../sound.h"
 #include "views.h"
+#include "../fonts.h"
 
 
 static int joypad[4];

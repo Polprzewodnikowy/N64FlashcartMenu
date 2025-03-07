@@ -32,6 +32,8 @@ typedef enum {
     MENU_MODE_CREDITS,
     MENU_MODE_SETTINGS_EDITOR,
     MENU_MODE_RTC,
+    MENU_MODE_CONTROLLER_PAK,
+    MENU_MODE_CONTROLLER_PAK_DUMP_INFO,
     MENU_MODE_FLASHCART,
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
@@ -87,12 +89,19 @@ typedef struct {
         bool go_left;
         bool go_right;
         bool go_fast;
+        bool go_c_left;
+        bool go_c_right;
+        bool go_c_up;
+        bool go_c_down;
 
         bool enter;
         bool back;
         bool options;
         bool settings;
         bool lz_context;
+        bool previous_tab;
+        bool next_tab;
+        bool l;
     } actions;
 
     struct {

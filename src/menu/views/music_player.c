@@ -1,6 +1,7 @@
 #include "../mp3_player.h"
 #include "../sound.h"
 #include "views.h"
+#include "../fonts.h"
 
 
 #define SEEK_SECONDS        (5)

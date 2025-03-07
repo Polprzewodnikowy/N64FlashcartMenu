@@ -1,6 +1,7 @@
 #include "views.h"
 #include "../sound.h"
 #include <libcart/cart.h>
+#include "../fonts.h"
 
 
 static inline const char *format_boolean_type (bool bool_value) {

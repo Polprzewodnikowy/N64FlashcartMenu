@@ -9,37 +9,34 @@ built from latest commit on main branch.
 ## Release Notes 2025-{Next}
 
 - **New Features**
-	- Introduced tabs in main menu for ROM favorites and history.
+	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
 	- BETA_FEATURE: Introduces ROM descriptions from files.
 	- Ignore macOS metadata.
 
 
 - **Bug Fixes**
-	- SFX
-	- RTC
+	- Menu sound FX issues (hissing, popping and white noise).
+	- RTC not showing or setting correct date parameters in certain circumstances.
+	- GB / GBC emulator not saving in certain circumstances.
 
 
 - **Documentation**
-	- Re-orginised user documentation.
+	- Re-orginised and improved user documentation.
 	- Added a lot of doxygen compatible code comments.
 
 
 - **Refactor**
-	- RTC subsystem.
+	- RTC subsystem (align with libDragon improvements).
 	- Boxart images (Deprecates old boxart image folder layout).
 
 ### Breaking changes
-* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility.
+* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
 * For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
 
 
 ### Current known Issues
 * The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
-[Pre-release menu]:
-* BETA_SETTING: PAL60 when using HDMI mods has regressed (awaiting libdragon fix).
-* ALPHA_FEATURE: ED64 X Series detection does not occur properly (however this is not a problem as not tag released asset).
-* ALPHA_FEATURE: ED64 V Series only supports loading ROMs (however this is not a problem as not tag released asset).
 
 
 ## Release Notes 2025-01-10

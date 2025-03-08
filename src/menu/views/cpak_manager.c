@@ -1,10 +1,12 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include <libdragon.h>
 #include "views.h"
 #include "../sound.h"
 #include "../fonts.h"
 #include <fatfs/ff.h>
+#include <cpak.h>
 
 #define WAITING_TIME 0
 #define u8 unsigned char
@@ -38,6 +40,8 @@ bool validate_pak;
 int total_elements;
 bool process_completed;
 bool start_complete_dump;
+bool is_cpak_mounted;
+int val_mount;
 
 bool show_complete_dump_confirm_message;
 bool show_complete_write_confirm_message;
@@ -54,6 +58,7 @@ void reset_vars(){
     start_complete_dump = false;
     show_complete_dump_confirm_message = false;
     show_complete_write_confirm_message = false;
+    is_cpak_mounted = false;
 }
 
 void create_directory(const char *dirpath) {
@@ -82,7 +87,7 @@ void utils_truncate_string(const char *source, char *destination, int new_length
     destination[new_length] = '\0'; // Null-terminate the truncated string
 }
 
-void free_controller_pak_name_notes() {
+void free_controller_pak_name_notes() { 
 
     // Set \0 to each note
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
@@ -202,16 +207,20 @@ static void process (menu_t *menu) {
     if (!show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
         if(menu->actions.go_left) {
             sound_play_effect(SFX_CURSOR);
+            if (is_cpak_mounted) {
+                cpak_unmount(controller_selected);
+                is_cpak_mounted = false;
+            }
             controller_selected = ((controller_selected - 1) + 4) % 4;
-            ctr_p_data_loop = false;
-            validate_pak = false;
-            has_mem = false;
+            reset_vars();
         } else if (menu->actions.go_right) {
             sound_play_effect(SFX_CURSOR);
+            if (is_cpak_mounted) {
+                cpak_unmount(controller_selected);
+                is_cpak_mounted = false;
+            }
             controller_selected = ((controller_selected + 1) + 4) % 4;
-            ctr_p_data_loop = false;
-            validate_pak = false;
-            has_mem = false;    
+            reset_vars();
         } else if (menu->actions.back) {
             sound_play_effect(SFX_EXIT);
             menu->next_mode = MENU_MODE_BROWSER;
@@ -224,6 +233,12 @@ static void process (menu_t *menu) {
     check_accessories(controller_selected);
 
     if (has_mem) {
+        char temp[16];
+        sprintf(temp, "cpak%d:/", controller_selected+1);
+        if (!is_cpak_mounted) {
+            val_mount = cpak_mount(controller_selected, temp);
+            is_cpak_mounted = true;
+        }
 
         // Pressing A : dump the controller pak
         if (menu->actions.enter && use_rtc && !show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
@@ -272,6 +287,8 @@ static void draw (menu_t *menu, surface_t *d) {
     if (has_mem) {
         sprintf(has_mem_text, "CPAK detected");
 
+        sprintf(free_space_cpak_text, "%d", val_mount);
+/*
         if (ctr_p_data_loop) {
             sprintf(has_mem_text, "%s %s", has_mem_text, " (is valid)");
             style = STL_GREEN;
@@ -279,11 +296,11 @@ static void draw (menu_t *menu, surface_t *d) {
 
         } else {
             sprintf(free_space_cpak_text, " ");
-        }
+        }*/
 
         if (validate_pak == false && validate_mempak(controller_selected) == 0) {
             validate_pak = true;
-            
+
             if (ctr_p_data_loop == false) {
                 free_space_cpak = get_mempak_free_space(controller_selected);
 
@@ -291,18 +308,27 @@ static void draw (menu_t *menu, surface_t *d) {
 
                 bool has_tot_element_checked = false;
                 if (total_elements > 0) has_tot_element_checked = true;
+
+                dir_t info;
+                char dir[100];
+                sprintf(dir,"cpak%d:/", controller_selected+1);
+                
+                int counter = 0;
+                cpakfs_t* val =  get_filesystem_from_port(controller_selected);
+                
                 for (int i = 0; i < MAX_NUM_NOTES; i++) {
                     entry_structure_t note;
                     get_mempak_entry(controller_selected, i, &note);
                     if (note.valid) {
-                        char temp[16];
-                        utils_truncate_string(note.name, temp, 15);
-                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", temp , get_cpak_save_region(note.region));
+                        //char temp[16];
+                        //utils_truncate_string(note.name, temp, 15);
+                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", val->notes[i].gamecode /*temp*/ , get_cpak_save_region(note.region));
                         //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", note.name , get_cpak_save_region(note.region));
                         if (!has_tot_element_checked) total_elements++;
                     } else {
                         strcpy(controller_pak_name_notes[i], " ");
                     }
+                    
                 }
                 ctr_p_data_loop = true;
             }

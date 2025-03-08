@@ -44,6 +44,18 @@ bool show_complete_write_confirm_message;
 
 u8 fmLoadDir(const TCHAR* path, FILINFO *inf, u32 max_items);
 
+void reset_vars(){
+    ctr_p_data_loop = false;
+    validate_pak = false;
+    has_mem = false;
+    free_space_cpak = 0;
+    total_elements = 0;
+    process_completed = false;
+    start_complete_dump = false;
+    show_complete_dump_confirm_message = false;
+    show_complete_write_confirm_message = false;
+}
+
 void create_directory(const char *dirpath) {
     FRESULT res = f_mkdir(dirpath);
     
@@ -84,13 +96,13 @@ char* get_cpak_save_region(char _code) {
         case 'A': return "A = All"; //(Only used in 1080 Snowboarding [USA/JAP] - later \"region-free\" in Wii)";
         case 'B': return "B = Brazil"; //(Not in GC/Wii thus possibly unlicensed, but exists in ROM data)";
         case 'D': return "D = Germany"; //(German only)";
-        case 'E': return "E = N.Am"; //(USA, Canada, Mexico)";
+        case 'E': return "E = N.America"; //(USA, Canada, Mexico)";
         case 'F': return "F = France"; //(French only)";
         case 'I': return "I = Italy"; //(Italian only)";
         case 'J': return "J = Japan";
         case 'P': return "P = Europe"; //(sometimes including Australia)";
         case 'S': return "S = Spain"; //(Spanish only)";
-        case 'U': return "U = Aus."; //(English-only PAL games)";
+        case 'U': return "U = Australia"; //(English-only PAL games)";
         case 'X': return "X = Europe"; //(Alt. Languages 1)";
         case 'Y': return "Y = Europe"; //(Alt. Languages 2)";
         case 'G': return "G = Lodgenet NTSC"; //(NTSC, mentioned in N64 SDKs)"; G = Lodgenet/Gateway 64 NTSC
@@ -169,8 +181,23 @@ bool check_accessories(int controller) {
     return has_rumble || has_transfert || has_bio_sensor || has_mem;
 }
 
+static void format_controller_pak (menu_t *menu, void *arg) {
+    format_mempak(controller_selected);
+    reset_vars();
+}
+
+static component_context_menu_t options_context_menu = {
+    .list = {
+        { .text = "Format Contr. Pak", .action = format_controller_pak },
+        COMPONENT_CONTEXT_MENU_LIST_END,
+    }
+};
+
 
 static void process (menu_t *menu) {
+    if (ui_components_context_menu_process(menu, &options_context_menu)) {
+        return;
+    }
 
     if (!show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
         if(menu->actions.go_left) {
@@ -188,6 +215,9 @@ static void process (menu_t *menu) {
         } else if (menu->actions.back) {
             sound_play_effect(SFX_EXIT);
             menu->next_mode = MENU_MODE_BROWSER;
+        } else if (menu->actions.options) {
+            ui_components_context_menu_show(&options_context_menu);
+            sound_play_effect(SFX_SETTING);
         }
     }
 
@@ -377,7 +407,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(style,
         ALIGN_RIGHT, VALIGN_TOP,
         "START: Restore Pak\n"
-        "Z: Restore single Note\n"
+        "R: Options\n"
     );
 
     if (show_complete_dump_confirm_message && !start_complete_dump) {
@@ -399,27 +429,23 @@ static void draw (menu_t *menu, surface_t *d) {
         start_complete_dump = false;
         return;
     }
+
+    ui_components_context_menu_draw(&options_context_menu);
         
     rdpq_detach_show();
 }
 
 void view_controller_pak_init (menu_t *menu) {
     controller_selected = 0;
-    ctr_p_data_loop = false;
-    validate_pak = false;
-    has_mem = false;
-    free_space_cpak = 0;
-    total_elements = 0;
-    process_completed = false;
-    start_complete_dump = false;
-    show_complete_dump_confirm_message = false;
-    show_complete_write_confirm_message = false;
+    reset_vars();
 
     use_rtc = menu->current_time >= 0 ? true : false;
 
     
     create_directory(CPAK_PATH_NO_PRE);
     create_directory(CPAK_NOTES_PATH_NO_PRE);
+
+    ui_components_context_menu_init(&options_context_menu);
 
 
 }

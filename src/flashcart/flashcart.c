@@ -1,21 +1,24 @@
-#include <stddef.h>
+/**
+ * @file flashcart.c
+ * @brief Flashcart functions implementation
+ * @ingroup flashcart
+ */
 
+#include <stddef.h>
 #include <libcart/cart.h>
 #include <libdragon.h>
 #include <usb.h>
 
 #include "utils/fs.h"
 #include "utils/utils.h"
-
 #include "flashcart.h"
 #include "flashcart_utils.h"
-
 #include "ed64/ed64_vseries.h"
 #include "ed64/ed64_xseries.h"
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
-
+/** @brief Save sizes for different flashcart save types. */
 static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     0,
     512,
@@ -27,11 +30,21 @@ static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {
     KiB(128),
 };
 
-
+/**
+ * @brief Dummy initialization function for flashcart.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t dummy_init (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Dummy function to check if a feature is supported by the flashcart.
+ * 
+ * @param feature The feature to check.
+ * @return true if the feature is supported, false otherwise.
+ */
 static bool dummy_has_feature (flashcart_features_t feature) {
     switch (feature) {
         default:
@@ -39,22 +52,50 @@ static bool dummy_has_feature (flashcart_features_t feature) {
     }
 }
 
+/**
+ * @brief Dummy function to load a ROM into the flashcart.
+ * 
+ * @param rom_path Path to the ROM file.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t dummy_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Dummy function to load a file into the flashcart.
+ * 
+ * @param file_path Path to the file.
+ * @param rom_offset ROM offset.
+ * @param file_offset File offset.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t dummy_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Dummy function to load a save file into the flashcart.
+ * 
+ * @param save_path Path to the save file.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t dummy_load_save (char *save_path) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Dummy function to set the save type for the flashcart.
+ * 
+ * @param save_type The save type.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t dummy_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
+/** @brief Flashcart structure with dummy functions. */
 static flashcart_t *flashcart = &((flashcart_t) {
     .init = dummy_init,
     .deinit = NULL,
@@ -76,7 +117,12 @@ static flashcart_t *flashcart = &((flashcart_t) {
     bool debug_init_sdfs (const char *prefix, int npart);
 #endif
 
-
+/**
+ * @brief Convert a flashcart error code to a human-readable message.
+ * 
+ * @param err The flashcart error code.
+ * @return char* The error message.
+ */
 char *flashcart_convert_error_message (flashcart_err_t err) {
     switch (err) {
         case FLASHCART_OK: return "No error";
@@ -91,6 +137,12 @@ char *flashcart_convert_error_message (flashcart_err_t err) {
     }
 }
 
+/**
+ * @brief Initialize the flashcart.
+ * 
+ * @param storage_prefix Pointer to the storage prefix.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_init (const char **storage_prefix) {
     flashcart_err_t err;
 
@@ -145,6 +197,11 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Deinitialize the flashcart.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_deinit (void) {
     if (flashcart->deinit) {
         return flashcart->deinit();
@@ -153,14 +210,33 @@ flashcart_err_t flashcart_deinit (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Check if the flashcart has a specific feature.
+ * 
+ * @param feature The feature to check.
+ * @return true if the feature is supported, false otherwise.
+ */
 bool flashcart_has_feature (flashcart_features_t feature) {
     return flashcart->has_feature(feature);
 }
 
+/**
+ * @brief Get the firmware version of the flashcart.
+ * 
+ * @return flashcart_firmware_version_t The firmware version.
+ */
 flashcart_firmware_version_t flashcart_get_firmware_version (void) {
     return flashcart->get_firmware_version();
 }
 
+/**
+ * @brief Load a ROM into the flashcart.
+ * 
+ * @param rom_path Path to the ROM file.
+ * @param byte_swap Flag indicating whether to byte swap the ROM.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
     flashcart_err_t err;
 
@@ -175,6 +251,14 @@ flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_pr
     return err;
 }
 
+/**
+ * @brief Load a file into the flashcart.
+ * 
+ * @param file_path Path to the file.
+ * @param rom_offset ROM offset.
+ * @param file_offset File offset.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     if ((file_path == NULL) || ((file_offset % FS_SECTOR_SIZE) != 0)) {
         return FLASHCART_ERR_ARGS;
@@ -183,6 +267,13 @@ flashcart_err_t flashcart_load_file (char *file_path, uint32_t rom_offset, uint3
     return flashcart->load_file(file_path, rom_offset, file_offset);
 }
 
+/**
+ * @brief Load a save file into the flashcart.
+ * 
+ * @param save_path Path to the save file.
+ * @param save_type The save type.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save_type) {
     flashcart_err_t err;
 
@@ -222,6 +313,13 @@ flashcart_err_t flashcart_load_save (char *save_path, flashcart_save_type_t save
     return flashcart->set_save_writeback(save_path);
 }
 
+/**
+ * @brief Load the 64DD IPL into the flashcart.
+ * 
+ * @param ipl_path Path to the IPL file.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_callback_t *progress) {
     if (!flashcart->load_64dd_ipl) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
@@ -234,6 +332,13 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
     return flashcart->load_64dd_ipl(ipl_path, progress);
 }
 
+/**
+ * @brief Load a 64DD disk into the flashcart.
+ * 
+ * @param disk_path Path to the disk file.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
     if (!flashcart->load_64dd_disk) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;

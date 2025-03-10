@@ -1,7 +1,11 @@
+/**
+ * @file cart_load.c
+ * @brief Cart loading functions
+ * @ingroup menu
+ */
+
 #include <string.h>
-
 #include <libdragon.h>
-
 #include "cart_load.h"
 #include "path.h"
 #include "utils/fs.h"
@@ -17,13 +21,23 @@
 #define EMU_LOCATION            "/menu/emulators"
 #endif
 
-
+/**
+ * @brief Check if the 64DD is connected.
+ * 
+ * @return true if the 64DD is connected, false otherwise.
+ */
 static bool is_64dd_connected (void) {
     bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
     bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
     return (is_64dd_io_present || is_64dd_ipl_present);
 }
 
+/**
+ * @brief Create the saves subdirectory.
+ * 
+ * @param path Pointer to the path structure.
+ * @return true if an error occurred, false otherwise.
+ */
 static bool create_saves_subdirectory (path_t *path) {
     path_t *save_folder_path = path_clone(path);
     path_pop(save_folder_path);
@@ -33,6 +47,12 @@ static bool create_saves_subdirectory (path_t *path) {
     return error;
 }
 
+/**
+ * @brief Convert the ROM save type to the flashcart save type.
+ * 
+ * @param save_type The ROM save type.
+ * @return flashcart_save_type_t The flashcart save type.
+ */
 static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
     switch (save_type) {
         case SAVE_TYPE_EEPROM_4KBIT: return FLASHCART_SAVE_TYPE_EEPROM_4KBIT;
@@ -46,7 +66,12 @@ static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
     }
 }
 
-
+/**
+ * @brief Convert the cart load error code to a human-readable message.
+ * 
+ * @param err The cart load error code.
+ * @return char* The error message.
+ */
 char *cart_load_convert_error_message (cart_load_err_t err) {
     switch (err) {
         case CART_LOAD_OK: return "Cart load OK";
@@ -55,11 +80,11 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
         case CART_LOAD_ERR_BOOT_MODE_FAIL: return "Error occured during boot mode setting";
         case CART_LOAD_ERR_64DD_PRESENT: return "64DD accessory is connected to the N64";
         case CART_LOAD_ERR_64DD_IPL_NOT_FOUND: return "Required 64DD IPL file was not found";
-        case CART_LOAD_ERR_64DD_IPL_LOAD_FAIL: return "Error occured during 64DD IPL loading";
-        case CART_LOAD_ERR_64DD_DISK_LOAD_FAIL: return "Error occured during 64DD disk loading";
+        case CART_LOAD_ERR_64DD_IPL_LOAD_FAIL: return "Error occurred during 64DD IPL loading";
+        case CART_LOAD_ERR_64DD_DISK_LOAD_FAIL: return "Error occurred during 64DD disk loading";
         case CART_LOAD_ERR_EMU_NOT_FOUND: return "Required emulator file was not found";
-        case CART_LOAD_ERR_EMU_LOAD_FAIL: return "Error occured during emulator ROM loading";
-        case CART_LOAD_ERR_EMU_ROM_LOAD_FAIL: return "Error occured during emulated ROM loading";
+        case CART_LOAD_ERR_EMU_LOAD_FAIL: return "Error occurred during emulator ROM loading";
+        case CART_LOAD_ERR_EMU_ROM_LOAD_FAIL: return "Error occurred during emulated ROM loading";
         case CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL: return "Couldn't create saves subdirectory";
         case CART_LOAD_ERR_EXP_PAK_NOT_FOUND: return "Mandatory Expansion Pak accessory was not found";
         case CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED: return "Your flashcart doesn't support required functionality";
@@ -67,6 +92,13 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
     }
 }
 
+/**
+ * @brief Load an N64 ROM and its save file.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param progress Progress callback function.
+ * @return cart_load_err_t Error code.
+ */
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
     path_t *path = path_clone(menu->load.rom_path);
 
@@ -110,6 +142,13 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     return CART_LOAD_OK;
 }
 
+/**
+ * @brief Load the 64DD IPL and disk.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param progress Progress callback function.
+ * @return cart_load_err_t Error code.
+ */
 cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
     if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
         return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
@@ -164,6 +203,14 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
     return CART_LOAD_OK;
 }
 
+/**
+ * @brief Load an emulator and its ROM.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param emu_type The type of emulator to load.
+ * @param progress Progress callback function.
+ * @return cart_load_err_t Error code.
+ */
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress) {
     path_t *path = path_init(menu->storage_prefix, EMU_LOCATION);
 

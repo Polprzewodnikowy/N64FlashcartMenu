@@ -1,15 +1,22 @@
+/**
+ * @file 64drive_ll.c
+ * @brief Low-level functions for 64drive
+ * @ingroup flashcart
+ */
+
 #include <libdragon.h>
 
 #include "../flashcart_utils.h"
 #include "64drive_ll.h"
-
 
 #define CI_STATUS_BUSY              (1 << 12)
 
 #define D64_DEVICE_VARIANT_MASK     (0xFFFF)
 #define D64_FPGA_REVISION_MASK      (0xFFFF)
 
-
+/**
+ * @brief Command IDs for 64drive.
+ */
 typedef enum {
     CMD_ID_SET_SAVE_TYPE            = 0xD0,
     CMD_ID_DISABLE_SAVE_WRITEBACK   = 0xD1,
@@ -22,10 +29,13 @@ typedef enum {
     CMD_ID_DISABLE_EXTENDED_MODE    = 0xF9,
 } d64_ci_cmd_id_t;
 
-
 static d64_regs_t *d64_regs = D64_REGS;
 
-
+/**
+ * @brief Wait for the CI (Command Interface) to become idle.
+ * 
+ * @return true if a timeout occurred, false otherwise.
+ */
 static bool d64_ll_ci_wait (void) {
     int timeout = 0;
     do {
@@ -36,12 +46,25 @@ static bool d64_ll_ci_wait (void) {
     return false;
 }
 
+/**
+ * @brief Send a command to the CI (Command Interface).
+ * 
+ * @param id The command ID.
+ * @return true if a timeout occurred, false otherwise.
+ */
 static bool d64_ll_ci_cmd (d64_ci_cmd_id_t id) {
     io_write((uint32_t) (&d64_regs->COMMAND), id);
     return d64_ll_ci_wait();
 }
 
-
+/**
+ * @brief Get the version information of the 64drive.
+ * 
+ * @param device_variant Pointer to store the device variant.
+ * @param fpga_revision Pointer to store the FPGA revision.
+ * @param bootloader_version Pointer to store the bootloader version.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_revision, uint32_t *bootloader_version) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -52,6 +75,14 @@ bool d64_ll_get_version (d64_device_variant_t *device_variant, uint16_t *fpga_re
     return d64_ll_ci_wait();
 }
 
+/**
+ * @brief Set the persistent variable storage on the 64drive.
+ * 
+ * @param quick_reboot Flag indicating whether to enable quick reboot.
+ * @param force_tv_type The TV type to force.
+ * @param cic_seed The CIC seed value.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_set_persistent_variable_storage (bool quick_reboot, d64_tv_type_t force_tv_type, uint8_t cic_seed) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -60,6 +91,12 @@ bool d64_ll_set_persistent_variable_storage (bool quick_reboot, d64_tv_type_t fo
     return d64_ll_ci_wait();
 }
 
+/**
+ * @brief Set the save type on the 64drive.
+ * 
+ * @param save_type The save type.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_set_save_type (d64_save_type_t save_type) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -68,6 +105,12 @@ bool d64_ll_set_save_type (d64_save_type_t save_type) {
     return d64_ll_ci_cmd(CMD_ID_SET_SAVE_TYPE);
 }
 
+/**
+ * @brief Enable or disable save writeback on the 64drive.
+ * 
+ * @param enabled Flag indicating whether to enable save writeback.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_enable_save_writeback (bool enabled) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -75,6 +118,12 @@ bool d64_ll_enable_save_writeback (bool enabled) {
     return d64_ll_ci_cmd(enabled ? CMD_ID_ENABLE_SAVE_WRITEBACK : CMD_ID_DISABLE_SAVE_WRITEBACK);
 }
 
+/**
+ * @brief Enable or disable cart ROM writes on the 64drive.
+ * 
+ * @param enabled Flag indicating whether to enable cart ROM writes.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_enable_cartrom_writes (bool enabled) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -82,6 +131,12 @@ bool d64_ll_enable_cartrom_writes (bool enabled) {
     return d64_ll_ci_cmd(enabled ? CMD_ID_ENABLE_CARTROM_WRITES : CMD_ID_DISABLE_CARTROM_WRITES);
 }
 
+/**
+ * @brief Enable or disable extended mode on the 64drive.
+ * 
+ * @param enabled Flag indicating whether to enable extended mode.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_enable_extended_mode (bool enabled) {
     d64_ll_ci_wait();
     if (enabled) {
@@ -93,6 +148,12 @@ bool d64_ll_enable_extended_mode (bool enabled) {
     return d64_ll_ci_wait();
 }
 
+/**
+ * @brief Write EEPROM contents to the 64drive.
+ * 
+ * @param contents Pointer to the EEPROM contents.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_write_eeprom_contents (void *contents) {
     if (d64_ll_ci_wait()) {
         return true;
@@ -101,6 +162,12 @@ bool d64_ll_write_eeprom_contents (void *contents) {
     return d64_ll_ci_wait();
 }
 
+/**
+ * @brief Write the save writeback LBA list to the 64drive.
+ * 
+ * @param list Pointer to the LBA list.
+ * @return true if a timeout occurred, false otherwise.
+ */
 bool d64_ll_write_save_writeback_lba_list (void *list) {
     if (d64_ll_ci_wait()) {
         return true;

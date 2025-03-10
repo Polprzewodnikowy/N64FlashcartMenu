@@ -1,8 +1,13 @@
+/**
+ * @file tabs.c
+ * @brief Tabs component implementation
+ * @ingroup ui_components
+ */
+
 #include "../ui_components.h"
 #include "constants.h"
 
-
-/* Common tabs used for the main menu */
+/** @brief Common tabs used for the main menu */
 static const char *tabs[] = {
     "Files",
     "History",
@@ -11,7 +16,7 @@ static const char *tabs[] = {
 };
 
 /**
- * Draws the common tabs used for the main menu.
+ * @brief Draws the common tabs used for the main menu.
  * 
  * @param selected The index of the currently selected tab.
  */

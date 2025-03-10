@@ -1,9 +1,43 @@
-Rolling release built from latest commit on main branch.  
+# Rolling release
+built from latest commit on main branch.  
 **Note**: the attached source code files may be out of date.
 
 - For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
+
+## Release Notes 2025-{Next}
+
+- **New Features**
+	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
+	- BETA_FEATURE: Introduces ROM descriptions from files.
+	- Ignore macOS metadata.
+
+
+- **Bug Fixes**
+	- Menu sound FX issues (hissing, popping and white noise).
+	- RTC not showing or setting correct date parameters in certain circumstances.
+	- GB / GBC emulator not saving in certain circumstances.
+
+
+- **Documentation**
+	- Re-orginised and improved user documentation.
+	- Added a lot of doxygen compatible code comments.
+
+
+- **Refactor**
+	- RTC subsystem (align with libDragon improvements).
+	- Boxart images (Deprecates old boxart image folder layout).
+
+### Breaking changes
+* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
+* For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
+
+
+### Current known Issues
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+
 
 ## Release Notes 2025-01-10
 

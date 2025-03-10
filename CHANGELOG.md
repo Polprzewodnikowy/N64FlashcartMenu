@@ -11,9 +11,12 @@ built from latest commit on main branch.
 - **New Features**
 	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
 	- Introduced first run check to ensure users are aware of latest changes.
+	- Introduced ability to turn off GUI loading bar.
 	- BETA_FEATURE: Introduces ROM descriptions from files.
 	- BETA_FEATURE: Enabled setting for fast ROM reboots on the SC64.
 	- Add macOS metadata to hidden files.
+	- Added settings schema version for future change versioning.
+	- Added setting for PAL60 compatibility mode (see breaking changes).
 
 
 - **Bug Fixes**
@@ -30,6 +33,7 @@ built from latest commit on main branch.
 - **Refactor**
 	- RTC subsystem (align with libDragon improvements).
 	- Boxart images (Deprecates old boxart image folder layout).
+	- Settings (PAL60 compatibility, schema version, fast reboot, first run, progress bar).
 
 ### Breaking changes
 * GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.

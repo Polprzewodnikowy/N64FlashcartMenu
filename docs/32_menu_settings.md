@@ -16,4 +16,5 @@ The menu has default sound effects to improve the user experience. This setting 
 
 ### Fast ROM reboots
 Certain flashcarts support the ability to use the N64 `RESET` button for re-loading the last game, rather than returning to the menu. When enabled (and if supported by your flashcart), the power switch must be toggled to return to the menu.
+NOTE: if a USB cable is connected, the last game may continue to be re-loaded.
 This setting is OFF by default.

@@ -13,3 +13,6 @@ $exts = @("*.n64", "*.z64", "*.v64"); Get-ChildItem -Filter "*.zip" | ForEach-Ob
 
 ### I am using macOS and want to clean unwanted files before adding them to the SD card
 On macOS, if you have extracted ROM's from ZIP or other compressed files, run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles.
+
+### I have changed the menu/config.ini file manually and things are not working.
+Delete the file. It will be re-created automatically with the default settings.

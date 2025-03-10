@@ -10,6 +10,7 @@ built from latest commit on main branch.
 
 - **New Features**
 	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
+	- Introduced first run check to ensure users are aware of latest changes.
 	- BETA_FEATURE: Introduces ROM descriptions from files.
 	- BETA_FEATURE: Enabled setting for fast ROM reboots on the SC64.
 	- Add macOS metadata to hidden files.
@@ -38,6 +39,7 @@ built from latest commit on main branch.
 ### Current known Issues
 * The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+* Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 
 
 ## Release Notes 2025-01-10

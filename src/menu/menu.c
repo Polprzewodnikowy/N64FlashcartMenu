@@ -192,6 +192,7 @@ static view_t menu_views[] = {
     { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
     { MENU_MODE_CONTROLLER_PAK, view_controller_pak_init, view_controller_pak_display },
     { MENU_MODE_CONTROLLER_PAK_DUMP_INFO, view_controller_pak_dump_info_init, view_controller_pak_dump_info_display },
+    { MENU_MODE_TRANSFER_PAK, view_transfer_pak_init, view_transfer_pak_display },
     { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },

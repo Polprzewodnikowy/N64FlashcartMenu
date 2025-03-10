@@ -24,7 +24,22 @@ static void load_default_font (char *custom_font_path) {
     rdpq_text_register_font(FNT_DEFAULT, default_font);
 }
 
+static void load_jpn_font () {
+    char *font_path = "rom:/KosugiMaruRegular.font64";
+
+    rdpq_font_t *jap_font = rdpq_font_load(font_path);
+
+    rdpq_font_style(jap_font, STL_DEFAULT, &((rdpq_fontstyle_t) { .color = RGBA32(0xFF, 0xFF, 0xFF, 0xFF) }));
+    rdpq_font_style(jap_font, STL_GREEN, &((rdpq_fontstyle_t) { .color = RGBA32(0x70, 0xFF, 0x70, 0xFF) }));
+    rdpq_font_style(jap_font, STL_BLUE, &((rdpq_fontstyle_t) { .color = RGBA32(0x70, 0xBC, 0xFF, 0xFF) }));
+    rdpq_font_style(jap_font, STL_YELLOW, &((rdpq_fontstyle_t) { .color = RGBA32(0xFF, 0xFF, 0x70, 0xFF) }));
+    rdpq_font_style(jap_font, STL_ORANGE, &((rdpq_fontstyle_t) { .color = RGBA32(0xFF, 0x99, 0x00, 0xFF) }));
+    rdpq_font_style(jap_font, STL_GRAY, &((rdpq_fontstyle_t) { .color = RGBA32(0xA0, 0xA0, 0xA0, 0xFF) }));
+
+    rdpq_text_register_font(FNT_JAP, jap_font);
+}
 
 void fonts_init (char *custom_font_path) {
     load_default_font(custom_font_path);
+    load_jpn_font();
 }

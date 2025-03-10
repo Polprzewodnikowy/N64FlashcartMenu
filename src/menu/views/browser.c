@@ -344,6 +344,7 @@ static component_context_menu_t settings_context_menu = {
         { .text = "Menu settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
         { .text = "Time (RTC) settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
         { .text = "Contr. Pak settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CONTROLLER_PAK) },
+        { .text = "Trans. Pak settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_TRANSFER_PAK) },
         { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
         { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
         { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },

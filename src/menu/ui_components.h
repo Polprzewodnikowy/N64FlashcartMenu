@@ -137,6 +137,16 @@ void ui_components_messagebox_draw(char *fmt, ...);
 void ui_components_main_text_draw(menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
 
 /**
+ * @brief Draw the main text component with specific font.
+ * 
+ * @param align Horizontal alignment.
+ * @param valign Vertical alignment.
+ * @param fmt Format string for the text.
+ * @param ... Additional arguments for the format string.
+ */
+void ui_components_main_text_draw_specific_font(menu_font_type_t font, menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+
+/**
  * @brief Draw the actions bar text component.
  * 
  * @param style The font style.

@@ -11,7 +11,8 @@ built from latest commit on main branch.
 - **New Features**
 	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
 	- BETA_FEATURE: Introduces ROM descriptions from files.
-	- Ignore macOS metadata.
+	- BETA_FEATURE: Enabled setting for fast ROM reboots on the SC64.
+	- Add macOS metadata to hidden files.
 
 
 - **Bug Fixes**

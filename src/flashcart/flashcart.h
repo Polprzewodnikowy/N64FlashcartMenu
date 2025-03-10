@@ -48,6 +48,14 @@ typedef enum {
     __FLASHCART_SAVE_TYPE_END /**< End of save types */
 } flashcart_save_type_t;
 
+/** @brief Flashcart save type enumeration */
+typedef enum {
+    /** @brief The flashcart will reboot into the menu on soft reboot (using the RESET button) */
+    FLASHCART_REBOOT_MODE_MENU,
+    /** @brief The flashcart will reboot into the previous ROM on soft reboot (using the RESET button) */
+    FLASHCART_REBOOT_MODE_ROM,
+} flashcart_reboot_mode_t;
+
 /** @brief Flashcart Disk Parameter Structure. */
 typedef struct {
     bool development_drive; /**< Development drive flag */
@@ -90,6 +98,8 @@ typedef struct {
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
     flashcart_err_t (*set_save_writeback) (char *save_path);
+    /** @brief The flashcart set boot mode function */
+    flashcart_err_t (*set_next_boot_mode) (flashcart_reboot_mode_t boot_mode);
 } flashcart_t;
 
 /**
@@ -176,5 +186,6 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
  * @return flashcart_err_t Error code.
  */
 flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode);
 
 #endif /* FLASHCART_H__ */

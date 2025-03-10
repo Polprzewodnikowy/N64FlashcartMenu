@@ -666,6 +666,25 @@ static flashcart_err_t sc64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
+static flashcart_err_t sc64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
+
+    sc64_boot_mode_t type = BOOT_MODE_MENU;
+
+    switch (boot_mode) {
+        case FLASHCART_REBOOT_MODE_ROM:
+            type = BOOT_MODE_ROM;
+            break;
+        default:
+            type = BOOT_MODE_MENU;
+            break;
+    }
+    if (sc64_ll_set_config(CFG_ID_BOOT_MODE, type) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    return FLASHCART_OK;
+}
+
 
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
@@ -679,6 +698,7 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_disk = sc64_load_64dd_disk,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,
+    .set_next_boot_mode = sc64_set_bootmode,
 };
 
 

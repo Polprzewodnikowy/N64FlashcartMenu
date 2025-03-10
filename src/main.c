@@ -11,6 +11,8 @@ int main (void) {
 
     disable_interrupts();
 
+    debug_init_isviewer();
+
     boot(&boot_params);
 
     assertf(false, "Unexpected return from 'boot' function");

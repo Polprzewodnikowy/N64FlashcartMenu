@@ -1,18 +1,16 @@
 #include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <libdragon.h>
 #include "views.h"
 #include "../sound.h"
 #include "../fonts.h"
 #include <fatfs/ff.h>
-#include <cpak.h>
 
 #define WAITING_TIME 0
 #define u8 unsigned char
 #define u32 unsigned long
 #define MAX_NUM_NOTES 16
-#define MAX_STRING_LENGTH 50
+#define MAX_STRING_LENGTH 62
 #define EXTENSION ".mpk"   
 #define NOTE_EXTENSION ".smpk"
 
@@ -30,7 +28,6 @@ char controller_pak_name_notes[MAX_NUM_NOTES][MAX_STRING_LENGTH];
 short controller_selected;
 
 bool has_rumble;
-bool has_transfert;
 bool has_bio_sensor;
 
 bool has_mem;
@@ -40,8 +37,6 @@ bool validate_pak;
 int total_elements;
 bool process_completed;
 bool start_complete_dump;
-bool is_cpak_mounted;
-int val_mount;
 
 bool show_complete_dump_confirm_message;
 bool show_complete_write_confirm_message;
@@ -58,7 +53,48 @@ void reset_vars(){
     start_complete_dump = false;
     show_complete_dump_confirm_message = false;
     show_complete_write_confirm_message = false;
-    is_cpak_mounted = false;
+}
+
+int convert_n64_to_utf8(uint8_t c, char *out)
+{
+    /* Upper case letters */
+    if (c >= 0x1A && c <= 0x33) { *out++ = 'A' + (c - 0x1A); return 1; }
+    /* Numbers */
+    if (c >= 0x10 && c <= 0x19) { *out++ = '0' + (c - 0x10); return 1; }
+    /* Miscelaneous chart */
+    switch (c) {
+        case 0x00: *out++ = 0; return 1;
+        case 0x0F: *out++ = ' '; return 1;
+        case 0x34: *out++ = '!'; return 1;
+        case 0x35: *out++ = '\"'; return 1;
+        case 0x36: *out++ = '#'; return 1;
+        case 0x37: *out++ = '`'; return 1;
+        case 0x38: *out++ = '*'; return 1;
+        case 0x39: *out++ = '+'; return 1;
+        case 0x3A: *out++ = ','; return 1;
+        case 0x3B: *out++ = '-'; return 1;
+        case 0x3C: *out++ = '.'; return 1;
+        case 0x3D: *out++ = '/'; return 1;
+        case 0x3E: *out++ = ':'; return 1;
+        case 0x3F: *out++ = '='; return 1;
+        case 0x40: *out++ = '?'; return 1;
+        case 0x41: *out++ = '@'; return 1;
+    }
+
+    /* Katakana and CJK symbols */
+    if (c >= 0x42 && c <= 0x94) {
+        const int cjk_base = 0x3000;
+        static uint8_t cjk_map[83] = { 2, 155, 156, 161, 163, 165, 167, 169, 195, 227, 229, 231, 242, 243, 162, 164, 166, 168, 170, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 196, 198, 200, 202, 203, 204, 205, 206, 207, 210, 213, 216, 219, 222, 223, 224, 225, 226, 228, 230, 232, 233, 234, 235, 236, 237, 239, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 197, 199, 201, 208, 211, 214, 217, 220, 209, 212, 215, 218, 221 };
+        uint16_t codepoint = cjk_base + cjk_map[c - 0x42];
+        *out++ = 0xE0 | ((codepoint >> 12) & 0x0F);
+        *out++ = 0x80 | ((codepoint >> 6) & 0x3F);
+        *out++ = 0x80 | (codepoint & 0x3F);
+        return 3;
+    }
+
+    /* Default to space for unprintables */
+    *out++ = ' ';
+    return 1;
 }
 
 void create_directory(const char *dirpath) {
@@ -87,7 +123,7 @@ void utils_truncate_string(const char *source, char *destination, int new_length
     destination[new_length] = '\0'; // Null-terminate the truncated string
 }
 
-void free_controller_pak_name_notes() { 
+void free_controller_pak_name_notes() {
 
     // Set \0 to each note
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
@@ -174,16 +210,13 @@ void dump_complete_cpak(int _port) {
     free(data);
 }
 
-bool check_accessories(int controller) {
+bool check_accessories(int port) {
     
-    joypad_accessory_type_t val =  joypad_get_accessory_type(controller);
+    joypad_accessory_type_t val =  joypad_get_accessory_type(port);
 
-    has_rumble    = val == JOYPAD_ACCESSORY_TYPE_RUMBLE_PAK;
-    has_transfert = val == JOYPAD_ACCESSORY_TYPE_TRANSFER_PAK;
-    has_mem       = val == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
-    has_bio_sensor = val == JOYPAD_ACCESSORY_TYPE_BIO_SENSOR;
+    has_mem = val == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
 
-    return has_rumble || has_transfert || has_bio_sensor || has_mem;
+    return has_mem;
 }
 
 static void format_controller_pak (menu_t *menu, void *arg) {
@@ -206,19 +239,11 @@ static void process (menu_t *menu) {
 
     if (!show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
         if(menu->actions.go_left) {
-            sound_play_effect(SFX_CURSOR);
-            if (is_cpak_mounted) {
-                cpak_unmount(controller_selected);
-                is_cpak_mounted = false;
-            }
+            sound_play_effect(SFX_SETTING);
             controller_selected = ((controller_selected - 1) + 4) % 4;
             reset_vars();
         } else if (menu->actions.go_right) {
-            sound_play_effect(SFX_CURSOR);
-            if (is_cpak_mounted) {
-                cpak_unmount(controller_selected);
-                is_cpak_mounted = false;
-            }
+            sound_play_effect(SFX_SETTING);
             controller_selected = ((controller_selected + 1) + 4) % 4;
             reset_vars();
         } else if (menu->actions.back) {
@@ -233,12 +258,6 @@ static void process (menu_t *menu) {
     check_accessories(controller_selected);
 
     if (has_mem) {
-        char temp[16];
-        sprintf(temp, "cpak%d:/", controller_selected+1);
-        if (!is_cpak_mounted) {
-            val_mount = cpak_mount(controller_selected, temp);
-            is_cpak_mounted = true;
-        }
 
         // Pressing A : dump the controller pak
         if (menu->actions.enter && use_rtc && !show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
@@ -287,8 +306,6 @@ static void draw (menu_t *menu, surface_t *d) {
     if (has_mem) {
         sprintf(has_mem_text, "CPAK detected");
 
-        sprintf(free_space_cpak_text, "%d", val_mount);
-/*
         if (ctr_p_data_loop) {
             sprintf(has_mem_text, "%s %s", has_mem_text, " (is valid)");
             style = STL_GREEN;
@@ -296,11 +313,11 @@ static void draw (menu_t *menu, surface_t *d) {
 
         } else {
             sprintf(free_space_cpak_text, " ");
-        }*/
+        }
 
         if (validate_pak == false && validate_mempak(controller_selected) == 0) {
             validate_pak = true;
-
+            
             if (ctr_p_data_loop == false) {
                 free_space_cpak = get_mempak_free_space(controller_selected);
 
@@ -308,27 +325,19 @@ static void draw (menu_t *menu, surface_t *d) {
 
                 bool has_tot_element_checked = false;
                 if (total_elements > 0) has_tot_element_checked = true;
-
-                dir_t info;
-                char dir[100];
-                sprintf(dir,"cpak%d:/", controller_selected+1);
-                
-                int counter = 0;
-                cpakfs_t* val =  get_filesystem_from_port(controller_selected);
-                
                 for (int i = 0; i < MAX_NUM_NOTES; i++) {
                     entry_structure_t note;
                     get_mempak_entry(controller_selected, i, &note);
                     if (note.valid) {
-                        //char temp[16];
-                        //utils_truncate_string(note.name, temp, 15);
-                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", val->notes[i].gamecode /*temp*/ , get_cpak_save_region(note.region));
+                        char temp[16];
+                        utils_truncate_string(note.name, temp, 15);
+                        //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s", temp);
+                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", temp , get_cpak_save_region(note.region));
                         //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", note.name , get_cpak_save_region(note.region));
                         if (!has_tot_element_checked) total_elements++;
                     } else {
                         strcpy(controller_pak_name_notes[i], " ");
                     }
-                    
                 }
                 ctr_p_data_loop = true;
             }
@@ -381,7 +390,8 @@ static void draw (menu_t *menu, surface_t *d) {
             free_space_cpak_text
         );
 
-        ui_components_main_text_draw(style,
+        
+        ui_components_main_text_draw_specific_font(FNT_JAP, style,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -420,14 +430,20 @@ static void draw (menu_t *menu, surface_t *d) {
             controller_pak_name_notes[15],
             controller_pak_name_notes[16]
         );
+        
     }
 
     style = (has_mem && validate_pak) ? STL_DEFAULT : STL_GRAY;
     
-
+    //TODO: single note dump process
     ui_components_actions_bar_text_draw(style,
         ALIGN_LEFT, VALIGN_TOP,
         "A: Dump Pak\n"
+        "\n"//"L: Dump single Note\n"
+    );
+    ui_components_actions_bar_text_draw(STL_GRAY,
+        ALIGN_LEFT, VALIGN_TOP,
+        "\n"
         "L: Dump single Note\n"
     );
     ui_components_actions_bar_text_draw(style,
@@ -472,7 +488,6 @@ void view_controller_pak_init (menu_t *menu) {
     create_directory(CPAK_NOTES_PATH_NO_PRE);
 
     ui_components_context_menu_init(&options_context_menu);
-
 
 }
 

@@ -60,6 +60,7 @@ SRCS = \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
+	menu/gb_game_info.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
@@ -79,10 +80,12 @@ SRCS = \
 	menu/views/flashcart_info.c \
 	menu/views/cpak_manager.c \
 	menu/views/cpak_dump_info.c \
+	menu/views/tpak_manager.c \
 	utils/fs.c
 
 FONTS = \
-	FiraMonoBold.ttf
+	FiraMonoBold.ttf \
+	KosugiMaruRegular.ttf
 
 SOUNDS = \
 	cursorsound.wav \
@@ -104,6 +107,8 @@ FILESYSTEM = \
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
 $(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/KosugiMaruRegular.font64: MKFONT_FLAGS+=--outline 2 --size 19 \
+  --range 20-7F --range 80-1FF --range 3040-309F --range 30A0-30FF --range FF00-FFEF 
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))

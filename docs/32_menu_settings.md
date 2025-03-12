@@ -13,3 +13,9 @@ OFF: ROM saves are saved alongside the ROM file.
 
 ### Sound Effects
 The menu has default sound effects to improve the user experience. This setting is OFF by default.
+
+### Fast ROM reboots
+Certain flashcarts support the ability to use the N64 `RESET` button for re-loading the last game, rather than returning to the menu. When enabled (and if supported by your flashcart), the power switch must be toggled to return to the menu.
+NOTE: if a USB cable is connected, the last game may continue to be re-loaded.
+Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+This setting is OFF by default.

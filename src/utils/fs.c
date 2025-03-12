@@ -17,6 +17,10 @@ char *strip_fs_prefix (char *path) {
     return path;
 }
 
+char *file_basename (char *path) {
+    char *base = strrchr(path, '/');
+    return base ? base + 1 : path;
+}
 
 bool file_exists (char *path) {
     struct stat st;

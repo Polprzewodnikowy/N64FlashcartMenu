@@ -1,5 +1,10 @@
-#include <libdragon.h>
+/**
+ * @file cheats.c
+ * @brief Cheat Engine Implementation
+ * @ingroup boot
+ */
 
+#include <libdragon.h>
 #include "boot_io.h"
 #include "cheats.h"
 #include "vr4300_asm.h"
@@ -21,22 +26,25 @@
 #define ENGINE_TEMPORARY_ADDRESS (PATCHER_ADDRESS + 0x10000)
 #define DEFAULT_ENGINE_ADDRESS (0x807C5C00)
 
+/** @brief Cheat structure */
 typedef struct {
-    uint8_t type;
-    uint32_t address;
-    uint16_t value;
+    uint8_t type; /**< Cheat type */
+    uint32_t address; /**< Cheat address */
+    uint16_t value; /**< Cheat value */
 } cheat_t;
 
+/** @brief Cheat entry structure */
 typedef struct {
-    cheat_t main;
-    cheat_t sub;
+    cheat_t main; /**< Main cheat */
+    cheat_t sub; /**< Sub cheat */
 } cheat_entry_t;
 
+/** @brief Special cheat types enumeration */
 typedef enum {
-    SPECIAL_DISABLE_EXPANSION_PAK = 0xEE,
-    SPECIAL_WRITE_BYTE_ON_BOOT = 0xF0,
-    SPECIAL_WRITE_SHORT_ON_BOOT = 0xF1,
-    SPECIAL_SET_STORE_LOCATION = 0xFF,
+    SPECIAL_DISABLE_EXPANSION_PAK = 0xEE, /**< Disable Expansion Pak */
+    SPECIAL_WRITE_BYTE_ON_BOOT = 0xF0, /**< Write byte on boot */
+    SPECIAL_WRITE_SHORT_ON_BOOT = 0xF1, /**< Write short on boot */
+    SPECIAL_SET_STORE_LOCATION = 0xFF, /**< Set store location */
 } cheat_type_special_t;
 
 #define IS_WIDTH_16(t) ((t) & (1 << 0))
@@ -49,6 +57,13 @@ typedef enum {
 
 #define IS_DOUBLE_ENTRY(t) (IS_TYPE_CONDITIONAL(t) || IS_TYPE_REPEATER(t))
 
+/**
+ * @brief Patch the IPL3 with the cheat engine.
+ * 
+ * @param cic_type The CIC type.
+ * @param target The target address.
+ * @return true if successful, false otherwise.
+ */
 static bool cheats_patch_ipl3 (cic_type_t cic_type, io32_t *target) {
     uint32_t patch_offset = 0;
     uint32_t j_instruction = I_J((uint32_t)(target));
@@ -92,6 +107,13 @@ static bool cheats_patch_ipl3 (cic_type_t cic_type, io32_t *target) {
     return false;
 }
 
+/**
+ * @brief Get the next cheat entry from the cheat list.
+ * 
+ * @param cheat_list Pointer to the cheat list.
+ * @param cheat Pointer to the cheat entry structure.
+ * @return true if successful, false otherwise.
+ */
 static bool cheats_get_next (uint32_t **cheat_list, cheat_entry_t *cheat) {
     cheat_t *c = &cheat->main;
     cheat->sub.type = 0;
@@ -119,6 +141,12 @@ static bool cheats_get_next (uint32_t **cheat_list, cheat_entry_t *cheat) {
     return true;
 }
 
+/**
+ * @brief Get the engine address from the cheat list.
+ * 
+ * @param cheat_list Pointer to the cheat list.
+ * @return io32_t* The engine address.
+ */
 static io32_t *cheats_get_engine_address (uint32_t *cheat_list) {
     cheat_entry_t cheat;
     while (cheats_get_next(&cheat_list, &cheat)) {
@@ -129,11 +157,24 @@ static io32_t *cheats_get_engine_address (uint32_t *cheat_list) {
     return (io32_t *)(DEFAULT_ENGINE_ADDRESS);
 }
 
+/**
+ * @brief Update the cache for the specified memory range.
+ * 
+ * @param start The start address.
+ * @param end The end address.
+ */
 static void cheats_update_cache (volatile void *start, volatile void *end) {
     data_cache_hit_writeback(start, (end - start));
     inst_cache_hit_invalidate(start, (end - start));
 }
 
+/**
+ * @brief Install the cheat engine.
+ * 
+ * @param cic_type The CIC type.
+ * @param cheat_list Pointer to the cheat list.
+ * @return true if successful, false otherwise.
+ */
 bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
     if (!cheat_list) {
         return false;
@@ -165,7 +206,7 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
     *engine_p++ = I_BNEL(REG_K1, REG_ZERO, 1);
     *engine_p++ = I_MTC0(REG_ZERO, C0_REG_WATCH_LO);
 
-    // Check if watch exception ocurred, if yes then proceed to relocate the game exception handler
+    // Check if watch exception occurred, if yes then proceed to relocate the game exception handler
     *engine_p++ = I_ANDI(REG_K0, REG_K0, CAUSE_EXC_CODE_MASK);
     *engine_p++ = I_ORI(REG_K1, REG_ZERO, CAUSE_EXC_CODE_WATCH);
     *engine_p++ = I_BNE(REG_K0, REG_K1, 15); // Skips to after the 'eret' instruction

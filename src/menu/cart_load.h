@@ -7,7 +7,6 @@
 #ifndef CART_LOAD_H__
 #define CART_LOAD_H__
 
-
 #include "disk_info.h"
 #include "flashcart/flashcart.h"
 #include "menu_state.h"
@@ -21,6 +20,8 @@ typedef enum {
     CART_LOAD_ERR_ROM_LOAD_FAIL,
     /** @brief Failed to load the save correctly. */
     CART_LOAD_ERR_SAVE_LOAD_FAIL,
+    /** @brief Failed to set the next boot mode. */
+    CART_LOAD_ERR_BOOT_MODE_FAIL,
     /** @brief The 64DD is available for use. */
     CART_LOAD_ERR_64DD_PRESENT,
     /** @brief Failed to find the 64DD IPL (BIOS) file. */
@@ -33,6 +34,7 @@ typedef enum {
     CART_LOAD_ERR_EMU_NOT_FOUND,
     /** @brief Failed to load the emulator required. */
     CART_LOAD_ERR_EMU_LOAD_FAIL,
+    /** @brief Failed to load the emulator ROM. */
     CART_LOAD_ERR_EMU_ROM_LOAD_FAIL,
     /** @brief Failed to create the save sub-directory. */
     CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL,
@@ -58,11 +60,40 @@ typedef enum {
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
 } cart_load_emu_type_t;
 
+/**
+ * @brief Convert a cart load error code to a human-readable error message.
+ * 
+ * @param err The cart load error code.
+ * @return char* The human-readable error message.
+ */
+char *cart_load_convert_error_message(cart_load_err_t err);
 
-char *cart_load_convert_error_message (cart_load_err_t err);
-cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress);
-cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress);
-cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress);
+/**
+ * @brief Load an N64 ROM and its save data.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param progress Callback function for progress updates.
+ * @return cart_load_err_t Error code.
+ */
+cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress);
 
+/**
+ * @brief Load the 64DD IPL (BIOS) and disk.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param progress Callback function for progress updates.
+ * @return cart_load_err_t Error code.
+ */
+cart_load_err_t cart_load_64dd_ipl_and_disk(menu_t *menu, flashcart_progress_callback_t progress);
 
-#endif
+/**
+ * @brief Load an emulator and its ROM.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param emu_type The type of emulator to load.
+ * @param progress Callback function for progress updates.
+ * @return cart_load_err_t Error code.
+ */
+cart_load_err_t cart_load_emulator(menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress);
+
+#endif /* CART_LOAD_H__ */

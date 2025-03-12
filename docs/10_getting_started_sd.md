@@ -7,8 +7,6 @@ Connect the SD card to your PC and ensure it is properly formatted to be compati
 
 **Note:** It is advised to use ROM files in the Big Endian (default, also called "non-byteswapped") format. Although the menu auto-converts byteswapped ROM files, the load time will increase.
 
-**Note:** On macOS, if you have extracted ROM's from ZIP or other compressed files, run `dot_clean -m /Volumes/SummerCart` to clear those awful dotfiles. That way, they will not show up in the menu.
-
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.

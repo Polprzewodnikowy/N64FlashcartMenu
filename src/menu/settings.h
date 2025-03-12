@@ -18,6 +18,9 @@ typedef struct {
 
     /** @brief Use 60 Hz refresh rate on a PAL console */
     bool pal60_enabled;
+    
+    /** @brief Use 60 Hz refresh rate on a PAL console with certain mods that do not properly the video output */
+    bool pal60_compatibility_mode;
 
     /** @brief Show files/directories that are filtered in the browser */
     bool show_protected_entries;
@@ -31,17 +34,20 @@ typedef struct {
     /** @brief Enable Background music */
     bool bgm_enabled;
 
-    /** @brief Enable Sounds */
+    /** @brief Enable Sound effects within the menu */
     bool soundfx_enabled;
 
-    /** @brief Enable rumble feedback */
+    /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;
 
-    /** @brief Enable the ability to bypass the menu and instantly load a ROM */
+    /** @brief Enable the ability to bypass the menu and instantly load a ROM on power and reset button */
     bool rom_autoload_enabled;
+
+    /** @brief Enable the ability to bypass the menu and instantly load a ROM on reset button */
+    bool rom_fast_reboot_enabled;
 
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;

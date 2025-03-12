@@ -99,7 +99,7 @@ FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
-$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
+$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
 $(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1

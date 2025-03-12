@@ -1,39 +1,101 @@
+/**
+ * @file cic.c
+ * @brief CIC (Copy Protection) functions implementation
+ * @ingroup boot
+ */
+
 #include "cic.h"
 
-
+/**
+ * @brief Get a 32-bit value from a byte array at the specified index.
+ * 
+ * @param p Pointer to the byte array.
+ * @param index Index to get the value from.
+ * @return uint32_t The 32-bit value.
+ */
 static inline uint32_t _get (uint8_t *p, int index) {
     int i = index * 4;
     return (p[i] << 24 | p[i + 1] << 16 | p[i + 2] << 8 | p[i + 3]);
 }
 
+/**
+ * @brief Add two 32-bit values.
+ * 
+ * @param a1 First value.
+ * @param a2 Second value.
+ * @return uint32_t The result of the addition.
+ */
 static inline uint32_t _add (uint32_t a1, uint32_t a2) {
     return a1 + a2;
 }
 
+/**
+ * @brief Subtract one 32-bit value from another.
+ * 
+ * @param a1 First value.
+ * @param a2 Second value.
+ * @return uint32_t The result of the subtraction.
+ */
 static inline uint32_t _sub (uint32_t a1, uint32_t a2) {
     return a1 - a2;
 }
 
+/**
+ * @brief Multiply two 32-bit values.
+ * 
+ * @param a1 First value.
+ * @param a2 Second value.
+ * @return uint32_t The result of the multiplication.
+ */
 static inline uint32_t _mul (uint32_t a1, uint32_t a2) {
     return a1 * a2;
 }
 
+/**
+ * @brief Rotate a 32-bit value left by a specified number of bits.
+ * 
+ * @param a The value to rotate.
+ * @param s The number of bits to rotate.
+ * @return uint32_t The result of the rotation.
+ */
 static inline uint32_t _rol (uint32_t a, uint32_t s) {
     return ((a) << (s)) | ((a) >> (-(s) & 31));
 }
 
+/**
+ * @brief Rotate a 32-bit value right by a specified number of bits.
+ * 
+ * @param a The value to rotate.
+ * @param s The number of bits to rotate.
+ * @return uint32_t The result of the rotation.
+ */
 static inline uint32_t _ror (uint32_t a, uint32_t s) {
     return ((a) >> (s)) | ((a) << (-(s) & 31));
 }
 
+/**
+ * @brief Calculate the sum of three 32-bit values.
+ * 
+ * @param a0 First value.
+ * @param a1 Second value.
+ * @param a2 Third value.
+ * @return uint32_t The result of the sum.
+ */
 static uint32_t _sum (uint32_t a0, uint32_t a1, uint32_t a2) {
     uint64_t prod = ((uint64_t) (a0)) * (a1 == 0 ? a2 : a1);
     uint32_t hi = (prod >> 32) & 0xFFFFFFFF;
     uint32_t lo = prod & 0xFFFFFFFF;
     uint32_t diff = hi - lo;
     return (diff == 0) ? a0 : diff;
-};
+}
 
+/**
+ * @brief Calculate the IPL3 checksum for the CIC.
+ * 
+ * @param ipl3 Pointer to the IPL3 data.
+ * @param seed The seed value.
+ * @return uint64_t The calculated checksum.
+ */
 static uint64_t cic_calculate_ipl3_checksum (uint8_t *ipl3, uint8_t seed) {
     const uint32_t MAGIC = 0x6C078965;
 
@@ -97,7 +159,12 @@ static uint64_t cic_calculate_ipl3_checksum (uint8_t *ipl3, uint8_t seed) {
     return checksum;
 }
 
-
+/**
+ * @brief Detect the CIC type based on the IPL3 data.
+ * 
+ * @param ipl3 Pointer to the IPL3 data.
+ * @return cic_type_t The detected CIC type.
+ */
 cic_type_t cic_detect (uint8_t *ipl3) {
     switch (cic_calculate_ipl3_checksum(ipl3, 0x3F)) {
         case 0x45CC73EE317AULL: return CIC_6101;        // 6101
@@ -127,6 +194,12 @@ cic_type_t cic_detect (uint8_t *ipl3) {
     return CIC_UNKNOWN;
 }
 
+/**
+ * @brief Get the seed value for the specified CIC type.
+ * 
+ * @param cic_type The CIC type.
+ * @return uint8_t The seed value.
+ */
 uint8_t cic_get_seed (cic_type_t cic_type) {
     switch (cic_type) {
         case CIC_5101: return 0xAC;

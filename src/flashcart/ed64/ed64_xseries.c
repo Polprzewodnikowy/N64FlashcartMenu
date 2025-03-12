@@ -144,14 +144,12 @@ static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_off
 }
 
 static flashcart_err_t ed64_xseries_load_save (char *save_path) {
-
-
+    // FIXME: the savetype will be none.
     return FLASHCART_OK;
 }
 
 static flashcart_err_t ed64_xseries_set_save_type (flashcart_save_type_t save_type) {
-    
-
+    // FIXME: the savetype will be none.
     return FLASHCART_OK;
 }
 

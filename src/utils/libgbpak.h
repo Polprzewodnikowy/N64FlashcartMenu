@@ -43,8 +43,8 @@ typedef struct {
 //externals
 int init_gbpak(void);
 int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, char* _string);
-int copy_gbRam_toRAM(uint8_t *ram_data, char* _string);
-int copy_save_toGbRam(uint8_t *ram_data, char* _string);
+int copy_gbRam_toRAM(uint8_t *ram_data, char* _string, bool isDump);
+int copy_save_toGbRam(uint8_t *ram_data);
 int disable_gbRam(void);
 
 

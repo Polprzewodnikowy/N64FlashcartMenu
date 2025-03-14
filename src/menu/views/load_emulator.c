@@ -54,7 +54,7 @@ static void draw (menu_t *menu, surface_t *d) {
     } else {
         ui_components_layout_draw();
 
-        ui_components_main_text_draw(STL_DEFAULT,STL_DEFAULT,
+        ui_components_main_text_draw(STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "Load Emulated ROM\n"
         );

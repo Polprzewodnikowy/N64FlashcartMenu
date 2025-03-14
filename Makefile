@@ -81,6 +81,8 @@ SRCS = \
 	menu/views/cpak_manager.c \
 	menu/views/cpak_dump_info.c \
 	menu/views/tpak_manager.c \
+	menu/views/tpak_manager.c \
+	utils/libgbpak.c \
 	utils/fs.c
 
 FONTS = \

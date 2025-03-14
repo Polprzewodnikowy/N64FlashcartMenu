@@ -16,6 +16,13 @@
 #include <stdint.h>
 #include <libdragon.h>
 #include "libgbpak.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <libdragon.h>
+#include "../menu/views/views.h"
+#include "../menu/sound.h"
+#include "../menu/fonts.h"
+#include <fatfs/ff.h>
 
 //ed64 header
 //#include "sys.h"
@@ -63,6 +70,11 @@ int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, cha
 	//copy banks to sdram
 	for(; bankc < bankLimit; bankc++){ //bank count
 
+		surface_t *d = display_try_get();
+        rdpq_attach(d, NULL);
+
+        ui_components_layout_draw();
+
 		//mbc1 exceptions
 		if(gbcart.mapper==GB_MBC1 && (bankc==0x20 || bankc==0x40 || bankc==0x60))
 		bankc++;
@@ -88,6 +100,15 @@ int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, cha
 		//00001000	0x8 OS_GBPAK_RSTB_STATUS (reset by query)
 		//00000001	0x1 OS_GBPAK_POWER
 
+		ui_components_messagebox_draw(
+			"Do you want to dump the ROM of the GB cart?\n\n"
+			"A: Yes        B: No"
+		); 
+
+		ui_components_loader_draw((float) (bankc + 1) / (bankLimit));
+
+		rdpq_detach_show();
+
 		tmp = _set_gbRomBank(bankc);
 		if(tmp!=0)
 		return -1;
@@ -111,15 +132,6 @@ int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, cha
 					}
 
 				}
-
-		//console_clear();
-		libgbpak_disp = display_get();
-		sprintf(libgbpak_disp_output, "%s", _string);
-		graphics_draw_text(libgbpak_disp, 10, 80, libgbpak_disp_output);
-		sprintf(libgbpak_disp_output,"banks %d/%d", bankc + 1, bankLimit);
-		graphics_draw_text(libgbpak_disp, 10, 90, libgbpak_disp_output);
-		//console_render();
-		display_show(libgbpak_disp);
 	}
 
     if (bankOffset) *bankOffset = bankc;
@@ -130,7 +142,7 @@ int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, cha
 
 
 /* copies a buffer to the Game Boy RAM */
-int copy_save_toGbRam(uint8_t *ram_data, char* _string) {
+int copy_save_toGbRam(uint8_t *ram_data) {
 
 	if(gbcart.ram!=TRUE)
 	return -1;
@@ -154,6 +166,10 @@ int copy_save_toGbRam(uint8_t *ram_data, char* _string) {
 	//for each bank...
 	for(int bankc=0; bankc < gbcart.rambanks; bankc++) //bank count
 	{ 
+		surface_t *d = display_try_get();
+        rdpq_attach(d, NULL);
+
+        ui_components_layout_draw();
 
 		//get power status 0=off 1=on
 		if(_get_gbPower()!=1) return -4;
@@ -165,9 +181,19 @@ int copy_save_toGbRam(uint8_t *ram_data, char* _string) {
 		
 		if(tmp!=0) return -1;
 
-			int bank_width=0xFFE0;
-			if(gbcart.mapper == GB_MBC2)
-			bank_width=0xE1E0;
+		int bank_width=0xFFE0;
+		if(gbcart.mapper == GB_MBC2)
+		bank_width=0xE1E0;
+
+		ui_components_messagebox_draw(
+            "Do you want to restore a Savefile to the GB cart?\n\n"
+            "The savefile on the cartridge will be override !!\n\n"
+            "A: Yes        B: No"
+        ); 
+
+		ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks));
+
+		rdpq_detach_show();
 
 		//for each offset in this bank...
 		for(unsigned long banko=addr; banko<=bank_width; banko+=0x20) //bank offset
@@ -189,24 +215,16 @@ int copy_save_toGbRam(uint8_t *ram_data, char* _string) {
 				return -8;
 			}
 		}
-
-			//console_clear();
-			libgbpak_disp = display_get();
-			sprintf(libgbpak_disp_output, "%s", _string);
-			graphics_draw_text(libgbpak_disp, 10, 80, libgbpak_disp_output);
-			sprintf(libgbpak_disp_output,"banks %d/%d", bankc + 1, gbcart.rambanks);
-			graphics_draw_text(libgbpak_disp, 10, 90, libgbpak_disp_output);
-			//console_render();
-			display_show(libgbpak_disp);
 	}
 
 	libgbpak_disp = 0;
 
+	debugf("OKAY ? ");
 	return 0;
 }
 
 /* copies the Game Boy RAM to the Flashcart SDRAM */
-int copy_gbRam_toRAM(uint8_t *ram_data, char* _string) {//parameter unused
+int copy_gbRam_toRAM(uint8_t *ram_data, char* _string, bool isDump) {//parameter unused
 
 	if(gbcart.ram!=TRUE)
 	return -1;
@@ -229,6 +247,11 @@ int copy_gbRam_toRAM(uint8_t *ram_data, char* _string) {//parameter unused
 	//copy rambanks to sdram
 	for(int bankc=0; bankc < gbcart.rambanks; bankc++){ //bank count
 
+		surface_t *d = display_try_get();
+        rdpq_attach(d, NULL);
+
+        ui_components_layout_draw();
+
 		//get access mode
 		int as=_get_gbAccessState();
 
@@ -239,6 +262,23 @@ int copy_gbRam_toRAM(uint8_t *ram_data, char* _string) {//parameter unused
 			int bank_width=0xFFE0;
 			if(gbcart.mapper == GB_MBC2)
 			bank_width=0xE1E0;
+
+			if (isDump) {
+				ui_components_messagebox_draw(
+					"Do you want to dump the Savefile of the GB cart?\n\n"
+					"A: Yes        B: No"
+				); 
+			} else {
+				ui_components_messagebox_draw(
+					"Do you want to restore a Savefile to the GB cart?\n\n"
+					"The savefile on the cartridge will be override !!\n\n"
+					"A: Yes        B: No"
+				); 
+			}
+
+			ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks));
+
+        	rdpq_detach_show();
 
 				for(unsigned long banko=addr; banko<=bank_width; banko+=0x20){ //bank offset
 
@@ -256,15 +296,6 @@ int copy_gbRam_toRAM(uint8_t *ram_data, char* _string) {//parameter unused
 						return -1;
 					}
 				}
-
-		//console_clear();
-		libgbpak_disp = display_get();
-		sprintf(libgbpak_disp_output, "%s", _string);
-		graphics_draw_text(libgbpak_disp, 10, 80, libgbpak_disp_output);
-		sprintf(libgbpak_disp_output,"banks %d/%d\n", bankc + 1, gbcart.rambanks);
-		graphics_draw_text(libgbpak_disp, 10, 90, libgbpak_disp_output);
-		//console_render();
-		display_show(libgbpak_disp);
 	}
 	libgbpak_disp = 0;
 	return 0;

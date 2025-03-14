@@ -55,48 +55,6 @@ void reset_vars(){
     show_complete_write_confirm_message = false;
 }
 
-int convert_n64_to_utf8(uint8_t c, char *out)
-{
-    /* Upper case letters */
-    if (c >= 0x1A && c <= 0x33) { *out++ = 'A' + (c - 0x1A); return 1; }
-    /* Numbers */
-    if (c >= 0x10 && c <= 0x19) { *out++ = '0' + (c - 0x10); return 1; }
-    /* Miscelaneous chart */
-    switch (c) {
-        case 0x00: *out++ = 0; return 1;
-        case 0x0F: *out++ = ' '; return 1;
-        case 0x34: *out++ = '!'; return 1;
-        case 0x35: *out++ = '\"'; return 1;
-        case 0x36: *out++ = '#'; return 1;
-        case 0x37: *out++ = '`'; return 1;
-        case 0x38: *out++ = '*'; return 1;
-        case 0x39: *out++ = '+'; return 1;
-        case 0x3A: *out++ = ','; return 1;
-        case 0x3B: *out++ = '-'; return 1;
-        case 0x3C: *out++ = '.'; return 1;
-        case 0x3D: *out++ = '/'; return 1;
-        case 0x3E: *out++ = ':'; return 1;
-        case 0x3F: *out++ = '='; return 1;
-        case 0x40: *out++ = '?'; return 1;
-        case 0x41: *out++ = '@'; return 1;
-    }
-
-    /* Katakana and CJK symbols */
-    if (c >= 0x42 && c <= 0x94) {
-        const int cjk_base = 0x3000;
-        static uint8_t cjk_map[83] = { 2, 155, 156, 161, 163, 165, 167, 169, 195, 227, 229, 231, 242, 243, 162, 164, 166, 168, 170, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 196, 198, 200, 202, 203, 204, 205, 206, 207, 210, 213, 216, 219, 222, 223, 224, 225, 226, 228, 230, 232, 233, 234, 235, 236, 237, 239, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 197, 199, 201, 208, 211, 214, 217, 220, 209, 212, 215, 218, 221 };
-        uint16_t codepoint = cjk_base + cjk_map[c - 0x42];
-        *out++ = 0xE0 | ((codepoint >> 12) & 0x0F);
-        *out++ = 0x80 | ((codepoint >> 6) & 0x3F);
-        *out++ = 0x80 | (codepoint & 0x3F);
-        return 3;
-    }
-
-    /* Default to space for unprintables */
-    *out++ = ' ';
-    return 1;
-}
-
 void create_directory(const char *dirpath) {
     FRESULT res = f_mkdir(dirpath);
     

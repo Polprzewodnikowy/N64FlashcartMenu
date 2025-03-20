@@ -640,8 +640,8 @@ static flashcart_err_t sc64_set_save_type (flashcart_save_type_t save_type) {
             type = SAVE_TYPE_FLASHRAM_1MBIT;
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT:
-            // NOTE: SC64 doesn't support the non-compliant FlashRam save types (yet), Just thow an error.
-            return FLASHCART_ERR_ARGS;
+            type = SAVE_TYPE_FLASHRAM_FAKE;
+            break;
         default:
             return FLASHCART_ERR_ARGS;
     }

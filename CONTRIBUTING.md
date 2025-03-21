@@ -9,4 +9,3 @@ Additionally this document assumes that you already know how to use GitHub and G
 If that's not the case, we recommend learning about it first [here](https://docs.github.com/en/get-started/quickstart/hello-world).
 
 **Help us by creating a PR.**
-

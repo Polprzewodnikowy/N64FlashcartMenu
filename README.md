@@ -37,9 +37,10 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * Real Time Clock support.
 * Music playback (MP3).
 * Menu sound effects.
-* N64 ROM autoload.
+* N64 ROM autoload option (on power).
+* N64 ROM fast reboot option (on reset).
 * ROM information descriptions.
-* ROM history and favorites (pre-release only).
+* ROM history and favorites.
 
 
 ## Documentation

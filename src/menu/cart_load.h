@@ -20,6 +20,8 @@ typedef enum {
     CART_LOAD_ERR_ROM_LOAD_FAIL,
     /** @brief Failed to load the save correctly. */
     CART_LOAD_ERR_SAVE_LOAD_FAIL,
+    /** @brief Failed to set the next boot mode. */
+    CART_LOAD_ERR_BOOT_MODE_FAIL,
     /** @brief The 64DD is available for use. */
     CART_LOAD_ERR_64DD_PRESENT,
     /** @brief Failed to find the 64DD IPL (BIOS) file. */

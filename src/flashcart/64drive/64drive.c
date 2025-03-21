@@ -350,6 +350,16 @@ static flashcart_err_t d64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
+// static flashcart_err_t d64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
+
+//     if (d64_ll_set_persistent_variable_storage(true, 0, 0)) {
+//         return FLASHCART_ERR_INT;
+//     }
+
+//     return FLASHCART_OK;
+// }
+
+
 /** @brief Flashcart structure for 64drive. */
 static flashcart_t flashcart_d64 = {
     .init = d64_init,
@@ -363,6 +373,7 @@ static flashcart_t flashcart_d64 = {
     .load_64dd_disk = NULL,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,
+    .set_next_boot_mode = NULL, // d64_set_bootmode,
 };
 
 /**

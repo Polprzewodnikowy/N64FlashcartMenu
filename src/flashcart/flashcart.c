@@ -107,6 +107,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_disk = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
+    .set_next_boot_mode = NULL,
 });
 
 #ifdef NDEBUG
@@ -348,4 +349,12 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
     }
 
     return flashcart->load_64dd_disk(disk_path, disk_parameters);
+}
+
+flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode) {
+    if (!flashcart->set_next_boot_mode) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    return flashcart->set_next_boot_mode(boot_mode);
 }

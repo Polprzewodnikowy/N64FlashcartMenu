@@ -36,36 +36,37 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "N64 SYSTEM INFORMATION"
     );
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
-        "\n"
-        "Current date & time: %s"
         "\n"
         "Expansion PAK is %sinserted\n"
         "\n"
         "Joypad 1 is %sconnected %s\n"
         "Joypad 2 is %sconnected %s\n"
         "Joypad 3 is %sconnected %s\n"
-        "Joypad 4 is %sconnected %s\n",
-        menu->current_time >= 0 ? ctime(&menu->current_time) : "Unknown",
+        "Joypad 4 is %sconnected %s\n"
+        "\n"
+        "\n"
+        "Physical Disk Drive attached: %s\n",
         is_memory_expanded() ? "" : "not ",
         (joypad[0]) ? "" : "not ", format_accessory(0),
         (joypad[1]) ? "" : "not ", format_accessory(1),
         (joypad[2]) ? "" : "not ", format_accessory(2),
-        (joypad[3]) ? "" : "not ", format_accessory(3)
+        (joypad[3]) ? "" : "not ", format_accessory(3),
+        "Unknown" // Fixme: Implement disk drive detection
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Exit"

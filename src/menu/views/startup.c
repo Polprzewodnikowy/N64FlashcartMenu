@@ -30,7 +30,14 @@ void view_startup_init (menu_t *menu) {
         return;
     }
     
-    menu->next_mode = MENU_MODE_BROWSER;
+    if (menu->settings.first_run) {
+        menu->settings.first_run = false;
+        settings_save(&menu->settings);
+        menu->next_mode = MENU_MODE_CREDITS;
+    }
+    else {
+        menu->next_mode = MENU_MODE_BROWSER;
+    }
 }
 
 void view_startup_display (menu_t *menu, surface_t *display) {

@@ -1,3 +1,9 @@
+/**
+ * @file usb_comm.c
+ * @brief USB communication component implementation
+ * @ingroup ui_components
+ */
+
 // NOTE: This code doesn't implement EverDrive-64 USB protocol.
 //       Main use of these functions is to aid menu development
 //       (for example replace files on the SD card or reboot menu).
@@ -10,9 +16,7 @@
 #include "usb_comm.h"
 #include "utils/utils.h"
 
-
 #define MAX_FILE_SIZE   MiB(4)
-
 
 /** @brief The supported USB commands structure. */
 typedef struct {
@@ -23,7 +27,11 @@ typedef struct {
     void (*op) (menu_t *menu);
 } usb_comm_command_t;
 
-
+/**
+ * @brief Get a character from the USB input.
+ * 
+ * @return int The character read, or -1 if no character is available.
+ */
 static int usb_comm_get_char (void) {
     char c;
 
@@ -36,6 +44,14 @@ static int usb_comm_get_char (void) {
     return (int) (c);
 }
 
+/**
+ * @brief Read a string from the USB input.
+ * 
+ * @param string Buffer to store the string.
+ * @param length Maximum length of the string.
+ * @param end Character indicating the end of the string.
+ * @return true if the string was read successfully, false otherwise.
+ */
 static bool usb_comm_read_string (char *string, int length, char end) {
     for (int i = 0; i < length; i++) {
         int c = usb_comm_get_char();
@@ -59,12 +75,21 @@ static bool usb_comm_read_string (char *string, int length, char end) {
     return false;
 }
 
+/**
+ * @brief Send an error message over USB.
+ * 
+ * @param message The error message.
+ */
 static void usb_comm_send_error (const char *message) {
     usb_purge();
     usb_write(DATATYPE_TEXT, message, strlen(message));
 }
 
-
+/**
+ * @brief Reboot the system.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 static void command_reboot (menu_t *menu) {
     menu->next_mode = MENU_MODE_BOOT;
 
@@ -72,8 +97,13 @@ static void command_reboot (menu_t *menu) {
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
     menu->boot_params->cheat_list = NULL;
-};
+}
 
+/**
+ * @brief Receive a file over USB and save it to the storage.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 static void command_send_file (menu_t *menu) {
     FILE *f;
     char buffer[256];
@@ -132,7 +162,11 @@ static usb_comm_command_t commands[] = {
     { .id = NULL },
 };
 
-
+/**
+ * @brief Poll the USB input for commands.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 void usb_comm_poll (menu_t *menu) {
     uint32_t header = usb_poll();
 

@@ -17,6 +17,7 @@
 #include "path.h"
 #include "rom_info.h"
 #include "settings.h"
+#include "bookkeeping.h"
 
 
 /** @brief Menu mode enumeration */
@@ -40,6 +41,8 @@ typedef enum {
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
+    MENU_MODE_FAVORITE,
+    MENU_MODE_HISTORY
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -70,6 +73,7 @@ typedef struct {
 
     const char *storage_prefix;
     settings_t settings;
+    bookkeeping_t bookkeeping;
     boot_params_t *boot_params;
 
     char *error_message;
@@ -89,6 +93,8 @@ typedef struct {
         bool options;
         bool settings;
         bool lz_context;
+        bool previous_tab;
+        bool next_tab;
     } actions;
 
     struct {
@@ -108,6 +114,9 @@ typedef struct {
         disk_info_t disk_info;
         path_t *rom_patch_path;
         rom_patch_info_t rom_patch_info;
+        int load_history;
+        int load_favorite;
+        bool combined_disk_rom;
     } load;
 
     struct {

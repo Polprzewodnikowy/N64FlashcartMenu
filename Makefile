@@ -29,6 +29,8 @@ SRCS = \
 	flashcart/64drive/64drive_ll.c \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
+	flashcart/ed64/ed64_vseries.c \
+	flashcart/ed64/ed64_xseries.c \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
@@ -42,12 +44,8 @@ SRCS = \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
 	menu/actions.c \
+	menu/bookkeeping.c \
 	menu/cart_load.c \
-	menu/components/background.c \
-	menu/components/boxart.c \
-	menu/components/common.c \
-	menu/components/context_menu.c \
-	menu/components/file_list.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -58,12 +56,19 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/ui_components/background.c \
+	menu/ui_components/boxart.c \
+	menu/ui_components/common.c \
+	menu/ui_components/context_menu.c \
+	menu/ui_components/file_list.c \
+	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
+	menu/views/history_favorites.c \
 	menu/views/image_viewer.c \
 	menu/views/text_viewer.c \
 	menu/views/load_disk.c \
@@ -94,23 +99,27 @@ DEPS = $(OBJS:.o=.d)
 
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64)))
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
-$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -fcompare-debug-second
+$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=-c 1 --size 16 -r 20-7F -r 80-1FF -r 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
-
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 
-$(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/%.ttf
+$(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/fonts/%.ttf
 	@echo "    [FONT] $@"
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
-$(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/%.wav
+$(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
 	@echo "    [AUDIO] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+
+$(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png
+	@echo "    [SPRITE] $@"
+	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 

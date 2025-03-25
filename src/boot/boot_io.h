@@ -7,41 +7,79 @@
 #ifndef BOOT_IO_H__
 #define BOOT_IO_H__
 
-
 #include <stddef.h>
 #include <stdint.h>
 
-
+/**
+ * @typedef io8_t
+ * @brief 8-bit volatile IO type.
+ */
 typedef volatile uint8_t io8_t;
+
+/**
+ * @typedef io32_t
+ * @brief 32-bit volatile IO type.
+ */
 typedef volatile uint32_t io32_t;
 
-
+/**
+ * @brief Convert an address to its uncached equivalent.
+ * 
+ * This macro takes an address and converts it to its uncached equivalent
+ * by setting the appropriate bits.
+ * 
+ * @param address The address to convert.
+ * @return The uncached equivalent of the address.
+ */
 #define UNCACHED(address)           ((typeof(address)) (((io32_t) (address)) | (0xA0000000UL)))
 
-/** @brief Memory Structure. */
+/**
+ * @brief Memory Structure.
+ * 
+ * This structure represents the memory layout for the SP (Signal Processor),
+ * containing both Data Memory (DMEM) and Instruction Memory (IMEM).
+ */
 typedef struct {
-    io32_t DMEM[1024];
-    io32_t IMEM[1024];
+    io32_t DMEM[1024]; /**< Data Memory (DMEM) array of 1024 32-bit words. */
+    io32_t IMEM[1024]; /**< Instruction Memory (IMEM) array of 1024 32-bit words. */
 } sp_mem_t;
 
+/**
+ * @brief Base address for SP memory.
+ */
 #define SP_MEM_BASE                 (0x04000000UL)
+
+/**
+ * @brief Pointer to the SP memory structure.
+ */
 #define SP_MEM                      ((sp_mem_t *) SP_MEM_BASE)
 
-/** @brief SP Registers Structure. */
+/**
+ * @brief SP Registers Structure.
+ * 
+ * This structure represents the registers for the SP (Signal Processor).
+ */
 typedef struct {
-    io32_t PADDR;
-    io32_t MADDR;
-    io32_t RD_LEN;
-    io32_t WR_LEN;
-    io32_t SR;
-    io32_t DMA_FULL;
-    io32_t DMA_BUSY;
-    io32_t SEMAPHORE;
+    io32_t PADDR; /**< Physical Address Register. */
+    io32_t MADDR; /**< Memory Address Register. */
+    io32_t RD_LEN; /**< Read Length Register. */
+    io32_t WR_LEN; /**< Write Length Register. */
+    io32_t SR; /**< Status Register. */
+    io32_t DMA_FULL; /**< DMA Full Register. */
+    io32_t DMA_BUSY; /**< DMA Busy Register. */
+    io32_t SEMAPHORE; /**< Semaphore Register. */
     io32_t __reserved[0xFFF8];
-    io32_t PC;
+    io32_t PC; /**< Program Counter Register. */
 } sp_regs_t;
 
+/**
+ * @brief Base address for SP registers.
+ */
 #define SP_BASE                     (0x04040000UL)
+
+/**
+ * @brief Pointer to the SP registers structure.
+ */
 #define SP                          ((sp_regs_t *) SP_BASE)
 
 #define SP_SR_HALT                  (1 << 0)
@@ -85,17 +123,20 @@ typedef struct {
 #define SP_SR_CLR_SIG7              (1 << 23)
 #define SP_SR_SET_SIG7              (1 << 24)
 
-
-/** @brief DPC Registers Structure. */
+/**
+ * @brief DPC Registers Structure.
+ * 
+ * This structure represents the registers for the DPC (Display Processor).
+ */
 typedef struct {
-    io32_t START;
-    io32_t END;
-    io32_t CURRENT;
-    io32_t SR;
-    io32_t CLOCK;
-    io32_t BUF_BUSY;
-    io32_t PIPE_BUSY;
-    io32_t TMEM;
+    io32_t START; /**< Start Register. */
+    io32_t END; /**< End Register. */
+    io32_t CURRENT; /**< Current Register. */
+    io32_t SR; /**< Status Register. */
+    io32_t CLOCK; /**< Clock Register. */
+    io32_t BUF_BUSY; /**< Buffer Busy Register. */
+    io32_t PIPE_BUSY; /**< Pipe Busy Register. */
+    io32_t TMEM; /**< TMEM Register. */
 } dpc_regs_t;
 
 #define DPC_BASE                    (0x04100000UL)
@@ -123,37 +164,26 @@ typedef struct {
 #define DPC_SR_CLR_CMD_CTR          (1 << 8)
 #define DPC_SR_CLR_CLOCK_CTR        (1 << 9)
 
-
-/** @brief Video Interface Registers Structure. */
+/**
+ * @brief Video Interface Registers Structure.
+ * 
+ * This structure represents the registers for the Video Interface (VI).
+ */
 typedef struct {
-    /** @brief The Control Register. */
-    io32_t CR;
-    /** @brief The Memory Address. */
-    io32_t MADDR;
-    /** @brief The Horizontal Width. */
-    io32_t H_WIDTH;
-    /** @brief The Virtical Interupt. */
-    io32_t V_INTR;
-    /** @brief The Current Line. */
-    io32_t CURR_LINE;
-    /** @brief The Timings. */
-    io32_t TIMING;
-    /** @brief The Virtical Sync. */
-    io32_t V_SYNC;
-    /** @brief The Horizontal Sync. */
-    io32_t H_SYNC;
-    /** @brief The Horizontal Sync Leap. */
-    io32_t H_SYNC_LEAP;
-    /** @brief The Horizontal Limits. */
-    io32_t H_LIMITS;
-    /** @brief The Virtical Limits. */
-    io32_t V_LIMITS;
-    /** @brief The Colour Burst. */
-    io32_t COLOR_BURST;
-    /** @brief The Horizontal Scale. */
-    io32_t H_SCALE;
-    /** @brief The Virtical Scale. */
-    io32_t V_SCALE;
+    io32_t CR; /**< Control Register. */
+    io32_t MADDR; /**< Memory Address. */
+    io32_t H_WIDTH; /**< Horizontal Width. */
+    io32_t V_INTR; /**< Vertical Interrupt. */
+    io32_t CURR_LINE; /**< Current Line. */
+    io32_t TIMING; /**< Timings. */
+    io32_t V_SYNC; /**< Vertical Sync. */
+    io32_t H_SYNC; /**< Horizontal Sync. */
+    io32_t H_SYNC_LEAP; /**< Horizontal Sync Leap. */
+    io32_t H_LIMITS; /**< Horizontal Limits. */
+    io32_t V_LIMITS; /**< Vertical Limits. */
+    io32_t COLOR_BURST; /**< Color Burst. */
+    io32_t H_SCALE; /**< Horizontal Scale. */
+    io32_t V_SCALE; /**< Vertical Scale. */
 } vi_regs_t;
 
 #define VI_BASE                     (0x04400000UL)
@@ -175,20 +205,18 @@ typedef struct {
 
 #define VI_CURR_LINE_FIELD          (1 << 0)
 
-/** @brief Audio Interface Registers Structure. */
+/**
+ * @brief Audio Interface Registers Structure.
+ * 
+ * This structure represents the registers for the Audio Interface (AI).
+ */
 typedef struct {
-    /** @brief The Memory Address. */
-    io32_t MADDR;
-    /** @brief The Length of bytes. */
-    io32_t LEN;
-    /** @brief The Control Register. */
-    io32_t CR;
-    /** @brief The Status Register. */
-    io32_t SR;
-    /** @brief The DAC rate. */
-    io32_t DACRATE;
-    /** @brief The bit rate. */
-    io32_t BITRATE;
+    io32_t MADDR; /**< Memory Address. */
+    io32_t LEN; /**< Length of bytes. */
+    io32_t CR; /**< Control Register. */
+    io32_t SR; /**< Status Register. */
+    io32_t DACRATE; /**< DAC rate. */
+    io32_t BITRATE; /**< Bit rate. */
 } ai_regs_t;
 
 #define AI_BASE                     (0x04500000UL)
@@ -198,30 +226,23 @@ typedef struct {
 #define AI_SR_FIFO_FULL             (1 << 31)
 #define AI_CR_DMA_ON                (1 << 0)
 
-
-/** @brief Peripheral Interface Register Structure. */
+/**
+ * @brief Peripheral Interface Register Structure.
+ * 
+ * This structure represents the registers for the Peripheral Interface (PI).
+ */
 typedef struct {
-    /** @brief The Memory Address. */
-    io32_t MADDR;
-    /** @brief The Cart Address. */
-    io32_t PADDR;
-    /** @brief The Read Length. */
-    io32_t RDMA;
-    /** @brief The Write Length. */
-    io32_t WDMA;
-    /** @brief The Status Register. */
-    io32_t SR;
-    /** @brief The Domain 2 Registers. */
+    io32_t MADDR; /**< Memory Address. */
+    io32_t PADDR; /**< Cart Address. */
+    io32_t RDMA; /**< Read Length. */
+    io32_t WDMA; /**< Write Length. */
+    io32_t SR; /**< Status Register. */
     struct {
-        /** @brief The Latch Value. */
-        io32_t LAT;
-        /** @brief The Pulse Width Value. */
-        io32_t PWD;
-        /** @brief The Page Size Value. */
-        io32_t PGS;
-        /** @brief The Release Value. */
-        io32_t RLS;
-    } DOM[2];
+        io32_t LAT; /**< Latch Value. */
+        io32_t PWD; /**< Pulse Width Value. */
+        io32_t PGS; /**< Page Size Value. */
+        io32_t RLS; /**< Release Value. */
+    } DOM[2]; /**< Domain 2 Registers. */
 } pi_regs_t;
 
 #define PI_BASE                     (0x04600000UL)
@@ -233,25 +254,33 @@ typedef struct {
 #define PI_SR_RESET                 (1 << 0)
 #define PI_SR_CLR_INTR              (1 << 1)
 
-
 #define ROM_DDIPL_BASE              (0x06000000UL)
 #define ROM_DDIPL                   ((io32_t *) ROM_DDIPL_BASE)
-
 
 #define ROM_CART_BASE               (0x10000000UL)
 #define ROM_CART                    ((io32_t *) ROM_CART_BASE)
 
-
+/**
+ * @brief Read a value from a CPU IO address.
+ * 
+ * @param address The address to read from.
+ * @return uint32_t The value read from the address.
+ */
 static inline uint32_t cpu_io_read (io32_t *address) {
     io32_t *uncached = UNCACHED(address);
     uint32_t value = *uncached;
     return value;
 }
 
+/**
+ * @brief Write a value to a CPU IO address.
+ * 
+ * @param address The address to write to.
+ * @param value The value to write.
+ */
 static inline void cpu_io_write (io32_t *address, uint32_t value) {
     io32_t *uncached = UNCACHED(address);
     *uncached = value;
 }
 
-
-#endif
+#endif /* BOOT_IO_H__ */

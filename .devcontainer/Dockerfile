@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 
-ARG SC64_DEPLOYER_VERSION=v2.18.0
+ARG SC64_DEPLOYER_VERSION=v2.20.2
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install build-essential doxygen git python3 wget -y && \

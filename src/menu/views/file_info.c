@@ -14,7 +14,7 @@ static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NUL
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
 static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
-static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", NULL };
+static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", NULL };
 
 
 static struct stat st;
@@ -50,19 +50,19 @@ static char *format_file_type (char *name, bool is_directory) {
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
 }
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "ENTRY INFORMATION\n"
         "\n"
@@ -70,7 +70,7 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->browser.entry->name
     );
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -84,10 +84,10 @@ static void draw (menu_t *menu, surface_t *d) {
         S_ISDIR(st.st_mode) ? "Directory" : "File",
         st.st_mode & S_IWUSR ? "" : "(Read only)",
         format_file_type(menu->browser.entry->name, S_ISDIR(st.st_mode)),
-        ctime(&st.st_mtim.tv_sec)
+        ctime(&st.st_mtime)
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Exit"

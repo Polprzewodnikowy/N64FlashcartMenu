@@ -41,8 +41,8 @@ static void process (menu_t *menu) {
     if (err != MP3PLAYER_OK) {
         menu_show_error(menu, convert_error_message(err));
     } else if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.enter) {
         err = mp3player_toggle();
         if (err != MP3PLAYER_OK) {
@@ -61,13 +61,13 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_layout_draw();
 
-    component_seekbar_draw(mp3player_get_progress());
+    ui_components_seekbar_draw(mp3player_get_progress());
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_TOP,
         "MUSIC PLAYER\n"
         "\n"
@@ -83,7 +83,7 @@ static void draw (menu_t *menu, surface_t *d) {
         mp3player_get_duration()
     );
 
-    component_main_text_draw(
+    ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -102,7 +102,7 @@ static void draw (menu_t *menu, surface_t *d) {
         mp3player_get_samplerate()
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "A: %s\n"
         "B: Exit | Left / Right: Rewind / Fast forward",

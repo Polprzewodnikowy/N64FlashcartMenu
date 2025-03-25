@@ -11,7 +11,7 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *disk_extensions[] = { "ndd", NULL };
-static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", NULL };
+static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
 static const char *image_extensions[] = { "png", NULL };
@@ -36,6 +36,52 @@ static const char *hidden_paths[] = {
     NULL,
 };
 
+struct substr { const char *str; size_t len; };
+#define substr(str) ((struct substr){ str, sizeof(str) - 1 })
+
+static const struct substr hidden_basenames[] = {
+    substr("desktop.ini"), // Windows Explorer settings
+    substr("Thumbs.db"),   // Windows Explorer thumbnails
+    substr(".DS_Store"),   // macOS Finder settings
+};
+#define HIDDEN_BASENAMES_COUNT (sizeof(hidden_basenames) / sizeof(hidden_basenames[0]))
+
+static const struct substr hidden_prefixes[] = {
+    substr("._"), // macOS "AppleDouble" metadata files
+};
+#define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
+
+
+static bool path_is_hidden (path_t *path) {
+    char *stripped_path = strip_fs_prefix(path_get(path));
+
+    // Check for hidden files based on full path
+    for (int i = 0; hidden_paths[i] != NULL; i++) {
+        if (strcmp(stripped_path, hidden_paths[i]) == 0) {
+            return true;
+        }
+    }
+
+    char *basename = file_basename(stripped_path);
+    int basename_len = strlen(basename);
+
+    // Check for hidden files based on filename
+    for (int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+        if (basename_len == hidden_basenames[i].len &&
+            strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
+            return true;
+        }
+    }
+    // Check for hidden files based on filename prefix
+    for (int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+        if (basename_len > hidden_prefixes[i].len &&
+            strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 static int compare_entry (const void *pa, const void *pb) {
     entry_t *a = (entry_t *) (pa);
@@ -108,14 +154,7 @@ static bool load_directory (menu_t *menu) {
 
         if (!menu->settings.show_protected_entries) {
             path_push(path, info.d_name);
-
-            for (int i = 0; hidden_paths[i] != NULL; i++) {
-                if (strcmp(strip_fs_prefix(path_get(path)), hidden_paths[i]) == 0) {
-                    hide = true;
-                    break;
-                }
-            }
-
+            hide = path_is_hidden(path);
             path_pop(path);
         }
 
@@ -278,21 +317,21 @@ static void set_menu_next_mode (menu_t *menu, void *arg) {
 
 static component_context_menu_t settings_context_menu = {
     .list = {
-        { .text = "Edit settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
-        { .text = "Show system info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
-        { .text = "Show credits", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
-        { .text = "Adjust RTC", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
-        { .text = "Show cart info", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
+        { .text = "Menu settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
+        { .text = "Time (RTC) settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
+        { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
+        { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
+        { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
 
 static void process (menu_t *menu) {
-    if (component_context_menu_process(menu, &entry_context_menu)) {
+    if (ui_components_context_menu_process(menu, &entry_context_menu)) {
         return;
     }
 
-    if (component_context_menu_process(menu, &settings_context_menu)) {
+    if (ui_components_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -353,23 +392,28 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
-        component_context_menu_show(&entry_context_menu);
+        ui_components_context_menu_show(&entry_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
-        component_context_menu_show(&settings_context_menu);
+        ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.next_tab) {
+        menu->next_mode = MENU_MODE_HISTORY;
+    } else if (menu->actions.previous_tab) {
+        menu->next_mode = MENU_MODE_FAVORITE;
     }
 }
-
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
-    component_layout_draw();
+    ui_components_tabs_common_draw(0);
 
-    component_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    ui_components_layout_draw_tabbed();
+
+    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
 
     const char *action = NULL;
 
@@ -385,7 +429,7 @@ static void draw (menu_t *menu, surface_t *d) {
         }
     }
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -393,25 +437,31 @@ static void draw (menu_t *menu, surface_t *d) {
         path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
-    component_actions_bar_text_draw(
+    ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
+        "^%02XStart: Settings^00\n"
         "^%02XR: Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
-        component_actions_bar_text_draw(
+        ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "\n"
+            "<C Change Tab C>\n"
             "%s",
             ctime(&menu->current_time)
         );
+    } else {
+        ui_components_actions_bar_text_draw(
+        ALIGN_CENTER, VALIGN_TOP,
+        "<C Change Tab C>\n"
+        "\n"
+        );
     }
 
-    component_context_menu_draw(&entry_context_menu);
+    ui_components_context_menu_draw(&entry_context_menu);
 
-    component_context_menu_draw(&settings_context_menu);
+    ui_components_context_menu_draw(&settings_context_menu);
 
     rdpq_detach_show();
 }
@@ -419,8 +469,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
-        component_context_menu_init(&entry_context_menu);
-        component_context_menu_init(&settings_context_menu);
+        ui_components_context_menu_init(&entry_context_menu);
+        ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");

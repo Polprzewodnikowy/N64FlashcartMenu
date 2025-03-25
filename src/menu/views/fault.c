@@ -7,13 +7,13 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_clear(RGBA32(0x7F, 0x00, 0x00, 0xFF));
 
     const char *firmware_message = (
-        "Supported firmware versions:\n"
+        "Minimum supported firmware versions:\n"
         "64drive: 2.05+\n"
         "EverDrive-64: ???+\n"
         "SummerCart64: 2.17.0+"
     );
 
-    component_messagebox_draw(
+    ui_components_messagebox_draw(
         "UNRECOVERABLE ERROR\n"
         "\n"
         "%s\n"

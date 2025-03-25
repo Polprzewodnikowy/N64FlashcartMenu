@@ -4,20 +4,20 @@
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
         sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
     }
 }
 
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    component_background_draw();
+    ui_components_background_draw();
 
     if (menu->error_message) {
-        component_messagebox_draw(menu->error_message);
+        ui_components_messagebox_draw(menu->error_message);
     } else {
-        component_messagebox_draw("Unspecified error");
+        ui_components_messagebox_draw("Unspecified error");
     }
 
     rdpq_detach_show();

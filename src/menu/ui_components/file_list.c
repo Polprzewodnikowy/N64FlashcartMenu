@@ -1,13 +1,24 @@
+/**
+ * @file file_list.c
+ * @brief File list component implementation
+ * @ingroup ui_components
+ */
+
 #include <stdlib.h>
 
-#include "../components.h"
+#include "../ui_components.h"
 #include "../fonts.h"
 #include "constants.h"
 
-
 static const char *dir_prefix = "/";
 
-
+/**
+ * @brief Format the file size into a human-readable string.
+ * 
+ * @param buffer Buffer to store the formatted string.
+ * @param size Size of the file.
+ * @return int Number of characters written to the buffer.
+ */
 static int format_file_size (char *buffer, int64_t size) {
     if (size < 0) {
         return sprintf(buffer, "unknown");
@@ -24,8 +35,14 @@ static int format_file_size (char *buffer, int64_t size) {
     }
 }
 
-
-void component_file_list_draw (entry_t *list, int entries, int selected) {
+/**
+ * @brief Draw the file list component.
+ * 
+ * @param list Pointer to the list of entries.
+ * @param entries Number of entries in the list.
+ * @param selected Index of the currently selected entry.
+ */
+void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
     int starting_position = 0;
 
     if (entries > LIST_ENTRIES && selected >= (LIST_ENTRIES / 2)) {
@@ -35,11 +52,12 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         }
     }
 
-    component_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
+    ui_components_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
 
     if (entries == 0) {
-        component_main_text_draw(
+        ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
+            "\n"
             "^%02X** empty directory **",
             STL_GRAY
         );
@@ -115,9 +133,9 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         layout = rdpq_paragraph_builder_end();
 
         int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
-        int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
+        int highlight_y = VISIBLE_AREA_Y0 + TAB_HEIGHT + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
 
-        component_box_draw(
+        ui_components_box_draw(
             FILE_LIST_HIGHLIGHT_X,
             highlight_y,
             FILE_LIST_HIGHLIGHT_X + FILE_LIST_HIGHLIGHT_WIDTH,
@@ -128,7 +146,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);
@@ -166,7 +184,7 @@ void component_file_list_draw (entry_t *list, int entries, int selected) {
         rdpq_paragraph_render(
             layout,
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
-            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TEXT_OFFSET_VERTICAL
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
 
         rdpq_paragraph_free(layout);

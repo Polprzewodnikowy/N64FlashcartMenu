@@ -1,3 +1,9 @@
+/**
+ * @file menu.c
+ * @brief Menu system implementation
+ * @ingroup menu
+ */
+
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
@@ -19,60 +25,37 @@
 #include "utils/fs.h"
 #include "views/views.h"
 
+#define MENU_DIRECTORY              "/menu"
+#define MENU_SETTINGS_FILE          "config.ini"
+#define MENU_CUSTOM_FONT_FILE       "custom.font64"
+#define MENU_ROM_LOAD_HISTORY_FILE  "history.ini"
 
-#define MENU_DIRECTORY          "/menu"
-#define MENU_SETTINGS_FILE      "config.ini"
-#define MENU_CUSTOM_FONT_FILE   "custom.font64"
+#define MENU_CACHE_DIRECTORY        "cache"
+#define BACKGROUND_CACHE_FILE       "background.data"
 
-#define MENU_CACHE_DIRECTORY    "cache"
-#define BACKGROUND_CACHE_FILE   "background.data"
-
-#define FRAMERATE_DIVIDER       (2)
-#define LAG_REPORT              (false)
-
+#define FPS_LIMIT                   (30.0f)
 
 static menu_t *menu;
+
+/** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
+ *  with hardware mods that don't really understand the VI output.
+ **/
 static tv_type_t tv_type;
-static volatile int frame_counter = 0;
+extern int __boot_tvtype;
+/* -- */
 
-extern tv_type_t __boot_tvtype;
+static bool interlaced = true;
 
-
-static void frame_counter_handler (void) {
-    frame_counter += 1;
-}
-
-static void frame_counter_reset (void) {
-#if LAG_REPORT
-    static int accumulated = 0;
-    if (frame_counter > FRAMERATE_DIVIDER) {
-        accumulated += frame_counter - FRAMERATE_DIVIDER;
-        debugf(
-            "LAG: %d additional frame(s) displayed since last draw (accumulated: %d)\n",
-            frame_counter - FRAMERATE_DIVIDER,
-            accumulated
-        );
-    }
-#endif
-    frame_counter = 0;
-}
-
-static void menu_init (boot_params_t *boot_params) {
-    joypad_init();
-    timer_init();
-    rtc_init();
-    rspq_init();
-    rdpq_init();
-    dfs_init(DFS_DEFAULT_LOCATION);
-
-    sound_init_default();
-
-    JOYPAD_PORT_FOREACH (port) {
-        joypad_set_rumble_active(port, false);
-    }
-
+/**
+ * @brief Initialize the menu system.
+ * 
+ * @param boot_params Pointer to the boot parameters structure.
+ */
+static void menu_init (boot_params_t *boot_params) {    
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
+
+    menu->boot_params = boot_params;
 
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
@@ -81,6 +64,19 @@ static void menu_init (boot_params_t *boot_params) {
     if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
     }
+
+    joypad_init();
+    timer_init();
+    rtc_init();
+    rspq_init();
+    rdpq_init();
+    dfs_init(DFS_DEFAULT_LOCATION);
+
+    actions_init();
+    sound_init_default();
+    sound_init_sfx();
+
+    hdmi_clear_game_id();
 
     path_t *path = path_init(menu->storage_prefix, MENU_DIRECTORY);
 
@@ -91,6 +87,34 @@ static void menu_init (boot_params_t *boot_params) {
     settings_load(&menu->settings);
     path_pop(path);
 
+    path_push(path, MENU_ROM_LOAD_HISTORY_FILE);
+    bookkeeping_init(path_get(path));
+    bookkeeping_load(&menu->bookkeeping);
+    menu->load.load_history = -1;
+    menu->load.load_favorite = -1;
+    path_pop(path);
+  
+    if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output
+        tv_type = get_tv_type();
+        if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
+            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
+            __boot_tvtype = (int)TV_NTSC;
+        }
+    }
+
+    // Force interlacing off in VI settings for TVs and other devices that struggle with interlaced video input.
+    interlaced = !menu->settings.force_progressive_scan;
+
+    resolution_t resolution = {
+        .width = 640,
+        .height = 480,
+        .interlaced = interlaced ? INTERLACE_HALF : INTERLACE_OFF,
+        .pal60 = menu->settings.pal60_enabled, // this may be overridden by the PAL60 compatibility mode.
+    };
+
+    display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, interlaced ? FILTERS_DISABLED : FILTERS_RESAMPLE);
+    display_set_fps_limit(FPS_LIMIT);
+
     path_push(path, MENU_CUSTOM_FONT_FILE);
     fonts_init(path_get(path));
     path_pop(path);
@@ -99,43 +123,28 @@ static void menu_init (boot_params_t *boot_params) {
     directory_create(path_get(path));
 
     path_push(path, BACKGROUND_CACHE_FILE);
-    component_background_init(path_get(path));
+    ui_components_background_init(path_get(path));
 
     path_free(path);
 
-    menu->boot_params = boot_params;
+    sound_use_sfx(menu->settings.soundfx_enabled);
 
     menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
     if (!directory_exists(path_get(menu->browser.directory))) {
         path_free(menu->browser.directory);
         menu->browser.directory = path_init(menu->storage_prefix, "/");
     }
-
-    hdmi_clear_game_id();
-
-    tv_type = get_tv_type();
-    if ((tv_type == TV_PAL) && menu->settings.pal60_enabled) {
-        // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-        __boot_tvtype = TV_NTSC;
-    }
-
-    sound_init_sfx();
-    if (menu->settings.sound_enabled) {
-        sound_use_sfx(true);
-    }
-
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, FILTERS_DISABLED);
-
-    register_VI_handler(frame_counter_handler);
 }
 
+/**
+ * @brief Deinitialize the menu system.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 static void menu_deinit (menu_t *menu) {
-    unregister_VI_handler(frame_counter_handler);
-
-    // NOTE: Restore previous TV type so boot procedure wouldn't passthrough wrong value.
-    __boot_tvtype = tv_type;
-
     hdmi_send_game_id(menu->boot_params);
+
+    ui_components_background_free();
 
     path_free(menu->load.disk_path);
     path_free(menu->load.rom_path);
@@ -146,9 +155,7 @@ static void menu_deinit (menu_t *menu) {
     path_free(menu->browser.directory);
     free(menu);
 
-    component_background_free();
-
-    flashcart_deinit();
+    display_close();
 
     sound_deinit();
 
@@ -158,13 +165,16 @@ static void menu_deinit (menu_t *menu) {
     timer_close();
     joypad_close();
 
-    display_close();
+    flashcart_deinit();
 }
 
+/**
+ * @brief View structure containing initialization and display functions.
+ */
 typedef const struct {
-    menu_mode_t id;
-    void (*init) (menu_t *menu);
-    void (*show) (menu_t *menu, surface_t *display);
+    menu_mode_t id; /**< View ID */
+    void (*init) (menu_t *menu); /**< Initialization function */
+    void (*show) (menu_t *menu, surface_t *display); /**< Display function */
 } view_t;
 
 static view_t menu_views[] = {
@@ -184,8 +194,16 @@ static view_t menu_views[] = {
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
     { MENU_MODE_ERROR, view_error_init, view_error_display },
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
+    { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
+    { MENU_MODE_HISTORY, view_history_init, view_history_display }
 };
 
+/**
+ * @brief Get the view structure for the specified menu mode.
+ * 
+ * @param id The menu mode ID.
+ * @return view_t* Pointer to the view structure.
+ */
 static view_t *menu_get_view (menu_mode_t id) {
     for (int i = 0; i < sizeof(menu_views) / sizeof(view_t); i++) {
         if (menu_views[i].id == id) {
@@ -195,16 +213,18 @@ static view_t *menu_get_view (menu_mode_t id) {
     return NULL;
 }
 
-
+/**
+ * @brief Run the menu system.
+ * 
+ * @param boot_params Pointer to the boot parameters structure.
+ */
 void menu_run (boot_params_t *boot_params) {
     menu_init(boot_params);
 
     while (true) {
-        surface_t *display = (frame_counter >= FRAMERATE_DIVIDER) ? display_try_get() : NULL;
+        surface_t *display = display_try_get();
 
         if (display != NULL) {
-            frame_counter_reset();
-
             actions_update(menu);
 
             view_t *view = menu_get_view(menu->mode);

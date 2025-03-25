@@ -1,9 +1,20 @@
-#include "../components.h"
+/**
+ * @file context_menu.c
+ * @brief Context menu component implementation
+ * @ingroup ui_components
+ */
+
+#include "../ui_components.h"
 #include "../fonts.h"
 #include "../sound.h"
 #include "constants.h"
 
-
+/**
+ * @brief Get the current submenu.
+ * 
+ * @param cm Pointer to the context menu component.
+ * @return component_context_menu_t* Pointer to the current submenu.
+ */
 static component_context_menu_t *get_current_submenu (component_context_menu_t *cm) {
     while (cm->submenu != NULL) {
         cm = cm->submenu;
@@ -11,24 +22,40 @@ static component_context_menu_t *get_current_submenu (component_context_menu_t *
     return cm;
 }
 
-
-void component_context_menu_init (component_context_menu_t *cm) {
-    cm->selected = -1;
-    cm->count = 0;
+/**
+ * @brief Initialize the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
+void ui_components_context_menu_init (component_context_menu_t *cm) {
+    cm->row_selected = -1;
+    cm->row_count = 0;
     cm->hide_pending = false;
     cm->parent = NULL;
     for (int i = 0; (cm->list[i].text) != NULL; i++) {
-        cm->count += 1;
+        cm->row_count += 1;
     }
 }
 
-void component_context_menu_show (component_context_menu_t *cm) {
-    cm->selected = 0;
+/**
+ * @brief Show the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
+void ui_components_context_menu_show (component_context_menu_t *cm) {
+    cm->row_selected = 0;
     cm->submenu = NULL;
 }
 
-bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
-    if (!cm || (cm->selected < 0)) {
+/**
+ * @brief Process the context menu actions.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param cm Pointer to the context menu component.
+ * @return true if the context menu is processed, false otherwise.
+ */
+bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
+    if (!cm || (cm->row_selected < 0)) {
         return false;
     }
 
@@ -44,26 +71,26 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.enter) {
-        if (cm->list[cm->selected].submenu) {
-            cm->submenu = cm->list[cm->selected].submenu;
-            component_context_menu_init(cm->submenu);
-            cm->submenu->selected = 0;
+        if (cm->list[cm->row_selected].submenu) {
+            cm->submenu = cm->list[cm->row_selected].submenu;
+            ui_components_context_menu_init(cm->submenu);
+            cm->submenu->row_selected = 0;
             cm->submenu->parent = cm;
-        } else if (cm->list[cm->selected].action) {
-            cm->list[cm->selected].action(menu, cm->list[cm->selected].arg);
+        } else if (cm->list[cm->row_selected].action) {
+            cm->list[cm->row_selected].action(menu, cm->list[cm->row_selected].arg);
             top->hide_pending = true;
         }
         sound_play_effect(SFX_ENTER);
     } else if (menu->actions.go_up) {
-        cm->selected -= 1;
-        if (cm->selected < 0) {
-            cm->selected = 0;
+        cm->row_selected -= 1;
+        if (cm->row_selected < 0) {
+            cm->row_selected = 0;
         }
         sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.go_down) {
-        cm->selected += 1;
-        if (cm->selected >= cm->count) {
-            cm->selected = (cm->count - 1);
+        cm->row_selected += 1;
+        if (cm->row_selected >= cm->row_count) {
+            cm->row_selected = (cm->row_count - 1);
         }
         sound_play_effect(SFX_CURSOR);
     }
@@ -71,8 +98,13 @@ bool component_context_menu_process (menu_t *menu, component_context_menu_t *cm)
     return true;
 }
 
-void component_context_menu_draw (component_context_menu_t *cm) {
-    if (!cm || (cm->selected < 0)) {
+/**
+ * @brief Draw the context menu component.
+ * 
+ * @param cm Pointer to the context menu component.
+ */
+void ui_components_context_menu_draw (component_context_menu_t *cm) {
+    if (!cm || (cm->row_selected < 0)) {
         return;
     }
 
@@ -92,7 +124,7 @@ void component_context_menu_draw (component_context_menu_t *cm) {
         NULL
     );
 
-    for (int i = 0; i < cm->count; i++) {
+    for (int i = 0; i < cm->row_count; i++) {
         const char *text = cm->list[i].text;
         rdpq_paragraph_builder_span(text, strlen(text));
         if (cm->list[i + 1].text != NULL) {
@@ -105,14 +137,14 @@ void component_context_menu_draw (component_context_menu_t *cm) {
     int width = layout->bbox.x1 - layout->bbox.x0 + MESSAGEBOX_MARGIN;
     int height = layout->bbox.y1 - layout->bbox.y0 + MESSAGEBOX_MARGIN;
 
-    component_dialog_draw(width, height);
+    ui_components_dialog_draw(width, height);
 
     int highlight_x0 = DISPLAY_CENTER_X - (width / 2);
     int highlight_x1 = DISPLAY_CENTER_X + (width / 2);
     int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
-    int highlight_y = VISIBLE_AREA_Y0 + layout->bbox.y0 + ((cm->selected) * highlight_height);
+    int highlight_y = VISIBLE_AREA_Y0 + layout->bbox.y0 + ((cm->row_selected) * highlight_height);
 
-    component_box_draw(
+    ui_components_box_draw(
         highlight_x0,
         highlight_y,
         highlight_x1,
@@ -126,6 +158,6 @@ void component_context_menu_draw (component_context_menu_t *cm) {
 
     if (top->hide_pending) {
         top->hide_pending = false;
-        top->selected = -1;
+        top->row_selected = -1;
     }
 }

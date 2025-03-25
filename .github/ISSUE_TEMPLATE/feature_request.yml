@@ -23,6 +23,15 @@ body:
       required: true
 
   - type: textarea
+    id: release-context
+    attributes:
+      label: Release Context
+      description: Is your feature request related to the latest release or pre-release version.
+      placeholder: This is still not available on the latest release or the pre-release versions, so it is applicable to both (and not a regression).
+    validations:
+      required: true
+
+  - type: textarea
     id: solution
     attributes:
       label: How to solve the problem

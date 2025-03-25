@@ -5,9 +5,13 @@
 #include "../sound.h"
 #include "views.h"
 
-#define MAX(a,b)  (((a) > (b)) ? (a) : (b))
-#define MIN(a,b)  (((a) < (b)) ? (a) : (b))
+#define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
+#define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
 #define CLAMP(x, min, max) (MIN(MAX((x), (min)), (max)))
+#define WRAP(x, min, max)  ({ \
+    typeof(x) _x = x; typeof(min) _min = min; typeof(max) _max = max; \
+    _x < _min ? _max : _x > _max ? _min : _x; \
+})
 
 #define YEAR_MIN 1996
 #define YEAR_MAX 2095
@@ -27,44 +31,27 @@ static struct tm rtc_tm = {0};
 static bool is_editing_mode;
 static rtc_field_t editing_field_type;
 
-int wrap( int val, uint16_t min, uint16_t max ) {
-    if( val < min ) return max;
-    if( val > max ) return min;
-    return val;
-}
-
-rtc_time_t rtc_time_from_tm( struct tm *time ) {
-    return(rtc_time_t){
-        .year = CLAMP(time->tm_year + 1900, YEAR_MIN, YEAR_MAX),
-        .month = CLAMP(time->tm_mon, 1, 12),
-        .day = CLAMP(time->tm_mday, 1, 31),
-        .hour = CLAMP(time->tm_hour, 0, 23),
-        .min = CLAMP(time->tm_min, 0, 59),
-        .sec = CLAMP(time->tm_sec, 0, 59),
-        .week_day = CLAMP(time->tm_wday, 0, 6),
-    };
-}
 
 void adjust_rtc_time( struct tm *t, int incr ) {
     switch(editing_field_type)
     {
         case RTC_EDIT_YEAR:
-            t->tm_year = wrap( t->tm_year + incr, YEAR_MIN - 1900, YEAR_MAX - 1900 );
+            t->tm_year = WRAP( t->tm_year + incr, YEAR_MIN - 1900, YEAR_MAX - 1900 );
             break;
         case RTC_EDIT_MONTH:
-            t->tm_mon = wrap( t->tm_mon + incr, 0, 11 );
+            t->tm_mon = WRAP( t->tm_mon + incr, 0, 11 );
             break;
         case RTC_EDIT_DAY:
-            t->tm_mday = wrap( t->tm_mday + incr, 1, 31 );
+            t->tm_mday = WRAP( t->tm_mday + incr, 1, 31 );
             break;
         case RTC_EDIT_HOUR:
-            t->tm_hour = wrap( t->tm_hour + incr, 0, 23 );
+            t->tm_hour = WRAP( t->tm_hour + incr, 0, 23 );
             break;
         case RTC_EDIT_MIN:
-            t->tm_min = wrap( t->tm_min + incr, 0, 59 );
+            t->tm_min = WRAP( t->tm_min + incr, 0, 59 );
             break;
         case RTC_EDIT_SEC:
-            t->tm_sec = wrap( t->tm_sec + incr, 0, 59 );
+            t->tm_sec = WRAP( t->tm_sec + incr, 0, 59 );
             break;
     }
     // Recalculate day-of-week and day-of-year
@@ -79,13 +66,13 @@ void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_fiel
     char current_selection_chars[30];
 
     snprintf( full_dt, sizeof(full_dt), ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
-        t.tm_year + 1900,
-        t.tm_mon + 1,
-        t.tm_mday,
-        t.tm_hour,
-        t.tm_min,
-        t.tm_sec,
-        DAYS_OF_WEEK[t.tm_wday]
+        CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX),
+        CLAMP(t.tm_mon + 1, 1, 12),
+        CLAMP(t.tm_mday, 1, 31),
+        CLAMP(t.tm_hour, 0, 23),
+        CLAMP(t.tm_min, 0, 59),
+        CLAMP(t.tm_sec, 0, 59),
+        DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]
         );
         
     switch(selected_field)
@@ -140,14 +127,11 @@ static void process (menu_t *menu) {
             adjust_rtc_time( &rtc_tm, -1 );
         }
         else if (menu->actions.options) { // R button = save
-            if(rtc_is_writable()) {
-                // FIXME: settimeofday is not available in libdragon yet.
-                // struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
-                // int res = settimeofday(&new_time, NULL);
+            if( rtc_get_source() == RTC_SOURCE_JOYBUS && rtc_is_source_available( RTC_SOURCE_DD ) ) {
+                struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
+                int res = settimeofday(&new_time, NULL);
 
-                rtc_time_t rtc_time = rtc_time_from_tm(&rtc_tm);
-                int res = rtc_set(&rtc_time);
-                if (res != 1) {
+                if (res != 0) {
                     menu_show_error(menu, "Failed to set RTC time");
                 }
             }
@@ -235,6 +219,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_rtc_init (menu_t *menu) {
+    /* Resync the time from the hardware RTC */
+    rtc_set_source( rtc_get_source() );
     is_editing_mode = false;
     editing_field_type = RTC_EDIT_YEAR;
 }

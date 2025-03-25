@@ -7,6 +7,12 @@
 #ifndef COMPONENTS_CONSTANTS_H__
 #define COMPONENTS_CONSTANTS_H__
 
+/** @brief The height of the tabs in the main menu. */
+#define TAB_HEIGHT                      (20)
+
+/** @brief The thickness of borders. */
+#define BORDER_THICKNESS                (4)
+
 /** @brief The display width. */
 #define DISPLAY_WIDTH                   (640)
 /** @brief The display height. */
@@ -36,9 +42,7 @@
 /** @brief The height of the visible display. */
 #define VISIBLE_AREA_HEIGHT             (VISIBLE_AREA_Y1 - VISIBLE_AREA_Y0)
 
-/** @brief The thickness of borders. */
-#define BORDER_THICKNESS                (4)
-
+/** @brief The layout actions separator Y position. */
 #define LAYOUT_ACTIONS_SEPARATOR_Y      (400)
 
 /** @brief The seek bar height. */
@@ -64,9 +68,13 @@
 /** @brief The margin of a message box. */
 #define MESSAGEBOX_MARGIN               (32)
 
+/** @brief The horizontal text margin. */
 #define TEXT_MARGIN_HORIZONTAL          (10)
+/** @brief The vertical text margin. */
 #define TEXT_MARGIN_VERTICAL            (6)
+/** @brief The vertical text offset. */
 #define TEXT_OFFSET_VERTICAL            (1)
+/** @brief The text line spacing adjustment. */
 #define TEXT_LINE_SPACING_ADJUST        (0)
 
 /** @brief The boxart picture width. */
@@ -76,7 +84,7 @@
 
 /** @brief The boxart picture width (64DD). */
 #define BOXART_WIDTH_DD                 (129)
-/** @brief The boxart picture height. */
+/** @brief The boxart picture height (64DD). */
 #define BOXART_HEIGHT_DD                (112)
 
 /** @brief The boxart picture maximum width. */
@@ -88,12 +96,12 @@
 #define BOXART_X                        (VISIBLE_AREA_X1 - BOXART_WIDTH - 24)
 /** @brief The box art position on the Y axis. */
 #define BOXART_Y                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT - 24)
-/** @brief The box art position on the X axis for japanese caratules.*/
+/** @brief The box art position on the X axis for Japanese caratules. */
 #define BOXART_X_JP                     (VISIBLE_AREA_X1 - BOXART_WIDTH_MAX + 21)
-/** @brief The box art position on the Y axis for japanese caratules. */
+/** @brief The box art position on the Y axis for Japanese caratules. */
 #define BOXART_Y_JP                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_MAX - 24)
 
-/** @brief The box art position on the X axis for 64DD caratules.*/
+/** @brief The box art position on the X axis for 64DD caratules. */
 #define BOXART_X_DD                     (VISIBLE_AREA_X1 - BOXART_WIDTH_DD - 23)
 /** @brief The box art position on the Y axis for 64DD caratules. */
 #define BOXART_Y_DD                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_DD - 24)
@@ -101,17 +109,19 @@
 /** @brief The scroll bar width. */
 #define LIST_SCROLLBAR_WIDTH            (12)
 /** @brief The scroll bar height. */
-#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT)
+#define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - TAB_HEIGHT - BORDER_THICKNESS)
 /** @brief The scroll bar position on the X axis. */
 #define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
 /** @brief The scroll bar position on the Y axis. */
-#define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0)
+#define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
 
 /** @brief The maximum amount of file list entries. */
-#define LIST_ENTRIES                    (19)
+#define LIST_ENTRIES                    (18)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
+/** @brief The file list highlight width. */
 #define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)
+/** @brief The file list highlight X position. */
 #define FILE_LIST_HIGHLIGHT_X           (VISIBLE_AREA_X0)
 
 /** @brief The default background colour. */
@@ -140,11 +150,19 @@
 /** @brief The boxart loading colour. */
 #define BOXART_LOADING_COLOR            RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
-/** @brief The filelist highlight colour. */
+/** @brief The file list highlight colour. */
 #define FILE_LIST_HIGHLIGHT_COLOR       RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
 /** @brief The menu highlight colour. */
 #define CONTEXT_MENU_HIGHLIGHT_COLOR    RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
+/** @brief The tab inactive border colour. */
+#define TAB_INACTIVE_BORDER_COLOR       RGBA32(0x5F, 0x5F, 0x5F, 0xFF)
+/** @brief The tab active border colour. */
+#define TAB_ACTIVE_BORDER_COLOR         RGBA32(0xFF, 0xFF, 0xFF, 0xFF)
+/** @brief The tab inactive background colour. */
+#define TAB_INACTIVE_BACKGROUND_COLOR   RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
+/** @brief The tab active background colour. */
+#define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
-#endif
+#endif /* COMPONENTS_CONSTANTS_H__ */

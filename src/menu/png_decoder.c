@@ -1,29 +1,33 @@
+/**
+ * @file png_decoder.c
+ * @brief PNG Decoder component implementation
+ * @ingroup ui_components
+ */
+
 #include <stdio.h>
-
 #include <libspng/spng/spng.h>
-
 #include "png_decoder.h"
 #include "utils/fs.h"
 
-
 /** @brief PNG File Information Structure. */
 typedef struct {
-    FILE *f;
-
-    spng_ctx *ctx;
-    struct spng_ihdr ihdr;
-
-    surface_t *image;
-    uint8_t *row_buffer;
-    int decoded_rows;
-
-    png_callback_t *callback;
-    void *callback_data;
+    FILE *f; /**< File pointer */
+    spng_ctx *ctx; /**< SPNG context */
+    struct spng_ihdr ihdr; /**< SPNG image header */
+    surface_t *image; /**< Image surface */
+    uint8_t *row_buffer; /**< Row buffer */
+    int decoded_rows; /**< Number of decoded rows */
+    png_callback_t *callback; /**< Callback function */
+    void *callback_data; /**< Callback data */
 } png_decoder_t;
 
 static png_decoder_t *decoder;
 
-
+/**
+ * @brief Deinitialize the PNG decoder.
+ * 
+ * @param free_image Flag indicating whether to free the image.
+ */
 static void png_decoder_deinit (bool free_image) {
     if (decoder != NULL) {
         fclose(decoder->f);
@@ -42,7 +46,16 @@ static void png_decoder_deinit (bool free_image) {
     }
 }
 
-
+/**
+ * @brief Start decoding a PNG file.
+ * 
+ * @param path Path to the PNG file.
+ * @param max_width Maximum width of the image.
+ * @param max_height Maximum height of the image.
+ * @param callback Callback function to be called upon completion.
+ * @param callback_data Data to be passed to the callback function.
+ * @return png_err_t Error code.
+ */
 png_err_t png_decoder_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data) {
     if (decoder != NULL) {
         return PNG_ERR_BUSY;
@@ -122,10 +135,18 @@ png_err_t png_decoder_start (char *path, int max_width, int max_height, png_call
     return PNG_OK;
 }
 
+/**
+ * @brief Abort the PNG decoding process.
+ */
 void png_decoder_abort (void) {
     png_decoder_deinit(true);
 }
 
+/**
+ * @brief Get the progress of the PNG decoding process.
+ * 
+ * @return float Progress as a percentage.
+ */
 float png_decoder_get_progress (void) {
     if (!decoder) {
         return 0.0f;
@@ -134,6 +155,9 @@ float png_decoder_get_progress (void) {
     return (float) (decoder->decoded_rows) / (decoder->ihdr.height);
 }
 
+/**
+ * @brief Poll the PNG decoder to process the next row.
+ */
 void png_decoder_poll (void) {
     if (!decoder) {
         return;

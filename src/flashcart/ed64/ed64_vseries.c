@@ -9,6 +9,7 @@
 #include "utils/utils.h"
 
 #include "../flashcart_utils.h"
+#include "ed64_vseries_ll.h"
 #include "ed64_vseries.h"
 
 typedef enum {
@@ -22,6 +23,18 @@ typedef enum {
 #define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
+
+static flashcart_firmware_version_t ed64_vseries_get_firmware_version (void) {
+    flashcart_firmware_version_t version_info;
+    // FIXME: get version from ll
+    version_info.major = 1;
+    version_info.minor = 1;
+    version_info.revision = 0;
+
+    //ed64_ll_get_version(&version_info.major, &version_info.minor, &version_info.revision);
+
+    return version_info;
+}
 
 static flashcart_err_t ed64_vseries_init (void) {
     return FLASHCART_OK;
@@ -140,7 +153,7 @@ static flashcart_t flashcart_ed64_vseries = {
     .init = ed64_vseries_init,
     .deinit = ed64_vseries_deinit,
     .has_feature = ed64_vseries_has_feature,
-    .get_firmware_version = NULL, // FIXME: show the returned firmware version info.
+    .get_firmware_version = ed64_vseries_get_firmware_version,
     .load_rom = ed64_vseries_load_rom,
     .load_file = ed64_vseries_load_file,
     .load_save = ed64_vseries_load_save,
@@ -148,6 +161,7 @@ static flashcart_t flashcart_ed64_vseries = {
     .load_64dd_disk = NULL,
     .set_save_type = ed64_vseries_set_save_type,
     .set_save_writeback = NULL,
+    .set_next_boot_mode = NULL,
 };
 
 

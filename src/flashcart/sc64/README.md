@@ -1,4 +1,4 @@
-# SummerCart64 developer notes
+## SummerCart64 developer notes
 
 ### Official documentation
 

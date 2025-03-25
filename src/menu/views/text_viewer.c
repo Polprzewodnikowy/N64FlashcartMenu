@@ -1,3 +1,9 @@
+/**
+ * @file text_viewer.c
+ * @brief Text Viewer component implementation
+ * @ingroup ui_components
+ */
+
 #include <stdio.h>
 #include <sys/stat.h>
 
@@ -7,23 +13,26 @@
 #include "utils/utils.h"
 #include "views.h"
 
-
 #define MAX_FILE_SIZE KiB(128)
 
-
+/** @brief Text file structure */
 typedef struct {
-    FILE *f;
-    char *contents;
-    size_t length;
-    int lines;
-    int current_line;
-    int offset;
-    bool vertical_scroll_possible;
+    FILE *f; /**< File pointer */
+    char *contents; /**< File contents */
+    size_t length; /**< File length */
+    int lines; /**< Number of lines */
+    int current_line; /**< Current line */
+    int offset; /**< Offset in the file */
+    bool vertical_scroll_possible; /**< Flag indicating if vertical scroll is possible */
 } text_file_t;
 
 static text_file_t *text;
 
-
+/**
+ * @brief Perform vertical scroll in the text file.
+ * 
+ * @param lines Number of lines to scroll.
+ */
 static void perform_vertical_scroll (int lines) {
     if (!text->vertical_scroll_possible) {
         return;
@@ -52,7 +61,11 @@ static void perform_vertical_scroll (int lines) {
     }
 }
 
-
+/**
+ * @brief Process user actions for the text viewer.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 static void process (menu_t *menu) {
     if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -66,6 +79,12 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * @brief Draw the text viewer.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param d Pointer to the display surface.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -91,6 +110,9 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * @brief Deinitialize the text viewer.
+ */
 static void deinit (void) {
     if (text) {
         if (text->f) {
@@ -104,7 +126,11 @@ static void deinit (void) {
     }
 }
 
-
+/**
+ * @brief Initialize the text viewer.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
 void view_text_viewer_init (menu_t *menu) {
     if ((text = calloc(1, sizeof(text_file_t))) == NULL) {
         return menu_show_error(menu, "Couldn't allocate memory for the text file");
@@ -163,6 +189,12 @@ void view_text_viewer_init (menu_t *menu) {
     text->vertical_scroll_possible = (text->lines > LIST_ENTRIES);
 }
 
+/**
+ * @brief Display the text viewer.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
 void view_text_viewer_display (menu_t *menu, surface_t *display) {
     process(menu);
 

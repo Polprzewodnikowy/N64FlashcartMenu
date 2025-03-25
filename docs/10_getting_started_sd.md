@@ -1,40 +1,29 @@
-## Initial Setup of SD Card
+[Return to the index](./00_index.md)
+## Initial Setup of an SD Card
 
-### First Steps
+### First steps
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
 **WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
+
+**Note:** It is advised to use ROM files in the Big Endian (default, also called "non-byteswapped") format. Although the menu auto-converts byteswapped ROM files, the load time will increase.
 
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.
-
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-- Create a folder in the root of your SD card called `menu`.
-- Place your ROM files on the SD card, **in any folder except `menu`**.  
+- Place your ROM files on the SD card, **in any folder except `menu`**.
 **NOTE:** byteswapped ROM's will increase load times.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.
 - An SD formatted with the default cluster size is recommended.
+- Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
 
-(TBW)
+### Emulator support
+See the [Emulators](./18_emulators.md) page.
 
-
-### Emulator Support
-Emulators should be added to the `/menu/emulators` directory on the SD card.
-
-N64FlashcartMenu currently supports the following emulators and associated ROM file names:
-- **NES**: [neon64v2](https://github.com/hcs64/neon64v2/releases) by *hcs64* - `neon64bu.rom`
-- **SNES**: [sodium64](https://github.com/Hydr8gon/sodium64/releases) by *Hydr8gon* - `sodium64.z64`
-- **Game Boy**/**GB Color**: [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* - `gb.v64`/`gbc.v64` ("Download Emulator" button)
-- **SMS**/**GG**: [smsPlus64](https://github.com/fhoedemakers/smsplus64/releases) by *fhoedmakers* - `smsPlus64.z64`
-- **Fairchild Channel F**: [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra/releases) by *celerizer* - `Press-F.z64`
-
-
-### 64DD Disk Support
-To load and run 64DD disk images, place the required 64DD IPL dumps in the `/menu/64ddipl` folder on the SD card.
-For more details, follow [this guide on the 64dd.org website](https://64dd.org/tutorial_sc64.html).
-
+### 64DD Disk support
+See the [64DD](./17_64dd.md) page.
 
 #### So what would the layout of the SD card look like?
 ```plaintext
@@ -61,8 +50,8 @@ SD:\
 │
 ├── (a rom).z64
 ├── (a rom).n64
-├── (some folder with roms)\
-        │   └── (some folder with roms)\
+├── (some folder with ROMs)\
+        │   └── (some folder with ROMs)\
         |       └── (some supported ROM files)
         │
         ├── (some supported ROM files)
@@ -78,7 +67,7 @@ and they must share the same file name, but use the `.sav` extension. `.sav` fil
 the "cartridge save memory".
 
 ```plaintext
-├── (some folder with roms)\
+├── (some folder with ROMs)\
     ├── a_rom.z64
     ├── b_rom_whatever.n64
     └── saves\
@@ -86,7 +75,7 @@ the "cartridge save memory".
         └── b_rom_whatever.sav
 ```
 
-### Transfering Saves From An ED64
+### Transferring saves from an ED64
 If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
 For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 

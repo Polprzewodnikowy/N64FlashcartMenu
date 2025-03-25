@@ -34,7 +34,7 @@
 - [ ] All new and existing tests passed.
 
 
-You agree with the license terms and that other licenses may be granted with permission of the original `N64FlashcartMenu` project license holders.
+You agree with the license terms and that other license types may be granted with permission of the original `N64FlashcartMenu` project license holders.
 
 <!--- It would be nice if you could sign off your contribution by replacing the name with your GitHub user name and GitHub email contact. -->
 Signed-off-by: GITHUB_USER <GITHUB_USER_EMAIL>

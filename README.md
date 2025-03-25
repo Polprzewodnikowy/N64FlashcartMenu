@@ -44,8 +44,8 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 
 
 ## Documentation
-Please take a moment to browse the current documentation / User Guide:  
-[Index](./docs/00_index.md)
+Please take a moment to browse the current documentation / user guide:  
+[User Guide - Index](./docs/00_index.md)
 
 
 ## Aims

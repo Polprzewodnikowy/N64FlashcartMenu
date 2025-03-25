@@ -147,8 +147,10 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 
 
 # License
-This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses. 
-Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project license holders. 
+This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.  
+Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project authors / maintainers.  
+* Mateusz Faderewski / Polprzewodnikowy
+* Robin Jones / NetworkFusion
 
 # Open source software and licenses used
 

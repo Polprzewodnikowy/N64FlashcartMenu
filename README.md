@@ -148,8 +148,6 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 
 # License
 This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.
-For clarity, the flashcart is considered to be a "network" server (the flashcart is a basic file server consumed by the N64 (as a client) to run Games etc.).
-
 
 # Open source software and licenses used
 

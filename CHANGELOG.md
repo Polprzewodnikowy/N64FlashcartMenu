@@ -17,7 +17,7 @@ built from latest commit on main branch.
 	- Add macOS metadata to hidden files.
 	- Added settings schema version for future change versioning.
 	- Added setting for PAL60 compatibility mode (see breaking changes).
-	- BETA_FEATURE: Added setting for line doublers that need progressive output.
+	- BETA_FEATURE: Added setting for line doublers that need progressive output, enable using "force_progressive_scan" setting in `config.ini`.
 
 
 - **Bug Fixes**
@@ -55,6 +55,8 @@ built from latest commit on main branch.
 
 ### Deprecation notices
 * Autoload ROM's will be deprecated in favor of Fast Reboot in a future menu version.
+* Old boxart images using filenames for game ID is deprecated and the compatibility mode will be removed in a future release.
+
 
 ## Release Notes 2025-01-10
 

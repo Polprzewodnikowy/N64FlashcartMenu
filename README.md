@@ -2,7 +2,7 @@
 ![GitHub Org's stars](https://img.shields.io/github/stars/Polprzewodnikowy/N64FlashcartMenu)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Percentage of issues still open")
-[![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/CONTRIBUTING.md)
+[![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
 An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
@@ -44,8 +44,8 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 
 
 ## Documentation
-Please take a moment to browse the current documentation:  
-[Index](./docs/00_index.md)
+Please take a moment to browse the current documentation / user guide:  
+[User Guide - Index](./docs/00_index.md)
 
 
 ## Aims
@@ -86,6 +86,12 @@ Download the `OS64.v64` ROM from the latest [action run - assets] and place it i
 Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.
 The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
 
+
+# License
+This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.  
+Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project authors / maintainers.  
+* Mateusz Faderewski / Polprzewodnikowy
+* Robin Jones / NetworkFusion
 
 # Open source software and licenses used
 ## libraries

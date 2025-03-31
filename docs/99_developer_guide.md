@@ -3,6 +3,10 @@
 
 You can use a dev container in VSCode to ease development.
 
+Expected pre-requsites:
+* Docker container environment (for dev container support).
+* VSCode.
+
 ### A quick start video tutorial on how to set up your environment
 [![Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Devcontainer quick start guide").
 

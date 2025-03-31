@@ -6,7 +6,7 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-## Release Notes 2025-{Next}
+## Release Notes 2025-03-31
 
 - **New Features**
 	- Introduced tabs in main menu for ROM favorites and recently played ROM history.

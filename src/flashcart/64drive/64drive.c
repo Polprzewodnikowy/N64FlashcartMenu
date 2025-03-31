@@ -1,3 +1,9 @@
+/**
+ * @file 64drive.c
+ * @brief 64drive functions implementation
+ * @ingroup flashcart
+ */
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -12,7 +18,6 @@
 #include "64drive_ll.h"
 #include "64drive.h"
 
-
 #define ROM_ADDRESS                 (0x10000000)
 #define SAVE_ADDRESS_DEV_A          (0x13FE0000)
 #define SAVE_ADDRESS_DEV_A_PKST2    (0x11606560)
@@ -20,11 +25,14 @@
 
 #define SUPPORTED_FPGA_REVISION     (205)
 
-
 static d64_device_variant_t device_variant = DEVICE_VARIANT_UNKNOWN;
 static d64_save_type_t current_save_type = SAVE_TYPE_NONE;
 
-
+/**
+ * @brief Initialize the 64drive.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_init (void) {
     uint16_t fpga_revision;
     uint32_t bootloader_version;
@@ -62,6 +70,11 @@ static flashcart_err_t d64_init (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Deinitialize the 64drive.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_deinit (void) {
     if (d64_ll_enable_cartrom_writes(false)) {
         return FLASHCART_ERR_INT;
@@ -70,6 +83,12 @@ static flashcart_err_t d64_deinit (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Check if the 64drive has a specific feature.
+ * 
+ * @param feature The feature to check.
+ * @return true if the feature is supported, false otherwise.
+ */
 static bool d64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return false;
@@ -78,6 +97,7 @@ static bool d64_has_feature (flashcart_features_t feature) {
         case FLASHCART_FEATURE_AUTO_CIC: return true;
         case FLASHCART_FEATURE_AUTO_REGION: return true;
         case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
+        case FLASHCART_FEATURE_ROM_REBOOT_FAST: return true;
         default: return false;
     }
 }
@@ -107,6 +127,13 @@ static flashcart_firmware_version_t d64_get_firmware_version (void) {
     return version_info;
 }
 
+/**
+ * @brief Load a ROM into the 64drive.
+ * 
+ * @param rom_path Path to the ROM file.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
@@ -149,6 +176,14 @@ static flashcart_err_t d64_load_rom (char *rom_path, flashcart_progress_callback
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Load a file into the 64Drive.
+ * 
+ * @param file_path Path to the file.
+ * @param rom_offset ROM offset.
+ * @param file_offset File offset.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
@@ -187,6 +222,12 @@ static flashcart_err_t d64_load_file (char *file_path, uint32_t rom_offset, uint
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Load a save file into the 64drive.
+ * 
+ * @param save_path Path to the save file.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_load_save (char *save_path) {
     uint8_t eeprom_contents[2048] __attribute__((aligned(8)));
     FIL fil;
@@ -233,6 +274,12 @@ static flashcart_err_t d64_load_save (char *save_path) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Set the save type for the 64drive.
+ * 
+ * @param save_type The save type.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
     d64_save_type_t type;
 
@@ -279,6 +326,12 @@ static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Set the save writeback for the 64drive.
+ * 
+ * @param save_path Path to the save file.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t d64_set_save_writeback (char *save_path) {
     uint32_t sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
 
@@ -297,7 +350,17 @@ static flashcart_err_t d64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
+// static flashcart_err_t d64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
 
+//     if (d64_ll_set_persistent_variable_storage(true, 0, 0)) {
+//         return FLASHCART_ERR_INT;
+//     }
+
+//     return FLASHCART_OK;
+// }
+
+
+/** @brief Flashcart structure for 64drive. */
 static flashcart_t flashcart_d64 = {
     .init = d64_init,
     .deinit = d64_deinit,
@@ -310,9 +373,14 @@ static flashcart_t flashcart_d64 = {
     .load_64dd_disk = NULL,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,
+    .set_next_boot_mode = NULL, // d64_set_bootmode,
 };
 
-
+/**
+ * @brief Get the flashcart structure for 64drive.
+ * 
+ * @return flashcart_t* Pointer to the flashcart structure.
+ */
 flashcart_t *d64_get_flashcart (void) {
     return &flashcart_d64;
 }

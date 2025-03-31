@@ -6,6 +6,58 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
+## Release Notes 2025-03-31
+
+- **New Features**
+	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
+	- Introduced first run check to ensure users are aware of latest changes.
+	- Introduced ability to turn off GUI loading bar.
+	- BETA_FEATURE: Introduces ROM descriptions from files.
+	- BETA_FEATURE: Enabled setting for fast ROM reboots on the SC64.
+	- Add macOS metadata to hidden files.
+	- Added settings schema version for future change versioning.
+	- Added setting for PAL60 compatibility mode (see breaking changes).
+	- BETA_FEATURE: Added setting for line doublers that need progressive output, enable using "force_progressive_scan" setting in `config.ini`.
+
+
+- **Bug Fixes**
+	- Menu sound FX issues (hissing, popping and white noise).
+	- RTC not showing or setting correct date parameters in certain circumstances.
+	- GB / GBC emulator not saving in certain circumstances.
+
+
+- **Documentation**
+	- Re-orginised and improved user documentation.
+	- Added a lot of doxygen compatible code comments.
+	- Added project license.
+
+
+- **Refactor**
+	- RTC subsystem (align with libDragon improvements).
+	- Boxart images (Deprecates old boxart image folder layout).
+	- Settings (PAL60 compatibility, schema version, fast reboot, first run, progress bar).
+
+- **Other**
+	- Updated libDragon SDK.
+	- Updated miniz library.
+
+### Breaking changes
+* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
+* For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
+
+
+### Current known Issues
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+* Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+
+
+### Deprecation notices
+* Autoload ROM's will be deprecated in favor of Fast Reboot in a future menu version.
+* Old boxart images using filenames for game ID is deprecated and the compatibility mode will be removed in a future release.
+
+
 ## Release Notes 2025-01-10
 
 - **Bug Fixes**

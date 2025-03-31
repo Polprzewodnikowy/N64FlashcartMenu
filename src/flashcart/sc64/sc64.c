@@ -1,3 +1,9 @@
+/**
+ * @file sc64.c
+ * @brief SummerCart64 functions implementation
+ * @ingroup flashcart
+ */
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -11,7 +17,6 @@
 #include "../flashcart_utils.h"
 #include "sc64_ll.h"
 #include "sc64.h"
-
 
 #define SRAM_FLASHRAM_ADDRESS       (0x08000000)
 #define ROM_ADDRESS                 (0x10000000)
@@ -39,7 +44,6 @@
 #define THB_UNMAPPED                (0xFFFFFFFF)
 #define THB_WRITABLE_FLAG           (1 << 31)
 
-
 static const struct {
     uint8_t head;
     uint8_t sector_length;
@@ -63,6 +67,7 @@ static const struct {
     { 1, 128, 149, 912 },
     { 1, 112, 114, 1061 },
 };
+
 static const uint8_t vzone_to_pzone[DISK_TYPES][DISK_ZONES] = {
     {0, 1, 2, 9, 8, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10},
     {0, 1, 2, 3, 10, 9, 8, 4, 5, 6, 7, 15, 14, 13, 12, 11},
@@ -72,9 +77,19 @@ static const uint8_t vzone_to_pzone[DISK_TYPES][DISK_ZONES] = {
     {0, 1, 2, 3, 4, 5, 6, 7, 14, 13, 12, 11, 10, 9, 8, 15},
     {0, 1, 2, 3, 4, 5, 6, 7, 15, 14, 13, 12, 11, 10, 9, 8},
 };
+
 static const uint8_t rom_zones[DISK_TYPES] = { 5, 7, 9, 11, 13, 15, 16 };
 
-
+/**
+ * @brief Load data to flash memory.
+ * 
+ * @param fil Pointer to the file object.
+ * @param address Address to load data to.
+ * @param size Size of the data to load.
+ * @param br Pointer to store the number of bytes read.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t load_to_flash (FIL *fil, void *address, size_t size, UINT *br, flashcart_progress_callback_t *progress) {
     size_t erase_block_size;
     UINT bp;
@@ -107,7 +122,14 @@ static flashcart_err_t load_to_flash (FIL *fil, void *address, size_t size, UINT
     return FLASHCART_OK;
 }
 
-
+/**
+ * @brief Check if a disk zone track is bad.
+ * 
+ * @param zone Zone number.
+ * @param track Track number.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @return true if the track is bad, false otherwise.
+ */
 static bool disk_zone_track_is_bad (uint8_t zone, uint8_t track, flashcart_disk_parameters_t *disk_parameters) {
     for (int i = 0; i < DISK_BAD_TRACKS_PER_ZONE; i++) {
         if (disk_parameters->defect_tracks[zone][i] == track) {
@@ -118,6 +140,13 @@ static bool disk_zone_track_is_bad (uint8_t zone, uint8_t track, flashcart_disk_
     return false;
 }
 
+/**
+ * @brief Check if a system LBA is bad.
+ * 
+ * @param lba Logical block address.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @return true if the LBA is bad, false otherwise.
+ */
 static bool disk_system_lba_is_bad (uint16_t lba, flashcart_disk_parameters_t *disk_parameters) {
     if (lba < DISK_SYSTEM_LBA_COUNT) {
         return disk_parameters->bad_system_area_lbas[lba];
@@ -126,6 +155,17 @@ static bool disk_system_lba_is_bad (uint16_t lba, flashcart_disk_parameters_t *d
     return false;
 }
 
+/**
+ * @brief Set the THB mapping for a disk.
+ * 
+ * @param offset Offset for the THB mapping.
+ * @param track Track number.
+ * @param head Head number.
+ * @param block Block number.
+ * @param valid Valid flag.
+ * @param writable Writable flag.
+ * @param file_offset File offset.
+ */
 static void disk_set_thb_mapping (uint32_t offset, uint16_t track, uint8_t head, uint8_t block, bool valid, bool writable, int file_offset) {
     uint32_t index = (track << 2) | (head << 1) | (block);
     uint32_t mapping = valid ? ((writable ? THB_WRITABLE_FLAG : 0) | (file_offset & ~(THB_WRITABLE_FLAG))) : THB_UNMAPPED;
@@ -133,6 +173,13 @@ static void disk_set_thb_mapping (uint32_t offset, uint16_t track, uint8_t head,
     io_write(ROM_ADDRESS + offset + (index * sizeof(uint32_t)), mapping);
 }
 
+/**
+ * @brief Load the THB table for a disk.
+ * 
+ * @param disk_parameters Pointer to the disk parameters.
+ * @param thb_table_offset Pointer to store the THB table offset.
+ * @param current_offset Pointer to the current offset.
+ */
 static void disk_load_thb_table (flashcart_disk_parameters_t *disk_parameters, uint32_t *thb_table_offset, uint32_t *current_offset) {
     int file_offset = 0;
 
@@ -176,6 +223,14 @@ static void disk_load_thb_table (flashcart_disk_parameters_t *disk_parameters, u
     *current_offset += (DISK_TRACKS * DISK_HEADS * DISK_BLOCKS * sizeof(uint32_t));
 }
 
+/**
+ * @brief Load the sector table for a disk.
+ * 
+ * @param path Path to the disk file.
+ * @param sector_table_offset Pointer to store the sector table offset.
+ * @param current_offset Pointer to the current offset.
+ * @return true if an error occurred, false otherwise.
+ */
 static bool disk_load_sector_table (char *path, uint32_t *sector_table_offset, uint32_t *current_offset) {
     if (fatfs_get_file_sectors(path, (uint32_t *) (ROM_ADDRESS + *current_offset), ADDRESS_TYPE_PI, DISK_MAX_SECTORS)) {
         return true;
@@ -187,6 +242,11 @@ static bool disk_load_sector_table (char *path, uint32_t *sector_table_offset, u
     return false;
 }
 
+/**
+ * @brief Get the firmware version of the SummerCart64.
+ * 
+ * @return flashcart_firmware_version_t The firmware version.
+ */
 static flashcart_firmware_version_t sc64_get_firmware_version (void) {
     flashcart_firmware_version_t version_info;
 
@@ -195,7 +255,11 @@ static flashcart_firmware_version_t sc64_get_firmware_version (void) {
     return version_info;
 }
 
-
+/**
+ * @brief Initialize the SummerCart64.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t sc64_init (void) {
     uint16_t major;
     uint16_t minor;
@@ -249,6 +313,11 @@ static flashcart_err_t sc64_init (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Deinitialize the SummerCart64.
+ * 
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t sc64_deinit (void) {
     sc64_ll_set_config(CFG_ID_ROM_WRITE_ENABLE, false);
 
@@ -257,6 +326,12 @@ static flashcart_err_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Check if the SummerCart64 has a specific feature.
+ * 
+ * @param feature The feature to check.
+ * @return true if the feature is supported, false otherwise.
+ */
 static bool sc64_has_feature (flashcart_features_t feature) {
     switch (feature) {
         case FLASHCART_FEATURE_64DD: return true;
@@ -266,10 +341,18 @@ static bool sc64_has_feature (flashcart_features_t feature) {
         case FLASHCART_FEATURE_AUTO_REGION: return true;
         case FLASHCART_FEATURE_DIAGNOSTIC_DATA: return true;
         case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
+        case FLASHCART_FEATURE_ROM_REBOOT_FAST: return true;
         default: return false;
     }
 }
 
+/**
+ * @brief Load a ROM into the SummerCart64.
+ * 
+ * @param rom_path Path to the ROM file.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
     FIL fil;
     UINT br;
@@ -351,6 +434,14 @@ static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callbac
     return FLASHCART_OK;
 }
 
+/**
+ * @brief Load a file into the SummerCart64.
+ * 
+ * @param file_path Path to the file.
+ * @param rom_offset ROM offset.
+ * @param file_offset File offset.
+ * @return flashcart_err_t Error code.
+ */
 static flashcart_err_t sc64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
     FIL fil;
     UINT br;
@@ -575,6 +666,25 @@ static flashcart_err_t sc64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
+static flashcart_err_t sc64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
+
+    sc64_boot_mode_t type = BOOT_MODE_MENU;
+
+    switch (boot_mode) {
+        case FLASHCART_REBOOT_MODE_ROM:
+            type = BOOT_MODE_ROM;
+            break;
+        default:
+            type = BOOT_MODE_MENU;
+            break;
+    }
+    if (sc64_ll_set_config(CFG_ID_BOOT_MODE, type) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    return FLASHCART_OK;
+}
+
 
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
@@ -588,6 +698,7 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_disk = sc64_load_64dd_disk,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,
+    .set_next_boot_mode = sc64_set_bootmode,
 };
 
 

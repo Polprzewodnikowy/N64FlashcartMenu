@@ -1,8 +1,28 @@
 var searchData=
 [
-  ['target_0',['target',['../structvr4300__instruction__t_8j__type.html#a42aefbae01d2dfd981f7da7d823d689e',1,'vr4300_instruction_t.j_type']]],
-  ['text_1',['text',['../structcomponent__context__menu__t_8list.html#a1cb251ec0d568de6a929b520c4aed8d1',1,'component_context_menu_t.list']]],
-  ['timing_2',['TIMING',['../boot__io_8h.html#a62ad61417eb98ddc6ad522b566f4667d',1,'vi_regs_t']]],
-  ['title_3',['title',['../rom__info_8h.html#ad0ac2903416955beeea09ff127ab0245',1,'rom_info_t']]],
-  ['tv_5ftype_4',['tv_type',['../rom__info_8h.html#ad9a5855518fbf47645b8d8b60822d593',1,'rom_info_t']]]
+  ['r_5ftype_0',['r_type',['../vr4300__asm_8h.html#ab83cf2f62296edb13c66f542335d537a',1,'vr4300_instruction_t']]],
+  ['raw_1',['raw',['../vr4300__asm_8h.html#aef96fe0ea18d61a87c8349c08f71fe56',1,'vr4300_instruction_t']]],
+  ['rd_2',['rd',['../vr4300__asm_8h.html#aeeec033a2c4d56d7ba16b69358779091',1,'vr4300_instruction_t.r_type']]],
+  ['rd_5flen_3',['RD_LEN',['../boot__io_8h.html#a7385f69dad65c3a23b0600923035f236',1,'sp_regs_t']]],
+  ['rdma_4',['RDMA',['../boot__io_8h.html#a6d04dc1568e8bec29264bc9a8c2e7724',1,'pi_regs_t']]],
+  ['real_5ftime_5fclock_5',['real_time_clock',['../rom__info_8h.html#a9f5fd51b7d799dfbd589e71d0ea0a116',1,'rom_info_t.features']]],
+  ['reboot_5fsize_6',['reboot_size',['../reboot_8h.html#aaab8abef9dd59847596f8f719c609e42',1,'reboot.h']]],
+  ['reboot_5fstart_7',['reboot_start',['../reboot_8h.html#a61ea2752dd3cb6606b041beb0f3a293b',1,'reboot.h']]],
+  ['result_8',['RESULT',['../group__drive.html#ae9bdd61e6b06ea6eb72e6b2eb6fe62bc',1,'d64_regs_t']]],
+  ['revision_9',['REVISION',['../group__drive.html#a8c235712a6cdd3b584b75d34e77a86f5',1,'d64_regs_t']]],
+  ['revision_10',['revision',['../flashcart_8h.html#a97a4bd1b44361f35aaabfaffdbe495bc',1,'flashcart_firmware_version_t::revision'],['../rom__info_8h.html#ab5f927bae9a11c2967a368e3e9bd9e75',1,'rom_info_t.libultra::revision']]],
+  ['rls_11',['RLS',['../boot__io_8h.html#acc7f332850e8e9c1d0003ab4126c71e1',1,'pi_regs_t.DOM']]],
+  ['rom_5fautoload_5fenabled_12',['rom_autoload_enabled',['../settings_8h.html#a9dc5b0415bed5421bdc2e58e55ac22eb',1,'settings_t']]],
+  ['rom_5fautoload_5ffilename_13',['rom_autoload_filename',['../settings_8h.html#a9bd04fdecbaaf577252d985cd7ada9d9',1,'settings_t']]],
+  ['rom_5fautoload_5fpath_14',['rom_autoload_path',['../settings_8h.html#aaf92cdc2eb517cb477ca76eb0f99ef2c',1,'settings_t']]],
+  ['rom_5ffast_5freboot_5fenabled_15',['rom_fast_reboot_enabled',['../settings_8h.html#ac6c7114eddb24a992f4a0880d988fa03',1,'settings_t']]],
+  ['root_16',['root',['../path_8h.html#a63d3803160447135651a09e7e5275caa',1,'path_t']]],
+  ['row_5fbuffer_17',['row_buffer',['../png__decoder_8c.html#a3f450cf1ccd58023addfa257ca12a669',1,'png_decoder_t']]],
+  ['row_5fcount_18',['row_count',['../ui__components_8h.html#aa6307036a4767d033e871f5ddb38bdf0',1,'component_context_menu_t']]],
+  ['row_5fselected_19',['row_selected',['../ui__components_8h.html#a8183b2f441dc05921228700ad3c5775e',1,'component_context_menu_t']]],
+  ['rs_20',['rs',['../vr4300__asm_8h.html#a3a2d7564baee79182ebc7b65084aabd1',1,'vr4300_instruction_t.i_type::rs'],['../vr4300__asm_8h.html#a3a2d7564baee79182ebc7b65084aabd1',1,'vr4300_instruction_t.r_type::rs']]],
+  ['rsp_21',['rsp',['../sc64__ll_8c.html#ab4d068ea1a6fb0a5ea7a6555a702358a',1,'sc64_cmd_t']]],
+  ['rt_22',['rt',['../vr4300__asm_8h.html#a822050d9ae3c47f54bee71b85fce1487',1,'vr4300_instruction_t.i_type::rt'],['../vr4300__asm_8h.html#a822050d9ae3c47f54bee71b85fce1487',1,'vr4300_instruction_t.r_type::rt']]],
+  ['rumble_5fenabled_23',['rumble_enabled',['../settings_8h.html#af8e5d894c1bc8c114fb0bf9ad5d12360',1,'settings_t']]],
+  ['rumble_5fpak_24',['rumble_pak',['../rom__info_8h.html#a1979d61c11f6a589c9f54895d8bd6bfc',1,'rom_info_t.features']]]
 ];

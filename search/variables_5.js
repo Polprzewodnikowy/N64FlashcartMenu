@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['features_0',['features',['../rom__info_8h.html#a7eda06a6294dca780f036d3802aaed3e',1,'rom_info_t']]],
-  ['funct_1',['funct',['../structvr4300__instruction__t_8r__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.r_type::funct'],['../structvr4300__instruction__t_8c__type.html#ac8352b64ae3f2c38d4a6bcb1374628b4',1,'vr4300_instruction_t.c_type::funct']]]
+  ['eeprom_0',['EEPROM',['../group__drive.html#a863fda533970d389385e86db2bf539d0',1,'d64_regs_t::EEPROM'],['../group__sc64.html#ab488aa86495351d75eec070636e42f5e',1,'sc64_buffers_t::EEPROM']]],
+  ['end_1',['END',['../boot__io_8h.html#ac211d738f5a6bce56ddfb3c215d5cc98',1,'dpc_regs_t']]],
+  ['endianness_2',['endianness',['../rom__info_8h.html#a0b802f6d76c318b3077b4b076fa29c15',1,'rom_info_t']]],
+  ['expansion_5fpak_3',['expansion_pak',['../rom__info_8h.html#a18e69616d5ba4d1164edba4298653cfc',1,'rom_info_t.features']]]
 ];

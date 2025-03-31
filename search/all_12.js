@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quickstart_20video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_0',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md53',1,'']]]
+  ['j_5ftype_0',['j_type',['../vr4300__asm_8h.html#a712826f7c25b845eaa8d71772bd24057',1,'vr4300_instruction_t']]]
 ];

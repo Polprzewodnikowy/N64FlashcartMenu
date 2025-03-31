@@ -1,23 +1,9 @@
 var searchData=
 [
-  ['a_20background_20image_0',['Adding a background image',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]],
-  ['a_20quickstart_20video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_1',['A quickstart video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md53',1,'']]],
-  ['ability_20to_20customize_20the_20font_2',['Test ability to Customize the font',['../md_docs_299__developer__guide.html#autotoc_md64',1,'']]],
-  ['action_3',['action',['../structcomponent__context__menu__t_8list.html#a8916ba21a9367f9a669e83f3d56ae17b',1,'component_context_menu_t.list']]],
-  ['actions_2eh_4',['actions.h',['../actions_8h.html',1,'']]],
-  ['actions_5finit_5',['actions_init',['../actions_8h.html#ae496cb0fe97dced4a5caf96872a261fc',1,'actions.c']]],
-  ['adding_20a_20background_20image_6',['Adding a background image',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]],
-  ['additional_20control_20information_7',['Additional Control Information',['../md_docs_201__menu__controls.html#autotoc_md42',1,'']]],
-  ['additional_20rom_20information_8',['Additional ROM information',['../md_docs_201__menu__controls.html#autotoc_md46',1,'']]],
-  ['address_20mode_20command_9',['&quot;Enable/disable extended address mode&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md29',1,'']]],
-  ['ai_5fregs_5ft_10',['ai_regs_t',['../boot__io_8h.html#structai__regs__t',1,'']]],
-  ['aims_11',['Aims',['../index.html#autotoc_md7',1,'']]],
-  ['an_20ed64_12',['Transfering Saves From An ED64',['../md_docs_200__getting__started__sd.html#autotoc_md40',1,'']]],
-  ['and_20licenses_20used_13',['Open source software and licenses used',['../index.html#autotoc_md21',1,'']]],
-  ['and_20unsupported_20use_20at_20own_20risk_14',['ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md17',1,'']]],
-  ['ares_20emulator_15',['Ares Emulator',['../md_docs_299__developer__guide.html#autotoc_md58',1,'']]],
-  ['arg_16',['arg',['../structcomponent__context__menu__t_8list.html#a61dd86c2dc75c3f569ec619bd283a33f',1,'component_context_menu_t.list']]],
-  ['as_20of_20oct_2012_202023_17',['Video showcase (as of Oct 12 2023)',['../index.html#autotoc_md6',1,'']]],
-  ['at_20own_20risk_18',['ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md17',1,'']]],
-  ['autoload_19',['N64 ROM autoload',['../index.html#autotoc_md9',1,'']]]
+  ['31_5ffile_5fbrowser_0',['31_file_browser',['../md_docs_231__file__browser.html',1,'']]],
+  ['32_5fmenu_5fsettings_1',['32_menu_settings',['../md_docs_232__menu__settings.html',1,'']]],
+  ['33_5frtc_5fsettings_2',['33_rtc_settings',['../md_docs_233__rtc__settings.html',1,'']]],
+  ['35_5fmenu_5finformation_3',['35_menu_information',['../md_docs_235__menu__information.html',1,'']]],
+  ['36_5fflashcart_5finformation_4',['36_flashcart_information',['../md_docs_236__flashcart__information.html',1,'']]],
+  ['37_5fn64_5finformation_5',['37_n64_information',['../md_docs_237__n64__information.html',1,'']]]
 ];

@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['paddr_0',['paddr',['../boot__io_8h.html#ae7d837b8be7b32681c1004e945362163',1,'sp_regs_t::PADDR'],['../boot__io_8h.html#a39dcd01f99c2ca546737cff58821a43d',1,'pi_regs_t::PADDR']]],
-  ['pal60_5fenabled_1',['pal60_enabled',['../settings_8h.html#ad88eea6bf7e99f89f316513306a07506',1,'settings_t']]],
-  ['parent_2',['parent',['../ui__components_8h.html#a62ed882efa35b7570bc0dbfef044b627',1,'component_context_menu_t']]],
-  ['pgs_3',['PGS',['../boot__io_8h.html#a27eb8b9c1e2bbaa238edca6206308db0',1,'pi_regs_t.DOM']]],
-  ['pwd_4',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
+  ['maddr_0',['MADDR',['../boot__io_8h.html#aa42ea35ffb72f598580d2c2f2c539a5e',1,'sp_regs_t::MADDR'],['../boot__io_8h.html#afddfa288e765993552f0b0b9e5091abd',1,'vi_regs_t::MADDR'],['../boot__io_8h.html#ad7040a2f3fa50a932cb1d3328784ebb4',1,'ai_regs_t::MADDR'],['../boot__io_8h.html#aa9504bae7269bf8facd720b4ac2d2c00',1,'pi_regs_t::MADDR']]],
+  ['magic_1',['MAGIC',['../group__drive.html#a332c5a5906898671db236768a5584af1',1,'d64_regs_t']]],
+  ['magic_2',['magic',['../background_8c.html#aa6565922aed75e902ef3d8ec507a0d05',1,'cache_metadata_t']]],
+  ['main_3',['main',['../cheats_8c.html#a823def8d6bc733f646105437e29e3351',1,'cheat_entry_t']]],
+  ['major_4',['major',['../flashcart_8h.html#a7c129daf16078573c4b80086aa9d22c7',1,'flashcart_firmware_version_t']]],
+  ['metadata_5',['metadata',['../rom__info_8h.html#a3d9c6a2e54a75a16155d5e4fe4f8ad0f',1,'rom_info_t']]],
+  ['minor_6',['minor',['../flashcart_8h.html#a5c58f767519c97848e7343bbc0c76466',1,'flashcart_firmware_version_t']]]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['views_2eh_0',['views.h',['../views_8h.html',1,'']]]
+  ['tabs_2ec_0',['tabs.c',['../tabs_8c.html',1,'']]],
+  ['text_5fviewer_2ec_1',['text_viewer.c',['../text__viewer_8c.html',1,'']]]
 ];

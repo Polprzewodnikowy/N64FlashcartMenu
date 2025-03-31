@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['bgm_5fenabled_0',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
-  ['bitrate_1',['BITRATE',['../boot__io_8h.html#a43e0411e186298f185d39b80ea5f1d4f',1,'ai_regs_t']]],
-  ['boot_5faddress_2',['boot_address',['../rom__info_8h.html#afeb7118e65f58ed63767c1cd31be04d0',1,'rom_info_t']]]
+  ['action_0',['action',['../ui__components_8h.html#a8916ba21a9367f9a669e83f3d56ae17b',1,'component_context_menu_t.list']]],
+  ['address_1',['address',['../cheats_8c.html#a3b91ca18417d8beb53de613769ab5ff3',1,'cheat_t']]],
+  ['arg_2',['arg',['../sc64__ll_8c.html#aef624263d0e6f469dd8260a35e5dc271',1,'sc64_cmd_t::arg'],['../ui__components_8h.html#a61dd86c2dc75c3f569ec619bd283a33f',1,'component_context_menu_t.list::arg']]]
 ];

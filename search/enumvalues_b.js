@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['rom_5fcic_5ftype_5f5101_0',['ROM_CIC_TYPE_5101',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca309a6ab46225a1aba12d08e856e66294',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f5167_1',['ROM_CIC_TYPE_5167',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca5a4fcfc62ac9368c8d536478c36e740d',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f6101_2',['ROM_CIC_TYPE_6101',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca9b68c5d84e60384d5090a9adec571dfb',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f7102_3',['ROM_CIC_TYPE_7102',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89cafde4e72398cc757b5dcdc4094e2f3bb4',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f8301_4',['ROM_CIC_TYPE_8301',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89cace5dc407873c827233f233623dd96dde',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f8302_5',['ROM_CIC_TYPE_8302',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca3eb237ab478282521046999a80facc98',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f8303_6',['ROM_CIC_TYPE_8303',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89caff06949902c50357954a0a3b42afbd41',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f8401_7',['ROM_CIC_TYPE_8401',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca6e085e508a7be677ea2d9321bd4576ce',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5f8501_8',['ROM_CIC_TYPE_8501',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89caeb18b6ff9357b6f9c33deedf4bd8e016',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5fautomatic_9',['ROM_CIC_TYPE_AUTOMATIC',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca3307873f4a7ecd1556941a7ba454e50a',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5funknown_10',['ROM_CIC_TYPE_UNKNOWN',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca57f8b05d52c11cf2e95edabddf1e552d',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5fx102_11',['ROM_CIC_TYPE_x102',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89cabba7960b7292342d6bbaf3affddaf516',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5fx103_12',['ROM_CIC_TYPE_x103',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca539d82827da3dca5d3644f7914dae82f',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5fx105_13',['ROM_CIC_TYPE_x105',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89cad5907a3a8baa2b800ac9562c7a9ee650',1,'rom_info.h']]],
+  ['rom_5fcic_5ftype_5fx106_14',['ROM_CIC_TYPE_x106',['../rom__info_8h.html#a21ae7cdab56bbcd9cb4627f69903c89ca70d51e964c04c8e12c628f8b4901483a',1,'rom_info.h']]],
+  ['rom_5ferr_5fload_5fio_15',['ROM_ERR_LOAD_IO',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a02ee20defaacc7cf5ba90fad1755f908',1,'rom_info.h']]],
+  ['rom_5ferr_5fno_5ffile_16',['ROM_ERR_NO_FILE',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037adfeb4a0def7c746dbd3bf81b377886d7',1,'rom_info.h']]],
+  ['rom_5ferr_5fsave_5fio_17',['ROM_ERR_SAVE_IO',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a04fdc076bf21c5450a03b707f724c827',1,'rom_info.h']]],
+  ['rom_5fok_18',['ROM_OK',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a4f2c5b35b101f121dc810b7c354a7f4b',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fautomatic_19',['ROM_TV_TYPE_AUTOMATIC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca32eb46c583b63bf5f3fc13b202e7ce53',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fmpal_20',['ROM_TV_TYPE_MPAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca07c6a2edd29299dbde271f47b07ab829',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fntsc_21',['ROM_TV_TYPE_NTSC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca3e9079cd83d60e89698902a726951cfa',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fpal_22',['ROM_TV_TYPE_PAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca5289e25c6d999e91f859e1f6b3a46637',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5funknown_23',['ROM_TV_TYPE_UNKNOWN',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca9badbf7a8e5e0c152a932933a06091ee',1,'rom_info.h']]]
+];

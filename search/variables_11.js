@@ -1,5 +1,26 @@
 var searchData=
 [
-  ['unique_5fcode_0',['unique_code',['../rom__info_8h.html#aa1e3ff593f139ee836b46892bd5f799f',1,'rom_info_t.__unnamed22__.__unnamed26__']]],
-  ['use_5fsaves_5ffolder_1',['use_saves_folder',['../settings_8h.html#abf8e54596905858b3ada7f163b07d6a6',1,'settings_t']]]
+  ['sa_0',['sa',['../vr4300__asm_8h.html#ac12e01f2a13ff5587e1e9e4aedb8242d',1,'vr4300_instruction_t.r_type']]],
+  ['save_1',['save',['../rom__info_8c.html#a43781db5c40ecc39fd718685594f0956',1,'match_t.data::save'],['../rom__info_8h.html#a43781db5c40ecc39fd718685594f0956',1,'rom_info_t.boot_override::save']]],
+  ['save_5ftype_2',['save_type',['../rom__info_8h.html#a9bf05efea2279aeacb197096bb88e59d',1,'rom_info_t::save_type'],['../rom__info_8h.html#ab02e3087d460fc91de6307164cc849a2',1,'rom_info_t.boot_override::save_type']]],
+  ['schema_5frevision_3',['schema_revision',['../settings_8h.html#aa1ff27ce347bf4595944f05d4ed9a155',1,'settings_t']]],
+  ['sdram_5fsize_4',['SDRAM_SIZE',['../group__drive.html#a0897408c46a5fa3b12af8d124b79388e',1,'d64_regs_t']]],
+  ['secondary_5fpath_5',['secondary_path',['../bookkeeping_8h.html#aa4366742c44c10fa6d51e6f5b570d07b',1,'bookkeeping_item_t']]],
+  ['sector_5ftable_6',['sector_table',['../group__sc64.html#a6eb87f552c929841eb0bb309b8ba32e0',1,'sc64_disk_mapping_t.disks']]],
+  ['seek_5fpredecode_5fframes_7',['seek_predecode_frames',['../mp3__player_8c.html#afa6bd2748224a835beb2fc07553faf51',1,'mp3player_t']]],
+  ['semaphore_8',['SEMAPHORE',['../boot__io_8h.html#adf0065c2e5ac765fc1b20fd733ba5d7b',1,'sp_regs_t']]],
+  ['set_5fnext_5fboot_5fmode_9',['set_next_boot_mode',['../flashcart_8h.html#a2120cd1d94a6ceda9dff22f39342266b',1,'flashcart_t']]],
+  ['set_5fsave_5ftype_10',['set_save_type',['../flashcart_8h.html#ac6fb8bf7d1957a4200273068c94d13b4',1,'flashcart_t']]],
+  ['set_5fsave_5fwriteback_11',['set_save_writeback',['../flashcart_8h.html#a19eba40921dc872c15fab58bdcc853b1',1,'flashcart_t']]],
+  ['settings_12',['settings',['../rom__info_8h.html#aa35895ea72aa9e278ef9b26bdf7bbcd8',1,'rom_info_t']]],
+  ['show_13',['show',['../menu_8c.html#a1b387bca6c0b9ace5174030d02928759',1,'view_t']]],
+  ['show_5fprotected_5fentries_14',['show_protected_entries',['../settings_8h.html#af59022b231f0952311af71f4eb132d67',1,'settings_t']]],
+  ['size_15',['size',['../background_8c.html#a760f7345951a200ae13590002331882d',1,'cache_metadata_t']]],
+  ['soundfx_5fenabled_16',['soundfx_enabled',['../settings_8h.html#a95c4197f24dc3bdc6d0180aa6115890b',1,'settings_t']]],
+  ['sr_17',['SR',['../boot__io_8h.html#a04ee6c089b5bbab732bf3ac352dfff40',1,'sp_regs_t::SR'],['../boot__io_8h.html#ab46bc9d0ff31e386a39e03bdfd199c4c',1,'dpc_regs_t::SR'],['../boot__io_8h.html#a8b1251e120efe26718d3394aec73ca0c',1,'ai_regs_t::SR'],['../boot__io_8h.html#a6c4f19758b5239f5239f490a6be98262',1,'pi_regs_t::SR']]],
+  ['sr_5fcmd_18',['SR_CMD',['../sc64__ll_8c.html#a980b4ce766a4f518fcbf2c124adabe01',1,'sc64_regs_t']]],
+  ['start_19',['START',['../boot__io_8h.html#a23c61fcf584e98d4593c8b45dab8498a',1,'dpc_regs_t']]],
+  ['status_20',['STATUS',['../group__drive.html#a77011453fc6f25af5839e91bfac1d56a',1,'d64_regs_t']]],
+  ['sub_21',['sub',['../cheats_8c.html#aa6b48e504813823bcded53dbb2645315',1,'cheat_entry_t']]],
+  ['submenu_22',['submenu',['../ui__components_8h.html#ad4f2b342246c13cee51a157e581dd2b0',1,'component_context_menu_t::submenu'],['../ui__components_8h.html#a7662837116dd5f902c5934e710b051c4',1,'component_context_menu_t.list::submenu']]]
 ];

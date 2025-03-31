@@ -1,32 +1,4 @@
 var searchData=
 [
-  ['background_20image_0',['Adding a background image',['../md_docs_207__menu__customization.html#autotoc_md51',1,'']]],
-  ['background_5fempty_5fcolor_1',['BACKGROUND_EMPTY_COLOR',['../constants_8h.html#ad34ec4463c7da0f6da7f56f6d43f9f33',1,'constants.h']]],
-  ['background_5foverlay_5fcolor_2',['BACKGROUND_OVERLAY_COLOR',['../constants_8h.html#ab399c3a31a6aacaea384ee5552292590',1,'constants.h']]],
-  ['bgm_5fenabled_3',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
-  ['bitrate_4',['BITRATE',['../boot__io_8h.html#a43e0411e186298f185d39b80ea5f1d4f',1,'ai_regs_t']]],
-  ['boot_2eh_5',['boot.h',['../boot_8h.html',1,'']]],
-  ['boot_5faddress_6',['boot_address',['../rom__info_8h.html#afeb7118e65f58ed63767c1cd31be04d0',1,'rom_info_t']]],
-  ['boot_5fdevice_5ftype_5ft_7',['boot_device_type_t',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbd',1,'boot.h']]],
-  ['boot_5fio_2eh_8',['boot_io.h',['../boot__io_8h.html',1,'']]],
-  ['boot_5fparams_5ft_9',['boot_params_t',['../boot_8h.html#structboot__params__t',1,'']]],
-  ['boot_5freset_5ftype_5ft_10',['boot_reset_type_t',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6',1,'boot.h']]],
-  ['boot_5ftv_5ftype_5ft_11',['boot_tv_type_t',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353',1,'boot.h']]],
-  ['border_5fcolor_12',['BORDER_COLOR',['../constants_8h.html#a966901ace2cf6cba3fc9cec310150860',1,'constants.h']]],
-  ['border_5fthickness_13',['BORDER_THICKNESS',['../constants_8h.html#a8ed7a0f0ea48c9733bf7e57fe6eaf0f4',1,'constants.h']]],
-  ['boxart_5fheight_14',['BOXART_HEIGHT',['../constants_8h.html#aecb936f69f40e5bd052597baa49a11a2',1,'constants.h']]],
-  ['boxart_5fheight_5fdd_15',['BOXART_HEIGHT_DD',['../constants_8h.html#a01fa19b5e5acb8da72eba3edb9de2e81',1,'constants.h']]],
-  ['boxart_5fheight_5fmax_16',['BOXART_HEIGHT_MAX',['../constants_8h.html#a80cc0803f77cacc11c9f51de659f67dd',1,'constants.h']]],
-  ['boxart_5floading_5fcolor_17',['BOXART_LOADING_COLOR',['../constants_8h.html#a0e310295ec01558e62840b2bbfe95f47',1,'constants.h']]],
-  ['boxart_5fwidth_18',['BOXART_WIDTH',['../constants_8h.html#a05817fe257afbe0f071f9ecb5b5544db',1,'constants.h']]],
-  ['boxart_5fwidth_5fdd_19',['BOXART_WIDTH_DD',['../constants_8h.html#a592ea592852272bae7b9d81b937616b3',1,'constants.h']]],
-  ['boxart_5fwidth_5fmax_20',['BOXART_WIDTH_MAX',['../constants_8h.html#aaad71674bb2c83b1ced37370cdaeed60',1,'constants.h']]],
-  ['boxart_5fx_21',['BOXART_X',['../constants_8h.html#a1dd26d043582325cae03bf26e09a02fe',1,'constants.h']]],
-  ['boxart_5fx_5fdd_22',['BOXART_X_DD',['../constants_8h.html#a6f19a52ff8f1bc9df53e1d6350454d46',1,'constants.h']]],
-  ['boxart_5fx_5fjp_23',['BOXART_X_JP',['../constants_8h.html#a8fa931998a9d6d7d259f22ce213227bd',1,'constants.h']]],
-  ['boxart_5fy_24',['BOXART_Y',['../constants_8h.html#a42e7d267ca14ca1060cab46284922dea',1,'constants.h']]],
-  ['boxart_5fy_5fdd_25',['BOXART_Y_DD',['../constants_8h.html#aa6c714745010c0c56c59122639644a18',1,'constants.h']]],
-  ['boxart_5fy_5fjp_26',['BOXART_Y_JP',['../constants_8h.html#a409fb72df45fb8225b31d6b9dbb413a6',1,'constants.h']]],
-  ['browser_20options_27',['Browser options',['../md_docs_201__menu__controls.html#autotoc_md45',1,'']]],
-  ['byteswap_20on_20load_20command_28',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md28',1,'']]]
+  ['41_5fmp3_5fplayer_0',['41_mp3_player',['../md_docs_241__mp3__player.html',1,'']]]
 ];

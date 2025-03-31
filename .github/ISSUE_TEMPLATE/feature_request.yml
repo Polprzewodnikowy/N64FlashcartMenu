@@ -1,8 +1,9 @@
 name: Feature request
 description: Suggest an idea to help us improve.
 labels: 
-  - "Type: Feature request"
-  - "Status: waiting feedback"
+  - "enhancement"
+  - "low priority"
+  - "awaiting triage"
 body:
   - type: markdown
     attributes:

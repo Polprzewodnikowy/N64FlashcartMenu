@@ -41,22 +41,22 @@
 #define MIN(a,b)        ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
 
 /**
- * @brief Converts a value to kilobytes.
+ * @brief Converts a value to kibibytes.
  *
- * This macro converts the given value `x` to kilobytes.
+ * This macro converts the given value `x` to kibibytes.
  *
  * @param x The value to convert.
- * @return The value in kilobytes.
+ * @return The value in kibibytes.
  */
 #define KiB(x)          ((x) * 1024)
 
 /**
- * @brief Converts a value to megabytes.
+ * @brief Converts a value to mebibytes.
  *
- * This macro converts the given value `x` to megabytes.
+ * This macro converts the given value `x` to mebibytes.
  *
  * @param x The value to convert.
- * @return The value in megabytes.
+ * @return The value in mebibytes.
  */
 #define MiB(x)          ((x) * 1024 * 1024)
 

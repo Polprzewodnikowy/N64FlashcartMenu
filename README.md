@@ -8,7 +8,7 @@
 An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
 **This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
 
-## Flashcart Supported
+## Flashcart Support
 This menu aims to support as many N64 flashcarts as possible. The current state is:
 
 ### Supported

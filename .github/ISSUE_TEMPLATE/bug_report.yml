@@ -9,6 +9,8 @@ body:
       value: |
         # :warning: **Please read before raising the issue** :warning:
 
+        If you have a **question** that needs clarification on something, or need help in a particular situation, **DO NOT** open an issue here, create a discussion instead. _Otherwise it will be automatically closed!_ .
+
         Please make sure to provide as much information as possible. 
         Failing to do so will most likely end up on the issue being closed without discussion. Don't take offense at this, 
         whenever an issue is raised without following the template and/or adding the required information, too much time has to be spent going back and forth to obtain the details that are outlined below.

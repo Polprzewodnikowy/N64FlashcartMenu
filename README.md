@@ -80,10 +80,10 @@ Download the `OS64.v64` ROM from the latest [action run - assets] and place it i
 
 #### ED64 (X series)
 The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
-Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
+Download the `OS64.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64` folder.
 
 #### ED64 (P clone)
-Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.
+Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
 The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
 
 

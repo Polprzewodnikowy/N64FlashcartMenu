@@ -6,6 +6,39 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
+## Release Notes 2025-{next}
+
+- **New Features**
+	- TBD
+
+
+- **Bug Fixes**
+	- TBD
+
+
+- **Documentation**
+	- TBD
+
+
+- **Refactor**
+	- TBD
+
+- **Other**
+	- Updated libDragon SDK.
+	- Updated miniz library.
+
+### Breaking changes
+* TBD
+
+
+### Current known Issues
+* TBD
+
+
+### Deprecation notices
+* TBD
+
+
 ## Release Notes 2025-03-31
 
 - **New Features**

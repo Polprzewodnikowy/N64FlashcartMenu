@@ -11,7 +11,7 @@
 
 #define DEFAULT_FREQUENCY   (44100)
 #define NUM_BUFFERS         (4)
-#define NUM_CHANNELS        (3)
+#define NUM_CHANNELS        (16)
 
 static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
 
@@ -31,6 +31,8 @@ static void sound_reconfigure (int frequency) {
         }
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
+        // Initialize wav64 compression level 3 as we're going to use it
+        wav64_init_compression(3);
         mp3player_mixer_init();
         sound_initialized = true;
     }

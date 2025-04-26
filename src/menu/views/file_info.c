@@ -19,10 +19,13 @@ static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "
 
 static struct stat st;
 bool is_memory_pak_dump;
+bool is_memory_pak_dump_note;
 
 
 static char *format_file_type (char *name, bool is_directory) {
     is_memory_pak_dump = false;
+    is_memory_pak_dump_note = false;
+
     if (is_directory) {
         return "";
     } if (file_has_extensions(name, n64_rom_extensions)) {
@@ -44,6 +47,9 @@ static char *format_file_type (char *name, bool is_directory) {
     } else if (file_has_extensions(name, controller_pak_extensions)) {
         is_memory_pak_dump = true;
         return " Type: Controller Pak file\n";
+    } else if (check_cpaksmpk(name)) {
+        is_memory_pak_dump_note = true;
+        return " Type: Note of controller Pak file\n";
     } else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
     }
@@ -55,6 +61,9 @@ static void process (menu_t *menu) {
     if (is_memory_pak_dump && menu->actions.enter) {
         sound_play_effect(SFX_ENTER);
         menu->next_mode = MENU_MODE_CONTROLLER_PAK_DUMP_INFO;
+    } else if (is_memory_pak_dump_note  && menu->actions.enter) {
+        sound_play_effect(SFX_ENTER);
+        menu->next_mode = MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -99,7 +108,13 @@ static void draw (menu_t *menu, surface_t *d) {
             "A: Restore to Controller Pak\n"
             "B: Back"
         );
-    } else {
+    } else if (is_memory_pak_dump_note) {
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Restore note to Controller Pak\n"
+            "B: Back"
+        );
+    }else {
         ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
@@ -113,6 +128,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_file_info_init (menu_t *menu) {
     is_memory_pak_dump = false;
+    is_memory_pak_dump_note = false;
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
     if (stat(path_get(path), &st)) {

@@ -168,6 +168,7 @@ void dump_complete_cpak(int _port) {
     free(data);
 }
 
+
 bool check_accessories(int port) {
     
     joypad_accessory_type_t val =  joypad_get_accessory_type(port);

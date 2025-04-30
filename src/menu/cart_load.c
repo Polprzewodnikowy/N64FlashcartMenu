@@ -75,8 +75,9 @@ static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
 char *cart_load_convert_error_message (cart_load_err_t err) {
     switch (err) {
         case CART_LOAD_OK: return "Cart load OK";
-        case CART_LOAD_ERR_ROM_LOAD_FAIL: return "Error occurred during ROM loading";
-        case CART_LOAD_ERR_SAVE_LOAD_FAIL: return "Error occurred during save loading";
+        case CART_LOAD_ERR_ROM_LOAD_FAIL: return "Error occured during ROM loading";
+        case CART_LOAD_ERR_SAVE_LOAD_FAIL: return "Error occured during save loading";
+        case CART_LOAD_ERR_BOOT_MODE_FAIL: return "Error occured during boot mode setting";
         case CART_LOAD_ERR_64DD_PRESENT: return "64DD accessory is connected to the N64";
         case CART_LOAD_ERR_64DD_IPL_NOT_FOUND: return "Required 64DD IPL file was not found";
         case CART_LOAD_ERR_64DD_IPL_LOAD_FAIL: return "Error occurred during 64DD IPL loading";
@@ -123,6 +124,17 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
+    }
+
+    if (menu->settings.rom_fast_reboot_enabled) {
+        if (!flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST)) {
+            return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
+        }
+        menu->flashcart_err = flashcart_set_next_boot_mode(FLASHCART_REBOOT_MODE_ROM);
+        if (menu->flashcart_err != FLASHCART_OK) {
+            path_free(path);
+            return CART_LOAD_ERR_BOOT_MODE_FAIL;
+        }
     }
 
     path_free(path);

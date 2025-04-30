@@ -18,6 +18,12 @@ typedef struct {
 
     /** @brief Use 60 Hz refresh rate on a PAL console */
     bool pal60_enabled;
+    
+    /** @brief Use 60 Hz refresh rate on a PAL console with certain mods that do not properly the video output */
+    bool pal60_compatibility_mode;
+
+    /** @brief Direct the VI to force progressive scan output at 240p. Meant for TVs and other devices which struggle to display interlaced video. */
+    bool force_progressive_scan;
 
     /** @brief Show files/directories that are filtered in the browser */
     bool show_protected_entries;

@@ -175,7 +175,7 @@ static bool load_directory (menu_t *menu) {
 
     while (result == 0) {
         bool hide = false;
-    
+
         if (!menu->settings.show_protected_entries) {
             path_push(path, info.d_name);
             hide = path_is_hidden(path);
@@ -192,7 +192,7 @@ static bool load_directory (menu_t *menu) {
 
         if (!hide) {
             menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
-            
+
             entry_t *entry = &menu->browser.list[menu->browser.entries++];
 
             entry->name = strdup(info.d_name);

@@ -34,6 +34,15 @@ typedef struct {
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
 
+    /** @brief Hide file extensions */    
+    bool hide_extension;
+
+    /** @brief Hide rom tags */  
+    bool hide_rom_tags;
+
+    /** @brief Hide saves folder */ 
+    bool hide_saves_folder;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 

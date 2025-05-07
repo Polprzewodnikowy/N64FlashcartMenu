@@ -322,7 +322,10 @@ static void draw (menu_t *menu, surface_t *d) {
             );
         }
 
-        ui_components_context_menu_draw(&options_context_menu);
+        if (!menu->settings.rom_autoload_enabled) {
+            ui_components_context_menu_draw(&options_context_menu);
+        }
+        
     }
 
     rdpq_detach_show();

@@ -51,6 +51,30 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
+static char *strip_extension(const char *filename) { 
+    char *copy = strdup(filename);
+    if (!copy) return NULL;
+
+    char *dot = strrchr(copy, '.');
+    if (dot) *dot = '\0';
+
+    return copy;
+}
+
+static char *strip_rom_tags (const char *filename) {
+    char *name = strdup(filename);
+    for (char *p = name; *p; ++p) {
+        if (*p == '(' || *p == '[') {
+            *p = '\0';
+            break;
+        }
+    }
+    // Trim trailing space
+    for (char *end = name + strlen(name) - 1; end > name && *end == ' '; --end) {
+        *end = '\0';
+    }
+    return name;
+}
 
 static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
@@ -151,16 +175,24 @@ static bool load_directory (menu_t *menu) {
 
     while (result == 0) {
         bool hide = false;
-
+    
         if (!menu->settings.show_protected_entries) {
             path_push(path, info.d_name);
             hide = path_is_hidden(path);
             path_pop(path);
         }
+    
+        if (info.d_type == DT_DIR && menu->settings.hide_saves_folder) {
+            const char *name = info.d_name;
+            if (strcasecmp(name, "saves") == 0 || strstr(name, "/saves") || strstr(name, "\\saves")) {
+                result = dir_findnext(path_get(path), &info);
+                continue;
+            }
+        }
 
         if (!hide) {
             menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
-
+            
             entry_t *entry = &menu->browser.list[menu->browser.entries++];
 
             entry->name = strdup(info.d_name);
@@ -413,8 +445,39 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw_tabbed();
 
-    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
-
+    if (menu->settings.hide_extension || menu->settings.hide_rom_tags) {
+        entry_t *stripped_entries = malloc(sizeof(entry_t) * menu->browser.entries);
+        for (int i = 0; i < menu->browser.entries; i++) {
+            stripped_entries[i] = menu->browser.list[i];
+            char *name = menu->browser.list[i].name;
+    
+            if (menu->settings.hide_extension &&
+                (menu->browser.list[i].type == ENTRY_TYPE_ROM || menu->browser.list[i].type == ENTRY_TYPE_DISK || menu->browser.list[i].type == ENTRY_TYPE_EMULATOR)) {
+                name = strip_extension(name);
+            } else {
+                name = strdup(name);
+            }
+    
+            if (menu->settings.hide_rom_tags &&
+                (menu->browser.list[i].type == ENTRY_TYPE_ROM || menu->browser.list[i].type == ENTRY_TYPE_DISK || menu->browser.list[i].type == ENTRY_TYPE_EMULATOR)) {
+                char *stripped = strip_rom_tags(name);
+                free(name);
+                name = stripped;
+            }
+    
+            stripped_entries[i].name = name;
+        }
+    
+        ui_components_file_list_draw(stripped_entries, menu->browser.entries, menu->browser.selected);
+    
+        for (int i = 0; i < menu->browser.entries; i++) {
+            free(stripped_entries[i].name);
+        }
+        free(stripped_entries);
+    } else {
+        ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    }
+    
     const char *action = NULL;
 
     if (menu->browser.entry) {

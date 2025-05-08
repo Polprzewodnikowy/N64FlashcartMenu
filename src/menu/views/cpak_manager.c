@@ -17,7 +17,7 @@
 char * CPAK_PATH = "sd:/cpak_saves";
 char * CPAK_PATH_NO_PRE = "/cpak_saves";
 char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
-char * CPAK_NOTES_PATH_NO_PRE = "cpak_saves/notes";
+char * CPAK_NOTES_PATH_NO_PRE = "/cpak_saves/notes";
 
 bool use_rtc;
 rtc_time_t rtc_time;
@@ -26,6 +26,7 @@ char string_datetime_cpak[26];
 char controller_pak_name_notes[MAX_NUM_NOTES][MAX_STRING_LENGTH];
 
 short controller_selected;
+short index_selected;
 
 bool has_rumble;
 bool has_bio_sensor;
@@ -37,8 +38,10 @@ bool validate_pak;
 int total_elements;
 bool process_completed;
 bool start_complete_dump;
+bool start_single_note_dump;
 
 bool show_complete_dump_confirm_message;
+bool show_single_note_dump_confirm_message;
 bool show_complete_write_confirm_message;
 
 u8 fmLoadDir(const TCHAR* path, FILINFO *inf, u32 max_items);
@@ -52,6 +55,7 @@ void reset_vars(){
     process_completed = false;
     start_complete_dump = false;
     show_complete_dump_confirm_message = false;
+    show_single_note_dump_confirm_message = false;
     show_complete_write_confirm_message = false;
 }
 
@@ -135,7 +139,7 @@ void dump_complete_cpak(int _port) {
         
 
         if (read_mempak_sector(0, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            //"Failed to read mempak sector!"
+            debugf("Failed to read mempak sector %d\n", i);
             free(data);
             return;
         }
@@ -153,19 +157,104 @@ void dump_complete_cpak(int _port) {
 
     FILE *fp = fopen(complete_filename, "w");
     if (!fp) {
-        //"Failed to open file for writing!"
+        debugf("Failed to open file for writing: %s\n", complete_filename);
         free(data);
         return;
     }
 
     if (fwrite(data, 1, MEMPAK_BLOCK_SIZE * 128, fp) != MEMPAK_BLOCK_SIZE * 128) {
-        //"Failed to write data to file!"
+        debugf("Failed to write data to file: %s\n", complete_filename);
     } else {
         process_completed = true;
     }
     
     fclose(fp);
     free(data);
+}
+
+void dump_single_entry(int _port, unsigned short selected_index) {
+    process_completed = false;
+
+    entry_structure_t entry;
+    get_mempak_entry(_port, selected_index, &entry);
+    debugf("Entry %d: %s\n", selected_index, entry.name);
+
+    if (entry.valid) {
+        uint8_t* data = malloc(entry.blocks * MEMPAK_BLOCK_SIZE);
+        debugf("Reading %d blocks\n", entry.blocks);
+        read_mempak_entry_data(_port, &entry, data);
+        debugf("Read %d bytes\n", entry.blocks * MEMPAK_BLOCK_SIZE);
+
+        get_rtc_time(string_datetime_cpak);
+
+        char complete_filename_data[200];
+        char complete_filename_entry[200];
+
+        /*
+        We store 2 files : 
+        - CPAK_ : contains the data of the entry
+        - CPAKE_ : contains the header of the entry
+        */
+            
+
+        //This is for the complete CPAK save file
+        snprintf(complete_filename_data, sizeof(complete_filename_data), "%s/CPAK_%s(%s)%s_%d", CPAK_NOTES_PATH, entry.name, string_datetime_cpak ,NOTE_EXTENSION, entry.blocks);
+        debugf("Complete filename: %s\n", complete_filename_data);
+
+        //This is for only the entries
+        snprintf(complete_filename_entry, sizeof(complete_filename_entry), "%s/CPAKE_%s(%s)%s_%d", CPAK_NOTES_PATH, entry.name, string_datetime_cpak ,NOTE_EXTENSION, entry.blocks);
+        debugf("Complete filename e: %s\n", complete_filename_entry);
+
+        FILE *fp = fopen(complete_filename_data, "w");
+        if (fp == NULL) {
+            debugf("Failed to open file for writing: %s\n", complete_filename_data);
+            free(data);
+            return;
+        } else {
+            fwrite(data, 1, entry.blocks * MEMPAK_BLOCK_SIZE, fp);
+            fclose(fp);
+        }
+
+        debugf("Entry before dump: %s\n", entry.name);
+        debugf("Entry blocks: %d\n", entry.blocks);
+        debugf("Entry inode: %d\n", entry.inode);
+        debugf("Entry region: %d\n", entry.region);
+        debugf("Entry game_id: %d\n", entry.game_id);
+        debugf("Entry vendor: %ld\n", entry.vendor);
+        debugf("Entry entry_id: %d\n", entry.entry_id);
+        debugf("Entry valid: %d\n", entry.valid);
+
+        FILE *fp2 = fopen(complete_filename_entry, "w");
+        if (fp2 == NULL) {
+            debugf("Failed to open file for writing: %s\n", complete_filename_entry);
+            free(data);
+            return;
+        }
+
+        char buffer[1024];
+        sprintf(buffer, "%d", entry.blocks);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%d", entry.game_id);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%d", entry.inode);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%s", entry.name);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%d", entry.region);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%d", entry.valid);
+        fprintf(fp2, "%s\n", buffer);
+        sprintf(buffer, "%ld", entry.vendor);
+        fprintf(fp2, "%s\n", buffer);
+        fclose(fp2);
+
+        free(data);
+        process_completed = true;
+        debugf("Entry %d dumped successfully\n", selected_index);
+    } else {
+        debugf("Entry %d is not valid\n", selected_index);
+    }
+    
 }
 
 
@@ -196,7 +285,9 @@ static void process (menu_t *menu) {
         return;
     }
 
-    if (!show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
+    if (!show_complete_dump_confirm_message && 
+        !show_complete_write_confirm_message && 
+        !show_single_note_dump_confirm_message) {
         if(menu->actions.go_left) {
             sound_play_effect(SFX_SETTING);
             controller_selected = ((controller_selected - 1) + 4) % 4;
@@ -219,19 +310,40 @@ static void process (menu_t *menu) {
     if (has_mem) {
 
         // Pressing A : dump the controller pak
-        if (menu->actions.enter && use_rtc && !show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
+        if (menu->actions.enter && 
+            use_rtc && 
+            !show_complete_dump_confirm_message && 
+            !show_complete_write_confirm_message &&
+            !show_single_note_dump_confirm_message) {
             sound_play_effect(SFX_ENTER);
             show_complete_dump_confirm_message = true;
             return;
         } 
         // Pressing START : write a controller pak dump
-        else if (menu->actions.settings && use_rtc && !show_complete_write_confirm_message && !show_complete_dump_confirm_message) {
+        else if (menu->actions.settings && 
+            use_rtc && 
+            !show_complete_write_confirm_message && 
+            !show_complete_dump_confirm_message &&
+            !show_single_note_dump_confirm_message) {
             sound_play_effect(SFX_ENTER);
             show_complete_write_confirm_message = true;
             return;
         }
 
-        if (show_complete_dump_confirm_message && !show_complete_write_confirm_message) {
+        // Pressing L : dump a single note
+        else if (menu->actions.l && 
+            use_rtc && 
+            !show_complete_write_confirm_message && 
+            !show_complete_dump_confirm_message &&
+            !show_single_note_dump_confirm_message) {
+            sound_play_effect(SFX_ENTER);
+            show_single_note_dump_confirm_message = true;
+            return;
+        }
+
+        if (show_complete_dump_confirm_message && 
+            !show_complete_write_confirm_message &&
+            !show_single_note_dump_confirm_message) {
             if (menu->actions.enter) {
                 show_complete_dump_confirm_message = false;
                 sound_play_effect(SFX_ENTER);
@@ -241,10 +353,30 @@ static void process (menu_t *menu) {
                 show_complete_dump_confirm_message = false;
             }
             return;
-        } else if (show_complete_write_confirm_message && !show_complete_dump_confirm_message) {
+        } else if (show_complete_write_confirm_message && 
+            !show_complete_dump_confirm_message &&
+            !show_single_note_dump_confirm_message) {
             if (menu->actions.back) {
                 show_complete_write_confirm_message = false;
                 sound_play_effect(SFX_EXIT);
+            }
+            return;
+        } else if (show_single_note_dump_confirm_message && 
+            !show_complete_dump_confirm_message &&
+            !show_complete_write_confirm_message) {
+            if (menu->actions.enter) {
+                show_single_note_dump_confirm_message = false;
+                sound_play_effect(SFX_ENTER);
+                start_single_note_dump = true;
+            } else if (menu->actions.back) {
+                show_single_note_dump_confirm_message = false;
+                sound_play_effect(SFX_EXIT);
+            } else if (menu->actions.go_left) {
+                sound_play_effect(SFX_CURSOR);
+                index_selected = ((index_selected - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+            } else if (menu->actions.go_right) {
+                sound_play_effect(SFX_CURSOR);
+                index_selected = ((index_selected + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
             }
             return;
         }
@@ -290,9 +422,8 @@ static void draw (menu_t *menu, surface_t *d) {
                     if (note.valid) {
                         char temp[16];
                         utils_truncate_string(note.name, temp, 15);
-                        //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s", temp);
-                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", temp , get_cpak_save_region(note.region));
-                        //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s %s", note.name , get_cpak_save_region(note.region));
+                        snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%-16.16s %-17.17s (%-3.3d blocks)",
+                             temp , get_cpak_save_region(note.region), note.blocks);
                         if (!has_tot_element_checked) total_elements++;
                     } else {
                         strcpy(controller_pak_name_notes[i], " ");
@@ -411,7 +542,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "R: Options\n"
     );
 
-    if (show_complete_dump_confirm_message && !start_complete_dump) {
+    if (show_complete_dump_confirm_message && 
+        !start_complete_dump) {
         ui_components_messagebox_draw(
             "Do you want to dump the CPAK?\n\n"
             "A: Yes        B: No"
@@ -424,10 +556,28 @@ static void draw (menu_t *menu, surface_t *d) {
         );   
     } 
 
+    if (show_single_note_dump_confirm_message &&
+        !start_single_note_dump) {
+        ui_components_messagebox_draw(
+            "Which note would you like to dump?\n\n"
+            "Note selected: N.%-2.2d\n\n"
+            "A: Select    B: No\n"
+            "<- / ->: Select note number",
+            index_selected + 1
+        );
+    }
+
     if (start_complete_dump) {
         rdpq_detach_show();
         dump_complete_cpak(controller_selected);
         start_complete_dump = false;
+        return;
+    }
+
+    if (start_single_note_dump) {
+        rdpq_detach_show();
+        dump_single_entry(controller_selected, index_selected);
+        start_single_note_dump = false;
         return;
     }
 

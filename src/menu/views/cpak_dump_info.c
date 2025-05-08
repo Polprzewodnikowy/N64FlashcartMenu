@@ -108,8 +108,15 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "%s\n"
         "\n"
+        "\n",
+        cpak_path
+    );
+    ui_components_main_text_draw(STL_ORANGE,
+        ALIGN_CENTER, VALIGN_TOP,
+        "\n"
+        "\n"
+        "\n"
         "%s\n",
-        cpak_path,
         failure_message
     );
 

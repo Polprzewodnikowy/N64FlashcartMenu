@@ -10,8 +10,8 @@ static uint16_t __get_header_checksum( uint16_t *block );
 static int __validate_header( uint8_t *sector );
 static uint8_t __get_toc_checksum( uint8_t *sector );
 static int __validate_toc( uint8_t *sector );
-static char __n64_to_ascii( char c );
-static char __ascii_to_n64( char c );
+static int __n64_to_utf8( uint8_t c, char *out );
+static int __utf8_to_n64(const char *in, uint8_t *out);
 static int __validate_region( uint8_t region );
 static int __read_note( uint8_t *tnote, entry_structure_t *note );
 static int __write_note( entry_structure_t *note, uint8_t *out_note );
@@ -19,9 +19,14 @@ static int __get_num_pages( uint8_t *sector, int inode );
 static int __get_free_space (uint8_t *sector);
 static int __get_note_block (uint8_t *sector, int inode, int block);
 static int __get_valid_toc (int controller);
+int get_mempak_entry_mod( int controller, int entry, entry_structure_t *entry_data );
 int write_mempak_data_based_on_entry (int controller, entry_structure_t *entry, uint8_t *data);
-
-
+int write_mempak_address_mod (int controller, uint16_t address, uint8_t *data);
+int write_mempak_sector_mod (int controller, int sector, uint8_t *sector_data);
+int read_mempak_sector_mod( int controller, int sector, uint8_t *sector_data );
+int read_mempak_address_mod( int controller, uint16_t address, uint8_t *data );
+static uint16_t __calc_address_crc( uint16_t address );
+static uint8_t __calc_data_crc (uint8_t *data);
 
 char * CPAK_ENTRIES_PATH = "sd:/aio/cpak_saves/entries";
 char * CPAK_ENTRIES_PATH_NO_PRE = "/aio/cpak_saves/entries";
@@ -81,9 +86,19 @@ bool restore_controller_pak_note(int controller) {
     for (int i = 0; i < 16; i++) {
 
         entry_structure_t entry;
-        int val = get_mempak_entry(controller, i, &entry);
+        int val = get_mempak_entry_mod(controller, i, &entry);
 
         if (!entry.valid) {
+
+            int free_space = get_mempak_free_space(controller);
+
+            if (entry.blocks > free_space){
+                sprintf(failure_message_note, "Not enough space on controller %d!\n(Required: %d / Available: %d)", controller + 1, entry.blocks, free_space);
+                return false;
+            } else {
+                val = get_mempak_entry_mod(controller, i, &entry);
+            }
+
             delete_mempak_entry(controller, &entry);
             FILE *fpe = fopen(filename_e, "r");
 
@@ -113,17 +128,19 @@ bool restore_controller_pak_note(int controller) {
 
             fclose(fpe);
 
-            int free_space = get_mempak_free_space(controller);
-
-            if (entry.blocks > free_space){
-                sprintf(failure_message_note, "Not enough space on controller %d!\n(Required: %d / Available: %d)", controller + 1, entry.blocks, free_space);
-                return false;
-            }
-
+            debugf("Entry before write: %s\n", entry.name);
+            debugf("Entry blocks: %d\n", entry.blocks);
+            debugf("Entry inode: %d\n", entry.inode);
+            debugf("Entry region: %d\n", entry.region);
+            debugf("Entry game_id: %d\n", entry.game_id);
+            debugf("Entry vendor: %ld\n", entry.vendor);
+            debugf("Entry entry_id: %d\n", entry.entry_id);
+            debugf("Entry valid: %d\n", entry.valid);
+            
             FILE *fp = fopen(filename, "rb");
 
             if (!fp) {
-                //"Failed to open file for reading!"
+                debugf("ERROR: Unable to open: %s\n", filename);
                 return false;
             }
 
@@ -132,8 +149,17 @@ bool restore_controller_pak_note(int controller) {
             fclose(fp);
 
             val = write_mempak_data_based_on_entry(controller, &entry, data);
+            debugf("Result of writing: %d\n", val);
 
             free(data);
+            debugf("Entry after write: %s\n", entry.name);
+            debugf("Entry blocks: %d\n", entry.blocks);
+            debugf("Entry inode: %d\n", entry.inode);
+            debugf("Entry region: %d\n", entry.region);
+            debugf("Entry game_id: %d\n", entry.game_id);
+            debugf("Entry vendor: %ld\n", entry.vendor);
+            debugf("Entry entry_id: %d\n", entry.entry_id);
+            debugf("Entry valid: %d\n", entry.valid);
             break;
         } 
     }
@@ -172,13 +198,24 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_CENTER, VALIGN_TOP,
         "Controller Pak dump:\n"
     );
+    
     ui_components_main_text_draw(STL_GREEN,
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
         "%s\n"
         "\n"
+        "\n"
+        "\n",
+        cpak_note_path
+    );
+
+    ui_components_main_text_draw(STL_ORANGE,
+        ALIGN_CENTER, VALIGN_TOP,
+        "\n"
+        "\n"
+        "\n"
+        "\n"
         "%s\n",
-        cpak_note_path,
         failure_message_note
     );
 
@@ -371,133 +408,191 @@ static int __validate_toc( uint8_t *sector )
 }
 
 /**
- * @brief Convert a N64 mempak character to ASCII
+ * @brief Convert a Controller Pak character to UTF-8
+ *
+ * The codepage used by the controller pak contains a subset of ASCII and
+ * some Katakana.
  *
  * @param[in] c
- *            A character read from a mempak entry title
+ *            A character read from a Controller Pak entry title
+ * @param[out] out
+ *            Output buffer to write the bytes to (at least 3 bytes).
  *
- * @return ASCII equivalent of character read
+ * @return    The number of bytes written to the output buffer
  */
-static char __n64_to_ascii( char c )
+static int __n64_to_utf8( uint8_t c, char *out )
 {
     /* Miscelaneous chart */
     switch( c )
     {
         case 0x00:
-            return 0;
+            *out++ = 0; return 1;
         case 0x0F:
-            return ' ';
+            *out++ = ' '; return 1;
         case 0x34:
-            return '!';
+            *out++ = '!'; return 1;
         case 0x35:
-            return '\"';
+            *out++ = '\"'; return 1;
         case 0x36:
-            return '#';
+            *out++ = '#'; return 1;
         case 0x37:
-            return '`';
+            *out++ = '`'; return 1;
         case 0x38:
-            return '*';
+            *out++ = '*'; return 1;
         case 0x39:
-            return '+';
+            *out++ = '+'; return 1;
         case 0x3A:
-            return ',';
+            *out++ = ','; return 1;
         case 0x3B:
-            return '-';
+            *out++ = '-'; return 1;
         case 0x3C:
-            return '.';
+            *out++ = '.'; return 1;
         case 0x3D:
-            return '/';
+            *out++ = '/'; return 1;
         case 0x3E:
-            return ':';
+            *out++ = ':'; return 1;
         case 0x3F:
-            return '=';
+            *out++ = '='; return 1;
         case 0x40:
-            return '?';
+            *out++ = '?'; return 1;
         case 0x41:
-            return '@';
+            *out++ = '@'; return 1;
     }
 
     /* Numbers */
     if( c >= 0x10 && c <= 0x19 )
     {
-        return '0' + (c - 0x10);
+        *out++ = '0' + (c - 0x10);
+        return 1;
     }
 
     /* Uppercase ASCII */
     if( c >= 0x1A && c <= 0x33 )
     {
-        return 'A' + (c - 0x1A);
+        *out++ = 'A' + (c - 0x1A);
+        return 1;
+    }
+
+    /* Katakana and CJK symbols */
+    if( c >= 0x42 && c <= 0x94 )
+    {
+        const int cjk_base = 0x3000;
+        static uint8_t cjk_map[83] = { 2, 155, 156, 161, 163, 165, 167, 169, 195, 227, 229, 231, 242, 243, 162, 164, 166, 168, 170, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 196, 198, 200, 202, 203, 204, 205, 206, 207, 210, 213, 216, 219, 222, 223, 224, 225, 226, 228, 230, 232, 233, 234, 235, 236, 237, 239, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 197, 199, 201, 208, 211, 214, 217, 220, 209, 212, 215, 218, 221 };
+        uint16_t codepoint = cjk_base + cjk_map[c - 0x42];
+        *out++ = 0xE0 | ((codepoint >> 12) & 0x0F);
+        *out++ = 0x80 | ((codepoint >> 6) & 0x3F);
+        *out++ = 0x80 | (codepoint & 0x3F);
+        return 3;
     }
 
     /* Default to space for unprintables */
-    return ' ';
+    *out++ = ' ';
+    return 1;
 }
+
+#include <stdint.h>
 
 /**
- * @brief Convert an ASCII character to a N64 mempak character
+ * @brief Convert a UTF-8 sequence (ASCII subset + Katakana/CJK) back to a Controller Pak code
  *
- * If the character passed in is one that the N64 mempak doesn't support, this
- * function will default to a space.
+ * @param[in]  in      Pointer to UTF-8 bytes
+ * @param[out] out     Pointer to uint8_t where the code will be stored
  *
- * @param[in] c
- *            An ASCII character
- *
- * @return A N64 mempak character equivalent to the ASCII character passed in
+ * @return Number of bytes consumed from `in` (1 or 3)
  */
-static char __ascii_to_n64( char c )
+static int __utf8_to_n64(const char *in, uint8_t *out)
 {
-    /* Miscelaneous chart */
-    switch( c )
-    {
-        case 0:
-            return 0x00;
-        case ' ':
-            return 0x0F;
-        case '!':
-            return 0x34;
-        case '\"':
-            return 0x35;
-        case '#':
-            return 0x36;
-        case '`':
-            return 0x37;
-        case '*':
-            return 0x38;
-        case '+':
-            return 0x39;
-        case ',':
-            return 0x3A;
-        case '-':
-            return 0x3B;
-        case '.':
-            return 0x3C;
-        case '/':
-            return 0x3D;
-        case ':':
-            return 0x3E;
-        case '=':
-            return 0x3F;
-        case '?':
-            return 0x40;
-        case '@':
-            return 0x41;
+    uint32_t codepoint = 0;
+    int consumed = 0;
+
+    unsigned char b0 = (unsigned char)in[0];
+    if (b0 < 0x80) {
+        // ASCII (including control null)
+        codepoint = b0;
+        consumed = 1;
+    }
+    else {
+        // expect exactly three-byte sequence for our CJK/Katakana block
+        unsigned char b1 = (unsigned char)in[1];
+        unsigned char b2 = (unsigned char)in[2];
+        if ((b0 & 0xF0) == 0xE0 &&
+            (b1 & 0xC0) == 0x80 &&
+            (b2 & 0xC0) == 0x80)
+        {
+            codepoint  = ((b0 & 0x0F) << 12);
+            codepoint |= ((b1 & 0x3F) << 6);
+            codepoint |=  (b2 & 0x3F);
+            consumed = 3;
+        } else {
+            // invalid UTF-8 for our purposes → treat as space
+            *out = 0x0F;
+            return 1;
+        }
     }
 
-    /* Numbers */
-    if( c >= '0' && c <= '9' )
-    {
-        return 0x10 + (c - '0');
+    // 1) Null
+    if (codepoint == 0x0000) {
+        *out = 0x00;
+        return consumed;
+    }
+    // 2) Space
+    if (codepoint == ' ') {
+        *out = 0x0F;
+        return consumed;
     }
 
-    /* Uppercase ASCII */
-    if( c >= 'A' && c <= 'Z' )
-    {
-        return 0x1A + (c - 'A');
+    // 3) Miscellaneous single-byte punctuation
+    switch (codepoint) {
+        case '!':  *out = 0x34; return consumed;
+        case '\"': *out = 0x35; return consumed;
+        case '#':  *out = 0x36; return consumed;
+        case '`':  *out = 0x37; return consumed;
+        case '*':  *out = 0x38; return consumed;
+        case '+':  *out = 0x39; return consumed;
+        case ',':  *out = 0x3A; return consumed;
+        case '-':  *out = 0x3B; return consumed;
+        case '.':  *out = 0x3C; return consumed;
+        case '/':  *out = 0x3D; return consumed;
+        case ':':  *out = 0x3E; return consumed;
+        case '=':  *out = 0x3F; return consumed;
+        case '?':  *out = 0x40; return consumed;
+        case '@':  *out = 0x41; return consumed;
     }
 
-    /* Default to space for unprintables */
-    return 0x0F;
+    // 4) Digits '0'–'9' → 0x10–0x19
+    if (codepoint >= '0' && codepoint <= '9') {
+        *out = 0x10 + (codepoint - '0');
+        return consumed;
+    }
+
+    // 5) Uppercase ASCII 'A'–'Z' → 0x1A–0x33
+    if (codepoint >= 'A' && codepoint <= 'Z') {
+        *out = 0x1A + (codepoint - 'A');
+        return consumed;
+    }
+
+    // 6) Katakana/CJK block
+    //    mirror the same mapping array you used for UTF-8 output:
+    {
+        static const uint8_t cjk_map[83] = {
+            2,155,156,161,163,165,167,169,195,227,229,231,242,243,162,164,166,168,170,171,173,175,177,179,181,183,185,187,189,191,193,
+            196,198,200,202,203,204,205,206,207,210,213,216,219,222,223,224,225,226,228,230,232,233,234,235,236,237,239,172,174,176,178,180,
+            182,184,186,188,190,192,194,197,199,201,208,211,214,217,220,209,212,215,218,221
+        };
+        const uint16_t base = 0x3000;
+        for (int i = 0; i < 83; i++) {
+            if (codepoint == (base + cjk_map[i])) {
+                *out = (uint8_t)(0x42 + i);
+                return consumed;
+            }
+        }
+    }
+
+    // 7) Fallback → space
+    *out = 0x0F;
+    return consumed;
 }
+
 
 /**
  * @brief Check a region read from a mempak entry for validity
@@ -569,22 +664,24 @@ static int __read_note( uint8_t *tnote, entry_structure_t *note )
     /* Translate n64 to ascii */
     memset( note->name, 0, sizeof( note->name ) );
 
+    int nidx = 0;
     for( int i = 0; i < 16; i++ )
     {
-        note->name[i] = __n64_to_ascii( tnote[0x10 + i] );
+        if ( tnote[0x10 + i] == 0 ) break;
+        nidx += __n64_to_utf8( tnote[0x10 + i], &note->name[nidx] );
     }
 
-    /* Find the last position */
-    for( int i = 0; i < 17; i++ )
+    /* Separator between name and extension */
+    note->name[nidx++] = '.';
+
+    for( int i = 0; i < 4; i++ )
     {
-        if( note->name[i] == 0 )
-        {
-            /* Here it is! */
-            note->name[i]   = '.';
-            note->name[i+1] = __n64_to_ascii( tnote[0xC] );
-            break;
-        }
+        if ( tnote[0xC + i] == 0 ) break;
+        nidx += __n64_to_utf8( tnote[0xC + i], &note->name[nidx] );
     }
+
+    /* String terminator */
+    note->name[nidx++] = 0;
 
     /* Validate entries */
     if( note->inode < BLOCK_VALID_FIRST || note->inode > BLOCK_VALID_LAST )
@@ -617,49 +714,63 @@ static int __read_note( uint8_t *tnote, entry_structure_t *note )
  * @retval 0 if the note was converted properly
  * @retval -1 if the parameters were invalid
  */
-static int __write_note( entry_structure_t *note, uint8_t *out_note )
+static int __write_note(entry_structure_t *note, uint8_t *out_note)
 {
-    char tname[19];
-    if( !out_note || !note ) { return -1; }
+    if (!note || !out_note) return -1;
 
-    /* Start with baseline */
-    memset( out_note, 0, 32 );
+    /* 1) zero the 32-byte pak entry */
+    memset(out_note, 0, 32);
 
-    /* Easy stuff */
+    /* 2) easy header bits */
     out_note[0] = (note->vendor >> 16) & 0xFF;
-    out_note[1] = (note->vendor >> 8) & 0xFF;
-    out_note[2] = note->vendor & 0xFF;
-
+    out_note[1] = (note->vendor >>  8) & 0xFF;
+    out_note[2] =  note->vendor        & 0xFF;
     out_note[3] = note->region;
-
-    /* Important stuff */
     out_note[4] = (note->game_id >> 8) & 0xFF;
-    out_note[5] = note->game_id & 0xFF;
-    out_note[6] = (note->inode >> 8) & 0xFF;
-    out_note[7] = note->inode & 0xFF;
+    out_note[5] =  note->game_id       & 0xFF;
+    out_note[6] = (note->inode   >> 8) & 0xFF;
+    out_note[7] =  note->inode         & 0xFF;
 
-    /* Fields that generally stay the same on official saves */
+    /* 3) official-save constants */
     out_note[8] = 0x02;
     out_note[9] = 0x03;
 
-    /* Translate ascii to n64 */
-    memcpy( tname, note->name, sizeof( note->name ) );
-    for( int i = 18; i >= 0; i-- )
-    {
-        if( tname[i] == '.' )
-        {
-            /* Found extension */
-            out_note[0xC] = __ascii_to_n64( tname[i+1] );
+    /* 4) work on a local, NUL-terminated copy of the name */
+    char tname[sizeof(note->name) + 1];
+    memcpy(tname, note->name, sizeof(note->name));
+    tname[sizeof(note->name)] = '\0';  /* ensure termination */
 
-            /* Erase these as they have been taken care of */
-            tname[i] = 0;
-            tname[i+1] = 0;
+    /* 5) find a ‘.’ for extension, if any */
+    char *dot = NULL;
+    for (char *p = tname + strlen(tname); p > tname; --p) {
+        if (*p == '.') { dot = p; break; }
+    }
+    if (dot) {
+        /* convert the first codepoint after the dot */
+        uint8_t extcode;
+        int consumed = __utf8_to_n64(dot + 1, &extcode);
+        out_note[0x0C] = extcode;
+        /* zap the dot + its bytes so they won’t show up in the name */
+        dot[0] = '\0';
+        for (int i = 1; i <= consumed; i++) {
+            if (dot[i] == '\0') break;
+            dot[i] = '\0';
         }
     }
 
-    for( int i = 0; i < 16; i++ )
-    {
-        out_note[0x10 + i] = __ascii_to_n64( tname[i] );
+    /* 6) walk the remaining UTF-8 name, emit up to 16 N64 codes */
+    const char *in = tname;
+    int written = 0;
+    while (written < 16 && *in) {
+        uint8_t code;
+        int len = __utf8_to_n64(in, &code);
+        out_note[0x10 + written] = code;
+        in += len;
+        written++;
+    }
+    /* 7) pad with spaces (0x0F) */
+    for (; written < 16; written++) {
+        out_note[0x10 + written] = 0x0F;
     }
 
     return 0;
@@ -811,7 +922,7 @@ static int __get_valid_toc( int controller )
     uint8_t data[MEMPAK_BLOCK_SIZE];
 
     /* First check to see that the header block is valid */
-    if( read_mempak_sector( controller, 0, data ) )
+    if( read_mempak_sector_mod( controller, 0, data ) )
     {
         /* Couldn't read header */
         return -2;
@@ -824,7 +935,7 @@ static int __get_valid_toc( int controller )
     }
 
     /* Try to read the first TOC */
-    if( read_mempak_sector( controller, 1, data ) )
+    if( read_mempak_sector_mod( controller, 1, data ) )
     {
         /* Couldn't read header */
         return -2;
@@ -833,7 +944,7 @@ static int __get_valid_toc( int controller )
     if( __validate_toc( data ) )
     {
         /* First TOC is bad.  Maybe the second works? */
-        if( read_mempak_sector( controller, 2, data ) )
+        if( read_mempak_sector_mod( controller, 2, data ) )
         {
             /* Couldn't read header */
             return -2;
@@ -883,7 +994,7 @@ int write_mempak_data_based_on_entry( int controller, entry_structure_t *entry, 
     }
 
     /* Grab the valid TOC to get free space */
-    if( read_mempak_sector( controller, toc, sector ) )
+    if( read_mempak_sector_mod( controller, toc, sector ) )
     {
         /* Couldn't read TOC */
         return -2;
@@ -939,7 +1050,7 @@ int write_mempak_data_based_on_entry( int controller, entry_structure_t *entry, 
     {
         int block = __get_note_block( sector, entry->inode, i );
 
-        if( write_mempak_sector( controller, block, data + (i * MEMPAK_BLOCK_SIZE) ) )
+        if( write_mempak_sector_mod( controller, block, data + (i * MEMPAK_BLOCK_SIZE) ) )
         {
             /* Couldn't write a sector */
             return -3;
@@ -951,7 +1062,7 @@ int write_mempak_data_based_on_entry( int controller, entry_structure_t *entry, 
     {
         entry_structure_t tmp_entry;
 
-        if( read_mempak_address( controller, (3 * MEMPAK_BLOCK_SIZE) + (i * 32), tmp_data ) )
+        if( read_mempak_address_mod( controller, (3 * MEMPAK_BLOCK_SIZE) + (i * 32), tmp_data ) )
         {
             /* Couldn't read note database */
             return -2;
@@ -977,14 +1088,14 @@ int write_mempak_data_based_on_entry( int controller, entry_structure_t *entry, 
     sector[1] = __get_toc_checksum( sector );
 
     /* Write back to alternate TOC first before erasing the known valid one */
-    if( write_mempak_sector( controller, ( toc == 1 ) ? 2 : 1, sector ) )
+    if( write_mempak_sector_mod( controller, ( toc == 1 ) ? 2 : 1, sector ) )
     {
         /* Failed to write alternate TOC */
         return -2;
     }
 
     /* Write back to good TOC now that alternate is updated */
-    if( write_mempak_sector( controller, toc, sector ) )
+    if( write_mempak_sector_mod( controller, toc, sector ) )
     {
         /* Failed to write alternate TOC */
         return -2;
@@ -994,11 +1105,305 @@ int write_mempak_data_based_on_entry( int controller, entry_structure_t *entry, 
     __write_note( entry, tmp_data );
 
     /* Store entry to empty slot on mempak */
-    if( write_mempak_address( controller, (3 * MEMPAK_BLOCK_SIZE) + (entry->entry_id * 32), tmp_data ) )
+    if( write_mempak_address_mod( controller, (3 * MEMPAK_BLOCK_SIZE) + (entry->entry_id * 32), tmp_data ) )
     {
         /* Couldn't update note database */
         return -2;
     }
 
     return 0;
+}
+
+
+
+int write_mempak_address_mod( int controller, uint16_t address, uint8_t *data )
+{
+    uint8_t output[64];
+    uint8_t SI_write_mempak_block[64];
+    int ret;
+
+    /* Controller must be in range */
+    if( controller < 0 || controller > 3 ) { return -1; }
+
+    /* Last byte must be 0x01 to signal to the SI to process data */
+    memset( SI_write_mempak_block, 0, 64 );
+    SI_write_mempak_block[56] = 0xfe;
+    SI_write_mempak_block[63] = 0x01;
+
+    /* Start command at the correct channel to write from the right mempak */
+    SI_write_mempak_block[controller]     = 0x23;
+    SI_write_mempak_block[controller + 1] = 0x01;
+    SI_write_mempak_block[controller + 2] = 0x03;
+
+    /* Calculate CRC on address */
+    uint16_t write_address = __calc_address_crc( address );
+    SI_write_mempak_block[controller + 3] = (write_address >> 8) & 0xFF;
+    SI_write_mempak_block[controller + 4] = write_address & 0xFF;
+
+    /* Place the data to be written */
+    memcpy( &SI_write_mempak_block[controller + 5], data, 32 );
+
+    /* Leave room for CRC to come back */
+    SI_write_mempak_block[controller + 5 + 32] = 0xFF;
+
+    joybus_exec( SI_write_mempak_block, &output );
+
+    /* Calculate CRC on output */
+    uint8_t crc = __calc_data_crc( &output[controller + 5] );
+
+    if( crc == output[controller + 5 + 32] )
+    {
+        /* Data was written successfully */
+        ret = 0;
+    }
+    else
+    {
+        if( crc == (output[controller + 5 + 32] ^ 0xFF) )
+        {
+            /* Pak not present! */
+            ret = -2;
+        }
+        else
+        {
+            /* Pak returned bad data */
+            ret = -3;
+        }
+    }
+
+    return ret;
+}
+
+
+
+
+
+
+
+int get_mempak_entry_mod( int controller, int entry, entry_structure_t *entry_data )
+{
+    uint8_t data[MEMPAK_BLOCK_SIZE];
+    int toc;
+
+    if( entry < 0 || entry > 15 ) { return -1; }
+    if( entry_data == 0 ) { return -1; }
+
+    /* Make sure Controller Pak is valid */
+    if( (toc = __get_valid_toc( controller )) <= 0 )
+    {
+        /* Bad Controller Pak or was removed, return */
+        return -2;
+    }
+
+    /* Entries are spread across two sectors, but we can luckly grab just one
+       with a single Controller Pak read */
+    if( read_mempak_address_mod( controller, (3 * MEMPAK_BLOCK_SIZE) + (entry * 32), data ) )
+    {
+        /* Couldn't read note database */
+        return -2;
+    }
+
+    if( __read_note( data, entry_data ) )
+    {
+        /* Note is most likely empty, don't bother getting length */
+        return 0;
+    }
+
+    /* Grab the TOC sector */
+    if( read_mempak_sector_mod( controller, toc, data ) )
+    {
+        /* Couldn't read TOC */
+        return -2;
+    }
+
+    /* Get the length of the entry */
+    int blocks = __get_num_pages( data, entry_data->inode );
+
+    if( blocks > 0 )
+    {
+        /* Valid entry */
+        entry_data->blocks = blocks;
+        entry_data->entry_id = entry;
+        return 0;
+    }
+    else
+    {
+        /* Invalid TOC */
+        entry_data->valid = 0;
+        return 0;
+    }
+}
+
+
+
+int write_mempak_sector_mod( int controller, int sector, uint8_t *sector_data )
+{
+    if( sector < 0 || sector >= 128 ) { return -1; }
+    if( sector_data == 0 ) { return -1; }
+
+    /* Sectors are 256 bytes, a mempak writes 32 bytes at a time */
+    for( int i = 0; i < 8; i++ )
+    {
+        if( write_mempak_address_mod( controller, (sector * MEMPAK_BLOCK_SIZE) + (i * 32), sector_data + (i * 32) ) )
+        {
+            /* Failed to read a block */
+            return -2;
+        }
+    }
+
+    return 0;
+}
+
+int read_mempak_sector_mod( int controller, int sector, uint8_t *sector_data )
+{
+    if( sector < 0 || sector >= 128 ) { return -1; }
+    if( sector_data == 0 ) { return -1; }
+
+    /* Sectors are 256 bytes, a mempak reads 32 bytes at a time */
+    for( int i = 0; i < 8; i++ )
+    {
+        if( read_mempak_address_mod( controller, (sector * MEMPAK_BLOCK_SIZE) + (i * 32), sector_data + (i * 32) ) )
+        {
+            /* Failed to read a block */
+            return -2;
+        }
+    }
+
+    return 0;
+}
+
+int read_mempak_address_mod( int controller, uint16_t address, uint8_t *data )
+{
+    uint8_t output[64];
+    uint8_t SI_read_mempak_block[64];
+    int ret;
+
+    /* Controller must be in range */
+    if( controller < 0 || controller > 3 ) { return -1; }
+
+    /* Last byte must be 0x01 to signal to the SI to process data */
+    memset( SI_read_mempak_block, 0, 64 );
+    SI_read_mempak_block[56] = 0xfe;
+    SI_read_mempak_block[63] = 0x01;
+
+    /* Start command at the correct channel to read from the right mempak */
+    SI_read_mempak_block[controller]     = 0x03;
+    SI_read_mempak_block[controller + 1] = 0x21;
+    SI_read_mempak_block[controller + 2] = 0x02;
+
+    /* Calculate CRC on address */
+    uint16_t read_address = __calc_address_crc( address );
+    SI_read_mempak_block[controller + 3] = (read_address >> 8) & 0xFF;
+    SI_read_mempak_block[controller + 4] = read_address & 0xFF;
+
+    /* Leave room for 33 bytes (32 bytes + CRC) to come back */
+    memset( &SI_read_mempak_block[controller + 5], 0xFF, 33 );
+
+    joybus_exec( SI_read_mempak_block, &output );
+
+    /* Copy data correctly out of command */
+    memcpy( data, &output[controller + 5], 32 );
+
+    /* Validate CRC */
+    uint8_t crc = __calc_data_crc( &output[controller + 5] );
+
+    if( crc == output[controller + 5 + 32] )
+    {
+        /* Data was read successfully */
+        ret = 0;
+    }
+    else
+    {
+        if( crc == (output[controller + 5 + 32] ^ 0xFF) )
+        {
+            /* Pak not present! */
+            ret = -2;
+        }
+        else
+        {
+            /* Pak returned bad data */
+            ret = -3;
+        }
+    }
+
+    return ret;
+}
+
+/**
+ * @brief Calculate the 5 bit CRC on a mempak address
+ *
+ * This function, given an address intended for a mempak read or write, will
+ * calculate the CRC on the address, returning the corrected address | CRC.
+ *
+ * @param[in] address
+ *            The mempak address to calculate CRC over
+ *
+ * @return The mempak address | CRC
+ */
+static uint16_t __calc_address_crc( uint16_t address )
+{
+    /* CRC table */
+    uint16_t xor_table[16] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x15, 0x1F, 0x0B, 0x16, 0x19, 0x07, 0x0E, 0x1C, 0x0D, 0x1A, 0x01 };
+    uint16_t crc = 0;
+
+    /* Make sure we have a valid address */
+    address &= ~0x1F;
+
+    /* Go through each bit in the address, and if set, xor the right value into the output */
+    for( int i = 15; i >= 5; i-- )
+    {
+        /* Is this bit set? */
+        if( ((address >> i) & 0x1) )
+        {
+           crc ^= xor_table[i];
+        }
+    }
+
+    /* Just in case */
+    crc &= 0x1F;
+
+    /* Create a new address with the CRC appended */
+    return address | crc;
+}
+
+/**
+ * @brief Calculate the 8 bit CRC over a 32-byte block of data
+ *
+ * This function calculates the 8 bit CRC appropriate for checking a 32-byte
+ * block of data intended for or retrieved from a mempak.
+ *
+ * @param[in] data
+ *            Pointer to 32 bytes of data to run the CRC over
+ *
+ * @return The calculated 8 bit CRC over the data
+ */
+static uint8_t __calc_data_crc( uint8_t *data )
+{
+    uint8_t ret = 0;
+
+    for( int i = 0; i <= 32; i++ )
+    {
+        for( int j = 7; j >= 0; j-- )
+        {
+            int tmp = 0;
+
+            if( ret & 0x80 )
+            {
+                tmp = 0x85;
+            }
+
+            ret <<= 1;
+
+            if( i < 32 )
+            {
+                if( data[i] & (0x01 << j) )
+                {
+                    ret |= 0x1;
+                }
+            }
+
+            ret ^= tmp;
+        }
+    }
+
+    return ret;
 }

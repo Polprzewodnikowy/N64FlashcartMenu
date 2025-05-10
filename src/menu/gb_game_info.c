@@ -2763,7 +2763,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "3cd40f5268854d3cc4d3937c5d0dcca8b59148e6",
+        "218-15169",
         "Donkey Kong Land III",
         "(USA, Europe) (Rev 1) (SGB)",
         "DMG-AD3E",
@@ -2773,7 +2773,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "ba6e1031d8fb1415bb7898ca19eebdd31d065437",
+        "219-61882",
         "Donkey Kong Land III",
         "(USA, Europe) (SGB)",
         "DMG-AD3E",
@@ -2863,7 +2863,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "b524e9529d697b3b2833cb1f81247589ba16ebf8",
+        "220-45773",
         "Donkey Kong Land 2",
         "(USA, Europe) (SGB)",
         "DMG-ADDE",
@@ -2873,7 +2873,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "272dc5c9560f368ccc9ca27a2010982f7a6ac009",
+        "47-52460",
         "Donkey Kong Land",
         "(Japan) (SGB)",
         "DMG-ADDJ",
@@ -3723,7 +3723,7 @@ GameInfo games_info[] = {
         "Australia"
    , " " },
     {
-        "b4cc278944ed51246afa038617b4b2d08bbde0d7",
+        "122-38605",
         "F-1 World Grand Prix",
         "(Europe) (En,Fr,De,Es)",
         "CGB-AFIE",
@@ -4733,7 +4733,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "436b51f4f726d4daef710cd5202eafaafc20bab8",
+        "46-61364",
         "Super Mario Bros. Deluxe",
         "(USA, Europe) (Rev 1)",
         "CGB-AHYE",
@@ -4743,7 +4743,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "92790dc82a6271d62916d9540f9a2d3ee1af90a2",
+        "45-15434",
         "Super Mario Bros. Deluxe",
         "(Europe) (Rev 2)",
         "CGB-AHYE",
@@ -4753,7 +4753,7 @@ GameInfo games_info[] = {
         "Europe"
    , " " },
     {
-        "de1fb29548035bb828da2232d885453952844a75",
+        "47-49119",
         "Super Mario Bros. Deluxe",
         "(USA, Europe)",
         "CGB-AHYE",
@@ -4763,7 +4763,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "61c7ecb5395c1582ab399297b8fbe72a5e307640",
+        "42-43964",
         "Super Mario Bros. Deluxe",
         "(Japan) (Rev 1) (NP)",
         "CGB-AHYJ",
@@ -4773,7 +4773,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "e20f16bf6cddf021f66389e209a7910b13d557b6",
+        "43-17298",
         "Super Mario Bros. Deluxe",
         "(Japan) (NP)",
         "CGB-AHYJ",
@@ -7155,7 +7155,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "bd59484ed8949348bd0d59622598a358ba7bc4ea",
+        "142-41324",
         "Toy Story 2",
         "(USA, Europe) (SGB) (GB Comp.)",
         "DMG-AOQE",
@@ -8102,7 +8102,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "3622f0589a5716057af5d646f7d4612fc38d7733",
+        "103-63372",
         "Toy Story",
         "(USA) (SGB)",
         "DMG-AQHE",
@@ -8112,7 +8112,7 @@ GameInfo games_info[] = {
         "USA"
    , " " },
     {
-        "ca90590e693e9229c547cb4ac0f17f022f8392fe",
+        "102-21620",
         "Toy Story",
         "(USA) (Rev 1) (SGB)",
         "DMG-AQHE",
@@ -8122,7 +8122,7 @@ GameInfo games_info[] = {
         "USA"
    , " " },
     {
-        "e4c9068094c34a2b6225c28236d2b2f19ef300a1",
+        "141-21620",
         "Toy Story",
         "(Europe) (SGB)",
         "DMG-AQHP",
@@ -9452,7 +9452,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "db71247123b525d55b47f766f4ae821dae786a75",
+        "149-41124",
         "Tintin - Prisoners of the Sun",
         "(Europe) (En,Fr,De)",
         "DMG-ATSP",
@@ -11407,7 +11407,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "5b30e7e0283718f4329514136852d27dbc1ed752",
+        "60-11529",
         "Legend of Zelda, The - Link's Awakening DX",
         "(Germany) (SGB) (GB Comp.)",
         "DMG-AZLD",
@@ -11417,7 +11417,7 @@ GameInfo games_info[] = {
         "Germany"
    , " " },
     {
-        "e9d55652657ff2bd4d3ef415ffa21ae6e74393de",
+        "16-35534",
         "Legend of Zelda, The - Link's Awakening DX",
         "(Germany) (Rev 1) (SGB) (GB Comp.)",
         "DMG-AZLD",
@@ -11427,7 +11427,7 @@ GameInfo games_info[] = {
         "Germany"
    , " " },
     {
-        "acc0671e8b4602078ed52c5cfa036ec616ac1c74",
+        "107-3515",
         "Legend of Zelda, The - Link's Awakening DX",
         "(USA, Europe) (Rev 1) (SGB) (GB Comp.)",
         "DMG-AZLE",
@@ -11437,7 +11437,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "c1fa639c4081ee38d168bd4e59d9358e6ac333b3",
+        "60-58365",
         "Legend of Zelda, The - Link's Awakening DX",
         "(USA, Europe) (SGB) (GB Comp.)",
         "DMG-AZLE",
@@ -11447,7 +11447,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "ed389348c7a0530a87e986d601a49b742435d58d",
+        "14-309",
         "Legend of Zelda, The - Link's Awakening DX",
         "(USA, Europe) (Rev 2) (SGB) (GB Comp.)",
         "DMG-AZLE",
@@ -11457,7 +11457,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "5c61bf0728ed1b04f1e749815da84d69ea9cb758",
+        "14-38966",
         "Legend of Zelda, The - Link's Awakening DX",
         "(France) (Rev 1) (SGB) (GB Comp.)",
         "DMG-AZLF",
@@ -11467,7 +11467,7 @@ GameInfo games_info[] = {
         "France"
    , " " },
     {
-        "79a0bf790984502fbb26f102b5cefe463e4890ac",
+        "108-29772",
         "Legend of Zelda, The - Link's Awakening DX",
         "(France) (SGB) (GB Comp.)",
         "DMG-AZLF",
@@ -11787,7 +11787,7 @@ GameInfo games_info[] = {
         "Europe"
    , " " },
     {
-        "b7f4de61af15b386893c6351cf717eec687b0edd",
+        "141-29910",
         "Spider-Man 2 - The Sinister Six",
         "(USA, Europe)",
         "CGB-B2SE",
@@ -18141,7 +18141,7 @@ GameInfo games_info[] = {
         "Europe"
    , " " },
     {
-        "ab8038b119bebe3e309b7b126aeb63eb047225ac",
+        "94-31064",
         "Spider-Man",
         "(USA, Europe)",
         "CGB-BSEE",
@@ -18151,7 +18151,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "aaa54c2b10535f05054f80a5b754bff22f04c756",
+        "93-32947",
         "Spider-Man",
         "(France)",
         "CGB-BSEF",
@@ -18161,7 +18161,7 @@ GameInfo games_info[] = {
         "France"
    , " " },
     {
-        "7670da225768b21ae08aa39b7db5f89084617201",
+        "59-13972",
         "Spider-Man",
         "(Japan)",
         "CGB-BSEJ",
@@ -18461,7 +18461,7 @@ GameInfo games_info[] = {
         "USA"
    , " " },
     {
-        "1d094da47b5fbc978dea8efd1aa230413b3e3618",
+        "45-65294",
         "Toy Story Racer",
         "(USA, Europe)",
         "CGB-BT5E",
@@ -18471,7 +18471,7 @@ GameInfo games_info[] = {
         "USA, Europe"
    , " " },
     {
-        "b623378696e7bffc60c20591839d6fe1d66d0fc6",
+        "26-64829",
         "Toy Story Racer",
         "(Europe) (En,Fr,De)",
         "CGB-BT5X",
@@ -18771,7 +18771,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "70482eff2eadfe3a2631903fb820c20bfe26504b",
+        "243-41283",
         "Tintin - Le Temple Du Soleil",
         "(Europe) (En,Fr,De)",
         "CGB-BTTP",
@@ -24218,7 +24218,7 @@ GameInfo games_info[] = {
         "World"
    , " " },
     {
-        "15483a42fe8da2d8aab0e17bc3d274df660b4fec",
+        "114-42755",
         "Spider-Man 3 - Invasion of the Spider-Slayers",
         "(USA, Europe)",
         "DMG-LQE",
@@ -27329,7 +27329,7 @@ GameInfo games_info[] = {
         "USA"
    , " " },
     {
-        "78cbae71ba90ed689b1cd20ac2837d2e3101e576",
+        "190-39762",
         "Amazing Spider-Man, The",
         "(USA, Europe)",
         "DMG-SME",
@@ -29684,7 +29684,7 @@ GameInfo games_info[] = {
         "Japan"
    , " " },
     {
-        "53bd3b9892301e5278bbbcc8d09cef85e42729e1",
+        "146-34056",
         "Spider-Man - X-Men - Arcade's Revenge",
         "(USA, Europe)",
         "DMG-XGE",
@@ -30034,7 +30034,7 @@ GameInfo games_info[] = {
         "Europe"
    , " " },
     {
-        "f73434189311990716043c56891925a54db97432",
+        "192-29734",
         "Donkey Kong Land",
         "(USA, Europe) (SGB)",
         "DMG-YTE",
@@ -30284,7 +30284,7 @@ GameInfo games_info[] = {
         "Europe"
    , " " },
     {
-        "8f992029e7c3ca43af8672e09a5ed74935e3b3c4",
+        "107-37405",
         "Spider-Man 2",
         "(USA, Europe)",
         "DMG-ZSE",

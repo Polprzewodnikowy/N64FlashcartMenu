@@ -47,6 +47,8 @@ char tpak_game_name[64];
 
 char tpak_cart_info[500];
 
+char failure_message_tpak[255];
+
 const char * GB_PATH = "sd:/gb_saves";
 const char * GB_PATH_NO_PRE = "/gb_saves";
 const char * ROM_EXTENTION = "rom";
@@ -131,6 +133,7 @@ void simple_checksum(int size)
 }
 
 void save_to_sd(const char* RAM_or_ROM, const char* _code_card_game) {
+    sprintf(failure_message_tpak, " ");
 
     char extension[4];  
     int size_of_file_to_save = 0;  
@@ -263,6 +266,7 @@ int restore_ram_to_cart(const char *_code_card_game) {
     if (file == NULL) {
         //"Failed to open RAM file"
         debugf("FAIL open SD save ?");
+        sprintf(failure_message_tpak, "Unable to restore. The file does not exist.");
         return 0;
     } else {
         // Determine the size of the file
@@ -745,6 +749,15 @@ static void draw (menu_t *menu, surface_t *d){
         tpak_cart_info
     );
 
+    ui_components_main_text_draw(STL_ORANGE,
+        ALIGN_CENTER, VALIGN_TOP,
+        "\n"
+        "\n"
+        "\n"
+        "%s\n",
+        failure_message_tpak
+    );
+
 
     ui_components_actions_bar_text_draw(STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
@@ -786,6 +799,7 @@ static void draw (menu_t *menu, surface_t *d){
     }
 
     if (start_dump_ram) {
+        sprintf(failure_message_tpak, " ");
         int retval;
         if (index_value.rom_size != 0) {
             rdpq_detach_show();
@@ -813,6 +827,7 @@ static void draw (menu_t *menu, surface_t *d){
     }
 
     if (start_dump_rom) {
+        sprintf(failure_message_tpak, " ");
         int retval;
 
         if (index_value.rom_size != 0) {
@@ -841,6 +856,7 @@ static void draw (menu_t *menu, surface_t *d){
     }
 
     if (start_restore_ram) {
+        sprintf(failure_message_tpak, " ");
         int retval;
         debugf("start restore ram");
         if (index_value.rom_size != 0) {
@@ -849,9 +865,7 @@ static void draw (menu_t *menu, surface_t *d){
             retval = restore_ram_to_cart(index_value.game_code);
             if (retval == 0) {
                 //Dump or restore can't be proceeded
-                debugf("putain !!!");
             } else {
-                debugf("START RESTORE !!!!");
                 retval = copy_save_toGbRam(buffer);
 
                 if (retval)
@@ -872,9 +886,9 @@ static void draw (menu_t *menu, surface_t *d){
             retval = restore_ram_to_cart(formatted_string);
             if (retval == 0) {
                 //Dump or restore can't be proceeded
-                debugf("putain !!!");
+                
             } else {
-                debugf("START RESTORE !!!!");
+                
                 retval = copy_save_toGbRam(buffer);
 
                 if (retval)
@@ -888,7 +902,7 @@ static void draw (menu_t *menu, surface_t *d){
                 }
             }
         }
-        debugf("Je ne comprends rien ?");
+        
         start_restore_ram = false;
         free(buffer);
         buffer = NULL;
@@ -907,7 +921,7 @@ void view_transfer_pak_init (menu_t *menu){
 
     create_directory_tpak(GB_PATH_NO_PRE);
 
-    debugf("hello");
+    sprintf(failure_message_tpak, " ");
 }
 
 

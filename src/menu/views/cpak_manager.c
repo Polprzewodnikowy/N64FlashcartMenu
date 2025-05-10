@@ -117,6 +117,11 @@ char* get_cpak_save_region(char _code) {
 void dump_complete_cpak(int _port) {
     process_completed = false;
 
+    if ((free_space_cpak < 0) || (free_space_cpak >= 123)) {
+        debugf("Invalid or empty Controller Pak\n");
+        return;
+    }
+
     uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
 
     if (!data) {
@@ -138,7 +143,7 @@ void dump_complete_cpak(int _port) {
         );   
         
 
-        if (read_mempak_sector(0, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
+        if (read_mempak_sector(_port, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
             debugf("Failed to read mempak sector %d\n", i);
             free(data);
             return;
@@ -173,6 +178,7 @@ void dump_complete_cpak(int _port) {
 }
 
 void dump_single_entry(int _port, unsigned short selected_index) {
+    return;
     process_completed = false;
 
     entry_structure_t entry;
@@ -299,7 +305,7 @@ static void process (menu_t *menu) {
         } else if (menu->actions.back) {
             sound_play_effect(SFX_EXIT);
             menu->next_mode = MENU_MODE_BROWSER;
-        } else if (menu->actions.options) {
+        } else if (menu->actions.options && use_rtc) {
             ui_components_context_menu_show(&options_context_menu);
             sound_play_effect(SFX_SETTING);
         }
@@ -524,8 +530,16 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     style = (has_mem && validate_pak) ? STL_DEFAULT : STL_GRAY;
+
+
+    if (!use_rtc) {
+        ui_components_main_text_draw(STL_ORANGE,
+            ALIGN_LEFT, VALIGN_TOP,
+            "No RTC\n"
+        );
+        style = STL_GRAY;
+    }
     
-    //TODO: single note dump process
     ui_components_actions_bar_text_draw(style,
         ALIGN_LEFT, VALIGN_TOP,
         "A: Dump Pak\n"

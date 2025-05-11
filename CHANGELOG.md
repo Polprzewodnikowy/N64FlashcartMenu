@@ -84,6 +84,7 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+* Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
 
 
 ### Deprecation notices

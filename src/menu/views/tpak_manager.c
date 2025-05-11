@@ -123,6 +123,18 @@ uint8_t* buffer = NULL;
 
 extern cart gbcart;
 
+
+void sanitize_ascii_fixed(const char *src, char dst[16]) {
+    size_t out = 0;
+    while (*src && out < 15) {           // leave room for '\0'
+        unsigned char c = (unsigned char)*src++;
+        if (c <= 0x7F) {                // ASCII range 0x00–0x7F
+            dst[out++] = c;
+        }
+    }
+    dst[out] = '\0';
+}
+
 void simple_checksum(int size)
 {
     sum = 0;
@@ -148,11 +160,17 @@ void save_to_sd(const char* RAM_or_ROM, const char* _code_card_game) {
 
     char filename[200];
 
-    sprintf(filename, "%s/%s.%s", GB_PATH, _code_card_game, extension);
+    debugf("original: %s\n", _code_card_game);
+    char clean[16];
+    sanitize_ascii_fixed(_code_card_game, clean);
+    debugf("sanitized: %s\n", clean);
 
-    debugf("filename: %s", filename);
+    sprintf(filename, "%s/%s.%s", GB_PATH, clean, extension);
 
-    debugf("buffer size: %hhn", buffer);
+    debugf("filename: %s\n", filename);
+    
+
+    debugf("buffer size: %hhn\n", buffer);
 
     FILE *fp = fopen(filename, "w");
 
@@ -173,15 +191,17 @@ int load_rom_to_console(const char *_code_card_game) {
         cartDataGood = FALSE;
     } else {
         //Allocating the buffer for the rom : 
+        debugf("rom size: %d\n", gbcart.romsize);
         buffer = calloc(gbcart.romsize, sizeof(uint8_t));
 
         cartDataGood = TRUE;
         bool error = false;
 
         // TODO !! 
-        if (BUFFER_SIZE < gbcart.romsize)
+        if (BUFFER_SIZE <= gbcart.romsize)
         { 
-
+            sprintf(failure_message_tpak, "Unable to dump. The ROM is bigger than 2MB.");
+            return -1;
         } else {
             error = false;
             char string_gbrom_toRam[100];
@@ -260,7 +280,12 @@ int restore_ram_to_cart(const char *_code_card_game) {
 
     char filename[200];
 
-    sprintf(filename, "%s/%s.%s", GB_PATH,_code_card_game, SAV_EXTENTION);
+    debugf("original: %s\n", _code_card_game);
+    char clean[16];
+    sanitize_ascii_fixed(_code_card_game, clean);
+    debugf("sanitized: %s\n", clean);
+
+    sprintf(filename, "%s/%s.%s", GB_PATH,clean, SAV_EXTENTION);
     
     FILE *file = fopen(filename, "rb");
     if (file == NULL) {
@@ -456,14 +481,17 @@ static void process (menu_t *menu){
 
     if (!show_dump_tpak_RAM_confirm_message && !show_dump_tpak_ROM_confirm_message && !show_restore_tpak_RAM_confirm_message) {
         if(menu->actions.go_left) {
+            sprintf(failure_message_tpak, " ");
             sound_play_effect(SFX_SETTING);
             controller_selected_tpak = ((controller_selected_tpak - 1) + 4) % 4;
             reset_vars_tpak();
         } else if (menu->actions.go_right) {
+            sprintf(failure_message_tpak, " ");
             sound_play_effect(SFX_SETTING);
             controller_selected_tpak = ((controller_selected_tpak + 1) + 4) % 4;
             reset_vars_tpak();
         } else if (menu->actions.back) {
+            sprintf(failure_message_tpak, " ");
             sound_play_effect(SFX_EXIT);
             menu->next_mode = MENU_MODE_BROWSER;
         }
@@ -811,7 +839,7 @@ static void draw (menu_t *menu, surface_t *d){
             }
         } else {
             char formatted_string[20];  // Adjust the size as needed
-            sprintf(formatted_string, "%.4s", &header.title[11]);
+            sprintf(formatted_string, "%s", header.title);
             rdpq_detach_show();
             retval = load_ram_to_console(formatted_string);
             if (retval) {
@@ -840,7 +868,7 @@ static void draw (menu_t *menu, surface_t *d){
             }
         } else {
             char formatted_string[20];  // Adjust the size as needed
-            sprintf(formatted_string, "%.4s", &header.title[11]);
+            sprintf(formatted_string, "%s", header.title);
             rdpq_detach_show();
             retval = load_rom_to_console(formatted_string);
             if (retval) {
@@ -881,7 +909,7 @@ static void draw (menu_t *menu, surface_t *d){
         } else {
             debugf("No good index_value");
             char formatted_string[20];  // Adjust the size as needed
-            sprintf(formatted_string, "%.4s", &header.title[11]);
+            sprintf(formatted_string, "%s", header.title);
             rdpq_detach_show();
             retval = restore_ram_to_cart(formatted_string);
             if (retval == 0) {

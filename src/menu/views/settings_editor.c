@@ -3,6 +3,7 @@
 #include "../settings.h"
 #include "views.h"
 
+static bool show_message;
 
 static const char *format_switch (bool state) {
     switch (state) {
@@ -134,11 +135,23 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        ui_components_context_menu_show(&options_context_menu);
+        if (show_message) {
+            settings_reset_to_defaults(&menu->settings);
+            menu_show_error(menu, "Reboot N64 to take effect!");
+            show_message = false;
+        } else {
+            ui_components_context_menu_show(&options_context_menu);
+        }
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
+        if (show_message) {
+            show_message = false;
+        } else {
+            menu->next_mode = MENU_MODE_BROWSER;
+        }
         sound_play_effect(SFX_EXIT);
-        menu->next_mode = MENU_MODE_BROWSER;
+    } else if (menu->actions.options){
+        show_message = true;
     }
 }
 
@@ -197,14 +210,26 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
     );
 
-
     ui_components_actions_bar_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "A: Change\n"
         "B: Back"
     );
 
+    ui_components_actions_bar_text_draw(
+        ALIGN_RIGHT, VALIGN_TOP,
+        "R: Reset settings\n"
+        "\n"
+    );
+
     ui_components_context_menu_draw(&options_context_menu);
+
+    if (show_message) {
+        ui_components_messagebox_draw(
+            "Reset settings?\n\n"
+            "A: Yes, B: Back"
+        );
+    }
 
     rdpq_detach_show();
 }

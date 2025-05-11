@@ -100,3 +100,8 @@ void settings_save (settings_t *settings) {
 
     mini_free(ini);
 }
+
+void settings_reset_to_defaults(settings_t *settings) {
+    // Save the reset settings
+    settings_save(&init);
+}

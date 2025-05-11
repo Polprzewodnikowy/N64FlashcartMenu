@@ -12557,7 +12557,7 @@ GameInfo games_info[] = {
         "Spain"
    , " " },
     {
-        "0402948409bd00db36c9bed9db2c4a33a17111ff",
+        "218-23240",
         "Mobile Trainer",
         "(Japan)",
         "CGB-B9AJ",

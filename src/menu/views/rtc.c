@@ -127,7 +127,7 @@ static void process (menu_t *menu) {
             adjust_rtc_time( &rtc_tm, -1 );
         }
         else if (menu->actions.options) { // R button = save
-            if( rtc_get_source() == RTC_SOURCE_JOYBUS && rtc_is_source_available( RTC_SOURCE_DD ) ) {
+            if( rtc_get_source() == RTC_SOURCE_JOYBUS && rtc_is_source_available( RTC_SOURCE_JOYBUS ) ) {
                 struct timeval new_time = { .tv_sec = mktime(&rtc_tm) };
                 int res = settimeofday(&new_time, NULL);
 

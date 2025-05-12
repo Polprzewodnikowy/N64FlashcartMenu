@@ -70,6 +70,6 @@ void settings_load (settings_t *settings);
 /** @brief The settings to save */
 void settings_save (settings_t *settings);
 /** @brief Reset settings to defaults */
-void settings_reset_to_defaults(settings_t *settings);
+void settings_reset_to_defaults();
 
 #endif

@@ -136,7 +136,7 @@ static void process (menu_t *menu) {
 
     if (menu->actions.enter) {
         if (show_message) {
-            settings_reset_to_defaults(&menu->settings);
+            settings_reset_to_defaults();
             menu_show_error(menu, "Reboot N64 to take effect!");
             show_message = false;
         } else {

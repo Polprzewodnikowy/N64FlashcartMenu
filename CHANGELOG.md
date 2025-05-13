@@ -27,6 +27,7 @@ built from latest commit on main branch.
 - **Other**
 	- Updated libDragon SDK.
 	- Updated miniz library.
+	- Updated Github templates.
 
 ### Breaking changes
 * Deprecated "Autoload ROM" function was removed from menu (use `ED64_AUTOLOAD_ROM` as a build flag to re-enable it).

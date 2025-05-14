@@ -150,7 +150,7 @@ static void set_tv_type (menu_t *menu, void *arg) {
     }
     menu->browser.reload = true;
 }
-
+#ifdef ED64_AUTOLOAD_ROM
 static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -161,6 +161,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
     menu->browser.reload = true;
 }
+#endif
 
 static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
@@ -208,7 +209,9 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+#ifdef ED64_AUTOLOAD_ROM
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+#endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
@@ -240,10 +243,11 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
-
+#ifdef ED64_AUTOLOAD_ROM
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f);
     } else {
+#endif
         ui_components_layout_draw();
 
         ui_components_main_text_draw(
@@ -323,7 +327,9 @@ static void draw (menu_t *menu, surface_t *d) {
         }
 
         ui_components_context_menu_draw(&options_context_menu);
+#ifdef ED64_AUTOLOAD_ROM
     }
+#endif
 
     rdpq_detach_show();
 }
@@ -344,11 +350,15 @@ static void draw_progress (float progress) {
 
 static void load (menu_t *menu) {
     cart_load_err_t err;
+#ifdef ED64_AUTOLOAD_ROM
     if (!menu->settings.loading_progress_bar_enabled) {
         err = cart_load_n64_rom_and_save(menu, NULL);
     } else  {
         err = cart_load_n64_rom_and_save(menu, draw_progress);
     }
+#else
+    err = cart_load_n64_rom_and_save(menu, draw_progress);
+#endif
 
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));
@@ -377,7 +387,9 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
+#ifdef ED64_AUTOLOAD_ROM
     if (!menu->settings.rom_autoload_enabled) {
+#endif
         if (menu->load.rom_path) {
             path_free(menu->load.rom_path);
         }
@@ -391,7 +403,9 @@ void view_load_rom_init (menu_t *menu) {
         }
 
         rom_filename = path_last_get(menu->load.rom_path);
-    }    
+#ifdef ED64_AUTOLOAD_ROM
+    }
+#endif 
 
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;
@@ -403,11 +417,14 @@ void view_load_rom_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
-
+#ifdef ED64_AUTOLOAD_ROM
     if (!menu->settings.rom_autoload_enabled) {
+#endif
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
+#ifdef ED64_AUTOLOAD_ROM
     }
+#endif
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

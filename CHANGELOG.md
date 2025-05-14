@@ -13,7 +13,8 @@ built from latest commit on main branch.
 
 
 - **Bug Fixes**
-	- TBD
+	- Fix ability to set the RTC via menu.
+	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
 
 
 - **Documentation**
@@ -26,13 +27,18 @@ built from latest commit on main branch.
 - **Other**
 	- Updated libDragon SDK.
 	- Updated miniz library.
+	- Updated Github templates.
 
 ### Breaking changes
-* TBD
+* Deprecated "Autoload ROM" function was removed from menu (use `ED64_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 
 ### Current known Issues
-* TBD
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+* Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
 
 
 ### Deprecation notices
@@ -84,6 +90,8 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+* Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
+* Setting the RTC reports a write fail.
 
 
 ### Deprecation notices

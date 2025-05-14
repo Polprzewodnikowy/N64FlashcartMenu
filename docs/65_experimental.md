@@ -1,7 +1,7 @@
 [Return to the index](./00_index.md)
 ## Experimental Features (Subject to change)
 
-### ROM info descriptions (pre-release only)
+### ROM info descriptions
 To show a ROM description in the N64 ROM information screen, add a `.ini` file next to the game ROM file with the same name and the following content:
 ```ini
 [metadata]

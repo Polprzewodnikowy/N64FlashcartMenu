@@ -8,7 +8,7 @@
 An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
 **This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
 
-## Flashcart Supported
+## Flashcart Support
 This menu aims to support as many N64 flashcarts as possible. The current state is:
 
 ### Supported
@@ -80,10 +80,10 @@ Download the `OS64.v64` ROM from the latest [action run - assets] and place it i
 
 #### ED64 (X series)
 The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
-Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
+Download the `OS64.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64` folder.
 
 #### ED64 (P clone)
-Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.
+Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
 The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
 
 

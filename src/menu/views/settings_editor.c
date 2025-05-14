@@ -159,8 +159,10 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n\n"
+#ifdef ED64_AUTOLOAD_ROM
         "  Autoload ROM      : %s\n"
         "  ROM Loading Bar   : %s\n\n"
+#endif
         "To change the following menu settings, press 'A':\n"
         "     Fast Reboot ROM   : %s\n"
         "     Show Hidden Files : %s\n"
@@ -177,9 +179,12 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         ,
         menu->settings.default_directory,
+#ifdef ED64_AUTOLOAD_ROM
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.loading_progress_bar_enabled),
+#else
         format_switch(menu->settings.rom_fast_reboot_enabled),
+#endif
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.soundfx_enabled)

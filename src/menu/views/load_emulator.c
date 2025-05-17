@@ -86,6 +86,11 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
+        ui_components_main_text_draw(  
+            ALIGN_CENTER, VALIGN_TOP,  
+            "\n\n\nLoading emulated ROM..."  
+        );
+
         ui_components_loader_draw(progress);
 
         rdpq_detach_show();

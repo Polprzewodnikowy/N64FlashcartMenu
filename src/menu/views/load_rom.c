@@ -6,6 +6,7 @@
 #include <string.h>
 #include "utils/fs.h"
 #include "../bookkeeping.h"
+#include <libcart/cart.h>
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -341,6 +342,19 @@ static void draw_progress (float progress) {
         rdpq_attach(d, NULL);
 
         ui_components_background_draw();
+
+        // Add message about longer loading time for byteswapped ROMs  
+        if (cart_card_byteswap) {  
+            ui_components_main_text_draw(  
+                ALIGN_CENTER, VALIGN_TOP,  
+                "\n\n\nByteswapped ROM detected.\nLoading may take longer than usual."  
+            );  
+        } else {  
+            ui_components_main_text_draw(  
+                ALIGN_CENTER, VALIGN_TOP,  
+                "\n\n\nLoading ROM..."  
+            );  
+        }
 
         ui_components_loader_draw(progress);
 

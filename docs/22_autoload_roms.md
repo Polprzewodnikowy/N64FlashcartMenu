@@ -1,6 +1,7 @@
 [Return to the index](./00_index.md)
 
-:Warning: this feature is no longer available on the SummerCart64 and 64 Drive, consider using fast reboot instead.
+:Warning: this feature is superseded on the `SummerCart64` and `64 Drive` with [Fast Reboot](./32_menu_settings.md#fast-rom-reboots).
+Similar functionality can be obtained by keeping the USB port of the flashcart powered after sending a ROM via the terminal application.
 
 ## Autoloading N64 ROMs
 You can set up N64FlashcartMenu to load a specific ROM directly instead of booting up the menu's graphical user interface. **NOTE:** byteswapped ROMs will slow down the ROM load process.   

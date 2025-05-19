@@ -1,38 +1,37 @@
 name: Bug report
 description: Create a bug report to help us improve
-labels: 
-  - "Type: Bug"
-  - "Status: Waiting triage"
+labels:
+  - "bug"
+  - "awaiting triage"
 body:
   - type: markdown
     attributes:
       value: |
         # :warning: **Please read before raising the issue** :warning:
 
-        If you have a **question**, need clarification on something, need help on a particular situation or want to start a discussion, **DO NOT** open an issue here. _It will be automatically closed!_ 
-        First raise it in discussions.
-        If you really want to raise an issue, please make sure to follow the template and provide the required information.
-        Failing to do so will most likely end up on the issue being close. Don't take offense at this.
-        It is simply a time management decision.
-        Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
+        If you have a **question** that needs clarification on something, or need help in a particular situation, **DO NOT** open an issue here, create a discussion instead. _Otherwise it will be automatically closed!_ .
+
+        Please make sure to provide as much information as possible. 
+        Failing to do so will most likely end up on the issue being closed without discussion. Don't take offense at this, 
+        whenever an issue is raised without following the template and/or adding the required information, too much time has to be spent going back and forth to obtain the details that are outlined below.
 
   - type: input
-    id: firmware_version
+    id: flashcart_firmware_version
     attributes:
       label: Firmware version of the flashcart
-      description: The firmware version used
-      placeholder: V0.1
+      description: Press (Start) button on the menu, then (Check Flashcart Information).
+      placeholder: V2.20.2, N/A
     validations:
-      required: false
+      required: true
 
   - type: input
     id: menu_version
     attributes:
-      label: Menu revision used
-      description: Press (Start) button on the menu to show the current menu version.
+      label: N64 Flashcart Menu revision used
+      description: Press (Start) button on the menu, then (Check Menu Information), or specify github download URL.
       placeholder: e.g 1.2.3.456, N/A
     validations:
-      required: false
+      required: true
 
   - type: input
     id: n64_region
@@ -41,7 +40,7 @@ body:
       description: PAL, NTSC-U, NTSC-J, MPAL, etc.
       placeholder: NTSC
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: description

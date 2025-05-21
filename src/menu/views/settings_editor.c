@@ -12,7 +12,6 @@ static const char *format_switch (bool state) {
 }
 
 #ifdef ED64_AUTOLOAD_ROM
-#ifdef ED64_AUTOLOAD_ROM
 static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
     menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);

@@ -16,6 +16,7 @@ static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
     menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
+#endif
 
 static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);

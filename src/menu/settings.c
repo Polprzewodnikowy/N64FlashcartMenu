@@ -21,12 +21,14 @@ static settings_t init = {
     .hide_rom_tags = false,
     .hide_saves_folder = false,
     .soundfx_enabled = false,
-    .loading_progress_bar_enabled = true,
+#ifdef ED64_AUTOLOAD_ROM
     .rom_autoload_enabled = false,
-    .rom_fast_reboot_enabled = false,
     .rom_autoload_path = "",
     .rom_autoload_filename = "",
-    
+    .loading_progress_bar_enabled = true,
+#else
+    .rom_fast_reboot_enabled = false,
+#endif    
     /* Beta feature flags (should always init to off) */
     .bgm_enabled = false,
     .rumble_enabled = false,
@@ -59,12 +61,15 @@ void settings_load (settings_t *settings) {
     settings->hide_rom_tags = mini_get_bool(ini, "menu", "hide_rom_tags", init.hide_rom_tags);
     settings->hide_saves_folder = mini_get_bool(ini, "menu", "hide_saves_folder", init.hide_saves_folder);
     settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
-    settings->loading_progress_bar_enabled = mini_get_bool(ini, "menu", "loading_progress_bar_enabled", init.loading_progress_bar_enabled);
+    
+#ifdef ED64_AUTOLOAD_ROM
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
-    settings->rom_fast_reboot_enabled = mini_get_bool(ini, "menu", "reboot_rom_enabled", init.rom_fast_reboot_enabled);
     settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
     settings->rom_autoload_filename = strdup(mini_get_string(ini, "autoload", "rom_filename", init.rom_autoload_filename));
-
+    settings->loading_progress_bar_enabled = mini_get_bool(ini, "menu", "loading_progress_bar_enabled", init.loading_progress_bar_enabled);
+#else
+    settings->rom_fast_reboot_enabled = mini_get_bool(ini, "menu", "reboot_rom_enabled", init.rom_fast_reboot_enabled);
+#endif
     /* Beta feature flags, they might not be in the file */
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     settings->rumble_enabled = mini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
@@ -87,11 +92,14 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "hide_rom_tags", settings->hide_rom_tags);
     mini_set_bool(ini, "menu", "hide_saves_folder", settings->hide_saves_folder);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
-    mini_set_bool(ini, "menu", "loading_progress_bar_enabled", settings->loading_progress_bar_enabled);
+#ifdef ED64_AUTOLOAD_ROM
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
-    mini_set_bool(ini, "menu", "reboot_rom_enabled", settings->rom_fast_reboot_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);
     mini_set_string(ini, "autoload", "rom_filename", settings->rom_autoload_filename);
+    mini_set_bool(ini, "menu", "loading_progress_bar_enabled", settings->loading_progress_bar_enabled);
+#else
+    mini_set_bool(ini, "menu", "reboot_rom_enabled", settings->rom_fast_reboot_enabled);
+#endif
 
     /* Beta feature flags, they should not save until production ready! */
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", settings->bgm_enabled);

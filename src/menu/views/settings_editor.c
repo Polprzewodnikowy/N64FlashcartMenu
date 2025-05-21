@@ -219,7 +219,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Autoload ROM      : %s\n"
         "  ROM Loading Bar   : %s\n\n"
 #endif
-        "  To change the following menu settings, press 'A':\n\n"
+        " To change the following menu settings, press 'A':\n"
         "  Fast Reboot ROM   : %s\n"
         "  Show Hidden Files : %s\n"
         "  Use Saves Folder  : %s\n"

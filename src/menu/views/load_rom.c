@@ -253,33 +253,29 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_main_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "N64 ROM information\n"
-            "\n"
             "%s\n",
             rom_filename
         );
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n"
-            "Description:\n\t%s\n",
+            "\n\n"
+            "\t%s\n",
             menu->load.rom_info.metadata.description
         );
 
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            "Expansion PAK:\t%s\n"
-            "TV type:\t\t\t%s\n"
-            "CIC:\t\t\t\t%s\n"
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Datel Cheats:\t%s\n"
             "Patches:\t\t\t%s\n"
+            "TV region:\t\t%s\n"
+            "Expansion PAK:\t%s\n"
             "Save type:\t\t%s\n",
-            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
-            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
-            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
             format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
             format_boolean_type(menu->load.rom_info.settings.patches_enabled),
+            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
+            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
@@ -292,7 +288,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
-            "R:    Options\n"
+            "R: Adv. Options\n"
         );
 
         if (boxart != NULL) {
@@ -310,6 +306,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Variant: %s\n"
                 "Version: %hhu\n"
                 "Check code: 0x%016llX\n"
+                "CIC: %s\n"
                 "Boot address: 0x%08lX\n"
                 "SDK version: %.1f%c\n"
                 "Clock Rate: %.2fMHz\n\n\n"
@@ -321,6 +318,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
                 menu->load.rom_info.check_code,
+                format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
                 menu->load.rom_info.clock_rate
@@ -420,6 +418,10 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef ED64_AUTOLOAD_ROM
     }
 #endif 
+
+    if (show_extra_info_message) {
+        show_extra_info_message = false;
+    }
 
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;

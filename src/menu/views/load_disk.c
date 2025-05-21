@@ -28,7 +28,7 @@ static char *format_disk_region (disk_region_t region) {
 
 
 static void add_favorite (menu_t *menu, void *arg) {
-    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.primary_dd_disk_file_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
 }
 
 static component_context_menu_t options_context_menu = { .list = {
@@ -167,7 +167,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.primary_dd_disk_file_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (menu->load.combined_disk_rom) {
@@ -214,9 +214,9 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
 }
 
 void view_load_disk_init (menu_t *menu) {
-    if (menu->load.disk_path) {
-        path_free(menu->load.disk_path);
-        menu->load.disk_path = NULL;
+    if (menu->load.primary_dd_disk_file_path) {
+        path_free(menu->load.primary_dd_disk_file_path);
+        menu->load.primary_dd_disk_file_path = NULL;
     }
 
     menu->boot_pending.disk_file = false;
@@ -236,20 +236,20 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.load_history = -1;
         menu->load.load_favorite = -1;
 
-        menu->load.disk_path = path_clone(items[id].primary_path);
+        menu->load.primary_dd_disk_file_path = path_clone(items[id].primary_path);
         if(!load_rom(menu, items[id].secondary_path)) {
             return;
         }
 
     } else {
-        menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
+        menu->load.primary_dd_disk_file_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
     }
 
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;
 
-    disk_filename = path_last_get(menu->load.disk_path);
-    disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
+    disk_filename = path_last_get(menu->load.primary_dd_disk_file_path);
+    disk_err_t err = disk_info_load(menu->load.primary_dd_disk_file_path, &menu->load.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_error_message(err));
         return;

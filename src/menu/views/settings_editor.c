@@ -216,8 +216,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n\n"
         "  Default Directory : %s\n\n"
 #ifdef ED64_AUTOLOAD_ROM
-        "  Autoload ROM      : %s\n\n"
-        "  ROM Loading Bar   : %s\n"
+        "  Autoload ROM      : %s\n"
+        "  ROM Loading Bar   : %s\n\n"
 #endif
         "  To change the following menu settings, press 'A':\n\n"
         "  Fast Reboot ROM   : %s\n"

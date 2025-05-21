@@ -214,7 +214,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
-        "  Default Directory : %s\n"
+        "  Default Directory : %s\n\n"
 #ifdef ED64_AUTOLOAD_ROM
         "  Autoload ROM      : %s\n\n"
         "  ROM Loading Bar   : %s\n"

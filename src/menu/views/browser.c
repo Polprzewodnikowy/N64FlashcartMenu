@@ -163,7 +163,7 @@ static void browser_list_free (menu_t *menu) {
     menu->browser.selected = -1;
 }
 
-static bool load_directory(menu_t *menu) {
+static bool load_directory (menu_t *menu) {
     int result;
     dir_t info;
 
@@ -179,7 +179,6 @@ static bool load_directory(menu_t *menu) {
         up->size = 0;
         menu->browser.entries = 1;
     }
-
     result = dir_findfirst(path_get(path), &info);
 
     while (result == 0) {
@@ -192,10 +191,7 @@ static bool load_directory(menu_t *menu) {
         }
     
         if (info.d_type == DT_DIR && menu->settings.hide_saves_folder) {
-            const char *name = info.d_name;
-            if (strcasecmp(name, "saves") == 0 ||
-                strstr(name, "/saves") ||
-                strstr(name, "\\saves")) {
+            if (strcasecmp(info.d_name, "saves") == 0) {
                 result = dir_findnext(path_get(path), &info);
                 continue;
             }

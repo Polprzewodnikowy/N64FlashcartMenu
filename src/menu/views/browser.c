@@ -163,13 +163,22 @@ static void browser_list_free (menu_t *menu) {
     menu->browser.selected = -1;
 }
 
-static bool load_directory (menu_t *menu) {
+static bool load_directory(menu_t *menu) {
     int result;
     dir_t info;
 
     browser_list_free(menu);
 
     path_t *path = path_clone(menu->browser.directory);
+
+    if (!path_is_root(menu->browser.directory)) {
+        menu->browser.list = malloc(sizeof(entry_t));
+        entry_t *up = &menu->browser.list[0];
+        up->name = strdup("..");
+        up->type = ENTRY_TYPE_DIR;
+        up->size = 0;
+        menu->browser.entries = 1;
+    }
 
     result = dir_findfirst(path_get(path), &info);
 
@@ -184,7 +193,9 @@ static bool load_directory (menu_t *menu) {
     
         if (info.d_type == DT_DIR && menu->settings.hide_saves_folder) {
             const char *name = info.d_name;
-            if (strcasecmp(name, "saves") == 0 || strstr(name, "/saves") || strstr(name, "\\saves")) {
+            if (strcasecmp(name, "saves") == 0 ||
+                strstr(name, "/saves") ||
+                strstr(name, "\\saves")) {
                 result = dir_findnext(path_get(path), &info);
                 continue;
             }
@@ -208,7 +219,7 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_ROM;
             } else if (file_has_extensions(entry->name, disk_extensions)) {
                 entry->type = ENTRY_TYPE_DISK;
-            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+            } else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;
@@ -230,17 +241,22 @@ static bool load_directory (menu_t *menu) {
 
     path_free(path);
 
-    if (result < -1) {
-        browser_list_free(menu);
-        return true;
+    {
+        int offset = path_is_root(menu->browser.directory) ? 0 : 1;
+        if (menu->browser.entries > offset) {
+            qsort(
+                menu->browser.list + offset,
+                menu->browser.entries - offset,
+                sizeof(entry_t),
+                compare_entry
+            );
+        }
     }
 
     if (menu->browser.entries > 0) {
         menu->browser.selected = 0;
-        menu->browser.entry = &menu->browser.list[menu->browser.selected];
+        menu->browser.entry = &menu->browser.list[0];
     }
-
-    qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
 
     return false;
 }
@@ -368,6 +384,7 @@ static void process (menu_t *menu) {
     }
 
     int scroll_speed = menu->actions.go_fast ? 10 : 1;
+    int min_index   = 0;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
@@ -388,6 +405,10 @@ static void process (menu_t *menu) {
 
     if (menu->actions.enter && menu->browser.entry) {
         sound_play_effect(SFX_ENTER);
+        if (menu->browser.selected == 0 && !path_is_root(menu->browser.directory)) {
+            pop_directory(menu);
+            return;
+        }
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR:
                 if (push_directory(menu, menu->browser.entry->name)) {

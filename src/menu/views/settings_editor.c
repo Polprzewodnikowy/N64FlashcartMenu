@@ -11,6 +11,13 @@ static const char *format_switch (bool state) {
     }
 }
 
+#ifdef ED64_AUTOLOAD_ROM
+static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+#endif
+
 static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -32,6 +39,23 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
 static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
     menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
+}
+
+static void set_hide_extension_type(menu_t *menu, void *arg) {
+    menu->settings.hide_extension = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
+static void set_hide_rom_tags_type (menu_t *menu, void *arg) {
+    menu->settings.hide_rom_tags = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
+static void set_hide_saves_folder(menu_t *menu, void *arg) {
+    menu->settings.hide_saves_folder = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
 }
 
 #ifdef BETA_SETTINGS
@@ -61,6 +85,14 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 // }
 #endif
 
+#ifdef ED64_AUTOLOAD_ROM
+static component_context_menu_t set_loading_progress_bar_enabled_context_menu = { .list = {
+    {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+#endif
+
 static component_context_menu_t set_protected_entries_type_context_menu = { .list = {
     {.text = "On", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(false) },
@@ -82,6 +114,24 @@ static component_context_menu_t set_use_saves_folder_type_context_menu = { .list
 static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list = {
     {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_hide_extension_context_menu = { .list = {
+    { .text = "On", .action = set_hide_extension_type, .arg = (void *)(uintptr_t)(true) },
+    { .text = "Off", .action = set_hide_extension_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_hide_rom_tags_context_menu = { .list = {
+    {.text = "On", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_hide_saves_folder_context_menu = { .list = {
+    {.text = "On", .action = set_hide_saves_folder, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_hide_saves_folder, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -112,10 +162,16 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
 #endif
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
-    { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
-    { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+#ifdef ED64_AUTOLOAD_ROM
+    { .text = "ROM Loading Bar", .submenu = &set_loading_progress_bar_enabled_context_menu },
+#endif
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
+    { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
+    { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+    { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
+    { .text = "Hide Extensions", .submenu = &set_hide_extension_context_menu },
+    { .text = "Hide ROM Tags", .submenu = &set_hide_rom_tags_context_menu },
+    { .text = "Hide Saves Folder", .submenu = &set_hide_saves_folder_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
@@ -164,10 +220,13 @@ static void draw (menu_t *menu, surface_t *d) {
         "  ROM Loading Bar   : %s\n\n"
 #endif
         "To change the following menu settings, press 'A':\n"
-        "     Fast Reboot ROM   : %s\n"
-        "     Show Hidden Files : %s\n"
-        "     Use Saves folder  : %s\n"
-        "     Sound Effects     : %s\n"
+        "  Fast Reboot ROM   : %s\n"
+        "  Show Hidden Files : %s\n"
+        "  Use Saves Folder  : %s\n"
+        "  Sound Effects     : %s\n"
+        "  Hide Extensions   : %s\n"
+        "  Hide ROM Tags     : %s\n"
+        "  Hide Saves Folder : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
         "*    PAL60 Mod Compat  : %s\n"
@@ -187,7 +246,10 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
-        format_switch(menu->settings.soundfx_enabled)
+        format_switch(menu->settings.soundfx_enabled),
+        format_switch(menu->settings.hide_extension),
+        format_switch(menu->settings.hide_rom_tags),
+        format_switch(menu->settings.hide_saves_folder)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

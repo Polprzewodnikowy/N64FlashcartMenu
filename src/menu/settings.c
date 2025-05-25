@@ -91,7 +91,6 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "show_saves_folder", settings->show_saves_folder);
     mini_set_bool(ini, "menu", "hide_extension", settings->hide_extension);
     mini_set_bool(ini, "menu", "hide_rom_tags", settings->hide_rom_tags);
-    mini_set_bool(ini, "menu", "hide_saves_folder", settings->hide_saves_folder);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
 #ifdef FEATURE_AUTOLOAD_ROM
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);

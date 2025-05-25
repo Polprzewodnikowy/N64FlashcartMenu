@@ -59,12 +59,6 @@ static void set_hide_rom_tags_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-static void set_hide_saves_folder(menu_t *menu, void *arg) {
-    menu->settings.hide_saves_folder = (bool)(uintptr_t)(arg);
-    settings_save(&menu->settings);
-    menu->browser.reload = true;
-}
-
 #ifdef BETA_SETTINGS
 static void set_pal60_type (menu_t *menu, void *arg) {
     menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
@@ -142,12 +136,6 @@ static component_context_menu_t set_hide_rom_tags_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_hide_saves_folder_context_menu = { .list = {
-    {.text = "On", .action = set_hide_saves_folder, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_hide_saves_folder, .arg = (void *)(uintptr_t)(false) },
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
@@ -175,10 +163,11 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
 #endif
 
 static component_context_menu_t options_context_menu = { .list = {
-#ifdef ED64_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM
     { .text = "ROM Loading Bar", .submenu = &set_loading_progress_bar_enabled_context_menu },
-#endif
+#else
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
+#endif
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
@@ -265,7 +254,7 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.show_saves_folder),
         format_switch(menu->settings.soundfx_enabled),
         format_switch(menu->settings.hide_extension),
-        format_switch(menu->settings.hide_rom_tags),
+        format_switch(menu->settings.hide_rom_tags)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

@@ -189,13 +189,6 @@ static bool load_directory (menu_t *menu) {
             hide = path_is_hidden(path);
             path_pop(path);
         }
-    
-        if (info.d_type == DT_DIR && menu->settings.hide_saves_folder) {
-            if (strcasecmp(info.d_name, "saves") == 0) {
-                result = dir_findnext(path_get(path), &info);
-                continue;
-            }
-        }
 
         if (!menu->settings.show_saves_folder) {
             path_push(path, info.d_name);

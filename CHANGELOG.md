@@ -9,12 +9,12 @@ built from latest commit on main branch.
 ## Release Notes 2025-{next}
 
 - **New Features**
-	- TBD
+	- Added ability to hide save folders (on by default).
 
 
 - **Bug Fixes**
-	- Fix ability to set the RTC via menu.
-	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
+	- Fix ability to set the RTC via menu (Hotfixed in last release).
+	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 
 
 - **Documentation**
@@ -30,7 +30,7 @@ built from latest commit on main branch.
 	- Updated Github templates.
 
 ### Breaking changes
-* Deprecated "Autoload ROM" function was removed from menu (use `ED64_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM` as a build flag to re-enable it).
 * Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 

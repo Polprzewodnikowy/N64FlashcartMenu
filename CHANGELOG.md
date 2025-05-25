@@ -30,7 +30,7 @@ built from latest commit on main branch.
 	- Updated Github templates.
 
 ### Breaking changes
-* Deprecated "Autoload ROM" function was removed from menu (use `ED64_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM` as a build flag to re-enable it).
 * Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 

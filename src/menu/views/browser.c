@@ -185,7 +185,7 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_ROM;
             } else if (file_has_extensions(entry->name, disk_extensions)) {
                 entry->type = ENTRY_TYPE_DISK;
-            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+            } else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;

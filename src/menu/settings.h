@@ -34,6 +34,9 @@ typedef struct {
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
 
+    /** @brief Show saves folder in file browser */ 
+    bool show_saves_folder;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 

@@ -11,6 +11,13 @@ static const char *format_switch (bool state) {
     }
 }
 
+#ifdef ED64_AUTOLOAD_ROM
+static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+#endif
+
 static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -26,6 +33,8 @@ static void set_use_saves_folder_type (menu_t *menu, void *arg) {
 static void set_show_saves_folder_type (menu_t *menu, void *arg) {
     menu->settings.show_saves_folder = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
+
+    menu->browser.reload = true;
 }
 
 static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
@@ -64,6 +73,14 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 //     // FIXME: add implementation
 //     menu->browser.reload = true;
 // }
+#endif
+
+#ifdef ED64_AUTOLOAD_ROM
+static component_context_menu_t set_loading_progress_bar_enabled_context_menu = { .list = {
+    {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
 #endif
 
 static component_context_menu_t set_protected_entries_type_context_menu = { .list = {
@@ -170,13 +187,16 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
-        "  Default Directory : %s\n\n"
+        "  Default Directory : %s\n"
 #ifdef ED64_AUTOLOAD_ROM
-        "  Autoload ROM      : %s\n"
-        "  ROM Loading Bar   : %s\n\n"
-#endif
+        "  Autoload ROM      : %s\n\n"
+        "To change the following menu settings, press 'A':\n"
+        "    ROM Loading Bar   : %s\n"
+#else
+        "\n"
         "To change the following menu settings, press 'A':\n"
         "     Fast Reboot ROM   : %s\n"
+#endif
         "     Show Hidden Files : %s\n"
         "     Use Saves folder  : %s\n"
         "     Show Saves folder : %s\n"

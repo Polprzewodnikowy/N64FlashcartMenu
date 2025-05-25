@@ -33,15 +33,15 @@ typedef struct {
 
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
+  
+    /** @brief Show saves folder in file browser */ 
+    bool show_saves_folder;
 
     /** @brief Hide file extensions */    
     bool hide_extension;
 
     /** @brief Hide rom tags */  
     bool hide_rom_tags;
-
-    /** @brief Hide saves folder */ 
-    bool hide_saves_folder;
 
     /** @brief Enable Background music */
     bool bgm_enabled;
@@ -52,7 +52,7 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
-#ifdef ED64_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;
 

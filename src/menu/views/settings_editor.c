@@ -11,7 +11,7 @@ static const char *format_switch (bool state) {
     }
 }
 
-#ifdef ED64_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM
 static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
     menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -28,6 +28,13 @@ static void set_protected_entries_type (menu_t *menu, void *arg) {
 static void set_use_saves_folder_type (menu_t *menu, void *arg) {
     menu->settings.use_saves_folder = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
+}
+
+static void set_show_saves_folder_type (menu_t *menu, void *arg) {
+    menu->settings.show_saves_folder = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+
+    menu->browser.reload = true;
 }
 
 static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
@@ -85,7 +92,7 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 // }
 #endif
 
-#ifdef ED64_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM
 static component_context_menu_t set_loading_progress_bar_enabled_context_menu = { .list = {
     {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
@@ -108,6 +115,12 @@ static component_context_menu_t set_soundfx_enabled_type_context_menu = { .list 
 static component_context_menu_t set_use_saves_folder_type_context_menu = { .list = {
     {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_show_saves_folder_type_context_menu = { .list = {
+    {.text = "On", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -168,10 +181,10 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
+    { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Hide Extensions", .submenu = &set_hide_extension_context_menu },
     { .text = "Hide ROM Tags", .submenu = &set_hide_rom_tags_context_menu },
-    { .text = "Hide Saves Folder", .submenu = &set_hide_saves_folder_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
@@ -214,19 +227,22 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
-        "  Default Directory : %s\n\n"
-#ifdef ED64_AUTOLOAD_ROM
-        "  Autoload ROM      : %s\n"
-        "  ROM Loading Bar   : %s\n\n"
-#endif
+        "  Default Directory : %s\n"
+#ifdef FEATURE_AUTOLOAD_ROM
+        "  Autoload ROM      : %s\n\n"
         "To change the following menu settings, press 'A':\n"
-        "  Fast Reboot ROM   : %s\n"
-        "  Show Hidden Files : %s\n"
-        "  Use Saves Folder  : %s\n"
-        "  Sound Effects     : %s\n"
-        "  Hide Extensions   : %s\n"
-        "  Hide ROM Tags     : %s\n"
-        "  Hide Saves Folder : %s\n"
+        "    ROM Loading Bar   : %s\n"
+#else
+        "\n"
+        "To change the following menu settings, press 'A':\n"
+        "     Fast Reboot ROM   : %s\n"
+#endif
+        "     Show Hidden Files : %s\n"
+        "     Use Saves folder  : %s\n"
+        "     Show Saves folder : %s\n"
+        "     Sound Effects     : %s\n"
+        "     Hide Extensions   : %s\n"
+        "     Hide ROM Tags     : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
         "*    PAL60 Mod Compat  : %s\n"
@@ -238,7 +254,7 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         ,
         menu->settings.default_directory,
-#ifdef ED64_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.loading_progress_bar_enabled),
 #else
@@ -246,10 +262,10 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
+        format_switch(menu->settings.show_saves_folder),
         format_switch(menu->settings.soundfx_enabled),
         format_switch(menu->settings.hide_extension),
         format_switch(menu->settings.hide_rom_tags),
-        format_switch(menu->settings.hide_saves_folder)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

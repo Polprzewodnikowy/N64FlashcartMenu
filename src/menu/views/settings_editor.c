@@ -144,7 +144,11 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
+#ifdef FEATURE_AUTOLOAD_ROM
+    { .text = "ROM Loading Bar", .submenu = &set_loading_progress_bar_enabled_context_menu },
+#else
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
+#endif
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },

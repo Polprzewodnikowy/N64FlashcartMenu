@@ -18,7 +18,7 @@ static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
-static const char *hidden_paths[] = {
+static const char *hidden_root_paths[] = {
     "/menu.bin",
     "/menu",
     "/N64FlashcartMenu.n64",
@@ -56,8 +56,8 @@ static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
-    for (int i = 0; hidden_paths[i] != NULL; i++) {
-        if (strcmp(stripped_path, hidden_paths[i]) == 0) {
+    for (int i = 0; hidden_root_paths[i] != NULL; i++) {
+        if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
             return true;
         }
     }
@@ -158,6 +158,15 @@ static bool load_directory (menu_t *menu) {
             path_pop(path);
         }
 
+        if (!menu->settings.show_saves_folder) {
+            path_push(path, info.d_name);
+            // Skip the "saves" directory if it is hidden (this is case sensitive)
+            if (strcmp(info.d_name, "saves") == 0) { // TODO: use SAVES_SUBDIRECTORY from cart_load.c
+                hide = true;
+            }
+            path_pop(path);
+        }
+
         if (!hide) {
             menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
 
@@ -176,7 +185,7 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_ROM;
             } else if (file_has_extensions(entry->name, disk_extensions)) {
                 entry->type = ENTRY_TYPE_DISK;
-            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+            } else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;

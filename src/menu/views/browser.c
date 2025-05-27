@@ -451,14 +451,14 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         ALIGN_RIGHT, VALIGN_TOP,
         "^%02XStart: Settings^00\n"
-        "^%02XR: Options^00",
+        "^%02XR:  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             ALIGN_CENTER, VALIGN_TOP,
-            "< Change Tab >\n"
+            "C-Up/Down: Fast Scroll\n"
             "%s",
             ctime(&menu->current_time)
         );

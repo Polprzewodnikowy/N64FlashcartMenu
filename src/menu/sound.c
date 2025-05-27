@@ -31,8 +31,11 @@ static void sound_reconfigure (int frequency) {
         }
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
+
         // Initialize wav64 compression level 3 as we're going to use it
         wav64_init_compression(3);
+
+        // Initialize MP3 player mixer
         mp3player_mixer_init();
         sound_initialized = true;
     }
@@ -126,6 +129,9 @@ void sound_deinit (void) {
  */
 void sound_poll (void) {
     if (sound_initialized) {
+        
+        // Check whether one audio buffer is ready, otherwise wait for next
+        // frame to perform mixing.
         mixer_try_play();
     }
 }

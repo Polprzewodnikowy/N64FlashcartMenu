@@ -22,7 +22,7 @@ built from latest commit on main branch.
 
 
 - **Refactor**
-	- TBD
+	- Improve tab navigation by using any left/right control input and add cursor SFX.
 
 - **Other**
 	- Updated libDragon SDK.

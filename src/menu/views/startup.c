@@ -9,6 +9,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 
 void view_startup_init (menu_t *menu) {
+#ifdef FEATURE_AUTOLOAD_ROM
     // FIXME: rather than use a controller button, would it be better to use the cart button?
     JOYPAD_PORT_FOREACH (port) {
         joypad_poll();
@@ -29,6 +30,7 @@ void view_startup_init (menu_t *menu) {
 
         return;
     }
+#endif
     
     if (menu->settings.first_run) {
         menu->settings.first_run = false;

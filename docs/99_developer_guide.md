@@ -4,20 +4,20 @@
 You can use a dev container in VSCode to ease development.
 
 Expected pre-requsites:
-* Docker container environment (for dev container support).
-* VSCode.
+* [Docker](https://docs.docker.com/engine/install/) or [Podman](https://podman.io/docs/installation) container environment (for dev container support).
+* [VSCode](https://code.visualstudio.com/download).
 
 ### A quick start video tutorial on how to set up your environment
-[![Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Devcontainer quick start guide").
+[![Docker Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Docker Devcontainer quick start guide").
 
 
 ### How to deploy
 #### SC64
-* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.20.0/sc64-deployer-windows-v2.20.0.zip).
+* Download the deployer [here](https://github.com/Polprzewodnikowy/SummerCart64/releases/download/v2.20.2/sc64-deployer-windows-v2.20.2.zip).
 * Extract and place `sc64deployer.exe` in the `tools/sc64` directory.
 
-Make sure that your firmware is compatible (currently v2.20.0+).
-See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.20.0/docs/00_quick_startup_guide.md#firmware-backupupdate)
+Make sure that your firmware is compatible (currently v2.20.2+).
+See: [here](https://github.com/Polprzewodnikowy/SummerCart64/blob/v2.20.2/docs/00_quick_startup_guide.md#firmware-backupupdate)
 
 ##### From the devcontainer
 It is not currently possible to directly communicate with USB devices. BUT, you can use a proxy TCP/IP connection as a workaround.  

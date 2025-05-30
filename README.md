@@ -5,18 +5,23 @@
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features.  
-**This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.**  
+An open source menu for N64 flashcarts that aims to support as many as possible. This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 
-## Flashcart Supported
-This menu aims to support as many N64 flashcarts as possible. The current state is:
+> [!TIP]
+> New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
+
+> [!WARNING]
+> **This project considers flashcart sellers that ship this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
+
+## Flashcart Support
+This menu aims to support as many N64 flashcarts as possible. The current state of support is:
 
 ### Supported
 * SummerCart64
 * 64Drive
 
 ### Work in Progress
-* ED64 (X and V series)
+* EverDrive-64 (X and V series)
 * ED64P (clones)
 
 ### Not yet planned
@@ -43,11 +48,6 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * ROM history and favorites.
 
 
-## Documentation
-Please take a moment to browse the current documentation / user guide:  
-[User Guide - Index](./docs/00_index.md)
-
-
 ## Aims
 * Support as many N64 Flashcarts as possible.
 * Be open source, using permissively licensed third-party libraries.
@@ -56,9 +56,9 @@ Please take a moment to browse the current documentation / user guide:
 * Support as many common mods and features as possible (flashcart dependent).
 
 
-## Flashcart specific
+## Flashcart specific information
 
-### SC64
+### SummerCart64
 * Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
 * Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
@@ -70,21 +70,25 @@ Please take a moment to browse the current documentation / user guide:
 * Download the latest `menu.bin` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
-### ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
+### EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
 Currently not supported, but work is in progress (See [PRs](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
-**Warning**: The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
+> [!CAUTION]
+> The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
 
-#### ED64 (Vseries)
+#### EverDrive-64 (V series)
 The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries) / [ED64-OfficialOS](https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/).
-Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
 
-#### ED64 (X series)
+* Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
+
+#### EverDrive-64 (X series)
 The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
-Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
 
-#### ED64 (P clone)
-Download the `OS64P.v64` ROM from the latest [action run - assets] and place it in the `/ED64P` folder.
+* Download the `OS64.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64` folder.
+
+#### ED64P (clones)
 The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
+
+* Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
 
 
 # License
@@ -94,7 +98,7 @@ Other license options may be available upon request with permissions of the orig
 * Robin Jones / NetworkFusion
 
 # Open source software and licenses used
-## libraries
+## Libraries
 * [libdragon](https://github.com/DragonMinded/libdragon/tree/preview) (UNLICENSE License)
 * [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
 * [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)

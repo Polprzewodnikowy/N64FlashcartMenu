@@ -88,45 +88,6 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
                 return b;
             }
         }
-    } else { // compatibility mode
-
-        char file_name[9];
-
-        // reset the directory path used for boxart.
-        path_free(path);
-        path = path_init(storage_prefix, BOXART_DIRECTORY);
-
-        snprintf(file_name, sizeof(file_name), "%c%c%c%c.png", game_code[0], game_code[1], game_code[2], game_code[3]);
-        path_push(path, file_name);
-
-        if (file_exists(path_get(path))) {
-            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
-                path_free(path);
-                return b;
-            }
-        }
-
-        path_pop(path);
-        snprintf(file_name, sizeof(file_name), "%c%c%c.png", game_code[0], game_code[1], game_code[2]);
-        path_push(path, file_name);
-
-        if (file_exists(path_get(path))) {
-            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
-                path_free(path);
-                return b;
-            }
-        } else {
-            path_pop(path);
-
-            snprintf(file_name, sizeof(file_name), "%c%c.png", game_code[1], game_code[2]);
-            path_push(path, file_name);
-            if (file_exists(path_get(path))) {
-                if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
-                    path_free(path);
-                    return b;
-                }
-            }
-        }
     }
     // TODO: return default image.
 

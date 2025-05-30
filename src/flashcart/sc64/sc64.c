@@ -639,6 +639,9 @@ static flashcart_err_t sc64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
             type = SAVE_TYPE_FLASHRAM_1MBIT;
             break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT:
+            type = SAVE_TYPE_FLASHRAM_FAKE;
+            break;
         default:
             return FLASHCART_ERR_ARGS;
     }

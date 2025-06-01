@@ -335,7 +335,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
-    menu_t *menu;
 
     if (d) {
         rdpq_attach(d, NULL);
@@ -345,8 +344,6 @@ static void draw_progress (float progress) {
         // Add message about longer loading time for byteswapped ROMs  
         if (cart_card_byteswap) {  
             ui_components_loader_draw(progress, "Byteswapped ROM detected, loading may take longer");
-        } else if (menu->load.rom_info.features.expansion_pak == EXPANSION_PAK_REQUIRED && !is_memory_expanded()) {  
-            ui_components_loader_draw(progress, "Mandatory Expansion Pak accessory was not found");
         } else {  
             ui_components_loader_draw(progress, "Loading ROM...");  
         }

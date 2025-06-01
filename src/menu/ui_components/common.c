@@ -132,7 +132,7 @@ void ui_components_seekbar_draw (float position) {
  * 
  * @param progress The progress value (0.0 to 1.0).
  */
-void ui_components_loader_draw (float progress) {
+void ui_components_loader_draw (float progress, const char *msg) {
     int x0 = LOADER_X;
     int y0 = LOADER_Y;
     int x1 = LOADER_X + LOADER_WIDTH;
@@ -140,6 +140,12 @@ void ui_components_loader_draw (float progress) {
 
     ui_components_border_draw(x0, y0, x1, y1);
     ui_components_progressbar_draw(x0, y0, x1, y1, progress);
+
+    ui_components_main_text_draw(  
+        ALIGN_CENTER, VALIGN_CENTER,  
+        "%s",  
+        msg  
+    );  
 }
 
 /**

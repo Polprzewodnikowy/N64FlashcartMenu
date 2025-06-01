@@ -102,10 +102,6 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
     path_t *path = path_clone(menu->load.rom_path);
 
-    if (menu->load.rom_info.features.expansion_pak == EXPANSION_PAK_REQUIRED && !is_memory_expanded()) {  
-        return CART_LOAD_ERR_EXP_PAK_NOT_FOUND;  
-    }
-
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
     flashcart_save_type_t save_type = convert_save_type(rom_info_get_save_type(&menu->load.rom_info));
 

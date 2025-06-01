@@ -246,7 +246,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_background_draw();
 #ifdef FEATURE_AUTOLOAD_ROM
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
-        ui_components_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f, NULL);
     } else {
 #endif
         ui_components_layout_draw();
@@ -335,6 +335,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
+    menu_t *menu;
 
     if (d) {
         rdpq_attach(d, NULL);
@@ -343,18 +344,12 @@ static void draw_progress (float progress) {
 
         // Add message about longer loading time for byteswapped ROMs  
         if (cart_card_byteswap) {  
-            ui_components_main_text_draw(  
-                ALIGN_CENTER, VALIGN_TOP,  
-                "\n\n\nByteswapped ROM detected.\nLoading may take longer than usual."  
-            );  
+            ui_components_loader_draw(progress, "Byteswapped ROM detected, loading may take longer");
+        } else if (menu->load.rom_info.features.expansion_pak == EXPANSION_PAK_REQUIRED && !is_memory_expanded()) {  
+            ui_components_loader_draw(progress, "Mandatory Expansion Pak accessory was not found");
         } else {  
-            ui_components_main_text_draw(  
-                ALIGN_CENTER, VALIGN_TOP,  
-                "\n\n\nLoading ROM..."  
-            );  
+            ui_components_loader_draw(progress, "Loading ROM...");;  
         }
-
-        ui_components_loader_draw(progress);
 
         rdpq_detach_show();
     }

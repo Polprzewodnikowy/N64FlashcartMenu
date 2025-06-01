@@ -60,12 +60,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_background_draw();
 
-        ui_components_main_text_draw(  
-            ALIGN_CENTER, VALIGN_TOP,  
-            "\n\n\nLoading image..."  
-        );
-
-        ui_components_loader_draw(png_decoder_get_progress());
+        ui_components_loader_draw(png_decoder_get_progress(), "Loading image...");
     } else {
         rdpq_attach_clear(d, NULL);
 

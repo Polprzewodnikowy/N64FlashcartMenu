@@ -83,7 +83,7 @@ void ui_components_seekbar_draw(float progress);
  * 
  * @param position Position value (0.0 to 1.0).
  */
-void ui_components_loader_draw(float position);
+void ui_components_loader_draw(float progress, const char *msg);
 
 /**
  * @brief Draw a scrollbar component.

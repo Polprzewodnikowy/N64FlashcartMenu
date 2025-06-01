@@ -49,7 +49,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_background_draw();
 
     if (menu->boot_pending.emulator_file) {
-        ui_components_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
 
@@ -86,12 +86,7 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_main_text_draw(  
-            ALIGN_CENTER, VALIGN_TOP,  
-            "\n\n\nLoading emulated ROM..."  
-        );
-
-        ui_components_loader_draw(progress);
+        ui_components_loader_draw(progress, "Loading emulated ROM...");
 
         rdpq_detach_show();
     }

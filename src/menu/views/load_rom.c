@@ -348,7 +348,7 @@ static void draw_progress (float progress) {
         } else if (menu->load.rom_info.features.expansion_pak == EXPANSION_PAK_REQUIRED && !is_memory_expanded()) {  
             ui_components_loader_draw(progress, "Mandatory Expansion Pak accessory was not found");
         } else {  
-            ui_components_loader_draw(progress, "Loading ROM...");;  
+            ui_components_loader_draw(progress, "Loading ROM...");  
         }
 
         rdpq_detach_show();

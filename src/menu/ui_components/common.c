@@ -141,11 +141,13 @@ void ui_components_loader_draw (float progress, const char *msg) {
     ui_components_border_draw(x0, y0, x1, y1);
     ui_components_progressbar_draw(x0, y0, x1, y1, progress);
 
-    ui_components_main_text_draw(  
-        ALIGN_CENTER, VALIGN_CENTER,  
-        "%s",  
-        msg  
-    );  
+    if (msg != NULL) {
+        ui_components_main_text_draw(
+        ALIGN_CENTER, VALIGN_CENTER,
+            "%s",
+            msg
+        );
+    }
 }
 
 /**

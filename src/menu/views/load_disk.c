@@ -143,7 +143,6 @@ static void draw_progress (float progress) {
         rdpq_attach(d, NULL);
 
         ui_components_background_draw();
-        
         ui_components_loader_draw(progress, "Loading 64DD disk...");
 
         rdpq_detach_show();

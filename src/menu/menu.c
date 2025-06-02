@@ -146,7 +146,7 @@ static void menu_deinit (menu_t *menu) {
 
     ui_components_background_free();
 
-    path_free(menu->load.disk_path);
+    path_free(menu->load.primary_dd_disk_file_path);
     path_free(menu->load.rom_path);
     for (int i = 0; i < menu->browser.entries; i++) {
         free(menu->browser.list[i].name);

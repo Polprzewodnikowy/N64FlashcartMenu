@@ -2,16 +2,19 @@
 ## Initial Setup of an SD Card
 
 ### First steps
-Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
-**WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
+Insert the (Micro) SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.
 
-**Note:** On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed.
+> [!TIP]
+> Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and dont require re-formatting.
+
 
 #### Preparations for SC64
-- FAT32 and EXFAT are fully supported.
-- An SD formatted with 128 kiB cluster size is recommended.
-- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-- Place your ROM files on the SD card, **in any folder except `menu`**.
+- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your Micro SD card.
+- Place your ROM files on the Micro SD card, **in any folder except the root directory `menu` folder**.
+- Remove the Micro SD Card from your computer and insert it into the SC64. 
+
+> [!TIP]
+> An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.

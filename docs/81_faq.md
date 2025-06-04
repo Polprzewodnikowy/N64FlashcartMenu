@@ -21,4 +21,8 @@ Delete the file. It will be re-created automatically with the default settings.
 Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
 
 ### Loading ROM's are slower than on other flashcart menus
-On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed.
+> [!TIP]
+> An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.
+
+> [!WARNING]
+> On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed.

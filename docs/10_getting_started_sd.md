@@ -4,30 +4,32 @@
 ### First steps
 Insert the (Micro) SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.
 
-> [!TIP]
-> Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and dont require re-formatting.
-
 
 #### Preparations for SC64
+
+> [!TIP]
+> Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and don't require re-formatting.
+
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your Micro SD card.
 - Place your ROM files on the Micro SD card, **in any folder except the root directory `menu` folder**.
 - Remove the Micro SD Card from your computer and insert it into the SC64. 
 
-> [!TIP]
-> An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.
-
-#### Preparations for other supported flashcarts
-- FAT32 recommended.
-- An SD formatted with the default cluster size is recommended.
+#### Preparations for OTHER supported flashcarts
+- It is recommended to format the SD Card to FAT32 with the default cluster size.
 - Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
+- Remove the Micro SD Card from your computer and insert it into the flashcart.
 
-### Emulator support
+
+### Advanced Steps
+Advanced steps are optional, which adds additional capabilities.
+
+#### Add Emulator support
 See the [Emulators](./18_emulators.md) page.
 
-### 64DD Disk support
+#### Add 64DD Disk support
 See the [64DD](./17_64dd.md) page.
 
-#### So what would the layout of the SD card look like?
+### So what could the layout of the SD card look like?
 ```plaintext
 SD:\
 │

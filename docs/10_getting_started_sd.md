@@ -5,14 +5,13 @@
 Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.  
 **WARNING:** Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
 
-**Note:** It is advised to use ROM files in the Big Endian (default, also called "non-byteswapped") format. Although the menu auto-converts byteswapped ROM files, the load time will increase.
+**Note:** On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed.
 
 #### Preparations for SC64
 - FAT32 and EXFAT are fully supported.
 - An SD formatted with 128 kiB cluster size is recommended.
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 - Place your ROM files on the SD card, **in any folder except `menu`**.
-**NOTE:** byteswapped ROM's will increase load times.
 
 #### Preparations for other supported flashcarts
 - FAT32 recommended.

@@ -1,0 +1,5 @@
+# Download the (https://github.com/hcs64/neon64v2/releases/download/v2.0-beta.4/neon64v2b4.zip), extract it and add the `neon64bu.rom` file to the `filesystem/menu/emulators` directory.
+# Download the (https://github.com/Hydr8gon/sodium64/releases/download/release/sodium64.zip), extract it and add the `sodium64.z64` file to the `filesystem/menu/emulators` directory.
+# Download the (https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) from the `download emulator` button extract it and add both the `gb.v64` and `gbc.v64` files to the `filesystem/menu/emulators` directory.
+# Download the (https://github.com/fhoedemakers/smsplus64/releases/download/v0.7/smsPlus64.z64) and add the `smsplus64.z64` file to the `filesystem/menu/emulators` directory.
+# Download the (https://github.com/celerizer/Press-F-Ultra/releases/download/r4/Press-F.z64) and add the `pressf.z64` file to the `filesystem/menu/emulators` directory.

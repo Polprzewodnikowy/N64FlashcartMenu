@@ -7,7 +7,8 @@ The internal database is contained within `rom_info.c`.
 
 The N64FlashcartMenu expects that you are using a flashcart that has an [UltraCIC](https://n64brew.dev/wiki/Checking_Integrated_Circuit) available.
 
-NOTE: Some old ROM hacks may have adjusted the ROM code to manipulate the expected CIC and save type in order to allow compatibility with more available chips (usually 6102) as was used on flashcarts prior to 2018. If it does, you may need to override the internal database using the override settings.
+> [!TIP]
+> Some old ROM hacks may have adjusted the ROM code to manipulate the expected CIC and save type in order to allow compatibility with more available chips (usually 6102) as was used on flashcarts prior to 2018. If it does, you may need to override the internal database using the override settings.
 
 If you override the defaults and want to go back to the default ones, delete the `<rom name>.ini` file.
 
@@ -19,14 +20,16 @@ The N64FlashcartMenu fully supports the [homebrew header](https://n64brew.dev/wi
 #### CIC type
 The Checking Integrated Circuit [CIC](https://n64brew.dev/wiki/Checking_Integrated_Circuit) was a physical security chip used by retail Nintendo 64 game cartridges that prevented unlicensed and pirated game cartridges from running and used in conjunction with the [PIF](https://n64brew.dev/wiki/PIF-NUS). 
 
-WARNING: Changing the CIC type to an unsupported one may result in a blank screen for that particular ROM until you manually delete the override file!
+> [!WARNING]
+> Changing the CIC type to an unsupported one may result in a blank screen for that particular ROM until you manually delete the override file!
 
 For more detailed information regarding the various CIC chips, please visit [micro-64.com's game CIC database](http://micro-64.com/database/gamecic.shtml).
 
 #### Save type
 Games that have been programmed to include an internal save system might use various types of chips, methods and sizes.
 
-WARNING: Using the wrong save type can cause unwanted behaviors on games and/or corrupt existing ones!
+> [!WARNING]
+> Using the wrong save type can cause unwanted behaviors on games and/or corrupt existing ones!
 
 For more detailed information regarding the various saving methods, please visit [micro-64.com's game save database](http://micro-64.com/database/gamesave.shtml)
 

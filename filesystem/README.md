@@ -4,3 +4,8 @@ The current expected files used by `makefile` have the extensions:
 * wav64
 * font64
 * sprite
+
+Adding files in the following directories are used as a fallback for the same files as would be added on an SD card:
+* `menu/emulators`
+* `menu/ddipl`
+

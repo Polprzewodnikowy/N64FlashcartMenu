@@ -173,12 +173,24 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
     switch (menu->load.disk_info.region) {
         case DISK_REGION_DEVELOPMENT:
             path_push(path, "NDXJ0.n64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", DDIPL_LOCATION);
+                path_push(path, "NDXJ0.n64");
+            }
             break;
         case DISK_REGION_JAPANESE:
             path_push(path, "NDDJ2.n64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", DDIPL_LOCATION);
+                path_push(path, "NDDJ2.n64");
+            }
             break;
         case DISK_REGION_USA:
             path_push(path, "NDDE0.n64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", DDIPL_LOCATION);
+                path_push(path, "NDDE0.n64");
+            }
             break;
     }
 
@@ -221,26 +233,50 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "neon64bu.rom");
+            }
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "sodium64.z64");
+            }
             save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "gb.v64");
+            }
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "gbc.v64");
+            }
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "smsPlus64.z64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "smsPlus64.z64");
+            }
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
         case CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF:
             path_push(path, "Press-F.z64");
+            if (!file_exists(path_get(path))) {
+                path = path_init("rom:", EMU_LOCATION);
+                path_push(path, "Press-F.z64");
+            }
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
     }

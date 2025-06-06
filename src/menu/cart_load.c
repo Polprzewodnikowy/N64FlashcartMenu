@@ -174,21 +174,21 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
         case DISK_REGION_DEVELOPMENT:
             path_push(path, "NDXJ0.n64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", DDIPL_LOCATION);
+                path = path_init("rom:/", DDIPL_LOCATION);
                 path_push(path, "NDXJ0.n64");
             }
             break;
         case DISK_REGION_JAPANESE:
             path_push(path, "NDDJ2.n64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", DDIPL_LOCATION);
+                path = path_init("rom:/", DDIPL_LOCATION);
                 path_push(path, "NDDJ2.n64");
             }
             break;
         case DISK_REGION_USA:
             path_push(path, "NDDE0.n64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", DDIPL_LOCATION);
+                path = path_init("rom:/", DDIPL_LOCATION);
                 path_push(path, "NDDE0.n64");
             }
             break;
@@ -226,6 +226,10 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type, flashcart_progress_callback_t progress) {
     path_t *path = path_init(menu->storage_prefix, EMU_LOCATION);
 
+    // TODO: think about using dir_glob to find the emulator files
+    //dir_glob("**/*.sprite", "rom:/", mycb, NULL);
+    //dir_glob("**/*.neon64bu.rom", menu->storage_prefix, mycb, NULL);
+
     flashcart_save_type_t save_type = FLASHCART_SAVE_TYPE_NONE;
     uint32_t emulated_rom_offset = 0x200000;
     uint32_t emulated_file_offset = 0;
@@ -234,7 +238,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "neon64bu.rom");
             }
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
@@ -242,7 +246,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "sodium64.z64");
             }
             save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
@@ -250,7 +254,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "gb.v64");
             }
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
@@ -258,7 +262,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "gbc.v64");
             }
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
@@ -266,7 +270,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "smsPlus64.z64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "smsPlus64.z64");
             }
             save_type = FLASHCART_SAVE_TYPE_NONE;
@@ -274,7 +278,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF:
             path_push(path, "Press-F.z64");
             if (!file_exists(path_get(path))) {
-                path = path_init("rom:", EMU_LOCATION);
+                path = path_init("rom:/", EMU_LOCATION);
                 path_push(path, "Press-F.z64");
             }
             save_type = FLASHCART_SAVE_TYPE_NONE;

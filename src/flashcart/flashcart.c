@@ -335,20 +335,20 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
 /**
  * @brief Load a 64DD disk into the flashcart.
  * 
- * @param disk_path Path to the disk file.
+ * @param primary_dd_disk_file_path Path to the disk file.
  * @param disk_parameters Pointer to the disk parameters.
  * @return flashcart_err_t Error code.
  */
-flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters) {
+flashcart_err_t flashcart_load_64dd_disk (char *primary_dd_disk_file_path, flashcart_disk_parameters_t *disk_parameters) { // , dd_swap_disk_filepaths *swap_disk_filepaths
     if (!flashcart->load_64dd_disk) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
-    if ((disk_path == NULL) || (disk_parameters == NULL)) {
+    if ((primary_dd_disk_file_path == NULL) || (disk_parameters == NULL)) { //   || (swap_disk_filepaths == NULL)
         return FLASHCART_ERR_ARGS;
     }
 
-    return flashcart->load_64dd_disk(disk_path, disk_parameters);
+    return flashcart->load_64dd_disk(primary_dd_disk_file_path, disk_parameters); // , swap_disk_filepaths
 }
 
 flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode) {

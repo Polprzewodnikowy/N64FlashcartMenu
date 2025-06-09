@@ -9,6 +9,7 @@ $neon64Url = "https://github.com/hcs64/neon64v2/releases/download/v2.0-beta.4/ne
 $sodium64Url = "https://github.com/Hydr8gon/sodium64/releases/download/release/sodium64.zip"
 $smsplus64Url = "https://github.com/fhoedemakers/smsplus64/releases/download/v0.7/smsPlus64.z64"
 $pressfUrl = "https://github.com/celerizer/Press-F-Ultra/releases/download/r4/Press-F.z64"
+$gb64Url = "https://github.com/lambertjamesd/gb64/blob/master/romwrapper/gb.n64"
 
 # Get neon64
 $neon64Zip = "$env:TEMP/neon64v2b4.zip"
@@ -34,6 +35,8 @@ Invoke-WebRequest -Uri $pressfUrl -OutFile "$emulatorDir/pressf.z64"
 # https://github.com/lambertjamesd/gb64/blob/gh-pages/romwrapper/romwrapper.html
 # we now need to work out how to download the files automatically using the `downloadEV()` event.
 # Currently we need to manually open: https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html" and click the "Download Emulator" button to get the gb.v64 and gbc.v64 files.
+Invoke-WebRequest -Uri $gb64Url -OutFile "$emulatorDir/gb.v64"
+Invoke-WebRequest -Uri $gb64Url -OutFile "$emulatorDir/gbc.v64"
 
 Write-Host "All emulators downloaded and placed in $emulatorDir."
 

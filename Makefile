@@ -97,7 +97,8 @@ DEPS = $(OBJS:.o=.d)
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(wildcard menu/emulators/*))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second

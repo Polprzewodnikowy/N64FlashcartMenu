@@ -131,6 +131,7 @@ void ui_components_seekbar_draw (float position) {
  * @brief Draw a loader.
  * 
  * @param progress The progress value (0.0 to 1.0).
+ * @param msg The message to display truncated to 30 characters.
  */
 void ui_components_loader_draw (float progress, const char *msg) {
     int x0 = LOADER_X;

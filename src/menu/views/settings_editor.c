@@ -3,7 +3,7 @@
 #include "../settings.h"
 #include "views.h"
 
-static bool show_message;
+static bool show_message_reset_settings = false;
 
 static const char *format_switch (bool state) {
     switch (state) {
@@ -168,23 +168,23 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        if (show_message) {
+        if (show_message_reset_settings) {
             settings_reset_to_defaults();
             menu_show_error(menu, "Reboot N64 to take effect!");
-            show_message = false;
+            show_message_reset_settings = false;
         } else {
             ui_components_context_menu_show(&options_context_menu);
         }
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
-        if (show_message) {
-            show_message = false;
+        if (show_message_reset_settings) {
+            show_message_reset_settings = false;
         } else {
             menu->next_mode = MENU_MODE_BROWSER;
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options){
-        show_message = true;
+        show_message_reset_settings = true;
     }
 }
 
@@ -262,7 +262,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_context_menu_draw(&options_context_menu);
 
-    if (show_message) {
+    if (show_message_reset_settings) {
         ui_components_messagebox_draw(
             "Reset settings?\n\n"
             "A: Yes, B: Back"

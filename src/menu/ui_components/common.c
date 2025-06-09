@@ -145,7 +145,7 @@ void ui_components_loader_draw (float progress, const char *msg) {
     if (msg != NULL) {
         ui_components_main_text_draw(
         ALIGN_CENTER, VALIGN_CENTER,
-            "%.30s",
+            "\n%.30s",
             msg
         );
     }

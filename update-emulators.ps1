@@ -27,7 +27,7 @@ Copy-Item -Path (Get-ChildItem -Path "$env:TEMP/sodium64" -Recurse -Filter "sodi
 Invoke-WebRequest -Uri $smsplus64Url -OutFile "$emulatorDir/smsplus64.z64"
 
 # Get Press-F Ultra
-Invoke-WebRequest -Uri $pressfUrl -OutFile "$emulatorDir/pressf.z64"
+Invoke-WebRequest -Uri $pressfUrl -OutFile "$emulatorDir/Press-F.z64"
 
 # Get gb64
 # Note: The gb64 emulator requires manual download and extraction of gb.v64 and gbc.v64 files.

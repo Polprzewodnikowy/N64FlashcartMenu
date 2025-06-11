@@ -62,7 +62,7 @@ static flashcart_save_type_t convert_save_type (rom_save_type_t save_type) {
         case SAVE_TYPE_SRAM_1MBIT: return FLASHCART_SAVE_TYPE_SRAM_1MBIT;
         case SAVE_TYPE_FLASHRAM_1MBIT: return FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT;
         case SAVE_TYPE_FLASHRAM_PKST2: return FLASHCART_SAVE_TYPE_FLASHRAM_PKST2;
-        case SAVE_TYPE_FLASHRAM_NONCOMPLIANT: return FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+        case SAVE_TYPE_FLASHRAM_FAKE: return FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
         default: return FLASHCART_SAVE_TYPE_NONE;
     }
 }
@@ -230,11 +230,11 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "smsPlus64.z64");

@@ -91,7 +91,7 @@ typedef enum {
     SAVE_TYPE_SRAM_1MBIT = 5,               /**< SRAM 1Mbit - Not a real save type, but used for some ROMs due to ED64 support. */
     SAVE_TYPE_FLASHRAM_1MBIT = 6,           /**< FlashRAM 1Mbit */
     SAVE_TYPE_FLASHRAM_PKST2 = 7,           /**< FlashRAM PKST2 */
-    SAVE_TYPE_FLASHRAM_NONCOMPLIANT = 8,    /**< Fake FlashRAM 1Mbit - Not a real save type, but used for some ROMs due to ED64 support. */
+    SAVE_TYPE_FLASHRAM_FAKE = 8,            /**< Fake FlashRAM 1Mbit - Not a real save type, but used for some ROMs due to ED64 support. */
     SAVE_TYPE_AUTOMATIC = -1,               /**< Automatic save type detection */
 } rom_save_type_t;
 

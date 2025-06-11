@@ -309,7 +309,7 @@ static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
         case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
             type = (device_variant == DEVICE_VARIANT_A) ? SAVE_TYPE_FLASHRAM_PKST2 : SAVE_TYPE_FLASHRAM_1MBIT;
             break;
-        case FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT:
+        case FLASHCART_SAVE_TYPE_FLASHRAM_FAKE:
             // NOTE: 64drive doesn't support the non-compliant FlashRam save type, Just thow an error.
             return FLASHCART_ERR_ARGS;
         default:

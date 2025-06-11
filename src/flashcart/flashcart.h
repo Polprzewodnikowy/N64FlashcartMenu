@@ -45,7 +45,7 @@ typedef enum {
     FLASHCART_SAVE_TYPE_SRAM_1MBIT, /**< SRAM 1Mbit */
     FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT, /**< FlashRAM 1Mbit */
     FLASHCART_SAVE_TYPE_FLASHRAM_PKST2, /**< FlashRAM PKST2 */
-    FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT, /**< Fake FlashRAM 1Mbit */
+    FLASHCART_SAVE_TYPE_FLASHRAM_FAKE, /**< Fake FlashRAM 1Mbit */
     __FLASHCART_SAVE_TYPE_END /**< End of save types */
 } flashcart_save_type_t;
 

@@ -23,7 +23,7 @@ built from latest commit on main branch.
 - **Bug Fixes**
 	- Menu sound FX issues (hissing, popping and white noise).
 	- RTC not showing or setting correct date parameters in certain circumstances.
-	- GB / GBC emulator not saving in certain circumstances.
+	- ~~GB / GBC emulator not saving in certain circumstances.~~
 
 
 - **Documentation**
@@ -42,7 +42,7 @@ built from latest commit on main branch.
 	- Updated miniz library.
 
 ### Breaking changes
-* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
+* ~~GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.~~
 * For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
 
 

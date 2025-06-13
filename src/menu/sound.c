@@ -11,7 +11,7 @@
 
 #define DEFAULT_FREQUENCY   (44100)
 #define NUM_BUFFERS         (4)
-#define NUM_CHANNELS        (3)
+#define NUM_CHANNELS        (16)
 
 static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
 
@@ -31,6 +31,11 @@ static void sound_reconfigure (int frequency) {
         }
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
+
+        // Attempt to initialize wav64 compression level 1
+        wav64_init_compression(1);
+
+        // Initialize MP3 player mixer
         mp3player_mixer_init();
         sound_initialized = true;
     }
@@ -124,6 +129,9 @@ void sound_deinit (void) {
  */
 void sound_poll (void) {
     if (sound_initialized) {
+        
+        // Check whether one audio buffer is ready, otherwise wait for next
+        // frame to perform mixing.
         mixer_try_play();
     }
 }

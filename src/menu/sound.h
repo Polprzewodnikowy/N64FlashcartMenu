@@ -9,8 +9,9 @@
 
 #include <stdbool.h>
 
-#define SOUND_MP3_PLAYER_CHANNEL    (0) /**< Channel for MP3 player sound */
-#define SOUND_SFX_CHANNEL           (2) /**< Channel for sound effects */
+#define SOUND_SFX_CHANNEL           (0) /**< Channel for sound effects */
+#define SOUND_MP3_PLAYER_CHANNEL    (2) /**< Channel for MP3 player sound */
+
 
 /**
  * @brief Enumeration of available sound effects for menu interactions.

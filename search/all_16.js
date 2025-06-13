@@ -11,7 +11,7 @@ var searchData=
   ['n64_5fdisk_5fexpandable_8',['N64_DISK_EXPANDABLE',['../rom__info_8h.html#a0049f84e1fa62200145aa4bcbf7510b0a0b98dff1eb797c2684050e4d430d8722',1,'rom_info.h']]],
   ['n64flashcartmenu_9',['N64FlashcartMenu',['../index.html',1,'']]],
   ['n64flashcartmenu_20settings_10',['N64FlashcartMenu settings',['../md_docs_211__menu__controls.html#autotoc_md45',1,'']]],
-  ['n64flashcartmenu_20user_20guide_11',['N64FlashcartMenu User Guide',['../md_docs_200__index.html#autotoc_md28',1,'']]],
+  ['n64flashcartmenu_20user_20guide_11',['N64FlashcartMenu User Guide',['../md_docs_200__index.html#autotoc_md27',1,'']]],
   ['name_20here_20does_20not_20work_12',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md91',1,'']]],
   ['not_20work_13',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md91',1,'']]],
   ['not_20working_14',['I have changed the menu/config.ini file manually and things are not working.',['../md_docs_281__faq.html#autotoc_md94',1,'']]],

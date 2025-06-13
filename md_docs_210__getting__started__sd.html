@@ -88,36 +88,37 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="el" href="md_docs_200__index.html">Return to the index</a> </p>
-<h2><a class="anchor" id="autotoc_md34"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 Initial Setup of an SD Card</h2>
-<h3><a class="anchor" id="autotoc_md35"></a>
+<h3><a class="anchor" id="autotoc_md34"></a>
 First steps</h3>
-<p>Connect the SD card to your PC and ensure it is properly formatted to be compatible with your flashcart. <br  />
- <b>WARNING:</b> Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.</p>
-<p><b>Note:</b> It is advised to use ROM files in the Big Endian (default, also called "non-byteswapped") format. Although the menu auto-converts byteswapped ROM files, the load time will increase.</p>
-<h4><a class="anchor" id="autotoc_md36"></a>
+<p>Insert the (Micro) SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.</p>
+<h4><a class="anchor" id="autotoc_md35"></a>
 Preparations for SC64</h4>
+<dl class="section remark"><dt>Remarks</dt><dd>Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and don't require re-formatting.</dd></dl>
 <ul>
-<li>FAT32 and EXFAT are fully supported.</li>
-<li>An SD formatted with 128 kiB cluster size is recommended.</li>
-<li>Download the latest <code>sc64menu.n64</code> file from the <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/">releases</a> page, then put it in the root directory of your SD card.</li>
-<li>Place your ROM files on the SD card, <b>in any folder except <code>menu</code></b>. <b>NOTE:</b> byteswapped ROM's will increase load times.</li>
+<li>Download the latest <code>sc64menu.n64</code> file from the <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/">releases</a> page, then put it in the root directory of your Micro SD card.</li>
+<li>Place your ROM files on the Micro SD card, <b>in any folder except the root directory <code>menu</code> folder</b>.</li>
+<li>Remove the Micro SD Card from your computer and insert it into the SC64.</li>
 </ul>
-<h4><a class="anchor" id="autotoc_md37"></a>
-Preparations for other supported flashcarts</h4>
+<h4><a class="anchor" id="autotoc_md36"></a>
+Preparations for OTHER supported flashcarts</h4>
 <ul>
-<li>FAT32 recommended.</li>
-<li>An SD formatted with the default cluster size is recommended.</li>
+<li>It is recommended to format the SD Card to FAT32 with the default cluster size.</li>
 <li>Download the latest <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/">menu</a> file specific for your flashcart and place it in the expected location.</li>
+<li>Remove the Micro SD Card from your computer and insert it into the flashcart.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md38"></a>
-Emulator support</h3>
+<h3><a class="anchor" id="autotoc_md37"></a>
+Advanced Steps</h3>
+<p>Advanced steps are optional, which adds additional capabilities.</p>
+<h4><a class="anchor" id="autotoc_md38"></a>
+Add Emulator support</h4>
 <p>See the <a class="el" href="md_docs_218__emulators.html">Emulators</a> page.</p>
-<h3><a class="anchor" id="autotoc_md39"></a>
-64DD Disk support</h3>
+<h4><a class="anchor" id="autotoc_md39"></a>
+Add 64DD Disk support</h4>
 <p>See the <a class="el" href="md_docs_217__64dd.html">64DD</a> page.</p>
-<h4><a class="anchor" id="autotoc_md40"></a>
-So what would the layout of the SD card look like?</h4>
+<h3><a class="anchor" id="autotoc_md40"></a>
+So what could the layout of the SD card look like?</h3>
 <div class="fragment"><div class="line">SD:\</div>
 <div class="line">│</div>
 <div class="line">├── sc64menu.n64</div>
@@ -165,12 +166,12 @@ Transferring saves from an ED64</h3>
 <li>For EEPROM 4Kbit games, remove the padding.</li>
 <li>For others, use a tool such as <a href="https://github.com/Ninjiteu/N64SaveConverter">Ninjiteu's N64SaveConverter</a>.</li>
 </ul>
-<p><b>WARNING:</b> Saves created with certain emulators, or created for a different ROM version (as in revisions of the same game) or region (as in between NTSC and PAL versions of a same game) may be incompatible. </p>
+<dl class="section attention"><dt>Attention</dt><dd>Saves created with certain emulator versions, or created for a different ROM version (as in revisions of the same game), or region (as in between NTSC and PAL versions of a same game) may be incompatible. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 13 2025 18:00:52 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Jun 13 2025 18:29:19 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

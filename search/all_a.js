@@ -77,5 +77,5 @@ var searchData=
   ['button_5fmode_5fnone_74',['BUTTON_MODE_NONE',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefa365b5ec9d504646251a700062f19bc3f',1,'sc64_ll.h']]],
   ['button_5fmode_5fusb_5fpacket_75',['BUTTON_MODE_USB_PACKET',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefafac0b304877fefda7edc5e2e49ae5141',1,'sc64_ll.h']]],
   ['button_5fupgrade_76',['BUTTON_UPGRADE',['../group__drive.html#a9c1ff2b030a6ebcb953fc895d77adf7f',1,'d64_regs_t']]],
-  ['byteswap_20on_20load_20command_77',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md24',1,'']]]
+  ['byteswap_20on_20load_20command_77',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md23',1,'']]]
 ];

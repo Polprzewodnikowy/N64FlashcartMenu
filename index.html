@@ -90,12 +90,13 @@ $(function(){ initResizable(false); });
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <img src="https://github.com/polprzewodnikowy/N64FlashcartMenu/actions/workflows/build.yml/badge.svg" alt="Build" style="pointer-events: none;" class="inline"/> <img src="https://img.shields.io/github/stars/Polprzewodnikowy/N64FlashcartMenu" alt="GitHub Org's stars" class="inline"/> <a href="http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu" title="Average time to resolve an issue"><img src="http://isitmaintained.com/badge/resolution/Polprzewodnikowy/N64FlashcartMenu.svg" alt="Average time to resolve an issue" style="pointer-events: none;" class="inline"/></a> <a href="http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu" title="Percentage of issues still open"><img src="http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg" alt="Percentage of issues still open" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md"><img src="https://img.shields.io/badge/first--timers--only-friendly-blue.svg" alt="#yourfirstpr" style="pointer-events: none;" class="inline"/></a></p>
 <h1><a class="anchor" id="autotoc_md0"></a>
 N64 Flashcart Menu</h1>
-<p>An open source menu for N64 flashcarts and aims to support as many as possible. The menu is not affiliated with any partuclar flashcart and does not necessarily expose all capable firmware features. <br  />
- <b>This project considers flashcart sellers that include this menu or copyrighted ROM's as part of their product offering as licence offenders which may result in future action.</b> <br  />
-</p>
+<p>An open source menu for N64 flashcarts that aims to support as many as possible. This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.</p>
+<dl class="section remark"><dt>Remarks</dt><dd>New users are invited to read the latest <a class="el" href="md_docs_200__index.html">Documentation / User Guide</a>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd><b>This project considers flashcart sellers that ship this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.</b> <br  />
+</dd></dl>
 <h2><a class="anchor" id="autotoc_md1"></a>
-Flashcart Supported</h2>
-<p>This menu aims to support as many N64 flashcarts as possible. The current state is:</p>
+Flashcart Support</h2>
+<p>This menu aims to support as many N64 flashcarts as possible. The current state of support is:</p>
 <h3><a class="anchor" id="autotoc_md2"></a>
 Supported</h3>
 <ul>
@@ -105,7 +106,7 @@ Supported</h3>
 <h3><a class="anchor" id="autotoc_md3"></a>
 Work in Progress</h3>
 <ul>
-<li>ED64 (X and V series)</li>
+<li>EverDrive-64 (X and V series)</li>
 <li>ED64P (clones)</li>
 </ul>
 <h3><a class="anchor" id="autotoc_md4"></a>
@@ -135,10 +136,6 @@ Current (notable) menu features</h2>
 <li>ROM history and favorites.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md6"></a>
-Documentation</h2>
-<p>Please take a moment to browse the current documentation / user guide: <br  />
- <a class="el" href="md_docs_200__index.html">User Guide - Index</a></p>
-<h2><a class="anchor" id="autotoc_md7"></a>
 Aims</h2>
 <ul>
 <li>Support as many N64 Flashcarts as possible.</li>
@@ -147,10 +144,10 @@ Aims</h2>
 <li>Encourage active development from community members and N64 FlashCart owners.</li>
 <li>Support as many common mods and features as possible (flashcart dependent).</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md8"></a>
-Flashcart specific</h2>
-<h3><a class="anchor" id="autotoc_md9"></a>
-SC64</h3>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Flashcart specific information</h2>
+<h3><a class="anchor" id="autotoc_md8"></a>
+SummerCart64</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://github.com/Polprzewodnikowy/SummerCart64/releases/latest">firmware</a> installed.</li>
 <li>Download the latest <code>sc64menu.n64</code> file from the <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/">releases</a> page, then put it in the root directory of your SD card.</li>
@@ -159,25 +156,34 @@ SC64</h3>
 <img src="sc64-flashcart-information.png" alt=""/>
 <div class="caption">
 example SC64 flashcart information</div></div>
-    <h3><a class="anchor" id="autotoc_md10"></a>
+    <h3><a class="anchor" id="autotoc_md9"></a>
 64drive</h3>
 <ul>
 <li>Ensure the cart has the latest <a href="https://64drive.retroactive.be/support.php">firmware</a> installed.</li>
 <li>Download the latest <code>menu.bin</code> file from the <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/">releases</a> page, then put it in the root directory of your SD card.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md11"></a>
-ED64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK</h3>
-<p>Currently not supported, but work is in progress (See <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls">PRs</a>). <b>Warning</b>: The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.</p>
+<h3><a class="anchor" id="autotoc_md10"></a>
+EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK</h3>
+<p>Currently not supported, but work is in progress (See <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls">PRs</a>). </p><dl class="section attention"><dt>Attention</dt><dd>The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.</dd></dl>
+<h4><a class="anchor" id="autotoc_md11"></a>
+EverDrive-64 (V series)</h4>
+<p>The aim is to reach feature parity with <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a> / <a href="https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/">ED64-OfficialOS</a>.</p>
+<ul>
+<li>Download the <code>OS64.v64</code> ROM from the latest [action run - assets] and place it in the <code>/ED64</code> folder.</li>
+</ul>
 <h4><a class="anchor" id="autotoc_md12"></a>
-ED64 (Vseries)</h4>
-<p>The aim is to reach feature parity with <a href="https://github.com/n64-tools/ED64-UnofficialOS-binaries">ED64-UnofficialOS</a> / <a href="https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/">ED64-OfficialOS</a>. Download the <code>OS64.v64</code> ROM from the latest [action run - assets] and place it in the <code>/ED64</code> folder.</p>
+EverDrive-64 (X series)</h4>
+<p>The aim is to reach feature parity with <a href="https://krikzz.com/pub/support/everdrive-64/x-series/OS/">OS</a> for now.</p>
+<ul>
+<li>Download the <code>OS64.v64</code> ROM from the latest [PR action run - assets] and place it in the <code>/ED64</code> folder.</li>
+</ul>
 <h4><a class="anchor" id="autotoc_md13"></a>
-ED64 (X series)</h4>
-<p>The aim is to reach feature parity with <a href="https://krikzz.com/pub/support/everdrive-64/x-series/OS/">OS</a> for now. Download the <code>OS64.v64</code> ROM from the latest [action run - assets] and place it in the <code>/ED64</code> folder.</p>
-<h4><a class="anchor" id="autotoc_md14"></a>
-ED64 (P clone)</h4>
-<p>Download the <code>OS64P.v64</code> ROM from the latest [action run - assets] and place it in the <code>/ED64P</code> folder. The aim is to reach feature parity with <a href="https://github.com/networkfusion/altra64">Altra64</a></p>
-<h1><a class="anchor" id="autotoc_md15"></a>
+ED64P (clones)</h4>
+<p>The aim is to reach feature parity with <a href="https://github.com/networkfusion/altra64">Altra64</a></p>
+<ul>
+<li>Download the <code>OS64P.v64</code> ROM from the latest [PR action run - assets] and place it in the <code>/ED64P</code> folder.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md14"></a>
 License</h1>
 <p>This project is released under the GNU AFFERO GENERAL PUBLIC LICENSE as compatible with all other dependent project licenses. <br  />
  Other license options may be available upon request with permissions of the original <code>N64FlashcartMenu</code> project authors / maintainers. <br  />
@@ -185,10 +191,10 @@ License</h1>
 <li>Mateusz Faderewski / Polprzewodnikowy</li>
 <li>Robin Jones / NetworkFusion</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Open source software and licenses used</h1>
-<h2><a class="anchor" id="autotoc_md17"></a>
-libraries</h2>
+<h2><a class="anchor" id="autotoc_md16"></a>
+Libraries</h2>
 <ul>
 <li><a href="https://github.com/DragonMinded/libdragon/tree/preview">libdragon</a> (UNLICENSE License)</li>
 <li><a href="https://github.com/randy408/libspng">libspng</a> (BSD 2-Clause License)</li>
@@ -196,7 +202,7 @@ libraries</h2>
 <li><a href="https://github.com/lieff/minimp3">minimp3</a> (CC0 1.0 Universal)</li>
 <li><a href="https://github.com/richgel999/miniz">miniz</a> (MIT License)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Sounds</h2>
 <p>See <a href="https://pixabay.com/en/service/license-summary/">License</a> for the following sounds:</p><ul>
 <li><a href="https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/">Cursor sound</a> by Skyscraper_seven (Free to use)</li>
@@ -208,7 +214,7 @@ Sounds</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 13 2025 18:00:52 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Jun 13 2025 18:29:19 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

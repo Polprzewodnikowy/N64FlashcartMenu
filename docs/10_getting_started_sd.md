@@ -87,5 +87,5 @@ You may also need to pad/trim the files to their original size:
 - For EEPROM 4Kbit games, remove the padding.
 - For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
 
-**WARNING:** Saves created with certain emulators, or created for a different ROM version (as in revisions of the same game) 
-or region (as in between NTSC and PAL versions of a same game) may be incompatible.
+> [!CAUTION]
+> Saves created with certain emulator versions, or created for a different ROM version (as in revisions of the same game), or region (as in between NTSC and PAL versions of a same game) may be incompatible.

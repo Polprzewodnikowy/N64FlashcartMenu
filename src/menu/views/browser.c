@@ -56,7 +56,7 @@ static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
-    for (int i = 0; hidden_root_paths[i] != NULL; i++) {
+    for (unsigned short i = 0; hidden_root_paths[i] != NULL; i++) {
         if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
             return true;
         }
@@ -66,14 +66,14 @@ static bool path_is_hidden (path_t *path) {
     int basename_len = strlen(basename);
 
     // Check for hidden files based on filename
-    for (int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+    for (unsigned short i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
         if (basename_len == hidden_basenames[i].len &&
             strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
             return true;
         }
     }
     // Check for hidden files based on filename prefix
-    for (int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+    for (unsigned short i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
         if (basename_len > hidden_prefixes[i].len &&
             strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
             return true;
@@ -127,7 +127,7 @@ static int compare_entry (const void *pa, const void *pb) {
 }
 
 static void browser_list_free (menu_t *menu) {
-    for (int i = menu->browser.entries - 1; i >= 0; i--) {
+    for (unsigned short i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
 
@@ -223,7 +223,7 @@ static bool load_directory (menu_t *menu) {
 }
 
 static bool reload_directory (menu_t *menu) {
-    int selected = menu->browser.selected;
+    short selected = menu->browser.selected;
 
     if (load_directory(menu)) {
         return true;
@@ -265,7 +265,7 @@ static bool pop_directory (menu_t *menu) {
         return true;
     }
 
-    for (int i = 0; i < menu->browser.entries; i++) {
+    for (unsigned short i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
@@ -344,12 +344,12 @@ static void process (menu_t *menu) {
         return;
     }
 
-    int scroll_speed = menu->actions.go_fast ? 10 : 1;
+    short scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
             menu->browser.selected -= scroll_speed;
-            if (menu->browser.selected < 0) {
+            if (menu->browser.selected <= 0) {
                 menu->browser.selected = 0;
             }
             sound_play_effect(SFX_CURSOR);

@@ -9,7 +9,6 @@
 /filesystem/FiraMonoBold.font64
 /filesystem/*.wav64
 /filesystem/*.sprite
-/filesystem/menu/ddipl/*.n64
 
 # Ignore external development tools
 /tools/*

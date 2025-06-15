@@ -5,17 +5,17 @@ New-Item -ItemType Directory -Path $emulatorDir -Force | Out-Null
 
 # URLs for the emulators using the latest versions as of the time of writing.
 # If the URLs change or versions need updating, you will need to update them accordingly.
-$neon64Url = "https://github.com/hcs64/neon64v2/releases/download/v2.0-beta.4/neon64v2b4.zip"
+$neon64Url = "https://drive.google.com/uc?export=download&id=1zmKO4MRZm-U-10AyK7Z0kZwfihctjrDf"
 $sodium64Url = "https://github.com/Hydr8gon/sodium64/releases/download/release/sodium64.zip"
 $smsplus64Url = "https://github.com/fhoedemakers/smsplus64/releases/download/v0.7/smsPlus64.z64"
 $pressfUrl = "https://github.com/celerizer/Press-F-Ultra/releases/download/r4/Press-F.z64"
 $gb64Url = "https://github.com/lambertjamesd/gb64/blob/master/romwrapper/gb.n64"
 
 # Get neon64
-$neon64Zip = "$env:TEMP/neon64v2b4.zip"
-Invoke-WebRequest -Uri $neon64Url -OutFile $neon64Zip
-Expand-Archive -Path $neon64Zip -DestinationPath $env:TEMP/neon64v2b4 -Force
-Copy-Item -Path (Get-ChildItem -Path "$env:TEMP/neon64v2b4" -Recurse -Filter "neon64bu.rom").FullName -Destination $emulatorDir -Force
+$neon64Rar = "$env:TEMP/neon64-v3c-bin.rar"
+Invoke-WebRequest -Uri $neon64Url -OutFile $neon64Rar
+Expand-Archive -Path $neon64Rar -DestinationPath $env:TEMP/neon64-v3c-bin -Force
+Copy-Item -Path (Get-ChildItem -Path "$env:TEMP/neon64-v3c-bin" -Recurse -Filter "neon64bu.rom").FullName -Destination $emulatorDir -Force
 
 # Get sodium64
 $sodium64Zip = "$env:TEMP/sodium64.zip"

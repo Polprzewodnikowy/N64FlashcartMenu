@@ -60,8 +60,8 @@
 #define LOADER_HEIGHT                   (24)
 /** @brief The loader bar position on the X axis. */
 #define LOADER_X                        (DISPLAY_CENTER_X - (LOADER_WIDTH / 2))
-/** @brief The loader bar position on the Y axis. */
-#define LOADER_Y                        (DISPLAY_CENTER_Y - (LOADER_HEIGHT / 2))
+/** @brief The loader bar position on the Y axis. Accounting for the message height */
+#define LOADER_Y                        (DISPLAY_CENTER_Y - (LOADER_HEIGHT / 2) - 8)
 
 /** @brief The maximum width of a message box. */
 #define MESSAGEBOX_MAX_WIDTH            (360)

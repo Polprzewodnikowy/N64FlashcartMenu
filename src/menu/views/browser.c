@@ -56,24 +56,24 @@ static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
-    for (unsigned int i = 0; hidden_root_paths[i] != NULL; i++) {
+    for (size_t i = 0; hidden_root_paths[i] != NULL; i++) {
         if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
             return true;
         }
     }
 
     char *basename = file_basename(stripped_path);
-    int basename_len = strlen(basename);
+    size_t basename_len = strlen(basename);
 
     // Check for hidden files based on filename
-    for (unsigned int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+    for (size_t i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
         if (basename_len == hidden_basenames[i].len &&
             strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
             return true;
         }
     }
     // Check for hidden files based on filename prefix
-    for (unsigned int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+    for (size_t i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
         if (basename_len > hidden_prefixes[i].len &&
             strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
             return true;
@@ -223,7 +223,7 @@ static bool load_directory (menu_t *menu) {
 }
 
 static bool reload_directory (menu_t *menu) {
-    short selected = menu->browser.selected;
+    int selected = menu->browser.selected;
 
     if (load_directory(menu)) {
         return true;
@@ -344,12 +344,12 @@ static void process (menu_t *menu) {
         return;
     }
 
-    short scroll_speed = menu->actions.go_fast ? 10 : 1;
+    int scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
             menu->browser.selected -= scroll_speed;
-            if (menu->browser.selected <= 0) {
+            if (menu->browser.selected < 0) {
                 menu->browser.selected = 0;
             }
             sound_play_effect(SFX_CURSOR);

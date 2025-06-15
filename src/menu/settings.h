@@ -46,8 +46,11 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
+    /** @brief Show a message in the progress bar when loading a file to the flashcart */
+    bool show_loading_progress_bar_message;
+
 #ifdef FEATURE_AUTOLOAD_ROM
-    /** @brief Show progress bar when loading a ROM */
+    /** @brief Show progress bar when loading a file to the flashcart */
     bool loading_progress_bar_enabled;
 
     /** @brief Enable the ability to bypass the menu and instantly load a ROM on power and reset button */

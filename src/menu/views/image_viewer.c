@@ -59,8 +59,11 @@ static void draw (menu_t *menu, surface_t *d) {
         rdpq_attach(d, NULL);
 
         ui_components_background_draw();
-
-        ui_components_loader_draw(png_decoder_get_progress(), "Loading image...");
+        if (menu->settings.show_loading_progress_bar_message) {
+            ui_components_loader_draw(png_decoder_get_progress(), "Loading image...");
+        } else {
+            ui_components_loader_draw(png_decoder_get_progress(), NULL);
+        }
     } else {
         rdpq_attach_clear(d, NULL);
 

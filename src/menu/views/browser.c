@@ -56,7 +56,7 @@ static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
-    for (unsigned short i = 0; hidden_root_paths[i] != NULL; i++) {
+    for (unsigned int i = 0; hidden_root_paths[i] != NULL; i++) {
         if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
             return true;
         }
@@ -66,14 +66,14 @@ static bool path_is_hidden (path_t *path) {
     int basename_len = strlen(basename);
 
     // Check for hidden files based on filename
-    for (unsigned short i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+    for (unsigned int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
         if (basename_len == hidden_basenames[i].len &&
             strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
             return true;
         }
     }
     // Check for hidden files based on filename prefix
-    for (unsigned short i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+    for (unsigned int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
         if (basename_len > hidden_prefixes[i].len &&
             strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
             return true;

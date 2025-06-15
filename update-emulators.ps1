@@ -12,10 +12,12 @@ $pressfUrl = "https://github.com/celerizer/Press-F-Ultra/releases/download/r4/Pr
 $gb64Url = "https://github.com/lambertjamesd/gb64/blob/master/romwrapper/gb.n64"
 
 # Get neon64
-$neon64Rar = "$env:TEMP/neon64-v3c-bin.rar"
-Invoke-WebRequest -Uri $neon64Url -OutFile $neon64Rar
-Expand-Archive -Path $neon64Rar -DestinationPath $env:TEMP/neon64-v3c-bin -Force
-Copy-Item -Path (Get-ChildItem -Path "$env:TEMP/neon64-v3c-bin" -Recurse -Filter "neon64bu.rom").FullName -Destination $emulatorDir -Force
+# Note: powershell cannot yet extract RAR files, so commented out for now.
+# $neon64Rar = "$env:TEMP/neon64-v3c-bin.rar"
+# Invoke-WebRequest -Uri $neon64Url -OutFile $neon64Rar
+# Expand-Archive -Path $neon64Rar -DestinationPath $env:TEMP/neon64-v3c-bin -Force
+# 7z e -y $neon64Rar -o$env:TEMP/neon64-v3c-bin
+# Copy-Item -Path (Get-ChildItem -Path "$env:TEMP/neon64-v3c-bin" -Recurse -Filter "neon64bu.rom").FullName -Destination $emulatorDir -Force
 
 # Get sodium64
 $sodium64Zip = "$env:TEMP/sodium64.zip"

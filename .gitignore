@@ -23,5 +23,6 @@
 # Ignore macOS filesystem cruft
 .DS_Store
 
-# Dont ignore the emulator menu files
+# Dont ignore the default emulator or 64ddipl files
 !/filesystem/menu/emulators/*
+!/filesystem/menu/64ddipl/*

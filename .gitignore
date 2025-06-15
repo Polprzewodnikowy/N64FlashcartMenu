@@ -22,3 +22,6 @@
 
 # Ignore macOS filesystem cruft
 .DS_Store
+
+# Dont ignore the emulator menu files
+!/filesystem/menu/emulators/*

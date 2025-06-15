@@ -127,7 +127,7 @@ static int compare_entry (const void *pa, const void *pb) {
 }
 
 static void browser_list_free (menu_t *menu) {
-    for (unsigned short i = menu->browser.entries - 1; i >= 0; i--) {
+    for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
 

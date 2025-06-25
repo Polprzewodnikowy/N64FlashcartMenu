@@ -32,8 +32,8 @@ static void sound_reconfigure (int frequency) {
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
 
-        // Attempt to initialize wav64 compression level 3
-        wav64_init_compression(3);
+        // Attempt to initialize wav64 compression level 1
+        wav64_init_compression(1);
 
         // Initialize MP3 player mixer
         mp3player_mixer_init();

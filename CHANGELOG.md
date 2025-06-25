@@ -9,12 +9,12 @@ built from latest commit on main branch.
 ## Release Notes 2025-{next}
 
 - **New Features**
-	- TBD
+	- Added ability to hide save folders (on by default).
 
 
 - **Bug Fixes**
-	- Fix ability to set the RTC via menu.
-	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
+	- Fix ability to set the RTC via menu (Hotfixed in last release).
+	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 
 
 - **Documentation**
@@ -22,7 +22,7 @@ built from latest commit on main branch.
 
 
 - **Refactor**
-	- TBD
+	- Improve tab navigation by using any left/right control input and add cursor SFX.
 
 - **Other**
 	- Updated libDragon SDK.
@@ -30,7 +30,7 @@ built from latest commit on main branch.
 	- Updated Github templates.
 
 ### Breaking changes
-* Deprecated "Autoload ROM" function was removed from menu (use `ED64_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM` as a build flag to re-enable it).
 * Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 
@@ -62,7 +62,7 @@ built from latest commit on main branch.
 - **Bug Fixes**
 	- Menu sound FX issues (hissing, popping and white noise).
 	- RTC not showing or setting correct date parameters in certain circumstances.
-	- GB / GBC emulator not saving in certain circumstances.
+	- ~~GB / GBC emulator not saving in certain circumstances.~~
 
 
 - **Documentation**
@@ -81,7 +81,7 @@ built from latest commit on main branch.
 	- Updated miniz library.
 
 ### Breaking changes
-* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
+* ~~GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.~~
 * For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
 
 

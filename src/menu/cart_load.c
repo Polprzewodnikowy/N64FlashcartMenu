@@ -221,6 +221,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
+             // Tested against https://themanbehindcurtain.blogspot.com/2017/12/small-neon64-hdmi-audio-fix.html
+             // Save states in newer versions might require a different save type.
             save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
@@ -229,11 +231,13 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             path_push(path, "gb.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            // TODO: Saves might be less problematic by using the FAKE type.
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             path_push(path, "gbc.v64");
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED; //FLASHCART_SAVE_TYPE_FLASHRAM_NONCOMPLIANT;
+            // TODO: Saves might be less problematic by using the FAKE type.
+            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             path_push(path, "smsPlus64.z64");

@@ -111,6 +111,17 @@ typedef enum {
     EXPANSION_PAK_FAULTY,           /**< Faulty with 8MB of memory */
 } rom_expansion_pak_t;
 
+/** @brief ROM ESRB age rating enumeration  */
+typedef enum {
+    ROM_ESRB_AGE_RATING_NONE = 0,                /**< No age rating defined */
+    ROM_ESRB_AGE_RATING_EVERYONE = 1,            /**< Everyone */
+    ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS = 2,    /**< Everyone 10+ */
+    ROM_ESRB_AGE_RATING_TEEN = 3,                /**< Teen */
+    ROM_ESRB_AGE_RATING_MATURE = 4,              /**< Mature */
+    ROM_ESRB_AGE_RATING_ADULT = 5,               /**< Adults Only */
+}
+rom_esrb_age_rating_t;
+
 /** @brief ROM Information Structure. */
 typedef struct {
     rom_endianness_t endianness;    /**< The file endian */
@@ -165,7 +176,8 @@ typedef struct {
     } settings;                     /**< The ROM settings */
 
     struct {
-        char description[300];      /**< ROM description */
+        rom_esrb_age_rating_t esrb_age_rating; /**< The game age rating */
+        char description[2000];      /**< ROM description */
     } metadata;                     /**< The ROM metadata */
 } rom_info_t;
 

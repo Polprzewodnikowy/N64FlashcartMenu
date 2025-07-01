@@ -25,6 +25,27 @@ To set up a proxy, open a terminal window, `cd ./tools/sc64` and then `./sc64dep
 
 Then, in the dev container, use `make run` or `make run-debug`.
 
+If you want to Deploy and debug to a fully remote target (over your LAN)
+Make sure that the remote target has the server running:
+
+> [!TIP]
+> Make sure you specify its accessible IP and port.
+
+```
+./sc64deployer server [THE_LAN_IP_ADDRESS]:9064
+```
+
+
+One (or more of the following commands) can then be run from within the docker environment:
+
+```
+sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 upload ./output/N64FlashcartMenu.n64
+
+sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 debug --no-writeback
+
+sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 debug --no-writeback --init "send-file /sc64menu.n64 @output/sc64menu.n64@;reboot"
+```
+
 
 ##### From your host (Windows) OS
 

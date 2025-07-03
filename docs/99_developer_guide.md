@@ -36,13 +36,10 @@ Make sure that the remote target has the server running:
 ```
 
 
-One (or more of the following commands) can then be run from within the docker environment:
+The following commands can then be run from the docker environment terminal:
 
 ```
 sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 upload ./output/N64FlashcartMenu.n64
-
-sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 debug --no-writeback
-
 sc64deployer --remote [THE_LAN_IP_ADDRESS]:9064 debug --no-writeback --init "send-file /sc64menu.n64 @output/sc64menu.n64@;reboot"
 ```
 

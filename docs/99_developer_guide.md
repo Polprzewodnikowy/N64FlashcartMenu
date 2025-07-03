@@ -10,6 +10,18 @@ Expected pre-requsites:
 ### A quick start video tutorial on how to set up your environment
 [![Docker Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Docker Devcontainer quick start guide").
 
+### How to debug
+Within the code, use the `debugf` command, and then deploy using a debug build e.g. `make run-debug`.
+
+```c
+    debugf("joybus_rtc_detect_async: %s %s %s %s\n",
+        detected ? "detected" : "not detected",
+        status.stopped ? "stopped" : "running",
+        status.crystal_bad ? "crystal:BAD" : "crystal:OK",
+        status.battery_bad ? "battery:BAD" : "battery:OK"
+    );
+```
+The output will then be shown within the console.
 
 ### How to deploy
 #### SC64

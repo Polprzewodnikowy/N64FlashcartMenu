@@ -2,7 +2,13 @@
 ## Experimental Features (Subject to change)
 
 ### Rom information metadata
-To show certain (metadata) information on the N64 ROM information screen, add a `.ini` file next to the game ROM file with the same name and the following content:
+To show certain (metadata) information on the N64 ROM information screen, add a `.ini` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
+
+> [!TIP]
+> A rom called `my N64 game rom.z64` will load Rom information metadata from `my N64 game rom.ini`.
+
+and the following content under the file content header:
+
 ```ini
 [metadata]
 ```
@@ -18,7 +24,7 @@ The age rating of the original ROM as matched to the [ESRB](https://www.esrb.org
     esrb_age_rating=4   /**< Mature */
     esrb_age_rating=5   /**< Adults Only */
 ```
-an example for an age rating of "Everyonr" would be:
+an example for an age rating of "Everyone 10+" would be:
 ```ini
 [metadata]
 esrb_age_rating=2
@@ -28,7 +34,7 @@ Note: [PEGI](https://pegi.info/) support may be added as an option at a later da
 In future, this can be of use for content filtering.
 
 #### ROM description
-To show a ROM description in the N64 ROM information screen, add a `.ini` file next to the game ROM file with the same name and the following content:
+
 ```ini
 [metadata]
 description=This is the ROM description that does X Y Z.

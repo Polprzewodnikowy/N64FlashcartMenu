@@ -7,7 +7,8 @@ The N64FlashcartMenu supports the cheat code types made popular by the periphera
 
 Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are less likely to work.
 
-**WARNING**: It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
+> [!CAUTION]
+> It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
 
 The N64FlashcartMenu can only support cheat codes based on Datel carts when also using an Expansion Pak.

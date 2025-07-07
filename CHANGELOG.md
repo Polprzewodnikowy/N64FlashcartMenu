@@ -10,19 +10,28 @@ built from latest commit on main branch.
 
 - **New Features**
 	- Added ability to hide save folders (on by default).
+	- Added ability to reset the menu setting to default from the menu UI.
+	- Shows info message within the loading progress bar.
+	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
 
 
 - **Bug Fixes**
 	- Fix ability to set the RTC via menu (Hotfixed in last release).
 	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
+	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
+
 
 
 - **Documentation**
-	- TBD
+	- Improved Emulator information for known working NES emulator version.
+	- Updated experimental features to reflect feature change.
+	- Added sounds documentation.
+	- Updated autoload to reflect feature change.
 
 
 - **Refactor**
 	- Improve tab navigation by using any left/right control input and add cursor SFX.
+	- Improve ROM description metadata loading (it is now able to load stings with upto 2000 chars, but still only displays the first 300).
 
 - **Other**
 	- Updated libDragon SDK.
@@ -38,7 +47,7 @@ built from latest commit on main branch.
 * The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
-* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 
 ### Deprecation notices

@@ -121,6 +121,18 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
+static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
+    switch (esrb_age_rating) {
+        case ROM_ESRB_AGE_RATING_NONE: return "None";
+        case ROM_ESRB_AGE_RATING_EVERYONE: return "Everyone";
+        case ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS: return "Everyone 10+";
+        case ROM_ESRB_AGE_RATING_TEEN: return "Teen";
+        case ROM_ESRB_AGE_RATING_MATURE: return "Mature";
+        case ROM_ESRB_AGE_RATING_ADULT: return "Adults Only";
+        default: return "Unknown";
+    }
+}
+
 static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
@@ -247,7 +259,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_background_draw();
 #ifdef FEATURE_AUTOLOAD_ROM
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
-        ui_components_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f, NULL);
     } else {
 #endif
         ui_components_layout_draw();
@@ -261,7 +273,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n"
-            "\t%s\n",
+            "\t%.300s\n",
             menu->load.rom_info.metadata.description
         );
 
@@ -306,6 +318,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Media type: %s\n"
                 "Variant: %s\n"
                 "Version: %hhu\n"
+                "ESRB Age Rating: %s\n"
                 "Check code: 0x%016llX\n"
                 "CIC: %s\n"
                 "Boot address: 0x%08lX\n"
@@ -318,6 +331,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 format_rom_media_type(menu->load.rom_info.category_code),
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
+                format_esrb_age_rating(menu->load.rom_info.metadata.esrb_age_rating),
                 menu->load.rom_info.check_code,
                 format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
                 menu->load.rom_info.boot_address,
@@ -342,7 +356,7 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(progress);
+        ui_components_loader_draw(progress, "Loading ROM...");  
 
         rdpq_detach_show();
     }

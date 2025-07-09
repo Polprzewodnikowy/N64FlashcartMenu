@@ -138,7 +138,7 @@ static inline const char *format_boolean_type (bool bool_value) {
 
 static void set_cic_type (menu_t *menu, void *arg) {
     rom_cic_type_t cic_type = (rom_cic_type_t) (arg);
-    rom_err_t err = rom_info_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
+    rom_err_t err = rom_config_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
@@ -147,7 +147,7 @@ static void set_cic_type (menu_t *menu, void *arg) {
 
 static void set_save_type (menu_t *menu, void *arg) {
     rom_save_type_t save_type = (rom_save_type_t) (arg);
-    rom_err_t err = rom_info_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
+    rom_err_t err = rom_config_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
@@ -156,13 +156,13 @@ static void set_save_type (menu_t *menu, void *arg) {
 
 static void set_tv_type (menu_t *menu, void *arg) {
     rom_tv_type_t tv_type = (rom_tv_type_t) (arg);
-    rom_err_t err = rom_info_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
+    rom_err_t err = rom_config_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
     menu->browser.reload = true;
 }
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -171,6 +171,22 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.rom_autoload_enabled = true;
     settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+#endif
+
+#ifdef FEATURE_CHEATS_GUI_ENABLED
+static void set_cheat_option(menu_t *menu, void *arg) {
+    bool enabled = (bool)arg;
+    rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
+    menu->browser.reload = true;
+}
+#endif
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+static void set_patcher_option(menu_t *menu, void *arg) {
+    bool enabled = (bool)arg;
+    rom_config_setting_set_patches(menu->load.rom_path, &menu->load.rom_info, enabled);
     menu->browser.reload = true;
 }
 #endif
@@ -217,12 +233,34 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+#ifdef FEATURE_CHEATS_GUI_ENABLED
+static component_context_menu_t set_cheat_options_menu = { .list = {
+    { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
+    { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+#endif
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+static component_context_menu_t set_patcher_options_menu = { .list = {
+    { .text = "Enable", .action = set_patcher_option, .arg = (void *) (true)},
+    { .text = "Disable", .action = set_patcher_option, .arg = (void *) (false)},
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+#endif
+
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+#endif
+#ifdef FEATURE_CHEATS_GUI_ENABLED
+{ .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+#endif
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+{ .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -255,7 +293,7 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
@@ -344,7 +382,7 @@ static void draw (menu_t *menu, surface_t *d) {
         }
 
         ui_components_context_menu_draw(&options_context_menu);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif
 
@@ -367,7 +405,7 @@ static void draw_progress (float progress) {
 
 static void load (menu_t *menu) {
     cart_load_err_t err;
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
         err = cart_load_n64_rom_and_save(menu, NULL);
     } else  {
@@ -404,7 +442,7 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
         if (menu->load.rom_path) {
@@ -420,7 +458,7 @@ void view_load_rom_init (menu_t *menu) {
         }
 
         rom_filename = path_last_get(menu->load.rom_path);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif 
 
@@ -431,19 +469,19 @@ void view_load_rom_init (menu_t *menu) {
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;
 
-    rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
+    rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
         menu->load.rom_path = NULL;
         menu_show_error(menu, convert_error_message(err));
         return;
     }
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif
 }

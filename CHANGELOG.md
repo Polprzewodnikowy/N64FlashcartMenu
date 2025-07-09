@@ -9,30 +9,46 @@ built from latest commit on main branch.
 ## Release Notes 2025-{next}
 
 - **New Features**
-	- TBD
+	- Added ability to hide save folders (on by default).
+	- Added ability to reset the menu setting to default from the menu UI.
+	- Shows info message within the loading progress bar.
+	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
 
 
 - **Bug Fixes**
-	- TBD
+	- Fix ability to set the RTC via menu (Hotfixed in last release).
+	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
+	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
+
 
 
 - **Documentation**
-	- TBD
+	- Improved Emulator information for known working NES emulator version.
+	- Updated experimental features to reflect feature change.
+	- Added sounds documentation.
+	- Updated autoload to reflect feature change.
 
 
 - **Refactor**
-	- TBD
+	- Improve tab navigation by using any left/right control input and add cursor SFX.
+	- Improve ROM description metadata loading (it is now able to load stings with upto 2000 chars, but still only displays the first 300).
+	- Add ability for font style to be used in ui_components_main_text_draw and ui_components_actions_bar_text_draw.
 
 - **Other**
 	- Updated libDragon SDK.
 	- Updated miniz library.
+	- Updated Github templates.
 
 ### Breaking changes
-* TBD
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 
 ### Current known Issues
-* TBD
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+* Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 
 ### Deprecation notices
@@ -56,7 +72,7 @@ built from latest commit on main branch.
 - **Bug Fixes**
 	- Menu sound FX issues (hissing, popping and white noise).
 	- RTC not showing or setting correct date parameters in certain circumstances.
-	- GB / GBC emulator not saving in certain circumstances.
+	- ~~GB / GBC emulator not saving in certain circumstances.~~
 
 
 - **Documentation**
@@ -75,7 +91,7 @@ built from latest commit on main branch.
 	- Updated miniz library.
 
 ### Breaking changes
-* GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.
+* ~~GB /GBC emulator changed save type to SRAM (from FRAM) to improve compatibility with Summercart64 (which only uses H/W compatible FRAM), this may break your ability to load existing saves.~~
 * For similar PAL60 functionality, you may need to also enable the new "pal60_compatibility_mode" setting in `config.ini`.
 
 
@@ -84,6 +100,8 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+* Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
+* Setting the RTC reports a write fail.
 
 
 ### Deprecation notices

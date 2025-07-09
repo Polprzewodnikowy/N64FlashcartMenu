@@ -34,6 +34,9 @@ typedef struct {
     /** @brief Put saves into separate directory */
     bool use_saves_folder;
 
+    /** @brief Show saves folder in file browser */ 
+    bool show_saves_folder;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 
@@ -43,14 +46,16 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
+#ifdef FEATURE_AUTOLOAD_ROM
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;
 
     /** @brief Enable the ability to bypass the menu and instantly load a ROM on power and reset button */
     bool rom_autoload_enabled;
-
+#else
     /** @brief Enable the ability to bypass the menu and instantly load a ROM on reset button */
     bool rom_fast_reboot_enabled;
+#endif
 
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
@@ -67,5 +72,7 @@ void settings_init (char *path);
 void settings_load (settings_t *settings);
 /** @brief The settings to save */
 void settings_save (settings_t *settings);
+/** @brief Reset settings to defaults */
+void settings_reset_to_defaults();
 
 #endif

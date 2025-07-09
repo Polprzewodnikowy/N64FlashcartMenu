@@ -120,6 +120,18 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
+static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
+    switch (esrb_age_rating) {
+        case ROM_ESRB_AGE_RATING_NONE: return "None";
+        case ROM_ESRB_AGE_RATING_EVERYONE: return "Everyone";
+        case ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS: return "Everyone 10+";
+        case ROM_ESRB_AGE_RATING_TEEN: return "Teen";
+        case ROM_ESRB_AGE_RATING_MATURE: return "Mature";
+        case ROM_ESRB_AGE_RATING_ADULT: return "Adults Only";
+        default: return "Unknown";
+    }
+}
+
 static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
@@ -150,7 +162,7 @@ static void set_tv_type (menu_t *menu, void *arg) {
     }
     menu->browser.reload = true;
 }
-
+#ifdef FEATURE_AUTOLOAD_ROM
 static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -161,6 +173,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
     menu->browser.reload = true;
 }
+#endif
 
 static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
@@ -208,7 +221,9 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
+#ifdef FEATURE_AUTOLOAD_ROM
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+#endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
@@ -240,54 +255,56 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
-
+#ifdef FEATURE_AUTOLOAD_ROM
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
-        ui_components_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f, NULL);
     } else {
+#endif
         ui_components_layout_draw();
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "N64 ROM information\n"
-            "\n"
             "%s\n",
             rom_filename
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n"
-            "Description:\n\t%s\n",
+            "\n\n"
+            "\t%.300s\n",
             menu->load.rom_info.metadata.description
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            "Expansion PAK:\t%s\n"
-            "TV type:\t\t\t%s\n"
-            "CIC:\t\t\t\t%s\n"
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Datel Cheats:\t%s\n"
             "Patches:\t\t\t%s\n"
+            "TV region:\t\t%s\n"
+            "Expansion PAK:\t%s\n"
             "Save type:\t\t%s\n",
-            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
-            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
-            format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
             format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
             format_boolean_type(menu->load.rom_info.settings.patches_enabled),
+            format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
+            format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
         );
 
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
             "B: Back\n"
         );
 
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
-            "R:    Options\n"
+            "R: Adv. Options\n"
         );
 
         if (boxart != NULL) {
@@ -304,7 +321,9 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Media type: %s\n"
                 "Variant: %s\n"
                 "Version: %hhu\n"
+                "ESRB Age Rating: %s\n"
                 "Check code: 0x%016llX\n"
+                "CIC: %s\n"
                 "Boot address: 0x%08lX\n"
                 "SDK version: %.1f%c\n"
                 "Clock Rate: %.2fMHz\n\n\n"
@@ -315,7 +334,9 @@ static void draw (menu_t *menu, surface_t *d) {
                 format_rom_media_type(menu->load.rom_info.category_code),
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
+                format_esrb_age_rating(menu->load.rom_info.metadata.esrb_age_rating),
                 menu->load.rom_info.check_code,
+                format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
                 menu->load.rom_info.clock_rate
@@ -323,7 +344,9 @@ static void draw (menu_t *menu, surface_t *d) {
         }
 
         ui_components_context_menu_draw(&options_context_menu);
+#ifdef FEATURE_AUTOLOAD_ROM
     }
+#endif
 
     rdpq_detach_show();
 }
@@ -336,7 +359,7 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(progress);
+        ui_components_loader_draw(progress, "Loading ROM...");  
 
         rdpq_detach_show();
     }
@@ -344,11 +367,15 @@ static void draw_progress (float progress) {
 
 static void load (menu_t *menu) {
     cart_load_err_t err;
+#ifdef FEATURE_AUTOLOAD_ROM
     if (!menu->settings.loading_progress_bar_enabled) {
         err = cart_load_n64_rom_and_save(menu, NULL);
     } else  {
         err = cart_load_n64_rom_and_save(menu, draw_progress);
     }
+#else
+    err = cart_load_n64_rom_and_save(menu, draw_progress);
+#endif
 
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));
@@ -377,7 +404,9 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
+#ifdef FEATURE_AUTOLOAD_ROM
     if (!menu->settings.rom_autoload_enabled) {
+#endif
         if (menu->load.rom_path) {
             path_free(menu->load.rom_path);
         }
@@ -391,7 +420,13 @@ void view_load_rom_init (menu_t *menu) {
         }
 
         rom_filename = path_last_get(menu->load.rom_path);
-    }    
+#ifdef FEATURE_AUTOLOAD_ROM
+    }
+#endif 
+
+    if (show_extra_info_message) {
+        show_extra_info_message = false;
+    }
 
     menu->load.load_favorite = -1;
     menu->load.load_history = -1;
@@ -403,11 +438,14 @@ void view_load_rom_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
-
+#ifdef FEATURE_AUTOLOAD_ROM
     if (!menu->settings.rom_autoload_enabled) {
+#endif
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
+#ifdef FEATURE_AUTOLOAD_ROM
     }
+#endif
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

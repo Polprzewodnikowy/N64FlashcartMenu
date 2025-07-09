@@ -754,7 +754,6 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
     }
 
-    rom_info->metadata.description[0] = '\0';
     rom_info->metadata.esrb_age_rating = ROM_ESRB_AGE_RATING_NONE;
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
@@ -767,8 +766,6 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     mini_t *rom_config_ini = mini_load(path_get(rom_info_path));
 
-    const char *rom_description = "\n";
-
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
     rom_info->boot_override.tv = false;
@@ -779,7 +776,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
 
         // metadata
-        rom_description = mini_get_string(rom_config_ini, "metadata", "description", "\n"); //FIXME: only supports LF (UNIX) line endings. CRLF will not work.
+        rom_info->metadata.description = mini_get_string(rom_config_ini, "metadata", "description", "");
         rom_info->metadata.esrb_age_rating = mini_get_int(rom_config_ini, "metadata", "esrb_age_rating", ROM_ESRB_AGE_RATING_NONE);
         
         // overrides
@@ -800,8 +797,6 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
         mini_free(rom_config_ini);
     }
-
-    strlcpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description));
 
     path_free(rom_info_path);
 }

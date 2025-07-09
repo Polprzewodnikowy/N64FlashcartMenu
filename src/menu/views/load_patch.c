@@ -37,11 +37,12 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_background_draw();
 
     if (load_pending) {
-        ui_components_loader_draw(0.0f);
+        ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "Patch information\n"
             "\n"
@@ -50,6 +51,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
@@ -60,6 +62,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run patched ROM\n"
             "B: Exit"
@@ -67,6 +70,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
+                STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
                 "R: Load with ROM"
             );
@@ -84,7 +88,7 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(progress);
+        ui_components_loader_draw(progress,"Loading Patch...");
 
         rdpq_detach_show();
     }

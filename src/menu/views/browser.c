@@ -441,6 +441,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -449,6 +450,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "^%02XStart: Settings^00\n"
         "^%02XR:  Options^00",
@@ -457,6 +459,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "C-Up/Down: Fast Scroll\n"
             "%s",
@@ -464,6 +467,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     } else {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "< Change Tab >\n"
         "\n"

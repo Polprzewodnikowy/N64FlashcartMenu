@@ -12,7 +12,7 @@ ON: ROM saves are saved in separate subfolders (called `\saves`, will create one
 OFF: ROM saves are saved alongside the ROM file.
 
 ### Sound Effects
-The menu has default sound effects to improve the user experience. This setting is OFF by default.
+The menu has default sound effects to improve the user experience. See [here](./40_sound.md). This setting is OFF by default.
 
 ### Fast ROM reboots
 Certain flashcarts support the ability to use the N64 `RESET` button for re-loading the last game, rather than returning to the menu. When enabled (and if supported by your flashcart), the power switch must be toggled to return to the menu.

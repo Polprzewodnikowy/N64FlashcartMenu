@@ -18,7 +18,7 @@ static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 
-static const char *hidden_paths[] = {
+static const char *hidden_root_paths[] = {
     "/menu.bin",
     "/menu",
     "/N64FlashcartMenu.n64",
@@ -56,24 +56,24 @@ static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
-    for (int i = 0; hidden_paths[i] != NULL; i++) {
-        if (strcmp(stripped_path, hidden_paths[i]) == 0) {
+    for (size_t i = 0; hidden_root_paths[i] != NULL; i++) {
+        if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
             return true;
         }
     }
 
     char *basename = file_basename(stripped_path);
-    int basename_len = strlen(basename);
+    size_t basename_len = strlen(basename);
 
     // Check for hidden files based on filename
-    for (int i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
+    for (size_t i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
         if (basename_len == hidden_basenames[i].len &&
             strncmp(basename, hidden_basenames[i].str, hidden_basenames[i].len) == 0) {
             return true;
         }
     }
     // Check for hidden files based on filename prefix
-    for (int i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
+    for (size_t i = 0; i < HIDDEN_PREFIXES_COUNT; i++) {
         if (basename_len > hidden_prefixes[i].len &&
             strncmp(basename, hidden_prefixes[i].str, hidden_prefixes[i].len) == 0) {
             return true;
@@ -158,6 +158,15 @@ static bool load_directory (menu_t *menu) {
             path_pop(path);
         }
 
+        if (!menu->settings.show_saves_folder) {
+            path_push(path, info.d_name);
+            // Skip the "saves" directory if it is hidden (this is case sensitive)
+            if (strcmp(info.d_name, "saves") == 0) { // TODO: use SAVES_SUBDIRECTORY from cart_load.c
+                hide = true;
+            }
+            path_pop(path);
+        }
+
         if (!hide) {
             menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
 
@@ -176,7 +185,7 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_ROM;
             } else if (file_has_extensions(entry->name, disk_extensions)) {
                 entry->type = ENTRY_TYPE_DISK;
-            }else if (file_has_extensions(entry->name, emulator_extensions)) {
+            } else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
             } else if (file_has_extensions(entry->name, save_extensions)) {
                 entry->type = ENTRY_TYPE_SAVE;
@@ -256,7 +265,7 @@ static bool pop_directory (menu_t *menu) {
         return true;
     }
 
-    for (int i = 0; i < menu->browser.entries; i++) {
+    for (unsigned short i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
@@ -397,10 +406,12 @@ static void process (menu_t *menu) {
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.next_tab) {
+    } else if (menu->actions.go_right) {
         menu->next_mode = MENU_MODE_HISTORY;
-    } else if (menu->actions.previous_tab) {
+        sound_play_effect(SFX_CURSOR);
+    } else if (menu->actions.go_left) {
         menu->next_mode = MENU_MODE_FAVORITE;
+        sound_play_effect(SFX_CURSOR);
     }
 }
 
@@ -430,6 +441,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -438,23 +450,26 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "^%02XStart: Settings^00\n"
-        "^%02XR: Options^00",
+        "^%02XR:  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "<C Change Tab C>\n"
+            "C-Up/Down: Fast Scroll\n"
             "%s",
             ctime(&menu->current_time)
         );
     } else {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "<C Change Tab C>\n"
+        "< Change Tab >\n"
         "\n"
         );
     }

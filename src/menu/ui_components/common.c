@@ -131,8 +131,9 @@ void ui_components_seekbar_draw (float position) {
  * @brief Draw a loader.
  * 
  * @param progress The progress value (0.0 to 1.0).
+ * @param msg The message to display truncated to 30 characters.
  */
-void ui_components_loader_draw (float progress) {
+void ui_components_loader_draw (float progress, const char *msg) {
     int x0 = LOADER_X;
     int y0 = LOADER_Y;
     int x1 = LOADER_X + LOADER_WIDTH;
@@ -140,6 +141,15 @@ void ui_components_loader_draw (float progress) {
 
     ui_components_border_draw(x0, y0, x1, y1);
     ui_components_progressbar_draw(x0, y0, x1, y1, progress);
+
+    if (msg != NULL) {
+        ui_components_main_text_draw(
+            STL_DEFAULT,
+            ALIGN_CENTER, VALIGN_CENTER,
+            "\n%.30s",
+            msg
+        );
+    }
 }
 
 /**
@@ -243,12 +253,13 @@ void ui_components_messagebox_draw (char *fmt, ...) {
 /**
  * @brief Draw the main text with formatted content.
  * 
+ * @param style The font style.
  * @param align The horizontal alignment.
  * @param valign The vertical alignment.
  * @param fmt The format string.
  * @param ... The format arguments.
  */
-void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
+void ui_components_main_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[1024];
     size_t nbytes = sizeof(buffer);
 
@@ -259,6 +270,7 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
 
     rdpq_text_printn(
         &(rdpq_textparms_t) {
+            .style_id = style,
             .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
             .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
             .align = align,
@@ -281,12 +293,13 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
 /**
  * @brief Draw the actions bar text with formatted content.
  * 
+ * @param style The font style.
  * @param align The horizontal alignment.
  * @param valign The vertical alignment.
  * @param fmt The format string.
  * @param ... The format arguments.
  */
-void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
+void ui_components_actions_bar_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[256];
     size_t nbytes = sizeof(buffer);
 
@@ -297,6 +310,7 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
 
     rdpq_text_printn(
         &(rdpq_textparms_t) {
+            .style_id = style,
             .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
             .height = VISIBLE_AREA_Y1 - LAYOUT_ACTIONS_SEPARATOR_Y - BORDER_THICKNESS - (TEXT_MARGIN_VERTICAL * 2),
             .align = align,

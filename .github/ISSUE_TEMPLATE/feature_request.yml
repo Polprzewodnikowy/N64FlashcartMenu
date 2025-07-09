@@ -1,17 +1,18 @@
 name: Feature request
 description: Suggest an idea to help us improve.
 labels: 
-  - "Type: Feature request"
-  - "Status: waiting feedback"
+  - "enhancement"
+  - "low priority"
+  - "awaiting triage"
 body:
   - type: markdown
     attributes:
       value: |
-        # :warning: **Please read before raising the issue** :warning:
+        # :warning: **Please read before raising the feature request** :warning:
 
-        If you have a **question**, need clarification on something, need help on a particular situation or want to start a discussion, **DO NOT** open an issue here. _It will be automatically closed!_ 
+        If you have a **question** that needs clarification on something, or need help in a particular situation, create a discussion instead. _Otherwise it will be automatically closed!_ .
 
-        If you really want to raise an issue, please make sure to follow the template and provide the required information. Failing to do so will most likely end up on the issue being close. Don't take offense at this. It is simply a time management decision. Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
+        If you really want to suggest a new feature, please make sure to follow the template and provide the required information. Failing to do so will most likely end up on the issue being close. Don't take offense at this. It is simply a time management decision. Whenever an issue is raised without following the template and the required information is not provided, very often too much time has to be spent going back and forth to obtain the details that are outlined below.
 
   - type: textarea
     id: description

@@ -157,6 +157,7 @@ static void draw (menu_t *menu, surface_t *d) {
          if( menu->current_time >= 0 ) {
 
             ui_components_main_text_draw(
+                STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -171,6 +172,7 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
+                STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "A: Adjust time\n"
                 "B: Back"
@@ -179,6 +181,7 @@ static void draw (menu_t *menu, surface_t *d) {
          else {
 
             ui_components_main_text_draw(
+                STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -191,6 +194,7 @@ static void draw (menu_t *menu, surface_t *d) {
             );
 
             ui_components_actions_bar_text_draw(
+                STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
                 "B: Back"
@@ -199,11 +203,13 @@ static void draw (menu_t *menu, surface_t *d) {
     }
     else {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "Up/Down: Adjust Field\n"
             "Left/Right: Switch Field"
         );
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "R: Save\n"
             "B: Back"

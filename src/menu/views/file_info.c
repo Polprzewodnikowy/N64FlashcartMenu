@@ -63,6 +63,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_layout_draw();
 
     ui_components_main_text_draw(
+        STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "ENTRY INFORMATION\n"
         "\n"
@@ -71,6 +72,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_main_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
@@ -88,6 +90,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "B: Exit"

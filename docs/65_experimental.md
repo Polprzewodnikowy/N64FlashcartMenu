@@ -1,6 +1,9 @@
 [Return to the index](./00_index.md)
 ## Experimental Features (Subject to change)
 
+### Cheats
+See: [Cheats (Gameshark, etc.)](./13_datel_cheats.md)
+
 ### Rom information metadata
 To show certain (metadata) information on the N64 ROM information screen, add a `.ini` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
 

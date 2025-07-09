@@ -1,28 +1,28 @@
 [Return to the index](./00_index.md)
 ## Cheats (Gameshark, etc.)
 
-The N64FlashcartMenu supports the cheat code types made popular by the peripherals:
+The N64FlashcartMenu has underlying support for the cheat code types made popular by the peripherals:
 - GameShark
 - Action Replay
 
 Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are less likely to work.
 
-> [!CAUTION]
+> [!WARNING]
 > It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
-
-The N64FlashcartMenu can only support cheat codes based on Datel carts when also using an Expansion Pak.
+> [!CAUTION]
+> This feature is experimental and the N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak (but not yet made available within the user interface).
 
 Caveats:
-- Something about cheats and expansion paks.
+- Requires an expansion pak.
+- Codes that require a button to pressed are not yet supported.
 
 The current code types are supported:
-- 80 (description here)
-- D0 (description here)
-- Fx (description here)
-- ...
+- 80
+- D0
+- Fx
 
-The codes XX are not supported, because...
+Other codes are not yet supported, because, for instance:
 - e.g. they rely on the button.
 
 ```

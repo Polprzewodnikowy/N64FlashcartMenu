@@ -801,8 +801,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         mini_free(rom_config_ini);
     }
 
-    strncpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description)-1); // FIXME we should use limit the length of the description to avoid buffer overflow using strlcpy.
-    rom_info->metadata.description[sizeof(rom_info->metadata.description) - 1] = '\0';
+    strlcpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description));
 
     path_free(rom_info_path);
 }

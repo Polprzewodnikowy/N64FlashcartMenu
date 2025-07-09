@@ -77,8 +77,9 @@ Currently not supported, but work is in progress (See [PRs](https://github.com/P
 #### EverDrive-64 (V series)
 The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries) / [ED64-OfficialOS](https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/).
 
-#### EverDrive-64 (X series)
 * Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
+
+#### EverDrive-64 (X series)
 The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
 
 * Download the `OS64.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64` folder.

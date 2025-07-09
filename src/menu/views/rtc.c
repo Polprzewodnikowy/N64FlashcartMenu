@@ -157,6 +157,7 @@ static void draw (menu_t *menu, surface_t *d) {
          if( menu->current_time >= 0 ) {
 
             ui_components_main_text_draw(
+                STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"
@@ -179,6 +180,7 @@ static void draw (menu_t *menu, surface_t *d) {
          else {
 
             ui_components_main_text_draw(
+                STL_DEFAULT,
                 ALIGN_CENTER, VALIGN_TOP,
                 "ADJUST REAL TIME CLOCK\n"
                 "\n"

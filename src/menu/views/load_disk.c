@@ -69,6 +69,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_layout_draw();
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "64DD disk information\n"
             "\n"
@@ -77,6 +78,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n"
             "%s%s\n",
@@ -85,6 +87,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n\n\n"
             "Description:\n\t%s\n",
@@ -92,6 +95,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n\n\n\n\n\n\n\n\n"
             " Region:\t\t%s\n"

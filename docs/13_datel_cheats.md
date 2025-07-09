@@ -11,7 +11,7 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 > It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
 > [!CAUTION]
-> This feature is experimental and the N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak (but not yet made available within the user interface).
+> This feature is experimental and the N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak. Check the [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI editor support.
 
 Caveats:
 - Requires an expansion pak.
@@ -24,6 +24,9 @@ The current code types are supported:
 
 Other codes are not yet supported, because, for instance:
 - e.g. they rely on the button.
+
+> [!TIP]
+> a good reference for generating codes is: https://gamehacking.org
 
 ```
 // Example cheat codes for the game "Majoras Mask USA"
@@ -45,5 +48,3 @@ uint32_t cheats[] = {
 ```
 
 And pass this array as a boot parameter: `menu->boot_params->cheat_list = cheats;`
-
-Check the [Pull Requests](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards GUI editor support.

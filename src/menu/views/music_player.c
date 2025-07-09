@@ -105,6 +105,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "A: %s\n"
         "B: Exit | Left / Right: Rewind / Fast forward",

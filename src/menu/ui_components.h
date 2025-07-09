@@ -139,12 +139,13 @@ void ui_components_main_text_draw(menu_font_type_t style, rdpq_align_t align, rd
 /**
  * @brief Draw the actions bar text component.
  * 
+ * @param style The font style.
  * @param align Horizontal alignment.
  * @param valign Vertical alignment.
  * @param fmt Format string for the text.
  * @param ... Additional arguments for the format string.
  */
-void ui_components_actions_bar_text_draw(rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
+void ui_components_actions_bar_text_draw(menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...);
 
 /**
  * @brief Initialize the background component.

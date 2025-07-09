@@ -251,12 +251,14 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "A: Change\n"
         "B: Back"
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "R: Reset settings\n"
         "\n"

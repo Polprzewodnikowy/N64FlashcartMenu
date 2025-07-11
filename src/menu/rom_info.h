@@ -177,7 +177,6 @@ typedef struct {
 
     struct {
         rom_esrb_age_rating_t esrb_age_rating; /**< The game age rating */
-        const char *description;      /**< ROM description */
     } metadata;                     /**< The ROM metadata */
 } rom_info_t;
 

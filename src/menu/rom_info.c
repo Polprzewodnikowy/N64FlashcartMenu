@@ -776,7 +776,6 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
 
         // metadata
-        rom_info->metadata.description = mini_get_string(rom_config_ini, "metadata", "description", "");
         rom_info->metadata.esrb_age_rating = mini_get_int(rom_config_ini, "metadata", "esrb_age_rating", ROM_ESRB_AGE_RATING_NONE);
         
         // overrides

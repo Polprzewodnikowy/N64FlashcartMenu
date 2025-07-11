@@ -9,14 +9,17 @@
 #include "../sound.h"
 
 
-static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
+
+static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
+static const char *image_extensions[] = { "png", NULL };
+static const char *music_extensions[] = { "mp3", NULL };
+static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
+static const char *patch_extensions[] = { "bps", "ips", "aps", "ups", "xdelta", NULL };
 // TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
 static const char *save_extensions[] = { "sav", NULL };
-static const char *image_extensions[] = { "png", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
-static const char *music_extensions[] = { "mp3", NULL };
 
 static const char *hidden_root_paths[] = {
     "/menu.bin",
@@ -92,10 +95,6 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DIR) {
             return 1;
-        } else if (a->type == ENTRY_TYPE_ROM) {
-            return -1;
-        } else if (b->type == ENTRY_TYPE_ROM) {
-            return 1;
         } else if (a->type == ENTRY_TYPE_DISK) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DISK) {
@@ -104,10 +103,6 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_EMULATOR) {
             return 1;
-        } else if (a->type == ENTRY_TYPE_SAVE) {
-            return -1;
-        } else if (b->type == ENTRY_TYPE_SAVE) {
-            return 1;
         } else if (a->type == ENTRY_TYPE_IMAGE) {
             return -1;
         } else if (b->type == ENTRY_TYPE_IMAGE) {
@@ -115,6 +110,22 @@ static int compare_entry (const void *pa, const void *pb) {
         } else if (a->type == ENTRY_TYPE_MUSIC) {
             return -1;
         } else if (b->type == ENTRY_TYPE_MUSIC) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_ROM) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_ROM) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_ROM_CHEAT) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_ROM_CHEAT) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_ROM_PATCH) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_ROM_PATCH) {
+            return 1;
+        } else if (a->type == ENTRY_TYPE_SAVE) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_SAVE) {
             return 1;
         } else if (a->type == ENTRY_TYPE_TEXT) {
             return -1;
@@ -181,10 +192,14 @@ static bool load_directory (menu_t *menu) {
 
             if (info.d_type == DT_DIR) {
                 entry->type = ENTRY_TYPE_DIR;
-            } else if (file_has_extensions(entry->name, rom_extensions)) {
+            } else if (file_has_extensions(entry->name, n64_rom_extensions)) {
                 entry->type = ENTRY_TYPE_ROM;
             } else if (file_has_extensions(entry->name, disk_extensions)) {
                 entry->type = ENTRY_TYPE_DISK;
+            } else if (file_has_extensions(entry->name, patch_extensions)) {
+                entry->type = ENTRY_TYPE_ROM_PATCH;
+            } else if (file_has_extensions(entry->name, cheat_extensions)) {
+                entry->type = ENTRY_TYPE_ROM_CHEAT;
             } else if (file_has_extensions(entry->name, emulator_extensions)) {
                 entry->type = ENTRY_TYPE_EMULATOR;
             } else if (file_has_extensions(entry->name, save_extensions)) {
@@ -372,9 +387,6 @@ static void process (menu_t *menu) {
                     menu_show_error(menu, "Couldn't open next directory");
                 }
                 break;
-            case ENTRY_TYPE_ROM:
-                menu->next_mode = MENU_MODE_LOAD_ROM;
-                break;
             case ENTRY_TYPE_DISK:
                 menu->next_mode = MENU_MODE_LOAD_DISK;
                 break;
@@ -384,12 +396,22 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_IMAGE:
                 menu->next_mode = MENU_MODE_IMAGE_VIEWER;
                 break;
-            case ENTRY_TYPE_TEXT:
-                menu->next_mode = MENU_MODE_TEXT_VIEWER;
-                break;
             case ENTRY_TYPE_MUSIC:
                 menu->next_mode = MENU_MODE_MUSIC_PLAYER;
                 break;
+            case ENTRY_TYPE_ROM:
+                menu->next_mode = MENU_MODE_LOAD_ROM;
+                break;
+            case ENTRY_TYPE_ROM_CHEAT:
+                menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_CHEAT.
+                break;
+            case ENTRY_TYPE_ROM_PATCH:
+                menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_PATCH.
+                break;
+            case ENTRY_TYPE_TEXT:
+                menu->next_mode = MENU_MODE_TEXT_VIEWER;
+                break;
+
             default:
                 menu->next_mode = MENU_MODE_FILE_INFO;
                 break;
@@ -441,6 +463,7 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
         "^%02XB: Back^00",
@@ -449,6 +472,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "^%02XStart: Settings^00\n"
         "^%02XR:  Options^00",
@@ -457,6 +481,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "C-Up/Down: Fast Scroll\n"
             "%s",
@@ -464,6 +489,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     } else {
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "< Change Tab >\n"
         "\n"

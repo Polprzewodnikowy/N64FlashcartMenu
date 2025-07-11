@@ -134,6 +134,8 @@ static void menu_init (boot_params_t *boot_params) {
         path_free(menu->browser.directory);
         menu->browser.directory = path_init(menu->storage_prefix, "/");
     }
+
+    debugf("N64FlashcartMenu debugging...\n");
 }
 
 /**

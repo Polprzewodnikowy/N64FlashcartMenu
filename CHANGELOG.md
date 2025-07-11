@@ -13,6 +13,8 @@ built from latest commit on main branch.
 	- Added ability to reset the menu setting to default from the menu UI.
 	- Shows info message within the loading progress bar.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
+	- Add Alpha FEATURE_CHEATS_GUI_ENABLED (build flag to enable it)
+	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it)
 
 
 - **Bug Fixes**
@@ -31,7 +33,8 @@ built from latest commit on main branch.
 
 - **Refactor**
 	- Improve tab navigation by using any left/right control input and add cursor SFX.
-	- Improve ROM description metadata loading (it is now able to load stings with upto 2000 chars, but still only displays the first 300).
+	- Improve ROM description metadata loading (it is now able to load stings with upto 1000 chars, but still only displays the first 300).
+	- Add ability for font style to be used in ui_components_main_text_draw and ui_components_actions_bar_text_draw.
 
 - **Other**
 	- Updated libDragon SDK.
@@ -39,7 +42,7 @@ built from latest commit on main branch.
 	- Updated Github templates.
 
 ### Breaking changes
-* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM` as a build flag to re-enable it).
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM_ENABLED` as a build flag to re-enable it).
 * Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
 
 

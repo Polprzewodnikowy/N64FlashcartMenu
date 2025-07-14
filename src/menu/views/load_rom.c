@@ -249,6 +249,11 @@ static component_context_menu_t set_patcher_options_menu = { .list = {
 }};
 #endif
 
+static void set_menu_next_mode (menu_t *menu, void *arg) {
+    menu_mode_t next_mode = (menu_mode_t) (arg);
+    menu->next_mode = next_mode;
+}
+
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
@@ -258,8 +263,8 @@ static component_context_menu_t options_context_menu = { .list = {
 #endif
 #ifdef FEATURE_CHEATS_GUI_ENABLED
 { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-//{ .text = "Test Cheat Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
 #endif
+{ .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif

@@ -346,7 +346,6 @@ static component_context_menu_t settings_context_menu = {
         { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
         { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
         { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
-        { .text = "Test Cheat Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

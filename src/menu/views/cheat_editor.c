@@ -15,8 +15,16 @@ typedef struct {
 static cheat_file_code_t cheat_codes[MAX_CHEAT_CODES];
 static short item_selected = 0;
 
-static void edit_selected_cheat (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Edit Selected Cheat not implemented yet.\n");
+static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Edit Selected Cheat toggle not implemented yet.\n");
+}
+
+static void edit_selected_cheat_address (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Edit Selected Cheat address not implemented yet.\n");
+}
+
+static void edit_selected_cheat_value (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Edit Selected Cheat value not implemented yet.\n");
 }
 
 static void add_new_cheat (menu_t *menu, void *arg) {
@@ -27,9 +35,15 @@ static void delete_selected_cheat (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Delete Selected Cheat not implemented yet.\n");
 }
 
+static component_context_menu_t cm_edit_selected_cheat = { .list = {
+    { .text = "Toggle Enabled", .action = toggle_enable_selected_cheat },
+    { .text = "Edit Address", .action = edit_selected_cheat_address },
+    { .text = "Edit Value", .action = edit_selected_cheat_value },
+    COMPONENT_CONTEXT_MENU_LIST_END
+}};
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Edit Selected Item", .action = edit_selected_cheat },
+    { .text = "Edit Selected Item", .submenu = &cm_edit_selected_cheat },
     { .text = "Add New Cheat Item", .action = add_new_cheat },
     { .text = "Delete Selected Item", .action = delete_selected_cheat },
     COMPONENT_CONTEXT_MENU_LIST_END
@@ -40,6 +54,9 @@ static component_context_menu_t options_context_menu = { .list = {
 
 static void process(menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
+        return;
+    }
+    if (ui_components_context_menu_process(menu, &cm_edit_selected_cheat)) {
         return;
     }
 
@@ -256,6 +273,7 @@ static void draw (menu_t *menu, surface_t *display) {
 
 void view_cheat_editor_init (menu_t *menu) {
     ui_components_context_menu_init(&options_context_menu);
+    ui_components_context_menu_init(&cm_edit_selected_cheat);
 
     // Nothing to initialize (yet)
     // But we should be loading the cheat codes from a file here.

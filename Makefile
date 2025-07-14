@@ -61,6 +61,7 @@ SRCS = \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
+	menu/views/cheat_editor.c \
 	menu/views/credits.c \
 	menu/views/error.c \
 	menu/views/fault.c \

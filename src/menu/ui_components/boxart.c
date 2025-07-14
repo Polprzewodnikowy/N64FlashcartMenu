@@ -12,7 +12,8 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-#define BOXART_DIRECTORY    "menu/boxart"
+#define BOXART_DIRECTORY        "menu/metadata"
+#define OLD_BOXART_DIRECTORY    "menu/boxart"
 
 /**
  * @brief PNG decoder callback function.
@@ -44,6 +45,13 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
     }
 
     b->loading = true;
+
+    // path_t *path = path_init(storage_prefix, OLD_BOXART_DIRECTORY);
+    // if (directory_exists(OLD_BOXART_DIRECTORY)) {
+    //     // If the old boxart directory exists, warn users an update is required.
+        
+    // }
+    // path_free(path);
 
     path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
 

@@ -258,6 +258,7 @@ static component_context_menu_t options_context_menu = { .list = {
 #endif
 #ifdef FEATURE_CHEATS_GUI_ENABLED
 { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+//{ .text = "Test Cheat Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
 #endif
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 { .text = "Use Patches", .submenu = &set_patcher_options_menu },

@@ -1,0 +1,268 @@
+#include "views.h"
+#include "../sound.h"
+#include "../ui_components/constants.h"
+
+#define MAX_CHEAT_CODES (34) // Maximum number of cheat codes to display (currently hardcoded to 34 as per support for the ED64x, but can be changed later)
+
+/** @brief Cheat file code Structure. */
+typedef struct {
+    uint32_t address; /**< Cheat address */
+    uint16_t value; /**< Cheat value */
+    bool enabled; /**< Cheat enabled flag */
+    //char description[128]; /**< Cheat description */
+} cheat_file_code_t;
+
+static cheat_file_code_t cheat_codes[MAX_CHEAT_CODES];
+static short item_selected = 0;
+
+static void edit_selected_cheat (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Edit Selected Cheat not implemented yet.\n");
+}
+
+static void add_new_cheat (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Add New Cheat not implemented yet.\n");
+}
+
+static void delete_selected_cheat (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Delete Selected Cheat not implemented yet.\n");
+}
+
+
+static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Edit Selected Item", .action = edit_selected_cheat },
+    { .text = "Add New Cheat Item", .action = add_new_cheat },
+    { .text = "Delete Selected Item", .action = delete_selected_cheat },
+    COMPONENT_CONTEXT_MENU_LIST_END
+}};
+
+
+
+
+static void process(menu_t *menu) {
+    if (ui_components_context_menu_process(menu, &options_context_menu)) {
+        return;
+    }
+
+    if(menu->actions.go_down) {
+        item_selected++;
+        if (item_selected >= MAX_CHEAT_CODES) {
+            item_selected = 0;
+        }
+        sound_play_effect(SFX_CURSOR);
+    } else if(menu->actions.go_up) {
+        item_selected--;
+        if (item_selected < 0) {
+            item_selected = MAX_CHEAT_CODES - 1;
+        }
+        sound_play_effect(SFX_CURSOR);
+    } else if(menu->actions.enter) {
+        // TODO: load the submenu to edit the cheat code.
+        debugf("Cheat Editor: Options not implemented yet.\n");
+        sound_play_effect(SFX_ENTER);
+    } else if (menu->actions.back) {
+        sound_play_effect(SFX_EXIT);
+        menu->next_mode = MENU_MODE_BROWSER;
+    } else if (menu->actions.options) {
+        ui_components_context_menu_show(&options_context_menu);
+        sound_play_effect(SFX_SETTING);
+    }
+}
+
+/**
+ * @brief Draw the cheat list.
+ * 
+ * @param list Pointer to the list of entries.
+ * @param entries Number of entries in the list.
+ * @param selected Index of the currently selected entry.
+ */
+void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
+    int starting_position = 0;
+
+    if (entries > LIST_ENTRIES && selected >= (LIST_ENTRIES / 2)) {
+        starting_position = selected - (LIST_ENTRIES / 2);
+        if (starting_position >= entries - LIST_ENTRIES) {
+            starting_position = entries - LIST_ENTRIES;
+        }
+    }
+
+    ui_components_list_scrollbar_draw(selected, entries, LIST_ENTRIES);
+
+    if (entries == 0) {
+        ui_components_main_text_draw(
+            STL_RED,
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "^%02X** no cheats found **"
+        );
+    } else {
+        rdpq_paragraph_t *cheat_list_layout;
+        rdpq_paragraph_t *layout;
+
+        size_t cheat_string_lengths[LIST_ENTRIES];
+        size_t total_length = 1;
+
+        for (int i = 0; i < LIST_ENTRIES; i++) {
+            int entry_index = starting_position + i;
+
+            if (entry_index >= entries) {
+                cheat_string_lengths[i] = 0;
+            } else {
+                cheat_string_lengths[i] = 128; //length;
+                total_length += cheat_string_lengths[i];
+            }
+        }
+
+        cheat_list_layout = malloc(sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * total_length));
+        memset(cheat_list_layout, 0, sizeof(rdpq_paragraph_t));
+        cheat_list_layout->capacity = total_length;
+
+        rdpq_paragraph_builder_begin(
+            &(rdpq_textparms_t) {
+                .width = FILE_LIST_MAX_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
+                .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
+                .wrap = WRAP_NONE,
+                .line_spacing = TEXT_LINE_SPACING_ADJUST,
+            },
+            FNT_DEFAULT,
+            cheat_list_layout
+        );
+
+        for (int i = 0; i < LIST_ENTRIES; i++) {
+            int entry_index = starting_position + i;
+
+            cheat_file_code_t *entry = &list[entry_index];
+
+            menu_font_style_t style;
+
+            style = entry->enabled ? STL_GREEN : STL_RED;
+
+            rdpq_paragraph_builder_style(style);
+
+            char str_buffer[64];
+            sprintf(str_buffer, "%02d: %08lx %04x", 
+                entry_index, entry->address, entry->value
+            );
+
+            rdpq_paragraph_builder_span(str_buffer, strlen(str_buffer));
+
+            if ((entry_index + 1) >= entries) {
+                break;
+            }
+
+            rdpq_paragraph_builder_newline();
+        }
+
+        layout = rdpq_paragraph_builder_end();
+
+        int highlight_height = (layout->bbox.y1 - layout->bbox.y0) / layout->nlines;
+        int highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((selected - starting_position) * highlight_height);
+
+        ui_components_box_draw(
+            FILE_LIST_HIGHLIGHT_X,
+            highlight_y,
+            FILE_LIST_HIGHLIGHT_X + FILE_LIST_HIGHLIGHT_WIDTH,
+            highlight_y + highlight_height,
+            FILE_LIST_HIGHLIGHT_COLOR
+        );
+
+        rdpq_paragraph_render(
+            layout,
+            VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
+        );
+
+        rdpq_paragraph_free(layout);
+
+        rdpq_paragraph_builder_begin(
+            &(rdpq_textparms_t) {
+                .width = VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
+                .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
+                .align = ALIGN_RIGHT,
+                .wrap = WRAP_NONE,
+                .line_spacing = TEXT_LINE_SPACING_ADJUST,
+            },
+            FNT_DEFAULT,
+            NULL
+        );
+
+        for (int i = starting_position; i < entries; i++) {
+            cheat_file_code_t *entry = &list[i];
+
+            menu_font_style_t style;
+
+            style = entry->enabled ? STL_GREEN : STL_RED;
+
+            rdpq_paragraph_builder_style(style);
+
+            char str_enabled_buffer[4];
+            sprintf(str_enabled_buffer, "%s", 
+                entry->enabled ? "ON" : "OFF"
+            );
+
+            rdpq_paragraph_builder_span(str_enabled_buffer, strlen(str_enabled_buffer));
+
+            if ((i + 1) == (starting_position + LIST_ENTRIES)) {
+                break;
+            }
+
+            rdpq_paragraph_builder_newline();
+        }
+
+        layout = rdpq_paragraph_builder_end();
+
+        rdpq_paragraph_render(
+            layout,
+            VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
+            VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
+        );
+
+        rdpq_paragraph_free(layout);
+    }
+}
+
+static void draw (menu_t *menu, surface_t *display) {
+    rdpq_attach(display, NULL);
+
+    ui_components_background_draw();
+
+    ui_components_layout_draw();
+
+    ui_components_main_text_draw( // TODO: add header "Idx | Address | Value | Enabled\n"
+        STL_DEFAULT,
+        ALIGN_CENTER, VALIGN_TOP,
+        "DATEL CODE EDITOR\n"
+    );
+
+    cheat_code_list_draw(cheat_codes, MAX_CHEAT_CODES, item_selected);
+
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
+        ALIGN_LEFT, VALIGN_TOP,
+        "A: Load ROM with these cheats\n"
+        "B: Back"
+    );
+
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
+        ALIGN_RIGHT, VALIGN_TOP,
+        "\n"
+        "R: Item Options\n"
+    );
+
+    ui_components_context_menu_draw(&options_context_menu);
+
+    rdpq_detach_show();
+}
+
+void view_cheat_editor_init (menu_t *menu) {
+    ui_components_context_menu_init(&options_context_menu);
+
+    // Nothing to initialize (yet)
+    // But we should be loading the cheat codes from a file here.
+}
+
+void view_cheat_editor_display (menu_t *menu, surface_t *display) {
+    process(menu);
+
+    draw(menu, display);
+}

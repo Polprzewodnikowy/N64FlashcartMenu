@@ -1,4 +1,7 @@
 #include "datel_codes.h"
+#include <string.h>
+
+cheat_file_code_t cheat_codes[MAX_CHEAT_CODES]; // Global array to hold cheat codes
 
 /**
  * @brief Generate a cheats array containing enabled cheats as address/value pairs.
@@ -13,7 +16,7 @@ size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *che
     for (int i = 0; i < MAX_CHEAT_CODES; ++i) {
         if (cheats_in[i].enabled) {
             cheats_out[count++] = cheats_in[i].address;
-            cheats_out[count++] = cheats_in[i].value;
+            cheats_out[count++] = (uint32_t)cheats_in[i].value;
         }
     }
     // Ensure the last two entries are zero
@@ -22,4 +25,24 @@ size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *che
 
     return count;
     //return count - 2; // Number of address/value pairs (excluding trailing zeros)
+}
+
+/** * @brief Get the cheat codes.
+ * 
+ * @return Pointer to the array of cheat codes.
+ */
+cheat_file_code_t *get_cheat_codes(void) {
+    return cheat_codes;
+}
+
+/** * @brief Set the cheat codes.
+ * 
+ * @param cheats Pointer to the array of cheat codes.
+ */
+void set_cheat_codes(cheat_file_code_t *cheats) {
+    if (cheats) {
+        memcpy(cheat_codes, cheats, sizeof(cheat_file_code_t) * MAX_CHEAT_CODES);
+    } else {
+        memset(cheat_codes, 0, sizeof(cheat_file_code_t) * MAX_CHEAT_CODES);
+    }
 }

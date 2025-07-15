@@ -177,6 +177,7 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 #endif
 
 static void set_cheat_option(menu_t *menu, void *arg) {
+    debugf("Load Rom: setting cheat option to %d\n", (int)arg);
     bool enabled = (bool)arg;
     rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
     menu->browser.reload = true;
@@ -404,6 +405,7 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
+    debugf("Load ROM: load function called\n");
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
@@ -437,23 +439,26 @@ static void load (menu_t *menu) {
         if (menu->load.rom_info.settings.cheats_enabled) {
             // FIXME: get the list of cheats from the Datel Code Editor
             uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-            size_t num_pairs = 0;//generate_enabled_cheats_array(cheats);
-            debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, %u cheats found", (num_pairs /2 - 1));
+            size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), cheats);
+            debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, %u cheats found\n", (num_pairs /2 - 1));
+            for (size_t i = 0; i < num_pairs; i += 2) {
+                debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
+            }
             if (num_pairs > 0) {
                 menu->boot_params->cheat_list = cheats;
             }
             else {
-                debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, no cheats found");
+                debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, no cheats found\n");
                 menu->boot_params->cheat_list = NULL; // No cheats enabled, so no cheat list
             }
         }
         else {
-            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled");
+            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled\n");
             menu->boot_params->cheat_list = NULL; // cheats not enabled, so no cheat list
         }
     }
     else {
-        debugf("Loading ROM without Expansion Pak present, setting cheat list to NULL");
+        debugf("Loading ROM without Expansion Pak present, setting cheat list to NULL\n");
         menu->boot_params->cheat_list = NULL; // Expansion Pak not present, so no cheat list
     }
 }

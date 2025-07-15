@@ -34,4 +34,18 @@ typedef struct {
  */
 size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *cheats_out);
 
+/** * @brief Get the cheat codes.
+ * 
+ * @return Pointer to the array of cheat codes.
+ */
+cheat_file_code_t *get_cheat_codes(void);
+
+/** * @brief Set the cheat codes.
+ * 
+ * @param cheats Pointer to the array of cheat codes.
+ */
+void set_cheat_codes(cheat_file_code_t *cheats);
+
+
+
 #endif /* DATEL_CODES_H__ */

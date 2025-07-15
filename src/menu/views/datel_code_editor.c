@@ -4,7 +4,7 @@
 #include "../ui_components/constants.h"
 
 
-static cheat_file_code_t cheat_codes[MAX_CHEAT_CODES];
+static cheat_file_code_t *cheat_codes;
 static short item_selected = 0;
 
 
@@ -70,8 +70,9 @@ static void process(menu_t *menu) {
         }
         sound_play_effect(SFX_CURSOR);
     } else if(menu->actions.enter) {
-        // TODO: load the submenu to edit the cheat code.
-        debugf("Cheat Editor: Options not implemented yet.\n");
+        set_cheat_codes(cheat_codes);
+        //menu->next_mode = MENU_MODE_LOAD_ROM;
+        debugf("Cheat Editor: Applying cheats.\n");
         sound_play_effect(SFX_ENTER);
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
@@ -252,7 +253,7 @@ static void draw (menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "A: Load ROM with these cheats\n"
+        "A: Apply ROM with these cheats\n"
         "B: Back"
     );
 
@@ -272,7 +273,8 @@ void view_datel_code_editor_init (menu_t *menu) {
     ui_components_context_menu_init(&options_context_menu);
     ui_components_context_menu_init(&cm_edit_selected_cheat);
 
-    // Nothing to initialize (yet)
+    cheat_codes = get_cheat_codes();
+
     // But we should be loading the cheat codes from a file here.
     // Currently we are just going to pre populate them for test purposes.
     debugf("Cheat Editor: Init debug codes MM USA.\n");
@@ -292,8 +294,9 @@ void view_datel_code_editor_init (menu_t *menu) {
     cheat_codes[3].value = 2; // Hex 0x0002.
     cheat_codes[3].enabled = true;
 
+    set_cheat_codes(cheat_codes);
     uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-    size_t num_pairs = generate_enabled_cheats_array(cheat_codes, cheats);
+    size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), cheats);
     // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
     debugf("Cheat Editor: Generated %u address/value pairs.\n", num_pairs);
 

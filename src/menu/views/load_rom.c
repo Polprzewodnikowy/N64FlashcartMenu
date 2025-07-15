@@ -1,12 +1,13 @@
+#include "../bookkeeping.h"
 #include "../cart_load.h"
+#include "../datel_codes.h"
 #include "../rom_info.h"
-#include "boot/boot.h"
 #include "../sound.h"
+#include "boot/boot.h"
+#include "utils/fs.h"
 #include "views.h"
 #include <string.h>
-#include "utils/fs.h"
-#include "../bookkeeping.h"
-#include "../datel_codes.h"
+
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
@@ -447,11 +448,12 @@ static void load (menu_t *menu) {
             // FIXME: get the list of cheats from the Datel Code Editor
             uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
             size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), cheats);
-            debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, %u cheats found\n", (num_pairs /2 - 1));
+            
             for (size_t i = 0; i < num_pairs; i += 2) {
                 debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
             }
             if (num_pairs > 0) {
+                debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, %u cheats found\n", (num_pairs /2 - 1));
                 menu->boot_params->cheat_list = cheats;
             }
             else {
@@ -460,7 +462,7 @@ static void load (menu_t *menu) {
             }
         }
         else {
-            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled\n");
+            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled, setting cheat list to NULL\n");
             menu->boot_params->cheat_list = NULL; // cheats not enabled, so no cheat list
         }
     }

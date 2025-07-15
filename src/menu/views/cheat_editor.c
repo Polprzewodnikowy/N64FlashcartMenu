@@ -29,12 +29,12 @@ static void edit_selected_cheat_value (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat value not implemented yet.\n");
 }
 
-static void add_new_cheat (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Add New Cheat not implemented yet.\n");
-}
+// static void add_new_cheat (menu_t *menu, void *arg) {
+//     debugf("Cheat Editor: Add New Cheat not implemented yet.\n");
+// }
 
-static void delete_selected_cheat (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Delete Selected Cheat.\n");
+static void reset_selected_cheat (menu_t *menu, void *arg) {
+    debugf("Cheat Editor: Reset Selected Cheat.\n");
     cheat_codes[item_selected].address = 0; // Reset the cheat address.
     cheat_codes[item_selected].value = 0; // Reset the cheat value.
     //cheat_codes[item_selected].description[0] = '\0'; // Clear the cheat description.
@@ -50,8 +50,8 @@ static component_context_menu_t cm_edit_selected_cheat = { .list = {
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Edit Selected Item", .submenu = &cm_edit_selected_cheat },
-    { .text = "Add New Cheat Item", .action = add_new_cheat },
-    { .text = "Delete Selected Item", .action = delete_selected_cheat },
+    //{ .text = "Add New Cheat Item", .action = add_new_cheat },
+    { .text = "Reset Selected Item", .action = reset_selected_cheat },
     COMPONENT_CONTEXT_MENU_LIST_END
 }};
 

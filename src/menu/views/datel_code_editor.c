@@ -3,13 +3,14 @@
 #include "../ui_components/constants.h"
 
 #define MAX_CHEAT_CODES (34) // Maximum number of cheat codes to display (currently hardcoded to 34 as per support for the ED64x, but can be changed later)
+#define MAX_CHEAT_CODE_ARRAYLIST_SIZE (MAX_CHEAT_CODES * 2 + 2) // Maximum size of the cheat code list (address/value pairs + two trailing zeros)
 
 /** @brief Cheat file code Structure. */
 typedef struct {
     uint32_t address; /**< Cheat address */
     uint16_t value; /**< Cheat value */ // might need to be uint32_t for loading, though we should be able to convert.
     bool enabled; /**< Cheat enabled flag */
-    //char description[128]; /**< Cheat description */
+    //char description[32]; /**< Cheat description */
 } cheat_file_code_t;
 
 static cheat_file_code_t cheat_codes[MAX_CHEAT_CODES];
@@ -298,7 +299,7 @@ static void draw (menu_t *menu, surface_t *display) {
     rdpq_detach_show();
 }
 
-void view_cheat_editor_init (menu_t *menu) {
+void view_datel_code_editor_init (menu_t *menu) {
     ui_components_context_menu_init(&options_context_menu);
     ui_components_context_menu_init(&cm_edit_selected_cheat);
 
@@ -322,14 +323,14 @@ void view_cheat_editor_init (menu_t *menu) {
     cheat_codes[3].value = 2; // Hex 0x0002.
     cheat_codes[3].enabled = true;
 
-    uint32_t cheats[MAX_CHEAT_CODES * 2 + 2];
+    uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
     size_t num_pairs = generate_enabled_cheats_array(cheats);
     // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
     debugf("Cheat Editor: Generated %u address/value pairs.\n", num_pairs);
 
 }
 
-void view_cheat_editor_display (menu_t *menu, surface_t *display) {
+void view_datel_code_editor_display (menu_t *menu, surface_t *display) {
     process(menu);
 
     draw(menu, display);

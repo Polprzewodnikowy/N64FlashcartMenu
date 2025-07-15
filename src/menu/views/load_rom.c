@@ -258,7 +258,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
     { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
+    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_DATEL_CODE_EDITOR) },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
     { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
@@ -435,7 +435,7 @@ static void load (menu_t *menu) {
     if (is_memory_expanded()) {
         if (menu->load.rom_info.settings.cheats_enabled) {
             // FIXME: get the list of cheats from the Datel Code Editor
-            // uint32_t cheats[MAX_CHEAT_CODES * 2 + 2];
+            // uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
             // size_t num_pairs = generate_enabled_cheats_array(cheats);
             // if (num_pairs > 0) {
             //     menu->boot_params->cheat_list = cheats;

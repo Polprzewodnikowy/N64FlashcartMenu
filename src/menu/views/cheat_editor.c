@@ -16,7 +16,9 @@ static cheat_file_code_t cheat_codes[MAX_CHEAT_CODES];
 static short item_selected = 0;
 
 static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Edit Selected Cheat toggle not implemented yet.\n");
+    debugf("Cheat Editor: Edit Selected Cheat toggle.\n");
+    cheat_codes[item_selected].enabled = !cheat_codes[item_selected].enabled;
+    sound_play_effect(SFX_SETTING);
 }
 
 static void edit_selected_cheat_address (menu_t *menu, void *arg) {
@@ -32,7 +34,11 @@ static void add_new_cheat (menu_t *menu, void *arg) {
 }
 
 static void delete_selected_cheat (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Delete Selected Cheat not implemented yet.\n");
+    debugf("Cheat Editor: Delete Selected Cheat.\n");
+    cheat_codes[item_selected].address = 0; // Reset the cheat address.
+    cheat_codes[item_selected].value = 0; // Reset the cheat value.
+    //cheat_codes[item_selected].description[0] = '\0'; // Clear the cheat description.
+    cheat_codes[item_selected].enabled = !cheat_codes[item_selected].enabled;// Mark the cheat as disabled instead of deleting it.
 }
 
 static component_context_menu_t cm_edit_selected_cheat = { .list = {
@@ -53,10 +59,8 @@ static component_context_menu_t options_context_menu = { .list = {
 
 
 static void process(menu_t *menu) {
+
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
-        return;
-    }
-    if (ui_components_context_menu_process(menu, &cm_edit_selected_cheat)) {
         return;
     }
 

@@ -13,6 +13,23 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
+// // Example cheat codes for the game "Majoras Mask USA"
+// uint32_t cheats[] = {
+//     // Enable code
+//     0xF1096820,
+//     0x2400,
+//     0xFF000220,
+//     0x0000,
+//     // Inventory Editor (assigned to L)
+//     0xD01F9B91,
+//     0x0020,
+//     0x803FDA3F,
+//     0x0002,
+//     // Last 2 entries must be 0
+//     0,
+//     0,
+// };
+
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
         case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
@@ -445,9 +462,12 @@ static void load (menu_t *menu) {
 
     if (is_memory_expanded()) {
         if (menu->load.rom_info.settings.cheats_enabled) {
-            // FIXME: get the list of cheats from the Datel Code Editor
-            uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-            size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), cheats);
+            debugf("Loading ROM with Expansion Pak present, cheats setting enabled\n");
+            uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+            size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
+            // Allocate memory for the cheats array
+            uint32_t *cheats = malloc((num_pairs) * sizeof(uint32_t));
+            memcpy(cheats, tmp_cheats, num_pairs * sizeof(uint32_t));
             
             for (size_t i = 0; i < num_pairs; i += 2) {
                 debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
@@ -470,6 +490,8 @@ static void load (menu_t *menu) {
         debugf("Loading ROM without Expansion Pak present, setting cheat list to NULL\n");
         menu->boot_params->cheat_list = NULL; // Expansion Pak not present, so no cheat list
     }
+    //menu->boot_params->cheat_list = cheats;
+
 }
 
 static void deinit (void) {

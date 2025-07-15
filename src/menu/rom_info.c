@@ -921,12 +921,10 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
     return save_rom_config_setting_to_file(path, "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
     return save_rom_config_setting_to_file(path, "cheats_enabled", enabled, false);
 }
-#endif
 
 #ifdef FEATURE_PATCHES_GUI_ENABLED
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {

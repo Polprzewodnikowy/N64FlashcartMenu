@@ -175,13 +175,11 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 #endif
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 static void set_cheat_option(menu_t *menu, void *arg) {
     bool enabled = (bool)arg;
     rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
     menu->browser.reload = true;
 }
-#endif
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 static void set_patcher_option(menu_t *menu, void *arg) {
@@ -233,13 +231,11 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 static component_context_menu_t set_cheat_options_menu = { .list = {
     { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
     { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
-#endif
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 static component_context_menu_t set_patcher_options_menu = { .list = {
@@ -261,12 +257,10 @@ static component_context_menu_t options_context_menu = { .list = {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
-#ifdef FEATURE_CHEATS_GUI_ENABLED
-{ .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-#endif
-{ .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
+    { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CHEAT_EDITOR) },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
-{ .text = "Use Patches", .submenu = &set_patcher_options_menu },
+    { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -437,7 +431,30 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
-    menu->boot_params->cheat_list = NULL;
+
+    if (is_memory_expanded()) {
+        if (menu->load.rom_info.settings.cheats_enabled) {
+            // FIXME: get the list of cheats from the Datel Code Editor
+            // uint32_t cheats[MAX_CHEAT_CODES * 2 + 2];
+            // size_t num_pairs = generate_enabled_cheats_array(cheats);
+            // if (num_pairs > 0) {
+            //     menu->boot_params->cheat_list = cheats;
+            // }
+            // else {
+            //     menu->boot_params->cheat_list = NULL; // No cheats enabled, so no cheat list
+            // }
+            debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled");
+            menu->boot_params->cheat_list = NULL; // TODO: remove this when the Datel Code Editor is implemented
+        }
+        else {
+            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled");
+            menu->boot_params->cheat_list = NULL; // cheats not enabled, so no cheat list
+        }
+    }
+    else {
+        debugf("Loading ROM without Expansion Pak present, setting cheat list to NULL");
+        menu->boot_params->cheat_list = NULL; // Expansion Pak not present, so no cheat list
+    }
 }
 
 static void deinit (void) {

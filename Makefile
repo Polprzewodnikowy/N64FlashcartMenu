@@ -43,6 +43,7 @@ SRCS = \
 	menu/actions.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
+	menu/datel_codes.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \

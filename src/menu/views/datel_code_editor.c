@@ -296,9 +296,9 @@ void view_datel_code_editor_init (menu_t *menu) {
 
     set_cheat_codes(cheat_codes);
     uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-    size_t num_pairs = generate_enabled_cheats_array(get_cheat_codes(), cheats);
+    size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
     // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
-    debugf("Cheat Editor: Generated %u address/value pairs.\n", num_pairs);
+    debugf("Cheat Editor: Generated %u cheat items.\n", cheat_item_count);
 
 }
 

@@ -178,9 +178,16 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 
 static void set_cheat_option(menu_t *menu, void *arg) {
     debugf("Load Rom: setting cheat option to %d\n", (int)arg);
-    bool enabled = (bool)arg;
-    rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
-    menu->browser.reload = true;
+    if (!is_memory_expanded()) {
+        // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu->browser.reload = true;
+    }
+    else {
+        bool enabled = (bool)arg;
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
+        menu->browser.reload = true;
+    }
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED

@@ -160,7 +160,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_buffer[64];
-            sprintf(str_buffer, "%02d: %08lx %04x", 
+            sprintf(str_buffer, "%02d: 0x%08lx 0x%04x", 
                 entry_index, entry->address, entry->value
             );
 
@@ -281,6 +281,23 @@ void view_cheat_editor_init (menu_t *menu) {
 
     // Nothing to initialize (yet)
     // But we should be loading the cheat codes from a file here.
+    // Currently we are just going to pre populate them for test purposes.
+    debugf("Cheat Editor: Init debug codes MM USA.\n");
+    cheat_codes[0].address = 4043925536; // Hex 0xF1096820
+    cheat_codes[0].value = 9216; // Hex 0x2400.
+    cheat_codes[0].enabled = true;
+
+    cheat_codes[1].address = 4278190624; // Hex 0xFF000220.
+    cheat_codes[1].value = 0; // Hex 0x0000.
+    cheat_codes[1].enabled = true;
+
+    cheat_codes[2].address = 3491732369; // Hex 0xD01F9B91.
+    cheat_codes[2].value = 32; // Hex 0x0020.
+    cheat_codes[2].enabled = true;
+
+    cheat_codes[3].address = 2151668287; // Hex 0x803FDA3F.
+    cheat_codes[3].value = 2; // Hex 0x0002.
+    cheat_codes[3].enabled = true;
 }
 
 void view_cheat_editor_display (menu_t *menu, surface_t *display) {

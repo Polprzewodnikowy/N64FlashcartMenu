@@ -167,7 +167,7 @@ mp3player_err_t mp3player_init (void) {
         .name = "mp3player",
         .bits = 16,
         .channels = 2,
-        .frequency = 44100,
+        .frequency = 96000,
         .len = WAVEFORM_MAX_LEN - 1,
         .loop_len = WAVEFORM_MAX_LEN - 1,
         .read = mp3player_wave_read,

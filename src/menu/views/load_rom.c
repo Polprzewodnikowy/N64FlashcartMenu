@@ -465,7 +465,7 @@ static void load (menu_t *menu) {
         uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
         size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
 
-        if (cheat_item_count > 0) {
+        if (cheat_item_count > 2) { // account for at least one valid cheat code (address and value), excluding the last two 0s
             // Allocate memory for the cheats array
             uint32_t *cheats = malloc(cheat_item_count * sizeof(uint32_t));
             if (cheats) {

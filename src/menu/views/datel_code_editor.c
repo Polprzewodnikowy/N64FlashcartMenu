@@ -11,6 +11,7 @@ static short item_selected = 0;
 static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat toggle.\n");
     cheat_codes[item_selected].enabled = !cheat_codes[item_selected].enabled;
+    set_cheat_codes(cheat_codes);
     sound_play_effect(SFX_SETTING);
 }
 
@@ -22,16 +23,13 @@ static void edit_selected_cheat_value (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat value not implemented yet.\n");
 }
 
-// static void add_new_cheat (menu_t *menu, void *arg) {
-//     debugf("Cheat Editor: Add New Cheat not implemented yet.\n");
-// }
-
 static void reset_selected_cheat (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Reset Selected Cheat.\n");
     cheat_codes[item_selected].address = 0; // Reset the cheat address.
     cheat_codes[item_selected].value = 0; // Reset the cheat value.
-    //cheat_codes[item_selected].description[0] = '\0'; // Clear the cheat description.
-    cheat_codes[item_selected].enabled = !cheat_codes[item_selected].enabled;// Mark the cheat as disabled instead of deleting it.
+    strncpy(cheat_codes[item_selected].description, "\0", sizeof(cheat_codes[item_selected].description));
+    cheat_codes[item_selected].enabled = false;// Mark the cheat as disabled instead of deleting it.
+    set_cheat_codes(cheat_codes);
 }
 
 static component_context_menu_t cm_edit_selected_cheat = { .list = {
@@ -43,7 +41,6 @@ static component_context_menu_t cm_edit_selected_cheat = { .list = {
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Edit Selected Item", .submenu = &cm_edit_selected_cheat },
-    //{ .text = "Add New Cheat Item", .action = add_new_cheat },
     { .text = "Reset Selected Item", .action = reset_selected_cheat },
     COMPONENT_CONTEXT_MENU_LIST_END
 }};
@@ -242,7 +239,7 @@ static void draw (menu_t *menu, surface_t *display) {
 
     ui_components_layout_draw();
 
-    ui_components_main_text_draw( // TODO: add header "Idx | Address | Value | Enabled\n"
+    ui_components_main_text_draw( // TODO: add header "Idx | Address | Value | Description | Enabled\n"
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "DATEL CODE EDITOR\n"

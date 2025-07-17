@@ -487,8 +487,6 @@ static void load (menu_t *menu) {
         debugf("Cheats disabled or Expansion Pak not present\n");
         menu->boot_params->cheat_list = NULL;
     }
-    //menu->boot_params->cheat_list = cheats;
-
 }
 
 static void deinit (void) {

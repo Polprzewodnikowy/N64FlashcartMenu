@@ -46,6 +46,16 @@ cheat_file_code_t *get_cheat_codes(void);
  */
 void set_cheat_codes(cheat_file_code_t *cheats);
 
+/** * @brief Load cheats from a file.
+ * 
+ * @param path Path to the file containing cheat codes.
+ */
+void load_cheats_from_file(char *path);
 
+/** * @brief Save cheats to a file.
+ * 
+ * @param path Path to the file where cheat codes should be saved.
+ */
+void save_cheats_to_file(char *path);
 
 #endif /* DATEL_CODES_H__ */

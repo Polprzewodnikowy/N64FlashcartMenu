@@ -275,65 +275,12 @@ void view_datel_code_editor_init (menu_t *menu) {
 
     cheat_codes = get_cheat_codes();
 
-    // But we should be loading the cheat codes from a file here.
-    // Currently we are just going to pre populate them for test purposes.
-    debugf("Cheat Editor: Init debug codes MM USA.\n");
-    // Enable code
-    cheat_codes[0].address = 4043925536; // Hex 0xF1096820
-    cheat_codes[0].value = 9216; // Hex 0x2400.
-    strncpy(cheat_codes[0].description, "Enable code 1", sizeof(cheat_codes[0].description) - 1);
-    cheat_codes[0].description[sizeof(cheat_codes[0].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[0].enabled = true;
+    path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    path_ext_replace(path, "datel.txt");
 
-    cheat_codes[1].address = 4278190624; // Hex 0xFF000220.
-    cheat_codes[1].value = 0; // Hex 0x0000.
-    strncpy(cheat_codes[1].description, "Enable code 2", sizeof(cheat_codes[1].description) - 1);
-    cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[1].enabled = true;
+    load_cheats_from_file(path_get(path));
 
-    // Inventory Editor (assigned to L)
-    cheat_codes[2].address = 3491732369; // Hex 0xD01F9B91.
-    cheat_codes[2].value = 32; // Hex 0x0020.
-    strncpy(cheat_codes[2].description, "Inventory Editor 1", sizeof(cheat_codes[2].description) - 1);
-    cheat_codes[2].description[sizeof(cheat_codes[2].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[2].enabled = true;
-
-    cheat_codes[3].address = 2151668287; // Hex 0x803FDA3F.
-    cheat_codes[3].value = 2; // Hex 0x0002.
-    strncpy(cheat_codes[3].description, "Inventory Editor 2", sizeof(cheat_codes[3].description) - 1);
-    cheat_codes[3].description[sizeof(cheat_codes[3].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[3].enabled = true;
-
-    // Complete Bomber's Notebook
-    cheat_codes[4].address = 0x811F05AA; // Hex 0x811F05AA.
-    cheat_codes[4].value = 0xffff; // Hex 0xffff.
-    strncpy(cheat_codes[4].description, "Complete Bomber's Notebook 1", sizeof(cheat_codes[4].description) - 1);
-    cheat_codes[4].description[sizeof(cheat_codes[4].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[4].enabled = true;
-
-    cheat_codes[5].address = 0x811F05AC; // Hex 0x811F05AC.
-    cheat_codes[5].value = 0xffff; // Hex 0xffff.
-    strncpy(cheat_codes[5].description, "Complete Bomber's Notebook 2", sizeof(cheat_codes[5].description) - 1);
-    cheat_codes[5].description[sizeof(cheat_codes[5].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[5].enabled = true;
-
-    cheat_codes[6].address = 0x811F05AE; // Hex 0x811F05AE.
-    cheat_codes[6].value = 0xffff; // Hex 0xffff.
-    strncpy(cheat_codes[6].description, "Complete Bomber's Notebook 3", sizeof(cheat_codes[6].description) - 1);
-    cheat_codes[6].description[sizeof(cheat_codes[6].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[6].enabled = true;
-
-    cheat_codes[7].address = 0x811F05B0; // Hex 0x811F05B0.
-    cheat_codes[7].value = 0xffff; // Hex 0xffff.
-    strncpy(cheat_codes[7].description, "Complete Bomber's Notebook 4", sizeof(cheat_codes[7].description) - 1);
-    cheat_codes[7].description[sizeof(cheat_codes[7].description) - 1] = '\0'; // Ensure null-termination
-    cheat_codes[7].enabled = true;
-
-    set_cheat_codes(cheat_codes);
-    uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-    size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
-    // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
-    debugf("Cheat Editor: Generated %u cheat items.\n", cheat_item_count);
+    path_free(path);
 
 }
 

@@ -132,4 +132,10 @@ void save_cheats_to_file(char *path) {
     // This function should save the cheat codes to a file.
     // For now, we will just print them to the debug log.
     debugf("Cheat Editor: Saving cheats to path %s (not implemented).\n", path);
+    // if (!file_exists(path)) {
+    //     if (file_allocate(path, MAX_CHEAT_CODES * sizeof(cheat_file_code_t))) {
+    //         debugf("Cheat Editor: Failed to allocate file for saving cheats.\n");
+    //         return;
+    //     }
+    // }
 }

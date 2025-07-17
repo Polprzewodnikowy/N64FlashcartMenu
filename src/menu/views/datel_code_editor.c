@@ -155,7 +155,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
 
             char str_buffer[64];
             sprintf(str_buffer, "%02d: 0x%08lx 0x%04x - %s", 
-                entry_index, entry->address, entry->value, entry->description
+                entry_index + 1, entry->address, entry->value, entry->description
             );
 
             rdpq_paragraph_builder_span(str_buffer, strlen(str_buffer));

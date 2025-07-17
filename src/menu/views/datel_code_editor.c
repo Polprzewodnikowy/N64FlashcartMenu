@@ -151,7 +151,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_buffer[64];
-            sprintf(str_buffer, "%02d: 0x%08lx 0x%04x - %s", 
+            sprintf(str_buffer, "%02d | %08lX %04X | %s", 
                 entry_index + 1, entry->address, entry->value, entry->description
             );
 
@@ -207,7 +207,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_enabled_buffer[4];
-            sprintf(str_enabled_buffer, "%s", 
+            sprintf(str_enabled_buffer, "%s",
                 entry->enabled ? "ON" : "OFF"
             );
 
@@ -239,11 +239,18 @@ static void draw (menu_t *menu, surface_t *display) {
 
     ui_components_layout_draw();
 
-    ui_components_main_text_draw( // TODO: add header "Idx | Address | Value | Description | Enabled\n"
+    ui_components_main_text_draw(
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "DATEL CODE EDITOR\n"
     );
+
+    // ui_components_main_text_draw(
+    //     STL_DEFAULT,
+    //     ALIGN_LEFT, VALIGN_TOP,
+    //     "\n"
+    //     "ID  Address  Value  Description\n"
+    // );
 
     cheat_code_list_draw(cheat_codes, MAX_CHEAT_CODES, item_selected);
 

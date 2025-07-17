@@ -65,8 +65,8 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[1].address = 0xFF000220;
     cheat_codes[1].value = 0x0000;
-    strncpy(cheat_codes[1].description, "Enable code 2", sizeof(cheat_codes[1].description) - 1);
-    cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
+    // strncpy(cheat_codes[1].description, "Enable code 2", sizeof(cheat_codes[1].description) - 1);
+    // cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
@@ -78,8 +78,8 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[3].address = 0x803FDA3F;
     cheat_codes[3].value = 0x0002;
-    strncpy(cheat_codes[3].description, "Inventory Editor 2", sizeof(cheat_codes[3].description) - 1);
-    cheat_codes[3].description[sizeof(cheat_codes[3].description) - 1] = '\0'; // Ensure null-termination
+    // strncpy(cheat_codes[3].description, "Inventory Editor 2", sizeof(cheat_codes[3].description) - 1);
+    // cheat_codes[3].description[sizeof(cheat_codes[3].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[3].enabled = false;
 
     // Complete Bomber's Notebook
@@ -103,7 +103,7 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[7].address = 0x811F05B0;
     cheat_codes[7].value = 0xffff;
-    strncpy(cheat_codes[7].description, "Complete Bomber's Notebook 4", sizeof(cheat_codes[7].description) - 1);
+    strncpy(cheat_codes[7].description, "Complete Bomber's Notebook 4567", sizeof(cheat_codes[7].description) - 1);
     cheat_codes[7].description[sizeof(cheat_codes[7].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[7].enabled = true;
 

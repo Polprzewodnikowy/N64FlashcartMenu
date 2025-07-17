@@ -278,6 +278,7 @@ void view_datel_code_editor_init (menu_t *menu) {
     // But we should be loading the cheat codes from a file here.
     // Currently we are just going to pre populate them for test purposes.
     debugf("Cheat Editor: Init debug codes MM USA.\n");
+    // Enable code
     cheat_codes[0].address = 4043925536; // Hex 0xF1096820
     cheat_codes[0].value = 9216; // Hex 0x2400.
     cheat_codes[0].enabled = true;
@@ -286,6 +287,7 @@ void view_datel_code_editor_init (menu_t *menu) {
     cheat_codes[1].value = 0; // Hex 0x0000.
     cheat_codes[1].enabled = true;
 
+    // Inventory Editor (assigned to L)
     cheat_codes[2].address = 3491732369; // Hex 0xD01F9B91.
     cheat_codes[2].value = 32; // Hex 0x0020.
     cheat_codes[2].enabled = true;
@@ -293,6 +295,23 @@ void view_datel_code_editor_init (menu_t *menu) {
     cheat_codes[3].address = 2151668287; // Hex 0x803FDA3F.
     cheat_codes[3].value = 2; // Hex 0x0002.
     cheat_codes[3].enabled = true;
+
+    // Complete Bomber's Notebook
+    cheat_codes[4].address = 0x811F05AA; // Hex 0x811F05AA.
+    cheat_codes[4].value = 0xffff; // Hex 0xffff.
+    cheat_codes[4].enabled = true;
+
+    cheat_codes[5].address = 0x811F05AC; // Hex 0x811F05AC.
+    cheat_codes[5].value = 0xffff; // Hex 0xffff.
+    cheat_codes[5].enabled = true;
+
+    cheat_codes[6].address = 0x811F05AE; // Hex 0x811F05AE.
+    cheat_codes[6].value = 0xffff; // Hex 0xffff.
+    cheat_codes[6].enabled = true;
+
+    cheat_codes[7].address = 0x811F05B0; // Hex 0x811F05B0.
+    cheat_codes[7].value = 0xffff; // Hex 0xffff.
+    cheat_codes[7].enabled = true;
 
     set_cheat_codes(cheat_codes);
     uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];

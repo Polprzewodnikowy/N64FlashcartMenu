@@ -56,23 +56,23 @@ void load_cheats_from_file(char *path) {
 
     // Currently we are just going to pre populate them for test purposes.
     debugf("Cheat Editor: Init debug codes MM USA.\n");
-    // Enable code
+    // Activator code
     cheat_codes[0].address = 0xF1096820;
     cheat_codes[0].value = 0x2400;
-    strncpy(cheat_codes[0].description, "Enable code 1", sizeof(cheat_codes[0].description) - 1);
+    strncpy(cheat_codes[0].description, "Activator code", sizeof(cheat_codes[0].description) - 1);
     cheat_codes[0].description[sizeof(cheat_codes[0].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[0].enabled = true;
 
     cheat_codes[1].address = 0xFF000220;
     cheat_codes[1].value = 0x0000;
-    // strncpy(cheat_codes[1].description, "Enable code 2", sizeof(cheat_codes[1].description) - 1);
+    // strncpy(cheat_codes[1].description, "Activator code 2", sizeof(cheat_codes[1].description) - 1);
     // cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
     cheat_codes[2].address = 0xD01F9B91;
     cheat_codes[2].value = 0x0020;
-    strncpy(cheat_codes[2].description, "Inventory Editor", sizeof(cheat_codes[2].description) - 1);
+    strncpy(cheat_codes[2].description, "Inventory Editor (assigned to L)", sizeof(cheat_codes[2].description) - 1);
     cheat_codes[2].description[sizeof(cheat_codes[2].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[2].enabled = false;
 

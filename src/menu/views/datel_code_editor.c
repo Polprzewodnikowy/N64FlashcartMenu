@@ -71,7 +71,7 @@ static void process(menu_t *menu) {
         sound_play_effect(SFX_CURSOR);
     } else if(menu->actions.enter) {
         set_cheat_codes(cheat_codes);
-        //menu->next_mode = MENU_MODE_LOAD_ROM;
+        menu->next_mode = MENU_MODE_LOAD_ROM;
         debugf("Cheat Editor: Applying cheats.\n");
         sound_play_effect(SFX_ENTER);
     } else if (menu->actions.back) {

@@ -122,7 +122,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             if (entry_index >= entries) {
                 cheat_string_lengths[i] = 0;
             } else {
-                cheat_string_lengths[i] = 128; //length;
+                cheat_string_lengths[i] = 64; //length;
                 total_length += cheat_string_lengths[i];
             }
         }
@@ -135,7 +135,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             &(rdpq_textparms_t) {
                 .width = FILE_LIST_MAX_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
                 .height = LAYOUT_ACTIONS_SEPARATOR_Y - VISIBLE_AREA_Y0  - (TEXT_MARGIN_VERTICAL * 2),
-                .wrap = WRAP_NONE,
+                .wrap = WRAP_ELLIPSES,
                 .line_spacing = TEXT_LINE_SPACING_ADJUST,
             },
             FNT_DEFAULT,
@@ -154,8 +154,8 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_buffer[64];
-            sprintf(str_buffer, "%02d: 0x%08lx 0x%04x", 
-                entry_index, entry->address, entry->value
+            sprintf(str_buffer, "%02d: 0x%08lx 0x%04x - %s", 
+                entry_index, entry->address, entry->value, entry->description
             );
 
             rdpq_paragraph_builder_span(str_buffer, strlen(str_buffer));
@@ -281,36 +281,52 @@ void view_datel_code_editor_init (menu_t *menu) {
     // Enable code
     cheat_codes[0].address = 4043925536; // Hex 0xF1096820
     cheat_codes[0].value = 9216; // Hex 0x2400.
+    strncpy(cheat_codes[0].description, "Enable code 1", sizeof(cheat_codes[0].description) - 1);
+    cheat_codes[0].description[sizeof(cheat_codes[0].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[0].enabled = true;
 
     cheat_codes[1].address = 4278190624; // Hex 0xFF000220.
     cheat_codes[1].value = 0; // Hex 0x0000.
+    strncpy(cheat_codes[1].description, "Enable code 2", sizeof(cheat_codes[1].description) - 1);
+    cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
     cheat_codes[2].address = 3491732369; // Hex 0xD01F9B91.
     cheat_codes[2].value = 32; // Hex 0x0020.
+    strncpy(cheat_codes[2].description, "Inventory Editor 1", sizeof(cheat_codes[2].description) - 1);
+    cheat_codes[2].description[sizeof(cheat_codes[2].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[2].enabled = true;
 
     cheat_codes[3].address = 2151668287; // Hex 0x803FDA3F.
     cheat_codes[3].value = 2; // Hex 0x0002.
+    strncpy(cheat_codes[3].description, "Inventory Editor 2", sizeof(cheat_codes[3].description) - 1);
+    cheat_codes[3].description[sizeof(cheat_codes[3].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[3].enabled = true;
 
     // Complete Bomber's Notebook
     cheat_codes[4].address = 0x811F05AA; // Hex 0x811F05AA.
     cheat_codes[4].value = 0xffff; // Hex 0xffff.
+    strncpy(cheat_codes[4].description, "Complete Bomber's Notebook 1", sizeof(cheat_codes[4].description) - 1);
+    cheat_codes[4].description[sizeof(cheat_codes[4].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[4].enabled = true;
 
     cheat_codes[5].address = 0x811F05AC; // Hex 0x811F05AC.
     cheat_codes[5].value = 0xffff; // Hex 0xffff.
+    strncpy(cheat_codes[5].description, "Complete Bomber's Notebook 2", sizeof(cheat_codes[5].description) - 1);
+    cheat_codes[5].description[sizeof(cheat_codes[5].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[5].enabled = true;
 
     cheat_codes[6].address = 0x811F05AE; // Hex 0x811F05AE.
     cheat_codes[6].value = 0xffff; // Hex 0xffff.
+    strncpy(cheat_codes[6].description, "Complete Bomber's Notebook 3", sizeof(cheat_codes[6].description) - 1);
+    cheat_codes[6].description[sizeof(cheat_codes[6].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[6].enabled = true;
 
     cheat_codes[7].address = 0x811F05B0; // Hex 0x811F05B0.
     cheat_codes[7].value = 0xffff; // Hex 0xffff.
+    strncpy(cheat_codes[7].description, "Complete Bomber's Notebook 4", sizeof(cheat_codes[7].description) - 1);
+    cheat_codes[7].description[sizeof(cheat_codes[7].description) - 1] = '\0'; // Ensure null-termination
     cheat_codes[7].enabled = true;
 
     set_cheat_codes(cheat_codes);

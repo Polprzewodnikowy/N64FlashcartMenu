@@ -460,35 +460,32 @@ static void load (menu_t *menu) {
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
 
-    if (is_memory_expanded()) {
-        if (menu->load.rom_info.settings.cheats_enabled) {
-            debugf("Loading ROM with Expansion Pak present, cheats setting enabled\n");
-            uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-            size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
+    // Handle cheat codes only if Expansion Pak is present and cheats are enabled
+    if (is_memory_expanded() && menu->load.rom_info.settings.cheats_enabled) {
+        uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+        size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
+
+        if (cheat_item_count > 0) {
             // Allocate memory for the cheats array
-            uint32_t *cheats = malloc((cheat_item_count) * sizeof(uint32_t));
-            memcpy(cheats, tmp_cheats, cheat_item_count * sizeof(uint32_t));
-            
-            for (size_t i = 0; i < cheat_item_count; i += 2) {
-                debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
-            }
-            if (cheat_item_count > 0) {
-                debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, %u cheats found (plus 2 required zero entries)\n", (cheat_item_count /2 - 1));
+            uint32_t *cheats = malloc(cheat_item_count * sizeof(uint32_t));
+            if (cheats) {
+                memcpy(cheats, tmp_cheats, cheat_item_count * sizeof(uint32_t));
+                for (size_t i = 0; i + 1 < cheat_item_count; i += 2) {
+                    debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
+                }
+                debugf("Cheats enabled, %u cheats found\n", cheat_item_count / 2);
                 menu->boot_params->cheat_list = cheats;
+            } else {
+                debugf("Failed to allocate memory for cheat list\n");
+                menu->boot_params->cheat_list = NULL;
             }
-            else {
-                debugf("Loading ROM with Expansion Pak enabled, cheats setting enabled, no cheats found\n");
-                menu->boot_params->cheat_list = NULL; // No cheats enabled, so no cheat list
-            }
+        } else {
+            debugf("Cheats enabled, but no cheats found\n");
+            menu->boot_params->cheat_list = NULL;
         }
-        else {
-            debugf("Loading ROM with Expansion Pak enabled, cheats setting disabled, setting cheat list to NULL\n");
-            menu->boot_params->cheat_list = NULL; // cheats not enabled, so no cheat list
-        }
-    }
-    else {
-        debugf("Loading ROM without Expansion Pak present, setting cheat list to NULL\n");
-        menu->boot_params->cheat_list = NULL; // Expansion Pak not present, so no cheat list
+    } else {
+        debugf("Cheats disabled or Expansion Pak not present\n");
+        menu->boot_params->cheat_list = NULL;
     }
     //menu->boot_params->cheat_list = cheats;
 

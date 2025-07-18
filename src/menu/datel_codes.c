@@ -76,7 +76,7 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[1].address = 0xFF000220;
     cheat_codes[1].value = 0x0000;
-    //populate_cheat_code_description(&cheat_codes[1], "Activator code 2");
+    populate_cheat_code_description(&cheat_codes[1], "Activator code");
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
@@ -87,7 +87,7 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[3].address = 0x803FDA3F;
     cheat_codes[3].value = 0x0002;
-    //populate_cheat_code_description(&cheat_codes[3], "Inventory Editor 2");
+    populate_cheat_code_description(&cheat_codes[3], "Inventory Editor  (assigned to L)");
     cheat_codes[3].enabled = false;
 
     // Complete Bomber's Notebook
@@ -98,30 +98,32 @@ void load_cheats_from_file(char *path) {
 
     cheat_codes[5].address = 0x811F05AC;
     cheat_codes[5].value = 0xffff;
-    //populate_cheat_code_description(&cheat_codes[5], "Complete Bomber's Notebook 2");
+    populate_cheat_code_description(&cheat_codes[5], "Complete Bomber's Notebook");
     cheat_codes[5].enabled = true;
 
     cheat_codes[6].address = 0x811F05AE;
     cheat_codes[6].value = 0xffff;
-    //populate_cheat_code_description(&cheat_codes[6], "Complete Bomber's Notebook 3");
+    populate_cheat_code_description(&cheat_codes[6], "Complete Bomber's Notebook");
     cheat_codes[6].enabled = true;
 
     cheat_codes[7].address = 0x811F05B0;
     cheat_codes[7].value = 0xffff;
-    //populate_cheat_code_description(&cheat_codes[7], "Complete Bomber's Notebook 4");
+    populate_cheat_code_description(&cheat_codes[7], "Complete Bomber's Notebook");
     cheat_codes[7].enabled = true;
 
     cheat_codes[8].address = 0x80146ACB;
     cheat_codes[8].value = 0x005A;
-    populate_cheat_code_description(&cheat_codes[8], "Make A Save File For Debug Save File:");
+    populate_cheat_code_description(&cheat_codes[8], "Make A Debug Save File");
     cheat_codes[8].enabled = true;
 
     cheat_codes[9].address = 0x81146B18;
     cheat_codes[9].value = 0x1000;
+    populate_cheat_code_description(&cheat_codes[9], "Make A Debug Save File");
     cheat_codes[9].enabled = true;
 
     cheat_codes[10].address = 0x81146B1A;
     cheat_codes[10].value = 0x0017;
+    populate_cheat_code_description(&cheat_codes[10], "Make A Debug Save File");
     cheat_codes[10].enabled = true;
 
     set_cheat_codes(cheat_codes);

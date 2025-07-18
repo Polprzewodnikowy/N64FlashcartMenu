@@ -48,6 +48,18 @@ void set_cheat_codes(cheat_file_code_t *cheats) {
     }
 }
 
+/** * @brief Populate a cheat code with a description.
+ * 
+ * @param code Pointer to the cheat code structure.
+ * @param description The description string to set.
+ */
+void populate_cheat_code_description(cheat_file_code_t *code, const char *description) {
+    if (code && description) {
+        strncpy(code->description, description, sizeof(code->description) - 1);
+        code->description[sizeof(code->description) - 1] = '\0'; // Ensure null-termination
+    }
+}
+
 void load_cheats_from_file(char *path) {
 
     // We should be loading the cheat codes from a file here.
@@ -59,58 +71,49 @@ void load_cheats_from_file(char *path) {
     // Activator code
     cheat_codes[0].address = 0xF1096820;
     cheat_codes[0].value = 0x2400;
-    strncpy(cheat_codes[0].description, "Activator code", sizeof(cheat_codes[0].description) - 1);
-    cheat_codes[0].description[sizeof(cheat_codes[0].description) - 1] = '\0'; // Ensure null-termination
+    populate_cheat_code_description(&cheat_codes[0], "Activator code");
     cheat_codes[0].enabled = true;
 
     cheat_codes[1].address = 0xFF000220;
     cheat_codes[1].value = 0x0000;
-    // strncpy(cheat_codes[1].description, "Activator code 2", sizeof(cheat_codes[1].description) - 1);
-    // cheat_codes[1].description[sizeof(cheat_codes[1].description) - 1] = '\0'; // Ensure null-termination
+    //populate_cheat_code_description(&cheat_codes[1], "Activator code 2");
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
     cheat_codes[2].address = 0xD01F9B91;
     cheat_codes[2].value = 0x0020;
-    strncpy(cheat_codes[2].description, "Inventory Editor (assigned to L)", sizeof(cheat_codes[2].description) - 1);
-    cheat_codes[2].description[sizeof(cheat_codes[2].description) - 1] = '\0'; // Ensure null-termination
+    populate_cheat_code_description(&cheat_codes[2], "Inventory Editor  (assigned to L)");
     cheat_codes[2].enabled = false;
 
     cheat_codes[3].address = 0x803FDA3F;
     cheat_codes[3].value = 0x0002;
-    // strncpy(cheat_codes[3].description, "Inventory Editor 2", sizeof(cheat_codes[3].description) - 1);
-    // cheat_codes[3].description[sizeof(cheat_codes[3].description) - 1] = '\0'; // Ensure null-termination
+    //populate_cheat_code_description(&cheat_codes[3], "Inventory Editor 2");
     cheat_codes[3].enabled = false;
 
     // Complete Bomber's Notebook
     cheat_codes[4].address = 0x811F05AA;
     cheat_codes[4].value = 0xffff;
-    strncpy(cheat_codes[4].description, "Complete Bomber's Notebook", sizeof(cheat_codes[4].description) - 1);
-    cheat_codes[4].description[sizeof(cheat_codes[4].description) - 1] = '\0'; // Ensure null-termination
+    populate_cheat_code_description(&cheat_codes[4], "Complete Bomber's Notebook");
     cheat_codes[4].enabled = true;
 
     cheat_codes[5].address = 0x811F05AC;
     cheat_codes[5].value = 0xffff;
-    // strncpy(cheat_codes[5].description, "Complete Bomber's Notebook 2", sizeof(cheat_codes[5].description) - 1);
-    // cheat_codes[5].description[sizeof(cheat_codes[5].description) - 1] = '\0'; // Ensure null-termination
+    //populate_cheat_code_description(&cheat_codes[5], "Complete Bomber's Notebook 2");
     cheat_codes[5].enabled = true;
 
     cheat_codes[6].address = 0x811F05AE;
     cheat_codes[6].value = 0xffff;
-    // strncpy(cheat_codes[6].description, "Complete Bomber's Notebook 3", sizeof(cheat_codes[6].description) - 1);
-    // cheat_codes[6].description[sizeof(cheat_codes[6].description) - 1] = '\0'; // Ensure null-termination
+    //populate_cheat_code_description(&cheat_codes[6], "Complete Bomber's Notebook 3");
     cheat_codes[6].enabled = true;
 
     cheat_codes[7].address = 0x811F05B0;
     cheat_codes[7].value = 0xffff;
-    strncpy(cheat_codes[7].description, "Complete Bomber's Notebook 4567", sizeof(cheat_codes[7].description) - 1);
-    cheat_codes[7].description[sizeof(cheat_codes[7].description) - 1] = '\0'; // Ensure null-termination
+    //populate_cheat_code_description(&cheat_codes[7], "Complete Bomber's Notebook 4");
     cheat_codes[7].enabled = true;
 
     cheat_codes[8].address = 0x80146ACB;
     cheat_codes[8].value = 0x005A;
-    strncpy(cheat_codes[8].description, "Make A Save File For Debug Save File:", sizeof(cheat_codes[8].description) - 1);
-    cheat_codes[8].description[sizeof(cheat_codes[8].description) - 1] = '\0'; // Ensure null-termination
+    populate_cheat_code_description(&cheat_codes[8], "Make A Save File For Debug Save File:");
     cheat_codes[8].enabled = true;
 
     cheat_codes[9].address = 0x81146B18;

@@ -137,7 +137,7 @@ void load_cheats_from_file(char *path) {
     cheat_codes[12].address = 0x811EF6B6;
     cheat_codes[12].value = 0xFFFF;
     populate_cheat_code_description(&cheat_codes[12], "Enable All Owl Statues");
-    cheat_codes[12].enabled = true;
+    cheat_codes[12].enabled = false;
 
     set_cheat_codes(cheat_codes);
     uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];

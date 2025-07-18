@@ -111,20 +111,33 @@ void load_cheats_from_file(char *path) {
     populate_cheat_code_description(&cheat_codes[7], "Complete Bomber's Notebook");
     cheat_codes[7].enabled = true;
 
-    cheat_codes[8].address = 0x80146ACB;
-    cheat_codes[8].value = 0x005A;
-    populate_cheat_code_description(&cheat_codes[8], "Make A Debug Save File");
-    cheat_codes[8].enabled = true;
+    // Disable 3-day Timer
+    cheat_codes[8].address = 0x810F6C3C;
+    cheat_codes[8].value = 0x2400;
+    populate_cheat_code_description(&cheat_codes[8], "Disable 3-day Timer");
+    cheat_codes[8].enabled = false;
 
-    cheat_codes[9].address = 0x81146B18;
-    cheat_codes[9].value = 0x1000;
+    // Make A Debug Save File
+    cheat_codes[9].address = 0x80146ACB;
+    cheat_codes[9].value = 0x005A;
     populate_cheat_code_description(&cheat_codes[9], "Make A Debug Save File");
     cheat_codes[9].enabled = true;
 
-    cheat_codes[10].address = 0x81146B1A;
-    cheat_codes[10].value = 0x0017;
+    cheat_codes[10].address = 0x81146B18;
+    cheat_codes[10].value = 0x1000;
     populate_cheat_code_description(&cheat_codes[10], "Make A Debug Save File");
     cheat_codes[10].enabled = true;
+
+    cheat_codes[11].address = 0x81146B1A;
+    cheat_codes[11].value = 0x0017;
+    populate_cheat_code_description(&cheat_codes[11], "Make A Debug Save File");
+    cheat_codes[11].enabled = true;
+
+    // Enable All Owl Statues
+    cheat_codes[12].address = 0x811EF6B6;
+    cheat_codes[12].value = 0xFFFF;
+    populate_cheat_code_description(&cheat_codes[12], "Enable All Owl Statues");
+    cheat_codes[12].enabled = true;
 
     set_cheat_codes(cheat_codes);
     uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];

@@ -287,6 +287,13 @@ void view_datel_code_editor_init (menu_t *menu) {
 
     cheat_codes = get_cheat_codes();
 
+    path_t *path = path_clone(menu->load.rom_path);
+    path_ext_replace(path, "datel.txt");
+
+    load_cheats_from_file(path_get(path));
+
+    path_free(path);
+
 }
 
 void view_datel_code_editor_display (menu_t *menu, surface_t *display) {

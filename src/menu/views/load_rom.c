@@ -539,12 +539,6 @@ void view_load_rom_init (menu_t *menu) {
     }
 #endif
 
-    path_t *cheat_file_path = path_clone(menu->load.rom_path);
-    path_ext_replace(cheat_file_path, "datel.txt");
-
-    load_cheats_from_file(path_get(cheat_file_path));
-
-    path_free(cheat_file_path);
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {

@@ -108,74 +108,48 @@ void load_cheats_from_file(char *path) {
     // Currently we are just going to pre populate them for test purposes.
     debugf("Cheat Editor: Init debug codes MM USA.\n");
     // Activator code
-    cheat_codes[0].address = 0xF1096820;
-    cheat_codes[0].value = 0x2400;
-    populate_cheat_code_description(&cheat_codes[0], "Activator code");
+    parse_cheat_code_string(&cheat_codes[0],  "F1096820 2400 Activator code");
     cheat_codes[0].enabled = true;
 
-    cheat_codes[1].address = 0xFF000220;
-    cheat_codes[1].value = 0x0000;
-    populate_cheat_code_description(&cheat_codes[1], "Activator code");
+    parse_cheat_code_string(&cheat_codes[1],  "FF000220 0000 Activator code");
     cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
-    cheat_codes[2].address = 0xD01F9B91;
-    cheat_codes[2].value = 0x0020;
-    populate_cheat_code_description(&cheat_codes[2], "Inventory Editor  (assigned to L)");
+    parse_cheat_code_string(&cheat_codes[2],  "D01F9B91 0020 Inventory Editor (assigned to L)");
     cheat_codes[2].enabled = false;
 
-    cheat_codes[3].address = 0x803FDA3F;
-    cheat_codes[3].value = 0x0002;
-    populate_cheat_code_description(&cheat_codes[3], "Inventory Editor  (assigned to L)");
+    parse_cheat_code_string(&cheat_codes[3],  "803FDA3F 0002 Inventory Editor (assigned to L)");
     cheat_codes[3].enabled = false;
 
     // Complete Bomber's Notebook
-    cheat_codes[4].address = 0x811F05AA;
-    cheat_codes[4].value = 0xffff;
-    populate_cheat_code_description(&cheat_codes[4], "Complete Bomber's Notebook");
+    parse_cheat_code_string(&cheat_codes[4],  "811F05AA FFFF Complete Bomber's Notebook");
     cheat_codes[4].enabled = true;
 
-    cheat_codes[5].address = 0x811F05AC;
-    cheat_codes[5].value = 0xffff;
-    populate_cheat_code_description(&cheat_codes[5], "Complete Bomber's Notebook");
+    parse_cheat_code_string(&cheat_codes[5],  "811F05AC FFFF Complete Bomber's Notebook");
     cheat_codes[5].enabled = true;
 
-    cheat_codes[6].address = 0x811F05AE;
-    cheat_codes[6].value = 0xffff;
-    populate_cheat_code_description(&cheat_codes[6], "Complete Bomber's Notebook");
+    parse_cheat_code_string(&cheat_codes[6],  "811F05AE FFFF Complete Bomber's Notebook");
     cheat_codes[6].enabled = true;
 
-    cheat_codes[7].address = 0x811F05B0;
-    cheat_codes[7].value = 0xffff;
-    populate_cheat_code_description(&cheat_codes[7], "Complete Bomber's Notebook");
+    parse_cheat_code_string(&cheat_codes[7],  "811F05B0 FFFF Complete Bomber's Notebook");
     cheat_codes[7].enabled = true;
 
     // Disable 3-day Timer
-    cheat_codes[8].address = 0x810F6C3C;
-    cheat_codes[8].value = 0x2400;
-    populate_cheat_code_description(&cheat_codes[8], "Disable 3-day Timer");
+    parse_cheat_code_string(&cheat_codes[8],  "810F6C3C 2400 Disable 3-day Timer");
     cheat_codes[8].enabled = false;
 
     // Make A Debug Save File
-    cheat_codes[9].address = 0x80146ACB;
-    cheat_codes[9].value = 0x005A;
-    populate_cheat_code_description(&cheat_codes[9], "Make A Debug Save File");
+    parse_cheat_code_string(&cheat_codes[9],  "80146ACB 005A Make A Debug Save File");
     cheat_codes[9].enabled = true;
 
-    cheat_codes[10].address = 0x81146B18;
-    cheat_codes[10].value = 0x1000;
-    populate_cheat_code_description(&cheat_codes[10], "Make A Debug Save File");
+    parse_cheat_code_string(&cheat_codes[10], "81146B18 1000"); //  Make A Debug Save File
     cheat_codes[10].enabled = true;
 
-    cheat_codes[11].address = 0x81146B1A;
-    cheat_codes[11].value = 0x0017;
-    populate_cheat_code_description(&cheat_codes[11], "Make A Debug Save File");
+    parse_cheat_code_string(&cheat_codes[11], "81146B1A 0017 Make A Debug Save File");
     cheat_codes[11].enabled = true;
 
     // Enable All Owl Statues
-    cheat_codes[12].address = 0x811EF6B6;
-    cheat_codes[12].value = 0xFFFF;
-    populate_cheat_code_description(&cheat_codes[12], "Enable All Owl Statues");
+    parse_cheat_code_string(&cheat_codes[12], "811EF6B6 FFFF Enable All Owl Statues");
     cheat_codes[12].enabled = false;
 
     set_cheat_codes(cheat_codes);

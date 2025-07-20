@@ -23,6 +23,13 @@ typedef struct {
 } cheat_file_code_t;
 
 
+/** @brief Cheat code loading enum */
+typedef enum {
+    CHEAT_LOAD_OK,
+    CHEAT_LOAD_ERR_FILE_READ_FAIL,
+    CHEAT_LOAD_ERR_UNKNOWN
+} cheat_load_err_t;
+
 
 /**
  * @brief Generate a cheats array containing enabled cheats as address/value pairs.

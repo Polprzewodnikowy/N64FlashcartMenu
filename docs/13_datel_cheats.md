@@ -19,12 +19,13 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 Caveats:
 - Requires an Expansion Pak.
 - Codes that require a button to pressed are not yet supported.
+- Only the first 12 codes are currently used.
 
 Certain codes are not yet supported, because, for instance:
 - they rely on the button.
 
 ### Enable Cheats
-Ensure you have a cheat file and/or have used the Datel Code Editor, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.
+Ensure you have a cheat file and have accessed the Datel Code Editor screen, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.
 
 #### Datel Code Editor
 When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adjust the cheat codes as needed then press `A` to `Apply ROM with these cheats`.

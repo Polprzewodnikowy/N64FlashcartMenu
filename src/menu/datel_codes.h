@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define MAX_CHEAT_CODES (34) // Maximum number of cheat codes to display (currently hardcoded to 34 as per support for the ED64x, but can be changed later)
+#define MAX_CHEAT_CODES (12) // Maximum number of cheat codes to support (currently hardcoded to 12, but would be nice to support 34 as per support for the ED64x, but can be changed later)
 #define MAX_CHEAT_CODE_ARRAYLIST_SIZE (MAX_CHEAT_CODES * 2 + 2) // Maximum size of the cheat code list (address/value pairs + two trailing zeros)
 
 /** @brief Cheat file code Structure. */

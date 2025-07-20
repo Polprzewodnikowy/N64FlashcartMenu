@@ -185,9 +185,9 @@ void load_cheats_from_file(char *path) {
 
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
 
-    cheat_file_load_err_t file_open_res = open_cheat_file(path);
+    cheat_file_load_err_t res_file_open = open_cheat_file(path);
 
-    if (file_open_res == CHEAT_FILE_LOAD_OK) {
+    if (res_file_open == CHEAT_FILE_LOAD_OK) {
         debugf("Cheat Editor: Cheat file loaded successfully.\n");
 
         // Parse each line in the file as a cheat code string
@@ -222,7 +222,7 @@ void load_cheats_from_file(char *path) {
 
     }
     else {
-        switch (file_open_res) {
+        switch (res_file_open) {
             case CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL:
                 debugf("Cheat Editor: Failed to allocate memory for cheat file.\n");
                 break;

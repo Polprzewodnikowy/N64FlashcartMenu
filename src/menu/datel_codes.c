@@ -1,6 +1,9 @@
 #include "datel_codes.h"
 #include <string.h>
 #include <libdragon.h> // only included for debugf
+#include <sys/stat.h>
+#include "utils/utils.h"
+
 
 #define MAX_FILE_SIZE KiB(128)
 
@@ -129,6 +132,61 @@ static void deinit (void) {
     }
 }
 
+cheat_file_load_err_t open_cheat_file(char *path) {
+    if ((cheat_file_text = calloc(1, sizeof(cheat_file_t))) == NULL) {
+        return CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL;
+    }
+
+    cheat_file_text->f = fopen(path, "rw");
+
+    if (cheat_file_text->f == NULL) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL;
+    }
+
+    struct stat st;
+    if (fstat(fileno(cheat_file_text->f), &st)) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL;
+    }
+    cheat_file_text->length = st.st_size;
+
+    if (cheat_file_text->length <= 0) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_EMPTY;
+    }
+
+    if (cheat_file_text->length > MAX_FILE_SIZE) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG;
+    }
+
+    if ((cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char))) == NULL) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL;
+    }
+
+    if (fread(cheat_file_text->contents, cheat_file_text->length, 1, cheat_file_text->f) != 1) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL;
+    }
+    cheat_file_text->contents[cheat_file_text->length] = '\0';
+
+    if (fclose(cheat_file_text->f)) {
+        deinit();
+        return CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL;
+    }
+    cheat_file_text->f = NULL;
+
+    cheat_file_text->lines = 1;
+    for (size_t i = 0; i < cheat_file_text->length; i++) {
+        if (cheat_file_text->contents[i] == '\n') {
+            cheat_file_text->lines += 1;
+        }
+    }
+    return CHEAT_FILE_LOAD_OK;
+}
+
 void load_cheats_from_file(char *path) {
 
     // We should be loading the cheat codes from a file here.
@@ -136,57 +194,43 @@ void load_cheats_from_file(char *path) {
 
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
 
-    // if ((cheat_file_text = calloc(1, sizeof(cheat_file_t))) == NULL) {
-    //     return menu_show_error(menu, "Couldn't allocate memory for the cheat file");
-    // }
+    cheat_file_load_err_t file_open_res = open_cheat_file(path);
 
-    // cheat_file_text->f = fopen(path, "r");
-
-    // if (cheat_file_text->f == NULL) {
-    //     deinit();
-    //     return menu_show_error(menu, "Couldn't open cheat file");
-    // }
-
-    // struct stat st;
-    // if (fstat(fileno(cheat_file_text->f), &st)) {
-    //     deinit();
-    //     return menu_show_error(menu, "Couldn't get cheat file size");
-    // }
-    // text->length = st.st_size;
-
-    // if (cheat_file_text->length <= 0) {
-    //     deinit();
-    //     return menu_show_error(menu, "Cheat file is empty");
-    // }
-
-    // if (cheat_file_text->length > MAX_FILE_SIZE) {
-    //     deinit();
-    //     return menu_show_error(menu, "Cheat file is too big to be read");
-    // }
-
-    // if ((cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char))) == NULL) {
-    //     deinit();
-    //     return menu_show_error(menu, "Couldn't allocate memory for the cheat file contents");
-    // }
-
-    // if (fread(cheat_file_text->contents, cheat_file_text->length, 1, cheat_file_text->f) != 1) {
-    //     deinit();
-    //     return menu_show_error(menu, "Couldn't read cheat file contents");
-    // }
-    // cheat_file_text->contents[cheat_file_text->length] = '\0';
-
-    // if (fclose(cheat_file_text->f)) {
-    //     deinit();
-    //     return menu_show_error(menu, "Couldn't close cheat file");
-    // }
-    // cheat_file_text->f = NULL;
-
-    // cheat_file_text->lines = 1;
-    // for (size_t i = 0; i < cheat_file_text->length; i++) {
-    //     if (cheat_file_text->contents[i] == '\n') {
-    //         cheat_file_text->lines += 1;
-    //     }
-    // }
+    if (file_open_res != CHEAT_FILE_LOAD_OK) {
+        switch (file_open_res) {
+            case CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL:
+                debugf("Cheat Editor: Failed to allocate memory for cheat file.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL:
+                debugf("Cheat Editor: Failed to open cheat file.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL:
+                debugf("Cheat Editor: Failed to get cheat file size.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_EMPTY:
+                debugf("Cheat Editor: Cheat file is empty.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG:
+                debugf("Cheat Editor: Cheat file is too big to be read.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL:
+                debugf("Cheat Editor: Failed to allocate memory for cheat file contents.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL:
+                debugf("Cheat Editor: Failed to read cheat file contents.\n");
+                break;
+            case CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL:
+                debugf("Cheat Editor: Failed to close cheat file.\n");
+                break;
+            default:
+                debugf("Cheat Editor: Unknown error occurred while loading cheat file.\n");
+                break;
+        }
+        // return;
+    }
+    else {
+        debugf("Cheat Editor: Cheat file loaded successfully with %d lines.\n", cheat_file_text->lines);
+    }
 
     // int direction = (lines < 0) ? -1 : 1;
     // int next_offset = cheat_file_text->offset;

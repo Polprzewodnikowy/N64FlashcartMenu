@@ -60,6 +60,45 @@ void populate_cheat_code_description(cheat_file_code_t *code, const char *descri
     }
 }
 
+/** * @brief Parse a cheat code string and populate the cheat code structure.
+ * 
+ * @param code Pointer to the cheat code structure to populate.
+ * @param code_str The cheat code string in the format "address value description".
+ */
+void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
+    if (code && code_str) {
+        char address_str[10];
+        char value_str[6];
+        char description[32] = {0};
+        int parsed = sscanf(code_str, "%9s %5s %31[^\n]", address_str, value_str, description);
+        if (parsed == 3) {
+            code->address = strtoul(address_str, NULL, 16);
+            code->value = (uint16_t)strtoul(value_str, NULL, 16);
+            code->enabled = true; // Assuming the code is enabled by default
+            populate_cheat_code_description(code, description);
+        } else if (parsed == 2) {
+            code->address = strtoul(address_str, NULL, 16);
+            code->value = (uint16_t)strtoul(value_str, NULL, 16);
+            code->enabled = true;
+            code->description[0] = '\0'; // No description provided
+        } else {
+            debugf("Failed to parse cheat code string: %s\n", code_str);
+            code->address = 0;
+            code->value = 0;
+            code->enabled = false;
+            code->description[0] = '\0'; // Clear description
+        }
+    } else {
+        debugf("Invalid cheat code or code string provided.\n");
+        if (code) {
+            code->address = 0;
+            code->value = 0;
+            code->enabled = false;
+            code->description[0] = '\0'; // Clear description
+        }
+    }
+}
+
 void load_cheats_from_file(char *path) {
 
     // We should be loading the cheat codes from a file here.

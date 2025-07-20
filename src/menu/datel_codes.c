@@ -212,14 +212,14 @@ void load_cheats_from_file(char *path) {
 
         set_cheat_codes(cheat_codes);
 
+        deinit_cheat_file();
+
         // --DEBUG CODE
         uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
         size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
         debugf("Cheat Editor: Parsed and generated %u cheat items from file.\n", cheat_item_count);
         // --END DEBUG CODE
 
-        deinit_cheat_file();
-        return;
     }
     else {
         switch (file_open_res) {

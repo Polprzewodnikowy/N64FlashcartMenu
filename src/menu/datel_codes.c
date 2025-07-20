@@ -2,6 +2,20 @@
 #include <string.h>
 #include <libdragon.h> // only included for debugf
 
+#define MAX_FILE_SIZE KiB(128)
+
+/** @brief Text file structure */
+typedef struct {
+    FILE *f; /**< File pointer */
+    char *contents; /**< File contents */
+    size_t length; /**< File length */
+    int lines; /**< Number of lines */
+    int current_line; /**< Current line */
+    int offset; /**< Offset in the file */
+} cheat_file_t;
+
+static cheat_file_t *cheat_file_text;
+
 cheat_file_code_t cheat_codes[MAX_CHEAT_CODES]; // Global array to hold cheat codes
 
 /**
@@ -99,20 +113,108 @@ void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
     }
 }
 
+/**
+ * @brief Deinitialize the cheat file.
+ */
+static void deinit (void) {
+    if (cheat_file_text) {
+        if (cheat_file_text->f) {
+            fclose(cheat_file_text->f);
+        }
+        if (cheat_file_text->contents) {
+            free(cheat_file_text->contents);
+        }
+        free(cheat_file_text);
+        cheat_file_text = NULL;
+    }
+}
+
 void load_cheats_from_file(char *path) {
 
     // We should be loading the cheat codes from a file here.
+    // but only if the file exists. and its content is not zero.
 
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
+
+    // if ((cheat_file_text = calloc(1, sizeof(cheat_file_t))) == NULL) {
+    //     return menu_show_error(menu, "Couldn't allocate memory for the cheat file");
+    // }
+
+    // cheat_file_text->f = fopen(path, "r");
+
+    // if (cheat_file_text->f == NULL) {
+    //     deinit();
+    //     return menu_show_error(menu, "Couldn't open cheat file");
+    // }
+
+    // struct stat st;
+    // if (fstat(fileno(cheat_file_text->f), &st)) {
+    //     deinit();
+    //     return menu_show_error(menu, "Couldn't get cheat file size");
+    // }
+    // text->length = st.st_size;
+
+    // if (cheat_file_text->length <= 0) {
+    //     deinit();
+    //     return menu_show_error(menu, "Cheat file is empty");
+    // }
+
+    // if (cheat_file_text->length > MAX_FILE_SIZE) {
+    //     deinit();
+    //     return menu_show_error(menu, "Cheat file is too big to be read");
+    // }
+
+    // if ((cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char))) == NULL) {
+    //     deinit();
+    //     return menu_show_error(menu, "Couldn't allocate memory for the cheat file contents");
+    // }
+
+    // if (fread(cheat_file_text->contents, cheat_file_text->length, 1, cheat_file_text->f) != 1) {
+    //     deinit();
+    //     return menu_show_error(menu, "Couldn't read cheat file contents");
+    // }
+    // cheat_file_text->contents[cheat_file_text->length] = '\0';
+
+    // if (fclose(cheat_file_text->f)) {
+    //     deinit();
+    //     return menu_show_error(menu, "Couldn't close cheat file");
+    // }
+    // cheat_file_text->f = NULL;
+
+    // cheat_file_text->lines = 1;
+    // for (size_t i = 0; i < cheat_file_text->length; i++) {
+    //     if (cheat_file_text->contents[i] == '\n') {
+    //         cheat_file_text->lines += 1;
+    //     }
+    // }
+
+    // int direction = (lines < 0) ? -1 : 1;
+    // int next_offset = cheat_file_text->offset;
+
+    // for (int i = 0; i < abs(lines); i++) {
+    //     while (true) {
+    //         next_offset += direction;
+    //         if (next_offset <= 0) {
+    //             cheat_file_text->current_line = 0;
+    //             cheat_file_text->offset = 0;
+    //             return;
+    //         }
+    //         if (next_offset > cheat_file_text->length) {
+    //             return;
+    //         }
+    //         if (cheat_file_text->contents[next_offset - 1] == '\n') {
+    //             break;
+    //         }
+    //     }
+    //     cheat_file_text->current_line += direction;
+    //     cheat_file_text->offset = next_offset;
+    // }
 
     // Currently we are just going to pre populate them for test purposes.
     debugf("Cheat Editor: Init debug codes MM USA.\n");
     // Activator code
     parse_cheat_code_string(&cheat_codes[0],  "F1096820 2400 Activator code");
-    cheat_codes[0].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[1],  "FF000220 0000 Activator code");
-    cheat_codes[1].enabled = true;
 
     // Inventory Editor (assigned to L)
     parse_cheat_code_string(&cheat_codes[2],  "D01F9B91 0020 Inventory Editor (assigned to L)");
@@ -123,16 +225,9 @@ void load_cheats_from_file(char *path) {
 
     // Complete Bomber's Notebook
     parse_cheat_code_string(&cheat_codes[4],  "811F05AA FFFF Complete Bomber's Notebook");
-    cheat_codes[4].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[5],  "811F05AC FFFF Complete Bomber's Notebook");
-    cheat_codes[5].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[6],  "811F05AE FFFF Complete Bomber's Notebook");
-    cheat_codes[6].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[7],  "811F05B0 FFFF Complete Bomber's Notebook");
-    cheat_codes[7].enabled = true;
 
     // Disable 3-day Timer
     parse_cheat_code_string(&cheat_codes[8],  "810F6C3C 2400 Disable 3-day Timer");
@@ -140,13 +235,8 @@ void load_cheats_from_file(char *path) {
 
     // Make A Debug Save File
     parse_cheat_code_string(&cheat_codes[9],  "80146ACB 005A Make A Debug Save File");
-    cheat_codes[9].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[10], "81146B18 1000"); //  Make A Debug Save File
-    cheat_codes[10].enabled = true;
-
     parse_cheat_code_string(&cheat_codes[11], "81146B1A 0017 Make A Debug Save File");
-    cheat_codes[11].enabled = true;
 
     // Enable All Owl Statues
     parse_cheat_code_string(&cheat_codes[12], "811EF6B6 FFFF Enable All Owl Statues");

@@ -17,10 +17,18 @@ static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
 
 static void edit_selected_cheat_address (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat address not implemented yet.\n");
+    menu_show_error(menu,
+        "Edit Selected Cheat address...\n"
+        "feature not implemented yet.\n"
+    );
 }
 
 static void edit_selected_cheat_value (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat value not implemented yet.\n");
+    menu_show_error(menu,
+        "Edit Selected Cheat value...\n"
+        "feature not implemented yet.\n"
+    );
 }
 
 static void reset_selected_cheat (menu_t *menu, void *arg) {

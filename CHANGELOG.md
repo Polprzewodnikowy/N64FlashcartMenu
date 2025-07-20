@@ -21,6 +21,7 @@ built from latest commit on main branch.
 	- Fix ability to set the RTC via menu (Hotfixed in last release).
 	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
+	- Fix issue with emulation of cold boot, as otherwise the FPU might start in an unexpected state.
 
 
 
@@ -33,7 +34,6 @@ built from latest commit on main branch.
 
 - **Refactor**
 	- Improve tab navigation by using any left/right control input and add cursor SFX.
-	- Improve ROM description metadata loading (it is now able to load stings with upto 1000 chars, but still only displays the first 300).
 	- Add ability for font style to be used in ui_components_main_text_draw and ui_components_actions_bar_text_draw.
 
 - **Other**

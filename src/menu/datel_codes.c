@@ -12,9 +12,6 @@ typedef struct {
     FILE *f; /**< File pointer */
     char *contents; /**< File contents */
     size_t length; /**< File length */
-    int lines; /**< Number of lines */
-    int current_line; /**< Current line */
-    int offset; /**< Offset in the file */
 } cheat_file_t;
 
 static cheat_file_t *cheat_file_text;
@@ -119,7 +116,7 @@ void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
 /**
  * @brief Deinitialize the cheat file.
  */
-static void deinit (void) {
+static void deinit_cheat_file (void) {
     if (cheat_file_text) {
         if (cheat_file_text->f) {
             fclose(cheat_file_text->f);
@@ -140,50 +137,44 @@ cheat_file_load_err_t open_cheat_file(char *path) {
     cheat_file_text->f = fopen(path, "rw");
 
     if (cheat_file_text->f == NULL) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL;
     }
 
     struct stat st;
     if (fstat(fileno(cheat_file_text->f), &st)) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL;
     }
     cheat_file_text->length = st.st_size;
 
     if (cheat_file_text->length <= 0) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_EMPTY;
     }
 
     if (cheat_file_text->length > MAX_FILE_SIZE) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG;
     }
 
     if ((cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char))) == NULL) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL;
     }
 
     if (fread(cheat_file_text->contents, cheat_file_text->length, 1, cheat_file_text->f) != 1) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL;
     }
     cheat_file_text->contents[cheat_file_text->length] = '\0';
 
     if (fclose(cheat_file_text->f)) {
-        deinit();
+        deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL;
     }
     cheat_file_text->f = NULL;
 
-    cheat_file_text->lines = 1;
-    for (size_t i = 0; i < cheat_file_text->length; i++) {
-        if (cheat_file_text->contents[i] == '\n') {
-            cheat_file_text->lines += 1;
-        }
-    }
     return CHEAT_FILE_LOAD_OK;
 }
 
@@ -196,7 +187,41 @@ void load_cheats_from_file(char *path) {
 
     cheat_file_load_err_t file_open_res = open_cheat_file(path);
 
-    if (file_open_res != CHEAT_FILE_LOAD_OK) {
+    if (file_open_res == CHEAT_FILE_LOAD_OK) {
+        debugf("Cheat Editor: Cheat file loaded successfully.\n");
+
+        // Parse each line in the file as a cheat code string
+        int code_count = 0;
+        char *line = cheat_file_text->contents;
+        char *saveptr = NULL;
+        char *token = strtok_r(line, "\n", &saveptr);
+
+        while (token && code_count < MAX_CHEAT_CODES) {
+            // Skip empty lines
+            if (token[0] != '\0') {
+                parse_cheat_code_string(&cheat_codes[code_count], token);
+                code_count++;
+            }
+            token = strtok_r(NULL, "\n", &saveptr);
+        }
+
+        // Zero out any remaining cheat codes
+        for (int i = code_count; i < MAX_CHEAT_CODES; ++i) {
+            memset(&cheat_codes[i], 0, sizeof(cheat_file_code_t));
+        }
+
+        set_cheat_codes(cheat_codes);
+
+        // --DEBUG CODE
+        uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+        size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
+        debugf("Cheat Editor: Parsed and generated %u cheat items from file.\n", cheat_item_count);
+        // --END DEBUG CODE
+
+        deinit_cheat_file();
+        return;
+    }
+    else {
         switch (file_open_res) {
             case CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL:
                 debugf("Cheat Editor: Failed to allocate memory for cheat file.\n");
@@ -226,71 +251,47 @@ void load_cheats_from_file(char *path) {
                 debugf("Cheat Editor: Unknown error occurred while loading cheat file.\n");
                 break;
         }
-        // return;
+
+        // --DEBUG CODE
+        // Currently we are just going to pre populate them for test purposes.
+        debugf("Cheat Editor: Init debug codes MM USA.\n");
+        // Activator code
+        parse_cheat_code_string(&cheat_codes[0],  "F1096820 2400 Activator code");
+        parse_cheat_code_string(&cheat_codes[1],  "FF000220 0000 Activator code");
+
+        // Inventory Editor (assigned to L)
+        parse_cheat_code_string(&cheat_codes[2],  "D01F9B91 0020 Inventory Editor (assigned to L)");
+        cheat_codes[2].enabled = false;
+
+        parse_cheat_code_string(&cheat_codes[3],  "803FDA3F 0002 Inventory Editor (assigned to L)");
+        cheat_codes[3].enabled = false;
+
+        // Complete Bomber's Notebook
+        parse_cheat_code_string(&cheat_codes[4],  "811F05AA FFFF Complete Bomber's Notebook");
+        parse_cheat_code_string(&cheat_codes[5],  "811F05AC FFFF Complete Bomber's Notebook");
+        parse_cheat_code_string(&cheat_codes[6],  "811F05AE FFFF Complete Bomber's Notebook");
+        parse_cheat_code_string(&cheat_codes[7],  "811F05B0 FFFF Complete Bomber's Notebook");
+
+        // Disable 3-day Timer
+        parse_cheat_code_string(&cheat_codes[8],  "810F6C3C 2400 Disable 3-day Timer");
+        cheat_codes[8].enabled = false;
+
+        // Make A Debug Save File
+        parse_cheat_code_string(&cheat_codes[9],  "80146ACB 005A Make A Debug Save File");
+        parse_cheat_code_string(&cheat_codes[10], "81146B18 1000"); //  Make A Debug Save File
+        parse_cheat_code_string(&cheat_codes[11], "81146B1A 0017 Make A Debug Save File");
+
+        // Enable All Owl Statues
+        parse_cheat_code_string(&cheat_codes[12], "811EF6B6 FFFF Enable All Owl Statues");
+        cheat_codes[12].enabled = false;
+
+        set_cheat_codes(cheat_codes);
+        uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+        size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
+        // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
+        debugf("Cheat Editor: Generated %u cheat items.\n", cheat_item_count);
+        // --END DEBUG CODE
     }
-    else {
-        debugf("Cheat Editor: Cheat file loaded successfully with %d lines.\n", cheat_file_text->lines);
-    }
-
-    // int direction = (lines < 0) ? -1 : 1;
-    // int next_offset = cheat_file_text->offset;
-
-    // for (int i = 0; i < abs(lines); i++) {
-    //     while (true) {
-    //         next_offset += direction;
-    //         if (next_offset <= 0) {
-    //             cheat_file_text->current_line = 0;
-    //             cheat_file_text->offset = 0;
-    //             return;
-    //         }
-    //         if (next_offset > cheat_file_text->length) {
-    //             return;
-    //         }
-    //         if (cheat_file_text->contents[next_offset - 1] == '\n') {
-    //             break;
-    //         }
-    //     }
-    //     cheat_file_text->current_line += direction;
-    //     cheat_file_text->offset = next_offset;
-    // }
-
-    // Currently we are just going to pre populate them for test purposes.
-    debugf("Cheat Editor: Init debug codes MM USA.\n");
-    // Activator code
-    parse_cheat_code_string(&cheat_codes[0],  "F1096820 2400 Activator code");
-    parse_cheat_code_string(&cheat_codes[1],  "FF000220 0000 Activator code");
-
-    // Inventory Editor (assigned to L)
-    parse_cheat_code_string(&cheat_codes[2],  "D01F9B91 0020 Inventory Editor (assigned to L)");
-    cheat_codes[2].enabled = false;
-
-    parse_cheat_code_string(&cheat_codes[3],  "803FDA3F 0002 Inventory Editor (assigned to L)");
-    cheat_codes[3].enabled = false;
-
-    // Complete Bomber's Notebook
-    parse_cheat_code_string(&cheat_codes[4],  "811F05AA FFFF Complete Bomber's Notebook");
-    parse_cheat_code_string(&cheat_codes[5],  "811F05AC FFFF Complete Bomber's Notebook");
-    parse_cheat_code_string(&cheat_codes[6],  "811F05AE FFFF Complete Bomber's Notebook");
-    parse_cheat_code_string(&cheat_codes[7],  "811F05B0 FFFF Complete Bomber's Notebook");
-
-    // Disable 3-day Timer
-    parse_cheat_code_string(&cheat_codes[8],  "810F6C3C 2400 Disable 3-day Timer");
-    cheat_codes[8].enabled = false;
-
-    // Make A Debug Save File
-    parse_cheat_code_string(&cheat_codes[9],  "80146ACB 005A Make A Debug Save File");
-    parse_cheat_code_string(&cheat_codes[10], "81146B18 1000"); //  Make A Debug Save File
-    parse_cheat_code_string(&cheat_codes[11], "81146B1A 0017 Make A Debug Save File");
-
-    // Enable All Owl Statues
-    parse_cheat_code_string(&cheat_codes[12], "811EF6B6 FFFF Enable All Owl Statues");
-    cheat_codes[12].enabled = false;
-
-    set_cheat_codes(cheat_codes);
-    uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-    size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
-    // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
-    debugf("Cheat Editor: Generated %u cheat items.\n", cheat_item_count);
 }
 
 void save_cheats_to_file(char *path) {

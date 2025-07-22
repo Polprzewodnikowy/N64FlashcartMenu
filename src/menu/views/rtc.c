@@ -128,29 +128,35 @@ void ui_component_value_editor(const char **header_text, const char **value_text
 }
 
 
+/**
+ * Draws the RTC date/time editor UI component.
+ * 
+ * @param t The struct tm containing the current date and time values to display.
+ * @param selected_field The field currently selected for editing (year, month, day, etc.).
+ */
 void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
     /* Format RTC date/time as strings */
-    char year_str[5];
-    snprintf(year_str, sizeof(year_str), "%04d", CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX));
-    char month_str[3];
-    snprintf(month_str, sizeof(month_str), "%02d", CLAMP(t.tm_mon + 1, 1, 12));
-    char day_str[3];
-    snprintf(day_str, sizeof(day_str), "%02d", CLAMP(t.tm_mday, 1, 31));
-    char hour_str[3];
-    snprintf(hour_str, sizeof(hour_str), "%02d", CLAMP(t.tm_hour, 0, 23));
-    char min_str[3];
-    snprintf(min_str, sizeof(min_str), "%02d", CLAMP(t.tm_min, 0, 59));
-    char sec_str[3];
-    snprintf(sec_str, sizeof(sec_str), "%02d", CLAMP(t.tm_sec, 0, 59));
-    char dow_str[4];
-    snprintf(dow_str, sizeof(dow_str), "%s", DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]);
+    char str_year[5];
+    snprintf(str_year, sizeof(str_year), "%04d", CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX));
+    char str_month[3];
+    snprintf(str_month, sizeof(str_month), "%02d", CLAMP(t.tm_mon + 1, 1, 12));
+    char str_day[3];
+    snprintf(str_day, sizeof(str_day), "%02d", CLAMP(t.tm_mday, 1, 31));
+    char str_hour[3];
+    snprintf(str_hour, sizeof(str_hour), "%02d", CLAMP(t.tm_hour, 0, 23));
+    char str_min[3];
+    snprintf(str_min, sizeof(str_min), "%02d", CLAMP(t.tm_min, 0, 59));
+    char str_sec[3];
+    snprintf(str_sec, sizeof(str_sec), "%02d", CLAMP(t.tm_sec, 0, 59));
+    char str_dow[4];
+    snprintf(str_dow, sizeof(str_dow), "%s", DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]);
 
     ui_component_value_editor(
         (const char *[]){
-            "YYYY", "MM", "DD", "hh", "mm", "ss", "DOW"
+            "YYYY", "MM", "DD", "hh", "mm", "ss", "DoW"
         },
         (const char *[]){
-            year_str, month_str, day_str, hour_str, min_str, sec_str, dow_str
+            str_year, str_month, str_day, str_hour, str_min, str_sec, str_dow
         },
         7,
         selected_field,

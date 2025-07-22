@@ -104,17 +104,26 @@ static void process(menu_t *menu) {
         else if (menu->actions.go_up) {
             // Increment the selected nibble
             if (is_editing_mode_address) {
+                // Edit the address field, one nibble at a time.
                 uint32_t *addr = &cheat_codes[item_selected].address;
+                // Calculate the bit position for the selected nibble (0 = leftmost/highest nibble)
                 int shift = (7 - editing_field_selected) * 4;
+                // Extract the current nibble value
                 uint32_t nibble = (*addr >> shift) & 0xF;
+                // Increment the nibble, wrapping around from 0xF to 0x0
                 nibble = (nibble + 1) & 0xF;
+                // Clear the old nibble and set the new value
                 *addr = (*addr & ~(0xFu << shift)) | (nibble << shift);
             } else if (is_editing_mode_value) {
+                // Edit the value field, one nibble at a time (only lower 4 nibbles for 16-bit value)
                 uint16_t *val = &cheat_codes[item_selected].value;
                 int shift = (7 - editing_field_selected) * 4;
-                if (shift < 16) {
+                if (shift < 16) { // Only modify valid nibbles in the 16-bit value
+                    // Extract the current nibble value
                     uint16_t nibble = (*val >> shift) & 0xF;
+                    // Increment the nibble, wrapping around from 0xF to 0x0
                     nibble = (nibble + 1) & 0xF;
+                    // Clear the old nibble and set the new value
                     *val = (*val & ~(0xFu << shift)) | (nibble << shift);
                 }
             }

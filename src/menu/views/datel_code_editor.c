@@ -11,14 +11,14 @@ static bool is_editing_mode_value = false;
 static uint8_t editing_field_selected = 7; // 0-7 for 8 nibbles of the address or value (set to last nibble by default).
 
 typedef struct {
-    char slot_zero[2];
-    char slot_one[2];
-    char slot_two[2];
-    char slot_three[2];
-    char slot_four[2];
-    char slot_five[2];
-    char slot_six[2];
-    char slot_seven[2];
+    char nibble_zero[2];
+    char nibble_one[2];
+    char nibble_two[2];
+    char nibble_three[2];
+    char nibble_four[2];
+    char nibble_five[2];
+    char nibble_six[2];
+    char nibble_seven[2];
 } cheat_field_nibbles_t;
 
 /**
@@ -31,21 +31,21 @@ static void cheat_ui_component_edit_field_draw ( uint32_t address, int selected_
     cheat_field_nibbles_t nibbles;
 
     /* Format each nibble in address as hex */
-    snprintf(nibbles.slot_zero, sizeof(nibbles.slot_zero), "%lX", (address >> 28) & 0xF);
-    snprintf(nibbles.slot_one, sizeof(nibbles.slot_one), "%lX", (address >> 24) & 0xF);
-    snprintf(nibbles.slot_two, sizeof(nibbles.slot_two), "%lX", (address >> 20) & 0xF);
-    snprintf(nibbles.slot_three, sizeof(nibbles.slot_three), "%lX", (address >> 16) & 0xF);
-    snprintf(nibbles.slot_four, sizeof(nibbles.slot_four), "%lX", (address >> 12) & 0xF);
-    snprintf(nibbles.slot_five, sizeof(nibbles.slot_five), "%lX", (address >> 8) & 0xF);
-    snprintf(nibbles.slot_six, sizeof(nibbles.slot_six), "%lX", (address >> 4) & 0xF);
-    snprintf(nibbles.slot_seven, sizeof(nibbles.slot_seven), "%lX", address & 0xF);
+    snprintf(nibbles.nibble_zero, sizeof(nibbles.nibble_zero), "%lX", (address >> 28) & 0xF);
+    snprintf(nibbles.nibble_one, sizeof(nibbles.nibble_one), "%lX", (address >> 24) & 0xF);
+    snprintf(nibbles.nibble_two, sizeof(nibbles.nibble_two), "%lX", (address >> 20) & 0xF);
+    snprintf(nibbles.nibble_three, sizeof(nibbles.nibble_three), "%lX", (address >> 16) & 0xF);
+    snprintf(nibbles.nibble_four, sizeof(nibbles.nibble_four), "%lX", (address >> 12) & 0xF);
+    snprintf(nibbles.nibble_five, sizeof(nibbles.nibble_five), "%lX", (address >> 8) & 0xF);
+    snprintf(nibbles.nibble_six, sizeof(nibbles.nibble_six), "%lX", (address >> 4) & 0xF);
+    snprintf(nibbles.nibble_seven, sizeof(nibbles.nibble_seven), "%lX", address & 0xF);
 
     ui_component_value_editor(
         (const char *[]){
             "*", "*", "*", "*", "*", "*", "*", "*"
         },
         (const char *[]){
-            nibbles.slot_zero, nibbles.slot_one, nibbles.slot_two, nibbles.slot_three, nibbles.slot_four, nibbles.slot_five, nibbles.slot_six, nibbles.slot_seven
+            nibbles.nibble_zero, nibbles.nibble_one, nibbles.nibble_two, nibbles.nibble_three, nibbles.nibble_four, nibbles.nibble_five, nibbles.nibble_six, nibbles.nibble_seven
         },
         8,
         selected_field,

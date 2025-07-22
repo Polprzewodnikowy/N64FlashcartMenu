@@ -22,7 +22,7 @@ built from latest commit on main branch.
 	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
 	- Fix issue with emulation of cold boot, as otherwise the FPU might start in an unexpected state.
-
+	- Fix missing enum case for 1 Mbit SRAM saves (Hotfixed in last release).
 
 
 - **Documentation**

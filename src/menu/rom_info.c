@@ -754,62 +754,60 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
     }
 
-    rom_info->metadata.description[0] = '\0';
+    rom_info->metadata.esrb_age_rating = ROM_ESRB_AGE_RATING_NONE;
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
 }
 
-static void load_rom_info_from_file (path_t *path, rom_info_t *rom_info) {
+static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
     path_t *rom_info_path = path_clone(path);
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_info_ini = mini_load(path_get(rom_info_path));
-
-    const char *rom_description = "\n";
+    mini_t *rom_config_ini = mini_load(path_get(rom_info_path));
 
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
     rom_info->boot_override.tv = false;
 
-    if (rom_info_ini) {
-        rom_description = mini_get_string(rom_info_ini, "metadata", "description", "\n"); //FIXME: only supports LF (UNIX) line endings. CRLF will not work.
+    if (rom_config_ini) {
+        // general
+        rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
+        rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
 
-        rom_info->boot_override.cic_type = mini_get_int(rom_info_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
+        // metadata
+        rom_info->metadata.esrb_age_rating = mini_get_int(rom_config_ini, "metadata", "esrb_age_rating", ROM_ESRB_AGE_RATING_NONE);
+        
+        // overrides
+        rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
         if (rom_info->boot_override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {
             rom_info->boot_override.cic = true;
         }
 
-        rom_info->boot_override.save_type = mini_get_int(rom_info_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
+        rom_info->boot_override.save_type = mini_get_int(rom_config_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
         if (rom_info->boot_override.save_type != SAVE_TYPE_AUTOMATIC) {
             rom_info->boot_override.save = true;
         }
 
-        rom_info->boot_override.tv_type = mini_get_int(rom_info_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
+        rom_info->boot_override.tv_type = mini_get_int(rom_config_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
         if (rom_info->boot_override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
             rom_info->boot_override.tv = true;
         }
 
-        rom_info->settings.cheats_enabled = mini_get_bool(rom_info_ini, NULL, "cheats_enabled", false);
-        rom_info->settings.patches_enabled = mini_get_bool(rom_info_ini, NULL, "patches_enabled", false);
-
-        mini_free(rom_info_ini);
+        mini_free(rom_config_ini);
     }
-
-    strncpy(rom_info->metadata.description, rom_description, sizeof(rom_info->metadata.description)-1);
-    rom_info->metadata.description[sizeof(rom_info->metadata.description) - 1] = '\0';
 
     path_free(rom_info_path);
 }
 
-static rom_err_t save_override (path_t *path, const char *id, int value, int default_value) {
+static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *id, int value, int default_value) {
     path_t *rom_info_path = path_clone(path);
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_info_ini = mini_try_load(path_get(rom_info_path));
+    mini_t *rom_config_ini = mini_try_load(path_get(rom_info_path));
 
-    if (!rom_info_ini) {
+    if (!rom_config_ini) {
         path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
@@ -817,28 +815,28 @@ static rom_err_t save_override (path_t *path, const char *id, int value, int def
     int mini_err;
 
     if (value == default_value) {
-        mini_err = mini_delete_value(rom_info_ini, "custom_boot", id);
+        mini_err = mini_delete_value(rom_config_ini, "custom_boot", id);
     } else {
-        mini_err = mini_set_int(rom_info_ini, "custom_boot", id, value);
+        mini_err = mini_set_int(rom_config_ini, "custom_boot", id, value);
     }
 
     if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
         path_free(rom_info_path);
-        mini_free(rom_info_ini);
+        mini_free(rom_config_ini);
         return ROM_ERR_SAVE_IO;
     }
 
-    bool empty = mini_empty(rom_info_ini);
+    bool empty = mini_empty(rom_config_ini);
 
     if (!empty) {
-        if (mini_save(rom_info_ini, MINI_FLAGS_NONE) != MINI_OK) {
+        if (mini_save(rom_config_ini, MINI_FLAGS_NONE) != MINI_OK) {
             path_free(rom_info_path);
-            mini_free(rom_info_ini);
+            mini_free(rom_config_ini);
             return ROM_ERR_SAVE_IO;
         }
     }
 
-    mini_free(rom_info_ini);
+    mini_free(rom_config_ini);
 
     if (empty) {
         if (remove(path_get(rom_info_path)) && (errno != ENOENT)) {
@@ -886,11 +884,11 @@ bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed) {
     return (!rom_info->boot_override.cic);
 }
 
-rom_err_t rom_info_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type) {
+rom_err_t rom_config_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type) {
     rom_info->boot_override.cic = (cic_type != ROM_CIC_TYPE_AUTOMATIC);
     rom_info->boot_override.cic_type = cic_type;
 
-    return save_override(path, "cic_type", rom_info->boot_override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "cic_type", rom_info->boot_override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
 }
 
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
@@ -901,11 +899,11 @@ rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
     }
 }
 
-rom_err_t rom_info_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
+rom_err_t rom_config_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
     rom_info->boot_override.save = (save_type != SAVE_TYPE_AUTOMATIC);
     rom_info->boot_override.save_type = save_type;
 
-    return save_override(path, "save_type", rom_info->boot_override.save_type, SAVE_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "save_type", rom_info->boot_override.save_type, SAVE_TYPE_AUTOMATIC);
 }
 
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
@@ -916,14 +914,28 @@ rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
     }
 }
 
-rom_err_t rom_info_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
+rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
     rom_info->boot_override.tv = (tv_type != ROM_TV_TYPE_AUTOMATIC);
     rom_info->boot_override.tv_type = tv_type;
 
-    return save_override(path, "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
-rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
+#ifdef FEATURE_CHEATS_GUI_ENABLED
+rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
+    rom_info->settings.cheats_enabled = enabled;
+    return save_rom_config_setting_to_file(path, "cheats_enabled", enabled, false);
+}
+#endif
+
+#ifdef FEATURE_PATCHES_GUI_ENABLED
+rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
+    rom_info->settings.patches_enabled = enabled;
+    return save_rom_config_setting_to_file(path, "patches_enabled", enabled, false);
+}
+#endif
+
+rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     FILE *f;
     rom_header_t rom_header;
 
@@ -945,7 +957,7 @@ rom_err_t rom_info_load (path_t *path, rom_info_t *rom_info) {
 
     extract_rom_info(&match, &rom_header, rom_info);
 
-    load_rom_info_from_file(path, rom_info);
+    load_rom_config_from_file(path, rom_info);
 
     return ROM_OK;
 }

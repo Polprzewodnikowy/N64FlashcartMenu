@@ -104,7 +104,7 @@ static void command_reboot (menu_t *menu) {
  * 
  * @param menu Pointer to the menu structure.
  */
-static void command_send_file (menu_t *menu) {
+static void command_receive_file (menu_t *menu) {
     FILE *f;
     char buffer[256];
     uint8_t data[8192];
@@ -158,7 +158,7 @@ static void command_send_file (menu_t *menu) {
 
 static usb_comm_command_t commands[] = {
     { .id = "reboot", .op = command_reboot },
-    { .id = "send-file", .op = command_send_file },
+    { .id = "send-file", .op = command_receive_file }, // Note that this is a crossover with the `id` related to the PC commands.
     { .id = NULL },
 };
 

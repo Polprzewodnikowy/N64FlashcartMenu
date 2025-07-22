@@ -46,7 +46,7 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;
 
@@ -72,5 +72,7 @@ void settings_init (char *path);
 void settings_load (settings_t *settings);
 /** @brief The settings to save */
 void settings_save (settings_t *settings);
+/** @brief Reset settings to defaults */
+void settings_reset_to_defaults();
 
 #endif

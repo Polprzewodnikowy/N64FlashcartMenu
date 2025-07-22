@@ -58,6 +58,7 @@ void boot (boot_params_t *params) {
     }
 
     C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
+    C1_WRITE_FCR31(0);
 
     while (!(cpu_io_read(&SP->SR) & SP_SR_HALT));
 

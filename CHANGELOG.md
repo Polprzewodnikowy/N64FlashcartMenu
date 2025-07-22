@@ -21,6 +21,8 @@ built from latest commit on main branch.
 	- Fix ability to set the RTC via menu (Hotfixed in last release).
 	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
+	- Fix reset value of FCR31 to the boot value (0) (Hotfixed in last release).
+	- Fix missing enum case for 1 Mbit SRAM saves (Hotfixed in last release).
 
 
 

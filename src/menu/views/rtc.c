@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
-#include "../ui_components/constants.h" // FIXME: remove when ui_component_value_editor is moved.
+#include "../ui_components/constants.h" // FIXME: remove when ui_component_value_editor can handle widths by itself.
 
 #define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
 #define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
@@ -58,73 +58,6 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     // Recalculate day-of-week and day-of-year
     time_t timestamp = mktime( t );
     *t = *gmtime( &timestamp );
-}
-
-
-void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width ) {
-    // FIXME: move this to ui_components.c once improved.
-    float starting_x = DISPLAY_CENTER_X - (width * count / 2.0f);
-
-    float x = starting_x;
-    float y = DISPLAY_CENTER_Y;    
-    float height = TAB_HEIGHT;
-
-    // first draw the values that are not selected
-    for(int i=0;i< count;i++) {
-        if(i != selected) {
-            ui_components_box_draw(
-                x,
-                y,
-                x + width,
-                y + height + 24,
-                TAB_INACTIVE_BACKGROUND_COLOR
-            );
-        }
-        x += width;
-    }
-    
-    // draw the selected value (so it shows up on top of the others)
-    if(selected >= 0 && selected < count) {
-        x = starting_x + (width * selected);
-
-        ui_components_box_draw(
-            x,
-            y,
-            x + width,
-            y + height + 24,
-            TAB_ACTIVE_BACKGROUND_COLOR
-        );
-    }
-
-    // write the text on the value boxes
-    rdpq_textparms_t value_textparms = {
-        .width = width,
-        .height = 24,
-        .align = ALIGN_CENTER,
-        .wrap = WRAP_NONE
-    };
-    x = starting_x;
-    for(int i=0;i< count;i++) {
-        rdpq_text_print(
-            &value_textparms,
-            FNT_DEFAULT,
-            x,
-            y,
-            header_text[i]
-        );
-
-        rdpq_text_print(
-            &value_textparms,
-            FNT_DEFAULT,
-            x,
-            y + 24,
-            value_text[i]
-        );
-        x += width;
-    }
-
-    // draw the border around the value boxes
-    ui_components_border_draw (starting_x, y, x, y + height + 24);
 }
 
 

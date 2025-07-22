@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
+#include "../ui_components/constants.h" // FIXME: remove when ui_component_value_editor is moved.
 
 #define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
 #define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
@@ -59,46 +60,102 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     *t = *gmtime( &timestamp );
 }
 
-void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
-    // FIXME: move this to ui_components.c once improved.
-    /* Format RTC date/time as strings */
-    char full_dt[30];
-    char current_selection_chars[30];
 
-    snprintf( full_dt, sizeof(full_dt), ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
-        CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX),
-        CLAMP(t.tm_mon + 1, 1, 12),
-        CLAMP(t.tm_mday, 1, 31),
-        CLAMP(t.tm_hour, 0, 23),
-        CLAMP(t.tm_min, 0, 59),
-        CLAMP(t.tm_sec, 0, 59),
-        DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]
-        );
-        
-    switch(selected_field)
-    {
-        // Note: for what ever reason, hat chars need to be duplicated to display correctly. This will be solved when there is a decent UI for it.
-        case RTC_EDIT_YEAR:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "*^^^^^^^^********************");
-            break;
-        case RTC_EDIT_MONTH:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "******^^^^*****************");
-            break;
-        case RTC_EDIT_DAY:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "*********^^^^**************");
-            break;
-        case RTC_EDIT_HOUR:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "************^^^^***********");
-            break;
-        case RTC_EDIT_MIN:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "***************^^^^********");
-            break;
-        case RTC_EDIT_SEC:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "******************^^^^*****");
-            break;
+void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width ) {
+    // FIXME: move this to ui_components.c once improved.
+    float starting_x = DISPLAY_CENTER_X - (width * count / 2.0f);
+
+    float x = starting_x;
+    float y = DISPLAY_CENTER_Y;    
+    float height = TAB_HEIGHT;
+
+    // first draw the values that are not selected
+    for(int i=0;i< count;i++) {
+        if(i != selected) {
+            ui_components_box_draw(
+                x,
+                y,
+                x + width,
+                y + height + 24,
+                TAB_INACTIVE_BACKGROUND_COLOR
+            );
+        }
+        x += width;
     }
-        ui_components_messagebox_draw(
-            "|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n%s\n", full_dt, current_selection_chars);
+    
+    // draw the selected value (so it shows up on top of the others)
+    if(selected >= 0 && selected < count) {
+        x = starting_x + (width * selected);
+
+        ui_components_box_draw(
+            x,
+            y,
+            x + width,
+            y + height + 24,
+            TAB_ACTIVE_BACKGROUND_COLOR
+        );
+    }
+
+    // write the text on the value boxes
+    rdpq_textparms_t value_textparms = {
+        .width = width,
+        .height = 24,
+        .align = ALIGN_CENTER,
+        .wrap = WRAP_NONE
+    };
+    x = starting_x;
+    for(int i=0;i< count;i++) {
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y,
+            header_text[i]
+        );
+
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y + 24,
+            value_text[i]
+        );
+        x += width;
+    }
+
+    // draw the border around the value boxes
+    ui_components_border_draw (starting_x, y, x, y + height + 24);
+}
+
+
+void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
+    /* Format RTC date/time as strings */
+    char year_str[5];
+    snprintf(year_str, sizeof(year_str), "%04d", CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX));
+    char month_str[3];
+    snprintf(month_str, sizeof(month_str), "%02d", CLAMP(t.tm_mon + 1, 1, 12));
+    char day_str[3];
+    snprintf(day_str, sizeof(day_str), "%02d", CLAMP(t.tm_mday, 1, 31));
+    char hour_str[3];
+    snprintf(hour_str, sizeof(hour_str), "%02d", CLAMP(t.tm_hour, 0, 23));
+    char min_str[3];
+    snprintf(min_str, sizeof(min_str), "%02d", CLAMP(t.tm_min, 0, 59));
+    char sec_str[3];
+    snprintf(sec_str, sizeof(sec_str), "%02d", CLAMP(t.tm_sec, 0, 59));
+    char dow_str[4];
+    snprintf(dow_str, sizeof(dow_str), "%s", DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]);
+
+    ui_component_value_editor(
+        (const char *[]){
+            "YYYY", "MM", "DD", "hh", "mm", "ss", "DOW"
+        },
+        (const char *[]){
+            year_str, month_str, day_str, hour_str, min_str, sec_str, dow_str
+        },
+        7,
+        selected_field,
+        (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 12.0f
+    );
 }
 
 static void process (menu_t *menu) {

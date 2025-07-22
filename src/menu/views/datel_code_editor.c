@@ -10,43 +10,30 @@ static bool is_editing_mode_address = false;
 static bool is_editing_mode_value = false;
 static uint8_t editing_field_selected = 7; // 0-7 for 8 nibbles of the address or value (set to last nibble by default).
 
-typedef struct {
-    char nibble_zero[2];
-    char nibble_one[2];
-    char nibble_two[2];
-    char nibble_three[2];
-    char nibble_four[2];
-    char nibble_five[2];
-    char nibble_six[2];
-    char nibble_seven[2];
-} cheat_field_nibbles_t;
-
 /**
- * Draws the cheat editor UI component.
+ * Draws the cheat editor UI component for address/value editing.
  * 
- * @param address The address to display.
- * @param selected_field The field currently selected for editing.
+ * @param value The address or value to display (up to 32 bits).
+ * @param selected_field The nibble currently selected for editing (0-7).
  */
-static void cheat_ui_component_edit_field_draw ( uint32_t address, int selected_field ) {
-    cheat_field_nibbles_t nibbles;
+static void cheat_ui_component_edit_field_draw(uint32_t value, int selected_field) {
+    char nibbles[8][2];
 
-    /* Format each nibble in address as hex */
-    snprintf(nibbles.nibble_zero, sizeof(nibbles.nibble_zero), "%lX", (address >> 28) & 0xF);
-    snprintf(nibbles.nibble_one, sizeof(nibbles.nibble_one), "%lX", (address >> 24) & 0xF);
-    snprintf(nibbles.nibble_two, sizeof(nibbles.nibble_two), "%lX", (address >> 20) & 0xF);
-    snprintf(nibbles.nibble_three, sizeof(nibbles.nibble_three), "%lX", (address >> 16) & 0xF);
-    snprintf(nibbles.nibble_four, sizeof(nibbles.nibble_four), "%lX", (address >> 12) & 0xF);
-    snprintf(nibbles.nibble_five, sizeof(nibbles.nibble_five), "%lX", (address >> 8) & 0xF);
-    snprintf(nibbles.nibble_six, sizeof(nibbles.nibble_six), "%lX", (address >> 4) & 0xF);
-    snprintf(nibbles.nibble_seven, sizeof(nibbles.nibble_seven), "%lX", address & 0xF);
+    // Format each nibble as a single hex digit
+    for (int i = 0; i < 8; ++i) {
+        snprintf(nibbles[i], sizeof(nibbles[i]), "%lX", (value >> (28 - i * 4)) & 0xF);
+    }
+
+    static const char *labels[8] = { "*", "*", "*", "*", "*", "*", "*", "*" };
+
+    const char *nibble_ptrs[8];
+    for (int i = 0; i < 8; ++i) {
+        nibble_ptrs[i] = nibbles[i];
+    }
 
     ui_component_value_editor(
-        (const char *[]){
-            "*", "*", "*", "*", "*", "*", "*", "*"
-        },
-        (const char *[]){
-            nibbles.nibble_zero, nibbles.nibble_one, nibbles.nibble_two, nibbles.nibble_three, nibbles.nibble_four, nibbles.nibble_five, nibbles.nibble_six, nibbles.nibble_seven
-        },
+        labels,
+        nibble_ptrs,
         8,
         selected_field,
         (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 20.0f

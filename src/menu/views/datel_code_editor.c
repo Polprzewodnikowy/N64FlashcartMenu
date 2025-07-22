@@ -115,10 +115,42 @@ static void process(menu_t *menu) {
        
         }
         else if (menu->actions.go_up) {
-            // adjust_selected_nibble( &cheat_field_nibble, +1 );
+            // Increment the selected nibble
+            if (is_editing_mode_address) {
+                uint32_t *addr = &cheat_codes[item_selected].address;
+                int shift = (7 - editing_field_selected) * 4;
+                uint32_t nibble = (*addr >> shift) & 0xF;
+                nibble = (nibble + 1) & 0xF;
+                *addr = (*addr & ~(0xFu << shift)) | (nibble << shift);
+            } else if (is_editing_mode_value) {
+                uint16_t *val = &cheat_codes[item_selected].value;
+                int shift = (7 - editing_field_selected) * 4;
+                if (shift < 16) {
+                    uint16_t nibble = (*val >> shift) & 0xF;
+                    nibble = (nibble + 1) & 0xF;
+                    *val = (*val & ~(0xFu << shift)) | (nibble << shift);
+                }
+            }
+            sound_play_effect(SFX_CURSOR);
         }
         else if (menu->actions.go_down) {
-            // adjust_selected_nibble( &cheat_field_nibble, -1 );
+            // Decrement the selected nibble
+            if (is_editing_mode_address) {
+                uint32_t *addr = &cheat_codes[item_selected].address;
+                int shift = (7 - editing_field_selected) * 4;
+                uint32_t nibble = (*addr >> shift) & 0xF;
+                nibble = (nibble - 1) & 0xF;
+                *addr = (*addr & ~(0xFu << shift)) | (nibble << shift);
+            } else if (is_editing_mode_value) {
+                uint16_t *val = &cheat_codes[item_selected].value;
+                int shift = (7 - editing_field_selected) * 4;
+                if (shift < 16) {
+                    uint16_t nibble = (*val >> shift) & 0xF;
+                    nibble = (nibble - 1) & 0xF;
+                    *val = (*val & ~(0xFu << shift)) | (nibble << shift);
+                }
+            }
+            sound_play_effect(SFX_CURSOR);
         }
         else if (menu->actions.enter) { // apply
             is_editing_mode_address = false;

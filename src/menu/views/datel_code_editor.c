@@ -161,10 +161,12 @@ static void process(menu_t *menu) {
             is_editing_mode_address = false;
             is_editing_mode_value = false;
             cheat_codes[item_selected].enabled = true;
+            debugf("Cheat Editor: Edited and enabled selected Cheat %08lX %04X.\n", cheat_codes[item_selected].address, cheat_codes[item_selected].value);
         }
         else if (menu->actions.back) { // finish editing
             is_editing_mode_address = false;
             is_editing_mode_value = false;
+            debugf("Cheat Editor: Edited selected Cheat %08lX %04X.\n", cheat_codes[item_selected].address, cheat_codes[item_selected].value);
         }
     } 
     else {

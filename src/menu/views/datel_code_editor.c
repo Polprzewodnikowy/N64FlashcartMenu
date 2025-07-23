@@ -157,11 +157,7 @@ static void process(menu_t *menu) {
             }
             sound_play_effect(SFX_CURSOR);
         }
-        else if (menu->actions.enter) { // apply
-            is_editing_mode_address = false;
-            is_editing_mode_value = false;
-        }
-        else if (menu->actions.back) { // cancel
+        else if (menu->actions.enter || menu->actions.back) { // finish editing
             is_editing_mode_address = false;
             is_editing_mode_value = false;
         }

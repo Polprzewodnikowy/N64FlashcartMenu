@@ -49,13 +49,13 @@ static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
 }
 
 static void edit_selected_cheat_address (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Edit Selected Cheat address %08lX, edit not implemented.\n", cheat_codes[item_selected].address);
+    debugf("Cheat Editor: Edit Selected Cheat address %08lX.\n", cheat_codes[item_selected].address);
     editing_field_selected = 0; // Reset to the first nibble of the address.
     is_editing_mode_address = true;
 }
 
 static void edit_selected_cheat_value (menu_t *menu, void *arg) {
-    debugf("Cheat Editor: Edit Selected Cheat value: %04X, edit not implemented.\n", cheat_codes[item_selected].value);
+    debugf("Cheat Editor: Edit Selected Cheat value: %04X.\n", cheat_codes[item_selected].value);
     editing_field_selected = 4; // Reset to the first nibble of the value.
     is_editing_mode_value = true;
 }

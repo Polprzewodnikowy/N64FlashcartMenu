@@ -56,6 +56,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
 
     if (entries == 0) {
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "^%02X** empty directory **",
@@ -168,6 +169,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];
 
+            // TODO: add option to use font icons instead of file sizes.
             if (entry->type != ENTRY_TYPE_DIR) {
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
             }

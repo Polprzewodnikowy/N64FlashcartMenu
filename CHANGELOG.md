@@ -6,6 +6,59 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
+## Release Notes 2025-{next}
+
+- **New Features**
+	- Added ability to hide save folders (on by default).
+	- Added ability to reset the menu setting to default from the menu UI.
+	- Shows info message within the loading progress bar.
+	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
+	- Add Alpha FEATURE_CHEATS_GUI_ENABLED (build flag to enable it)
+	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it)
+
+
+- **Bug Fixes**
+	- Fix ability to set the RTC via menu (Hotfixed in last release).
+	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
+	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
+	- Fix reset value of FCR31 to the boot value (0) (Hotfixed in last release).
+	- Fix missing enum case for 1 Mbit SRAM saves (Hotfixed in last release).
+
+
+
+- **Documentation**
+	- Improved Emulator information for known working NES emulator version.
+	- Updated experimental features to reflect feature change.
+	- Added sounds documentation.
+	- Updated autoload to reflect feature change.
+
+
+- **Refactor**
+	- Improve tab navigation by using any left/right control input and add cursor SFX.
+	- Improve ROM description metadata loading (it is now able to load stings with upto 1000 chars, but still only displays the first 300).
+	- Add ability for font style to be used in ui_components_main_text_draw and ui_components_actions_bar_text_draw.
+
+- **Other**
+	- Updated libDragon SDK.
+	- Updated miniz library.
+	- Updated Github templates.
+
+### Breaking changes
+* Deprecated "Autoload ROM" function was removed from menu (use `FEATURE_AUTOLOAD_ROM_ENABLED` as a build flag to re-enable it).
+* Deprecated Boxart image handler was removed (see [documentation](./docs/19_gamepak_boxart.md) for new boxart link).
+
+
+### Current known Issues
+* The RTC UI requires improvement (awaiting UI developer).
+* Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+* Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+* MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+
+
+### Deprecation notices
+* TBD
+
+
 ## Release Notes 2025-03-31
 
 - **New Features**
@@ -51,6 +104,8 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
+* Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
+* Setting the RTC reports a write fail.
 
 
 ### Deprecation notices

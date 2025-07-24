@@ -185,6 +185,14 @@ else
 endif
 .PHONY: run-debug
 
+run-debug-upload: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /du
+else
+	./remotedeploy.sh -du
+endif
+.PHONY: run-debug-upload
+
 # test:
 #   TODO: run tests
 

@@ -93,6 +93,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_layout_draw();
 
     ui_components_main_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n",
         text->contents + text->offset
@@ -101,6 +102,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_list_scrollbar_draw(text->current_line, text->lines, LIST_ENTRIES);
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "^%02XUp / Down: Scroll^00\n"
         "B: Back",

@@ -252,45 +252,7 @@ void load_cheats_from_file(char *path) {
                 break;
         }
 
-        // // --DEBUG CODE
-        // // Currently we are just going to pre populate them for test purposes.
-        // debugf("Cheat Editor: Init debug codes MM USA.\n");
-        // // Activator code
-        // parse_cheat_code_string(&cheat_codes[0],  "F1096820 2400 Activator code");
-        // parse_cheat_code_string(&cheat_codes[1],  "FF000220 0000 Activator code");
-
-        // // Inventory Editor (assigned to L)
-        // parse_cheat_code_string(&cheat_codes[2],  "D01F9B91 0020 Inventory Editor (assigned to L)");
-        // cheat_codes[2].enabled = false;
-
-        // parse_cheat_code_string(&cheat_codes[3],  "803FDA3F 0002 Inventory Editor (assigned to L)");
-        // cheat_codes[3].enabled = false;
-
-        // // Complete Bomber's Notebook
-        // parse_cheat_code_string(&cheat_codes[4],  "811F05AA FFFF Complete Bomber's Notebook");
-        // parse_cheat_code_string(&cheat_codes[5],  "811F05AC FFFF Complete Bomber's Notebook");
-        // parse_cheat_code_string(&cheat_codes[6],  "811F05AE FFFF Complete Bomber's Notebook");
-        // parse_cheat_code_string(&cheat_codes[7],  "811F05B0 FFFF Complete Bomber's Notebook");
-
-        // // Disable 3-day Timer
-        // parse_cheat_code_string(&cheat_codes[8],  "810F6C3C 2400 Disable 3-day Timer");
-        // cheat_codes[8].enabled = false;
-
-        // // Make A Debug Save File
-        // parse_cheat_code_string(&cheat_codes[9],  "80146ACB 005A Make A Debug Save File");
-        // parse_cheat_code_string(&cheat_codes[10], "81146B18 1000"); //  Make A Debug Save File
-        // parse_cheat_code_string(&cheat_codes[11], "81146B1A 0017 Make A Debug Save File");
-
-        // // Enable All Owl Statues
-        // parse_cheat_code_string(&cheat_codes[12], "811EF6B6 FFFF Enable All Owl Statues");
-        // cheat_codes[12].enabled = false;
-
-        // set_cheat_codes(cheat_codes);
-        // uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
-        // size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), cheats);
-        // // cheats[] now contains address/value pairs for enabled cheats, ending with two zeros.
-        // debugf("Cheat Editor: Generated %u cheat items.\n", cheat_item_count);
-        // // --END DEBUG CODE
+        deinit_cheat_file();
     }
 }
 

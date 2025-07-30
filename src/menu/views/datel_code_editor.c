@@ -1,7 +1,7 @@
 #include "../datel_codes.h"
 #include "views.h"
 #include "../sound.h"
-#include "../ui_components/constants.h" // FIXME: remove when ui_component_value_editor can handle widths by itself.
+#include "../ui_components/constants.h" // FIXME: remove if/when can handle consts by itself.
 
 
 static cheat_file_code_t *cheat_codes;
@@ -36,7 +36,7 @@ static void cheat_ui_component_edit_field_draw(uint32_t value, int selected_fiel
         nibble_ptrs,
         8,
         selected_field,
-        (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 20.0f
+        20.0f
     );
 }
 

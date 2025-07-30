@@ -4,7 +4,6 @@
 #include <sys/time.h>
 #include "../sound.h"
 #include "views.h"
-#include "../ui_components/constants.h" // FIXME: remove when ui_component_value_editor can handle widths by itself.
 
 #define MAX(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a > _b ? _a : _b; })
 #define MIN(a,b)  ({ typeof(a) _a = a; typeof(b) _b = b; _a < _b ? _a : _b; })
@@ -93,7 +92,7 @@ void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_fiel
         },
         7,
         selected_field,
-        (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 12.0f
+        12.0f
     );
 }
 

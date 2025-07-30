@@ -251,9 +251,11 @@ void load_cheats_from_file(char *path) {
                 debugf("Cheat Editor: Unknown error occurred while loading cheat file.\n");
                 break;
         }
+        set_cheat_codes(NULL);
 
-        deinit_cheat_file();
     }
+
+    deinit_cheat_file();
 }
 
 void save_cheats_to_file(char *path) {

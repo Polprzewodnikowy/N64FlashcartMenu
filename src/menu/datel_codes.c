@@ -185,6 +185,7 @@ void load_cheats_from_file(char *path) {
 
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
 
+    set_cheat_codes(NULL);
     cheat_file_load_err_t res_file_open = open_cheat_file(path);
 
     if (res_file_open == CHEAT_FILE_LOAD_OK) {
@@ -252,10 +253,9 @@ void load_cheats_from_file(char *path) {
                 break;
         }
         set_cheat_codes(NULL);
+        deinit_cheat_file();
 
     }
-
-    deinit_cheat_file();
 }
 
 void save_cheats_to_file(char *path) {

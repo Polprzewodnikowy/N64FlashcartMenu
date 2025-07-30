@@ -186,6 +186,8 @@ static void process(menu_t *menu) {
             set_cheat_codes(cheat_codes);
             menu->next_mode = MENU_MODE_LOAD_ROM;
             debugf("Cheat Editor: Applying cheats.\n");
+            //save_cheats_to_file(menu->load.rom_path);
+            //menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
             sound_play_effect(SFX_ENTER);
         } else if (menu->actions.back) {
             sound_play_effect(SFX_EXIT);
@@ -413,12 +415,12 @@ void view_datel_code_editor_init (menu_t *menu) {
 
     cheat_codes = get_cheat_codes();
 
-    path_t *path = path_clone(menu->load.rom_path);
-    path_ext_replace(path, "datel.txt");
+    path_t *rom_datel_filepath = path_clone(menu->load.rom_path);
+    path_ext_replace(rom_datel_filepath, "datel.txt");
 
-    load_cheats_from_file(path_get(path));
+    load_cheats_from_file(path_get(rom_datel_filepath));
 
-    path_free(path);
+    path_free(rom_datel_filepath);
 
 }
 

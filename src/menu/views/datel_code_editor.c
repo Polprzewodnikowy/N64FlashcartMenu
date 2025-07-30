@@ -198,7 +198,7 @@ static void process(menu_t *menu) {
             sound_play_effect(SFX_ENTER);
         } else if (menu->actions.back) {
             sound_play_effect(SFX_EXIT);
-            menu->next_mode = MENU_MODE_BROWSER;
+            menu->next_mode = MENU_MODE_LOAD_ROM;
         } else if (menu->actions.options) {
             ui_components_context_menu_show(&options_context_menu);
             sound_play_effect(SFX_SETTING);

@@ -13,22 +13,6 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
-// // Example cheat codes for the game "Majoras Mask USA"
-// uint32_t cheats[] = {
-//     // Enable code
-//     0xF1096820,
-//     0x2400,
-//     0xFF000220,
-//     0x0000,
-//     // Inventory Editor (assigned to L)
-//     0xD01F9B91,
-//     0x0020,
-//     0x803FDA3F,
-//     0x0002,
-//     // Last 2 entries must be 0
-//     0,
-//     0,
-// };
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {

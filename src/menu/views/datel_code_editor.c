@@ -1,7 +1,14 @@
+/**
+ * @file datel_code_editor.c
+ * @brief Datel code editor implementation
+ * @author Robin Jones (networkfusion)
+ * @ingroup views
+ */
+
+#include "../ui_components/constants.h"
 #include "../datel_codes.h"
-#include "views.h"
 #include "../sound.h"
-#include "../ui_components/constants.h" // FIXME: remove if/when can handle consts by itself.
+#include "views.h"
 
 
 static cheat_file_code_t *cheat_codes;

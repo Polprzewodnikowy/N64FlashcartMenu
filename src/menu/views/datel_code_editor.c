@@ -197,6 +197,10 @@ static void process(menu_t *menu) {
             //menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
             sound_play_effect(SFX_ENTER);
         } else if (menu->actions.back) {
+            debugf("Cheat Editor: Cheats not saved or applied.\n");
+            // menu_show_warning(menu,
+            //     "Cheats not saved or applied.\n"
+            // );
             sound_play_effect(SFX_EXIT);
             menu->next_mode = MENU_MODE_LOAD_ROM;
         } else if (menu->actions.options) {

@@ -70,10 +70,6 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-// static void set_use_default_settings (menu_t *menu, void *arg) {
-//     // FIXME: add implementation
-//     menu->browser.reload = true;
-// }
 #endif
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
@@ -155,7 +151,6 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
-    // { .text = "Restore Defaults", .action = set_use_default_settings },
 #endif
 
     COMPONENT_CONTEXT_MENU_LIST_END,

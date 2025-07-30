@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "../fonts.h"
+#include "../cart_load.h"
 #include "utils/fs.h"
 #include "views.h"
 #include "../sound.h"
@@ -172,7 +173,7 @@ static bool load_directory (menu_t *menu) {
         if (!menu->settings.show_saves_folder) {
             path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
-            if (strcmp(info.d_name, "saves") == 0) { // TODO: use SAVES_SUBDIRECTORY from cart_load.c
+            if (strcmp(info.d_name, SAVES_SUBDIRECTORY) == 0) {
                 hide = true;
             }
             path_pop(path);

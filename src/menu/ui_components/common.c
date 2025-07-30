@@ -408,16 +408,17 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
     }
 }
 
-void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width ) {
-    // FIXME: move this to ui_components.c once improved.
+void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected) {
+    // Calculate width automatically based on visible area and count
+    float width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 12.0f;
     float starting_x = DISPLAY_CENTER_X - (width * count / 2.0f);
 
     float x = starting_x;
-    float y = DISPLAY_CENTER_Y;    
+    float y = DISPLAY_CENTER_Y;
     float height = TAB_HEIGHT;
 
     // first draw the values that are not selected
-    for(int i=0;i< count;i++) {
+    for(int i=0; i< count; i++) {
         if(i != selected) {
             ui_components_box_draw(
                 x,
@@ -429,7 +430,7 @@ void ui_component_value_editor(const char **header_text, const char **value_text
         }
         x += width;
     }
-    
+
     // draw the selected value (so it shows up on top of the others)
     if(selected >= 0 && selected < count) {
         x = starting_x + (width * selected);
@@ -451,7 +452,7 @@ void ui_component_value_editor(const char **header_text, const char **value_text
         .wrap = WRAP_NONE
     };
     x = starting_x;
-    for(int i=0;i< count;i++) {
+    for(int i=0; i< count; i++) {
         rdpq_text_print(
             &value_textparms,
             FNT_DEFAULT,

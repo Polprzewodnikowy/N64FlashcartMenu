@@ -487,10 +487,12 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        if(menu->load.load_history != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
-        } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
+        if(menu->load.load_history_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);
+            menu->load.load_history_id = -1;
+        } else if(menu->load.load_favorite_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite_id].primary_path);
+            menu->load.load_favorite_id = -1;
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
@@ -503,10 +505,6 @@ void view_load_rom_init (menu_t *menu) {
     if (show_extra_info_message) {
         show_extra_info_message = false;
     }
-
-    menu->load.load_favorite = -1;
-    menu->load.load_history = -1;
-
 
     // FIXME: datel cheats from history/favorites seem to fail here, and seems to fail to the first dir on the SD:
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));

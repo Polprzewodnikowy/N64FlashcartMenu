@@ -228,20 +228,20 @@ void view_load_disk_init (menu_t *menu) {
 
     menu->boot_pending.disk_file = false;
 
-    if(menu->load.load_history != -1 || menu->load.load_favorite != -1) {
+    if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         int id = -1;
         bookkeeping_item_t* items;
 
-        if(menu->load.load_history != -1) {
-            id = menu->load.load_history;
+        if(menu->load.load_history_id != -1) {
+            id = menu->load.load_history_id;
             items = menu->bookkeeping.history_items;
-        } else if (menu->load.load_favorite != -1) {
-            id = menu->load.load_favorite;
+        } else if (menu->load.load_favorite_id != -1) {
+            id = menu->load.load_favorite_id;
             items = menu->bookkeeping.favorite_items;
         }
 
-        menu->load.load_history = -1;
-        menu->load.load_favorite = -1;
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
 
         menu->load.disk_path = path_clone(items[id].primary_path);
         if(!load_rom(menu, items[id].secondary_path)) {
@@ -252,8 +252,8 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
     }
 
-    menu->load.load_favorite = -1;
-    menu->load.load_history = -1;
+    menu->load.load_favorite_id = -1;
+    menu->load.load_history_id = -1;
 
     disk_filename = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);

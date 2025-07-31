@@ -90,8 +90,8 @@ static void menu_init (boot_params_t *boot_params) {
     path_push(path, MENU_ROM_LOAD_HISTORY_FILE);
     bookkeeping_init(path_get(path));
     bookkeeping_load(&menu->bookkeeping);
-    menu->load.load_history = -1;
-    menu->load.load_favorite = -1;
+    menu->load.load_history_id = -1;
+    menu->load.load_favorite_id = -1;
     path_pop(path);
   
     if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output

@@ -16,13 +16,13 @@ typedef enum {
 static bookkeeping_tab_context_t tab_context = BOOKKEEPING_TAB_CONTEXT_NONE;
 static int selected_item = -1;
 static bookkeeping_item_t *item_list;
-static uint16_t item_max;
+static uint16_t item_max = 0;
 
 
 static void item_reset_selected(menu_t *menu) {
     selected_item = -1;
 
-    for(unsigned int i=0; i<item_max; i++) {
+    for(uint16_t i=0; i<item_max; i++) {
         if(item_list[i].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
             selected_item = i;
             break;
@@ -122,7 +122,7 @@ static void draw_list(menu_t *menu, surface_t *display) {
     char buffer[1024];
     buffer[0] = 0;
 
-    for(unsigned int i=0; i < item_max; i++) {   
+    for(uint16_t i=0; i < item_max; i++) {   
         if(path_has_value(item_list[i].primary_path)) {
             sprintf(buffer, "%s%d  : %s\n",buffer ,(i+1), path_last_get(item_list[i].primary_path));
         } else {

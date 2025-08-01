@@ -410,7 +410,7 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
 
 void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected) {
     // Calculate width automatically based on visible area and count
-    float width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / 12.0f;
+    float width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / count;
     float starting_x = DISPLAY_CENTER_X - (width * count / 2.0f);
 
     float x = starting_x;

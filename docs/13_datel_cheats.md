@@ -8,7 +8,7 @@ The N64FlashcartMenu has underlying support for the cheat code types made popula
 - GameShark
 - Action Replay
 
-Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are unlikely to work.
+Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are unlikely to work (yet).
 
 > [!WARNING]
 > It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
@@ -32,6 +32,9 @@ When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adj
 
 > [!CAUTION]
 > The Code editor does not work properly when using ROM's loaded from the favorites or history tabs (yet).
+
+> [!WARNING]
+> Any changes made in the code editor are totally volitile (i.e. not saved for when returning to the current screen).
 
 
 #### Datel Cheat Files

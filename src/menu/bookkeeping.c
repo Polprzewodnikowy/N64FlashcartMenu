@@ -73,9 +73,9 @@ void bookkeeping_load (bookkeeping_t *history) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-static void bookkeeping_ini_save_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group) {
+static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
-    for(int i = 0; i < count; i++) {
+    for(uint16_t i = 0; i < count; i++) {
         sprintf(buf, "%d_primary_path", i);
         path_t* path = list[i].primary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   

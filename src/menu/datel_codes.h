@@ -17,7 +17,7 @@
 /** @brief Cheat file code Structure. */
 typedef struct {
     uint32_t address; /**< Cheat address */
-    uint16_t value; /**< Cheat value */ // might need to be uint32_t for loading, though we should be able to convert.
+    uint16_t value; /**< Cheat value */
     bool enabled; /**< Cheat enabled flag */
     char description[32]; /**< Cheat description */
 } cheat_file_code_t;

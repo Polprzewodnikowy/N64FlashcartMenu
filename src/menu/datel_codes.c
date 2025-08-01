@@ -39,7 +39,6 @@ size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *che
     cheats_out[count++] = 0;
 
     return count;
-    //return count - 2; // Number of address/value pairs (excluding trailing zeros)
 }
 
 /** * @brief Get the cheat codes.
@@ -134,7 +133,7 @@ cheat_file_load_err_t open_cheat_file(char *path) {
         return CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL;
     }
 
-    cheat_file_text->f = fopen(path, "rw");
+    cheat_file_text->f = fopen(path, "r+");
 
     if (cheat_file_text->f == NULL) {
         deinit_cheat_file();

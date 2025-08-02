@@ -488,11 +488,9 @@ void view_load_rom_init (menu_t *menu) {
         }
 
         if(menu->load.load_history_id != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);
-            menu->load.load_history_id = -1;
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);    
         } else if(menu->load.load_favorite_id != -1) {
             menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite_id].primary_path);
-            menu->load.load_favorite_id = -1;
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
@@ -537,6 +535,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     }
 
     if (menu->next_mode != MENU_MODE_LOAD_ROM && menu->next_mode != MENU_MODE_DATEL_CODE_EDITOR) {
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
         deinit();
     }
 }

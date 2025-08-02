@@ -504,7 +504,6 @@ void view_load_rom_init (menu_t *menu) {
         show_extra_info_message = false;
     }
 
-    // FIXME: datel cheats from history/favorites seem to fail here, and seems to fail to the first dir on the SD:
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {

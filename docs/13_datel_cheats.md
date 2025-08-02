@@ -30,9 +30,6 @@ Ensure you have a cheat file and have accessed the Datel Code Editor screen, the
 #### Datel Code Editor
 When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adjust the cheat codes as needed then press `A` to `Apply ROM with these cheats`.
 
-> [!CAUTION]
-> The Code editor does not work properly when using ROM's loaded from the favorites or history tabs (yet).
-
 > [!WARNING]
 > Any changes made in the code editor are totally volitile (i.e. not saved for when returning to the current screen).
 

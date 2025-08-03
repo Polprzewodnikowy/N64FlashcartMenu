@@ -149,7 +149,7 @@ void dump_complete_cpak(int _port) {
             return;
         }
 
-        ui_components_loader_draw((float) i / 128.0f);
+        ui_components_loader_draw((float) i / 128.0f, "Dumping Controller Pak...");
 
         rdpq_detach_show();
     }

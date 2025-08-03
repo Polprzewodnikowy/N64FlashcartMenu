@@ -67,7 +67,7 @@ bool restore_controller_pak(int controller) {
             "<- / ->: Change controller",
             controller_selected_for_restore + 1
         );
-        ui_components_loader_draw((float) i / 128.0f);
+        ui_components_loader_draw((float) i / 128.0f, "Restoring Controller Pak...");
         rdpq_detach_show();
     }
 

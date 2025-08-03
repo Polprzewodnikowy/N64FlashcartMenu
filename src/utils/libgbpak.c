@@ -105,7 +105,7 @@ int copy_gbRom_toRAM(uint8_t *rom_data, uint32_t *bankOffset, uint32_t size, cha
 			"A: Yes        B: No"
 		); 
 
-		ui_components_loader_draw((float) (bankc + 1) / (bankLimit));
+		ui_components_loader_draw((float) (bankc + 1) / (bankLimit), "Loading banks...");
 
 		rdpq_detach_show();
 
@@ -191,7 +191,7 @@ int copy_save_toGbRam(uint8_t *ram_data) {
             "A: Yes        B: No"
         ); 
 
-		ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks));
+		ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks), "Restoring Savefile to GB cart...");
 
 		rdpq_detach_show();
 
@@ -276,7 +276,7 @@ int copy_gbRam_toRAM(uint8_t *ram_data, char* _string, bool isDump) {//parameter
 				); 
 			}
 
-			ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks));
+			ui_components_loader_draw((float) (bankc + 1) / (gbcart.rambanks), "Processing Savefile...");
 
         	rdpq_detach_show();
 

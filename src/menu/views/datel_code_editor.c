@@ -193,8 +193,6 @@ static void process(menu_t *menu) {
             set_cheat_codes(cheat_codes);
             menu->next_mode = MENU_MODE_LOAD_ROM;
             debugf("Cheat Editor: Applying cheats.\n");
-            //save_cheats_to_file(menu->load.rom_path);
-            //menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
             sound_play_effect(SFX_ENTER);
         } else if (menu->actions.back) {
             debugf("Cheat Editor: Cheats not saved or applied.\n");
@@ -205,6 +203,10 @@ static void process(menu_t *menu) {
             menu->next_mode = MENU_MODE_LOAD_ROM;
         } else if (menu->actions.options) {
             ui_components_context_menu_show(&options_context_menu);
+            sound_play_effect(SFX_SETTING);
+        } else if (menu->actions.lz_context) {
+            debugf("Cheat Editor: Saving cheats to file.\n");
+            save_cheats_to_file(path_get(menu->load.rom_path));
             sound_play_effect(SFX_SETTING);
         }
     }
@@ -394,7 +396,7 @@ static void draw (menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "\n"
+        "L|Z: Save changes to file\n"
         "R: Item Options\n"
     );
 

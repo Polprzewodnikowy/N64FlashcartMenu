@@ -177,6 +177,40 @@ cheat_file_load_err_t open_cheat_file(char *path) {
     return CHEAT_FILE_LOAD_OK;
 }
 
+void cheat_file_open_res_debug(cheat_file_load_err_t res) {
+    switch (res) {
+        case CHEAT_FILE_LOAD_OK:
+            debugf("Cheat file loaded successfully.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL:
+            debugf("Cheat file load error: Memory allocation failed.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL:
+            debugf("Cheat file load error: File open failed.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL:
+            debugf("Cheat file load error: File stat failed.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_EMPTY:
+            debugf("Cheat file load error: File is empty.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG:
+            debugf("Cheat file load error: File is too big.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL:
+            debugf("Cheat file load error: File contents allocation failed.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL:
+            debugf("Cheat file load error: File read failed.\n");
+            break;
+        case CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL:
+            debugf("Cheat file load error: File close failed.\n");
+            break;
+        default:
+            debugf("Cheat file load error: Unknown error.\n");
+    }
+}
+
 void load_cheats_from_file(char *path) {
 
     // We should be loading the cheat codes from a file here.
@@ -222,35 +256,7 @@ void load_cheats_from_file(char *path) {
 
     }
     else {
-        switch (res_file_open) {
-            case CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL:
-                debugf("Cheat Editor: Failed to allocate memory for cheat file.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL:
-                debugf("Cheat Editor: Failed to open cheat file.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL:
-                debugf("Cheat Editor: Failed to get cheat file size.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_EMPTY:
-                debugf("Cheat Editor: Cheat file is empty.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG:
-                debugf("Cheat Editor: Cheat file is too big to be read.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL:
-                debugf("Cheat Editor: Failed to allocate memory for cheat file contents.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL:
-                debugf("Cheat Editor: Failed to read cheat file contents.\n");
-                break;
-            case CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL:
-                debugf("Cheat Editor: Failed to close cheat file.\n");
-                break;
-            default:
-                debugf("Cheat Editor: Unknown error occurred while loading cheat file.\n");
-                break;
-        }
+        cheat_file_open_res_debug(res_file_open);
         set_cheat_codes(NULL);
         deinit_cheat_file();
 
@@ -258,13 +264,15 @@ void load_cheats_from_file(char *path) {
 }
 
 void save_cheats_to_file(char *path) {
+
     // This function should save the cheat codes to a file.
     // For now, we will just print them to the debug log.
-    debugf("Cheat Editor: Saving cheats to path %s (not implemented).\n", path);
-    // if (!file_exists(path)) {
-    //     if (file_allocate(path, MAX_CHEAT_CODES * sizeof(cheat_file_code_t))) {
-    //         debugf("Cheat Editor: Failed to allocate file for saving cheats.\n");
-    //         return;
-    //     }
-    // }
+    debugf("Cheat Editor: Saving cheats to path %s (not implemented yet).\n", path);
+
+    // cheat_file_load_err_t res_file_open = open_cheat_file(path_get(rom_datel_filepath));
+    
+    // TODO: save file here (overwriting all lines).
+
+
+    // deinit_cheat_file();
 }

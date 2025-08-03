@@ -17,12 +17,12 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 > The N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak. Codes will not be loaded when the Expansion Pak is not found.
 
 Caveats:
-- Requires an Expansion Pak.
+- Requires an Expansion Pak to work.
 - Codes that require a button to pressed are not yet supported.
-- Only the first 12 codes are currently used.
+- Serial repeater codes are unsupported.
+- The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM, exceeding them may cause unwanted sideeffects.
+    - It would be nice to support at least 34 as per suggested support on the Krikzz ED64x5-7, though not sure if this has been stress tested properly. However, for simplicity, it is currently hardcoded to 16 for now, as this is the number of codes currently supported by most games (keeping it low allows us to collect caveats).
 
-Certain codes are not yet supported, because, for instance:
-- they rely on the button.
 
 ### Enable Cheats
 Ensure you have a cheat file and have accessed the Datel Code Editor screen, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.
@@ -71,3 +71,12 @@ e.g. For Super Mario 64:
 8020770B 00C7 120 stars part 2
 50001101 0000 120 stars part 3
 8020770C 00FF 120 stars part 4
+
+
+### Known Issues
+ - Exceeding 12 cheats in Majoras Mask will cause issues.
+ - Paper Mario cheats do not work.
+ - WWF No Mercy (Rev 1) hangs at a black screen.
+ - Xeno Crises cheats do not work.
+ - F-Zero X (with and without the 64DD Expansion Kit) cheats do not work.
+ - AeroGauge (EUR) no damage hangs the game on impact.

@@ -102,7 +102,7 @@ typedef struct {
 #define MATCH_END                               { .type = MATCH_TYPE_END, .data = { .save = SAVE_TYPE_NONE, .feat = FEAT_NONE } }
 
 
-// List shamelessly stolen from https://github.com/ares-emulator/ares/blob/master/mia/medium/nintendo-64.cpp
+// List shamelessly stolen from https://github.com/ares-emulator/ares/blob/master/mia/medium/nintendo-64.cpp#L285
 
 // clang-format off
 static const match_t database[] = {

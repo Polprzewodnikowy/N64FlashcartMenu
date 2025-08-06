@@ -58,6 +58,7 @@ SRCS = \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
 	menu/ui_components/file_list.c \
+	menu/ui_components/sprites.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
@@ -88,6 +89,9 @@ SOUNDS = \
 	enter.wav \
 	error.wav \
 	settings.wav
+IMAGES = \
+	defbg.png \
+	defboxart.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

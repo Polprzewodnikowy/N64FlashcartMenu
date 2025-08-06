@@ -307,10 +307,12 @@ static void draw (menu_t *menu, surface_t *d) {
             rom_filename
         );
 
-        ui_components_main_text_draw( // TODO:"\t%.300s\n" for description.
+        ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n"
+            "Description:\n\t%.300s\n",
+            "None."
             
         );
 

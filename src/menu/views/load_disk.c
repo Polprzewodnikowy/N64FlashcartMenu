@@ -90,7 +90,7 @@ static void draw (menu_t *menu, surface_t *d) {
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n\n\n\n\n"
-            "Description:\n\t%s\n",
+            "Description:\n\t%.300s\n",
             "None."
         );
 

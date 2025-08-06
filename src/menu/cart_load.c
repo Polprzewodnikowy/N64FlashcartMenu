@@ -11,9 +11,6 @@
 #include "utils/fs.h"
 #include "utils/utils.h"
 
-#ifndef SAVES_SUBDIRECTORY
-#define SAVES_SUBDIRECTORY      "saves"
-#endif
 #ifndef DDIPL_LOCATION
 #define DDIPL_LOCATION          "/menu/64ddipl"
 #endif
@@ -26,7 +23,7 @@
  * 
  * @return true if the 64DD is connected, false otherwise.
  */
-static bool is_64dd_connected (void) {
+bool is_64dd_connected (void) {
     bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
     bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
     return (is_64dd_io_present || is_64dd_ipl_present);
@@ -221,9 +218,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
-             // Tested against https://themanbehindcurtain.blogspot.com/2017/12/small-neon64-hdmi-audio-fix.html
-             // Save states in newer versions might require a different save type.
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
+             // Tested against https://github.com/hcs64/neon64v2/releases/
+            save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");

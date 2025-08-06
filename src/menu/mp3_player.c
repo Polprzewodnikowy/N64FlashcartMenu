@@ -144,7 +144,7 @@ void mp3player_mixer_init (void) {
     // NOTE: Deliberately setting max_frequency to twice of actual maximum samplerate of mp3 file.
     //       It's tricking mixer into creating buffer long enough for appending data created by mp3dec_decode_frame.
 
-    mixer_ch_set_limits(SOUND_MP3_PLAYER_CHANNEL && SOUND_SFX_CHANNEL, 16, 96000, 0);
+    mixer_ch_set_limits(SOUND_MP3_PLAYER_CHANNEL, 16, 96000, 0);
 }
 
 /**

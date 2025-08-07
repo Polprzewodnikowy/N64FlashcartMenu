@@ -389,15 +389,15 @@ static void draw (menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "A: Apply ROM with these cheats\n"
+        "A: Apply to ROM\n"
         "B: Back"
     );
 
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "L|Z: Save changes to file\n"
-        "R: Item Options\n"
+        "L|Z: Save changes\n"
+        "R: Item options\n"
     );
 
     ui_components_context_menu_draw(&options_context_menu);

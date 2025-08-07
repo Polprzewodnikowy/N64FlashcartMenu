@@ -2,7 +2,7 @@
 ## Cheats (Gameshark, etc.)
 
 > [!WARNING]
-> THIS FEATURE IS EXPERIMENTAL
+> **THIS FEATURE IS EXPERIMENTAL**
 
 The N64FlashcartMenu has underlying support for the cheat code types made popular by the peripherals:
 - GameShark
@@ -19,10 +19,8 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 Caveats:
 - Requires an Expansion Pak to work.
 - Codes that require a button to pressed are not yet supported.
-- Serial repeater codes are unsupported.
-- The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM, exceeding them may cause unwanted sideeffects.
-    - It would be nice to support at least 34 as per suggested support on the Krikzz ED64x5-7, though not sure if this has been stress tested properly. However, for simplicity, it is currently hardcoded to 16 for now, as this is the number of codes currently supported by most games (keeping it low allows us to collect caveats).
-
+- The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM (especially with game ROM's that use an Expansion Pak), exceeding them may cause unwanted side effects.
+ - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 16 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
 
 ### Enable Cheats
 Ensure you have a cheat file and have accessed the Datel Code Editor screen, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.
@@ -71,12 +69,15 @@ e.g. For Super Mario 64:
 8020770B 00C7 120 stars part 2
 50001101 0000 120 stars part 3
 8020770C 00FF 120 stars part 4
+```
 
 
-### Known Issues
- - Exceeding 12 cheats in Majoras Mask will cause issues.
+### Current community reported issues
+These issues have been reported as differences when comparing a real GS device (or proved working on an ED64):
+ - Exceeding 12 cheats in Majoras Mask will cause issues (Find better Enable Code?!).
+ - Exceeding 15 cheats in DK64 will cause issues (Find better Enable Code?!).
  - Paper Mario cheats do not work.
  - WWF No Mercy (Rev 1) hangs at a black screen.
- - Xeno Crises cheats do not work.
+ - Xeno Crises cheats do not work, unless you increase each address by 0x01 (see https://github.com/Polprzewodnikowy/N64FlashcartMenu/pull/256#discussion_r2260752613).
  - F-Zero X (with and without the 64DD Expansion Kit) cheats do not work.
  - AeroGauge (EUR) no damage hangs the game on impact.

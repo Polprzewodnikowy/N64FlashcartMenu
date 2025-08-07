@@ -17,6 +17,8 @@ static bool is_editing_mode_address = false;
 static bool is_editing_mode_value = false;
 static uint8_t editing_field_selected = 7; // 0-7 for 8 nibbles of the address or value (set to last nibble by default).
 
+static bool show_message_save_confirm = false;
+
 /**
  * Draws the cheat editor UI component for address/value editing.
  * 
@@ -190,23 +192,32 @@ static void process(menu_t *menu) {
             }
             sound_play_effect(SFX_CURSOR);
         } else if(menu->actions.enter) {
-            set_cheat_codes(cheat_codes);
-            menu->next_mode = MENU_MODE_LOAD_ROM;
-            debugf("Cheat Editor: Applying cheats.\n");
-            sound_play_effect(SFX_ENTER);
+            if (show_message_save_confirm) {
+                save_cheats_to_file(path_get(menu->load.rom_path)); //TODO: this needs rethinking!
+                sound_play_effect(SFX_SETTING);
+                show_message_save_confirm = false;
+            }
+            else {
+                set_cheat_codes(cheat_codes);
+                menu->next_mode = MENU_MODE_LOAD_ROM;
+                debugf("Cheat Editor: Applying cheats.\n");
+                sound_play_effect(SFX_ENTER);
+            }
         } else if (menu->actions.back) {
-            debugf("Cheat Editor: Cheats not saved or applied.\n");
-            // menu_show_warning(menu,
-            //     "Cheats not saved or applied.\n"
-            // );
+            if (show_message_save_confirm) {
+                show_message_save_confirm = false;
+            }
+            else {
+                debugf("Cheat Editor: Cheats not saved or applied.\n");
+                menu->next_mode = MENU_MODE_LOAD_ROM;
+            }
             sound_play_effect(SFX_EXIT);
-            menu->next_mode = MENU_MODE_LOAD_ROM;
         } else if (menu->actions.options) {
             ui_components_context_menu_show(&options_context_menu);
             sound_play_effect(SFX_SETTING);
         } else if (menu->actions.lz_context) {
             debugf("Cheat Editor: Saving cheats to file.\n");
-            save_cheats_to_file(path_get(menu->load.rom_path));
+            show_message_save_confirm = true;
             sound_play_effect(SFX_SETTING);
         }
     }
@@ -413,6 +424,13 @@ static void draw (menu_t *menu, surface_t *display) {
         cheat_ui_component_edit_field_draw(
             cheat_codes[item_selected].value,
             editing_field_selected
+        );
+    }
+
+    if (show_message_save_confirm) {
+        ui_components_messagebox_draw(
+            "Overwrite file?\n\n"
+            "A: Yes, B: No"
         );
     }
 

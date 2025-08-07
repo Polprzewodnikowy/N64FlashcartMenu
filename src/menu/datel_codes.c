@@ -246,7 +246,7 @@ void load_cheats_from_file(char *path) {
 
         set_cheat_codes(cheat_codes);
 
-        deinit_cheat_file();
+        deinit_cheat_file(); // TODO: should we keep the cheat_file_text open for save operations?
 
         // --DEBUG CODE
         uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
@@ -263,7 +263,7 @@ void load_cheats_from_file(char *path) {
     }
 }
 
-void save_cheats_to_file(char *path) {
+void save_cheats_to_file(char *path) { // cheats_file_code_t *cheats
 
     // This function should save the cheat codes to a file.
     // For now, we will just print them to the debug log.

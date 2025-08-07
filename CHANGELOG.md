@@ -13,7 +13,7 @@ built from latest commit on main branch.
 	- Added ability to reset the menu setting to default from the menu UI.
 	- Shows info message within the loading progress bar.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
-	- Add Alpha Datel code GUI (for upto 12 cheats).
+	- Add Alpha Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
 	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
 
 

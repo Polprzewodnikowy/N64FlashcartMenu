@@ -10,17 +10,18 @@ The N64FlashcartMenu has underlying support for the cheat code types made popula
 
 Another product by Blaze, called the Xploder64/Xplorer64 also existed in some regions, but these codes are unlikely to work (yet).
 
-> [!WARNING]
+> [!CAUTION]
 > It is not advised to connect a physical cheat cartridge in conjunction with most flashcarts.
 
-> [!CAUTION]
+> [!WARNING]
 > The N64FlashcartMenu can only support cheat codes based on Datel carts when **also** using an Expansion Pak. Codes will not be loaded when the Expansion Pak is not found.
 
 Caveats:
 - Requires an Expansion Pak to work.
 - Codes that require a button to pressed are not yet supported.
 - The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM (especially with game ROM's that use an Expansion Pak), exceeding them may cause unwanted side effects.
- - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 16 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
+ - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 34 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
+- The cheat engine is subtly different from an actual GameShark and ED64 implementation so working enable and cheat codes may vary.
 
 ### Enable Cheats
 Ensure you have a cheat file and have accessed the Datel Code Editor screen, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.

@@ -18,7 +18,9 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 
 Caveats:
 - Requires an Expansion Pak to work.
-- Codes that require a button to pressed are not yet supported.
+- Codes that require a button to pressed are not yet supported (TODO: possible with the SC64, requires hook).
+- `DE` enable codes for dealing with CICs that change the entrypoint are not yet supported.
+- Games that were developed using the libDragon SDK are not yet supported.
 - The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM (especially with game ROM's that use an Expansion Pak), exceeding them may cause unwanted side effects.
  - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 34 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
 - The cheat engine is subtly different from an actual GameShark and ED64 implementation so working enable and cheat codes may vary.
@@ -36,7 +38,7 @@ When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adj
 #### Datel Cheat Files
 
 > [!TIP]
-> a good reference for generating codes is: https://gamehacking.org and downloading ED64 text files.
+> A good reference for cheat codes is: https://gamehacking.org and downloading ED64 text files, though note that usage may vary, as these may have been "corrupted" by the ability to use them in an in-accurate emulator.
 
 Cheat files should be contained in the same directory as the ROM, but with the file extension `datel.txt` (instead of the ROM extension).
 The files use the following content format (as aligned to text files made popular by the ED64):

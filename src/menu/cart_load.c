@@ -219,7 +219,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
              // Tested against https://github.com/hcs64/neon64v2/releases/
-            save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
+            save_type = FLASHCART_SAVE_TYPE_SRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");

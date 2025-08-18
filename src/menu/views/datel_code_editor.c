@@ -294,15 +294,15 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_buffer[64];
-            // if (entry->description[0] != '\0') {
+            if (entry->description[0] != '\0') {
                 snprintf(str_buffer, sizeof(str_buffer), "%02d: %08lX %04X - %s",
                     entry_index + 1, entry->address, entry->value, entry->description
                 );
-            // } else {
-            //     snprintf(str_buffer, sizeof(str_buffer), "%02d: %08lX %04X",
-            //         entry_index + 1, entry->address, entry->value
-            //     );
-            // }
+            } else {
+                snprintf(str_buffer, sizeof(str_buffer), "%02d: %08lX %04X",
+                    entry_index + 1, entry->address, entry->value
+                );
+            }
 
             rdpq_paragraph_builder_span(str_buffer, strlen(str_buffer));
 

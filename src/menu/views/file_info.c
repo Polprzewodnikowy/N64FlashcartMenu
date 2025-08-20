@@ -23,7 +23,7 @@ static struct stat st;
 
 static char *format_file_type (char *name, bool is_directory) {
     if (is_directory) {
-        return "";
+        return " Type: Directory\n";
     } if (file_has_extensions(name, n64_rom_extensions)) {
         return " Type: N64 ROM\n";
     } else if (file_has_extensions(name, text_extensions)) {

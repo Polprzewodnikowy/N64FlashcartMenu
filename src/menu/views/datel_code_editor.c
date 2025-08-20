@@ -193,7 +193,11 @@ static void process(menu_t *menu) {
             sound_play_effect(SFX_CURSOR);
         } else if(menu->actions.enter) {
             if (show_message_save_confirm) {
-                save_cheats_to_file(path_get(menu->load.rom_path)); //TODO: this needs rethinking!
+
+                path_t *rom_datel_filepath = path_clone(menu->load.rom_path);
+                path_ext_replace(rom_datel_filepath, "datel.txt");
+                save_cheats_to_file(path_get(rom_datel_filepath));
+                path_free(rom_datel_filepath);
                 sound_play_effect(SFX_SETTING);
                 show_message_save_confirm = false;
             }

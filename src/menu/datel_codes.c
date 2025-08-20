@@ -3,7 +3,6 @@
 #include <libdragon.h> // only included for debugf
 #include <sys/stat.h>
 #include "utils/utils.h"
-#include "path.h"
 
 
 #define MAX_FILE_SIZE KiB(128)
@@ -266,12 +265,9 @@ void load_cheats_from_file(char *path) {
 
 void save_cheats_to_file(char *path) {
 
-    path_t *rom_datel_filepath = path_create(path);
-    path_ext_replace(rom_datel_filepath, "datel.txt");
-
-    FILE *f = fopen(path_get(rom_datel_filepath), "w");
+    FILE *f = fopen(path, "w");
     if (!f) {
-        debugf("Cheat Editor: Failed to open file for writing: %s\n", path_get(rom_datel_filepath));
+        debugf("Cheat Editor: Failed to open file for writing: %s\n", path);
         return;
     }
 
@@ -287,7 +283,6 @@ void save_cheats_to_file(char *path) {
     }
 
     fclose(f);
-    debugf("Cheat Editor: Cheats saved to %s.\n", path_get(rom_datel_filepath));
-    path_free(rom_datel_filepath);
+    debugf("Cheat Editor: Cheats saved to %s.\n", path);
 
 }

@@ -19,8 +19,7 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 Caveats:
 - Requires an Expansion Pak to work.
 - Codes that require a button to pressed are not yet supported (TODO: possible with the SC64, requires hook).
-- `DE` enable codes for dealing with CICs that change the entrypoint are not yet supported.
-- Games that were developed using the libDragon SDK are not yet supported.
+- Games that were developed using later versions of the libDragon SDK are not supported and are currently incompatible due to ipl3 clearing RDRAM.
 - The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM (especially with game ROM's that use an Expansion Pak), exceeding them may cause unwanted side effects.
  - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 34 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
 - The cheat engine is subtly different from an actual GameShark and ED64 implementation so working enable and cheat codes may vary.
@@ -32,7 +31,7 @@ Ensure you have a cheat file and have accessed the Datel Code Editor screen, the
 When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adjust the cheat codes as needed then press `A` to `Apply ROM with these cheats`.
 
 > [!WARNING]
-> Any changes made in the code editor are totally volitile (i.e. not saved for when returning to the current screen).
+> Any changes made in the code editor are totally volatile (i.e. not saved when returning to the current screen). Press `L|Z` to save them.
 
 
 #### Datel Cheat Files
@@ -44,7 +43,7 @@ Cheat files should be contained in the same directory as the ROM, but with the f
 The files use the following content format (as aligned to text files made popular by the ED64):
 (one cheat per line).
 - An 8 character address, followed by a space, and then a 4 character value.
-- An optional description can be added after the value (with a preceeding space).
+- An optional description can be added after the value (with a preceding space).
 
 > [!TIP]
 > All codes in the file will be presumed active by default. Use the Datel Code Editor to disable them.
@@ -74,13 +73,32 @@ e.g. For Super Mario 64:
 8020770C 00FF 120 stars part 4
 ```
 
+e.g. For Paper Mario
+```
+F106D650 2400 Enable Code (Must Be On)
+8110DD9C 03E7 Infinite Max Coins 
+50000601 0000 Infinite Max HP + FP 
+8010DD91 0063
+8110E01E 0007 Have All Star Spirits 
+8010DD99 0063 Max Level 
+8010DDA0 0063 Max Star Points 
+8010DD98 007F Max Badge Points 
+8010DD9F 00A0 Max Star Pieces
+8010E0BD 00A0
+50000C08 0000 Have All Members in your party
+8010DDAC 0001
+8010DD91 0002 Have Hammer (Level 3)
+8010DD90 0002 Have Jump Boots (Level 3)
+8010DDA0 0000 No Star Points (0) (If Games hangs at level up, enable this cheat and don't disable it whatsoever!)
+D0071337 0020 Press L Button  For Moon Jump
+8010DAF4 0043
+8110E020 0707 Infinite Star Power
+```
 
 ### Current community reported issues
 These issues have been reported as differences when comparing a real GS device (or proved working on an ED64):
- - Exceeding 12 cheats in Majoras Mask will cause issues (Find better Enable Code?!).
- - Exceeding 15 cheats in DK64 will cause issues (Find better Enable Code?!).
- - Paper Mario cheats do not work.
- - WWF No Mercy (Rev 1) hangs at a black screen.
- - Xeno Crises cheats do not work, unless you increase each address by 0x01 (see https://github.com/Polprzewodnikowy/N64FlashcartMenu/pull/256#discussion_r2260752613).
- - F-Zero X (with and without the 64DD Expansion Kit) cheats do not work.
+ - Exceeding 12 cheats in Majoras Mask will cause issues (Requires better Enable Code?!).
+ - Exceeding 15 cheats in DK64 will cause issues (Requires better Enable Code?!).
+ - F-Zero X when using the DD expansion kit (due to unloading of cheats).
+ - Xeno Crises cheats do not work (this game was based on later versions of libDragon and is incompatible due to ipl3 clearing RDRAM).
  - AeroGauge (EUR) no damage hangs the game on impact.

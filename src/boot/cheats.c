@@ -98,7 +98,7 @@ static bool cheats_patch_ipl3 (cic_type_t cic_type, io32_t *target) {
     switch (cic_type) {
     case CIC_5101: patch_offset = 476; break;
     case CIC_6101:
-    case CIC_7102: patch_offset = 476; break;
+    case CIC_7102: patch_offset = 466; break;
     case CIC_x102: patch_offset = 475; break;
     case CIC_x103: patch_offset = 472; break;
     case CIC_x105: patch_offset = 499; break;

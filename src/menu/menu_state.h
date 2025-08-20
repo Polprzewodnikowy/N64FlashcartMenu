@@ -48,15 +48,18 @@ typedef enum {
 /** @brief File entry type enumeration */
 typedef enum {
     ENTRY_TYPE_DIR,
-    ENTRY_TYPE_ROM,
     ENTRY_TYPE_DISK,
     ENTRY_TYPE_ROM_PATCH,
     ENTRY_TYPE_EMULATOR,
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_IMAGE,
     ENTRY_TYPE_MUSIC,
-    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_OTHER,
+    ENTRY_TYPE_ROM,
+    ENTRY_TYPE_ROM_CHEAT,
+    ENTRY_TYPE_ROM_PATCH,
+    ENTRY_TYPE_SAVE,
+    ENTRY_TYPE_TEXT
 } entry_type_t;
 
 /** @brief File Entry Structure */

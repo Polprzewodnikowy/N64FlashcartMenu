@@ -208,7 +208,7 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
 
         menu->load.rom_path = path_clone(rom_path);
 
-        rom_err_t err = rom_info_load(rom_path, &menu->load.rom_info);
+        rom_err_t err = rom_config_load(rom_path, &menu->load.rom_info);
         if (err != ROM_OK) {
             path_free(menu->load.rom_path);
             menu->load.rom_path = NULL;

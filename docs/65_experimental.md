@@ -36,13 +36,6 @@ esrb_age_rating=2
 Note: [PEGI](https://pegi.info/) support may be added as an option at a later date.
 In future, this can be of use for content filtering.
 
-#### ROM description
-
-```ini
-[metadata]
-description=This is the ROM description that does X Y Z.
-```
-Text files must use ASCII characters only, Linux `LF` endings (CRLF is not yet supported) and the descriptions themselves must be limited to 2000 characters (currently only the first 300 characters are shown).
 
 ### Customizing the font
 The N64FlashcartMenu allows the ability to test new fonts or adding regional characters without recompiling the menu. However the font is explicitly linked to the currently used version of the libdragon SDK.  

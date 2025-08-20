@@ -37,6 +37,14 @@ static const char *hidden_root_paths[] = {
     "/.Trashes",
     "/.VolumeIcon.icns",
     "/.metadata_never_index",
+    // Linux garbage
+    "/lost+found",
+    "/.Trash-1000",
+    "/.Trash",
+    "/.cache",
+    "/.config",
+    "/.local",
+    "/.fuse_hidden*",
     NULL,
 };
 

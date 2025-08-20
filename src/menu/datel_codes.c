@@ -3,6 +3,7 @@
 #include <libdragon.h> // only included for debugf
 #include <sys/stat.h>
 #include "utils/utils.h"
+#include "path.h"
 
 
 #define MAX_FILE_SIZE KiB(128)
@@ -263,16 +264,30 @@ void load_cheats_from_file(char *path) {
     }
 }
 
-void save_cheats_to_file(char *path) { // cheats_file_code_t *cheats
+void save_cheats_to_file(char *path) {
 
-    // This function should save the cheat codes to a file.
-    // For now, we will just print them to the debug log.
-    debugf("Cheat Editor: Saving cheats to path %s (not implemented yet).\n", path);
+    path_t *rom_datel_filepath = path_create(path);
+    path_ext_replace(rom_datel_filepath, "datel.txt");
 
-    // cheat_file_load_err_t res_file_open = open_cheat_file(path_get(rom_datel_filepath));
-    
-    // TODO: save file here (overwriting all lines).
+    FILE *f = fopen(path_get(rom_datel_filepath), "w");
+    if (!f) {
+        debugf("Cheat Editor: Failed to open file for writing: %s\n", path_get(rom_datel_filepath));
+        return;
+    }
 
+    for (int i = 0; i < MAX_CHEAT_CODES; ++i) {
+        cheat_file_code_t *code = &cheat_codes[i];
 
-    // deinit_cheat_file();
+        if (code->description[0] != '\0') {
+            fprintf(f, "%08lX %04X %s\n", code->address, code->value, code->description);
+        } else {
+            fprintf(f, "%08lX %04X\n", code->address, code->value);
+        }
+
+    }
+
+    fclose(f);
+    debugf("Cheat Editor: Cheats saved to %s.\n", path_get(rom_datel_filepath));
+    path_free(rom_datel_filepath);
+
 }

@@ -273,13 +273,13 @@ void save_cheats_to_file(char *path) {
 
     for (int i = 0; i < MAX_CHEAT_CODES; ++i) {
         cheat_file_code_t *code = &cheat_codes[i];
-
-        if (code->description[0] != '\0') {
-            fprintf(f, "%08lX %04X %s\n", code->address, code->value, code->description);
-        } else {
-            fprintf(f, "%08lX %04X\n", code->address, code->value);
+        if (code->address != 0) { //code->enabled && 
+            if (code->description[0] != '\0') {
+                fprintf(f, "%08lX %04X %s\n", code->address, code->value, code->description);
+            } else {
+                fprintf(f, "%08lX %04X\n", code->address, code->value);
+            }
         }
-
     }
 
     fclose(f);

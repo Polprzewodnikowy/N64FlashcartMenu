@@ -229,33 +229,22 @@ void view_load_disk_init (menu_t *menu) {
     menu->boot_pending.disk_file = false;
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
-        int id = -1;
         bookkeeping_item_t* items;
+        int item_id = -1;
 
         if(menu->load.load_history_id != -1) {
-            id = menu->load.load_history_id;
+            item_id = menu->load.load_history_id;
             items = menu->bookkeeping.history_items;
         } else if (menu->load.load_favorite_id != -1) {
-            id = menu->load.load_favorite_id;
+            item_id = menu->load.load_favorite_id;
             items = menu->bookkeeping.favorite_items;
         }
 
-        /* reset once */
-        menu->load.load_history_id = -1;
-        menu->load.load_favorite_id = -1;
+        // menu->load.load_history_id = -1;
+        // menu->load.load_favorite_id = -1;
 
-        if (id < 0 || id >= max) {
-            menu_show_error(menu, "Invalid selection index");
-            return;
-        }
-        if (items[id].bookkeeping_type == BOOKKEEPING_TYPE_EMPTY
-         || !path_has_value(items[id].primary_path)) {
-            menu_show_error(menu, "Selected item is empty or has no disk path");
-            return;
-        }
-
-        menu->load.disk_path = path_clone(items[id].primary_path);
-        if(!load_rom(menu, items[id].secondary_path)) {
+        menu->load.disk_path = path_clone(items[item_id].primary_path);
+        if(!load_rom(menu, items[item_id].secondary_path)) {
             // existing code: uses convert_error_message(err)
             // TODO: use rom_config_convert_error_message(err) instead.
             return;
@@ -264,6 +253,9 @@ void view_load_disk_init (menu_t *menu) {
     } else {
         menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
     }
+
+    // menu->load.load_favorite_id = -1;
+    // menu->load.load_history_id = -1;
 
     disk_filename = path_last_get(menu->load.disk_path);
     disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);

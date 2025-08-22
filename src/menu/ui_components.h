@@ -269,7 +269,7 @@ void ui_components_boxart_draw(component_boxart_t *b);
  * @param selected Index of the selected tab.
  * @param width Width of the tabs.
  */
-void ui_components_tabs_draw(const char **text, int count, int selected, float width );
+void ui_components_tabs_draw(const char **text, int count, int selected, float width);
 
 /**
  * @brief Draw the common part of the tabs component.

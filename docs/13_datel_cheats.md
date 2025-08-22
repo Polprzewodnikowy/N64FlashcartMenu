@@ -100,5 +100,5 @@ These issues have been reported as differences when comparing a real GS device (
  - Exceeding 12 cheats in Majoras Mask will cause issues (Requires better Enable Code?!).
  - Exceeding 15 cheats in DK64 will cause issues (Requires better Enable Code?!).
  - F-Zero X when using the DD expansion kit (due to unloading of cheats).
- - Xeno Crises cheats do not work (this game was based on later versions of libDragon and is incompatible due to ipl3 clearing RDRAM).
+ - Xeno Crisis cheats do not work (this game was based on later versions of libDragon and is incompatible due to ipl3 clearing RDRAM).
  - AeroGauge (EUR) no damage hangs the game on impact.

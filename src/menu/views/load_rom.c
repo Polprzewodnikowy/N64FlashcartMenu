@@ -1,15 +1,17 @@
+#include "../bookkeeping.h"
 #include "../cart_load.h"
 #include "../rom_info.h"
-#include "boot/boot.h"
 #include "../sound.h"
+#include "boot/boot.h"
+#include "utils/fs.h"
 #include "views.h"
 #include <string.h>
-#include "utils/fs.h"
-#include "../bookkeeping.h"
+
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
+
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -257,10 +259,10 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
 #ifdef FEATURE_CHEATS_GUI_ENABLED
-{ .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+    { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
 #endif
 #ifdef FEATURE_PATCHER_GUI_ENABLED
-{ .text = "Use Patches", .submenu = &set_patcher_options_menu },
+    { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -403,6 +405,7 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
+    debugf("Load ROM: load function called\n");
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
@@ -448,10 +451,10 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        if(menu->load.load_history != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
-        } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
+        if(menu->load.load_history_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);
+        } else if(menu->load.load_favorite_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite_id].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
@@ -465,9 +468,7 @@ void view_load_rom_init (menu_t *menu) {
         show_extra_info_message = false;
     }
 
-    menu->load.load_favorite = -1;
-    menu->load.load_history = -1;
-
+    debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
@@ -496,6 +497,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
     }
 
     if (menu->next_mode != MENU_MODE_LOAD_ROM) {
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
         deinit();
     }
 }

@@ -213,9 +213,6 @@ void cheat_file_open_res_debug(cheat_file_load_err_t res) {
 
 void load_cheats_from_file(char *path) {
 
-    // We should be loading the cheat codes from a file here.
-    // but only if the file exists. and its content is not zero.
-
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
 
     set_cheat_codes(NULL);
@@ -231,8 +228,8 @@ void load_cheats_from_file(char *path) {
         char *token = strtok_r(line, "\n", &saveptr);
 
         while (token && code_count < MAX_CHEAT_CODES) {
-            // Skip empty lines
-            if (token[0] != '\0') {
+            // Skip empty lines and comment lines
+            if (token[0] != '\0' && token[0] != '#' && token[0] != ';') {
                 parse_cheat_code_string(&cheat_codes[code_count], token);
                 code_count++;
             }
@@ -246,7 +243,7 @@ void load_cheats_from_file(char *path) {
 
         set_cheat_codes(cheat_codes);
 
-        deinit_cheat_file(); // TODO: should we keep the cheat_file_text open for save operations?
+        deinit_cheat_file();
 
         // --DEBUG CODE
         uint32_t cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
@@ -259,7 +256,6 @@ void load_cheats_from_file(char *path) {
         cheat_file_open_res_debug(res_file_open);
         set_cheat_codes(NULL);
         deinit_cheat_file();
-
     }
 }
 

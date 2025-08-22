@@ -13,25 +13,21 @@ built from latest commit on main branch.
 	- Added ability to reset the menu setting to default from the menu UI.
 	- Shows info message within the loading progress bar.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
-	- Add Alpha FEATURE_CHEATS_GUI_ENABLED (build flag to enable it)
-	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it)
-
+	- Add Alpha Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
+	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
 
 - **Bug Fixes**
 	- Fix ability to set the RTC via menu (Hotfixed in last release).
 	- Fix Game ID (used by PixelFX HDMI mods) sent over Joybus is not working (Hotfixed in last release).
 	- Fix GB / GBC emulator not saving in certain circumstances (Hotfixed in last release).
-	- Fix reset value of FCR31 to the boot value (0) (Hotfixed in last release).
+	- Fix issue with emulation of cold boot, as otherwise the FPU might start in an unexpected state.
 	- Fix missing enum case for 1 Mbit SRAM saves (Hotfixed in last release).
-
-
 
 - **Documentation**
 	- Improved Emulator information for known working NES emulator version.
 	- Updated experimental features to reflect feature change.
 	- Added sounds documentation.
 	- Updated autoload to reflect feature change.
-
 
 - **Refactor**
 	- Improve tab navigation by using any left/right control input and add cursor SFX.

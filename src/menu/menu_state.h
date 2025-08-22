@@ -109,8 +109,8 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
-        int load_history;
-        int load_favorite;
+        int load_history_id;
+        int load_favorite_id;
         bool combined_disk_rom;
     } load;
 

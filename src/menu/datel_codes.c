@@ -87,12 +87,12 @@ void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
         if (parsed == 3) {
             code->address = strtoul(address_str, NULL, 16);
             code->value = (uint16_t)strtoul(value_str, NULL, 16);
-            code->enabled = true; // Assuming the code is enabled by default
+            code->enabled = (code->address != 0); // Enable only if address is not zero
             populate_cheat_code_description(code, description);
         } else if (parsed == 2) {
             code->address = strtoul(address_str, NULL, 16);
             code->value = (uint16_t)strtoul(value_str, NULL, 16);
-            code->enabled = true;
+            code->enabled = (code->address != 0); // Enable only if address is not zero
             code->description[0] = '\0'; // No description provided
         } else {
             debugf("Failed to parse cheat code string: %s\n", code_str);

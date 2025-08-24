@@ -19,9 +19,10 @@ Another product by Blaze, called the Xploder64/Xplorer64 also existed in some re
 Caveats:
 - Requires an Expansion Pak to work.
 - Codes that require a button to pressed are not yet supported (TODO: possible with the SC64, requires hook).
+- `DE` codes are ignored.
 - Games that were developed using later versions of the libDragon SDK are not supported and are currently incompatible due to ipl3 clearing RDRAM.
 - The maximum number of cheat codes that will work is dependent on the available space in the N64 RAM (especially with game ROM's that use an Expansion Pak), exceeding them may cause unwanted side effects.
- - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 34 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
+ - Whilst an experimental feature, the UI is currently hardcoded to limit the amount of codes to 64 (keeping it low allows us to collect caveats). This will be increased once enough feedback is collected.
 - The cheat engine is subtly different from an actual GameShark and ED64 implementation so working enable and cheat codes may vary.
 
 ### Enable Cheats

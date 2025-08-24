@@ -12,9 +12,9 @@
 #include <stddef.h>
 
 // The maximum number of cheat codes to support is dependent on the available space in the N64 RAM.
-// However, for simplicity, we will hardcode it to 34 for now, as per suggested support on the Krikzz ED64x5-7,
-// as this is the number of codes currently supported by most games (keeping it low allows us to collect caveats).
-#define MAX_CHEAT_CODES (34) // Maximum number of cheat codes to support. This can be changed later if needed.
+// However, for simplicity, we will hardcode it to 64 for now, as this number of codes should handle most games (keeping it low allows us to collect caveats).
+// The Krikzz official menu only supports upto 34 codes, so this is already an improvement.
+#define MAX_CHEAT_CODES (64) // Maximum number of cheat codes to support. This can be changed later if needed.
 #define MAX_CHEAT_CODE_ARRAYLIST_SIZE (MAX_CHEAT_CODES * 2 + 2) // Maximum size of the cheat code list (address/value pairs + two trailing zeros)
 
 /** @brief Cheat file code Structure. */

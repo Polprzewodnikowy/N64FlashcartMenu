@@ -1,15 +1,18 @@
+#include "../bookkeeping.h"
 #include "../cart_load.h"
+#include "../datel_codes.h"
 #include "../rom_info.h"
-#include "boot/boot.h"
 #include "../sound.h"
+#include "boot/boot.h"
+#include "utils/fs.h"
 #include "views.h"
 #include <string.h>
-#include "utils/fs.h"
-#include "../bookkeeping.h"
+
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
+
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -175,13 +178,19 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 #endif
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 static void set_cheat_option(menu_t *menu, void *arg) {
-    bool enabled = (bool)arg;
-    rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
-    menu->browser.reload = true;
+    debugf("Load Rom: setting cheat option to %d\n", (int)arg);
+    if (!is_memory_expanded()) {
+        // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu->browser.reload = true;
+    }
+    else {
+        bool enabled = (bool)arg;
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
+        menu->browser.reload = true;
+    }
 }
-#endif
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 static void set_patcher_option(menu_t *menu, void *arg) {
@@ -233,13 +242,11 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 static component_context_menu_t set_cheat_options_menu = { .list = {
     { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
     { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
-#endif
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 static component_context_menu_t set_patcher_options_menu = { .list = {
@@ -249,6 +256,11 @@ static component_context_menu_t set_patcher_options_menu = { .list = {
 }};
 #endif
 
+static void set_menu_next_mode (menu_t *menu, void *arg) {
+    menu_mode_t next_mode = (menu_mode_t) (arg);
+    menu->next_mode = next_mode;
+}
+
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
@@ -256,11 +268,10 @@ static component_context_menu_t options_context_menu = { .list = {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
-#ifdef FEATURE_CHEATS_GUI_ENABLED
-{ .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-#endif
+    { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_DATEL_CODE_EDITOR) },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
-{ .text = "Use Patches", .submenu = &set_patcher_options_menu },
+    { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -403,6 +414,7 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
+    debugf("Load ROM: load function called\n");
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
@@ -431,7 +443,34 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
-    menu->boot_params->cheat_list = NULL;
+
+    // Handle cheat codes only if Expansion Pak is present and cheats are enabled
+    if (is_memory_expanded() && menu->load.rom_info.settings.cheats_enabled) {
+        uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+        size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
+
+        if (cheat_item_count > 2) { // account for at least one valid cheat code (address and value), excluding the last two 0s
+            // Allocate memory for the cheats array
+            uint32_t *cheats = malloc(cheat_item_count * sizeof(uint32_t));
+            if (cheats) {
+                memcpy(cheats, tmp_cheats, cheat_item_count * sizeof(uint32_t));
+                for (size_t i = 0; i + 1 < cheat_item_count; i += 2) {
+                    debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
+                }
+                debugf("Cheats enabled, %u cheats found\n", cheat_item_count / 2);
+                menu->boot_params->cheat_list = cheats;
+            } else {
+                debugf("Failed to allocate memory for cheat list\n");
+                menu->boot_params->cheat_list = NULL;
+            }
+        } else {
+            debugf("Cheats enabled, but no cheats found\n");
+            menu->boot_params->cheat_list = NULL;
+        }
+    } else {
+        debugf("Cheats disabled or Expansion Pak not present\n");
+        menu->boot_params->cheat_list = NULL;
+    }
 }
 
 static void deinit (void) {
@@ -448,10 +487,10 @@ void view_load_rom_init (menu_t *menu) {
             path_free(menu->load.rom_path);
         }
 
-        if(menu->load.load_history != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
-        } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
+        if(menu->load.load_history_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);
+        } else if(menu->load.load_favorite_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite_id].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
@@ -465,9 +504,7 @@ void view_load_rom_init (menu_t *menu) {
         show_extra_info_message = false;
     }
 
-    menu->load.load_favorite = -1;
-    menu->load.load_history = -1;
-
+    debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
@@ -483,6 +520,7 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif
+
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
@@ -495,7 +533,9 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
         load(menu);
     }
 
-    if (menu->next_mode != MENU_MODE_LOAD_ROM) {
+    if (menu->next_mode != MENU_MODE_LOAD_ROM && menu->next_mode != MENU_MODE_DATEL_CODE_EDITOR) {
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
         deinit();
     }
 }

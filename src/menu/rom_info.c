@@ -800,7 +800,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
     path_free(rom_info_path);
 }
 
-static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *id, int value, int default_value) {
+static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type, const char *id, int value, int default_value) {
     path_t *rom_info_path = path_clone(path);
 
     path_ext_replace(rom_info_path, "ini");
@@ -815,9 +815,9 @@ static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *id, 
     int mini_err;
 
     if (value == default_value) {
-        mini_err = mini_delete_value(rom_config_ini, "custom_boot", id);
+        mini_err = mini_delete_value(rom_config_ini, type, id);
     } else {
-        mini_err = mini_set_int(rom_config_ini, "custom_boot", id, value);
+        mini_err = mini_set_int(rom_config_ini, type, id, value);
     }
 
     if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
@@ -888,7 +888,7 @@ rom_err_t rom_config_override_cic_type (path_t *path, rom_info_t *rom_info, rom_
     rom_info->boot_override.cic = (cic_type != ROM_CIC_TYPE_AUTOMATIC);
     rom_info->boot_override.cic_type = cic_type;
 
-    return save_rom_config_setting_to_file(path, "cic_type", rom_info->boot_override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "custom_boot", "cic_type", rom_info->boot_override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
 }
 
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
@@ -903,7 +903,7 @@ rom_err_t rom_config_override_save_type (path_t *path, rom_info_t *rom_info, rom
     rom_info->boot_override.save = (save_type != SAVE_TYPE_AUTOMATIC);
     rom_info->boot_override.save_type = save_type;
 
-    return save_rom_config_setting_to_file(path, "save_type", rom_info->boot_override.save_type, SAVE_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "custom_boot", "save_type", rom_info->boot_override.save_type, SAVE_TYPE_AUTOMATIC);
 }
 
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
@@ -918,20 +918,18 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
     rom_info->boot_override.tv = (tv_type != ROM_TV_TYPE_AUTOMATIC);
     rom_info->boot_override.tv_type = tv_type;
 
-    return save_rom_config_setting_to_file(path, "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
+    return save_rom_config_setting_to_file(path, "custom_boot", "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
-    return save_rom_config_setting_to_file(path, "cheats_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, NULL, "cheats_enabled", enabled, false);
 }
-#endif
 
 #ifdef FEATURE_PATCHES_GUI_ENABLED
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.patches_enabled = enabled;
-    return save_rom_config_setting_to_file(path, "patches_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, NULL, "patches_enabled", enabled, false);
 }
 #endif
 

@@ -133,7 +133,7 @@ cheat_file_load_err_t open_cheat_file(char *path) {
         return CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL;
     }
 
-    cheat_file_text->f = fopen(path, "r+");
+    cheat_file_text->f = fopen(path, "r");
 
     if (cheat_file_text->f == NULL) {
         deinit_cheat_file();

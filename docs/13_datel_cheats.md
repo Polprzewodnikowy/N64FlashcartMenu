@@ -46,16 +46,16 @@ The files use the following content format (as aligned to text files made popula
 - An 8 character address, followed by a space, and then a 4 character value.
 - An optional description can be added after the value (with a preceding space).
 - A line that starts with `#` or `;` or `//` will be ignored as a comment (though will be lost if saved from the editor).
-- A line that starts with `: ` and contains a valid cheat after will be loaded, but disabled.
+- A line that starts with `:` (followed by a space) and then a valid cheat will be loaded, but disabled.
 
 > [!TIP]
-> All codes in the file will be presumed active by default. Use the Datel Code Editor to disable them.
+> All codes in the file are active by default. Use the Datel Code Editor to disable individual cheats (or prefix the line with `:` (followed by a space) in the file).
 
 > [!WARNING]
 > Incorrectly formatted files may cause unknown side effects.
 
 e.g. For Majoras Mask (USA):
-```
+```text
 F1096820 2400 Activator
 FF000220 0000
 811F05AA FFFF Complete Bomber's Notebook
@@ -68,7 +68,7 @@ FF000220 0000
 ```
 
 e.g. For Super Mario 64:
-```
+```text
 8033B21D 0064 Super mario 64 infinite lives
 80207723 0001 120 stars part 1
 8020770B 00C7 120 stars part 2
@@ -77,7 +77,7 @@ e.g. For Super Mario 64:
 ```
 
 e.g. For Paper Mario
-```
+```text
 F106D650 2400 Enable Code (Must Be On)
 8110DD9C 03E7 Infinite Max Coins 
 50000601 0000 Infinite Max HP + FP 

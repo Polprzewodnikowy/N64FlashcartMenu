@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include "datel_codes.h"
 #include <string.h>
 #include <libdragon.h> // only included for debugf
@@ -80,24 +81,23 @@ void populate_cheat_code_description(cheat_file_code_t *code, const char *descri
  */
 void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
     if (code && code_str) {
-        char address_str[10];
-        char value_str[6];
+        unsigned int addr = 0, val = 0;
         char description[32] = {0};
-        int parsed = sscanf(code_str, "%9s %5s %31[^\n]", address_str, value_str, description);
+        int parsed = sscanf(code_str, " %x %x %31[^\n]", &addr, &val, description);
         if (parsed == 3) {
-            code->address = strtoul(address_str, NULL, 16);
-            code->value = (uint16_t)strtoul(value_str, NULL, 16);
-            code->enabled = (code->address != 0); // Enable only if address is not zero
+            code->address = (uint32_t)addr;
+            code->value   = (uint32_t)val;
+            code->enabled = true;
             populate_cheat_code_description(code, description);
         } else if (parsed == 2) {
-            code->address = strtoul(address_str, NULL, 16);
-            code->value = (uint16_t)strtoul(value_str, NULL, 16);
-            code->enabled = (code->address != 0); // Enable only if address is not zero
-            code->description[0] = '\0'; // No description provided
+            code->address = (uint32_t)addr;
+            code->value   = (uint32_t)val;
+            code->enabled = true;
+            code->description[0] = '\0';
         } else {
             debugf("Failed to parse cheat code string: %s\n", code_str);
             code->address = 0;
-            code->value = 0;
+            code->value   = 0;
             code->enabled = false;
             code->description[0] = '\0'; // Clear description
         }
@@ -105,7 +105,7 @@ void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
         debugf("Invalid cheat code or code string provided.\n");
         if (code) {
             code->address = 0;
-            code->value = 0;
+            code->value   = 0;
             code->enabled = false;
             code->description[0] = '\0'; // Clear description
         }
@@ -228,10 +228,26 @@ void load_cheats_from_file(char *path) {
         char *token = strtok_r(line, "\n", &saveptr);
 
         while (token && code_count < MAX_CHEAT_CODES) {
-            // Skip empty lines and comment lines
-            if (token[0] != '\0' && token[0] != '#' && token[0] != ';') {
-                parse_cheat_code_string(&cheat_codes[code_count], token);
-                code_count++;
+            // Trim leading whitespace
+            char *p = token;
+            while (*p && isspace((unsigned char)*p)) p++;
+            bool disabled = false;
+            // ": " prefix means disabled code; still parse the code after the marker
+            if (*p == ':') {
+                disabled = true;
+                p++;
+                while (*p && isspace((unsigned char)*p)) p++;
+            }
+            // Skip empty or comment-only lines (#, ;, or //)
+            if (*p && !(p[0] == '#' || p[0] == ';' || (p[0] == '/' && p[1] == '/'))) {
+                parse_cheat_code_string(&cheat_codes[code_count], p);
+                bool parsed_ok = (cheat_codes[code_count].address != 0)
+                              || (cheat_codes[code_count].value   != 0);
+                if (parsed_ok) {
+                    if (disabled) 
+                        cheat_codes[code_count].enabled = false;
+                    code_count++;
+                }
             }
             token = strtok_r(NULL, "\n", &saveptr);
         }
@@ -269,7 +285,10 @@ void save_cheats_to_file(char *path) {
 
     for (int i = 0; i < MAX_CHEAT_CODES; ++i) {
         cheat_file_code_t *code = &cheat_codes[i];
-        if (code->address != 0) { //code->enabled && 
+        if (code->address != 0) { //code->enabled &&
+            if (!code->enabled) {
+                fprintf(f, ": ");
+            } 
             if (code->description[0] != '\0') {
                 fprintf(f, "%08lX %04X %s\n", code->address, code->value, code->description);
             } else {

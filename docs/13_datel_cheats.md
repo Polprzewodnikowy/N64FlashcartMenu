@@ -45,7 +45,8 @@ The files use the following content format (as aligned to text files made popula
 (one cheat per line).
 - An 8 character address, followed by a space, and then a 4 character value.
 - An optional description can be added after the value (with a preceding space).
-- A line that starts with `#` or `;` will be ignored as a comment (though will be lost if saved from the editor).
+- A line that starts with `#` or `;` or `//` will be ignored as a comment (though will be lost if saved from the editor).
+- A line that starts with `: ` and contains a valid cheat after will be loaded, but disabled.
 
 > [!TIP]
 > All codes in the file will be presumed active by default. Use the Datel Code Editor to disable them.

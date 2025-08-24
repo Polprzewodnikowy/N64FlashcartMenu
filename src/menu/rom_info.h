@@ -252,7 +252,6 @@ rom_tv_type_t rom_info_get_tv_type(rom_info_t *rom_info);
  */
 rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
 
-#ifdef FEATURE_CHEATS_GUI_ENABLED
 /**
  * @brief Set the cheats setting for the ROM.
  * 
@@ -262,7 +261,6 @@ rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv
  * @return rom_err_t Error code
  */
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
-#endif // FEATURE_CHEATS_GUI_ENABLED
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 /**

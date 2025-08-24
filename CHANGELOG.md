@@ -31,7 +31,6 @@ built from latest commit on main branch.
 
 - **Refactor**
 	- Improve tab navigation by using any left/right control input and add cursor SFX.
-	- Improve ROM description metadata loading (it is now able to load stings with upto 1000 chars, but still only displays the first 300).
 	- Add ability for font style to be used in ui_components_main_text_draw and ui_components_actions_bar_text_draw.
 
 - **Other**

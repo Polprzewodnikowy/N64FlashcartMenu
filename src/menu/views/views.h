@@ -286,6 +286,21 @@ void view_history_init(menu_t *menu);
 void view_history_display(menu_t *menu, surface_t *display);
 
 /**
+ * @brief Initialize the cheats editor view.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
+void view_datel_code_editor_init(menu_t *menu);
+
+/**
+ * @brief Display the cheats editor view.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_datel_code_editor_display(menu_t *menu, surface_t *display);
+
+/**
  * @brief Show an error message in the menu.
  * 
  * @param menu Pointer to the menu structure.

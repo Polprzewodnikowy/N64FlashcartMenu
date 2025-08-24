@@ -40,7 +40,8 @@ typedef enum {
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
     MENU_MODE_FAVORITE,
-    MENU_MODE_HISTORY
+    MENU_MODE_HISTORY,
+    MENU_MODE_DATEL_CODE_EDITOR
 } menu_mode_t;
 
 /** @brief File entry type enumeration */

@@ -43,6 +43,7 @@ SRCS = \
 	menu/actions.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
+	menu/datel_codes.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -62,6 +63,7 @@ SRCS = \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
+	menu/views/datel_code_editor.c \
 	menu/views/error.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \

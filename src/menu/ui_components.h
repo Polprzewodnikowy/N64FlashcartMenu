@@ -36,8 +36,8 @@ typedef enum {
  * Enumeration for different types of sprites used in the user interface.
  */
 typedef enum {
-    SPRITE_BOXART_DEFAULT,        /**< Default background sprite */
-    SPRITE_BACKGROUND_DEFAULT,    /**< Default boxart sprite */
+    SPRITE_BOXART_DEFAULT,        /**< Default boxart sprite */
+    SPRITE_BACKGROUND_DEFAULT,    /**< Default background sprite */
     SPRITE_LIST_END               /**< List end marker */
 } sprite_type_t;
 

@@ -5,6 +5,7 @@
 #include "../sound.h"
 #include "../fonts.h"
 #include <fatfs/ff.h>
+#include <errno.h>
 
 #define WAITING_TIME 0
 #define u8 unsigned char
@@ -417,6 +418,7 @@ static void draw (menu_t *menu, surface_t *d) {
             
             if (ctr_p_data_loop == false) {
                 free_space_cpak = get_mempak_free_space(controller_selected);
+                int errno_value = errno; // Save the current errno value
 
                 free_controller_pak_name_notes();
 
@@ -455,7 +457,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "CONTROLLER PAK MANAGEMENT\n"
+        "CONTROLLER PAK MANAGEMENT\n", errno
     );
 
     ui_components_main_text_draw(STL_DEFAULT,

@@ -42,7 +42,8 @@ typedef enum {
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
     MENU_MODE_FAVORITE,
-    MENU_MODE_HISTORY
+    MENU_MODE_HISTORY,
+    MENU_MODE_DATEL_CODE_EDITOR
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -115,8 +116,8 @@ typedef struct {
         disk_info_t disk_info;
         path_t *rom_patch_path;
         rom_patch_info_t rom_patch_info;
-        int load_history;
-        int load_favorite;
+        int load_history_id;
+        int load_favorite_id;
         bool combined_disk_rom;
     } load;
 

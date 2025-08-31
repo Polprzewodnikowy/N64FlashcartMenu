@@ -18,6 +18,7 @@
 static bool use_rtc;
 static rtc_time_t rtc_time;
 static char string_datetime_cpak[26];
+static char failure_message_note[255];
 
 static short controller_selected;
 static bool has_mem;
@@ -26,6 +27,12 @@ static bool unmounted;
 static bool ctr_p_data_loop;
 static cpakfs_stats_t cpakfs_stats;
 static dir_t dir_entry;
+
+static bool process_complete_full_dump;
+static bool process_complete_note_dump;
+static bool process_complete_format;
+static bool process_complete_delete;
+static bool error_message_displayed;
 
 static char controller_pak_name_notes[MAX_NUM_NOTES][MAX_STRING_LENGTH];
 static char controller_pak_name_notes_bank_size[MAX_NUM_NOTES][13]; // (XXX blocks) = 12 chars + \0
@@ -58,6 +65,11 @@ static void reset_vars(){
     start_single_note_dump = false;
     start_single_note_delete = false;
     index_selected = 0;
+    process_complete_full_dump = false;
+    process_complete_note_dump = false;
+    process_complete_format = false;
+    process_complete_delete = false;
+    error_message_displayed = false;
 }
 
 static void create_directory(const char *dirpath) {
@@ -113,10 +125,16 @@ static void check_accessories(int controller) {
 }
 
 static void format_controller_pak (menu_t *menu, void *arg) {
-    cpakfs_format(controller_selected, false);
+    sprintf(failure_message_note, " ");
+    int res = cpakfs_format(controller_selected, false);
+    if (res < 0) {
+        sprintf(failure_message_note, "Unable to format controller pak on controller %d!\nError code: %d", controller_selected + 1, res);
+        error_message_displayed = true;
+    }
     reset_vars();
     unmount_all_cpakfs();
     unmounted = true;
+    process_complete_format = true;
 }
 
 static void active_single_note_delete_message(menu_t *menu, void *arg) {
@@ -170,17 +188,20 @@ static void populate_list_cpakfs() {
 }
 
 static void dump_complete_cpak(int _port) {
-
+    sprintf(failure_message_note, " ");
     uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
 
     if (!data) {
         //"Memory allocation failed!"
+        sprintf(failure_message_note, "Memory allocation failed!");
+        error_message_displayed = true;
         return;
     }
     
+    surface_t *d;
     for (int i = 0; i < 128; i++) {
 
-        surface_t *d = display_try_get();
+        d = display_try_get();
         rdpq_attach(d, NULL);
 
         ui_components_layout_draw();
@@ -195,6 +216,8 @@ static void dump_complete_cpak(int _port) {
         if (read_mempak_sector(_port, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
             //debugf("Failed to read mempak sector %d\n", i);
             free(data);
+            sprintf(failure_message_note, "Failed to read mempak sector %d", i);
+            error_message_displayed = true;
             return;
         }
 
@@ -222,14 +245,14 @@ static void dump_complete_cpak(int _port) {
     
     fclose(fp);
     free(data);
+    process_complete_full_dump = true;
 }
 
 static void dump_single_note(int _port, unsigned short selected_index) {
     //debugf("dump_single_note called for index %d\n", selected_index);
-
+    sprintf(failure_message_note, " ");
     FILE *fSource, *fDump;
     char filename_note[256];
-    int c;
 
     get_rtc_time(string_datetime_cpak);
 
@@ -239,6 +262,8 @@ static void dump_single_note(int _port, unsigned short selected_index) {
     fSource = fopen(filename_note, "rb");
     if (fSource == NULL) {
         //debugf("Failed to open source file: %s\n", filename_note);
+        sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
+        error_message_displayed = true;
         return;
     }
 
@@ -248,15 +273,44 @@ static void dump_single_note(int _port, unsigned short selected_index) {
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {
         //debugf("Failed to open dump file: %s\n", filename_note);
+        sprintf(failure_message_note, "Unable to create dump file: %s", filename_note);
+        error_message_displayed = true;
         return;
     }
 
-    while ((c = fgetc(fSource)) != EOF)
-    {
-        fputc(c, fDump);
+    surface_t *d = display_try_get();
+    rdpq_attach(d, NULL);
+    
+    ui_components_messagebox_draw(
+        "Which note would you like to dump?\n\n"
+        "Note selected: N.%-2.2d\n\n"
+        "A: Select    B: No\n"
+        "<- / ->: Select note number",
+        index_selected + 1
+    );
+    ui_components_loader_draw(0, "Dumping Controller Pak note...");
+    rdpq_detach_show();
+
+    char buffer[4096];
+    size_t bytesRead;
+
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), fSource)) > 0) {
+        size_t bytesWritten = fwrite(buffer, 1, bytesRead, fDump);
+        if (bytesWritten < bytesRead) {
+            //debugf("Write error while copying to destination!\n");
+            fclose(fSource);
+            fclose(fDump);
+            sprintf(failure_message_note, "Write error while copying to destination!");
+            error_message_displayed = true;
+            return;
+        }
     }
+
+
+
     fclose(fSource);
     fclose(fDump);
+    process_complete_note_dump = true;
 
 }
 
@@ -274,6 +328,7 @@ static bool file_exists(const char *filename)
 
 static void delete_single_note(int _port, unsigned short selected_index) {
     //debugf("delete_single_note called for index %d\n", selected_index);
+    sprintf(failure_message_note, " ");
     char filename_note[256];
 
     sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
@@ -281,6 +336,8 @@ static void delete_single_note(int _port, unsigned short selected_index) {
 
     if (!file_exists(filename_note)) {
         //debugf("File does not exist: %s\n", filename_note);
+        sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
+        error_message_displayed = true;
         return;
     }
 
@@ -290,6 +347,9 @@ static void delete_single_note(int _port, unsigned short selected_index) {
 
     if (file_exists(filename_note)) {
         //debugf("Failed to delete file: %s\n", filename_note);
+        sprintf(failure_message_note, "Failed to delete file: %s", filename_note);
+        error_message_displayed = true;
+        return;
     } else {
         //debugf("File deleted successfully: %s\n", filename_note);
     }       
@@ -297,136 +357,181 @@ static void delete_single_note(int _port, unsigned short selected_index) {
     reset_vars();
     unmount_all_cpakfs();
     unmounted = true;
+    process_complete_delete = true;
+}
+
+static bool is_one_of_process_complete() {
+    return process_complete_full_dump 
+    || process_complete_note_dump 
+    || process_complete_format 
+    || process_complete_delete
+    || error_message_displayed;
 }
 
 
 static void process (menu_t *menu) {
-    if (ui_components_context_menu_process(menu, &options_context_menu)) {
-        return;
-    }
 
-    if (!show_complete_dump_confirm_message && 
-        !show_complete_write_confirm_message && 
-        !show_single_note_dump_confirm_message &&
-        !show_single_note_delete_confirm_message) {
-        if(menu->actions.go_left) {
-            sound_play_effect(SFX_SETTING);
-            controller_selected = ((controller_selected - 1) + 4) % 4;
-            reset_vars();
-        } else if (menu->actions.go_right) {
-            sound_play_effect(SFX_SETTING);
-            controller_selected = ((controller_selected + 1) + 4) % 4;
-            reset_vars();
-        } else if (menu->actions.back) {
-            sound_play_effect(SFX_EXIT);
-            menu->next_mode = MENU_MODE_BROWSER;
-        } else if (menu->actions.options && use_rtc) {
-            ui_components_context_menu_show(&options_context_menu);
-            sound_play_effect(SFX_SETTING);
-        }
-    }
-
-    check_accessories(controller_selected);
-
-    populate_list_cpakfs();
-
-    if (has_mem) {
-
-        // Pressing A : dump the controller pak
-        if (menu->actions.enter && 
-            use_rtc && 
-            !show_complete_dump_confirm_message && 
-            !show_complete_write_confirm_message &&
-            !show_single_note_dump_confirm_message &&
-            !show_single_note_delete_confirm_message) {
+    if (is_one_of_process_complete()) {
+     
+        if(process_complete_full_dump && menu->actions.enter) {
             sound_play_effect(SFX_ENTER);
-            show_complete_dump_confirm_message = true;
+            process_complete_full_dump = false;
             return;
-        } 
-        // Pressing START : write a controller pak dump
-        else if (menu->actions.settings && 
-            use_rtc && 
+        }
+
+        if(process_complete_note_dump && menu->actions.enter) {
+            sound_play_effect(SFX_ENTER);
+            process_complete_note_dump = false;
+            return;
+        }
+
+        if(process_complete_format && menu->actions.enter) {
+            sound_play_effect(SFX_ENTER);
+            process_complete_format = false;
+            return;
+        }
+
+        if(process_complete_delete && menu->actions.enter) {
+            sound_play_effect(SFX_ENTER);
+            process_complete_delete = false;
+            return;
+        }
+
+        if(error_message_displayed && menu->actions.enter) {
+            sound_play_effect(SFX_ENTER);
+            error_message_displayed = false;
+            return;
+        }
+        
+    } else {
+
+        if (ui_components_context_menu_process(menu, &options_context_menu)) {
+            return;
+        }
+
+        if (!show_complete_dump_confirm_message && 
             !show_complete_write_confirm_message && 
-            !show_complete_dump_confirm_message &&
             !show_single_note_dump_confirm_message &&
             !show_single_note_delete_confirm_message) {
-            sound_play_effect(SFX_ENTER);
-            show_complete_write_confirm_message = true;
-            return;
+            if(menu->actions.go_left) {
+                sound_play_effect(SFX_SETTING);
+                controller_selected = ((controller_selected - 1) + 4) % 4;
+                reset_vars();
+            } else if (menu->actions.go_right) {
+                sound_play_effect(SFX_SETTING);
+                controller_selected = ((controller_selected + 1) + 4) % 4;
+                reset_vars();
+            } else if (menu->actions.back) {
+                sound_play_effect(SFX_EXIT);
+                menu->next_mode = MENU_MODE_BROWSER;
+            } else if (menu->actions.options && use_rtc && has_mem) {
+                ui_components_context_menu_show(&options_context_menu);
+                sound_play_effect(SFX_SETTING);
+            }
         }
 
-        // Pressing L : dump a single note
-        else if (menu->actions.l && 
-            use_rtc && 
-            !show_complete_write_confirm_message && 
-            !show_complete_dump_confirm_message &&
-            !show_single_note_dump_confirm_message &&
-            !show_single_note_delete_confirm_message) {
-            sound_play_effect(SFX_ENTER);
-            show_single_note_dump_confirm_message = true;
-            return;
-        }
+        check_accessories(controller_selected);
 
-        if (show_complete_dump_confirm_message && 
-            !show_complete_write_confirm_message &&
-            !show_single_note_dump_confirm_message &&
-            !show_single_note_delete_confirm_message) {
-            if (menu->actions.enter) {
-                show_complete_dump_confirm_message = false;
+        populate_list_cpakfs();
+
+        if (has_mem) {
+
+            // Pressing A : dump the controller pak
+            if (menu->actions.enter && 
+                use_rtc && 
+                !show_complete_dump_confirm_message && 
+                !show_complete_write_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message) {
                 sound_play_effect(SFX_ENTER);
-                start_complete_dump = true;
-            } else if (menu->actions.back) {
-                sound_play_effect(SFX_EXIT);
-                show_complete_dump_confirm_message = false;
-            }
-            return;
-        } else if (show_complete_write_confirm_message && 
-            !show_complete_dump_confirm_message &&
-            !show_single_note_dump_confirm_message &&
-            !show_single_note_delete_confirm_message) {
-            if (menu->actions.back) {
-                show_complete_write_confirm_message = false;
-                sound_play_effect(SFX_EXIT);
-            }
-            return;
-        } else if (show_single_note_dump_confirm_message && 
-            !show_complete_dump_confirm_message &&
-            !show_complete_write_confirm_message &&
-            !show_single_note_delete_confirm_message) {
-            if (menu->actions.enter) {
-                show_single_note_dump_confirm_message = false;
+                show_complete_dump_confirm_message = true;
+                return;
+            } 
+            // Pressing START : write a controller pak dump
+            else if (menu->actions.settings && 
+                use_rtc && 
+                !show_complete_write_confirm_message && 
+                !show_complete_dump_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message) {
                 sound_play_effect(SFX_ENTER);
-                start_single_note_dump = true;
-            } else if (menu->actions.back) {
-                show_single_note_dump_confirm_message = false;
-                sound_play_effect(SFX_EXIT);
-            } else if (menu->actions.go_left) {
-                sound_play_effect(SFX_CURSOR);
-                index_selected = ((index_selected - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
-            } else if (menu->actions.go_right) {
-                sound_play_effect(SFX_CURSOR);
-                index_selected = ((index_selected + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                show_complete_write_confirm_message = true;
+                return;
             }
-            return;
-        }  else if (show_single_note_delete_confirm_message && 
-            !show_complete_dump_confirm_message &&
-            !show_complete_write_confirm_message &&
-            !show_single_note_dump_confirm_message) {
-            if (menu->actions.enter) {
-                show_single_note_delete_confirm_message = false;
+
+            // Pressing L : dump a single note
+            else if (menu->actions.l && 
+                use_rtc && 
+                !show_complete_write_confirm_message && 
+                !show_complete_dump_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message) {
                 sound_play_effect(SFX_ENTER);
-                start_single_note_delete = true;
-            } else if (menu->actions.back) {
-                show_single_note_delete_confirm_message = false;
-                sound_play_effect(SFX_EXIT);
-            } else if (menu->actions.go_left) {
-                sound_play_effect(SFX_CURSOR);
-                index_selected = ((index_selected - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
-            } else if (menu->actions.go_right) {
-                sound_play_effect(SFX_CURSOR);
-                index_selected = ((index_selected + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                show_single_note_dump_confirm_message = true;
+                return;
             }
-            return;
+
+            if (show_complete_dump_confirm_message && 
+                !show_complete_write_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message) {
+                if (menu->actions.enter) {
+                    show_complete_dump_confirm_message = false;
+                    sound_play_effect(SFX_ENTER);
+                    start_complete_dump = true;
+                } else if (menu->actions.back) {
+                    sound_play_effect(SFX_EXIT);
+                    show_complete_dump_confirm_message = false;
+                }
+                return;
+            } else if (show_complete_write_confirm_message && 
+                !show_complete_dump_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message) {
+                if (menu->actions.back) {
+                    show_complete_write_confirm_message = false;
+                    sound_play_effect(SFX_EXIT);
+                }
+                return;
+            } else if (show_single_note_dump_confirm_message && 
+                !show_complete_dump_confirm_message &&
+                !show_complete_write_confirm_message &&
+                !show_single_note_delete_confirm_message) {
+                if (menu->actions.enter) {
+                    show_single_note_dump_confirm_message = false;
+                    sound_play_effect(SFX_ENTER);
+                    start_single_note_dump = true;
+                } else if (menu->actions.back) {
+                    show_single_note_dump_confirm_message = false;
+                    sound_play_effect(SFX_EXIT);
+                } else if (menu->actions.go_left) {
+                    sound_play_effect(SFX_CURSOR);
+                    index_selected = ((index_selected - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                } else if (menu->actions.go_right) {
+                    sound_play_effect(SFX_CURSOR);
+                    index_selected = ((index_selected + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                }
+                return;
+            }  else if (show_single_note_delete_confirm_message && 
+                !show_complete_dump_confirm_message &&
+                !show_complete_write_confirm_message &&
+                !show_single_note_dump_confirm_message) {
+                if (menu->actions.enter) {
+                    show_single_note_delete_confirm_message = false;
+                    sound_play_effect(SFX_ENTER);
+                    start_single_note_delete = true;
+                } else if (menu->actions.back) {
+                    show_single_note_delete_confirm_message = false;
+                    sound_play_effect(SFX_EXIT);
+                } else if (menu->actions.go_left) {
+                    sound_play_effect(SFX_CURSOR);
+                    index_selected = ((index_selected - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                } else if (menu->actions.go_right) {
+                    sound_play_effect(SFX_CURSOR);
+                    index_selected = ((index_selected + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES;
+                }
+                return;
+            }
         }
     }
 }
@@ -674,18 +779,77 @@ static void draw (menu_t *menu, surface_t *d) {
         style = STL_GRAY;
     }
 
-    ui_components_actions_bar_text_draw(style,
-        ALIGN_LEFT, VALIGN_TOP,
-        "A: Dump Pak\n"
-        "L: Dump single Note\n"
-    );
-    ui_components_actions_bar_text_draw(style,
-        ALIGN_RIGHT, VALIGN_TOP,
-        "START: Restore Pak\n"
-        "R: Options\n"
-    );
 
 
+    // Actions bars
+
+    if (!corrupted_pak) {
+
+        ui_components_actions_bar_text_draw(style,
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Dump Pak\n"
+            "L: Dump single Note\n"
+        );
+        ui_components_actions_bar_text_draw(style,
+            ALIGN_RIGHT, VALIGN_TOP,
+            "START: Restore Pak\n"
+            "R: Options\n"
+        );
+
+    } else {
+        ui_components_actions_bar_text_draw(style,
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Format Contr. Pak\n"
+            "\n"
+        );
+    }
+
+
+
+
+
+
+
+    if (error_message_displayed) {
+        ui_components_messagebox_draw(
+            "Error: %s\n\n"
+            "Press A to continue.",
+            failure_message_note
+        );   
+    }
+
+    if (process_complete_format) {
+        ui_components_messagebox_draw(
+            "Controller Pak formatted.\n\n"
+            "Press A to continue."
+        );   
+    }
+
+    if (process_complete_full_dump) {
+        ui_components_messagebox_draw(
+            "Complete dump created in:\n"
+            "%s\n\n"
+            "Press A to continue.",
+            CPAK_PATH
+        );   
+    }
+
+    if (process_complete_note_dump) {
+        ui_components_messagebox_draw(
+            "Note dumped in:\n"
+            "%s/notes\n\n"
+            "Press A to continue.",
+            CPAK_PATH
+        );   
+    }
+
+    if (process_complete_delete) {
+        ui_components_messagebox_draw(
+            "Note %d deleted from Controller Pak.\n\n"
+            "Press A to continue.",
+            index_selected + 1
+        );   
+    }
 
     if (show_complete_dump_confirm_message && 
         !start_complete_dump) {

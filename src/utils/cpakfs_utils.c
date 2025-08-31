@@ -101,10 +101,12 @@ int parse_cpakfs_fullname(const char *fullname, cpakfs_path_strings_t *out) {
     strncpy(out->gamecode, fullname, 4);
     out->gamecode[4] = '\0';
 
-    // Publisher code (2 chars)
-    if (dash - (dot1 + 1) != 2) return -4;
-    strncpy(out->pubcode, dot1 + 1, 2);
-    out->pubcode[2] = '\0';
+    // Publisher code (2 or 4 chars)
+    size_t publen = dash - (dot1 + 1);
+    if (publen != 2 && publen != 4) return -4;
+    if (publen > sizeof(out->pubcode) - 1) publen = sizeof(out->pubcode) - 1;
+    strncpy(out->pubcode, dot1 + 1, publen);
+    out->pubcode[publen] = '\0';
 
     // Filename
     if (dot2) {

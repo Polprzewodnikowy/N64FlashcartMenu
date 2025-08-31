@@ -8,7 +8,7 @@
 
 typedef struct {
     char gamecode[5];   // +1 for '\0'
-    char pubcode[3];    // +1 for '\0'
+    char pubcode[5];    // +1 for '\0'
     char filename[17];  // +1 for '\0'
     char ext[5];        // +1 for '\0'
 } cpakfs_path_strings_t;

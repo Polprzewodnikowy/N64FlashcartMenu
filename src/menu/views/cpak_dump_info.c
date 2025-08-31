@@ -5,19 +5,13 @@
 #include "../sound.h"
 #include "../fonts.h"
 #include <fatfs/ff.h>
+#include "utils/cpakfs_utils.h"
 
 
 char cpak_path[255];
 short controller_selected_for_restore;
 char failure_message[255];
 bool start_complete_restore;
-
-bool has_cpak(int controller) {
-    
-    joypad_accessory_type_t val =  joypad_get_accessory_type(controller);
-
-    return val == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
-}
 
 bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");

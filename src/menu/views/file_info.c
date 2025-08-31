@@ -16,7 +16,7 @@ static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NU
 static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
 static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
-
+static const char *controller_pak_note_extensions[] = { "mpkn", NULL };
 
 static struct stat st;
 bool is_memory_pak_dump;
@@ -49,6 +49,9 @@ static char *format_file_type (char *name, bool is_directory) {
         is_memory_pak_dump = true;
         return " Type: Controller Pak file\n";
     } else if (check_cpaksmpk(name)) {
+        is_memory_pak_dump_note = true;
+        return " Type: Note of controller Pak file\n";
+    } else if (file_has_extensions(name, controller_pak_note_extensions)) {
         is_memory_pak_dump_note = true;
         return " Type: Note of controller Pak file\n";
     } else if (file_has_extensions(name, emulator_extensions)) {

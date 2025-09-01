@@ -5,7 +5,7 @@
 
 
 static void load_default_font (char *custom_font_path) {
-    char *font_path = "rom:/FiraMonoBold.font64";
+    char *font_path = "rom:/FirpleBold.font64";
 
     if (custom_font_path && file_exists(custom_font_path)) {
         font_path = custom_font_path;

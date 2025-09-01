@@ -81,7 +81,7 @@ SRCS = \
 	utils/fs.c
 
 FONTS = \
-	FiraMonoBold.ttf
+	FirpleBold.ttf
 
 SOUNDS = \
 	cursorsound.wav \
@@ -105,7 +105,7 @@ FILESYSTEM = \
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
+$(FILESYSTEM_DIR)/FirpleBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --range 20-7F --range 80-1FF --range 2026-2026 --range 3040-309F --range 30A0-30FF --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))

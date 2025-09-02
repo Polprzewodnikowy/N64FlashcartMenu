@@ -46,7 +46,7 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;
 

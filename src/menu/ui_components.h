@@ -269,7 +269,7 @@ void ui_components_boxart_draw(component_boxart_t *b);
  * @param selected Index of the selected tab.
  * @param width Width of the tabs.
  */
-void ui_components_tabs_draw(const char **text, int count, int selected, float width );
+void ui_components_tabs_draw(const char **text, int count, int selected, float width);
 
 /**
  * @brief Draw the common part of the tabs component.
@@ -277,5 +277,16 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
  * @param selected Index of the selected tab.
  */
 void ui_components_tabs_common_draw(int selected);
+
+/**
+ * @brief Draw a value editor component.
+ * 
+ * @param header_text Array of header text for the values.
+ * @param value_text Array of value text to be displayed.
+ * @param count Number of values.
+ * @param selected Index of the selected value.
+ * @param width_adjustment Negative width adjustment of each value box.
+ */
+void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width_adjustment);
 
 #endif /* UI_COMPONENTS_H__ */

@@ -179,7 +179,6 @@ typedef struct {
 
     struct {
         rom_esrb_age_rating_t esrb_age_rating; /**< The game age rating */
-        char description[2000];      /**< ROM description */
     } metadata;                     /**< The ROM metadata */
 } rom_info_t;
 
@@ -199,7 +198,7 @@ bool rom_info_get_cic_seed(rom_info_t *rom_info, uint8_t *seed);
  * @param rom_info Pointer to the ROM information structure
  * @return rom_err_t Error code
  */
-rom_err_t rom_info_load(path_t *path, rom_info_t *rom_info);
+rom_err_t rom_config_load(path_t *path, rom_info_t *rom_info);
 
 /**
  * @brief Get the CIC type for the ROM.
@@ -217,7 +216,7 @@ rom_cic_type_t rom_info_get_cic_type(rom_info_t *rom_info);
  * @param cic_type CIC type to override
  * @return rom_err_t Error code
  */
-rom_err_t rom_info_override_cic_type(path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type);
+rom_err_t rom_config_override_cic_type(path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type);
 
 /**
  * @brief Get the save type for the ROM.
@@ -235,7 +234,7 @@ rom_save_type_t rom_info_get_save_type(rom_info_t *rom_info);
  * @param save_type Save type to override
  * @return rom_err_t Error code
  */
-rom_err_t rom_info_override_save_type(path_t *path, rom_info_t *rom_info, rom_save_type_t save_type);
+rom_err_t rom_config_override_save_type(path_t *path, rom_info_t *rom_info, rom_save_type_t save_type);
 
 /**
  * @brief Get the TV type for the ROM.
@@ -253,6 +252,28 @@ rom_tv_type_t rom_info_get_tv_type(rom_info_t *rom_info);
  * @param tv_type TV type to override
  * @return rom_err_t Error code
  */
-rom_err_t rom_info_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
+rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type);
+
+/**
+ * @brief Set the cheats setting for the ROM.
+ * 
+ * @param path Pointer to the path structure
+ * @param rom_info Pointer to the ROM information structure
+ * @param enabled True to enable cheats, false to disable
+ * @return rom_err_t Error code
+ */
+rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+/**
+ * @brief Set the patcher setting for the ROM.
+ * 
+ * @param path Pointer to the path structure
+ * @param rom_info Pointer to the ROM information structure
+ * @param enabled True to enable cheats, false to disable
+ * @return rom_err_t Error code
+ */
+rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled);
+#endif // FEATURE_PATCHER_GUI_ENABLED
 
 #endif // ROM_INFO_H__

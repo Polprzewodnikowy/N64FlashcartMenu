@@ -40,20 +40,23 @@ typedef enum {
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
     MENU_MODE_FAVORITE,
-    MENU_MODE_HISTORY
+    MENU_MODE_HISTORY,
+    MENU_MODE_DATEL_CODE_EDITOR
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
 typedef enum {
     ENTRY_TYPE_DIR,
-    ENTRY_TYPE_ROM,
     ENTRY_TYPE_DISK,
-    ENTRY_TYPE_EMULATOR,
-    ENTRY_TYPE_SAVE,
+    ENTRY_TYPE_EMULATOR,  
     ENTRY_TYPE_IMAGE,
     ENTRY_TYPE_MUSIC,
-    ENTRY_TYPE_TEXT,
     ENTRY_TYPE_OTHER,
+    ENTRY_TYPE_ROM,
+    ENTRY_TYPE_ROM_CHEAT,
+    ENTRY_TYPE_ROM_PATCH,
+    ENTRY_TYPE_SAVE,
+    ENTRY_TYPE_TEXT
 } entry_type_t;
 
 /** @brief File Entry Structure */
@@ -107,8 +110,8 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
-        int load_history;
-        int load_favorite;
+        int load_history_id;
+        int load_favorite_id;
         bool combined_disk_rom;
     } load;
 

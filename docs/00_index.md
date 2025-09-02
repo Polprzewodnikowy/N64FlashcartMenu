@@ -5,7 +5,7 @@
 - [Initial Setup of an SD Card](./10_getting_started_sd.md)
 - [Basic Controls](./11_menu_controls.md)
 - [ROM Configuration](./12_rom_configuration.md)
-- [Cheats (Gameshark, etc.)](./13_datel_cheats.md)
+- [Datel Cheats (Gameshark, Action Replay, etc.)](./13_datel_cheats.md)
 - [ROM Patches (Hacks, Fan Translations, etc.)](./14_rom_patches.md)
 - [Controller PAKs](./15_controller_paks.md)
 - [Background Images](./16_background_images.md)

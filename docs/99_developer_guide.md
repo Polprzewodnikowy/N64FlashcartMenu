@@ -65,9 +65,14 @@ To upload and run the ROM (requires power toggle):
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run
 ```
 
-To debug the ROM:
+To debug the ROM (requires power toggle):
 ```
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
+```
+
+To debug the ROM with upload and auto reboot:
+```
+REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```
 
 #### Directly From your host (Windows) OS

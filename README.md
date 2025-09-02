@@ -43,8 +43,8 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * Music playback (MP3).
 * Menu sound effects.
 * N64 ROM fast reboot option (on reset).
-* ROM information descriptions.
 * ROM history and favorites.
+* ROM Datel code editor.
 
 
 ## Aims
@@ -109,3 +109,10 @@ See [License](https://pixabay.com/en/service/license-summary/) for the following
 * [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
 * [Actions (Enter, Back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
 * [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)
+
+## Emulators
+* [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - (ISC License)
+* [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - (GPL-3.0 License)
+* [gb64](https://github.com/lambertjamesd/gb64) by *lambertjamesd* - (MIT License)
+* [smsPlus64](https://github.com/fhoedemakers/smsplus64) by *fhoedmakers* - (GPL-3.0 License)
+* [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra) by *celerizer* - (MIT License)

@@ -1,9 +1,9 @@
 #include <stdarg.h>
-#include "views.h"
 #include "../bookkeeping.h"
 #include "../fonts.h"
 #include "../ui_components/constants.h"
 #include "../sound.h"
+#include "views.h"
 
 
 typedef enum {
@@ -16,13 +16,13 @@ typedef enum {
 static bookkeeping_tab_context_t tab_context = BOOKKEEPING_TAB_CONTEXT_NONE;
 static int selected_item = -1;
 static bookkeeping_item_t *item_list;
-static int item_max;
+static uint16_t item_max = 0;
 
 
-static void reset_selected(menu_t *menu) {
+static void item_reset_selected(menu_t *menu) {
     selected_item = -1;
 
-    for(unsigned int i=0; i<item_max; i++) {
+    for(uint16_t i=0; i<item_max; i++) {
         if(item_list[i].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {
             selected_item = i;
             break;
@@ -30,7 +30,7 @@ static void reset_selected(menu_t *menu) {
     }  
 }
 
-static void move_next() {
+static void item_move_next() {
     int last = selected_item;
 
     do
@@ -47,7 +47,7 @@ static void move_next() {
     } while (true);  
 }
 
-static void move_back() {
+static void item_move_previous() {
     int last = selected_item;
     do
     {
@@ -65,15 +65,17 @@ static void move_back() {
 
 static void process(menu_t *menu) {
     if(menu->actions.go_down) {
-        move_next();   
+        item_move_next();   
     } else if(menu->actions.go_up) {
-        move_back();
+        item_move_previous();
     } else if(menu->actions.enter && selected_item != -1) {
                 
         if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
-            menu->load.load_favorite = selected_item;
+            menu->load.load_favorite_id = selected_item;
+            menu->load.load_history_id = -1;
         } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
-            menu->load.load_history = selected_item;
+            menu->load.load_history_id = selected_item;
+            menu->load.load_favorite_id = -1;
         }           
 
         if(item_list[selected_item].bookkeeping_type == BOOKKEEPING_TYPE_DISK) {
@@ -99,7 +101,7 @@ static void process(menu_t *menu) {
         sound_play_effect(SFX_CURSOR);
     }else if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE && menu->actions.options && selected_item != -1) {
         bookkeeping_favorite_remove(&menu->bookkeeping, selected_item);
-        reset_selected(menu);
+        item_reset_selected(menu);
         sound_play_effect(SFX_SETTING);
     }
 }
@@ -120,7 +122,7 @@ static void draw_list(menu_t *menu, surface_t *display) {
     char buffer[1024];
     buffer[0] = 0;
 
-    for(unsigned int i=0; i < item_max; i++) {   
+    for(uint16_t i=0; i < item_max; i++) {   
         if(path_has_value(item_list[i].primary_path)) {
             sprintf(buffer, "%s%d  : %s\n",buffer ,(i+1), path_last_get(item_list[i].primary_path));
         } else {
@@ -200,7 +202,7 @@ void view_favorite_init (menu_t *menu) {
     item_list = menu->bookkeeping.favorite_items;
     item_max = FAVORITES_COUNT;
 
-    reset_selected(menu);
+    item_reset_selected(menu);
 }
 
 void view_favorite_display (menu_t *menu, surface_t *display) {
@@ -213,7 +215,7 @@ void view_history_init (menu_t *menu) {
     item_list = menu->bookkeeping.history_items;
     item_max = HISTORY_COUNT;
 
-    reset_selected(menu);
+    item_reset_selected(menu);
 }
 
 void view_history_display (menu_t *menu, surface_t *display) {

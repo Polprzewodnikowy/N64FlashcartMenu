@@ -116,3 +116,6 @@ See [License](https://pixabay.com/en/service/license-summary/) for the following
 * [gb64](https://github.com/lambertjamesd/gb64) by *lambertjamesd* - (MIT License)
 * [smsPlus64](https://github.com/fhoedemakers/smsplus64) by *fhoedmakers* - (GPL-3.0 License)
 * [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra) by *celerizer* - (MIT License)
+
+## Fonts
+* [Firple](https://github.com/negset/Firple) by *negset* - (SIL Open Font License 1.1)

@@ -29,11 +29,6 @@ static void sound_reconfigure (int frequency) {
             mixer_close();
             audio_close();
         }
-
-        if (frequency < 96000) {
-            frequency = 96000; // Clamp frequency to minimum 96000
-        }
-
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
 

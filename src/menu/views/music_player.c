@@ -117,7 +117,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
 static void deinit (void) {
     sound_init_default();
-    sound_init_sfx();
     mp3player_deinit();
 }
 

@@ -15,6 +15,9 @@ i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_fro
 To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead:  
 i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
 
+Roms that utilse the "Homebrew Header" Game ID (`xEDx`) are matched using the ROM's "title", rather than the Game Code:
+e.g. `sd:/menu/boxart/homebrew/{title}/boxart_front.png`
+
 **Warning**: Excluding the region ID may show a box art of the wrong region.  
 **Note**: For future support, box art sprites should also include:  
 - `boxart_back.png`

@@ -242,10 +242,11 @@ typedef struct {
  * 
  * @param storage_prefix Prefix for the storage location.
  * @param game_code Game code for the box art.
+ * @param rom_title Title of the ROM.
  * @param current_image_view Current image view type.
  * @return Pointer to the initialized box art component.
  */
-component_boxart_t *ui_components_boxart_init(const char *storage_prefix, char *game_code, file_image_type_t current_image_view);
+component_boxart_t *ui_components_boxart_init(const char *storage_prefix, char *game_code, char *rom_title, file_image_type_t current_image_view);
 
 /**
  * @brief Free the box art component resources.

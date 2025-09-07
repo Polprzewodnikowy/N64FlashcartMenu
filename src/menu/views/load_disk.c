@@ -286,7 +286,7 @@ void view_load_disk_init (menu_t *menu) {
     }
 
     ui_components_context_menu_init(&options_context_menu);
-    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, NULL, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

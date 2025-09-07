@@ -32,10 +32,11 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
  * 
  * @param storage_prefix The storage prefix.
  * @param game_code The game code.
+ * @param rom_title The title of the ROM.
  * @param current_image_view The current image view type.
  * @return component_boxart_t* Pointer to the initialized boxart component.
  */
-component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view) {
+component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;
     char boxart_id_path[8];
 
@@ -47,8 +48,14 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
 
     path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
 
-    sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
-    path_push(path, boxart_id_path);
+    if (game_code[1] == 'E' && game_code[2] == 'D') {
+        // This is using a homebrew ROM ID, use the title for the file name instead.
+        sprintf(boxart_id_path, "homebrew/%s", rom_title);
+    }
+    else {
+        sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+        path_push(path, boxart_id_path);
+    }
 
     if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
         path_pop(path);

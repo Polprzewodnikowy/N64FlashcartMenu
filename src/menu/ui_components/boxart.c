@@ -38,7 +38,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
  */
 component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;
-    char boxart_id_path[8];
+    char boxart_path[32];
 
     if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
         return NULL;
@@ -50,12 +50,12 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
 
     if (game_code[1] == 'E' && game_code[2] == 'D') {
         // This is using a homebrew ROM ID, use the title for the file name instead.
-        sprintf(boxart_id_path, "homebrew/%s", rom_title);
+        sprintf(boxart_path, "homebrew/%s", rom_title);
     }
     else {
-        sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
-        path_push(path, boxart_id_path);
+        sprintf(boxart_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
     }
+    path_push(path, boxart_path);
 
     if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
         path_pop(path);

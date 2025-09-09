@@ -127,6 +127,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
         return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }
 
+#ifndef FEATURE_AUTOLOAD_ROM_ENABLED
     if (menu->settings.rom_fast_reboot_enabled) {
         if (!flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST)) {
             return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
@@ -137,6 +138,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
             return CART_LOAD_ERR_BOOT_MODE_FAIL;
         }
     }
+#endif
 
     path_free(path);
 

@@ -32,11 +32,11 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
  * 
  * @param storage_prefix The storage prefix.
  * @param game_code The game code.
- * @param rom_title The title of the ROM.
+ * @param rom_title Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety.
  * @param current_image_view The current image view type.
  * @return component_boxart_t* Pointer to the initialized boxart component.
  */
-component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, char *rom_title, file_image_type_t current_image_view) {
+component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const char *game_code, const char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;
     char boxart_path[32];
 

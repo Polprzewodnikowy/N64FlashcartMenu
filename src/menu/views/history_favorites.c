@@ -106,15 +106,15 @@ static void process(menu_t *menu) {
     }
 }
 
-static void draw_list(menu_t *menu, surface_t *display) {    
-    if(selected_item != -1) {    
-        float highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT +  TEXT_OFFSET_VERTICAL + (selected_item * 20 * 2);
+static void draw_list(menu_t *menu, surface_t *display) {
+    if(selected_item != -1) {
+        float highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT +  TEXT_OFFSET_VERTICAL + (selected_item * 19 * 2);
 
         ui_components_box_draw(
             VISIBLE_AREA_X0,
             highlight_y,
             VISIBLE_AREA_X0 + FILE_LIST_HIGHLIGHT_WIDTH + LIST_SCROLLBAR_WIDTH,
-            highlight_y + 40,
+            highlight_y + 39,
             FILE_LIST_HIGHLIGHT_COLOR
         );
     }

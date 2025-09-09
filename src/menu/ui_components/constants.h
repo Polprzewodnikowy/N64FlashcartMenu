@@ -116,7 +116,7 @@
 #define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
 
 /** @brief The maximum amount of file list entries. */
-#define LIST_ENTRIES                    (18)
+#define LIST_ENTRIES                    (19)
 /** @brief The maximum width available for a file list entry. */
 #define FILE_LIST_MAX_WIDTH             (480)
 /** @brief The file list highlight width. */

@@ -11,9 +11,18 @@ Expected pre-requsites:
 ### A quick start video tutorial on how to set up your environment
 [![Docker Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Docker Devcontainer quick start guide").
 
-### How to build the ROM
-In the terminal, use make directly, i.e.: `make all`.  
-The ROMs can be found in the `output` directory.
+### How to debug
+Within the code, use the `debugf` command, and then deploy using a debug build e.g. `make run-debug`.
+
+```c
+    debugf("joybus_rtc_detect_async: %s %s %s %s\n",
+        detected ? "detected" : "not detected",
+        status.stopped ? "stopped" : "running",
+        status.crystal_bad ? "crystal:BAD" : "crystal:OK",
+        status.battery_bad ? "battery:BAD" : "battery:OK"
+    );
+```
+The output will then be shown within the console.
 
 For the future:
 `ms-vscode.makefile-tools` will hopefully help (installed automatically in dev container).  
@@ -56,9 +65,15 @@ To upload and run the ROM (requires power toggle):
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run
 ```
 
-To debug the ROM:
+To debug the ROM (requires power toggle):
 ```
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
+```
+
+To debug the ROM with upload and auto reboot:
+(note: the current debugging session menu may not be the same as the file uploaded. you need to `make all` first to ensure the latest menu is uploaded).
+```
+REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```
 
 #### Directly From your host (Windows) OS

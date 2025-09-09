@@ -21,7 +21,7 @@ static settings_t init = {
     .hide_extension = false,
     .hide_rom_tags = false,
     .soundfx_enabled = false,
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     .rom_autoload_enabled = false,
     .rom_autoload_path = "",
     .rom_autoload_filename = "",
@@ -62,7 +62,7 @@ void settings_load (settings_t *settings) {
     settings->hide_rom_tags = mini_get_bool(ini, "menu", "hide_rom_tags", init.hide_rom_tags);
     settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
     
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
     settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
     settings->rom_autoload_filename = strdup(mini_get_string(ini, "autoload", "rom_filename", init.rom_autoload_filename));
@@ -92,7 +92,7 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "hide_extension", settings->hide_extension);
     mini_set_bool(ini, "menu", "hide_rom_tags", settings->hide_rom_tags);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);
     mini_set_string(ini, "autoload", "rom_filename", settings->rom_autoload_filename);

@@ -144,7 +144,8 @@ void ui_components_loader_draw (float progress, const char *msg) {
 
     if (msg != NULL) {
         ui_components_main_text_draw(
-        ALIGN_CENTER, VALIGN_CENTER,
+            STL_DEFAULT,
+            ALIGN_CENTER, VALIGN_CENTER,
             "\n%.30s",
             msg
         );
@@ -252,12 +253,13 @@ void ui_components_messagebox_draw (char *fmt, ...) {
 /**
  * @brief Draw the main text with formatted content.
  * 
+ * @param style The font style.
  * @param align The horizontal alignment.
  * @param valign The vertical alignment.
  * @param fmt The format string.
  * @param ... The format arguments.
  */
-void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
+void ui_components_main_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[1024];
     size_t nbytes = sizeof(buffer);
 
@@ -268,6 +270,7 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
 
     rdpq_text_printn(
         &(rdpq_textparms_t) {
+            .style_id = style,
             .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
             .height = LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - (TEXT_MARGIN_VERTICAL * 2),
             .align = align,
@@ -290,12 +293,13 @@ void ui_components_main_text_draw (rdpq_align_t align, rdpq_valign_t valign, cha
 /**
  * @brief Draw the actions bar text with formatted content.
  * 
+ * @param style The font style.
  * @param align The horizontal alignment.
  * @param valign The vertical alignment.
  * @param fmt The format string.
  * @param ... The format arguments.
  */
-void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
+void ui_components_actions_bar_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[256];
     size_t nbytes = sizeof(buffer);
 
@@ -306,6 +310,7 @@ void ui_components_actions_bar_text_draw (rdpq_align_t align, rdpq_valign_t vali
 
     rdpq_text_printn(
         &(rdpq_textparms_t) {
+            .style_id = style,
             .width = VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),
             .height = VISIBLE_AREA_Y1 - LAYOUT_ACTIONS_SEPARATOR_Y - BORDER_THICKNESS - (TEXT_MARGIN_VERTICAL * 2),
             .align = align,
@@ -401,4 +406,70 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
         );
         x += width;
     }
+}
+
+void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width_adjustment ) {
+    float field_width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / width_adjustment;
+    float starting_x = DISPLAY_CENTER_X - (field_width * count / 2.0f);
+
+    float x = starting_x;
+    float y = DISPLAY_CENTER_Y;    
+    float height = TAB_HEIGHT;
+
+    // first draw the values that are not selected
+    for(int i=0;i< count;i++) {
+        if(i != selected) {
+            ui_components_box_draw(
+                x,
+                y,
+                x + field_width,
+                y + height + 24,
+                TAB_INACTIVE_BACKGROUND_COLOR
+            );
+        }
+        x += field_width;
+    }
+    
+    // draw the selected value (so it shows up on top of the others)
+    if(selected >= 0 && selected < count) {
+        x = starting_x + (field_width * selected);
+
+        ui_components_box_draw(
+            x,
+            y,
+            x + field_width,
+            y + height + 24,
+            TAB_ACTIVE_BACKGROUND_COLOR
+        );
+    }
+
+    // write the text on the value boxes
+    rdpq_textparms_t value_textparms = {
+        .width = field_width,
+        .height = 24,
+        .align = ALIGN_CENTER,
+        .wrap = WRAP_NONE
+    };
+    x = starting_x;
+    for(int i=0;i< count;i++) {
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y,
+            header_text[i]
+        );
+
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y + 24,
+            value_text[i]
+        );
+        x += field_width;
+    }
+
+    // draw the border around the value boxes
+    ui_components_border_draw (starting_x, y, x, y + height + 24);
 }

@@ -1,15 +1,18 @@
+#include "../bookkeeping.h"
 #include "../cart_load.h"
+#include "../datel_codes.h"
 #include "../rom_info.h"
-#include "boot/boot.h"
 #include "../sound.h"
+#include "boot/boot.h"
+#include "utils/fs.h"
 #include "views.h"
 #include <string.h>
-#include "utils/fs.h"
-#include "../bookkeeping.h"
+
 
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
+
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -120,13 +123,25 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
+static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
+    switch (esrb_age_rating) {
+        case ROM_ESRB_AGE_RATING_NONE: return "None";
+        case ROM_ESRB_AGE_RATING_EVERYONE: return "Everyone";
+        case ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS: return "Everyone 10+";
+        case ROM_ESRB_AGE_RATING_TEEN: return "Teen";
+        case ROM_ESRB_AGE_RATING_MATURE: return "Mature";
+        case ROM_ESRB_AGE_RATING_ADULT: return "Adults Only";
+        default: return "Unknown";
+    }
+}
+
 static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
 
 static void set_cic_type (menu_t *menu, void *arg) {
     rom_cic_type_t cic_type = (rom_cic_type_t) (arg);
-    rom_err_t err = rom_info_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
+    rom_err_t err = rom_config_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
@@ -135,7 +150,7 @@ static void set_cic_type (menu_t *menu, void *arg) {
 
 static void set_save_type (menu_t *menu, void *arg) {
     rom_save_type_t save_type = (rom_save_type_t) (arg);
-    rom_err_t err = rom_info_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
+    rom_err_t err = rom_config_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
@@ -144,13 +159,13 @@ static void set_save_type (menu_t *menu, void *arg) {
 
 static void set_tv_type (menu_t *menu, void *arg) {
     rom_tv_type_t tv_type = (rom_tv_type_t) (arg);
-    rom_err_t err = rom_info_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
+    rom_err_t err = rom_config_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
     if (err != ROM_OK) {
         menu_show_error(menu, convert_error_message(err));
     }
     menu->browser.reload = true;
 }
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -159,6 +174,28 @@ static void set_autoload_type (menu_t *menu, void *arg) {
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.rom_autoload_enabled = true;
     settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+#endif
+
+static void set_cheat_option(menu_t *menu, void *arg) {
+    debugf("Load Rom: setting cheat option to %d\n", (int)arg);
+    if (!is_memory_expanded()) {
+        // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu->browser.reload = true;
+    }
+    else {
+        bool enabled = (bool)arg;
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
+        menu->browser.reload = true;
+    }
+}
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+static void set_patcher_option(menu_t *menu, void *arg) {
+    bool enabled = (bool)arg;
+    rom_config_setting_set_patches(menu->load.rom_path, &menu->load.rom_info, enabled);
     menu->browser.reload = true;
 }
 #endif
@@ -205,12 +242,36 @@ static component_context_menu_t set_tv_type_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+static component_context_menu_t set_cheat_options_menu = { .list = {
+    { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
+    { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+static component_context_menu_t set_patcher_options_menu = { .list = {
+    { .text = "Enable", .action = set_patcher_option, .arg = (void *) (true)},
+    { .text = "Disable", .action = set_patcher_option, .arg = (void *) (false)},
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+#endif
+
+static void set_menu_next_mode (menu_t *menu, void *arg) {
+    menu_mode_t next_mode = (menu_mode_t) (arg);
+    menu->next_mode = next_mode;
+}
+
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "Set ROM to autoload", .action = set_autoload_type },
+#endif
+    { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
+    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_DATEL_CODE_EDITOR) },
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+    { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -243,7 +304,7 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
@@ -251,21 +312,23 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_layout_draw();
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "%s\n",
             rom_filename
         );
 
-        ui_components_main_text_draw(
+        ui_components_main_text_draw( // TODO:"\t%.300s\n" for description.
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n\n"
-            "\t%s\n",
-            menu->load.rom_info.metadata.description
+            
         );
 
         ui_components_main_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Datel Cheats:\t%s\n"
             "Patches:\t\t\t%s\n"
             "TV region:\t\t%s\n"
@@ -279,12 +342,14 @@ static void draw (menu_t *menu, surface_t *d) {
         );
 
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
             "B: Back\n"
         );
 
         ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R: Adv. Options\n"
@@ -304,6 +369,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Media type: %s\n"
                 "Variant: %s\n"
                 "Version: %hhu\n"
+                "ESRB Age Rating: %s\n"
                 "Check code: 0x%016llX\n"
                 "CIC: %s\n"
                 "Boot address: 0x%08lX\n"
@@ -316,6 +382,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 format_rom_media_type(menu->load.rom_info.category_code),
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
+                format_esrb_age_rating(menu->load.rom_info.metadata.esrb_age_rating),
                 menu->load.rom_info.check_code,
                 format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
                 menu->load.rom_info.boot_address,
@@ -325,7 +392,7 @@ static void draw (menu_t *menu, surface_t *d) {
         }
 
         ui_components_context_menu_draw(&options_context_menu);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif
 
@@ -347,8 +414,9 @@ static void draw_progress (float progress) {
 }
 
 static void load (menu_t *menu) {
+    debugf("Load ROM: load function called\n");
     cart_load_err_t err;
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
         err = cart_load_n64_rom_and_save(menu, NULL);
     } else  {
@@ -375,7 +443,34 @@ static void load (menu_t *menu) {
         case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
         default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
-    menu->boot_params->cheat_list = NULL;
+
+    // Handle cheat codes only if Expansion Pak is present and cheats are enabled
+    if (is_memory_expanded() && menu->load.rom_info.settings.cheats_enabled) {
+        uint32_t tmp_cheats[MAX_CHEAT_CODE_ARRAYLIST_SIZE];
+        size_t cheat_item_count = generate_enabled_cheats_array(get_cheat_codes(), tmp_cheats);
+
+        if (cheat_item_count > 2) { // account for at least one valid cheat code (address and value), excluding the last two 0s
+            // Allocate memory for the cheats array
+            uint32_t *cheats = malloc(cheat_item_count * sizeof(uint32_t));
+            if (cheats) {
+                memcpy(cheats, tmp_cheats, cheat_item_count * sizeof(uint32_t));
+                for (size_t i = 0; i + 1 < cheat_item_count; i += 2) {
+                    debugf("Cheat %u: Address: 0x%08lX, Value: 0x%08lX\n", i / 2, cheats[i], cheats[i + 1]);
+                }
+                debugf("Cheats enabled, %u cheats found\n", cheat_item_count / 2);
+                menu->boot_params->cheat_list = cheats;
+            } else {
+                debugf("Failed to allocate memory for cheat list\n");
+                menu->boot_params->cheat_list = NULL;
+            }
+        } else {
+            debugf("Cheats enabled, but no cheats found\n");
+            menu->boot_params->cheat_list = NULL;
+        }
+    } else {
+        debugf("Cheats disabled or Expansion Pak not present\n");
+        menu->boot_params->cheat_list = NULL;
+    }
 }
 
 static void deinit (void) {
@@ -385,23 +480,23 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
         if (menu->load.rom_path) {
             path_free(menu->load.rom_path);
         }
 
-        if(menu->load.load_history != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history].primary_path);
-        } else if(menu->load.load_favorite != -1) {
-            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite].primary_path);
+        if(menu->load.load_history_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.history_items[menu->load.load_history_id].primary_path);
+        } else if(menu->load.load_favorite_id != -1) {
+            menu->load.rom_path = path_clone(menu->bookkeeping.favorite_items[menu->load.load_favorite_id].primary_path);
         } else {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
 
         rom_filename = path_last_get(menu->load.rom_path);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif 
 
@@ -409,24 +504,23 @@ void view_load_rom_init (menu_t *menu) {
         show_extra_info_message = false;
     }
 
-    menu->load.load_favorite = -1;
-    menu->load.load_history = -1;
-
-    rom_err_t err = rom_info_load(menu->load.rom_path, &menu->load.rom_info);
+    debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
+    rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
         path_free(menu->load.rom_path);
         menu->load.rom_path = NULL;
         menu_show_error(menu, convert_error_message(err));
         return;
     }
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif
+
 }
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
@@ -439,7 +533,9 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
         load(menu);
     }
 
-    if (menu->next_mode != MENU_MODE_LOAD_ROM) {
+    if (menu->next_mode != MENU_MODE_LOAD_ROM && menu->next_mode != MENU_MODE_DATEL_CODE_EDITOR) {
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
         deinit();
     }
 }

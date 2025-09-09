@@ -12,7 +12,7 @@ static const char *format_switch (bool state) {
     }
 }
 
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
     menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -44,10 +44,12 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+#ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
     menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
+#endif
 
 static void set_hide_extension_type(menu_t *menu, void *arg) {
     menu->settings.hide_extension = (bool)(uintptr_t)(arg);
@@ -87,7 +89,7 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 // }
 #endif
 
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static component_context_menu_t set_loading_progress_bar_enabled_context_menu = { .list = {
     {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
@@ -119,11 +121,13 @@ static component_context_menu_t set_show_saves_folder_type_context_menu = { .lis
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+#ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list = {
     {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
+#endif
 
 static component_context_menu_t set_hide_extension_context_menu = { .list = {
     { .text = "On", .action = set_hide_extension_type, .arg = (void *)(uintptr_t)(true) },
@@ -167,7 +171,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "ROM Loading Bar", .submenu = &set_loading_progress_bar_enabled_context_menu },
 #else
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
@@ -221,16 +225,18 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_layout_draw();
 
 	ui_components_main_text_draw(
+        STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "MENU SETTINGS EDITOR\n"
         "\n"
     );
 
     ui_components_main_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n\n"
         "  Default Directory : %s\n"
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
         "  Autoload ROM      : %s\n\n"
         "To change the following menu settings, press 'A':\n"
         "    ROM Loading Bar   : %s\n"
@@ -256,7 +262,7 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
         ,
         menu->settings.default_directory,
-#ifdef FEATURE_AUTOLOAD_ROM
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.loading_progress_bar_enabled),
 #else
@@ -278,12 +284,14 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "A: Change\n"
         "B: Back"
     );
 
     ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "R: Reset settings\n"
         "\n"

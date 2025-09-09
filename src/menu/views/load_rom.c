@@ -328,7 +328,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+            "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
             "Datel Cheats:\t%s\n"
             "Patches:\t\t\t%s\n"
             "TV region:\t\t%s\n"

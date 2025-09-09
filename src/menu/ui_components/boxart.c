@@ -38,7 +38,7 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
  */
 component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;
-    char boxart_path[30];
+    char boxart_path[32];
 
     if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
         return NULL;
@@ -50,7 +50,12 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
 
     if (game_code[1] == 'E' && game_code[2] == 'D') {
         // This is using a homebrew ROM ID, use the title for the file name instead.
-        snprintf(boxart_path, sizeof(boxart_path), "homebrew/%s", rom_title);
+        // Create a null-terminated copy of the title for safe string operations
+        char safe_title[21];  // 20 chars + null terminator
+        memcpy(safe_title, rom_title, 20);
+        safe_title[20] = '\0';
+        
+        snprintf(boxart_path, sizeof(boxart_path), "homebrew/%s", safe_title);
         path_push(path, boxart_path);
     }
     else {

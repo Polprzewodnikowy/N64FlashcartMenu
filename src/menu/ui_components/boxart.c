@@ -71,6 +71,7 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
         if (!directory_exists(path_get(path))) { // Fallback to the old boxart directory if metadata directory doesn't exist.
             
             // TODO: As a deprecated path, eventually this should be removed.
+            path_free(path);
             path = path_init(storage_prefix, OLD_BOXART_DIRECTORY);
             path_push(path, boxart_path);
 

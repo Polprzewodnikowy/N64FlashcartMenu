@@ -110,6 +110,18 @@ Within the code, use the `debugf` command, and then deploy using a debug build e
 ```
 The output will then be shown within the terminal.
 
+### Using feature flags
+To enable features that are not build by default, you can input flags as part of the build.
+i.e. the current notible flags are:
+```
+FEATURE_AUTOLOAD_ROM_ENABLED
+FEATURE_PATCHER_GUI_ENABLED
+BETA_SETTINGS
+FEATURE_DEPRECATED_FUNCTIONALITY
+```
+An example build command would be:
+`make clean && FLAGS="-DFEATURE_PATCHER_GUI_ENABLED -DFEATURE_DEPRECATED_FUNCTIONALITY" make all`
+
 
 ### Update submodules
 To update to the latest version, use `git submodule update --remote` from the terminal.

@@ -12,7 +12,8 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-#define METADATA_BASE_DIRECTORY    "menu/boxart"
+#define OLD_BOXART_DIRECTORY       "menu/boxart"
+#define METADATA_BASE_DIRECTORY    "menu/metadata"
 #define HOMEBREW_ID_SUBDIRECTORY   "homebrew"
 
 /**
@@ -65,6 +66,17 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
 
         if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
             path_pop(path);
+        }
+
+        if (!directory_exists(path_get(path))) { // Fallback to the old boxart directory if metadata directory doesn't exist.
+            
+            // TODO: As a deprecated path, eventually this should be removed.
+            path = path_init(storage_prefix, OLD_BOXART_DIRECTORY);
+            path_push(path, boxart_path);
+
+            if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
+                path_pop(path);
+            }
         }
     }
 

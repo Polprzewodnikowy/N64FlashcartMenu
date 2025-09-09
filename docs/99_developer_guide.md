@@ -71,6 +71,7 @@ REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
 ```
 
 To debug the ROM with upload and auto reboot:
+(note: the current debugging session menu may not be the same as the file uploaded. you need to `make all` first to ensure the latest menu is uploaded).
 ```
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```

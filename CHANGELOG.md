@@ -15,6 +15,7 @@ built from latest commit on main branch.
 	- Shows info message within the loading progress bar.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
 	- Add Alpha Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
+	- Add ability to load boxart from ROMs that use the homebrew header (see [documentation](./docs/19_gamepak_boxart.md)).
 	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
 
 - **Bug Fixes**

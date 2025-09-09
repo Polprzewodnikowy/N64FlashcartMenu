@@ -117,7 +117,7 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
             }
         }
     }
-#ifdef DEPRECATED_BOXART_COMPATIBILITY_MODE
+#ifdef FEATURE_DEPRECATED_FUNCTIONALITY
     else { // deprecated compatibility mode
 
         char file_name[9];

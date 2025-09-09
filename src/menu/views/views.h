@@ -113,6 +113,21 @@ void view_text_viewer_display(menu_t *menu, surface_t *display);
 void view_music_player_init(menu_t *menu);
 
 /**
+ * @brief Initialize the rom patcher view.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
+void view_load_rom_patch_init (menu_t *menu);
+
+/**
+ * @brief Display the rom patcher view.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_load_rom_patch_display (menu_t *menu, surface_t *display);
+
+/**
  * @brief Display the music player view.
  * 
  * @param menu Pointer to the menu structure.

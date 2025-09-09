@@ -52,6 +52,7 @@ SRCS = \
 	menu/path.c \
 	menu/png_decoder.c \
 	menu/rom_info.c \
+	menu/rom_patch_info.c \
 	menu/settings.c \
 	menu/sound.c \
 	menu/ui_components/background.c \
@@ -73,6 +74,7 @@ SRCS = \
 	menu/views/load_disk.c \
 	menu/views/load_emulator.c \
 	menu/views/load_rom.c \
+	menu/views/load_patch.c \
 	menu/views/music_player.c \
 	menu/views/startup.c \
 	menu/views/system_info.c \

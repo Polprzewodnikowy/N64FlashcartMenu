@@ -12,7 +12,8 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-#define BOXART_DIRECTORY    "menu/boxart"
+#define METADATA_BASE_DIRECTORY    "menu/boxart"
+#define HOMEBREW_ID_SUBDIRECTORY   "homebrew"
 
 /**
  * @brief PNG decoder callback function.
@@ -46,7 +47,7 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
 
     b->loading = true;
 
-    path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
+    path_t *path = path_init(storage_prefix, METADATA_BASE_DIRECTORY);
 
     if (game_code[1] == 'E' && game_code[2] == 'D') {
         // This is using a homebrew ROM ID, use the title for the file name instead.
@@ -55,7 +56,7 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
         memcpy(safe_title, rom_title, 20);
         safe_title[20] = '\0';
         
-        snprintf(boxart_path, sizeof(boxart_path), "homebrew/%s", safe_title);
+        snprintf(boxart_path, sizeof(boxart_path), HOMEBREW_ID_SUBDIRECTORY"/%s", safe_title);
         path_push(path, boxart_path);
     }
     else {

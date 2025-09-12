@@ -12,7 +12,9 @@
 #include "constants.h"
 #include "utils/fs.h"
 
-#define BOXART_DIRECTORY    "menu/boxart"
+#define OLD_BOXART_DIRECTORY       "menu/boxart"
+#define METADATA_BASE_DIRECTORY    "menu/metadata"
+#define HOMEBREW_ID_SUBDIRECTORY   "homebrew"
 
 /**
  * @brief PNG decoder callback function.
@@ -32,12 +34,13 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
  * 
  * @param storage_prefix The storage prefix.
  * @param game_code The game code.
+ * @param rom_title Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety.
  * @param current_image_view The current image view type.
  * @return component_boxart_t* Pointer to the initialized boxart component.
  */
-component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char *game_code, file_image_type_t current_image_view) {
+component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const char *game_code, const char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;
-    char boxart_id_path[8];
+    char boxart_path[32];
 
     if ((b = calloc(1, sizeof(component_boxart_t))) == NULL) {
         return NULL;
@@ -45,14 +48,40 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
 
     b->loading = true;
 
-    path_t *path = path_init(storage_prefix, BOXART_DIRECTORY);
+    path_t *path = path_init(storage_prefix, METADATA_BASE_DIRECTORY);
 
-    sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
-    path_push(path, boxart_id_path);
-
-    if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
-        path_pop(path);
+    if (game_code[1] == 'E' && game_code[2] == 'D') {
+        // This is using a homebrew ROM ID, use the title for the file name instead.
+        // Create a null-terminated copy of the title for safe string operations
+        char safe_title[21];  // 20 chars + null terminator
+        memcpy(safe_title, rom_title, 20);
+        safe_title[20] = '\0';
+        
+        snprintf(boxart_path, sizeof(boxart_path), HOMEBREW_ID_SUBDIRECTORY"/%s", safe_title);
+        path_push(path, boxart_path);
     }
+    else {
+        sprintf(boxart_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+        path_push(path, boxart_path);
+
+        if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
+            path_pop(path);
+        }
+
+        if (!directory_exists(path_get(path))) { // Fallback to the old boxart directory if metadata directory doesn't exist.
+            
+            // TODO: As a deprecated path, eventually this should be removed.
+            path_free(path);
+            path = path_init(storage_prefix, OLD_BOXART_DIRECTORY);
+            path_push(path, boxart_path);
+
+            if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
+                path_pop(path);
+            }
+        }
+    }
+
+    debugf("Boxart: Using path %s\n", boxart_path);
 
     if (directory_exists(path_get(path))) {
         switch (current_image_view) {
@@ -89,6 +118,50 @@ component_boxart_t *ui_components_boxart_init (const char *storage_prefix, char 
             }
         }
     }
+
+#ifdef FEATURE_DEPRECATED_FUNCTIONALITY
+    else { // deprecated compatibility mode
+
+        char file_name[9];
+
+        // reset the directory path used for boxart.
+        path_free(path);
+        path = path_init(storage_prefix, OLD_BOXART_DIRECTORY);
+
+        snprintf(file_name, sizeof(file_name), "%c%c%c%c.png", game_code[0], game_code[1], game_code[2], game_code[3]);
+        path_push(path, file_name);
+
+        if (file_exists(path_get(path))) {
+            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
+                path_free(path);
+                return b;
+            }
+        }
+
+        path_pop(path);
+        snprintf(file_name, sizeof(file_name), "%c%c%c.png", game_code[0], game_code[1], game_code[2]);
+        path_push(path, file_name);
+
+        if (file_exists(path_get(path))) {
+            if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
+                path_free(path);
+                return b;
+            }
+        } else {
+            path_pop(path);
+
+            snprintf(file_name, sizeof(file_name), "%c%c.png", game_code[1], game_code[2]);
+            path_push(path, file_name);
+            if (file_exists(path_get(path))) {
+                if (png_decoder_start(path_get(path), BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX, png_decoder_callback, b) == PNG_OK) {
+                    path_free(path);
+                    return b;
+                }
+            }
+        }
+    }
+#endif
+    // TODO: return default image.
 
     path_free(path);
 

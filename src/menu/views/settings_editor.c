@@ -44,10 +44,12 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+#ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
     menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
+#endif
 
 #ifdef BETA_SETTINGS
 static void set_pal60_type (menu_t *menu, void *arg) {
@@ -104,11 +106,13 @@ static component_context_menu_t set_show_saves_folder_type_context_menu = { .lis
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+#ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list = {
     {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
     {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
+#endif
 
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {

@@ -12,7 +12,6 @@
 #include "path.h"
 
 static char *history_path = NULL;
-static path_t *empty_path = NULL;
 static bookkeeping_t init;
 
 /**
@@ -25,7 +24,6 @@ void bookkeeping_init (char *path) {
         free(history_path);
     }
     history_path = strdup(path);
-    empty_path = path_create("");
 }
 
 /**
@@ -36,9 +34,9 @@ void bookkeeping_init (char *path) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-void bookkeeping_ini_load_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group) {
+void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
-    for(int i = 0; i < count; i++) {
+    for(uint16_t i = 0; i < count; i++) {
         sprintf(buf, "%d_primary_path", i);
         list[i].primary_path = path_create(mini_get_string(ini, group, buf, ""));
 
@@ -75,9 +73,9 @@ void bookkeeping_load (bookkeeping_t *history) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-static void bookkeeping_ini_save_list(bookkeeping_item_t *list, int count, mini_t *ini, const char *group) {
+static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
-    for(int i = 0; i < count; i++) {
+    for(uint16_t i = 0; i < count; i++) {
         sprintf(buf, "%d_primary_path", i);
         path_t* path = list[i].primary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   

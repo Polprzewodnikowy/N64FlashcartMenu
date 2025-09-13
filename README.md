@@ -43,8 +43,8 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * Music playback (MP3).
 * Menu sound effects.
 * N64 ROM fast reboot option (on reset).
-* ROM information descriptions.
 * ROM history and favorites.
+* ROM Datel code editor.
 
 
 ## Aims
@@ -116,3 +116,6 @@ See [License](https://pixabay.com/en/service/license-summary/) for the following
 * [gb64](https://github.com/lambertjamesd/gb64) by *lambertjamesd* - (MIT License)
 * [smsPlus64](https://github.com/fhoedemakers/smsplus64) by *fhoedmakers* - (GPL-3.0 License)
 * [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra) by *celerizer* - (MIT License)
+
+## Fonts
+* [Firple](https://github.com/negset/Firple) by *negset* - (SIL Open Font License 1.1)

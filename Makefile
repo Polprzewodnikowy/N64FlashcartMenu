@@ -61,7 +61,6 @@ SRCS = \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
-	menu/gb_game_info.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
 	menu/views/datel_code_editor.c \

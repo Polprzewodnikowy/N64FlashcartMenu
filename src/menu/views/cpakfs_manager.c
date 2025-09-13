@@ -471,7 +471,7 @@ static void process (menu_t *menu) {
             }
 
             // Pressing L : dump a single note
-            else if (menu->actions.l && 
+            else if (menu->actions.lz_context && 
                 use_rtc && 
                 !show_complete_write_confirm_message && 
                 !show_complete_dump_confirm_message &&
@@ -836,7 +836,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Dump Pak\n"
-            "L: Dump single Note\n"
+            "L|Z: Dump single Note\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,

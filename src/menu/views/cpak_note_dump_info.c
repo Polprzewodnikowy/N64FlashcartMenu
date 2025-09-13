@@ -7,12 +7,10 @@
 #include <fatfs/ff.h>
 #include "utils/cpakfs_utils.h"
 
-char * CPAK_ENTRIES_PATH = "sd:/aio/cpak_saves/entries";
-char * CPAK_ENTRIES_PATH_NO_PRE = "/aio/cpak_saves/entries";
-char cpak_note_path[255];
-short controller_selected_for_restore_note;
-char failure_message_note[255];
-bool start_note_restore;
+static char cpak_note_path[255];
+static short controller_selected;
+static char failure_message_note[255];
+static bool start_note_restore;
 
 static bool restore_controller_pak_note(int controller) {
     sprintf(failure_message_note, " ");
@@ -46,7 +44,6 @@ static bool restore_controller_pak_note(int controller) {
         return false;
     }
 
-
     //debugf("Source filename: %s\n", cpak_note_path);
 
     //Opening the source file (the dump note file)
@@ -76,9 +73,9 @@ static bool restore_controller_pak_note(int controller) {
         char unique_full[256];
 
         // Strip the prefix from filename_note to get just the CPAK full name:
-        // (title already has no prefix, so you can pass 'title' directly)
+        // (title already has no prefix, so pass 'title' directly)
         if (pick_unique_fullname_with_mount(CPAK_MOUNT_ARRAY[controller],
-                                            title,                 /* NO prefix */
+                                            title, /* NO prefix */
                                             unique_full, sizeof unique_full,
                                             my_exists_full) == 0)
         {
@@ -86,7 +83,6 @@ static bool restore_controller_pak_note(int controller) {
             //debugf("File exists, new name picked: %s\n", filename_note);
         } else {
             //debugf("Could not pick a unique name for %s\n", filename_note);
-            // handle error (bail out or fallback)
         }
     }
 
@@ -95,8 +91,6 @@ static bool restore_controller_pak_note(int controller) {
             //debugf("Failed to open destination file: %s\n", filename_note);
             return false;
     }
-
-    // Copy data from source to destination
 
     surface_t *d = display_try_get();
     rdpq_attach(d, NULL);
@@ -130,10 +124,10 @@ static bool restore_controller_pak_note(int controller) {
 static void process (menu_t *menu) {
     if (menu->actions.go_left) {
         sound_play_effect(SFX_CURSOR);
-        controller_selected_for_restore_note = ((controller_selected_for_restore_note - 1) + 4) % 4;
+        controller_selected = ((controller_selected - 1) + 4) % 4;
     } else if (menu->actions.go_right) {
         sound_play_effect(SFX_CURSOR);
-        controller_selected_for_restore_note = ((controller_selected_for_restore_note + 1) + 4) % 4;
+        controller_selected = ((controller_selected + 1) + 4) % 4;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -182,12 +176,12 @@ static void draw (menu_t *menu, surface_t *d) {
         "Controller selected: %d\n\n"
         "A: Yes  B: No \n"
         "<- / ->: Change controller",
-        controller_selected_for_restore_note + 1
+        controller_selected + 1
     );
 
     if (start_note_restore) {
         rdpq_detach_show();
-        if (restore_controller_pak_note(controller_selected_for_restore_note)) {
+        if (restore_controller_pak_note(controller_selected)) {
             menu->next_mode = MENU_MODE_BROWSER;
         } 
         start_note_restore = false;

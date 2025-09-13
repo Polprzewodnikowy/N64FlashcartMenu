@@ -45,6 +45,7 @@ static void draw (menu_t *menu, surface_t *d) {
         " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Contributors:\n"
+        " MaxiB : Controller pak menu manager\n"
         " Thank you to ALL project contributors,\n"
         " no matter how small the commit.\n"
         "OSS software used:\n"

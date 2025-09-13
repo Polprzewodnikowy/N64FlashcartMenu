@@ -8,16 +8,15 @@
 #include "utils/cpakfs_utils.h"
 
 
-char cpak_path[255];
-short controller_selected_for_restore;
-char failure_message[255];
-bool start_complete_restore;
+static char cpak_path[255];
+static short controller_selected;
+static char failure_message[255];
+static bool start_complete_restore;
 
-bool restore_controller_pak(int controller) {
+static bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");
 
     if (!has_cpak(controller)) {
-        //"No controller pak detected!"
         sprintf(failure_message, "No controller pak detected on controller %d!", controller + 1);
         return false;
     }
@@ -25,13 +24,11 @@ bool restore_controller_pak(int controller) {
     uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
     FILE *fp = fopen(cpak_path, "r");
     if (!fp) {
-        //"Failed to open file for reading!"
         sprintf(failure_message, "Failed to open file for reading!");
         free(data);
         return false;
     }
     if (fread(data, 1, MEMPAK_BLOCK_SIZE * 128, fp) != MEMPAK_BLOCK_SIZE * 128) {
-        //"Failed to read data from file!"
         sprintf(failure_message, "Failed to read data from file!");
         fclose(fp);
         free(data);
@@ -40,13 +37,11 @@ bool restore_controller_pak(int controller) {
     fclose(fp);
 
     for (int i = 0; i < 128; i++) { 
-        if (write_mempak_sector(controller_selected_for_restore, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            //"Failed to write to mempak sector!"
+        if (write_mempak_sector(controller_selected, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
             sprintf(failure_message, "Failed to write to mempak sector!");
             free(data);
             return false;
         }
-        
 
         surface_t *d = display_try_get();
         rdpq_attach(d, NULL);
@@ -59,7 +54,7 @@ bool restore_controller_pak(int controller) {
             "Controller selected: %d\n\n"
             "A: Yes  B: No \n"
             "<- / ->: Change controller",
-            controller_selected_for_restore + 1
+            controller_selected + 1
         );
         ui_components_loader_draw((float) i / 128.0f, "Restoring Controller Pak...");
         rdpq_detach_show();
@@ -72,10 +67,10 @@ bool restore_controller_pak(int controller) {
 static void process (menu_t *menu) {
     if (menu->actions.go_left) {
         sound_play_effect(SFX_CURSOR);
-        controller_selected_for_restore = ((controller_selected_for_restore - 1) + 4) % 4;
+        controller_selected = ((controller_selected - 1) + 4) % 4;
     } else if (menu->actions.go_right) {
         sound_play_effect(SFX_CURSOR);
-        controller_selected_for_restore = ((controller_selected_for_restore + 1) + 4) % 4;
+        controller_selected = ((controller_selected + 1) + 4) % 4;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -120,12 +115,12 @@ static void draw (menu_t *menu, surface_t *d) {
         "Controller selected: %d\n\n"
         "A: Yes  B: No \n"
         "<- / ->: Change controller",
-        controller_selected_for_restore + 1
+        controller_selected + 1
     );
 
     if (start_complete_restore) {
         rdpq_detach_show();
-        if (restore_controller_pak(controller_selected_for_restore)) {
+        if (restore_controller_pak(controller_selected)) {
             menu->next_mode = MENU_MODE_BROWSER;
         } 
         start_complete_restore = false;

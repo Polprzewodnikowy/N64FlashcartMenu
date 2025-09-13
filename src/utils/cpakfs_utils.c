@@ -37,9 +37,9 @@ void unmount_all_cpakfs() {
     for (int i = 0; i < 4; i++) {
         int val = cpakfs_unmount(i);
         if (val < 0) {
-            debugf("Failed to unmount cpakfs on port %d: %d\n", i+1, val);
+            //debugf("Failed to unmount cpakfs on port %d: %d\n", i+1, val);
         } else {
-            debugf("Unmounted cpakfs on port %d\n", i+1);
+            //debugf("Unmounted cpakfs on port %d\n", i+1);
         }
     }
 }
@@ -48,11 +48,11 @@ void unmount_all_cpakfs() {
 //  0 = success
 int mount_cpakfs(int controller) {
     if (cpakfs_mount(controller, CPAK_MOUNT_ARRAY[controller]) < 0) {
-        debugf("Failed to mount cpakfs on port %d\n", controller + 1);
+        //debugf("Failed to mount cpakfs on port %d\n", controller + 1);
        return -1;
 
     } else {
-        debugf("Mounted cpakfs on port %d\n", controller + 1);
+        //debugf("Mounted cpakfs on port %d\n", controller + 1);
         return 0;
     }
 }
@@ -65,7 +65,7 @@ int extract_title_from_absolute_path(const char *path, char *outbuf, size_t outb
 
     // 2. Find first underscore after filename
     const char *uscore = strchr(fname, '_');
-    const char *dot = strrchr(fname, '.');  // last dot → extension
+    const char *dot = strrchr(fname, '.');  // last dot -> extension
 
     const char *end;
 
@@ -76,11 +76,11 @@ int extract_title_from_absolute_path(const char *path, char *outbuf, size_t outb
         // Case without timestamp: cut before extension
         end = dot;
     } else {
-        // No underscore, no dot → whole filename
+        // No underscore, no dot -> whole filename
         end = fname + strlen(fname);
     }
 
-    // 3. Copy substring [fname, end)
+    // 3. Copy substring
     size_t len = (size_t)(end - fname);
     if (len >= outbuf_size) len = outbuf_size - 1;
     memcpy(outbuf, fname, len);
@@ -128,8 +128,6 @@ int parse_cpakfs_fullname(const char *fullname, cpakfs_path_strings_t *out) {
     return 0;
 }
 
-
-///////////////////////////////////////////////////////////////////$
 static int parse_fullname(const char *s, cpakfs_path_strings_t *out) {
     const char *dot1 = strchr(s, '.');          if (!dot1 || dot1 - s != 4) return -1;
     const char *dash = strchr(dot1 + 1, '-');   if (!dash || dash - (dot1+1) != 2) return -2;
@@ -167,7 +165,7 @@ static int format_fullname(const cpakfs_path_strings_t *in, char *out, size_t ou
     return 0;
 }
 
-/* --- base36 helpers for extension bumping --- */
+// --- base36 helpers for extension bumping --- 
 static int is_base36_str(const char *s){ if(!*s) return 0; for(const unsigned char*p=(const unsigned char*)s;*p;++p) if(!((*p>='0'&&*p<='9')||(*p>='A'&&*p<='Z'))) return 0; return 1; }
 static unsigned base36_to_uint(const char *s){ unsigned v=0; for(const unsigned char*p=(const unsigned char*)s;*p;++p){ v*=36; v+= (*p<='9'?*p-'0':*p-'A'+10); } return v; }
 static void uint_to_base36(unsigned n, char *out, size_t maxlen) {
@@ -190,7 +188,7 @@ static void uint_to_base36(unsigned n, char *out, size_t maxlen) {
     out[digits] = '\0';
 }
 
-/* --- safe join: prefix + name -> fullpath --- */
+// --- safe join: prefix + name -> fullpath ---
 static int join_mount_name(const char *mount, const char *name, char *out, size_t outsz){
     size_t m = strlen(mount), n = strlen(name);
     int need_sep = (m>0 && mount[m-1] != '/' && mount[m-1] != ':');
@@ -204,7 +202,7 @@ static int join_mount_name(const char *mount, const char *name, char *out, size_
     return 0;
 }
 
-/* exists_fullpath() must accept a FULL mounted path (e.g. "cpak1:/NAME") */
+// exists_fullpath() must accept a FULL mounted path (e.g. "cpak1:/NAME")
 int pick_unique_fullname_with_mount(const char *mount_prefix,
                                     const char *desired_name,
                                     char *out_fullpath, size_t outsz,
@@ -217,19 +215,19 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
     char test_full[256];
     if (join_mount_name(mount_prefix, desired_name, test_full, sizeof test_full) != 0) return -2;
     if (!exists_fullpath(test_full)) {
-        /* Copy full path (with prefix) out */
+        // Copy full path (with prefix) out
         size_t need = strlen(test_full) + 1;
         if (need > outsz) return -3;
         memcpy(out_fullpath, test_full, need);
         return 0;
     }
 
-    /* Build base without extension */
+    // Build base without extension
     cpakfs_path_strings_t base = want; base.ext[0] = '\0';
     char base_name[128];
     if (format_fullname(&base, base_name, sizeof base_name) != 0) return -4;
 
-    /* Starting counter */
+    // Starting counter
     unsigned start = is_base36_str(want.ext) ? (base36_to_uint(want.ext) + 1) : 0;
 
     const unsigned MAX = 36 + 36*36 + 36*36*36 + 36*36*36*36;
@@ -257,7 +255,7 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
             return 0;
         }
     }
-    return -6; /* exhausted (unlikely) */
+    return -6; // exhausted (unlikely)
 }
 
 int my_exists_full(const char *full_mounted_path){

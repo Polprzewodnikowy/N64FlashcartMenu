@@ -15,7 +15,6 @@
  */
 typedef enum {
     FNT_DEFAULT = 1, /**< Default font type */
-    FNT_JAP = 2,
 } menu_font_type_t;
 
 /**

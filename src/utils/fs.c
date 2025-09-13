@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <ctype.h>
 
 #include "fs.h"
 #include "utils.h"
@@ -106,40 +105,6 @@ bool file_has_extensions (char *path, const char *extensions[]) {
     }
 
     return false;
-}
-
-bool check_cpaksmpk(const char *filepath) {
-    // Get the filename from the path
-    const char *filename = strrchr(filepath, '/');
-    if (filename) {
-        filename++; // skip the '/'
-    } else {
-        filename = filepath; // no slash, the whole thing is the filename
-    }
-
-    // Check if it starts with "CPAK_"
-    if (strncmp(filename, "CPAK_", 5) != 0) {
-        return false; // doesn't start with CPAK_
-    }
-
-    // Find ".smpk_" in the filename
-    const char *smpk_pos = strstr(filename, ".smpk_");
-    if (!smpk_pos) {
-        return false; // ".smpk_" not found
-    }
-
-    // Move pointer after ".smpk_"
-    smpk_pos += strlen(".smpk_");
-
-    // After ".smpk_", all characters must be digits
-    while (*smpk_pos) {
-        if (!isdigit((unsigned char)*smpk_pos)) {
-            return false; // not a digit
-        }
-        smpk_pos++;
-    }
-
-    return true; // all checks passed
 }
 
 

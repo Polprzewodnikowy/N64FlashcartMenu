@@ -1,6 +1,5 @@
 #include "views.h"
 #include "../sound.h"
-#include "../fonts.h"
 
 #ifndef MENU_VERSION
 #define MENU_VERSION "Unknown"

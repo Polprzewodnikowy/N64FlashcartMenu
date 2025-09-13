@@ -4,7 +4,6 @@
 #include "../sound.h"
 #include "views.h"
 #include "../bookkeeping.h"
-#include "../fonts.h"
 
 static component_boxart_t *boxart;
 static char *disk_filename;

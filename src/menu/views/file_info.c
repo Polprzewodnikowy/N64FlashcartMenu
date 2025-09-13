@@ -19,8 +19,8 @@ static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", 
 static const char *controller_pak_note_extensions[] = { "mpkn", NULL };
 
 static struct stat st;
-bool is_memory_pak_dump;
-bool is_memory_pak_dump_note;
+static bool is_memory_pak_dump;
+static bool is_memory_pak_dump_note;
 
 
 static char *format_file_type (char *name, bool is_directory) {
@@ -48,9 +48,6 @@ static char *format_file_type (char *name, bool is_directory) {
     } else if (file_has_extensions(name, controller_pak_extensions)) {
         is_memory_pak_dump = true;
         return " Type: Controller Pak file\n";
-    } else if (check_cpaksmpk(name)) {
-        is_memory_pak_dump_note = true;
-        return " Type: Note of controller Pak file\n";
     } else if (file_has_extensions(name, controller_pak_note_extensions)) {
         is_memory_pak_dump_note = true;
         return " Type: Note of controller Pak file\n";

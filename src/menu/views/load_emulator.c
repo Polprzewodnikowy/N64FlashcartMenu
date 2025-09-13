@@ -3,7 +3,6 @@
 #include "utils/fs.h"
 #include "../sound.h"
 #include "views.h"
-#include "../fonts.h"
 
 
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };

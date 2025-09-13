@@ -619,7 +619,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "CONTROLLER PAK FS MANAGEMENT\n"
+        "CONTROLLER PAK MANAGEMENT\n"
     );
 
     ui_components_main_text_draw(STL_DEFAULT,

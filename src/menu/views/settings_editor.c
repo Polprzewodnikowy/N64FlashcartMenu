@@ -2,7 +2,6 @@
 #include "../sound.h"
 #include "../settings.h"
 #include "views.h"
-#include "../fonts.h"
 
 static bool show_message_reset_settings = false;
 

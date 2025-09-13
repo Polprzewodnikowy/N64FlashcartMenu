@@ -463,21 +463,26 @@ static void draw (menu_t *menu, surface_t *d) {
         }
     }
 
-    ui_components_actions_bar_text_draw((path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT),
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
-        "B: Back",
-        (menu->browser.entries == 0 ? "" : action)
+        "^%02XB: Back^00",
+        menu->browser.entries == 0 ? "" : action,
+        path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
 
-    ui_components_actions_bar_text_draw(menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT,
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "Start: Settings\n"
-        "R: Options"
+        "^%02XStart: Settings^00\n"
+        "^%02XR:  Options^00",
+        menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
     if (menu->current_time >= 0) {
-        ui_components_actions_bar_text_draw(STL_DEFAULT,
+        ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "C-Up/Down: Fast Scroll\n"
             "%s",

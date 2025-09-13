@@ -104,8 +104,9 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "Up / Down: Scroll\n"
-        "B: Back"
+        "^%02XUp / Down: Scroll^00\n"
+        "B: Back",
+        text->vertical_scroll_possible ? STL_DEFAULT : STL_GRAY
     );
 
     rdpq_detach_show();

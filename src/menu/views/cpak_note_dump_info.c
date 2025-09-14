@@ -16,7 +16,7 @@ static bool restore_controller_pak_note(int controller) {
     sprintf(failure_message_note, " ");
 
     if (!has_cpak(controller)) {
-        sprintf(failure_message_note, "No controller pak detected on controller %d!", controller + 1);
+        sprintf(failure_message_note, "No Controller Pak detected on controller %d!", controller + 1);
         return false;
     }
 
@@ -39,7 +39,7 @@ static bool restore_controller_pak_note(int controller) {
     //debugf("Free notes: %d notes\n", free_notes);
 
     if (free_notes <= 0) {
-        sprintf(failure_message_note, "Not enough pages left on cpak in controller %d!\n(Required: 1 / Available: 0)", controller + 1);
+        sprintf(failure_message_note, "Not enough pages left on Controller Pak in controller %d!\n(Required: 1 / Available: 0)", controller + 1);
         cpakfs_unmount(controller);
         return false;
     }
@@ -57,7 +57,7 @@ static bool restore_controller_pak_note(int controller) {
     //debugf("Size in blocks: %d\n", size);
 
     if (size > free_blocks) {
-        sprintf(failure_message_note, "Not enough space on cpak in controller %d!\n(Required: %d / Available: %d)", controller + 1, size, free_blocks);
+        sprintf(failure_message_note, "Not enough space on Controller Pak in controller %d!\n(Required: %d / Available: %d)", controller + 1, size, free_blocks);
         fclose(fSource);
         cpakfs_unmount(controller);
         return false;
@@ -172,7 +172,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     
     ui_components_messagebox_draw(
-        "Do you want to restore this note dump to the controller Pak?\n\n"
+        "Do you want to restore this note dump to the Controller Pak?\n\n"
         "Controller selected: %d\n\n"
         "A: Yes  B: No \n"
         "<- / ->: Change controller",

@@ -100,8 +100,6 @@ typedef struct {
         bool options;
         bool settings;
         bool lz_context;
-        bool previous_tab;
-        bool next_tab;
         bool l;
     } actions;
 

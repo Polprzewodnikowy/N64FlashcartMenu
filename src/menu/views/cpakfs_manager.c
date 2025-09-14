@@ -91,7 +91,7 @@ static void create_directory(const char *dirpath) {
 static void get_rtc_time(char* formatted_time) {
     rtc_get(&rtc_time);
 
-    sprintf(formatted_time, "%04d.%02d.%02d_%02dh%02dm%02ds",
+    sprintf(formatted_time, "%04d-%02d-%02d_%02d%02d%02d",
             rtc_time.year, rtc_time.month + 1, rtc_time.day,
             rtc_time.hour, rtc_time.min, rtc_time.sec);
 }
@@ -132,7 +132,7 @@ static void format_controller_pak () {
     sprintf(failure_message_note, " ");
     int res = cpakfs_format(controller_selected, false);
     if (res < 0) {
-        sprintf(failure_message_note, "Unable to format controller pak on controller %d!\nError code: %d", controller_selected + 1, res);
+        sprintf(failure_message_note, "Unable to format Controller Pak on controller %d!\nError code: %d", controller_selected + 1, res);
         error_message_displayed = true;
     }
     reset_vars();
@@ -149,10 +149,15 @@ static void active_format_controller_pak_message(menu_t *menu, void *arg) {
     show_format_controller_pak_confirm_message = true;
 }
 
+static void active_restore_controller_pak_message(menu_t *menu, void *arg) {
+    show_complete_write_confirm_message = true;
+}
+
 static component_context_menu_t options_context_menu = {
     .list = {
-        { .text = "Format Contr. Pak", .action = active_format_controller_pak_message },
+        { .text = "Format Controller Pak", .action = active_format_controller_pak_message },
         { .text = "Delete single note", .action = active_single_note_delete_message },
+        { .text = "Restore a dump to the Controller Pak", .action = active_restore_controller_pak_message },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -168,7 +173,7 @@ static void populate_list_cpakfs() {
             if (size < 0) {
                 sprintf(controller_pak_name_notes_bank_size[0], " ");
             } else {
-                sprintf(controller_pak_name_notes_bank_size[0], "(%-3.3d blocks)", size);
+                sprintf(controller_pak_name_notes_bank_size[0], "(%-3.3d)", size);
             }
             snprintf(controller_pak_name_notes[0], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
             parse_cpakfs_fullname(dir_entry.d_name, &cpakfs_path_strings[0]);
@@ -180,7 +185,7 @@ static void populate_list_cpakfs() {
                 if (size < 0) {
                     sprintf(controller_pak_name_notes_bank_size[i], " ");
                 } else {
-                    sprintf(controller_pak_name_notes_bank_size[i], "(%-3.3d blocks)", size);
+                    sprintf(controller_pak_name_notes_bank_size[i], "(%-3.3d)", size);
                 }
                 snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
 
@@ -216,7 +221,7 @@ static void dump_complete_cpak(int _port) {
 
         
         ui_components_messagebox_draw(
-            "Do you want to dump the CPAK?\n\n"
+            "Do you want to dump the Controller Pak?\n\n"
             "A: Yes     B: No"
         );   
         
@@ -224,7 +229,7 @@ static void dump_complete_cpak(int _port) {
         if (read_mempak_sector(_port, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
             //debugf("Failed to read mempak sector %d\n", i);
             free(data);
-            sprintf(failure_message_note, "Failed to read mempak sector %d", i);
+            sprintf(failure_message_note, "Failed to read Controller Pak sector %d", i);
             error_message_displayed = true;
             return;
         }
@@ -445,7 +450,7 @@ static void process (menu_t *menu) {
 
         if (has_mem && !corrupted_pak) {
 
-            // Pressing A : dump the controller pak
+            // Pressing A : dump the Controller Pak
             if (menu->actions.enter && 
                 use_rtc && 
                 !show_complete_dump_confirm_message && 
@@ -457,18 +462,6 @@ static void process (menu_t *menu) {
                 show_complete_dump_confirm_message = true;
                 return;
             } 
-            // Pressing START : write a controller pak dump
-            else if (menu->actions.settings && 
-                use_rtc && 
-                !show_complete_write_confirm_message && 
-                !show_complete_dump_confirm_message &&
-                !show_single_note_dump_confirm_message &&
-                !show_single_note_delete_confirm_message &&
-                !show_format_controller_pak_confirm_message) {
-                sound_play_effect(SFX_ENTER);
-                show_complete_write_confirm_message = true;
-                return;
-            }
 
             // Pressing L : dump a single note
             else if (menu->actions.lz_context && 
@@ -600,7 +593,7 @@ static void draw (menu_t *menu, surface_t *d) {
     style = STL_DEFAULT;
 
     if (has_mem) {
-        sprintf(has_mem_text, "CPAK detected");
+        sprintf(has_mem_text, "Controller Pak detected");
         style = STL_GREEN;
 
         if (has_mem && !corrupted_pak) {
@@ -612,7 +605,7 @@ static void draw (menu_t *menu, surface_t *d) {
             sprintf(free_space_cpak_text, " ");
         }
     } else {
-        sprintf(has_mem_text, "NO CPAK detected");
+        sprintf(has_mem_text, "No Controller Pak detected");
         style = STL_ORANGE;
         sprintf(free_space_cpak_text, " ");
     }
@@ -620,11 +613,6 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "CONTROLLER PAK MANAGEMENT\n"
-    );
-
-    ui_components_main_text_draw(STL_DEFAULT,
-        ALIGN_RIGHT, VALIGN_TOP,
-        "B: Back\n"
     );
 
     ui_components_main_text_draw(STL_DEFAULT,
@@ -645,7 +633,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
-            "                                  %s\n",
+            "\n"
+            "                   %s\n",
             free_space_cpak_text
         );
 
@@ -653,11 +642,13 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
             "\n"
-            "            Name           Code    Ext.        Size\n"
+            "\n"
+            "            Name           Code    Ext.    Size [blocks]\n"
         );
 
         ui_components_main_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
+            "\n"
             "\n"
             "\n"
             "\n"
@@ -700,6 +691,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
+            "\n"
             "                           %s\n"
             "                           %s\n"
             "                           %s\n"
@@ -736,6 +728,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_main_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
+            "\n"
             "\n"
             "\n"
             "\n"
@@ -778,22 +771,23 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n"
-            "                                          %s\n", 
+            "\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n"
+            "                                              %s\n", 
             controller_pak_name_notes_bank_size[0],
             controller_pak_name_notes_bank_size[1],
             controller_pak_name_notes_bank_size[2],
@@ -827,8 +821,6 @@ static void draw (menu_t *menu, surface_t *d) {
         style = STL_GRAY;
     }
 
-
-
     // Actions bars
 
     if (!corrupted_pak) {
@@ -836,18 +828,18 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
             "A: Dump Pak\n"
-            "L|Z: Dump single Note\n"
+            "B: Back\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "START: Restore Pak\n"
+            "L|Z: Dump single Note\n"
             "R: Options\n"
         );
 
     } else {
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Format Contr. Pak\n"
+            "A: Format Controller Pak\n"
             "\n"
         );
     }
@@ -902,7 +894,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (show_complete_dump_confirm_message && 
         !start_complete_dump) {
         ui_components_messagebox_draw(
-            "Do you want to dump the CPAK?\n\n"
+            "Do you want to dump the Controller Pak?\n\n"
             "A: Yes        B: No"
         );   
     } else if (show_complete_write_confirm_message) {
@@ -938,7 +930,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (show_format_controller_pak_confirm_message && 
         !start_format_controller_pak) {
         ui_components_messagebox_draw(
-            "Do you want to format the CPAK?\n\n"
+            "Do you want to format the Controller pak?\n\n"
             "A: Yes        B: No"
         );   
     }
@@ -947,7 +939,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (cpakfs_stats.pages.used <= 0) {
             rdpq_detach_show();
-            sprintf(failure_message_note, "No data to dump in controller pak on controller %d!", controller_selected + 1);
+            sprintf(failure_message_note, "No data to dump in Controller Pak on controller %d!", controller_selected + 1);
             error_message_displayed = true;
             start_complete_dump = false;
             return;

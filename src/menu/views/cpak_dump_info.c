@@ -17,7 +17,7 @@ static bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");
 
     if (!has_cpak(controller)) {
-        sprintf(failure_message, "No controller pak detected on controller %d!", controller + 1);
+        sprintf(failure_message, "No Controller Pak detected on controller %d!", controller + 1);
         return false;
     }
 
@@ -38,7 +38,7 @@ static bool restore_controller_pak(int controller) {
 
     for (int i = 0; i < 128; i++) { 
         if (write_mempak_sector(controller_selected, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            sprintf(failure_message, "Failed to write to mempak sector!");
+            sprintf(failure_message, "Failed to write to Controller Pak sector!");
             free(data);
             return false;
         }
@@ -50,7 +50,7 @@ static bool restore_controller_pak(int controller) {
 
         
         ui_components_messagebox_draw(
-            "Do you want to restore this dump to the controller Pak?\n\n"
+            "Do you want to restore this dump to the Controller Pak?\n\n"
             "Controller selected: %d\n\n"
             "A: Yes  B: No \n"
             "<- / ->: Change controller",
@@ -111,7 +111,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     
     ui_components_messagebox_draw(
-        "Do you want to restore this dump to the controller Pak?\n\n"
+        "Do you want to restore this dump to the Controller Pak?\n\n"
         "Controller selected: %d\n\n"
         "A: Yes  B: No \n"
         "<- / ->: Change controller",

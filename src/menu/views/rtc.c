@@ -59,46 +59,41 @@ void adjust_rtc_time( struct tm *t, int incr ) {
     *t = *gmtime( &timestamp );
 }
 
-void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
-    // FIXME: move this to ui_components.c once improved.
-    /* Format RTC date/time as strings */
-    char full_dt[30];
-    char current_selection_chars[30];
 
-    snprintf( full_dt, sizeof(full_dt), ">%04d|%02d|%02d|%02d|%02d|%02d< %s",
-        CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX),
-        CLAMP(t.tm_mon + 1, 1, 12),
-        CLAMP(t.tm_mday, 1, 31),
-        CLAMP(t.tm_hour, 0, 23),
-        CLAMP(t.tm_min, 0, 59),
-        CLAMP(t.tm_sec, 0, 59),
-        DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]
-        );
-        
-    switch(selected_field)
-    {
-        // Note: for what ever reason, hat chars need to be duplicated to display correctly. This will be solved when there is a decent UI for it.
-        case RTC_EDIT_YEAR:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "*^^^^^^^^********************");
-            break;
-        case RTC_EDIT_MONTH:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "******^^^^*****************");
-            break;
-        case RTC_EDIT_DAY:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "*********^^^^**************");
-            break;
-        case RTC_EDIT_HOUR:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "************^^^^***********");
-            break;
-        case RTC_EDIT_MIN:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "***************^^^^********");
-            break;
-        case RTC_EDIT_SEC:
-            snprintf( current_selection_chars, sizeof(current_selection_chars), "******************^^^^*****");
-            break;
-    }
-        ui_components_messagebox_draw(
-            "|YYYY|MM|DD|HH|MM|SS| DOW\n%s\n%s\n", full_dt, current_selection_chars);
+/**
+ * Draws the RTC date/time editor UI component.
+ * 
+ * @param t The struct tm containing the current date and time values to display.
+ * @param selected_field The field currently selected for editing (year, month, day, etc.).
+ */
+void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
+    /* Format RTC date/time as strings */
+    char str_year[5];
+    snprintf(str_year, sizeof(str_year), "%04d", CLAMP(t.tm_year + 1900, YEAR_MIN, YEAR_MAX));
+    char str_month[3];
+    snprintf(str_month, sizeof(str_month), "%02d", CLAMP(t.tm_mon + 1, 1, 12));
+    char str_day[3];
+    snprintf(str_day, sizeof(str_day), "%02d", CLAMP(t.tm_mday, 1, 31));
+    char str_hour[3];
+    snprintf(str_hour, sizeof(str_hour), "%02d", CLAMP(t.tm_hour, 0, 23));
+    char str_min[3];
+    snprintf(str_min, sizeof(str_min), "%02d", CLAMP(t.tm_min, 0, 59));
+    char str_sec[3];
+    snprintf(str_sec, sizeof(str_sec), "%02d", CLAMP(t.tm_sec, 0, 59));
+    char str_dow[4];
+    snprintf(str_dow, sizeof(str_dow), "%s", DAYS_OF_WEEK[CLAMP(t.tm_wday, 0, 6)]);
+
+    ui_component_value_editor(
+        (const char *[]){
+            "YYYY", "MM", "DD", "hh", "mm", "ss", "DoW"
+        },
+        (const char *[]){
+            str_year, str_month, str_day, str_hour, str_min, str_sec, str_dow
+        },
+        7,
+        selected_field,
+        12.0f
+    );
 }
 
 static void process (menu_t *menu) {

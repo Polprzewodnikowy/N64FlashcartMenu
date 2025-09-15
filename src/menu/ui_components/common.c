@@ -407,3 +407,69 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
         x += width;
     }
 }
+
+void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width_adjustment ) {
+    float field_width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / width_adjustment;
+    float starting_x = DISPLAY_CENTER_X - (field_width * count / 2.0f);
+
+    float x = starting_x;
+    float y = DISPLAY_CENTER_Y;    
+    float height = TAB_HEIGHT;
+
+    // first draw the values that are not selected
+    for(int i=0;i< count;i++) {
+        if(i != selected) {
+            ui_components_box_draw(
+                x,
+                y,
+                x + field_width,
+                y + height + 24,
+                TAB_INACTIVE_BACKGROUND_COLOR
+            );
+        }
+        x += field_width;
+    }
+    
+    // draw the selected value (so it shows up on top of the others)
+    if(selected >= 0 && selected < count) {
+        x = starting_x + (field_width * selected);
+
+        ui_components_box_draw(
+            x,
+            y,
+            x + field_width,
+            y + height + 24,
+            TAB_ACTIVE_BACKGROUND_COLOR
+        );
+    }
+
+    // write the text on the value boxes
+    rdpq_textparms_t value_textparms = {
+        .width = field_width,
+        .height = 24,
+        .align = ALIGN_CENTER,
+        .wrap = WRAP_NONE
+    };
+    x = starting_x;
+    for(int i=0;i< count;i++) {
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y,
+            header_text[i]
+        );
+
+        rdpq_text_print(
+            &value_textparms,
+            FNT_DEFAULT,
+            x,
+            y + 24,
+            value_text[i]
+        );
+        x += field_width;
+    }
+
+    // draw the border around the value boxes
+    ui_components_border_draw (starting_x, y, x, y + height + 24);
+}

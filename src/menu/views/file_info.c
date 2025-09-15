@@ -15,6 +15,7 @@ static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
 static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
 static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", NULL };
+static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 
 
 static struct stat st;
@@ -43,6 +44,8 @@ static char *format_file_type (char *name, bool is_directory) {
         return " Type: Controller Pak file\n";
     } else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
+    } else if (file_has_extensions(name, cheat_extensions)) {
+        return " Type: Cheats file\n";
     }
     return " Type: Unknown file\n";
 }

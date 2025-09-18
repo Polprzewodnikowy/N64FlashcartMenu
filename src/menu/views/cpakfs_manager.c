@@ -21,10 +21,12 @@ static char string_datetime_cpak[26];
 static char failure_message_note[255];
 
 static short controller_selected;
+static short index_selected;
+
 static bool has_mem;
 static bool corrupted_pak;
 static bool unmounted;
-static bool ctr_p_data_loop;
+static bool ctr_p_data_loop; // to avoid repopulating the list multiple times
 static cpakfs_stats_t cpakfs_stats;
 static dir_t dir_entry;
 
@@ -35,7 +37,7 @@ static bool process_complete_delete;
 static bool error_message_displayed;
 
 static char controller_pak_name_notes[MAX_NUM_NOTES][MAX_STRING_LENGTH];
-static char controller_pak_name_notes_bank_size[MAX_NUM_NOTES][13]; // (XXX blocks) = 12 chars + \0
+static char controller_pak_name_notes_bank_size[MAX_NUM_NOTES][4]; // "XXX" = 3 chars + \0
 
 static cpakfs_path_strings_t cpakfs_path_strings[MAX_NUM_NOTES];
 
@@ -44,11 +46,11 @@ static bool show_single_note_dump_confirm_message;
 static bool show_single_note_delete_confirm_message;
 static bool show_format_controller_pak_confirm_message;
 static bool show_complete_write_confirm_message;
+
 static bool start_complete_dump;
 static bool start_single_note_dump;
 static bool start_single_note_delete;
 static bool start_format_controller_pak;
-static short index_selected;
 
 static char * CPAK_PATH = "sd:/cpak_saves";
 static char * CPAK_PATH_NO_PRE = "/cpak_saves";
@@ -97,8 +99,6 @@ static void get_rtc_time(char* formatted_time) {
 }
 
 static void free_controller_pak_name_notes() {
-
-    // Set \0 to each note
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
         sprintf(controller_pak_name_notes[i], " ");
         sprintf(controller_pak_name_notes_bank_size[i], " ");
@@ -107,7 +107,6 @@ static void free_controller_pak_name_notes() {
         sprintf(cpakfs_path_strings[i].filename, " ");
         sprintf(cpakfs_path_strings[i].ext, " ");
     }
-
 }
 
 static void check_accessories(int controller) {
@@ -122,7 +121,7 @@ static void check_accessories(int controller) {
     } else if (has_mem && unmounted) {
         corrupted_pak = mount_cpakfs(controller) < 0 ? true : false;
         if (!corrupted_pak) {
-            cpakfs_get_stats( controller, &cpakfs_stats );
+            cpakfs_get_stats(controller, &cpakfs_stats);
         }
         unmounted = false;
     }
@@ -162,34 +161,55 @@ static component_context_menu_t options_context_menu = {
     }
 };
 
+static void write_note_name_info_list(short controller, int index, char* entry_name) {
+    char filename_cpak[256];
+    sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller], entry_name);
+    int size = get_block_size_from_fs_path(filename_cpak);
+
+    if (size < 0) {
+        sprintf(controller_pak_name_notes_bank_size[index], " ");
+    } else {
+        sprintf(controller_pak_name_notes_bank_size[index], "(%-3.3d)", size);
+    }
+    snprintf(controller_pak_name_notes[index], MAX_STRING_LENGTH, "%s", entry_name);
+    parse_cpakfs_fullname(entry_name, &cpakfs_path_strings[index]);
+}
+
 static void populate_list_cpakfs() {  
     if (has_mem && !ctr_p_data_loop) {
+        
         free_controller_pak_name_notes();
-        //TODO: enable actions when a cpak is present
+
         if (dir_findfirst(CPAK_MOUNT_ARRAY[controller_selected], &dir_entry) >= 0) {
-            char filename_cpak[256];
-            sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], dir_entry.d_name);
-            int size = get_block_size_from_fs_path(filename_cpak);
-            if (size < 0) {
-                sprintf(controller_pak_name_notes_bank_size[0], " ");
-            } else {
-                sprintf(controller_pak_name_notes_bank_size[0], "(%-3.3d)", size);
-            }
-            snprintf(controller_pak_name_notes[0], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
-            parse_cpakfs_fullname(dir_entry.d_name, &cpakfs_path_strings[0]);
+            //char filename_cpak[256];
+            //sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], dir_entry.d_name);
+
+            //int size = get_block_size_from_fs_path(filename_cpak);
+            //if (size < 0) {
+            //    sprintf(controller_pak_name_notes_bank_size[0], " ");
+            //} else {
+            //    sprintf(controller_pak_name_notes_bank_size[0], "(%-3.3d)", size);
+            //}
+
+            //snprintf(controller_pak_name_notes[0], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
+            //parse_cpakfs_fullname(dir_entry.d_name, &cpakfs_path_strings[0]);
+
+            write_note_name_info_list(controller_selected, 0, dir_entry.d_name);
+
             int i = 1;     
             while(dir_findnext(CPAK_MOUNT_ARRAY[controller_selected], &dir_entry) == 0) {
-                sprintf(filename_cpak, " ");
-                sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], dir_entry.d_name);
-                size = get_block_size_from_fs_path(filename_cpak);
-                if (size < 0) {
-                    sprintf(controller_pak_name_notes_bank_size[i], " ");
-                } else {
-                    sprintf(controller_pak_name_notes_bank_size[i], "(%-3.3d)", size);
-                }
-                snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
+                //sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], dir_entry.d_name);
+                //size = get_block_size_from_fs_path(filename_cpak);
+                //if (size < 0) {
+                //    sprintf(controller_pak_name_notes_bank_size[i], " ");
+                //} else {
+                //    sprintf(controller_pak_name_notes_bank_size[i], "(%-3.3d)", size);
+                // }
+                //snprintf(controller_pak_name_notes[i], MAX_STRING_LENGTH, "%s", dir_entry.d_name);
 
-                parse_cpakfs_fullname(dir_entry.d_name, &cpakfs_path_strings[i]);
+                //parse_cpakfs_fullname(dir_entry.d_name, &cpakfs_path_strings[i]);
+
+                write_note_name_info_list(controller_selected, i, dir_entry.d_name);
             
                 i++;
                 if (i >= MAX_NUM_NOTES) break;
@@ -205,7 +225,6 @@ static void dump_complete_cpak(int _port) {
     uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
 
     if (!data) {
-        //"Memory allocation failed!"
         sprintf(failure_message_note, "Memory allocation failed!");
         error_message_displayed = true;
         return;
@@ -219,7 +238,6 @@ static void dump_complete_cpak(int _port) {
 
         ui_components_layout_draw();
 
-        
         ui_components_messagebox_draw(
             "Do you want to dump the Controller Pak?\n\n"
             "A: Yes     B: No"
@@ -227,7 +245,6 @@ static void dump_complete_cpak(int _port) {
         
 
         if (read_mempak_sector(_port, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            //debugf("Failed to read mempak sector %d\n", i);
             free(data);
             sprintf(failure_message_note, "Failed to read Controller Pak sector %d", i);
             error_message_displayed = true;
@@ -247,13 +264,19 @@ static void dump_complete_cpak(int _port) {
 
     FILE *fp = fopen(complete_filename, "w");
     if (!fp) {
-        //debugf("Failed to open file for writing: %s\n", complete_filename);
+        sprintf(failure_message_note, "Failed to open file for writing: %s\n", complete_filename);
+        error_message_displayed = true;
+        fclose(fp);
         free(data);
         return;
     }
 
     if (fwrite(data, 1, MEMPAK_BLOCK_SIZE * 128, fp) != MEMPAK_BLOCK_SIZE * 128) {
-        //debugf("Failed to write data to file: %s\n", complete_filename);
+        sprintf(failure_message_note, "Failed to write data to file: %s\n", complete_filename);
+        error_message_displayed = true;
+        fclose(fp);
+        free(data);
+        return;
     }
     
     fclose(fp);
@@ -262,7 +285,6 @@ static void dump_complete_cpak(int _port) {
 }
 
 static void dump_single_note(int _port, unsigned short selected_index) {
-    //debugf("dump_single_note called for index %d\n", selected_index);
     sprintf(failure_message_note, " ");
     FILE *fSource, *fDump;
     char filename_note[256];
@@ -270,22 +292,18 @@ static void dump_single_note(int _port, unsigned short selected_index) {
     get_rtc_time(string_datetime_cpak);
 
     sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
-    //debugf("Source filename: %s\n", filename_note);
 
     fSource = fopen(filename_note, "rb");
     if (fSource == NULL) {
-        //debugf("Failed to open source file: %s\n", filename_note);
         sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
         error_message_displayed = true;
         return;
     }
 
     sprintf(filename_note, "%s/%s_%s%s", CPAK_NOTES_PATH, controller_pak_name_notes[selected_index], string_datetime_cpak, CPAK_NOTE_EXTENSION);
-    //debugf("Dump filename: %s\n", filename_note);
 
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {
-        //debugf("Failed to open dump file: %s\n", filename_note);
         sprintf(failure_message_note, "Unable to create dump file: %s", filename_note);
         error_message_displayed = true;
         return;
@@ -310,7 +328,6 @@ static void dump_single_note(int _port, unsigned short selected_index) {
     while ((bytesRead = fread(buffer, 1, sizeof(buffer), fSource)) > 0) {
         size_t bytesWritten = fwrite(buffer, 1, bytesRead, fDump);
         if (bytesWritten < bytesRead) {
-            //debugf("Write error while copying to destination!\n");
             fclose(fSource);
             fclose(fDump);
             sprintf(failure_message_note, "Write error while copying to destination!");
@@ -318,8 +335,6 @@ static void dump_single_note(int _port, unsigned short selected_index) {
             return;
         }
     }
-
-
 
     fclose(fSource);
     fclose(fDump);
@@ -334,38 +349,30 @@ static bool file_exists(const char *filename)
     if (fp != NULL)
     {
         is_exist = true;
-        fclose(fp); // close the file
+        fclose(fp);
     }
     return is_exist;
 }
 
 static void delete_single_note(int _port, unsigned short selected_index) {
-    //debugf("delete_single_note called for index %d\n", selected_index);
     sprintf(failure_message_note, " ");
     char filename_note[256];
 
     sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
-    //debugf("Source filename: %s\n", filename_note);
 
     if (!file_exists(filename_note)) {
-        //debugf("File does not exist: %s\n", filename_note);
         sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
         error_message_displayed = true;
         return;
     }
 
-    //debugf("Deleting file: %s\n", filename_note);
-
     remove(filename_note);
 
     if (file_exists(filename_note)) {
-        //debugf("Failed to delete file: %s\n", filename_note);
         sprintf(failure_message_note, "Failed to delete file: %s", filename_note);
         error_message_displayed = true;
         return;
-    } else {
-        //debugf("File deleted successfully: %s\n", filename_note);
-    }       
+    }  
 
     reset_vars();
     unmount_all_cpakfs();
@@ -463,7 +470,7 @@ static void process (menu_t *menu) {
                 return;
             } 
 
-            // Pressing L : dump a single note
+            // Pressing L or Z : dump a single note
             else if (menu->actions.lz_context && 
                 use_rtc && 
                 !show_complete_write_confirm_message && 

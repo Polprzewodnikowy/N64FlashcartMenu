@@ -22,6 +22,7 @@
 #define ROM_ADDRESS                 (0x10000000)
 #define IPL_ADDRESS                 (0x13BC0000)
 #define EXTENDED_ADDRESS            (0x14000000)
+#define MODEM_ADDRESS               (0x18000000)
 #define SHADOW_ADDRESS              (0x1FFC0000)
 #define EEPROM_ADDRESS              (0x1FFE2000)
 
@@ -435,6 +436,47 @@ static flashcart_err_t sc64_load_rom (char *rom_path, flashcart_progress_callbac
 }
 
 /**
+ * @brief Load a secondary ROM into the SummerCart64.
+ *
+ * @param rom_path Path to the ROM file.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
+static flashcart_err_t sc64_load_second_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_fs_prefix(rom_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    fatfs_fix_file_size(&fil);
+
+    size_t rom_size = f_size(&fil);
+
+    if (rom_size > MiB(14)) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    flashcart_err_t err = load_to_flash(&fil, (void *)(MODEM_ADDRESS), rom_size, &br, progress);
+    if (err != FLASHCART_OK) {
+        f_close(&fil);
+        return err;
+    }
+    if (br != rom_size) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    return FLASHCART_OK;
+}
+
+/**
  * @brief Load a file into the SummerCart64.
  * 
  * @param file_path Path to the file.
@@ -693,6 +735,7 @@ static flashcart_t flashcart_sc64 = {
     .has_feature = sc64_has_feature,
     .get_firmware_version = sc64_get_firmware_version,
     .load_rom = sc64_load_rom,
+    .load_second_rom = sc64_load_second_rom,
     .load_file = sc64_load_file,
     .load_save = sc64_load_save,
     .load_64dd_ipl = sc64_load_64dd_ipl,

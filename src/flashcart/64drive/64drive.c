@@ -367,6 +367,7 @@ static flashcart_t flashcart_d64 = {
     .has_feature = d64_has_feature,
     .get_firmware_version = d64_get_firmware_version,
     .load_rom = d64_load_rom,
+    .load_second_rom = NULL,
     .load_file = d64_load_file,
     .load_save = d64_load_save,
     .load_64dd_ipl = NULL,

@@ -101,6 +101,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .deinit = NULL,
     .has_feature = dummy_has_feature,
     .load_rom = dummy_load_rom,
+    .load_second_rom = dummy_load_rom,
     .load_file = dummy_load_file,
     .load_save = dummy_load_save,
     .load_64dd_ipl = NULL,
@@ -246,6 +247,28 @@ flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_pr
 
     cart_card_byteswap = byte_swap;
     err = flashcart->load_rom(rom_path, progress);
+    cart_card_byteswap = false;
+
+    return err;
+}
+
+/**
+ * @brief Load a secondary ROM into the flashcart.
+ *
+ * @param rom_path Path to the ROM file.
+ * @param byte_swap Flag indicating whether to byte swap the ROM.
+ * @param progress Progress callback function.
+ * @return flashcart_err_t Error code.
+ */
+flashcart_err_t flashcart_load_second_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress) {
+    flashcart_err_t err;
+
+    if (rom_path == NULL) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    cart_card_byteswap = byte_swap;
+    err = flashcart->load_second_rom(rom_path, progress);
     cart_card_byteswap = false;
 
     return err;

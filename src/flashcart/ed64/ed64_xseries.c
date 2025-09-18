@@ -159,6 +159,7 @@ static flashcart_t flashcart_ed64_xseries = {
     .has_feature = ed64_xseries_has_feature,
     .get_firmware_version = ed64_xseries_get_firmware_version,
     .load_rom = ed64_xseries_load_rom,
+    .load_second_rom = NULL,
     .load_file = ed64_xseries_load_file,
     .load_save = ed64_xseries_load_save,
     .load_64dd_ipl = NULL,

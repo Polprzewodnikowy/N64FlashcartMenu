@@ -37,7 +37,7 @@ static bool process_complete_delete;
 static bool error_message_displayed;
 
 static char controller_pak_name_notes[MAX_NUM_NOTES][MAX_STRING_LENGTH];
-static char controller_pak_name_notes_bank_size[MAX_NUM_NOTES][4]; // "XXX" = 3 chars + \0
+static char controller_pak_name_notes_bank_size[MAX_NUM_NOTES][6]; // "(XXX)" = 5 chars + \0
 
 static cpakfs_path_strings_t cpakfs_path_strings[MAX_NUM_NOTES];
 

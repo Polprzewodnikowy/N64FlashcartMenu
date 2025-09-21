@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <libdragon.h>
+#include <stddef.h>
 
 #define FS_BLOCK_DIVIDER 8*32
 #define MAX_NUM_NOTES 16
@@ -14,12 +15,7 @@ typedef struct {
     char ext[5];        // +1 for '\0'
 } cpakfs_path_strings_t;
 
-static char * CPAK_MOUNT_ARRAY[4] = {
-    "cpak1:/",
-    "cpak2:/",
-    "cpak3:/",
-    "cpak4:/"
-};
+extern const char * const CPAK_MOUNT_ARRAY[4];
 
 int get_block_size_from_fs_path(const char *filename_cpak);
 void unmount_all_cpakfs();

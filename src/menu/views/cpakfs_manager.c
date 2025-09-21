@@ -282,6 +282,7 @@ static void dump_single_note(int _port, int16_t selected_index) {
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {
         sprintf(failure_message_note, "Unable to create dump file: %s", filename_note);
+        fclose(fSource);
         error_message_displayed = true;
         return;
     }
@@ -941,7 +942,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (start_format_controller_pak) {
         rdpq_detach_show();
-        format_controller_pak(menu, NULL);
+        format_controller_pak();
         start_format_controller_pak = false;
         return;
     }

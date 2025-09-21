@@ -50,7 +50,7 @@ static char *format_file_type (char *name, bool is_directory) {
         return " Type: Controller Pak file\n";
     } else if (file_has_extensions(name, controller_pak_note_extensions)) {
         is_memory_pak_dump_note = true;
-        return " Type: Note of controller Pak file\n";
+        return " Type: Note of Controller Pak file\n";
     } else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
     } else if (file_has_extensions(name, cheat_extensions)) {

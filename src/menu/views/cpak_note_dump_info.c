@@ -29,8 +29,13 @@ static bool restore_controller_pak_note(int controller) {
     extract_title_from_absolute_path(cpak_note_path, title, sizeof title);
 
     //mounting the CPAK:
-    mount_cpakfs(controller);
-    cpakfs_get_stats( controller, &cpakfs_stats );
+    if (mount_cpakfs(controller) < 0){
+        snprintf(failure_message_note, sizeof failure_message_note,
+            "Failed to mount Controller Pak on controller %d!", controller + 1);
+            return false;
+    }
+    
+    cpakfs_get_stats(controller, &cpakfs_stats );
 
     //checking free space in the CPAK:
     int free_blocks = cpakfs_stats.pages.total - cpakfs_stats.pages.used;
@@ -49,7 +54,8 @@ static bool restore_controller_pak_note(int controller) {
     //Opening the source file (the dump note file)
     fSource = fopen(cpak_note_path, "rb");
     if (fSource == NULL) {
-        //debugf("Failed to open source file: %s\n", cpak_note_path);
+        snprintf(failure_message_note, sizeof failure_message_note, "Failed to open source file: %s\n", cpak_note_path);
+        cpakfs_unmount(controller);
         return false;
     }
 
@@ -82,14 +88,21 @@ static bool restore_controller_pak_note(int controller) {
             strcpy(filename_note, unique_full);
             //debugf("File exists, new name picked: %s\n", filename_note);
         } else {
-            //debugf("Could not pick a unique name for %s\n", filename_note);
+            cpakfs_unmount(controller);
+            fclose(fSource);
+            snprintf(failure_message_note, sizeof failure_message_note,
+                     "Unable to pick a unique destination name for %s", title);
+            return false;
         }
     }
 
     fDestination = fopen(filename_note, "wb");
-    if (fDestination == NULL) {
-            //debugf("Failed to open destination file: %s\n", filename_note);
-            return false;
+    if (!fDestination) {
+        fclose(fSource);
+        cpakfs_unmount(controller);
+        snprintf(failure_message_note, sizeof failure_message_note,
+                 "Failed to open destination file: %s", filename_note);
+        return false;
     }
 
     surface_t *d = display_try_get();
@@ -199,6 +212,8 @@ void view_controller_pak_note_dump_info_init (menu_t *menu) {
     sprintf(cpak_note_path, "%s", path_get(path));
     start_note_restore = false;
     sprintf(failure_message_note, " ");
+
+    path_free(path);
 
 }
 

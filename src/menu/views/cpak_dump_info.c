@@ -139,6 +139,7 @@ void view_controller_pak_dump_info_init (menu_t *menu) {
     start_complete_restore = false;
     sprintf(failure_message, " ");
 
+    path_free(path);
 }
 
 void view_controller_pak_dump_info_display (menu_t *menu, surface_t *display) {

@@ -6,6 +6,10 @@
 #include <dir.h>
 #include "cpakfs_utils.h"
 
+const char * const CPAK_MOUNT_ARRAY[4] = {
+    "cpak1:/", "cpak2:/", "cpak3:/", "cpak4:/"
+};
+
 
 bool has_cpak(int controller) {
     

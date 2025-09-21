@@ -19,8 +19,8 @@ static rtc_time_t rtc_time;
 static char string_datetime_cpak[26];
 static char failure_message_note[255];
 
-static short controller_selected;
-static short index_selected;
+static int16_t controller_selected;
+static int16_t index_selected;
 
 static bool has_mem;
 static bool corrupted_pak;
@@ -160,7 +160,7 @@ static component_context_menu_t options_context_menu = {
     }
 };
 
-static void write_note_name_info_list(short controller, int index, char* entry_name) {
+static void write_note_name_info_list(int16_t controller, int index, char* entry_name) {
     char filename_cpak[256];
     sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller], entry_name);
     int size = get_block_size_from_fs_path(filename_cpak);
@@ -261,7 +261,7 @@ static void dump_complete_cpak(int _port) {
     process_complete_full_dump = true;
 }
 
-static void dump_single_note(int _port, unsigned short selected_index) {
+static void dump_single_note(int _port, int16_t selected_index) {
     sprintf(failure_message_note, " ");
     FILE *fSource, *fDump;
     char filename_note[256];

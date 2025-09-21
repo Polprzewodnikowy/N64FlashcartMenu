@@ -8,7 +8,7 @@
 #include "utils/cpakfs_utils.h"
 
 static char cpak_note_path[255];
-static short controller_selected;
+static int16_t controller_selected;
 static char failure_message_note[255];
 static bool start_note_restore;
 

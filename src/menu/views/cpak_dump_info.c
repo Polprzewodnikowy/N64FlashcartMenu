@@ -9,7 +9,7 @@
 
 
 static char cpak_path[255];
-static short controller_selected;
+static int16_t controller_selected;
 static char failure_message[255];
 static bool start_complete_restore;
 

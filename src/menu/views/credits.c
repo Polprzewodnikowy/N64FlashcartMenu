@@ -17,6 +17,16 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Credits view into the provided display surface.
+ *
+ * Draws the background, layout, title ("MENU INFORMATION"), a multi-line
+ * information block (including MENU_VERSION and BUILD_TIMESTAMP), and the
+ * actions bar ("B: Exit"), then presents the rendered frame.
+ *
+ * @param menu Current menu state (used to determine view context).
+ * @param d    Surface/display to render the view into.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -44,6 +54,7 @@ static void draw (menu_t *menu, surface_t *d) {
         " Robin Jones / NetworkFusion\n"
         " Mateusz Faderewski / Polprzewodnikowy\n"
         "Contributors:\n"
+        " MaxiB : Controller Pak menu manager\n"
         " Thank you to ALL project contributors,\n"
         " no matter how small the commit.\n"
         "OSS software used:\n"

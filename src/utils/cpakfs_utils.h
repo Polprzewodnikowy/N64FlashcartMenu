@@ -5,6 +5,7 @@
 #include <libdragon.h>
 
 #define FS_BLOCK_DIVIDER 8*32
+#define MAX_NUM_NOTES 16
 
 typedef struct {
     char gamecode[5];   // +1 for '\0'
@@ -28,6 +29,8 @@ int get_file_size_from_fs_path(const char *filename_cpak);
 int extract_title_from_absolute_path(const char *path, char *outbuf, size_t outbuf_size);
 int parse_cpakfs_fullname(const char *fullname, cpakfs_path_strings_t *out);
 int my_exists_full(const char *full_mounted_path);
+int inc_index_note(int current_index);
+int dec_index_note(int current_index);
 int pick_unique_fullname_with_mount(const char *mount_prefix,
                                     const char *desired_name,
                                     char *out_fullpath, size_t outsz,

@@ -44,6 +44,14 @@ void unmount_all_cpakfs() {
     }
 }
 
+int inc_index_note(int current_index) {
+    return ((current_index + 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES; 
+}
+
+int dec_index_note(int current_index) {
+    return ((current_index - 1) + MAX_NUM_NOTES) % MAX_NUM_NOTES; 
+}
+
 // -1 = error
 //  0 = success
 int mount_cpakfs(int controller) {

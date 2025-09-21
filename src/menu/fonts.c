@@ -24,6 +24,7 @@ static void load_default_font (char *custom_font_path) {
     rdpq_text_register_font(FNT_DEFAULT, default_font);
 }
 
+
 void fonts_init (char *custom_font_path) {
     load_default_font(custom_font_path);
 }

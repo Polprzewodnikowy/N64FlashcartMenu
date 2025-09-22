@@ -15,6 +15,7 @@
 #include "flashcart/flashcart.h"
 #include "fonts.h"
 #include "hdmi.h"
+#include "joypad.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "mp3_player.h"
@@ -77,6 +78,7 @@ static void menu_init (boot_params_t *boot_params) {
     sound_init_sfx();
 
     hdmi_clear_game_id();
+    joypad_send_player_id();
 
     path_t *path = path_init(menu->storage_prefix, MENU_DIRECTORY);
 

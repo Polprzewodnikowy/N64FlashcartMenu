@@ -173,6 +173,11 @@ static bool load_archive (menu_t *menu) {
     menu->browser.archive = true;
     menu->browser.entries = (int)mz_zip_reader_get_num_files(&menu->browser.zip);
     menu->browser.list = malloc(menu->browser.entries * sizeof(entry_t));
+    if (!menu->browser.list) {
+        browser_list_free(menu);
+        return true;
+    }
+
     for (int i = 0; i < menu->browser.entries; i++) {
         entry_t *entry = &menu->browser.list[i];
 

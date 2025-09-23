@@ -206,10 +206,6 @@ static bool load_directory (menu_t *menu) {
     int result;
     dir_t info;
 
-    if (file_has_extensions(path_get(menu->browser.directory), archive_extensions)) {
-        return load_archive(menu);
-    }
-
     browser_list_free(menu);
 
     path_t *path = path_clone(menu->browser.directory);
@@ -312,12 +308,12 @@ static bool reload_directory (menu_t *menu) {
     return false;
 }
 
-static bool push_directory (menu_t *menu, char *directory) {
+static bool push_directory (menu_t *menu, char *directory, bool archive) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
     path_push(menu->browser.directory, directory);
 
-    if (load_directory(menu)) {
+    if (archive ? load_archive(menu) : load_directory(menu)) {
         path_free(menu->browser.directory);
         menu->browser.directory = previous_directory;
         return true;
@@ -479,12 +475,17 @@ static void process (menu_t *menu) {
     if (menu->actions.enter && menu->browser.entry) {
         sound_play_effect(SFX_ENTER);
         switch (menu->browser.entry->type) {
+            case ENTRY_TYPE_ARCHIVE:
+                if (push_directory(menu, menu->browser.entry->name, true)) {
+                    menu->browser.valid = false;
+                    menu_show_error(menu, "Couldn't open file archive");
+                }
+                break;
             case ENTRY_TYPE_ARCHIVED:
                 menu->next_mode = MENU_MODE_EXTRACT_FILE;
                 break;
-            case ENTRY_TYPE_ARCHIVE:
             case ENTRY_TYPE_DIR:
-                if (push_directory(menu, menu->browser.entry->name)) {
+                if (push_directory(menu, menu->browser.entry->name, false)) {
                     menu->browser.valid = false;
                     menu_show_error(menu, "Couldn't open next directory");
                 }

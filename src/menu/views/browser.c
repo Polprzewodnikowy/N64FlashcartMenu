@@ -178,7 +178,8 @@ static bool load_archive (menu_t *menu) {
 
         mz_zip_archive_file_stat info;
         if (!mz_zip_reader_file_stat(&menu->browser.zip, i, &info)) {
-            continue;
+            browser_list_free(menu);
+            return true;
         }
 
         entry->name = strdup(info.m_filename);

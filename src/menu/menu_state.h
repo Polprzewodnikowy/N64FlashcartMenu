@@ -69,7 +69,7 @@ typedef struct {
     char *name;
     entry_type_t type;
     int64_t size;
-    int index;
+    int32_t index;
 } entry_t;
 
 /** @brief Menu Structure */

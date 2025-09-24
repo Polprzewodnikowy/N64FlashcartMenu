@@ -171,14 +171,14 @@ static bool load_archive (menu_t *menu) {
     }
 
     menu->browser.archive = true;
-    menu->browser.entries = (int)mz_zip_reader_get_num_files(&menu->browser.zip);
+    menu->browser.entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
     menu->browser.list = malloc(menu->browser.entries * sizeof(entry_t));
     if (!menu->browser.list) {
         browser_list_free(menu);
         return true;
     }
 
-    for (int i = 0; i < menu->browser.entries; i++) {
+    for (int32_t i = 0; i < menu->browser.entries; i++) {
         entry_t *entry = &menu->browser.list[i];
 
         mz_zip_archive_file_stat info;
@@ -341,7 +341,7 @@ static bool pop_directory (menu_t *menu) {
         return true;
     }
 
-    for (unsigned short i = 0; i < menu->browser.entries; i++) {
+    for (uint16_t i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
@@ -367,7 +367,7 @@ static bool select_file (menu_t *menu, path_t *file) {
         return true;
     }
 
-    for (unsigned short i = 0; i < menu->browser.entries; i++) {
+    for (uint16_t i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(file)) == 0) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];

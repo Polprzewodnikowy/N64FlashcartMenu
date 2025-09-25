@@ -100,9 +100,9 @@ typedef struct {
         bool reload;
         path_t *directory;
         entry_t *list;
-        int entries;
+        int32_t entries;
         entry_t *entry;
-        int selected;
+        int32_t selected;
     } browser;
 
     struct {
@@ -110,8 +110,8 @@ typedef struct {
         rom_info_t rom_info;
         path_t *disk_path;
         disk_info_t disk_info;
-        int load_history_id;
-        int load_favorite_id;
+        int32_t load_history_id;
+        int32_t load_favorite_id;
         bool combined_disk_rom;
     } load;
 

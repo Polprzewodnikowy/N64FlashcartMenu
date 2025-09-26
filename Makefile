@@ -58,6 +58,7 @@ SRCS = \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
+	menu/ui_components/file_info.c \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \

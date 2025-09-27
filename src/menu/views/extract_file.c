@@ -63,7 +63,7 @@ static void extract(menu_t *menu) {
 static void process (menu_t *menu) {
     if (menu->actions.enter && !st.m_is_directory && st.m_is_supported) {
         sound_play_effect(SFX_ENTER);
-        menu->boot_pending.extract_file = true;
+        menu->load_pending.extract_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -75,7 +75,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.extract_file) {
+    if (menu->load_pending.extract_file) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
@@ -125,8 +125,8 @@ void view_extract_file_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.extract_file) {
-        menu->boot_pending.extract_file = false;
+    if (menu->load_pending.extract_file) {
+        menu->load_pending.extract_file = false;
         extract(menu);
     }
 }

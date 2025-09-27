@@ -129,7 +129,7 @@ typedef struct {
         bool disk_file;
         bool emulator_file;
         bool extract_file;
-    } boot_pending;
+    } load_pending;
 } menu_t;
 
 

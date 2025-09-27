@@ -283,7 +283,7 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->boot_pending.rom_file = true;
+        menu->load_pending.rom_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -305,7 +305,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
+    if (menu->load_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
 #endif
@@ -528,8 +528,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.rom_file) {
-        menu->boot_pending.rom_file = false;
+    if (menu->load_pending.rom_file) {
+        menu->load_pending.rom_file = false;
         load(menu);
     }
 

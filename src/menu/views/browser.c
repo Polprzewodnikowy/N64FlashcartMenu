@@ -407,7 +407,7 @@ static void delete_entry (menu_t *menu, void *arg) {
 }
 
 static void extract_entry (menu_t *menu, void *arg) {
-    menu->boot_pending.extract_file = true;
+    menu->load_pending.extract_file = true;
     menu->next_mode = MENU_MODE_EXTRACT_FILE;
 }
 

@@ -52,10 +52,10 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
@@ -72,7 +72,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.disk_file) {
+    if (menu->load_pending.disk_file) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
@@ -235,7 +235,7 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.disk_path = NULL;
     }
 
-    menu->boot_pending.disk_file = false;
+    menu->load_pending.disk_file = false;
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         bookkeeping_item_t* items;
@@ -294,8 +294,8 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.disk_file) {
-        menu->boot_pending.disk_file = false;
+    if (menu->load_pending.disk_file) {
+        menu->load_pending.disk_file = false;
         load(menu);
     }
 

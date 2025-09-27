@@ -113,6 +113,8 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
                 case ENTRY_TYPE_MUSIC: style = STL_BLUE; break;
                 case ENTRY_TYPE_TEXT: style = STL_ORANGE; break;
                 case ENTRY_TYPE_OTHER: style = STL_GRAY; break;
+                case ENTRY_TYPE_ARCHIVE: style = STL_ORANGE; break;
+                case ENTRY_TYPE_ARCHIVED: style = STL_DEFAULT; break;
                 default: style = STL_GRAY; break;
             }
 

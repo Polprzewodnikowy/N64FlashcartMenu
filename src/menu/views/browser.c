@@ -1,4 +1,6 @@
 #include <errno.h>
+#include <miniz.h>
+#include <miniz_zip.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -10,6 +12,7 @@
 
 
 
+static const char *archive_extensions[] = { "zip", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
@@ -95,6 +98,10 @@ static int compare_entry (const void *pa, const void *pb) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DIR) {
             return 1;
+        } else if (a->type == ENTRY_TYPE_ARCHIVE) {
+            return -1;
+        } else if (b->type == ENTRY_TYPE_ARCHIVE) {
+            return 1;
         } else if (a->type == ENTRY_TYPE_DISK) {
             return -1;
         } else if (b->type == ENTRY_TYPE_DISK) {
@@ -138,6 +145,11 @@ static int compare_entry (const void *pa, const void *pb) {
 }
 
 static void browser_list_free (menu_t *menu) {
+    if (menu->browser.archive) {
+        mz_zip_reader_end(&menu->browser.zip);
+    }
+    menu->browser.archive = false;
+
     for (int i = menu->browser.entries - 1; i >= 0; i--) {
         free(menu->browser.list[i].name);
     }
@@ -148,6 +160,52 @@ static void browser_list_free (menu_t *menu) {
     menu->browser.entries = 0;
     menu->browser.entry = NULL;
     menu->browser.selected = -1;
+}
+
+static bool load_archive (menu_t *menu) {
+    browser_list_free(menu);
+
+    mz_zip_zero_struct(&menu->browser.zip);
+    if (!mz_zip_reader_init_file(&menu->browser.zip, path_get(menu->browser.directory), 0)) {
+        return true;
+    }
+
+    menu->browser.archive = true;
+    menu->browser.entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
+    menu->browser.list = malloc(menu->browser.entries * sizeof(entry_t));
+    if (!menu->browser.list) {
+        browser_list_free(menu);
+        return true;
+    }
+
+    for (int32_t i = 0; i < menu->browser.entries; i++) {
+        entry_t *entry = &menu->browser.list[i];
+
+        mz_zip_archive_file_stat info;
+        if (!mz_zip_reader_file_stat(&menu->browser.zip, i, &info)) {
+            browser_list_free(menu);
+            return true;
+        }
+
+        entry->name = strdup(info.m_filename);
+        if (!entry->name) {
+            browser_list_free(menu);
+            return true;
+        }
+
+        entry->type = ENTRY_TYPE_ARCHIVED;
+        entry->size = info.m_uncomp_size;
+        entry->index = i;
+    }
+
+    if (menu->browser.entries > 0) {
+        menu->browser.selected = 0;
+        menu->browser.entry = &menu->browser.list[menu->browser.selected];
+    }
+
+    qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
+
+    return false;
 }
 
 static bool load_directory (menu_t *menu) {
@@ -210,11 +268,14 @@ static bool load_directory (menu_t *menu) {
                 entry->type = ENTRY_TYPE_TEXT;
             } else if (file_has_extensions(entry->name, music_extensions)) {
                 entry->type = ENTRY_TYPE_MUSIC;
+            } else if (file_has_extensions(entry->name, archive_extensions)) {
+                entry->type = ENTRY_TYPE_ARCHIVE;
             } else {
                 entry->type = ENTRY_TYPE_OTHER;
             }
 
             entry->size = info.d_size;
+            entry->index = menu->browser.entries - 1;
         }
 
         result = dir_findnext(path_get(path), &info);
@@ -253,12 +314,12 @@ static bool reload_directory (menu_t *menu) {
     return false;
 }
 
-static bool push_directory (menu_t *menu, char *directory) {
+static bool push_directory (menu_t *menu, char *directory, bool archive) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
     path_push(menu->browser.directory, directory);
 
-    if (load_directory(menu)) {
+    if (archive ? load_archive(menu) : load_directory(menu)) {
         path_free(menu->browser.directory);
         menu->browser.directory = previous_directory;
         return true;
@@ -280,7 +341,7 @@ static bool pop_directory (menu_t *menu) {
         return true;
     }
 
-    for (unsigned short i = 0; i < menu->browser.entries; i++) {
+    for (uint16_t i = 0; i < menu->browser.entries; i++) {
         if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
@@ -293,8 +354,34 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
+static bool select_file (menu_t *menu, path_t *file) {
+    path_t *previous_directory = path_clone(menu->browser.directory);
+
+    path_free(menu->browser.directory);
+    menu->browser.directory = path_clone(file);
+    path_pop(menu->browser.directory);
+
+    if (load_directory(menu)) {
+        path_free(menu->browser.directory);
+        menu->browser.directory = previous_directory;
+        return true;
+    }
+
+    for (uint16_t i = 0; i < menu->browser.entries; i++) {
+        if (strcmp(menu->browser.list[i].name, path_last_get(file)) == 0) {
+            menu->browser.selected = i;
+            menu->browser.entry = &menu->browser.list[menu->browser.selected];
+            break;
+        }
+    }
+
+    path_free(previous_directory);
+
+    return false;
+}
+
 static void show_properties (menu_t *menu, void *arg) {
-    menu->next_mode = MENU_MODE_FILE_INFO;
+    menu->next_mode = menu->browser.entry->type == ENTRY_TYPE_ARCHIVED ? MENU_MODE_EXTRACT_FILE : MENU_MODE_FILE_INFO;
 }
 
 static void delete_entry (menu_t *menu, void *arg) {
@@ -319,6 +406,11 @@ static void delete_entry (menu_t *menu, void *arg) {
     }
 }
 
+static void extract_entry (menu_t *menu, void *arg) {
+    menu->load_pending.extract_file = true;
+    menu->next_mode = MENU_MODE_EXTRACT_FILE;
+}
+
 static void set_default_directory (menu_t *menu, void *arg) {
     free(menu->settings.default_directory);
     menu->settings.default_directory = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -330,6 +422,14 @@ static component_context_menu_t entry_context_menu = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Delete selected entry", .action = delete_entry },
         { .text = "Set current directory as default", .action = set_default_directory },
+        COMPONENT_CONTEXT_MENU_LIST_END,
+    }
+};
+
+static component_context_menu_t archive_context_menu = {
+    .list = {
+        { .text = "Show entry properties", .action = show_properties },
+        { .text = "Extract selected entry", .action = extract_entry },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -351,7 +451,7 @@ static component_context_menu_t settings_context_menu = {
 };
 
 static void process (menu_t *menu) {
-    if (ui_components_context_menu_process(menu, &entry_context_menu)) {
+    if (ui_components_context_menu_process(menu, menu->browser.archive ? &archive_context_menu : &entry_context_menu)) {
         return;
     }
 
@@ -381,8 +481,17 @@ static void process (menu_t *menu) {
     if (menu->actions.enter && menu->browser.entry) {
         sound_play_effect(SFX_ENTER);
         switch (menu->browser.entry->type) {
+            case ENTRY_TYPE_ARCHIVE:
+                if (push_directory(menu, menu->browser.entry->name, true)) {
+                    menu->browser.valid = false;
+                    menu_show_error(menu, "Couldn't open file archive");
+                }
+                break;
+            case ENTRY_TYPE_ARCHIVED:
+                menu->next_mode = MENU_MODE_EXTRACT_FILE;
+                break;
             case ENTRY_TYPE_DIR:
-                if (push_directory(menu, menu->browser.entry->name)) {
+                if (push_directory(menu, menu->browser.entry->name, false)) {
                     menu->browser.valid = false;
                     menu_show_error(menu, "Couldn't open next directory");
                 }
@@ -423,7 +532,7 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
-        ui_components_context_menu_show(&entry_context_menu);
+        ui_components_context_menu_show(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
@@ -458,6 +567,7 @@ static void draw (menu_t *menu, surface_t *d) {
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;
             case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
+            case ENTRY_TYPE_ARCHIVE: action = "A: Open"; break;
             default: action = "A: Info"; break;
         }
     }
@@ -496,7 +606,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
     }
 
-    ui_components_context_menu_draw(&entry_context_menu);
+    ui_components_context_menu_draw(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
 
     ui_components_context_menu_draw(&settings_context_menu);
 
@@ -507,6 +617,7 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         ui_components_context_menu_init(&entry_context_menu);
+        ui_components_context_menu_init(&archive_context_menu);
         ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
@@ -515,6 +626,15 @@ void view_browser_init (menu_t *menu) {
         } else {
             menu->browser.valid = true;
         }
+    }
+
+    if (menu->browser.select_file) {
+        if (select_file(menu, menu->browser.select_file)) {
+            menu->browser.valid = false;
+            menu_show_error(menu, "Error while navigating to file");
+        }
+        path_free(menu->browser.select_file);
+        menu->browser.select_file = NULL;
     }
 
     if (menu->browser.reload) {

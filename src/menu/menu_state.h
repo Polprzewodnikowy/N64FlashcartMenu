@@ -8,6 +8,8 @@
 #define MENU_STRUCT_H__
 
 
+#include <miniz.h>
+#include <miniz_zip.h>
 #include <time.h>
 
 #include "boot/boot.h"
@@ -41,7 +43,8 @@ typedef enum {
     MENU_MODE_BOOT,
     MENU_MODE_FAVORITE,
     MENU_MODE_HISTORY,
-    MENU_MODE_DATEL_CODE_EDITOR
+    MENU_MODE_DATEL_CODE_EDITOR,
+    MENU_MODE_EXTRACT_FILE
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -56,7 +59,9 @@ typedef enum {
     ENTRY_TYPE_ROM_CHEAT,
     ENTRY_TYPE_ROM_PATCH,
     ENTRY_TYPE_SAVE,
-    ENTRY_TYPE_TEXT
+    ENTRY_TYPE_TEXT,
+    ENTRY_TYPE_ARCHIVE,
+    ENTRY_TYPE_ARCHIVED
 } entry_type_t;
 
 /** @brief File Entry Structure */
@@ -64,6 +69,7 @@ typedef struct {
     char *name;
     entry_type_t type;
     int64_t size;
+    int32_t index;
 } entry_t;
 
 /** @brief Menu Structure */
@@ -98,11 +104,14 @@ typedef struct {
     struct {
         bool valid;
         bool reload;
+        bool archive;
+        mz_zip_archive zip;
         path_t *directory;
         entry_t *list;
         int32_t entries;
         entry_t *entry;
         int32_t selected;
+        path_t* select_file;
     } browser;
 
     struct {
@@ -119,7 +128,8 @@ typedef struct {
         bool rom_file;
         bool disk_file;
         bool emulator_file;
-    } boot_pending;
+        bool extract_file;
+    } load_pending;
 } menu_t;
 
 

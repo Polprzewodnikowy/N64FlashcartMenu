@@ -28,6 +28,8 @@ static bool restore_controller_pak_note(int controller) {
 
     extract_title_from_absolute_path(cpak_note_path, title, sizeof title);
 
+    unmount_all_cpakfs();
+
     //mounting the CPAK:
     if (mount_cpakfs(controller) < 0){
         snprintf(failure_message_note, sizeof failure_message_note,
@@ -75,7 +77,7 @@ static bool restore_controller_pak_note(int controller) {
     //debugf("Dest. filename: %s\n", filename_note);
 
     //Check if the file already exists, and if so, pick a unique name
-    if (my_exists_full(filename_note)) {
+    if (file_exists_full(filename_note)) {
         char unique_full[256];
 
         // Strip the prefix from filename_note to get just the CPAK full name:
@@ -83,7 +85,7 @@ static bool restore_controller_pak_note(int controller) {
         if (pick_unique_fullname_with_mount(CPAK_MOUNT_ARRAY[controller],
                                             title, /* NO prefix */
                                             unique_full, sizeof unique_full,
-                                            my_exists_full) == 0)
+                                            file_exists_full) == 0)
         {
             strcpy(filename_note, unique_full);
             //debugf("File exists, new name picked: %s\n", filename_note);

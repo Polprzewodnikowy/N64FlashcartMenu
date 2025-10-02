@@ -270,7 +270,7 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
     return -6; // exhausted (unlikely)
 }
 
-int my_exists_full(const char *full_mounted_path){
+int file_exists_full(const char *full_mounted_path){
     FILE *f = fopen(full_mounted_path, "rb");
     if (f){ fclose(f); return 1; }
     return 0;

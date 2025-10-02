@@ -24,7 +24,7 @@ bool has_cpak(int controller);
 int get_file_size_from_fs_path(const char *filename_cpak);
 int extract_title_from_absolute_path(const char *path, char *outbuf, size_t outbuf_size);
 int parse_cpakfs_fullname(const char *fullname, cpakfs_path_strings_t *out);
-int my_exists_full(const char *full_mounted_path);
+int file_exists_full(const char *full_mounted_path);
 int inc_index_note(int current_index);
 int dec_index_note(int current_index);
 int pick_unique_fullname_with_mount(const char *mount_prefix,

@@ -61,6 +61,9 @@ static bool restore_controller_pak(int controller) {
     }
 
     free(data);
+
+    sprintf(failure_message, "Dump restored on controller %d!", controller + 1);
+
     return true;
 }
 
@@ -120,7 +123,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (start_complete_restore) {
         rdpq_detach_show();
-        if (restore_controller_pak(controller_selected)) {
+        if (restore_controller_pak(controller_selected) && !failure_message[0]) {
             menu->next_mode = MENU_MODE_BROWSER;
         } 
         start_complete_restore = false;

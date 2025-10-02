@@ -133,6 +133,8 @@ static bool restore_controller_pak_note(int controller) {
 
     cpakfs_unmount(controller);
 
+    sprintf(failure_message_note, "Note restored on controller %d!", controller + 1);
+
     return true;
 }
 
@@ -196,7 +198,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (start_note_restore) {
         rdpq_detach_show();
-        if (restore_controller_pak_note(controller_selected)) {
+        if (restore_controller_pak_note(controller_selected) && !failure_message_note[0]) {
             menu->next_mode = MENU_MODE_BROWSER;
         } 
         start_note_restore = false;

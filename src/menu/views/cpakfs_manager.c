@@ -69,7 +69,6 @@ static void reset_vars(){
     start_single_note_dump = false;
     start_single_note_delete = false;
     start_format_controller_pak = false;
-    index_selected = 0;
     process_complete_full_dump = false;
     process_complete_note_dump = false;
     process_complete_format = false;

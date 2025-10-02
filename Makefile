@@ -18,7 +18,7 @@ N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \
@@ -58,6 +58,7 @@ SRCS = \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
+	menu/ui_components/file_info.c \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
@@ -65,6 +66,7 @@ SRCS = \
 	menu/views/credits.c \
 	menu/views/datel_code_editor.c \
 	menu/views/error.c \
+	menu/views/extract_file.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/history_favorites.c \
@@ -106,7 +108,7 @@ FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
-$(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
+$(SPNG_OBJS): N64_CFLAGS+=-DSPNG_USE_MINIZ -fcompare-debug-second
 $(FILESYSTEM_DIR)/Firple-Bold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --charset charset.txt --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 

@@ -22,6 +22,11 @@ static char failure_message_note[255];
 static int16_t controller_selected;
 static int16_t index_selected;
 
+static bool mounted[4] = { false, false, false, false };
+static bool has_pak[4] = { false, false, false, false };
+static bool corrupted[4] = { false, false, false, false };
+static cpakfs_stats_t stats_per_port[4];
+
 static bool has_mem;
 static bool corrupted_pak;
 static bool unmounted;
@@ -108,20 +113,52 @@ static void free_controller_pak_name_notes() {
 }
 
 static void check_accessories(int controller) {
-    
-    joypad_accessory_type_t val =  joypad_get_accessory_type(controller);
+    bool was_present = has_pak[controller];
 
-    has_mem = val == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK;
+    joypad_accessory_type_t acc = joypad_get_accessory_type(controller);
+    bool present = (acc == JOYPAD_ACCESSORY_TYPE_CONTROLLER_PAK);
+    has_pak[controller] = present;
 
-    if (!has_mem && !unmounted) {
-        unmount_all_cpakfs();
-        unmounted = true;
-    } else if (has_mem && unmounted) {
-        corrupted_pak = mount_cpakfs(controller) < 0 ? true : false;
-        if (!corrupted_pak) {
-            cpakfs_get_stats(controller, &cpakfs_stats);
+    if (!present) {
+        if (mounted[controller]) {
+            cpakfs_unmount(controller);
+            mounted[controller] = false;
         }
-        unmounted = false;
+        corrupted[controller] = false;
+        memset(&stats_per_port[controller], 0, sizeof(stats_per_port[controller]));
+
+        if (was_present) {
+            free_controller_pak_name_notes();
+            ctr_p_data_loop = false;
+        }
+
+        has_mem       = false;
+        corrupted_pak = false;
+        memset(&cpakfs_stats, 0, sizeof(cpakfs_stats));
+        return;
+    }
+
+    if (!mounted[controller]) {
+        corrupted[controller] = (mount_cpakfs(controller) < 0);
+        if (!corrupted[controller]) {
+            cpakfs_get_stats(controller, &stats_per_port[controller]);
+            mounted[controller] = true;
+        } else {
+            mounted[controller] = false;
+        }
+    } else {
+        if (!corrupted[controller]) {
+            cpakfs_get_stats(controller, &stats_per_port[controller]);
+        }
+    }
+
+    has_mem       = has_pak[controller];
+    corrupted_pak = corrupted[controller];
+    cpakfs_stats  = stats_per_port[controller];
+
+    if (!was_present && present) {
+        free_controller_pak_name_notes();
+        ctr_p_data_loop = false;
     }
 }
 

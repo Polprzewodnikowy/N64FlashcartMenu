@@ -173,8 +173,10 @@ static void format_controller_pak () {
         error_message_displayed = true;
     }
     reset_vars();
-    unmount_all_cpakfs();
-    unmounted = true;
+    cpakfs_unmount(controller_selected);
+    mounted[controller_selected] = false;
+    has_pak[controller_selected] = false;
+    corrupted[controller_selected] = false; 
     process_complete_format = true;
 }
 
@@ -382,7 +384,10 @@ static void delete_single_note(int _port, unsigned short selected_index) {
     }  
 
     reset_vars();
-    unmount_all_cpakfs();
+    cpakfs_unmount(controller_selected);
+    mounted[controller_selected] = false;
+    has_pak[controller_selected] = false;
+    corrupted[controller_selected] = false; 
     unmounted = true;
     process_complete_delete = true;
 }

@@ -15,7 +15,6 @@
 #define CPAK_NOTE_EXTENSION ".mpkn"
 
 static bool use_rtc;
-static rtc_time_t rtc_time;
 static char string_datetime_cpak[26];
 static char failure_message_note[255];
 
@@ -94,11 +93,13 @@ static void create_directory(const char *dirpath) {
 }
 
 static void get_rtc_time(char* formatted_time) {
-    rtc_get(&rtc_time);
+    time_t t = time(NULL);
+
+    struct tm tm = *localtime(&t);
 
     sprintf(formatted_time, "%04d-%02d-%02d_%02d%02d%02d",
-            rtc_time.year, rtc_time.month + 1, rtc_time.day,
-            rtc_time.hour, rtc_time.min, rtc_time.sec);
+            tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+            tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
 static void free_controller_pak_name_notes() {

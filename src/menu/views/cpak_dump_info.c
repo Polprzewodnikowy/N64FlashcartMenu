@@ -13,6 +13,8 @@ static int16_t controller_selected;
 static char failure_message[255];
 static bool start_complete_restore;
 
+#define CONTROLLERPAK_BANK_SIZE 32768
+
 static bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");
 
@@ -21,49 +23,84 @@ static bool restore_controller_pak(int controller) {
         return false;
     }
 
-    uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
-    FILE *fp = fopen(cpak_path, "r");
+    cpakfs_unmount(controller);
+
+    uint8_t *data = malloc(CONTROLLERPAK_BANK_SIZE);
+    if (!data) {
+        sprintf(failure_message, "Memory allocation failed!");
+        return false;
+    }
+
+    FILE *fp = fopen(cpak_path, "rb");
     if (!fp) {
         sprintf(failure_message, "Failed to open file for reading!");
         free(data);
         return false;
     }
-    if (fread(data, 1, MEMPAK_BLOCK_SIZE * 128, fp) != MEMPAK_BLOCK_SIZE * 128) {
-        sprintf(failure_message, "Failed to read data from file!");
+
+    if (fseek(fp, 0, SEEK_END) != 0) {
+        sprintf(failure_message, "Seek failed!");
         fclose(fp);
         free(data);
         return false;
     }
-    fclose(fp);
+    long filesize = ftell(fp);
+    if (filesize < 0) {
+        sprintf(failure_message, "ftell failed!");
+        fclose(fp);
+        free(data);
+        return false;
+    }
+    rewind(fp);
 
-    for (int i = 0; i < 128; i++) { 
-        if (write_mempak_sector(controller_selected, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            sprintf(failure_message, "Failed to write to Controller Pak sector!");
+    int total_banks = (int)((filesize + CONTROLLERPAK_BANK_SIZE - 1) / CONTROLLERPAK_BANK_SIZE);
+
+    int banks_on_device = cpak_probe_banks(controller);
+    if (banks_on_device < 1) {
+        sprintf(failure_message, "Cannot probe Controller Pak banks (err=%d)!", banks_on_device);
+        fclose(fp);
+        free(data);
+        return false;
+    }
+    if (total_banks > banks_on_device) {
+        sprintf(failure_message, "Dump file too large (%d banks) for controller (%d banks)!",
+                total_banks, banks_on_device);
+        fclose(fp);
+        free(data);
+        return false;
+    }
+
+    debugf("Restoring Controller Pak: %ld bytes (%d banks)\n", filesize, total_banks);
+
+    for (int bank = 0; bank < total_banks; bank++) {
+        size_t bytesRead = fread(data, 1, CONTROLLERPAK_BANK_SIZE, fp);
+        if (bytesRead == 0 && ferror(fp)) {
+            sprintf(failure_message, "Read error from dump file!");
+            fclose(fp);
             free(data);
             return false;
         }
+        if (bytesRead == 0 && feof(fp)) break; // empty trailing chunk (shouldn't happen)
 
-        surface_t *d = display_try_get();
-        rdpq_attach(d, NULL);
-
-        ui_components_layout_draw();
-
-        
-        ui_components_messagebox_draw(
-            "Do you want to restore this dump to the Controller Pak?\n\n"
-            "Controller selected: %d\n\n"
-            "A: Yes  B: No \n"
-            "<- / ->: Change controller",
-            controller_selected + 1
-        );
-        ui_components_loader_draw((float) i / 128.0f, "Restoring Controller Pak...");
-        rdpq_detach_show();
+        int written = cpak_write((joypad_port_t)controller, (uint8_t)bank, 0, data, bytesRead);
+        if (written < 0) {
+            sprintf(failure_message, "Failed to write bank %d to Controller Pak! errno=%d", bank, written);
+            fclose(fp);
+            free(data);
+            return false;
+        }
+        if ((size_t)written != bytesRead) {
+            sprintf(failure_message, "Short write on bank %d: wrote %d / %zu bytes", bank, written, bytesRead);
+            fclose(fp);
+            free(data);
+            return false;
+        }
     }
 
+    fclose(fp);
     free(data);
 
     sprintf(failure_message, "Dump restored on controller %d!", controller + 1);
-
     return true;
 }
 
@@ -122,6 +159,7 @@ static void draw (menu_t *menu, surface_t *d) {
     );
 
     if (start_complete_restore) {
+        ui_components_loader_draw(0, "Writing Controller Pak...");
         rdpq_detach_show();
         if (restore_controller_pak(controller_selected) && !failure_message[0]) {
             menu->next_mode = MENU_MODE_BROWSER;

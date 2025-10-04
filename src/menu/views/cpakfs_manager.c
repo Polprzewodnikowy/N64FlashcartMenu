@@ -11,6 +11,8 @@
 
 #define MAX_STRING_LENGTH 62
 
+#define MEMPAK_BANK_SIZE 32768
+
 #define CPAK_EXTENSION ".mpk"   
 #define CPAK_NOTE_EXTENSION ".mpkn"
 
@@ -234,67 +236,57 @@ static void populate_list_cpakfs() {
     }
 }
 
-static void dump_complete_cpak(int _port) {
+static void dump_complete_cpak(int port) {
     sprintf(failure_message_note, " ");
-    uint8_t* data = malloc(MEMPAK_BLOCK_SIZE * 128 * sizeof(uint8_t));
 
-    if (!data) {
-        sprintf(failure_message_note, "Memory allocation failed!");
-        error_message_displayed = true;
-        return;
-    }
     
-    surface_t *d;
-    for (int i = 0; i < 128; i++) {
-
-        d = display_try_get();
-        rdpq_attach(d, NULL);
-
-        ui_components_layout_draw();
-
-        ui_components_messagebox_draw(
-            "Do you want to dump the Controller Pak?\n\n"
-            "A: Yes     B: No"
-        );   
-        
-
-        if (read_mempak_sector(_port, i, data + (i * MEMPAK_BLOCK_SIZE)) != 0) {
-            free(data);
-            sprintf(failure_message_note, "Failed to read Controller Pak sector %d", i);
-            error_message_displayed = true;
-            return;
-        }
-
-        ui_components_loader_draw((float) i / 128.0f, "Dumping Controller Pak...");
-
-        rdpq_detach_show();
+    int banks = cpak_probe_banks(port);
+    if (banks < 1) {
+        // Fallback to 1 bank if probing not available; or show error.
+        banks = 1;
     }
 
     get_rtc_time(string_datetime_cpak);
-
     char complete_filename[200];
     sprintf(complete_filename, "%s/CPAK_%s%s", CPAK_PATH, string_datetime_cpak, CPAK_EXTENSION);
 
-
-    FILE *fp = fopen(complete_filename, "w");
+    FILE *fp = fopen(complete_filename, "wb");
     if (!fp) {
         sprintf(failure_message_note, "Failed to open file for writing: %s\n", complete_filename);
         error_message_displayed = true;
-        fclose(fp);
-        free(data);
         return;
     }
 
-    if (fwrite(data, 1, MEMPAK_BLOCK_SIZE * 128, fp) != MEMPAK_BLOCK_SIZE * 128) {
-        sprintf(failure_message_note, "Failed to write data to file: %s\n", complete_filename);
+    uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
+    if (!bankbuf) {
+        sprintf(failure_message_note, "Memory allocation failed!");
         error_message_displayed = true;
         fclose(fp);
-        free(data);
         return;
     }
-    
+
+    for (int b = 0; b < banks; ++b) {
+        int rd = cpak_read((joypad_port_t)port, (uint8_t)b, 0, bankbuf, MEMPAK_BANK_SIZE);
+        if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
+            sprintf(failure_message_note, "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
+            error_message_displayed = true;
+            free(bankbuf);
+            fclose(fp);
+            return;
+        }
+
+        size_t wr = fwrite(bankbuf, 1, MEMPAK_BANK_SIZE, fp);
+        if (wr != MEMPAK_BANK_SIZE) {
+            sprintf(failure_message_note, "Failed to write data to file: %s", complete_filename);
+            error_message_displayed = true;
+            free(bankbuf);
+            fclose(fp);
+            return;
+        }
+    }
+
+    free(bankbuf);
     fclose(fp);
-    free(data);
     process_complete_full_dump = true;
 }
 
@@ -458,6 +450,14 @@ static void process (menu_t *menu) {
                 controller_selected = ((controller_selected + 1) + 4) % 4;
                 reset_vars();
             } else if (menu->actions.back) {
+                unmount_all_cpakfs();
+                reset_vars();
+                for(int i = 0; i < 4; i++){
+                    mounted[i] = false;
+                    has_pak[i] = false;
+                    corrupted[i] = false;
+                    memset(&stats_per_port[i], 0, sizeof(stats_per_port[i]));
+                }
                 sound_play_effect(SFX_EXIT);
                 menu->next_mode = MENU_MODE_BROWSER;
             } else if (menu->actions.options && use_rtc && has_mem) {
@@ -956,6 +956,7 @@ static void draw (menu_t *menu, surface_t *d) {
             return;
 
         } else {
+            ui_components_loader_draw(0, "Dumping Controller Pak...");
             rdpq_detach_show();
             dump_complete_cpak(controller_selected);
             start_complete_dump = false;
@@ -993,6 +994,13 @@ void view_controller_pakfs_init (menu_t *menu) {
     reset_vars();
     unmount_all_cpakfs();
     unmounted = true;
+
+    for(int i = 0; i < 4; i++){
+        mounted[i] = false;
+        has_pak[i] = false;
+        corrupted[i] = false;
+        memset(&stats_per_port[i], 0, sizeof(stats_per_port[i]));
+    }
 
     use_rtc = menu->current_time >= 0 ? true : false;
 

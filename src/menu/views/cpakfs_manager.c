@@ -13,8 +13,8 @@
 
 #define MEMPAK_BANK_SIZE 32768
 
-#define CPAK_EXTENSION ".mpk"   
-#define CPAK_NOTE_EXTENSION ".mpkn"
+#define CPAK_EXTENSION ".pak"   
+#define CPAK_NOTE_EXTENSION ".paknote"
 
 static bool use_rtc;
 static char string_datetime_cpak[26];
@@ -916,7 +916,7 @@ static void draw (menu_t *menu, surface_t *d) {
     } else if (show_complete_write_confirm_message) {
         ui_components_messagebox_draw(
             "To write a complete dump, select a file"
-            " with the extension \".mpk\".\n\n"
+            " with the extension \".mpk\" or \".pak\".\n\n"
             "B: Back"
         );   
     } 

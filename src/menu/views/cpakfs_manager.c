@@ -328,7 +328,7 @@ static void dump_single_note(int _port, int16_t selected_index) {
         "<- / ->: Select note number",
         index_selected + 1
     );
-    ui_components_loader_draw(0, "Dumping Controller Pak note...");
+    ui_components_loader_draw(0, "Saving Controller Pak note...");
     rdpq_detach_show();
 
     char buffer[4096];
@@ -883,7 +883,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (process_complete_full_dump) {
         ui_components_messagebox_draw(
-            "Complete backup created in:\n"
+            "Pak saved to:\n"
             "%s\n\n"
             "Press A to continue.",
             CPAK_PATH
@@ -892,7 +892,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (process_complete_note_dump) {
         ui_components_messagebox_draw(
-            "Note backup saved to:\n"
+            "Note saved to:\n"
             "%s/notes\n\n"
             "Press A to continue.",
             CPAK_PATH

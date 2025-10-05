@@ -19,5 +19,8 @@
 **/*.v64
 **/*.z64
 
+# Ignore exe files
+*.exe
+
 # Ignore macOS filesystem cruft
 .DS_Store

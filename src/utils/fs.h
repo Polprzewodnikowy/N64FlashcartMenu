@@ -102,7 +102,7 @@ bool directory_exists(char *path);
  * This function creates a directory at the specified path.
  *
  * @param path The path to the directory.
- * @return true if the directory was successfully created, false otherwise.
+ * @return false if the directory was successfully created, true if there was an error.
  */
 bool directory_create(char *path);
 

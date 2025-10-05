@@ -190,6 +190,9 @@ static view_t menu_views[] = {
     { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
     { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
     { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
+    { MENU_MODE_CONTROLLER_PAKFS, view_controller_pakfs_init, view_controller_pakfs_display },
+    { MENU_MODE_CONTROLLER_PAK_DUMP_INFO, view_controller_pak_dump_info_init, view_controller_pak_dump_info_display },
+    { MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO, view_controller_pak_note_dump_info_init, view_controller_pak_note_dump_info_display },
     { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
@@ -198,7 +201,8 @@ static view_t menu_views[] = {
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
     { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
     { MENU_MODE_HISTORY, view_history_init, view_history_display },
-    { MENU_MODE_DATEL_CODE_EDITOR, view_datel_code_editor_init, view_datel_code_editor_display }
+    { MENU_MODE_DATEL_CODE_EDITOR, view_datel_code_editor_init, view_datel_code_editor_display },
+    { MENU_MODE_EXTRACT_FILE, view_extract_file_init, view_extract_file_display }
 };
 
 /**

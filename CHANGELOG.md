@@ -16,7 +16,9 @@ built from latest commit on main branch.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
 	- Add Alpha Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
 	- Add ability to load boxart from ROMs that use the homebrew header (see [documentation](./docs/19_gamepak_boxart.md)).
+	- Add ability to extract files from ZIP archives (thanks [VicesOfTheMind](https://github.com/VicesOfTheMind)).
 	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
+	- Add Controller Pak manager (thanks [LuEnCam](https://github.com/LuEnCam))
 
 - **Bug Fixes**
 	- Fix ability to set the RTC via menu (Hotfixed in last release).

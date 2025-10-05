@@ -850,12 +850,12 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Backup Controller Pak\n"
+            "A: Backup whole Pak\n"
             "B: Back\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Backup individual Note\n"
+            "L|Z: Backup a Note\n"
             "R: Options\n"
         );
     } else {
@@ -865,6 +865,12 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
         );
     }
+
+    ui_components_actions_bar_text_draw(style,
+        ALIGN_CENTER, VALIGN_TOP,
+        "\n"
+        "< Change Controller >\n"
+    );
 
     if (error_message_displayed) {
         ui_components_messagebox_draw(

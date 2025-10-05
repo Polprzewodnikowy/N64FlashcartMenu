@@ -7,13 +7,15 @@
 The N64FlashcartMenu has a Controller Pak Manager.
 
 > [!WARNING]
-> Mileage may vary when hot swapping paks without re-powering the console (and may contain incorrect content).
+> Mileage may vary when hot swapping paks without exiting and re-entering the screen (and may contain incorrect content), and/or re-powering the console.
 
 Features:
 - Full pak backup and restore (saved to `SD:/cpak_saves/`).
 - Partial pak ('note') backup and restore (saved to `SD:/cpak_saves/notes/`).
 
+
+### Controller Pak Manager
 Use the "Controller Pak Manager" (accessed using `Start` button ) to backup and manage the pak.
+![Backup Controller Pak](./images/cpak-manager.png "Backup Controller Pak confirmation") 
 
-
-Browse to the saved file (usually contained within `SD:/cpak_saves/`) to restore them.
+Browse to the saved file (usually contained within `SD:/cpak_saves/`) to restore it.

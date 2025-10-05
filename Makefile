@@ -81,6 +81,10 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
+	menu/views/cpakfs_manager.c \
+	menu/views/cpak_dump_info.c \
+	menu/views/cpak_note_dump_info.c \
+	utils/cpakfs_utils.c \
 	utils/fs.c
 
 FONTS = \

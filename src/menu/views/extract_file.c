@@ -90,7 +90,9 @@ static void draw (menu_t *menu, surface_t *d) {
             st.m_time,
             st.m_uncomp_size,
             st.m_comp_size,
-            st.m_crc32
+            st.m_crc32,
+            false,
+            false
         };
         ui_components_file_info_draw(st.m_filename, &info);
 

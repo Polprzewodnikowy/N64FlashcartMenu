@@ -850,12 +850,12 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Dump Pak\n"
+            "A: Backup Controller Pak\n"
             "B: Back\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Dump single Note\n"
+            "L|Z: Backup individual Note\n"
             "R: Options\n"
         );
     } else {
@@ -883,7 +883,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (process_complete_full_dump) {
         ui_components_messagebox_draw(
-            "Complete dump created in:\n"
+            "Complete backup created in:\n"
             "%s\n\n"
             "Press A to continue.",
             CPAK_PATH
@@ -892,7 +892,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (process_complete_note_dump) {
         ui_components_messagebox_draw(
-            "Note dumped in:\n"
+            "Note backup saved to:\n"
             "%s/notes\n\n"
             "Press A to continue.",
             CPAK_PATH
@@ -910,12 +910,12 @@ static void draw (menu_t *menu, surface_t *d) {
     if (show_complete_dump_confirm_message && 
         !start_complete_dump) {
         ui_components_messagebox_draw(
-            "Do you want to dump the Controller Pak?\n\n"
+            "Do you want to backup the Controller Pak?\n\n"
             "A: Yes        B: No"
         );   
     } else if (show_complete_write_confirm_message) {
         ui_components_messagebox_draw(
-            "To write a complete dump, select a file"
+            "To write a complete backup, browse to a file"
             " with the extension \".mpk\" or \".pak\".\n\n"
             "B: Back"
         );   
@@ -924,7 +924,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (show_single_note_dump_confirm_message &&
         !start_single_note_dump) {
         ui_components_messagebox_draw(
-            "Which note would you like to dump?\n\n"
+            "Which note would you like to backup?\n\n"
             "Note selected: N.%-2.2d\n\n"
             "A: Select    B: No\n"
             "<- / ->: Select note number",
@@ -955,13 +955,13 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (cpakfs_stats.pages.used <= 0) {
             rdpq_detach_show();
-            sprintf(failure_message_note, "No data to dump in Controller Pak on controller %d!", controller_selected + 1);
+            sprintf(failure_message_note, "No data found on Controller Pak on controller %d!", controller_selected + 1);
             error_message_displayed = true;
             start_complete_dump = false;
             return;
 
         } else {
-            ui_components_loader_draw(0, "Dumping Controller Pak...");
+            ui_components_loader_draw(0, "Saving Controller Pak...");
             rdpq_detach_show();
             dump_complete_cpak(controller_selected);
             start_complete_dump = false;

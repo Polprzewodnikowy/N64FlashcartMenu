@@ -5,8 +5,16 @@
 
 static struct stat st;
 
+static file_info_t info;
+
 static void process (menu_t *menu) {
-    if (menu->actions.back) {
+    if (info.is_controller_pak_dump && menu->actions.enter) {
+        sound_play_effect(SFX_ENTER);
+        menu->next_mode = MENU_MODE_CONTROLLER_PAK_DUMP_INFO;
+    } else if (info.is_controller_pak_dump_note  && menu->actions.enter) {
+        sound_play_effect(SFX_ENTER);
+        menu->next_mode = MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO;
+    } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
@@ -19,21 +27,27 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw();
 
-    file_info_t info = {
-        S_ISDIR(st.st_mode),
-        st.st_mode & S_IWUSR,
-        false,
-        st.st_mtime,
-        st.st_size
-    };
     ui_components_file_info_draw(menu->browser.entry->name, &info);
 
-    ui_components_actions_bar_text_draw(
-        STL_DEFAULT,
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "B: Exit"
-    );
+    if (info.is_controller_pak_dump) {
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Restore to Controller Pak\n"
+            "B: Back"
+        );
+    } else if (info.is_controller_pak_dump_note) {
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "A: Restore note to Controller Pak\n"
+            "B: Back"
+        );
+    } else {
+        ui_components_actions_bar_text_draw(STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "B: Exit"
+        );
+    }
 
     rdpq_detach_show();
 }
@@ -41,6 +55,18 @@ static void draw (menu_t *menu, surface_t *d) {
 
 void view_file_info_init (menu_t *menu) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+
+    info = (file_info_t){
+        .directory = S_ISDIR(st.st_mode),
+        .writeable = (st.st_mode & S_IWUSR),
+        .encrypted = false,
+        .mtime = st.st_mtime,
+        .size = st.st_size,
+        .compressed = false,
+        .crc32 = false,
+        .is_controller_pak_dump = false,
+        .is_controller_pak_dump_note = false,
+    };
 
     if (stat(path_get(path), &st)) {
         menu_show_error(menu, "Couldn't obtain file information");
@@ -51,6 +77,5 @@ void view_file_info_init (menu_t *menu) {
 
 void view_file_info_display (menu_t *menu, surface_t *display) {
     process(menu);
-
     draw(menu, display);
 }

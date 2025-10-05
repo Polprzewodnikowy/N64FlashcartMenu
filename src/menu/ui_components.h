@@ -36,13 +36,15 @@ typedef enum {
  * Structure with file information displayed used in the user interface.
  */
 typedef struct {
-    bool directory;         /**< Directory rather than a file */
-    bool writeable;         /**< File is writeable */
-    bool encrypted;         /**< File is encrypted */
-    time_t mtime;           /**< Last modification time */
-    uint64_t size;          /**< File size in bytes */
-    uint64_t compressed;    /**< File size in bytes while compressed */
-    uint32_t crc32;         /**< Checksum for compressed files */
+    bool directory;                     /**< Directory rather than a file */
+    bool writeable;                     /**< File is writeable */
+    bool encrypted;                     /**< File is encrypted */
+    time_t mtime;                       /**< Last modification time */
+    uint64_t size;                      /**< File size in bytes */
+    uint64_t compressed;                /**< File size in bytes while compressed */
+    uint32_t crc32;                     /**< Checksum for compressed files */
+    bool is_controller_pak_dump;        /**< file is a controller pak dump */
+    bool is_controller_pak_dump_note;   /**< file is a controller pak dump note */
 } file_info_t;
 
 /**
@@ -311,6 +313,6 @@ void ui_component_value_editor(const char **header_text, const char **value_text
  * @param filename Name of the file for which to show the information.
  * @param info Metadata information of the file to be displayed.
  */
-void ui_components_file_info_draw (char* filename, const file_info_t *info);
+void ui_components_file_info_draw (char* filename, file_info_t *info);
 
 #endif /* UI_COMPONENTS_H__ */

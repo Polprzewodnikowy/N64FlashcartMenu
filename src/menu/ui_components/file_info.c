@@ -20,6 +20,7 @@ static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NUL
 static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
 static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
 static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
+static const char *controller_pak_note_extensions[] = { "mpkn", "paknote", NULL };
 static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 
@@ -30,8 +31,8 @@ static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", 
  * @param is_directory Whether the file is a directory.
  * @return A constant string describing the file type.
  */
-static const char *format_file_type (char *name, bool is_directory) {
-    if (is_directory) {
+static const char *format_file_type (char *name, file_info_t *info) {
+    if (info->directory) {
         return "";
     } if (file_has_extensions(name, n64_rom_extensions)) {
         return " Type: N64 ROM\n";
@@ -50,8 +51,13 @@ static const char *format_file_type (char *name, bool is_directory) {
     } else if (file_has_extensions(name, music_extensions)) {
         return " Type: Music file\n";
     } else if (file_has_extensions(name, controller_pak_extensions)) {
+        info->is_controller_pak_dump = true;
         return " Type: Controller Pak file\n";
-    } else if (file_has_extensions(name, emulator_extensions)) {
+    } else if (file_has_extensions(name, controller_pak_note_extensions)) {
+        info->is_controller_pak_dump_note = true;
+        return " Type: Controller Pak note file\n";
+    } 
+    else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
     } else if (file_has_extensions(name, cheat_extensions)) {
         return " Type: Cheats file\n";
@@ -66,7 +72,7 @@ static const char *format_file_type (char *name, bool is_directory) {
  * @param entries Number of entries in the list.
  * @param selected Index of the currently selected entry.
  */
-void ui_components_file_info_draw (char* filename, const file_info_t *info) {
+void ui_components_file_info_draw (char* filename, file_info_t *info) {
     if (!info) {
         return;
     }
@@ -80,7 +86,7 @@ void ui_components_file_info_draw (char* filename, const file_info_t *info) {
         filename
     );
 
-    const char *file_type = format_file_type(filename, info->directory);
+    const char *file_type = format_file_type(filename, info);
     const char *file_mode = info->directory ? "Directory" : "File";
     const char *file_access = info->encrypted ? "(Encrypted)" : info->writeable ? "" : "(Read only)";
     if (info->compressed > 0) {

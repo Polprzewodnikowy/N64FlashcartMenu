@@ -1,5 +1,6 @@
 #include <miniz.h>
 #include <miniz_zip.h>
+#include <sys/utime.h>
 #include "../sound.h"
 
 #include "utils/fs.h"
@@ -41,6 +42,7 @@ static void extract(menu_t *menu) {
     } else {
         FILE *file = fopen(path_get(path), "wb");
         if (file) {
+            struct utimbuf mtime = { st.m_time, st.m_time };
             if (!mz_zip_reader_extract_to_callback(
                 &menu->browser.zip,
                 st.m_file_index,
@@ -49,6 +51,7 @@ static void extract(menu_t *menu) {
                 menu_show_error(menu, "Failed to extract file");
             }
             fclose(file);
+            utime(path_get(path), &mtime);
             menu->browser.select_file = path_clone(path);
             menu->next_mode = MENU_MODE_BROWSER;
         } else {
@@ -84,11 +87,12 @@ static void draw (menu_t *menu, surface_t *d) {
             st.m_is_directory,
             true,
             st.m_is_encrypted,
-            // FIXME: Set to st.m_time once miniz impelements MINIZ_NO_UTIME
-            0,
+            st.m_time,
             st.m_uncomp_size,
             st.m_comp_size,
-            st.m_crc32
+            st.m_crc32,
+            false,
+            false
         };
         ui_components_file_info_draw(st.m_filename, &info);
 

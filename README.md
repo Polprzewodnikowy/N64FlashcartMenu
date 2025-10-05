@@ -45,6 +45,8 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * N64 ROM fast reboot option (on reset).
 * ROM history and favorites.
 * ROM Datel code editor.
+* Zip archive browsing and file extraction.
+* Controller Pak backup and restore (including individual notes).
 
 
 ## Aims

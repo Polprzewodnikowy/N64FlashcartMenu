@@ -56,20 +56,21 @@ static void draw (menu_t *menu, surface_t *d) {
 void view_file_info_init (menu_t *menu) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    info = (file_info_t){
-        .directory = S_ISDIR(st.st_mode),
-        .writeable = (st.st_mode & S_IWUSR),
-        .encrypted = false,
-        .mtime = st.st_mtime,
-        .size = st.st_size,
-        .compressed = false,
-        .crc32 = false,
-        .is_controller_pak_dump = false,
-        .is_controller_pak_dump_note = false,
-    };
-
     if (stat(path_get(path), &st)) {
         menu_show_error(menu, "Couldn't obtain file information");
+        info = (file_info_t){0};
+    } else {
+        info = (file_info_t){
+            .directory = S_ISDIR(st.st_mode),
+            .writeable = (st.st_mode & S_IWUSR),
+            .encrypted = false,
+            .mtime = st.st_mtime,
+            .size = st.st_size,
+            .compressed = false,
+            .crc32 = 0,
+            .is_controller_pak_dump = false,
+            .is_controller_pak_dump_note = false,
+        };
     }
 
     path_free(path);

@@ -1,5 +1,6 @@
 * text=auto eol=crlf
 # These are all bash scripts and should use lf
 *.sh text eol=lf
+*.yml text eol=lf
 
 src/libs/** linguist-vendored

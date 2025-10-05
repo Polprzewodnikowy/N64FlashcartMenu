@@ -5,7 +5,7 @@
 #include <libdragon.h>
 #include <stddef.h>
 
-#define FS_BLOCK_DIVIDER 8*32
+#define FS_BLOCK_DIVIDER (8 * 32)
 #define MAX_NUM_NOTES 16
 
 typedef struct {

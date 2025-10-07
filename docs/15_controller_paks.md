@@ -2,11 +2,11 @@
 ## Controller Paks
 
 > [!WARNING]
-> **THIS FEATURE IS EXPERIMENTAL**
+> **THIS FEATURE IS EXPERIMENTAL (PRE-RELEASE ONLY)**
 
 The N64FlashcartMenu has a Controller Pak Manager.
 
-> [!WARNING]
+> [!CAUTION]
 > Mileage may vary when hot swapping paks without exiting and re-entering the screen (and may contain incorrect content), and/or re-powering the console.
 
 Features:

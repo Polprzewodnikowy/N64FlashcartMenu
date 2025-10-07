@@ -5,7 +5,8 @@
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts that aims to support as many as possible. This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
+An open source menu for N64 flashcarts that aims to support as many as possible.  
+This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 
 > [!TIP]
 > New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
@@ -14,7 +15,8 @@ An open source menu for N64 flashcarts that aims to support as many as possible.
 > **This project considers flashcart sellers that ship this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
 
 ## Flashcart Support
-This menu aims to support as many N64 flashcarts as possible. The current state of support is:
+This menu aims to support as many N64 flashcarts as possible.  
+The current state of support is:
 
 ### Supported
 * SummerCart64
@@ -91,12 +93,14 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 
 * Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
 
+# Contributors
+This menu is only made possible by the [contributors)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/graphs/contributors)
 
 # License
 This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.  
 Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project authors / maintainers.  
-* Mateusz Faderewski / Polprzewodnikowy
-* Robin Jones / NetworkFusion
+* [Mateusz Faderewski / Polprzewodnikowy](https://github.com/Polprzewodnikowy)
+* [Robin Jones / NetworkFusion](https://github.com/networkfusion)
 
 # Open source software and licenses used
 ## Libraries

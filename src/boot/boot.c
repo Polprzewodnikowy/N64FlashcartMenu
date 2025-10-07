@@ -32,7 +32,6 @@ static cic_type_t boot_detect_cic (boot_params_t *params) {
     return cic_detect(ipl3);
 }
 
-
 /**
  * Prepare system hardware, load reboot code and IPL3, install cheats, and transfer control to the reboot routine using the provided boot parameters.
  *

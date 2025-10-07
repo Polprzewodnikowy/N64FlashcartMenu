@@ -1,0 +1,23 @@
+var searchData=
+[
+  ['bookkeeping_5ftype_5fdisk_0',['BOOKKEEPING_TYPE_DISK',['../bookkeeping_8h.html#ade37f681e61c6928afe2582458650d0cac8b929008019a4f85c08580457a35179',1,'bookkeeping.h']]],
+  ['bookkeeping_5ftype_5fempty_1',['BOOKKEEPING_TYPE_EMPTY',['../bookkeeping_8h.html#ade37f681e61c6928afe2582458650d0cadd80b8ed37b599f4be79db1c234e166c',1,'bookkeeping.h']]],
+  ['bookkeeping_5ftype_5from_2',['BOOKKEEPING_TYPE_ROM',['../bookkeeping_8h.html#ade37f681e61c6928afe2582458650d0cac2039a88f166e523080a44faa6b95c80',1,'bookkeeping.h']]],
+  ['boot_5fdevice_5ftype_5f64dd_3',['BOOT_DEVICE_TYPE_64DD',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbda4d6d2db983a0a524c640441423af3ea9',1,'boot.h']]],
+  ['boot_5fdevice_5ftype_5from_4',['BOOT_DEVICE_TYPE_ROM',['../boot_8h.html#ad2abc0c1ce054ac5d88d52df290c9bbda21d24a818a329b368022fa9015fc413b',1,'boot.h']]],
+  ['boot_5fmode_5fddipl_5',['BOOT_MODE_DDIPL',['../group__sc64.html#gga4fc6e6ea26473957f4720f59f69b934ea869a806385476357b997eb3d875e54f5',1,'sc64_ll.h']]],
+  ['boot_5fmode_5fdirect_5fddipl_6',['BOOT_MODE_DIRECT_DDIPL',['../group__sc64.html#gga4fc6e6ea26473957f4720f59f69b934ea06acefdd629c039cbec56e55582a23c1',1,'sc64_ll.h']]],
+  ['boot_5fmode_5fdirect_5from_7',['BOOT_MODE_DIRECT_ROM',['../group__sc64.html#gga4fc6e6ea26473957f4720f59f69b934ea703fd3dec54c2f7d7807c0789775e0eb',1,'sc64_ll.h']]],
+  ['boot_5fmode_5fmenu_8',['BOOT_MODE_MENU',['../group__sc64.html#gga4fc6e6ea26473957f4720f59f69b934eac9618951409f1ad797bf2e3af4ddf1ea',1,'sc64_ll.h']]],
+  ['boot_5fmode_5from_9',['BOOT_MODE_ROM',['../group__sc64.html#gga4fc6e6ea26473957f4720f59f69b934ea87a4961ba4cd80d2d407d04cb8343445',1,'sc64_ll.h']]],
+  ['boot_5freset_5ftype_5fcold_10',['BOOT_RESET_TYPE_COLD',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6a1d7a6814ca6f1e3cf5e9e506dc8b723e',1,'boot.h']]],
+  ['boot_5freset_5ftype_5fnmi_11',['BOOT_RESET_TYPE_NMI',['../boot_8h.html#a58ed873284bb826c75f3b0be4948fcc6abbc07d04abe16bc887dfa0f218ff9741',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5fmpal_12',['BOOT_TV_TYPE_MPAL',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353a6f051c9f7526d3a8d76ad9e3ab096d71',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5fntsc_13',['BOOT_TV_TYPE_NTSC',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353a15105546ae54fa48105f1473f572e8f0',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5fpal_14',['BOOT_TV_TYPE_PAL',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353a2fcd32e4b9034bacb4a49b08d072bd8c',1,'boot.h']]],
+  ['boot_5ftv_5ftype_5fpassthrough_15',['BOOT_TV_TYPE_PASSTHROUGH',['../boot_8h.html#a88e68b10e3c1acd4e232de56e2d12353ad54a2619daa65118dd45d35367391cc5',1,'boot.h']]],
+  ['button_5fmode_5fdd_5fdisk_5fswap_16',['BUTTON_MODE_DD_DISK_SWAP',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefa1bd17ad1366f4a3718e662403c49ba61',1,'sc64_ll.h']]],
+  ['button_5fmode_5fn64_5firq_17',['BUTTON_MODE_N64_IRQ',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefa8df45329ded83f6fb79787683781efb3',1,'sc64_ll.h']]],
+  ['button_5fmode_5fnone_18',['BUTTON_MODE_NONE',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefa365b5ec9d504646251a700062f19bc3f',1,'sc64_ll.h']]],
+  ['button_5fmode_5fusb_5fpacket_19',['BUTTON_MODE_USB_PACKET',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefafac0b304877fefda7edc5e2e49ae5141',1,'sc64_ll.h']]]
+];

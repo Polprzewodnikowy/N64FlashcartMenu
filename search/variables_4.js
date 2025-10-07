@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['dacrate_0',['DACRATE',['../boot__io_8h.html#a05b74719e0eb214f19d2aca062baa57d',1,'ai_regs_t']]],
+  ['data_1',['DATA',['../sc64__ll_8c.html#a6a261f6b81149646503ebc9a19e804f6',1,'sc64_regs_t']]],
+  ['data_5fstart_2',['data_start',['../mp3__player_8c.html#ab3cd038c53c92cc89475ffdf4e953888',1,'mp3player_t']]],
+  ['dd_5fsector_3',['DD_SECTOR',['../group__sc64.html#a5f05404fee16aadda6f2a0205e56be76',1,'sc64_buffers_t']]],
+  ['dec_4',['dec',['../mp3__player_8c.html#ac4bbcc9cc56f965a488de3eb9c483845',1,'mp3player_t']]],
+  ['decoded_5frows_5',['decoded_rows',['../png__decoder_8c.html#ad5632e8a4278d2319750d27da763b31d',1,'png_decoder_t']]],
+  ['default_5fdirectory_6',['default_directory',['../settings_8h.html#a7b25ac0c578507eb002025f1e5ad6041',1,'settings_t']]],
+  ['defect_5ftracks_7',['defect_tracks',['../flashcart_8h.html#ad62dae6f881576251e1df08274d2ccc8',1,'flashcart_disk_parameters_t']]],
+  ['deinit_8',['deinit',['../flashcart_8h.html#a5a7ab71f8d1ddc3040fc9038298bf830',1,'flashcart_t']]],
+  ['description_9',['description',['../datel__codes_8h.html#ab8c093a6a99afc63e683968b2fef8d10',1,'cheat_file_code_t']]],
+  ['destination_5fcode_10',['destination_code',['../rom__info_8h.html#a3008aa82b5d7245bd003978c91802199',1,'rom_info_t.__unnamed22__.__unnamed28__']]],
+  ['detect_5fcic_5fseed_11',['detect_cic_seed',['../boot_8h.html#ab45c6d8111161a39344c57a4f2fa0675',1,'boot_params_t']]],
+  ['development_5fdrive_12',['development_drive',['../flashcart_8h.html#ae1469bc79e8ee357edfc2b338d142f94',1,'flashcart_disk_parameters_t']]],
+  ['device_5ftype_13',['device_type',['../boot_8h.html#af892d1ddd6f949c3a7171c4ef5f059dc',1,'boot_params_t']]],
+  ['directory_14',['directory',['../ui__components_8h.html#a049287e5caeae123362fd8cdeb51749f',1,'file_info_t']]],
+  ['disk_5fconversion_15',['disk_conversion',['../rom__info_8h.html#a5110e684c9b29531b86f62b391d0fe31',1,'rom_info_t.features']]],
+  ['disk_5ftype_16',['disk_type',['../flashcart_8h.html#ae3c98b378650338e9164332d28178177',1,'flashcart_disk_parameters_t']]],
+  ['disks_17',['disks',['../group__sc64.html#a83a53b90ffb48eaa2e2d61fda96d2f17',1,'sc64_disk_mapping_t']]],
+  ['dma_5fbusy_18',['DMA_BUSY',['../boot__io_8h.html#a643213e3225fae5460f54c5dadc1a2d2',1,'sp_regs_t']]],
+  ['dma_5ffull_19',['DMA_FULL',['../boot__io_8h.html#a26b0fb4a2456b7f14a6c8eea80018823',1,'sp_regs_t']]],
+  ['dmem_20',['DMEM',['../boot__io_8h.html#a32512a78ee9a245ff70426ce12d1c1db',1,'sp_mem_t']]],
+  ['dom_21',['DOM',['../boot__io_8h.html#a378681355d279b47c38f6715cfa764d9',1,'pi_regs_t']]],
+  ['duration_22',['duration',['../mp3__player_8c.html#abc5090c30cfd6aa0ac23c645e484c34b',1,'mp3player_t']]]
+];

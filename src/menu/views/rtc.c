@@ -32,6 +32,22 @@ static bool is_editing_mode;
 static rtc_field_t editing_field_type;
 
 
+/**
+ * Adjust the currently selected RTC field in a given tm structure by a step and normalize the time.
+ *
+ * Modifies the pointed-to struct tm in place according to the global editing_field_type:
+ * - Year: wraps between YEAR_MIN and YEAR_MAX.
+ * - Month: wraps between 0 and 11.
+ * - Day: wraps between 1 and 31.
+ * - Hour: wraps between 0 and 23.
+ * - Minute: wraps between 0 and 59.
+ * - Second: wraps between 0 and 59.
+ * After applying the wrap-adjustment the function normalizes the tm (recomputes tm_wday and tm_yday) by converting
+ * to a time_t with mktime and converting back with gmtime.
+ *
+ * @param t Pointer to the struct tm to modify in place.
+ * @param incr Amount to add to the selected field (positive to increment, negative to decrement).
+ */
 void adjust_rtc_time( struct tm *t, int incr ) {
     switch(editing_field_type)
     {
@@ -61,10 +77,15 @@ void adjust_rtc_time( struct tm *t, int incr ) {
 
 
 /**
- * Draws the RTC date/time editor UI component.
- * 
- * @param t The struct tm containing the current date and time values to display.
- * @param selected_field The field currently selected for editing (year, month, day, etc.).
+ * Render an editable RTC date/time component showing individual fields.
+ *
+ * Displays the year, month, day, hour, minute, second, and day-of-week values and highlights
+ * the provided selected field for editing. Each displayed numeric field is clamped to its
+ * valid range (year within YEAR_MIN..YEAR_MAX, month 1..12, day 1..31, hour 0..23, minute/second 0..59).
+ * The day-of-week is taken from t.tm_wday and mapped via DAYS_OF_WEEK.
+ *
+ * @param t The current date/time to display; numeric fields will be clamped before rendering.
+ * @param selected_field The rtc_field_t value indicating which field should be highlighted for editing.
  */
 void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_field ) {
     /* Format RTC date/time as strings */
@@ -96,6 +117,21 @@ void rtc_ui_component_editdatetime_draw ( struct tm t, rtc_field_t selected_fiel
     );
 }
 
+/**
+ * Process UI actions for the RTC view, updating editing state, field navigation, time adjustments, and saving or canceling edits.
+ *
+ * While not in editing mode:
+ * - Back switches the menu to browser mode and plays an exit sound.
+ * - Enter loads the current time into the editor and enters editing mode if a valid current time exists.
+ *
+ * While in editing mode:
+ * - Left/Right move the selected edit field (year, month, day, hour, minute, second) with wrap-around.
+ * - Up/Down increment or decrement the currently selected field.
+ * - Options (save) attempts to write the edited time to the RTC (shows an error on failure or if the RTC is not writable) and exits editing mode.
+ * - Back cancels editing and exits editing mode without saving.
+ *
+ * @param menu Pointer to the current menu state and input actions.
+ */
 static void process (menu_t *menu) {
     if (menu->actions.back && !is_editing_mode) {
         sound_play_effect(SFX_EXIT);
@@ -141,6 +177,17 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the RTC view into the given display surface, showing either the read-only
+ * current-time screen or the date/time editor depending on the editing state.
+ *
+ * Draws the common background and layout, renders the main text and action bars
+ * for the non-editing state (including current date/time or unsupported message),
+ * and renders editor controls and the per-field date/time editor when editing.
+ *
+ * @param menu Pointer to the current menu state used to read the current time and view state.
+ * @param d Display surface to render the RTC view onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

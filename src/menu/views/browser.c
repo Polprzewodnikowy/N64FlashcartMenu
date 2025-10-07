@@ -58,6 +58,13 @@ static const struct substr hidden_prefixes[] = {
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
 
+/**
+ * Determines whether a filesystem path should be treated as hidden.
+ *
+ * @param path Path to evaluate.
+ * @returns `true` if the path matches a hidden root path, its basename exactly matches a hidden basename,
+ *          or its basename begins with a hidden prefix; `false` otherwise.
+ */
 static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
@@ -89,6 +96,18 @@ static bool path_is_hidden (path_t *path) {
     return false;
 }
 
+/**
+ * Compare two browser entries for ordering by type precedence then name.
+ *
+ * Entries are ordered so that directories come first, then archives, disks,
+ * emulators, images, music, ROMs, ROM cheats, ROM patches, saves, texts, and
+ * other types; entries of the same type are ordered case-insensitively by name.
+ *
+ * @param pa Pointer to the first entry_t to compare.
+ * @param pb Pointer to the second entry_t to compare.
+ * @returns A negative value if `pa` should sort before `pb`, zero if they are
+ * equal in ordering, and a positive value if `pa` should sort after `pb`.
+ */
 static int compare_entry (const void *pa, const void *pb) {
     entry_t *a = (entry_t *) (pa);
     entry_t *b = (entry_t *) (pb);
@@ -144,6 +163,15 @@ static int compare_entry (const void *pa, const void *pb) {
     return strcasecmp((const char *) (a->name), (const char *) (b->name));
 }
 
+/**
+ * Free browser list resources and reset browser state for the given menu.
+ *
+ * If an archive is open, closes the ZIP reader, then frees each entry name
+ * and the list array. Resets archive flag, entries count, list pointer,
+ * current entry pointer, and selected index to their empty/default values.
+ *
+ * @param menu Menu whose browser resources will be freed and state reset.
+ */
 static void browser_list_free (menu_t *menu) {
     if (menu->browser.archive) {
         mz_zip_reader_end(&menu->browser.zip);
@@ -162,6 +190,18 @@ static void browser_list_free (menu_t *menu) {
     menu->browser.selected = -1;
 }
 
+/**
+ * Load ZIP archive entries into the browser state.
+ *
+ * Initializes the ZIP reader for the current browser directory, populates
+ * menu->browser.list with the archive's entries (marked as archived), sets
+ * archive mode and entry count, and sorts the resulting list. On success the
+ * first entry is selected when entries exist.
+ *
+ * @param menu Browser menu whose browser state will be updated.
+ * @returns `true` if an error occurred while initializing or reading the archive,
+ *          `false` otherwise.
+ */
 static bool load_archive (menu_t *menu) {
     browser_list_free(menu);
 
@@ -208,6 +248,16 @@ static bool load_archive (menu_t *menu) {
     return false;
 }
 
+/**
+ * Populate the browser list from the current directory stored in menu->browser.directory.
+ *
+ * Builds menu->browser.list and related state (entries count, selected index, and entry pointer)
+ * by iterating the filesystem directory, skipping hidden entries and the "saves" folder
+ * according to menu settings, and classifying each visible entry by file type/extension.
+ *
+ * @param menu Menu context whose browser state will be updated.
+ * @returns `true` on error (list freed and browser state reset), `false` on success.
+ */
 static bool load_directory (menu_t *menu) {
     int result;
     dir_t info;
@@ -298,6 +348,15 @@ static bool load_directory (menu_t *menu) {
     return false;
 }
 
+/**
+ * Reloads the current directory listing and restores the previous selection index.
+ *
+ * Updates menu->browser.list and related state by reloading the directory; if the
+ * previous selection index is out of range after reload, selects the last entry.
+ *
+ * @param menu Menu instance whose browser state will be reloaded and updated.
+ * @returns `true` if reloading the directory failed, `false` otherwise.
+ */
 static bool reload_directory (menu_t *menu) {
     int selected = menu->browser.selected;
 
@@ -314,6 +373,14 @@ static bool reload_directory (menu_t *menu) {
     return false;
 }
 
+/**
+ * Pushes a new directory onto the browser path and loads its contents.
+ *
+ * @param menu Menu state whose browser directory will be modified.
+ * @param directory Path component to push onto the current browser directory.
+ * @param archive If true, treat the pushed path as a ZIP archive and open it.
+ * @returns `true` if loading the new directory/archive failed and the previous directory was restored, `false` otherwise.
+ */
 static bool push_directory (menu_t *menu, char *directory, bool archive) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
@@ -330,6 +397,17 @@ static bool push_directory (menu_t *menu, char *directory, bool archive) {
     return false;
 }
 
+/**
+ * Pop the current directory from the browser path and load its parent.
+ *
+ * Attempts to move the browser up one directory level, reloads the new current
+ * directory, and if successful restores the selected entry to the entry whose
+ * name matches the directory that was popped. On failure the previous browser
+ * directory state is restored.
+ *
+ * @param menu Menu whose browser directory and entries will be updated.
+ * @returns `true` if loading the parent directory failed and the previous state was restored, `false` otherwise.
+ */
 static bool pop_directory (menu_t *menu) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
@@ -354,6 +432,18 @@ static bool pop_directory (menu_t *menu) {
     return false;
 }
 
+/**
+ * Set the browser to the directory containing `file` and select `file` in the list.
+ *
+ * This replaces the current browser directory with the parent directory of `file`,
+ * loads that directory into the browser, and sets the browser's selected entry and
+ * entry pointer to the list item whose name matches `file`'s basename. If loading
+ * the directory fails, the original directory is restored.
+ *
+ * @param menu Browser menu state to modify.
+ * @param file Path of the file to select; only its parent directory and basename are used.
+ * @return `true` if loading the target directory failed and the previous directory was restored, `false` if the selection succeeded.
+ */
 static bool select_file (menu_t *menu, path_t *file) {
     path_t *previous_directory = path_clone(menu->browser.directory);
 
@@ -380,10 +470,30 @@ static bool select_file (menu_t *menu, path_t *file) {
     return false;
 }
 
+/**
+ * Selects the appropriate next menu mode for showing the current entry's properties.
+ *
+ * Sets menu->next_mode to file extraction mode when the current entry is from an archive,
+ * otherwise sets it to the regular file info mode.
+ *
+ * @param menu Menu state containing the browser and current entry.
+ * @param arg  Unused.
+ */
 static void show_properties (menu_t *menu, void *arg) {
     menu->next_mode = menu->browser.entry->type == ENTRY_TYPE_ARCHIVED ? MENU_MODE_EXTRACT_FILE : MENU_MODE_FILE_INFO;
 }
 
+/**
+ * Delete the currently selected browser entry and refresh the directory listing.
+ *
+ * Attempts to remove the filesystem entry represented by the menu's current selection.
+ * On failure, marks the browser state invalid and shows a context-appropriate error
+ * message. After a successful removal, reloads the directory and, on reload failure,
+ * marks the browser invalid and shows an error.
+ *
+ * @param menu Pointer to the menu containing the browser state and current entry.
+ * @param arg  Unused; provided to match the context-menu callback signature.
+ */
 static void delete_entry (menu_t *menu, void *arg) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -406,11 +516,21 @@ static void delete_entry (menu_t *menu, void *arg) {
     }
 }
 
+/**
+ * Mark the currently selected entry for extraction and transition the menu to extract-file mode.
+ * @param menu Menu state to modify; sets the pending extract flag and updates next_mode.
+ * @param arg Unused.
+ */
 static void extract_entry (menu_t *menu, void *arg) {
     menu->load_pending.extract_file = true;
     menu->next_mode = MENU_MODE_EXTRACT_FILE;
 }
 
+/**
+ * Save the current browser directory (with filesystem prefix removed) as the default and persist settings.
+ *
+ * @param menu Menu whose browser.directory will be stored as the default.
+ */
 static void set_default_directory (menu_t *menu, void *arg) {
     free(menu->settings.default_directory);
     menu->settings.default_directory = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -434,6 +554,12 @@ static component_context_menu_t archive_context_menu = {
     }
 };
 
+/**
+ * Set the menu's next mode to the mode value encoded in `arg`.
+ *
+ * @param menu The menu whose next_mode will be set.
+ * @param arg A `menu_mode_t` value passed as a `void *`; the function casts this pointer to `menu_mode_t` and assigns it to `menu->next_mode`.
+ */
 static void set_menu_next_mode (menu_t *menu, void *arg) {
     menu_mode_t next_mode = (menu_mode_t) (arg);
     menu->next_mode = next_mode;
@@ -451,6 +577,18 @@ static component_context_menu_t settings_context_menu = {
     }
 };
 
+/**
+ * Handle user input and update the browser menu state accordingly.
+ *
+ * Processes context menus and navigation actions for the browser view, including
+ * cursor movement, opening/closing directories (including archives), showing
+ * context menus, selecting entries to change the next application mode, and
+ * invoking error messages or sounds when operations fail or succeed.
+ *
+ * @param menu Pointer to the menu state to operate on; this function reads and
+ *             mutates fields such as browser selection, browser validity, and
+ *             next_mode.
+ */
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, menu->browser.archive ? &archive_context_menu : &entry_context_menu)) {
         return;
@@ -547,6 +685,16 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the browser view onto the given drawing surface.
+ *
+ * Draws the background, tab headers, tabbed layout, and the file list, then renders the action bars
+ * (left, right, and center) with context-sensitive labels based on the currently selected entry type,
+ * displays the current time or a tab-change hint, and draws the entry/archive and settings context menus.
+ *
+ * @param menu The menu state containing browser data (directory, entries, current selection, time, and context flags).
+ * @param d    The destination surface to render into.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -615,6 +763,20 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 
+/**
+ * Initialize and prepare the browser view state for the given menu.
+ *
+ * Ensures browser context menus are initialized and attempts to load the initial
+ * directory. If loading the initial directory fails the browser directory is
+ * reset to the menu's storage prefix and an error is shown. Processes a pending
+ * selection (if menu->browser.select_file is set) by navigating to that file and
+ * clears the pending selection; on failure the browser is marked invalid and an
+ * error is shown. If the reload flag is set, attempts to reload the current
+ * directory and clears the flag; on failure an error is shown and the browser
+ * is marked invalid. Sets or clears menu->browser.valid according to success.
+ *
+ * @param menu Menu instance whose browser view will be initialized and prepared.
+ */
 void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         ui_components_context_menu_init(&entry_context_menu);

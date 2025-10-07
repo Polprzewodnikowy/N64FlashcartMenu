@@ -33,6 +33,16 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the System Information view onto the provided display surface.
+ *
+ * Draws the background and layout, the "N64 SYSTEM INFORMATION" title, expansion
+ * pak status, per-joypad connection and accessory information, a placeholder
+ * for physical disk drive detection, and the actions bar.
+ *
+ * @param menu Current menu state used for view context.
+ * @param d Display surface to render onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

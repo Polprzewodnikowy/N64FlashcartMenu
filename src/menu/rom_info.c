@@ -704,6 +704,18 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
         }
 }
 
+/**
+ * Populate rom_info fields from a matched database entry and the ROM header.
+ *
+ * Decodes CIC, clock rate, boot address, libultra info, identifiers (check code, title, game code, version),
+ * save type, TV type, and feature flags into the provided rom_info structure. For HOMEBREW_HEADER matches,
+ * extracts save type and RTC flag from the header version nibble and updates match->data accordingly.
+ * Also maps feature bits to the expansion pak status and initializes ESRB rating and runtime settings defaults.
+ *
+ * @param match Database match entry used to derive save type and feature flags; may be modified for HOMEBREW_HEADER to set FEAT_RTC or save type.
+ * @param rom_header Parsed ROM header providing clock rate, boot address, libultra, check code, title, game code, version, IPL3, and destination code.
+ * @param rom_info Output structure that will be populated with detected CIC, timing, boot info, identifiers, save/tv types, feature flags, ESRB rating, and default settings.
+ */
 static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info_t *rom_info) {
     rom_info->cic_type = detect_cic_type(rom_header->ipl3);
 
@@ -759,6 +771,17 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->settings.patches_enabled = false;
 }
 
+/**
+ * Load per-ROM configuration from an INI next to the ROM and apply overrides into rom_info.
+ *
+ * Reads an INI file with the same base name as the provided path (extension ".ini") and updates
+ * rom_info's settings, metadata, and boot override fields. If values for cic_type, save_type,
+ * or tv_type differ from their respective AUTOMATIC defaults, the corresponding boot_override
+ * flags are set true; otherwise they remain false.
+ *
+ * @param path Path to the ROM file whose adjacent INI should be read.
+ * @param rom_info Destination structure to populate with configuration and override flags.
+ */
 static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
     path_t *rom_info_path = path_clone(path);
 
@@ -800,6 +823,15 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
     path_free(rom_info_path);
 }
 
+/**
+ * Persist or remove a per-ROM configuration integer setting in the ROM's INI file.
+ * @param path Path to the ROM file; the INI filename is derived from this path by replacing its extension with ".ini".
+ * @param type INI section name to write the key to, or NULL to use the global section.
+ * @param id Key name in the INI to set or delete.
+ * @param value Integer value to store for the key.
+ * @param default_value If `value` equals `default_value`, the key is removed from the INI instead of written.
+ * @returns ROM_OK on success, ROM_ERR_SAVE_IO on I/O, save, or removal failure.
+ */
 static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type, const char *id, int value, int default_value) {
     path_t *rom_info_path = path_clone(path);
 
@@ -859,6 +891,13 @@ rom_cic_type_t rom_info_get_cic_type (rom_info_t *rom_info) {
     }
 }
 
+/**
+ * Get the CIC seed corresponding to the effective CIC type for a ROM.
+ *
+ * @param rom_info ROM information structure; used to determine the effective CIC type and to check for a boot override.
+ * @param seed Pointer to a byte that will receive the CIC seed.
+ * @returns `true` if the seed was derived from the ROM's detected CIC type (no CIC boot override present), `false` if a boot override is in effect.
+ */
 bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed) {
     cic_type_t cic_type;
 
@@ -884,6 +923,17 @@ bool rom_info_get_cic_seed (rom_info_t *rom_info, uint8_t *seed) {
     return (!rom_info->boot_override.cic);
 }
 
+/**
+ * Apply and persist a CIC type boot override for a ROM.
+ * 
+ * Sets the rom_info boot override flag and value for CIC type, then saves the
+ * setting to the ROM's INI under the "custom_boot" section with key "cic_type".
+ *
+ * @param path Filesystem path to the ROM file (used to locate the ROM's INI).
+ * @param rom_info ROM information structure to update with the override.
+ * @param cic_type CIC type to set; use `ROM_CIC_TYPE_AUTOMATIC` to clear the override.
+ * @returns `ROM_OK` on success, `ROM_ERR_SAVE_IO` if writing/deleting the INI failed.
+ */
 rom_err_t rom_config_override_cic_type (path_t *path, rom_info_t *rom_info, rom_cic_type_t cic_type) {
     rom_info->boot_override.cic = (cic_type != ROM_CIC_TYPE_AUTOMATIC);
     rom_info->boot_override.cic_type = cic_type;
@@ -891,6 +941,12 @@ rom_err_t rom_config_override_cic_type (path_t *path, rom_info_t *rom_info, rom_
     return save_rom_config_setting_to_file(path, "custom_boot", "cic_type", rom_info->boot_override.cic_type, ROM_CIC_TYPE_AUTOMATIC);
 }
 
+/**
+ * Get the effective save type for a ROM, honoring any boot override.
+ *
+ * @param rom_info Pointer to rom_info containing the ROM's configured save type and any boot override.
+ * @returns The save type from the boot override if the save override is enabled; otherwise the ROM's configured save type.
+ */
 rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
     if (rom_info->boot_override.save) {
         return rom_info->boot_override.save_type;
@@ -899,6 +955,13 @@ rom_save_type_t rom_info_get_save_type (rom_info_t *rom_info) {
     }
 }
 
+/**
+ * Apply a save-type boot override to rom_info and persist it to the ROM's INI.
+ * @param path Path to the ROM file used to locate the corresponding INI.
+ * @param rom_info ROM info structure to update with the override.
+ * @param save_type Save type to set; setting SAVE_TYPE_AUTOMATIC clears the override.
+ * @returns ROM_OK on success, ROM_ERR_SAVE_IO if writing or removing the INI fails.
+ */
 rom_err_t rom_config_override_save_type (path_t *path, rom_info_t *rom_info, rom_save_type_t save_type) {
     rom_info->boot_override.save = (save_type != SAVE_TYPE_AUTOMATIC);
     rom_info->boot_override.save_type = save_type;
@@ -906,6 +969,11 @@ rom_err_t rom_config_override_save_type (path_t *path, rom_info_t *rom_info, rom
     return save_rom_config_setting_to_file(path, "custom_boot", "save_type", rom_info->boot_override.save_type, SAVE_TYPE_AUTOMATIC);
 }
 
+/**
+ * Get the effective TV type for a ROM, taking any boot override into account.
+ * @param rom_info ROM information structure to query.
+ * @returns The effective rom_tv_type_t: the boot override TV type if an override is enabled, otherwise the ROM's detected TV type.
+ */
 rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
     if (rom_info->boot_override.tv) {
         return rom_info->boot_override.tv_type;
@@ -914,6 +982,14 @@ rom_tv_type_t rom_info_get_tv_type (rom_info_t *rom_info) {
     }
 }
 
+/**
+ * Apply a TV type override for the ROM and persist it to the per-ROM INI.
+ *
+ * @param path Path to the ROM file used to locate the INI.
+ * @param rom_info ROM info structure to update with the override.
+ * @param tv_type TV type to apply; `ROM_TV_TYPE_AUTOMATIC` clears the override.
+ * @returns `ROM_OK` on success, `ROM_ERR_SAVE_IO` on I/O or save failure.
+ */
 rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_tv_type_t tv_type) {
     rom_info->boot_override.tv = (tv_type != ROM_TV_TYPE_AUTOMATIC);
     rom_info->boot_override.tv_type = tv_type;
@@ -921,18 +997,42 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
     return save_rom_config_setting_to_file(path, "custom_boot", "tv_type", rom_info->boot_override.tv_type, ROM_TV_TYPE_AUTOMATIC);
 }
 
+/**
+ * Enable or disable cheat support for a ROM and persist the setting to its INI file.
+ * @param path Path to the ROM file (used to locate the per-ROM INI).
+ * @param rom_info ROM information structure to update.
+ * @param enabled `true` to enable cheats, `false` to disable.
+ * @returns ROM_OK on success, ROM_ERR_SAVE_IO on I/O or save failure.
+ */
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
     return save_rom_config_setting_to_file(path, NULL, "cheats_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
+/**
+ * Set the per-ROM patches enabled flag and persist the setting to the ROM's INI file.
+ * @param path Path to the ROM file used to locate the corresponding INI.
+ * @param rom_info ROM info object to update.
+ * @param enabled `true` to enable patches, `false` to disable them.
+ * @returns ROM_OK on success, ROM_ERR_SAVE_IO if writing or removing the INI failed.
+ */
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.patches_enabled = enabled;
     return save_rom_config_setting_to_file(path, NULL, "patches_enabled", enabled, false);
 }
 #endif
 
+/**
+ * Load ROM header data from the file at the given path, populate rom_info from
+ * the header and database, and apply per-ROM configuration overrides.
+ *
+ * @param path Path to the ROM file.
+ * @param rom_info Output structure to populate with detected ROM metadata and settings.
+ * @returns ROM_OK on success.
+ * @returns ROM_ERR_NO_FILE if the ROM file cannot be opened.
+ * @returns ROM_ERR_LOAD_IO on I/O errors while reading or closing the ROM file.
+ */
 rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     FILE *f;
     rom_header_t rom_header;

@@ -7,6 +7,12 @@ static struct stat st;
 
 static file_info_t info;
 
+/**
+ * Handle input for the file-info view and transition the menu to the appropriate next mode.
+ *
+ * Processes the menu actions: if Enter is pressed on a controller pak dump entry it advances to the controller pak dump info view; if Enter is pressed on a controller pak dump note it advances to the controller pak dump note info view; if Back is pressed it returns to the browser. Plays the corresponding enter/exit sound effect when changing modes.
+ * @param menu Current menu state object whose actions are inspected and whose next_mode may be updated.
+ */
 static void process (menu_t *menu) {
     if (info.is_controller_pak_dump && menu->actions.enter) {
         sound_play_effect(SFX_ENTER);
@@ -20,6 +26,15 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the file information view and its context-sensitive action bar onto the given surface.
+ *
+ * Draws the background, layout, and file information for the currently selected browser entry,
+ * then renders action text appropriate to the file's state and presents the composed surface.
+ *
+ * @param menu Current menu state; used to obtain the selected browser entry to display.
+ * @param d    Destination surface to render the view onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -53,6 +68,16 @@ static void draw (menu_t *menu, surface_t *d) {
 }
 
 
+/**
+ * Initialize file information for the currently selected entry in the menu.
+ *
+ * Populates the module-level `info` with the selected entry's filesystem metadata
+ * (directory flag, write permission, modification time, size, and related flags).
+ * If metadata cannot be obtained, displays an error via `menu_show_error` and
+ * resets `info` to zeroed/default values.
+ *
+ * @param menu Menu context whose browser selected entry is used to construct the file path.
+ */
 void view_file_info_init (menu_t *menu) {
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -76,6 +101,15 @@ void view_file_info_init (menu_t *menu) {
     path_free(path);
 }
 
+/**
+ * Update the file-info view state and render it to the provided surface.
+ *
+ * Processes input and state transitions for the file-info view, then draws
+ * the view UI onto the given display surface.
+ *
+ * @param menu Current menu context containing view and input state.
+ * @param display Surface to render the file-info view onto.
+ */
 void view_file_info_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);

@@ -15,6 +15,17 @@ static bool start_complete_restore;
 
 #define CONTROLLERPAK_BANK_SIZE 32768
 
+/**
+ * Restore a Controller Pak from the configured dump file to the specified controller.
+ *
+ * Attempts to write the dump file at `cpak_path` bank-by-bank to the Controller Pak
+ * attached to `controller`. The function verifies the device is present, checks the
+ * dump file size against the Pak's capacity, and writes each bank in sequence.
+ * On completion or failure, `failure_message` is populated with a human-readable status.
+ *
+ * @param controller Index of the target controller (0 through 3).
+ * @returns `true` if the dump was successfully restored to the Controller Pak, `false` otherwise.
+ */
 static bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");
 
@@ -104,6 +115,16 @@ static bool restore_controller_pak(int controller) {
     return true;
 }
 
+/**
+ * Handle navigation and confirmation input for the Controller Pak dump view.
+ *
+ * Interprets the current menu actions to:
+ * - move the selected controller left or right with wrap-around and play the cursor sound,
+ * - cancel and return to the browser view while playing the exit sound,
+ * - or initiate the complete restore process while playing the enter sound.
+ *
+ * @param menu Menu state containing the current input actions and where the next mode is set.
+ */
 static void process (menu_t *menu) {
     if (menu->actions.go_left) {
         sound_play_effect(SFX_CURSOR);
@@ -120,6 +141,18 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Controller Pak dump confirmation view and handle restore initiation.
+ *
+ * Draws background, layout, path and status messages, and a confirmation messagebox
+ * for selecting a target controller. If a complete restore has been requested,
+ * a loader is shown and the dump restore is performed; on successful restore the
+ * menu is advanced to the browser view. The restore flag is cleared before
+ * returning.
+ *
+ * @param menu Menu state used for input/result handling and potentially advanced on success.
+ * @param d    Rendering surface to draw into.
+ */
 static void draw (menu_t *menu, surface_t *d) {
 
     rdpq_attach(d, NULL);
@@ -172,6 +205,14 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Initialize the Controller Pak dump view state and prepare the full path to the selected dump file.
+ *
+ * Clones the browser's current directory with the selected entry to populate `cpak_path`, clears
+ * `failure_message`, and resets the `start_complete_restore` flag.
+ *
+ * @param menu Current menu state containing the browser directory and selected entry.
+ */
 void view_controller_pak_dump_info_init (menu_t *menu) {
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -183,6 +224,12 @@ void view_controller_pak_dump_info_init (menu_t *menu) {
     path_free(path);
 }
 
+/**
+ * Update the Controller Pak dump info view for one frame by handling input and rendering.
+ *
+ * @param menu The current menu context.
+ * @param display The target surface to render onto.
+ */
 void view_controller_pak_dump_info_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);

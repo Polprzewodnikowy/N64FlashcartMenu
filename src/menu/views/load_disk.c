@@ -8,6 +8,12 @@
 static component_boxart_t *boxart;
 static char *disk_filename;
 
+/**
+ * Map a disk error code to a human-readable message.
+ *
+ * @param err Disk error code to convert.
+ * @returns A null-terminated string describing the error suitable for display.
+ */
 static char *convert_disk_error_message (disk_err_t err) {
     switch (err) {
         case DISK_ERR_IO: return "I/O error during loading 64DD disk information";
@@ -17,6 +23,11 @@ static char *convert_disk_error_message (disk_err_t err) {
     }
 }
 
+/**
+ * Translate a ROM error code into a human-readable message.
+ *
+ * @returns Pointer to a null-terminated string describing the ROM error.
+ */
 static char *convert_rom_error_message (rom_err_t err) {
     switch (err) {
         case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
@@ -26,6 +37,11 @@ static char *convert_rom_error_message (rom_err_t err) {
     }
 }
 
+/**
+ * Convert a disk_region_t value to a human-readable region string.
+ *
+ * @returns Pointer to a string describing the region: "Development", "Japan", "USA", or "Unknown".
+ */
 static char *format_disk_region (disk_region_t region) {
     switch (region) {
         case DISK_REGION_DEVELOPMENT: return "Development";
@@ -46,6 +62,21 @@ static component_context_menu_t options_context_menu = { .list = {
 }};
 
 
+/**
+ * Handle user input and context-menu interactions for the disk load view.
+ *
+ * Processes the active context menu first; if handled there, no further action is taken.
+ * Otherwise responds to view actions by updating load state, transitioning modes,
+ * showing the options context menu, and triggering the appropriate sound effects:
+ * - Enter: mark a disk load pending.
+ * - LZ context (when a ROM is selected): mark a combined disk+ROM load pending and play the setting SFX.
+ * - Back: play the exit SFX and request a transition to the browser view.
+ * - Options: show the options context menu and play the setting SFX.
+ *
+ * @param menu Pointer to the current menu state; updated fields include load_pending.disk_file,
+ *             load.combined_disk_rom, and next_mode, and side effects include showing the options
+ *             context menu and playing sound effects.
+ */
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
         return;
@@ -67,6 +98,18 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the disk-load view for the menu.
+ *
+ * Draws the background and either a loading indicator (when a disk load is pending)
+ * or the full disk information layout including disk filename, loaded ROM info,
+ * description, region/ID/version/disk type, action hints, optional boxart, and the
+ * options context menu. Attaches the provided surface as the rendering target
+ * for the duration of the draw and presents it when complete.
+ *
+ * @param menu Menu state containing load information and UI state.
+ * @param d Surface to render into; becomes the active rendering target for this call.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -152,6 +195,16 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Render a slim loading progress UI for the 64DD disk load.
+ *
+ * If a display surface is available, draws the background and a loader showing
+ * the provided progress value and the text "Loading 64DD disk...".
+ *
+ * @param progress Progress value in the range [0.0, 1.0] where 0.0 indicates no
+ *                 progress and 1.0 indicates completion. If the display cannot
+ *                 be acquired, nothing is drawn.
+ */
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
 
@@ -208,6 +261,17 @@ static void deinit (void) {
     ui_components_boxart_free(boxart);
 }
 
+/**
+ * Load ROM configuration from the given path and attach it to the menu state.
+ *
+ * If `rom_path` has a value, clones it into `menu->load.rom_path` and loads
+ * ROM configuration into `menu->load.rom_info`. On load failure the cloned
+ * path is freed, an error message is shown, and the function returns `false`.
+ *
+ * @param menu Menu state to update with the ROM path and info.
+ * @param rom_path Path to the ROM to load; may be empty/absent.
+ * @returns `true` if `rom_path` was absent or the ROM was loaded successfully, `false` if loading failed.
+ */
 static bool load_rom(menu_t* menu, path_t* rom_path) {
     if(path_has_value(rom_path)) {
         if (menu->load.rom_path) {
@@ -229,6 +293,19 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
     return true;
 }
 
+/**
+ * Initialize the disk-load view state for the given menu.
+ *
+ * Sets up the disk path and related state used when presenting and loading a 64DD disk.
+ * - Frees any previously set disk path and clears the pending-load flag.
+ * - If a history or favorite item was selected, validates the selection, clones its disk
+ *   path, and attempts to load an associated ROM configuration (errors shown by the loader).
+ * - Otherwise, builds the disk path from the current browser directory and entry.
+ * - Loads disk metadata into menu->load.disk_info; on failure, shows a mapped error and aborts.
+ * - Initializes the options context menu and creates the front boxart component for the disk.
+ *
+ * @param menu Menu instance whose disk-load view state will be initialized.
+ */
 void view_load_disk_init (menu_t *menu) {
     if (menu->load.disk_path) {
         path_free(menu->load.disk_path);
@@ -289,6 +366,16 @@ void view_load_disk_init (menu_t *menu) {
     boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, NULL, IMAGE_BOXART_FRONT);
 }
 
+/**
+ * Update and render the disk-load view, handle pending load requests, and clean up when exiting.
+ *
+ * Processes input, renders the view to the given surface, starts the disk load sequence if a
+ * load was requested, and deinitializes view resources when the menu transitions away from the
+ * disk-load mode.
+ *
+ * @param menu Current menu state for the disk-load view.
+ * @param display Surface to render the view into.
+ */
 void view_load_disk_display (menu_t *menu, surface_t *display) {
     process(menu);
 

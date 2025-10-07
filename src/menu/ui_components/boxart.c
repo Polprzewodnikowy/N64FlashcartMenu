@@ -30,13 +30,18 @@ static void png_decoder_callback (png_err_t err, surface_t *decoded_image, void 
 }
 
 /**
- * @brief Initialize the boxart component.
- * 
- * @param storage_prefix The storage prefix.
- * @param game_code The game code.
- * @param rom_title Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety.
- * @param current_image_view The current image view type.
- * @return component_boxart_t* Pointer to the initialized boxart component.
+ * Initialize a boxart component and begin loading the selected boxart image.
+ *
+ * Builds a metadata-based path for the given game (or a homebrew path derived from the ROM title),
+ * selects the appropriate image file for the requested view, and starts PNG decoding.
+ *
+ * @param storage_prefix Base storage path prefix used to construct metadata or legacy paths.
+ * @param game_code Four-character game identifier used to derive the boxart directory; when its
+ *                  second and third characters are 'E' and 'D' a homebrew path is used instead.
+ * @param rom_title ROM title used to construct a safe filename for homebrew entries (may be NULL).
+ * @param current_image_view Enum value selecting which image variant to load (front/back/left/etc.).
+ * @returns Pointer to the initialized boxart component when image decoding was started, `NULL` if
+ *          initialization or decoding could not be started.
  */
 component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const char *game_code, const char *rom_title, file_image_type_t current_image_view) {
     component_boxart_t *b;

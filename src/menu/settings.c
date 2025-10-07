@@ -40,6 +40,13 @@ void settings_init (char *path) {
     settings_path = strdup(path);
 }
 
+/**
+ * Populate the provided settings structure from the settings file at settings_path,
+ * creating the file with defaults if it does not exist.
+ *
+ * @param settings Pointer to a settings_t instance to be filled with values read
+ *                 from the settings file; missing keys are filled from built-in defaults.
+ */
 void settings_load (settings_t *settings) {
     if (!file_exists(settings_path)) {
         settings_save(&init);
@@ -73,6 +80,18 @@ void settings_load (settings_t *settings) {
     mini_free(ini);
 }
 
+/**
+ * Persist the provided settings to the configured settings INI file.
+ *
+ * Writes the fields of `settings` into the global settings file path, creating or
+ * overwriting the file as needed. The function saves menu-related values (schema
+ * revision, UI flags, default directory, saves-folder flags, sound effects) and
+ * conditionally saves either autoload ROM settings and loading-progress-bar flag
+ * (when FEATURE_AUTOLOAD_ROM_ENABLED is defined) or the fast-reboot flag (when it
+ * is not). Beta feature flags are intentionally not written.
+ *
+ * @param settings Pointer to the settings structure whose values will be saved.
+ */
 void settings_save (settings_t *settings) {
     mini_t *ini = mini_create(settings_path);
 
@@ -104,6 +123,11 @@ void settings_save (settings_t *settings) {
     mini_free(ini);
 }
 
+/**
+ * Delete the current settings file at settings_path.
+ *
+ * Attempts to remove the file whose path is stored in the internal `settings_path` variable.
+ */
 void settings_reset_to_defaults() {
     remove(settings_path);
 }

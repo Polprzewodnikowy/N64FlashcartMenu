@@ -36,11 +36,13 @@ static int format_file_size (char *buffer, int64_t size) {
 }
 
 /**
- * @brief Draw the file list component.
- * 
- * @param list Pointer to the list of entries.
- * @param entries Number of entries in the list.
- * @param selected Index of the currently selected entry.
+ * Render the file list UI component, including entry names (with directory prefix), sizes, vertical scrollbar, and a highlight for the selected entry.
+ *
+ * The function draws an empty-directory message if no entries are present and adjusts the visible window so the selected index is centered when the list is larger than the visible area.
+ *
+ * @param list Pointer to an array of entry_t representing the directory entries.
+ * @param entries Total number of entries in the list.
+ * @param selected Zero-based index of the currently selected entry within the list.
  */
 void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
     int starting_position = 0;

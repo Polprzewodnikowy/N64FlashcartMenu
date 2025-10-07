@@ -480,6 +480,15 @@ static flashcart_err_t sc64_load_file (char *file_path, uint32_t rom_offset, uin
     return FLASHCART_OK;
 }
 
+/**
+ * Load save data from a filesystem file into the configured save memory region.
+ *
+ * @param save_path Path to the save file to load (may include a filesystem prefix).
+ * @returns FLASHCART_OK on success.
+ * @returns FLASHCART_ERR_ARGS if the configured save type is NONE or invalid.
+ * @returns FLASHCART_ERR_INT if reading the save type configuration failed.
+ * @returns FLASHCART_ERR_LOAD on file I/O errors or if the file read size does not match the file size.
+ */
 static flashcart_err_t sc64_load_save (char *save_path) {
     void *address = NULL;
     uint32_t value;

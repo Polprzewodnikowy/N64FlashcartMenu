@@ -47,9 +47,18 @@ extern int __boot_tvtype;
 static bool interlaced = true;
 
 /**
- * @brief Initialize the menu system.
- * 
- * @param boot_params Pointer to the boot parameters structure.
+ * Initialize global menu state and all subsystems required by the menu.
+ *
+ * Initializes the global `menu` structure, stores `boot_params`, sets initial
+ * menu modes, and initializes hardware and software subsystems including
+ * flashcart, input, timers, display, fonts, audio (default and SFX), file
+ * system layers, bookkeeping/settings, UI background, and browser directory.
+ * Applies PAL60 compatibility and progressive-scan settings to the display
+ * configuration and sets the FPS limit. If flashcart initialization fails,
+ * schedules the menu to enter the FAULT mode.
+ *
+ * @param boot_params Pointer to the boot parameters structure used to supply
+ *                    boot-time information to the menu.
  */
 static void menu_init (boot_params_t *boot_params) {    
     menu = calloc(1, sizeof(menu_t));

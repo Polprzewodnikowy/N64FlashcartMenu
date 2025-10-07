@@ -54,6 +54,17 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the image viewer UI into the given display surface.
+ *
+ * Draws either a loading view (with progress and the message "Loading image...") when no image
+ * is available, or the decoded image centered on the surface. When an image is present this also
+ * renders a confirmation message box to set the image as background or a "Preparing background…"
+ * notice depending on viewer state.
+ *
+ * @param menu Current menu state used to obtain UI context (e.g., selected entry name).
+ * @param d    Target display surface to render into.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     if (!image) {
         rdpq_attach(d, NULL);

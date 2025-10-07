@@ -5,6 +5,11 @@
 
 static bool show_message_reset_settings = false;
 
+/**
+ * Convert a boolean switch state to its user-facing label.
+ * @param state The switch state to format.
+ * @returns `"On"` if `state` is `true`, `"Off"` otherwise.
+ */
 static const char *format_switch (bool state) {
     switch (state) {
         case true: return "On";
@@ -13,12 +18,24 @@ static const char *format_switch (bool state) {
 }
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+/**
+ * Update the menu setting that enables or disables the ROM loading progress bar.
+ *
+ * @param menu Menu instance whose settings will be updated and persisted.
+ * @param arg Boolean value cast through a pointer: `true` to enable the loading progress bar, `false` to disable it.
+ */
 static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
     menu->settings.loading_progress_bar_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 #endif
 
+/**
+ * Update the menu setting that controls visibility of protected entries and persist the change.
+ *
+ * @param menu Pointer to the menu whose settings will be updated.
+ * @param arg Pointer-sized boolean where non-zero enables showing protected entries and zero hides them.
+ */
 static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->settings.show_protected_entries = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -26,11 +43,29 @@ static void set_protected_entries_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+/**
+ * Update the menu settings to enable or disable using the saves folder.
+ *
+ * Sets menu->settings.use_saves_folder to the boolean value provided by `arg`
+ * and persists the updated settings.
+ *
+ * @param menu Menu context whose settings will be modified.
+ * @param arg Boolean value: `true` to enable using the saves folder, `false` to disable.
+ */
 static void set_use_saves_folder_type (menu_t *menu, void *arg) {
     menu->settings.use_saves_folder = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
+/**
+ * Update the "show saves folder" setting, persist it, and mark the browser for reload.
+ *
+ * Updates menu->settings.show_saves_folder to the boolean value provided by `arg`,
+ * saves the settings, and sets menu->browser.reload to true so the browser will refresh.
+ *
+ * @param menu Menu context whose settings will be modified.
+ * @param arg Boolean value (passed as a void pointer) indicating whether to show the saves folder.
+ */
 static void set_show_saves_folder_type (menu_t *menu, void *arg) {
     menu->settings.show_saves_folder = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -38,6 +73,12 @@ static void set_show_saves_folder_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+/**
+ * Update the sound effects enabled setting, apply the change, and persist it.
+ *
+ * @param menu Menu context whose settings will be modified.
+ * @param arg Boolean value (passed as a void pointer) indicating whether sound effects should be enabled: `true` to enable, `false` to disable.
+ */
 static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     menu->settings.soundfx_enabled = (bool)(uintptr_t)(arg);
     sound_use_sfx(menu->settings.soundfx_enabled);
@@ -45,6 +86,15 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
 }
 
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED
+/**
+ * Set the ROM fast-reboot setting and persist it.
+ *
+ * Updates the menu's rom_fast_reboot_enabled setting according to the provided argument
+ * (interpreted as a boolean) and saves the settings to storage.
+ *
+ * @param menu Menu context whose settings will be modified.
+ * @param arg Pointer-sized value interpreted as a boolean: nonzero enables fast reboot, zero disables it.
+ */
 static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
     menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -52,6 +102,14 @@ static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
 #endif
 
 #ifdef BETA_SETTINGS
+/**
+ * Set the PAL60 (60Hz PAL) setting for the given menu and persist the change.
+ *
+ * Updates menu->settings.pal60_enabled to enabled when `arg` is non-zero and disabled when `arg` is zero, then saves the settings via settings_save.
+ *
+ * @param menu Menu context whose settings will be modified.
+ * @param arg Boolean flag passed as a pointer-sized value: non-zero to enable PAL60, zero to disable.
+ */
 static void set_pal60_type (menu_t *menu, void *arg) {
     menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -166,6 +224,16 @@ static component_context_menu_t options_context_menu = { .list = {
 }};
 
 
+/**
+ * Handle input actions for the Settings Editor view and perform corresponding state changes.
+ *
+ * When the options context menu is active, input is consumed and no further processing occurs.
+ * - Enter: if the reset-confirmation flag is set, reset settings to defaults and show a reboot notice; otherwise open the options context menu. Plays the setting-change sound effect.
+ * - Back: if the reset-confirmation flag is set, clear the flag; otherwise request switching to the browser menu. Plays the exit sound effect.
+ * - Options: set the reset-confirmation flag so the next Enter triggers a reset.
+ *
+ * @param menu Current menu context used for input state and mode transitions.
+ */
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
         return;
@@ -192,6 +260,16 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Settings Editor view onto the specified drawing surface.
+ *
+ * Renders the background and layout, the main header and current settings
+ * values from the provided menu context, the action bars, the options
+ * context menu, and — when active — the reset confirmation message box.
+ *
+ * @param menu Menu context whose settings and state are used for display.
+ * @param d    Drawing surface to render the view onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

@@ -17,6 +17,17 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Credits/Information view onto the provided drawing surface.
+ *
+ * Renders the view header "MENU INFORMATION", a multiline block containing the menu
+ * version, build timestamp, project authors/contributors, and third-party OSS licenses,
+ * and an actions bar showing the exit hint. The composed frame is presented to the
+ * provided surface.
+ *
+ * @param menu Current menu context used for view state and layout.
+ * @param d Target drawing surface where the view will be rendered and presented.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

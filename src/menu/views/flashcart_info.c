@@ -40,6 +40,18 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the flashcart information view onto the provided display surface.
+ *
+ * Draws the view background, layout, centered title "FLASHCART INFORMATION",
+ * a left-aligned block with cart type, firmware version, and a list of feature
+ * flags (Virtual 64DD, RTC, USB Debugging, Automatic CIC, Region Detection,
+ * Save Writeback, Auto F/W Updates, Fast ROM Reboots), and an actions bar with
+ * the "B: Back" label.
+ *
+ * @param menu Menu context for the current view (may be used for state or actions).
+ * @param d    Surface to render the view onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

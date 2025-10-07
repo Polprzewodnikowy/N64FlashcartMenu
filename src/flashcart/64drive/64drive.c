@@ -327,10 +327,15 @@ static flashcart_err_t d64_set_save_type (flashcart_save_type_t save_type) {
 }
 
 /**
- * @brief Set the save writeback for the 64drive.
- * 
- * @param save_path Path to the save file.
- * @return flashcart_err_t Error code.
+ * Enable save writeback and point it at the specified save file.
+ *
+ * Writes the file's sector list to the device and enables save writeback so
+ * the device will persist save data to that file.
+ *
+ * @param save_path Path to the save file to use for writeback.
+ * @returns `FLASHCART_OK` on success, `FLASHCART_ERR_LOAD` if retrieving the
+ *          file's sector list fails, or `FLASHCART_ERR_INT` if a device
+ *          operation fails. 
  */
 static flashcart_err_t d64_set_save_writeback (char *save_path) {
     uint32_t sectors[SAVE_WRITEBACK_MAX_SECTORS] __attribute__((aligned(8)));
@@ -350,6 +355,12 @@ static flashcart_err_t d64_set_save_writeback (char *save_path) {
     return FLASHCART_OK;
 }
 
+/**
+ * Configure persistent boot variables to apply a reboot mode on the next boot.
+ *
+ * @param boot_mode Requested reboot mode to apply for the next boot.
+ * @returns `FLASHCART_OK` on success, `FLASHCART_ERR_INT` if enabling persistent variable storage fails.
+ */
 static flashcart_err_t d64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
 
     if (d64_ll_set_persistent_variable_storage(true, 0, 0)) {

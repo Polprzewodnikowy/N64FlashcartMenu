@@ -128,10 +128,10 @@ void ui_components_seekbar_draw (float position) {
 }
 
 /**
- * @brief Draw a loader.
- * 
- * @param progress The progress value (0.0 to 1.0).
- * @param msg The message to display truncated to 30 characters.
+ * Draws a centered loader box containing a bordered progress bar and an optional centered message.
+ *
+ * @param progress Progress fraction between 0.0 and 1.0 indicating the filled portion of the bar.
+ * @param msg Optional message to render centered inside the loader; if non-NULL the string is truncated to 30 characters. 
  */
 void ui_components_loader_draw (float progress, const char *msg) {
     int x0 = LOADER_X;
@@ -251,13 +251,16 @@ void ui_components_messagebox_draw (char *fmt, ...) {
 }
 
 /**
- * @brief Draw the main text with formatted content.
- * 
- * @param style The font style.
- * @param align The horizontal alignment.
- * @param valign The vertical alignment.
- * @param fmt The format string.
- * @param ... The format arguments.
+ * Render formatted main content text inside the layout area using the specified font style and alignment.
+ *
+ * The text is constrained to the visible content area with horizontal and vertical margins, uses word wrapping,
+ * and applies a fixed line-spacing adjustment.
+ *
+ * @param style Font style identifier to use for rendering.
+ * @param align Horizontal text alignment.
+ * @param valign Vertical text alignment.
+ * @param fmt printf-style format string for the text to render.
+ * @param ... Arguments for `fmt`.
  */
 void ui_components_main_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[1024];
@@ -291,13 +294,13 @@ void ui_components_main_text_draw (menu_font_type_t style, rdpq_align_t align, r
 }
 
 /**
- * @brief Draw the actions bar text with formatted content.
- * 
- * @param style The font style.
- * @param align The horizontal alignment.
- * @param valign The vertical alignment.
- * @param fmt The format string.
- * @param ... The format arguments.
+ * Render formatted text inside the actions bar area.
+ *
+ * @param style Font style to use for the rendered text.
+ * @param align Horizontal alignment of the text.
+ * @param valign Vertical alignment of the text.
+ * @param fmt printf-style format string for the message to render.
+ * @param ... Arguments for the format string.
  */
 void ui_components_actions_bar_text_draw (menu_font_type_t style, rdpq_align_t align, rdpq_valign_t valign, char *fmt, ...) {
     char buffer[256];
@@ -331,12 +334,12 @@ void ui_components_actions_bar_text_draw (menu_font_type_t style, rdpq_align_t a
 }
 
 /**
- * @brief Draw the tabs.
- * 
- * @param text Array of tab text.
- * @param count Number of tabs.
- * @param selected Index of the selected tab.
- * @param width Width of each tab.
+ * Render a horizontal row of tabs and their labels, drawing the selected tab on top.
+ *
+ * @param text Array of C-strings containing each tab's label; must contain at least `count` entries.
+ * @param count Number of tabs to render.
+ * @param selected Index of the selected tab; if less than 0 or >= count no tab is rendered as selected.
+ * @param width Width, in pixels, of each tab.
  */
 void ui_components_tabs_draw(const char **text, int count, int selected, float width ) {
     float starting_x = VISIBLE_AREA_X0;
@@ -408,6 +411,19 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
     }
 }
 
+/**
+ * Render a centered horizontal row of labeled value fields with one highlighted selection.
+ *
+ * Draws a sequence of adjacent value boxes centered in the display area, fills non-selected boxes
+ * with the inactive background, draws the selected box on top with the active background, renders
+ * each field's header and value text stacked within the box, and draws a border around the entire group.
+ *
+ * @param header_text Array of strings for the top-line label of each field; must contain at least `count` entries.
+ * @param value_text Array of strings for the bottom-line value of each field; must contain at least `count` entries.
+ * @param count Number of fields to render.
+ * @param selected Index of the currently selected field (0-based). If outside [0, count-1], no field is highlighted.
+ * @param width_adjustment Divisor used to compute each field's width from the visible area (larger values produce narrower fields).
+ */
 void ui_component_value_editor(const char **header_text, const char **value_text, int count, int selected, float width_adjustment ) {
     float field_width = (VISIBLE_AREA_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2)) / width_adjustment;
     float starting_x = DISPLAY_CENTER_X - (field_width * count / 2.0f);

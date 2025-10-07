@@ -15,9 +15,11 @@ static char *history_path = NULL;
 static bookkeeping_t init;
 
 /**
- * @brief Initialize the bookkeeping system with the specified path.
- * 
- * @param path Path to the history file.
+ * Set the path used for the history (INI) file.
+ *
+ * Replaces any previously stored path with an internal copy of the provided string.
+ *
+ * @param path Null-terminated string containing the history file path; the function makes its own copy so the caller retains ownership of the original.
  */
 void bookkeeping_init (char *path) {
     if (history_path) {
@@ -66,12 +68,16 @@ void bookkeeping_load (bookkeeping_t *history) {
 }
 
 /**
- * @brief Save a list of bookkeeping items to an INI file.
- * 
- * @param list Pointer to the list of bookkeeping items.
- * @param count Number of items in the list.
- * @param ini Pointer to the INI file structure.
- * @param group Name of the group in the INI file.
+ * Write a list of bookkeeping items into the specified INI group.
+ *
+ * For each index i the function stores three keys under the given group:
+ * "<i>_primary_path" and "<i>_secondary_path" (path strings, empty if the corresponding path is NULL),
+ * and "<i>_type" (integer representation of the item's bookkeeping type).
+ *
+ * @param list Pointer to the first element of the bookkeeping item array to save.
+ * @param count Number of items in the array to write.
+ * @param ini INI structure to write the keys into.
+ * @param group Name of the INI group under which item keys will be stored.
  */
 static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
@@ -273,10 +279,13 @@ void bookkeeping_favorite_add(bookkeeping_t *bookkeeping, path_t *primary_path, 
 }
 
 /**
- * @brief Remove an item from the bookkeeping favorites.
- * 
- * @param bookkeeping Pointer to the bookkeeping structure.
- * @param selection Index of the item to remove.
+ * Remove the favorite at the specified index and persist the updated favorites list.
+ *
+ * If the selected slot is not empty, entries after it are shifted up to fill the gap,
+ * the last slot is cleared (set to empty), and the bookkeeping is saved to disk.
+ *
+ * @param bookkeeping Pointer to the bookkeeping structure containing favorites.
+ * @param selection Zero-based index of the favorite to remove.
  */
 void bookkeeping_favorite_remove(bookkeeping_t *bookkeeping, int selection) {
     if(bookkeeping->favorite_items[selection].bookkeeping_type != BOOKKEEPING_TYPE_EMPTY) {

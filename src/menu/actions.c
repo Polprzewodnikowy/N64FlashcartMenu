@@ -10,6 +10,11 @@ static int dir_repeat_delay;
 static joypad_8way_t last_dir = JOYPAD_8WAY_NONE;
 
 
+/**
+ * Clear all action flags in the given menu.
+ *
+ * @param menu Menu whose action flags in `menu->actions` will be reset to `false`.
+ */
 static void actions_clear (menu_t *menu) {
     menu->actions.go_up = false;
     menu->actions.go_down = false;
@@ -24,6 +29,22 @@ static void actions_clear (menu_t *menu) {
     menu->actions.lz_context = false;
 }
 
+/**
+ * Update the menu's directional action flags based on current controller input,
+ * applying a short initial auto-repeat suppression and supporting a fast-direction
+ * override via the C-button.
+ *
+ * Reads 8-way directional input from connected joypads; if the C-button provides
+ * a direction it overrides the regular input and sets the menu's `go_fast`
+ * flag. When a new directional press begins, an internal repeat delay is started;
+ * while that delay is active directional movement is suppressed. Once the delay
+ * elapses, the function sets `go_up`, `go_down`, `go_left`, and/or `go_right`
+ * according to the resolved 8-way direction. Diagonal directions set both
+ * corresponding axis flags. The function updates the internal repeat state for
+ * subsequent calls.
+ *
+ * @param menu Menu whose action flags will be updated.
+ */
 static void actions_update_direction (menu_t *menu) {
     joypad_8way_t held_dir = JOYPAD_8WAY_NONE;
     joypad_8way_t fast_dir = JOYPAD_8WAY_NONE;
@@ -89,6 +110,14 @@ static void actions_update_direction (menu_t *menu) {
     last_dir = held_dir;
 }
 
+/**
+ * Set menu action flags based on the first detected joypad button press.
+ *
+ * Scans all joypad ports and, for the first non-zero button press found, sets
+ * the corresponding field in menu->actions: `a` -> enter, `b` -> back,
+ * `r` -> options, `start` -> settings, `l` or `z` -> lz_context.
+ *
+ * @param menu Menu whose action flags will be updated. */
 static void actions_update_buttons (menu_t *menu) {    
     joypad_buttons_t pressed = {0};
 

@@ -19,6 +19,15 @@ static bookkeeping_item_t *item_list;
 static uint16_t item_max = 0;
 
 
+/**
+ * Reset the current selection to the first non-empty bookkeeping item.
+ *
+ * Scans item_list up to item_max and sets selected_item to the index of the
+ * first entry whose bookkeeping_type is not BOOKKEEPING_TYPE_EMPTY. If no such
+ * entry exists, selected_item is set to -1.
+ *
+ * @param menu Menu context containing bookkeeping data.
+ */
 static void item_reset_selected(menu_t *menu) {
     selected_item = -1;
 
@@ -30,6 +39,13 @@ static void item_reset_selected(menu_t *menu) {
     }  
 }
 
+/**
+ * Advance the current selection to the next bookkeeping item that is not empty.
+ *
+ * If a later non-empty item is found, updates `selected_item` to that index and
+ * plays the cursor sound. If no such item exists after the current selection,
+ * `selected_item` is left unchanged.
+ */
 static void item_move_next() {
     int last = selected_item;
 
@@ -47,6 +63,14 @@ static void item_move_next() {
     } while (true);  
 }
 
+/**
+ * Move the current selection to the previous bookkeeping entry that is not empty.
+ *
+ * Searches backward from the current selection for the nearest earlier item whose
+ * `bookkeeping_type` is not `BOOKKEEPING_TYPE_EMPTY` and sets `selected_item` to
+ * that index. If such an item is found, plays the cursor sound. If no earlier
+ * non-empty item exists, the selection remains unchanged.
+ */
 static void item_move_previous() {
     int last = selected_item;
     do
@@ -63,6 +87,20 @@ static void item_move_previous() {
     } while (true);
 }
 
+/**
+ * Handle input for the bookkeeping view, updating selection, navigation, load targets, and feedback sounds.
+ *
+ * Processes the current menu actions:
+ * - Down/Up: move selection to the next/previous non-empty item.
+ * - Enter (when an item is selected): mark the selected index as the load target for the active tab (favorite or history),
+ *   set the complementary load id to -1, set the next menu mode to load a disk or ROM depending on the item's type, and play the enter sound.
+ * - Left/Right: switch tabs/modes according to the active tab (Favorite <-> Browser, History -> Browser/Favorite) and play the cursor sound.
+ * - Options (when in Favorite and an item is selected): remove the selected favorite, reset selection, and play the setting sound.
+ *
+ * Actions that require a selected item are ignored when no item is selected.
+ *
+ * @param menu Pointer to the current menu state to read actions from and to update load/next_mode and bookkeeping state.
+ */
 static void process(menu_t *menu) {
     if(menu->actions.go_down) {
         item_move_next();   
@@ -106,6 +144,17 @@ static void process(menu_t *menu) {
     }
 }
 
+/**
+ * Render the bookkeeping item list and current selection highlight into the given display.
+ *
+ * Draws a highlighted box behind the currently selected item (if any), builds a multi-line
+ * listing where each entry shows the item index and last component of its primary path on
+ * the first line and the last component of the secondary path (indented) on the second line,
+ * and prints the assembled text block into the view area with the configured layout and wrapping.
+ *
+ * @param menu Pointer to the menu state providing the current item list, selection, and layout context.
+ * @param display Surface to draw the list and highlight onto.
+ */
 static void draw_list(menu_t *menu, surface_t *display) {
     if(selected_item != -1) {
         float highlight_y = VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT +  TEXT_OFFSET_VERTICAL + (selected_item * 19 * 2);
@@ -154,6 +203,17 @@ static void draw_list(menu_t *menu, surface_t *display) {
     );           
 }
 
+/**
+ * Render the bookkeeping view (Favorites or History) onto the provided display.
+ *
+ * Draws the background, current tab indicators, tabbed layout, and the list of bookkeeping
+ * items. If an item is selected, displays a left-aligned "A: Load Game" action and, when
+ * viewing Favorites, a right-aligned "R: Remove item" action. Always displays a centered
+ * "< Change Tab >" action bar.
+ *
+ * @param menu Menu state used to determine items and current selection.
+ * @param display Surface to render the view onto.
+ */
 static void draw(menu_t *menu, surface_t *display) {
     rdpq_attach(display, NULL);
 
@@ -197,6 +257,15 @@ static void draw(menu_t *menu, surface_t *display) {
     rdpq_detach_show();   
 }
 
+/**
+ * Initialize the Favorites bookkeeping view and reset selection.
+ *
+ * Configure the view to use the Favorites tab: set the tab context to FAVORITE, point the internal
+ * item list at menu->bookkeeping.favorite_items, set the item count to FAVORITES_COUNT, and select
+ * the first non-empty favorite entry.
+ *
+ * @param menu Menu context containing bookkeeping data used to populate the view.
+ */
 void view_favorite_init (menu_t *menu) {
     tab_context = BOOKKEEPING_TAB_CONTEXT_FAVORITE;
     item_list = menu->bookkeeping.favorite_items;
@@ -205,11 +274,27 @@ void view_favorite_init (menu_t *menu) {
     item_reset_selected(menu);
 }
 
+/**
+ * Display the Favorites tab for one frame by handling input and rendering the view.
+ *
+ * @param menu Current menu state containing bookkeeping data and navigation state.
+ * @param display Rendering surface to draw the Favorites view onto.
+ */
 void view_favorite_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display); 
 }
 
+/**
+ * Initialize the view for the History tab.
+ *
+ * Configure the bookkeeping view to display history items from the provided
+ * menu: select the History tab context, point the internal item list to
+ * menu->bookkeeping.history_items, set the item count to HISTORY_COUNT, and
+ * reset the current selection.
+ *
+ * @param menu Pointer to the menu state containing bookkeeping history items.
+ */
 void view_history_init (menu_t *menu) {
     tab_context = BOOKKEEPING_TAB_CONTEXT_HISTORY;
     item_list = menu->bookkeeping.history_items;
@@ -218,6 +303,15 @@ void view_history_init (menu_t *menu) {
     item_reset_selected(menu);
 }
 
+/**
+ * Handle input and render the History view for a single frame.
+ *
+ * Processes user input and updates view state related to history items, then
+ * draws the history UI into the provided display surface.
+ *
+ * @param menu Current menu/context state used by the view.
+ * @param display Rendering surface to draw the view into.
+ */
 void view_history_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display); 

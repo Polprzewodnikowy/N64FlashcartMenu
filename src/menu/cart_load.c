@@ -93,11 +93,11 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
 }
 
 /**
- * @brief Load an N64 ROM and its save file.
- * 
- * @param menu Pointer to the menu structure.
- * @param progress Progress callback function.
- * @return cart_load_err_t Error code.
+ * Load the selected N64 ROM into the flashcart and upload its associated save file when present.
+ *
+ * @param menu Menu state containing the ROM path, ROM metadata, user settings, and a place to record flashcart errors.
+ * @param progress Callback invoked to report flashcart upload progress; may be NULL.
+ * @returns `CART_LOAD_OK` on success, otherwise a specific `CART_LOAD_ERR_*` value describing the failure. 
  */
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
     path_t *path = path_clone(menu->load.rom_path);

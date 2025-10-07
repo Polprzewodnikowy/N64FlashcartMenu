@@ -62,6 +62,12 @@ static char * CPAK_PATH_NO_PRE = "/cpak_saves";
 static char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
 static char * CPAK_NOTES_PATH_NO_PRE = "/cpak_saves/notes";
 
+/**
+ * Reset controller-pak UI and operation state flags to their default (inactive) values.
+ *
+ * Clears global flags that track accessory presence, corruption, data-listing loop state,
+ * confirmation dialogs, start/process completion signals, and error display state.
+ */
 static void reset_vars(){
     has_mem = false;
     corrupted_pak = false;
@@ -82,6 +88,13 @@ static void reset_vars(){
     error_message_displayed = false;
 }
 
+/**
+ * Ensure a directory exists at the given filesystem path by attempting to create it.
+ *
+ * If the directory already exists the function leaves it unchanged; creation errors are ignored.
+ *
+ * @param dirpath Path of the directory to create.
+ */
 static void create_directory(const char *dirpath) {
     FRESULT res = f_mkdir(dirpath);
     
@@ -94,6 +107,10 @@ static void create_directory(const char *dirpath) {
     }
 }
 
+/**
+ * Write the current local date and time into the provided buffer using the format YYYY-MM-DD_HHMMSS.
+ * @param formatted_time Buffer to receive the null-terminated timestamp string; must be at least 18 bytes.
+ */
 static void get_rtc_time(char* formatted_time) {
     time_t t = time(NULL);
 
@@ -104,6 +121,13 @@ static void get_rtc_time(char* formatted_time) {
             tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
+/**
+ * Reset per-note name, bank-size, and path fields to a single-space string.
+ *
+ * Clears UI-visible arrays that store controller pak note filenames, their
+ * displayed bank-size strings, and parsed CPAK filesystem path components
+ * (gamecode, pubcode, filename, ext) for all note slots.
+ */
 static void free_controller_pak_name_notes() {
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
         sprintf(controller_pak_name_notes[i], " ");
@@ -115,6 +139,17 @@ static void free_controller_pak_name_notes() {
     }
 }
 
+/**
+ * Check whether a Controller Pak is present on the given controller port and update related state.
+ *
+ * Detects the accessory on the specified controller port and updates global state accordingly:
+ * - sets `has_pak[controller]`, `mounted[controller]`, `corrupted[controller]`, and `stats_per_port[controller]`
+ * - sets global flags `has_mem`, `corrupted_pak`, and `cpakfs_stats`
+ * - mounts the pak when newly present and retrieves stats, or unmounts and clears state when removed
+ * - when a pak is newly detected or removed, clears per-note name data and resets `ctr_p_data_loop`
+ *
+ * @param controller Index of the controller port to check (typically 0–3).
+ */
 static void check_accessories(int controller) {
     bool was_present = has_pak[controller];
 
@@ -165,6 +200,15 @@ static void check_accessories(int controller) {
     }
 }
 
+/**
+ * Format the currently selected Controller Pak and reset related state.
+ *
+ * If formatting fails, sets `failure_message_note` with an error message and
+ * sets `error_message_displayed` to true. After attempting format (regardless
+ * of success), clears operation flags, unmounts the pak for the selected
+ * controller, clears per-port presence/corruption flags, and signals completion
+ * by setting `process_complete_format` to true.
+ */
 static void format_controller_pak () {
     sprintf(failure_message_note, " ");
     int res = cpakfs_format(controller_selected, false);
@@ -180,14 +224,29 @@ static void format_controller_pak () {
     process_complete_format = true;
 }
 
+/**
+ * Request showing the single-note delete confirmation dialog.
+ *
+ * Sets the internal flag that causes the UI to present a confirmation message
+ * for deleting the currently selected note.
+ *
+ * @param menu Pointer to the current menu context (unused).
+ * @param arg  Callback argument (unused).
+ */
 static void active_single_note_delete_message(menu_t *menu, void *arg) {
     show_single_note_delete_confirm_message = true;
 }
 
+/**
+ * Show the confirmation dialog to format the currently selected Controller Pak.
+ */
 static void active_format_controller_pak_message(menu_t *menu, void *arg) {
     show_format_controller_pak_confirm_message = true;
 }
 
+/**
+ * Display the confirmation dialog to restore a dump to the selected Controller Pak.
+ */
 static void active_restore_controller_pak_message(menu_t *menu, void *arg) {
     show_complete_write_confirm_message = true;
 }
@@ -201,6 +260,16 @@ static component_context_menu_t options_context_menu = {
     }
 };
 
+/**
+ * Populate per-slot UI metadata for a Controller Pak note entry.
+ *
+ * Sets the display name, a formatted bank-size string (a single space if size cannot be determined),
+ * and parses the note filename into the cpakfs_path_strings entry for the specified controller slot.
+ *
+ * @param controller Controller port index (0–3) whose mount path is used to resolve the entry.
+ * @param index Array slot index where name, bank-size and parsed path will be written.
+ * @param entry_name Filename of the note as reported by the Controller Pak filesystem (relative to the mount).
+ */
 static void write_note_name_info_list(int16_t controller, int index, char* entry_name) {
     char filename_cpak[256];
     sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller], entry_name);
@@ -215,6 +284,15 @@ static void write_note_name_info_list(int16_t controller, int index, char* entry
     parse_cpakfs_fullname(entry_name, &cpakfs_path_strings[index]);
 }
 
+/**
+ * Populate the in-memory list of Controller Pak note entries for the currently
+ * selected controller port when a pak is present and the list has not yet been loaded.
+ *
+ * Updates internal per-note arrays (filenames, formatted bank-size strings and
+ * parsed path components) for up to MAX_NUM_NOTES entries by enumerating the
+ * mounted pak directory for controller_selected. Sets ctr_p_data_loop to true
+ * after the list has been populated to avoid repeated re-enumeration.
+ */
 static void populate_list_cpakfs() {  
     if (has_mem && !ctr_p_data_loop) {
         
@@ -238,6 +316,15 @@ static void populate_list_cpakfs() {
     }
 }
 
+/**
+ * Create a timestamped full dump of the Controller Pak attached to the specified port and save it to a CPAK file.
+ *
+ * Attempts to probe the number of banks, reads each bank from the Controller Pak, and writes the concatenated banks
+ * into a timestamped file under CPAK_PATH with the CPAK_EXTENSION. On failure, writes a human-readable message into
+ * `failure_message_note` and sets `error_message_displayed`. On success, sets `process_complete_full_dump` to true.
+ *
+ * @param port Index of the controller port whose Controller Pak will be dumped (typically 0–3).
+ */
 static void dump_complete_cpak(int port) {
     sprintf(failure_message_note, " ");
 
@@ -292,6 +379,16 @@ static void dump_complete_cpak(int port) {
     process_complete_full_dump = true;
 }
 
+/**
+ * Copy a single note from a Controller Pak to the CPAK notes directory with a timestamped filename.
+ *
+ * Attempts to open the selected note on the Controller Pak, creates a timestamped dump file under
+ * CPAK_NOTES_PATH, and copies the note contents in 4KB chunks. On failure sets `failure_message_note`
+ * and `error_message_displayed`. On success sets `process_complete_note_dump`.
+ *
+ * @param _port Index of the controller port to read from (0-3).
+ * @param selected_index Index of the note slot to dump.
+ */
 static void dump_single_note(int _port, int16_t selected_index) {
     sprintf(failure_message_note, " ");
     FILE *fSource, *fDump;
@@ -351,6 +448,11 @@ static void dump_single_note(int _port, int16_t selected_index) {
 
 }
 
+/**
+ * Check whether a file exists and is readable.
+ * @param filename Path to the file to check.
+ * @returns `true` if the file exists and can be opened for reading, `false` otherwise.
+ */
 static bool file_exists(const char *filename)
 {
     FILE *fp = fopen(filename, "r");
@@ -363,6 +465,16 @@ static bool file_exists(const char *filename)
     return is_exist;
 }
 
+/**
+ * Delete a single note file from the selected Controller Pak and update mount state.
+ *
+ * Attempts to remove the note at the given slot for the currently selected controller.
+ * On failure to find or delete the file, sets `failure_message_note` and `error_message_displayed`.
+ * On success, resets internal process state, unmounts the pak for the selected controller, and sets flags to reflect the pak as unmounted and absent.
+ *
+ * @param _port Unused by this implementation; original caller's controller port index.
+ * @param selected_index Zero-based index of the note slot to delete on the selected controller.
+ */
 static void delete_single_note(int _port, unsigned short selected_index) {
     sprintf(failure_message_note, " ");
     char filename_note[256];
@@ -392,6 +504,12 @@ static void delete_single_note(int _port, unsigned short selected_index) {
     process_complete_delete = true;
 }
 
+/**
+ * Determine if any controller-pak process has completed or an error message is active.
+ *
+ * @returns `true` if a full dump, single-note dump, format, or delete process has completed,
+ *          or if an error message is currently displayed; `false` otherwise.
+ */
 static bool is_one_of_process_complete() {
     return process_complete_full_dump 
     || process_complete_note_dump 
@@ -401,6 +519,17 @@ static bool is_one_of_process_complete() {
 }
 
 
+/**
+ * Handle per-frame input, UI state transitions, and initiation of Controller Pak operations for the Controller Pak filesystem view.
+ *
+ * Processes completion acknowledgements and dismissals, routes context-menu interactions, handles controller navigation and
+ * view exit, updates accessory/mount state, populates the on-screen note list, and manages multi-stage confirmation flows
+ * for full Pak dumps, single-note dumps, single-note deletion, and Pak formatting. When confirmations are accepted this
+ * function sets the corresponding start_* flags (e.g., start_complete_dump, start_single_note_dump, start_single_note_delete,
+ * start_format_controller_pak), plays UI sound effects, and updates menu mode/state (for example menu->next_mode).
+ *
+ * @param menu Current menu context containing input actions and where next_mode is written when changing views.
+ */
 static void process (menu_t *menu) {
 
     if (is_one_of_process_complete()) {
@@ -606,6 +735,19 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Controller Pak management screen onto the given display surface.
+ *
+ * Draws the full UI for Controller Pak management (status, note list, context menu,
+ * action hints, and message/confirmation dialogs) for the currently selected controller.
+ * When user-confirmation flags are active and corresponding start_* flags are set,
+ * this function will detach the display and begin the requested operation (full dump,
+ * single-note dump, single-note delete, or format), which may display a loader or
+ * error message and update global process flags.
+ *
+ * @param menu Current menu state and input context used to determine selection and dialogs.
+ * @param d    Surface to render the UI onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -999,6 +1141,15 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Initialize the Controller Pak filesystem view state and prepare required directories and UI.
+ *
+ * Resets internal state used by the Controller Pak UI (selection, per-port mount/ corruption flags, stats,
+ * operation flags), unmounts any mounted pak filesystems, sets RTC usage based on the provided menu's current time,
+ * ensures CPAK dump and notes directories exist, and initializes the view's context menu.
+ *
+ * @param menu Pointer to the current menu state; `menu->current_time` is used to decide whether RTC-based filenames are available.
+ */
 void view_controller_pakfs_init (menu_t *menu) {
     ctr_p_data_loop = false;
     controller_selected = 0;
@@ -1021,6 +1172,15 @@ void view_controller_pakfs_init (menu_t *menu) {
     ui_components_context_menu_init(&options_context_menu);
 }
 
+/**
+ * Update Controller Pak view state and render it to the provided surface.
+ *
+ * Calls the view's processing step to handle input and state transitions, then draws
+ * the current view to the given display surface.
+ *
+ * @param menu The current menu context used for input and view state.
+ * @param display The surface to render the view onto.
+ */
 void view_controller_pakfs_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);

@@ -25,11 +25,11 @@ static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 
 /**
- * @brief Format the file extension into a human-readable string.
- * 
- * @param name The filename including the extension.
- * @param is_directory Whether the file is a directory.
- * @return A constant string describing the file type.
+ * Get a human-readable file type label based on the filename's extension and file metadata.
+ *
+ * @param name Filename including extension.
+ * @param info Pointer to file_info_t used to determine directory state and to receive controller pak flags; may be modified (sets `is_controller_pak_dump` or `is_controller_pak_dump_note` for matching extensions).
+ * @returns A constant string describing the file type (for example " Type: N64 ROM\n"); returns an empty string when `info->directory` is true.
  */
 static const char *format_file_type (char *name, file_info_t *info) {
     if (info->directory) {
@@ -66,11 +66,16 @@ static const char *format_file_type (char *name, file_info_t *info) {
 }
 
 /**
- * @brief Draw the file info component.
- * 
- * @param list Pointer to the list of entries.
- * @param entries Number of entries in the list.
- * @param selected Index of the currently selected entry.
+ * Draws a file information panel for the given filename and metadata.
+ *
+ * Displays the entry title and filename, file type, file mode (Directory or File),
+ * access attributes (Encrypted or Read only), size, modification time, and — if
+ * compressed — compressed size and CRC32.
+ *
+ * @param filename NUL-terminated filename to display.
+ * @param info Pointer to a `file_info_t` containing file metadata; if NULL the function returns immediately.
+ *
+ * @note This function may modify flags in `info` (e.g., controller pak dump/note indicators) when classifying the file type.
  */
 void ui_components_file_info_draw (char* filename, file_info_t *info) {
     if (!info) {

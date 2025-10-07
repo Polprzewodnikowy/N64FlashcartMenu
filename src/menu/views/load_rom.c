@@ -14,6 +14,10 @@ static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
 
+/**
+ * Map a ROM error code to a human-readable message.
+ * @param err ROM error code to convert.
+ * @returns Pointer to a null-terminated string describing the error. */
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
         case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
@@ -104,6 +108,12 @@ static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_
     }
 }
 
+/**
+ * Format a ROM CIC type into a human-readable identifier string.
+ *
+ * @param cic_type The CIC type value from the ROM metadata.
+ * @return A short textual identifier for the CIC (for example "5101", "6102 / 7101", or "Unknown" if the value is not recognized).
+ */
 static const char *format_cic_type (rom_cic_type_t cic_type) {
     switch (cic_type) {
         case ROM_CIC_TYPE_5101: return "5101";
@@ -123,6 +133,12 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
+/**
+ * Convert an ESRB age-rating enum to a human-readable label.
+ *
+ * @param esrb_age_rating ESRB age rating enum value to format.
+ * @returns Human-readable ESRB age rating string: "None", "Everyone", "Everyone 10+", "Teen", "Mature", "Adults Only", or "Unknown".
+ */
 static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
     switch (esrb_age_rating) {
         case ROM_ESRB_AGE_RATING_NONE: return "None";
@@ -135,10 +151,24 @@ static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating
     }
 }
 
+/**
+ * Format a boolean value as the strings "On" or "Off".
+ *
+ * @returns "On" if bool_value is true, "Off" otherwise.
+ */
 static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
 
+/**
+ * Override the CIC type for the current ROM and mark the browser to reload.
+ *
+ * Attempts to set the CIC override for the ROM referenced by menu->load.rom_path/menu->load.rom_info;
+ * on failure an error message is shown via the menu. The browser reload flag is set regardless.
+ *
+ * @param menu Menu context containing the current ROM path and ROM info.
+ * @param arg Desired CIC type encoded as a `rom_cic_type_t` value passed through a `void *` (cast to `rom_cic_type_t` internally).
+ */
 static void set_cic_type (menu_t *menu, void *arg) {
     rom_cic_type_t cic_type = (rom_cic_type_t) (arg);
     rom_err_t err = rom_config_override_cic_type(menu->load.rom_path, &menu->load.rom_info, cic_type);
@@ -148,6 +178,16 @@ static void set_cic_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+/**
+ * Override the configured save type for the ROM currently selected in the menu.
+ *
+ * Applies the provided save type to the ROM at menu->load.rom_path and updates
+ * the loaded rom_info; if the override fails an error message is shown to the
+ * user. Marks the browser to reload so changes take effect.
+ *
+ * @param menu Menu context containing the current ROM path and rom_info.
+ * @param arg  rom_save_type_t value (passed as void*) indicating the save type to apply.
+ */
 static void set_save_type (menu_t *menu, void *arg) {
     rom_save_type_t save_type = (rom_save_type_t) (arg);
     rom_err_t err = rom_config_override_save_type(menu->load.rom_path, &menu->load.rom_info, save_type);
@@ -157,6 +197,14 @@ static void set_save_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 
+/**
+ * Set the ROM's TV type override and trigger a browser reload.
+ *
+ * Attempts to apply the given TV type override to the ROM referenced by the menu; if the override fails, displays an error message to the user. Always marks the browser to reload after attempting the change.
+ *
+ * @param menu Menu context containing the ROM path and ROM info to modify.
+ * @param arg  Pointer-sized value representing a `rom_tv_type_t` (cast from `void *`) indicating the TV type to set.
+ */
 static void set_tv_type (menu_t *menu, void *arg) {
     rom_tv_type_t tv_type = (rom_tv_type_t) (arg);
     rom_err_t err = rom_config_override_tv_type(menu->load.rom_path, &menu->load.rom_info, tv_type);
@@ -166,6 +214,15 @@ static void set_tv_type (menu_t *menu, void *arg) {
     menu->browser.reload = true;
 }
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+/**
+ * Enable ROM autoload for the current browser selection and persist the setting.
+ *
+ * Updates the settings' autoload path and filename from the browser's current directory and entry,
+ * enables autoload, saves the settings, and marks the browser for reload.
+ *
+ * @param menu Menu context whose settings and browser state are modified.
+ * @param arg Unused; ignored.
+ */
 static void set_autoload_type (menu_t *menu, void *arg) {
     free(menu->settings.rom_autoload_path);
     menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
@@ -178,6 +235,11 @@ static void set_autoload_type (menu_t *menu, void *arg) {
 }
 #endif
 
+/**
+ * Set whether cheat codes are enabled for the current ROM, persist the setting, and mark the browser to reload.
+ * @param menu Pointer to the current menu (used for rom_path and rom_info).
+ * @param arg Boolean flag: `true` to enable cheats, `false` to disable. If the Expansion Pak is not present, cheats are forced off regardless of this flag.
+ */
 static void set_cheat_option(menu_t *menu, void *arg) {
     debugf("Load Rom: setting cheat option to %d\n", (int)arg);
     if (!is_memory_expanded()) {
@@ -193,6 +255,12 @@ static void set_cheat_option(menu_t *menu, void *arg) {
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
+/**
+ * Apply a patching enabled state to the currently selected ROM and mark the browser to reload.
+ *
+ * @param menu Pointer to the current menu containing load context and browser state.
+ * @param arg Boolean value (passed as void*) where `true` enables patches for the ROM and `false` disables them.
+ */
 static void set_patcher_option(menu_t *menu, void *arg) {
     bool enabled = (bool)arg;
     rom_config_setting_set_patches(menu->load.rom_path, &menu->load.rom_info, enabled);
@@ -200,6 +268,14 @@ static void set_patcher_option(menu_t *menu, void *arg) {
 }
 #endif
 
+/**
+ * Add the currently selected ROM path to the favorites list.
+ *
+ * Adds the ROM path from the menu's load state into the bookkeeping favorites
+ * using BOOKKEEPING_TYPE_ROM.
+ *
+ * @param menu Menu instance containing the current load ROM path and bookkeeping.
+ */
 static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
@@ -256,6 +332,12 @@ static component_context_menu_t set_patcher_options_menu = { .list = {
 }};
 #endif
 
+/**
+ * Set the menu's next mode from the provided mode value.
+ *
+ * @param menu Menu whose next_mode field will be updated.
+ * @param arg Pointer-sized value containing the target `menu_mode_t` (cast from `void *`).
+ */
 static void set_menu_next_mode (menu_t *menu, void *arg) {
     menu_mode_t next_mode = (menu_mode_t) (arg);
     menu->next_mode = next_mode;
@@ -277,6 +359,17 @@ static component_context_menu_t options_context_menu = { .list = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+/**
+ * Handle user input actions for the load-ROM menu and update UI/state accordingly.
+ *
+ * Processes any active context menu interaction; if none, responds to specific actions:
+ * - Enter: mark ROM file load as pending.
+ * - Back: play the exit sound and switch the menu mode to the browser.
+ * - Options: show the advanced options context menu and play the settings sound.
+ * - LZ/context: toggle display of the extra ROM information message and play the settings sound.
+ *
+ * @param menu Menu state for the load-ROM view.
+ */
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
         return;
@@ -399,6 +492,15 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Render a loading progress indicator for ROM loading.
+ *
+ * Draws the UI background and a loader bar with the fixed message "Loading ROM..."
+ * to the current display surface.
+ *
+ * @param progress Fractional progress where 0.0 is start and 1.0 is complete; values
+ *                 greater than or equal to 1.0 are treated as complete.
+ */
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
 
@@ -413,6 +515,13 @@ static void draw_progress (float progress) {
     }
 }
 
+/**
+ * Load the selected ROM, prepare boot parameters (device, CIC seed, TV type, and optional cheat list), and set the menu to boot mode.
+ *
+ * On failure to load the ROM an error dialog is shown and the function returns without advancing to boot mode.
+ *
+ * @param menu Menu context containing the selected ROM path/info, settings, bookkeeping, and boot parameters that will be modified.
+ */
 static void load (menu_t *menu) {
     debugf("Load ROM: load function called\n");
     cart_load_err_t err;
@@ -473,6 +582,11 @@ static void load (menu_t *menu) {
     }
 }
 
+/**
+ * Release the global boxart UI component and clear its reference.
+ *
+ * Frees the global `boxart` resource if present and sets the `boxart` pointer to NULL.
+ */
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
@@ -523,6 +637,16 @@ void view_load_rom_init (menu_t *menu) {
 
 }
 
+/**
+ * Update and render the Load ROM view for a single frame.
+ *
+ * Processes input and UI state, renders the view to the provided display surface,
+ * triggers a pending ROM load if one was requested, and when leaving the load view
+ * clears load-related identifiers and releases view resources.
+ *
+ * @param menu Pointer to the active menu state for the Load ROM view.
+ * @param display Surface to which the view should be rendered.
+ */
 void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
 

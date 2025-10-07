@@ -12,6 +12,17 @@ static int16_t controller_selected;
 static char failure_message_note[255];
 static bool start_note_restore;
 
+/**
+ * Restore a Controller Pak note dump file to the specified controller's Controller Pak.
+ *
+ * Attempts to mount the Controller Pak for the given controller, verify available space,
+ * pick or create a destination filename, and copy the note dump from the global
+ * `cpak_note_path` into the Controller Pak. On success, sets a success message in
+ * `failure_message_note`; on failure, sets an explanatory error message there.
+ *
+ * @param controller Index of the controller to restore to (0-3).
+ * @returns `true` if the note was successfully restored to the Controller Pak, `false` otherwise.
+ */
 static bool restore_controller_pak_note(int controller) {
     sprintf(failure_message_note, " ");
 
@@ -138,6 +149,16 @@ static bool restore_controller_pak_note(int controller) {
     return true;
 }
 
+/**
+ * Handle user input for the Controller Pak note restore view and update view state.
+ *
+ * Examines the menu's action flags and:
+ * - cycles the selected controller left/right and plays cursor sound,
+ * - cancels back to the browser mode and plays exit sound,
+ * - initiates the note restore flow and plays enter sound.
+ *
+ * @param menu Pointer to the current menu state whose action flags and next_mode may be read or updated.
+ */
 static void process (menu_t *menu) {
     if (menu->actions.go_left) {
         sound_play_effect(SFX_CURSOR);
@@ -154,6 +175,19 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the Controller Pak note-dump restore view and initiate a restore when requested.
+ *
+ * Draws the background, layout, informative text (source path and status message),
+ * and the confirmation message box for selecting a controller and starting the restore.
+ *
+ * If `start_note_restore` is true, this function initiates the restore operation for the
+ * currently selected controller; on successful restore it sets `menu->next_mode` to
+ * `MENU_MODE_BROWSER`. The `start_note_restore` flag is cleared before returning.
+ *
+ * @param menu Current menu state and control flow target to update on success.
+ * @param d    Drawing surface to render the view onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
 
     rdpq_attach(d, NULL);
@@ -209,6 +243,14 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Initialize the Controller Pak note-dump info view state from the menu entry.
+ *
+ * Sets the global `cpak_note_path` to the absolute path of the selected menu entry
+ * and resets `start_note_restore` and `failure_message_note` to their default states.
+ *
+ * @param menu Menu context containing the current directory and selected entry.
+ */
 void view_controller_pak_note_dump_info_init (menu_t *menu) {
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
@@ -221,6 +263,15 @@ void view_controller_pak_note_dump_info_init (menu_t *menu) {
 
 }
 
+/**
+ * Handle user input and render the Controller Pak note-dump information view.
+ *
+ * Processes view state transitions (navigation and restore trigger) and draws
+ * the UI for selecting a controller and restoring a Controller Pak note dump.
+ *
+ * @param menu Pointer to the view's menu/state context.
+ * @param display Drawing surface to render the view onto.
+ */
 void view_controller_pak_note_dump_info_display (menu_t *menu, surface_t *display) {
     process(menu);
     draw(menu, display);

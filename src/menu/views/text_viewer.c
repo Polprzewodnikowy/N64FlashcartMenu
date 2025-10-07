@@ -80,10 +80,14 @@ static void process (menu_t *menu) {
 }
 
 /**
- * @brief Draw the text viewer.
- * 
- * @param menu Pointer to the menu structure.
- * @param d Pointer to the display surface.
+ * Render the text viewer UI onto the provided display surface.
+ *
+ * Draws the background, layout, file text starting at the current offset,
+ * a scrollbar reflecting the current line within the total lines, and an
+ * actions bar whose text color is dimmed when vertical scrolling is not possible.
+ *
+ * @param menu Pointer to the menu context (used for viewer state).
+ * @param d Display surface to draw onto.
  */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);

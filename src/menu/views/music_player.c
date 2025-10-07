@@ -58,6 +58,15 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the music player user interface onto the provided display surface.
+ *
+ * Draws the background, layout, seekbar, song title, track elapsed/length,
+ * bitrate, samplerate, and actions bar, then presents the rendered surface.
+ *
+ * @param menu Current menu state; provides the selected entry metadata used in the UI (e.g., song name).
+ * @param d Surface to render the UI onto.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 

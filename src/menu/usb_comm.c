@@ -100,9 +100,15 @@ static void command_reboot (menu_t *menu) {
 }
 
 /**
- * @brief Receive a file over USB and save it to the storage.
- * 
- * @param menu Pointer to the menu structure.
+ * Receive a file sent over USB and save it to the menu's storage prefix.
+ *
+ * Reads a file path (terminated by a space), an '@' delimiter, and a file length (terminated by an '@'),
+ * then receives exactly that many bytes from USB and writes them to a new file located at
+ * menu->storage_prefix + path. Enforces MAX_FILE_SIZE and verifies a trailing NUL byte after the data.
+ * On any error (invalid arguments, oversize, filesystem or write failure, or invalid end token) the
+ * function aborts the transfer and sends an appropriate USB error message.
+ *
+ * @param menu Pointer to the menu structure whose storage_prefix is used as the file destination.
  */
 static void command_receive_file (menu_t *menu) {
     FILE *f;

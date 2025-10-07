@@ -20,10 +20,10 @@ static uint8_t editing_field_selected = 7; // 0-7 for 8 nibbles of the address o
 static bool show_message_save_confirm = false;
 
 /**
- * Draws the cheat editor UI component for address/value editing.
+ * Render an 8-nibble hexadecimal editor for a 32-bit value and highlight one nibble.
  * 
- * @param value The address or value to display (up to 32 bits).
- * @param selected_field The nibble currently selected for editing (0-7).
+ * @param value 32-bit value to render (most significant nibble shown first).
+ * @param selected_field Index of the nibble to highlight: 0 = most significant nibble, 7 = least significant nibble.
  */
 static void cheat_ui_component_edit_field_draw(uint32_t value, int selected_field) {
     char nibbles[8][2];
@@ -50,6 +50,11 @@ static void cheat_ui_component_edit_field_draw(uint32_t value, int selected_fiel
 }
 
 
+/**
+ * Toggle enabled state of the currently selected cheat entry.
+ *
+ * Persists the updated cheat list and plays the setting sound effect.
+ */
 static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat toggle.\n");
     cheat_codes[item_selected].enabled = !cheat_codes[item_selected].enabled;
@@ -57,18 +62,41 @@ static void toggle_enable_selected_cheat (menu_t *menu, void *arg) {
     sound_play_effect(SFX_SETTING);
 }
 
+/**
+ * Enter address editing mode for the currently selected cheat entry.
+ *
+ * Prepares the UI to edit the cheat's 32-bit address by selecting the most-significant
+ * nibble (first nibble) and enabling address-editing state.
+ *
+ * @param menu Current menu context (unused by this action).
+ * @param arg Unused.
+ */
 static void edit_selected_cheat_address (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat address %08lX.\n", cheat_codes[item_selected].address);
     editing_field_selected = 0; // Reset to the first nibble of the address.
     is_editing_mode_address = true;
 }
 
+/**
+ * Enter value-editing mode for the currently selected cheat.
+ *
+ * Resets the nibble selection to the first nibble of the cheat's value and enables
+ * the value editing mode so subsequent input modifies the value field.
+ *
+ * @param arg Unused.
+ */
 static void edit_selected_cheat_value (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Edit Selected Cheat value: %04X.\n", cheat_codes[item_selected].value);
     editing_field_selected = 4; // Reset to the first nibble of the value.
     is_editing_mode_value = true;
 }
 
+/**
+ * Reset the currently selected cheat entry to an empty, disabled state and persist the change.
+ *
+ * Clears the cheat's address and value, empties its description, marks it disabled, and saves
+ * the updated cheat list via set_cheat_codes().
+ */
 static void reset_selected_cheat (menu_t *menu, void *arg) {
     debugf("Cheat Editor: Reset Selected Cheat.\n");
     cheat_codes[item_selected].address = 0; // Reset the cheat address.
@@ -94,6 +122,19 @@ static component_context_menu_t options_context_menu = { .list = {
 
 
 
+/**
+ * Process input and update Datel code editor state.
+ *
+ * Handles the active context menu or, when not handled, processes either nibble-based
+ * address/value editing or the normal list navigation and command actions. In editing
+ * mode, left/right move the selected nibble, up/down increment or decrement the nibble,
+ * enter finalizes editing (enables the cheat), and back cancels editing. When not editing,
+ * up/down change the selected cheat, enter either saves to file (when confirmation is shown)
+ * or applies cheats to the ROM, back cancels or exits to the previous view, options opens
+ * the item options menu, and the L/Z action shows the save-confirmation prompt.
+ *
+ * @param menu Current menu context containing input action flags, load path, and next-mode field.
+ */
 static void process(menu_t *menu) {
 
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
@@ -228,11 +269,13 @@ static void process(menu_t *menu) {
 }
 
 /**
- * @brief Draw the cheat list.
- * 
- * @param list Pointer to the list of entries.
- * @param entries Number of entries in the list.
- * @param selected Index of the currently selected entry.
+ * Render the cheat code list UI including an entry column, a right-hand ON/OFF column, a scrollbar, and a highlighted selection.
+ *
+ * Draws a paged view of up to LIST_ENTRIES entries from `list`, renders a vertical scrollbar, highlights the `selected` row, and shows each entry's index, address, value, optional description, and enabled status.
+ *
+ * @param list Pointer to an array of cheat_file_code_t entries to display.
+ * @param entries Number of valid entries in `list`.
+ * @param selected Index of the currently selected entry within `list`.
  */
 void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
     int starting_position = 0;
@@ -385,6 +428,18 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
     }
 }
 
+/**
+ * Render the Datel Code Editor view onto the given display.
+ *
+ * Draws the view background and chrome, the centered title, the cheat list with its scrollbar
+ * and selection highlight, left/right action bars, and the options context menu. If address
+ * or value editing modes are active, renders the corresponding nibble editor for the
+ * currently selected cheat. If a save-confirmation is active, renders the confirmation
+ * message box.
+ *
+ * @param menu Pointer to the menu state containing selection and editing flags.
+ * @param display Rendering target surface where the view is drawn.
+ */
 static void draw (menu_t *menu, surface_t *display) {
     rdpq_attach(display, NULL);
 
@@ -447,6 +502,16 @@ static void draw (menu_t *menu, surface_t *display) {
     rdpq_detach_show();
 }
 
+/**
+ * Initialize the Datel code editor view and load cheats for the current ROM.
+ *
+ * Initializes editing state and context menus, obtains the global cheat list,
+ * constructs a Datel cheats file path from menu->load.rom_path, and loads cheats
+ * from that file into the editor state.
+ *
+ * @param menu Pointer to the menu instance containing the current ROM path used
+ *             to locate the Datel cheats file.
+ */
 void view_datel_code_editor_init (menu_t *menu) {
     is_editing_mode_address = false;
     is_editing_mode_value = false;
@@ -465,6 +530,13 @@ void view_datel_code_editor_init (menu_t *menu) {
 
 }
 
+/**
+ * Process input/state changes and render the Datel code editor view.
+ *
+ * Executes the view's input processing (state transitions, editing, menus) and then draws the updated UI onto the given surface.
+ * @param menu Pointer to the menu state for the Datel code editor.
+ * @param display Surface to render the view onto.
+ */
 void view_datel_code_editor_display (menu_t *menu, surface_t *display) {
     process(menu);
 

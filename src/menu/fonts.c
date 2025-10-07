@@ -4,6 +4,16 @@
 #include "utils/fs.h"
 
 
+/**
+ * Load and register the default font, optionally overriding it with a custom font file.
+ *
+ * Loads a font from the built-in ROM path or from `custom_font_path` if that path exists,
+ * applies a set of predefined colored styles (default, green, blue, yellow, orange, red, gray),
+ * and registers the configured font as the default font used for rendering.
+ *
+ * @param custom_font_path Path to a custom font file to use instead of the built-in font;
+ *                         pass NULL to use the embedded default font.
+ */
 static void load_default_font (char *custom_font_path) {
     char *font_path = "rom:/Firple-Bold.font64";
 

@@ -19,9 +19,16 @@ static bool sound_initialized = false;
 static bool sfx_enabled = false;
 
 /**
- * @brief Reconfigure the sound system with the specified frequency.
- * 
- * @param frequency The audio frequency.
+ * Reconfigure the sound subsystem to use the given sample rate.
+ *
+ * If the requested frequency differs from the current audio frequency, this
+ * will close the existing mixer and audio device (if already initialized),
+ * initialize the audio device and mixer for the new frequency, enable WAV64
+ * compression level 1, initialize the MP3 player mixer, and mark the sound
+ * subsystem as initialized.
+ *
+ * @param frequency The desired audio sample rate in Hz; ignored if non-positive
+ *                  or equal to the current audio frequency.
  */
 static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
@@ -125,7 +132,10 @@ void sound_deinit (void) {
 }
 
 /**
- * @brief Poll the sound system to process audio playback.
+ * Polls the sound subsystem and advances audio mixing when ready.
+ *
+ * If the sound system is initialized, attempts to service the mixer so pending
+ * audio buffers are mixed and submitted for playback; does nothing otherwise.
  */
 void sound_poll (void) {
     if (sound_initialized) {

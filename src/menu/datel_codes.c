@@ -20,12 +20,10 @@ static cheat_file_t *cheat_file_text;
 cheat_file_code_t cheat_codes[MAX_CHEAT_CODES]; // Global array to hold cheat codes
 
 /**
- * @brief Generate a cheats array containing enabled cheats as address/value pairs.
- *        The last two entries will always be zero.
- * 
- * @param cheats_in Input array of type cheat_file_code_t.
- * @param cheats_out Output array (must be at least (MAX_CHEAT_CODES * 2 + 2) in size).
- * @return Number of address/value pairs written (including the trailing zeros).
+ * Builds an array of enabled cheat entries as consecutive address/value uint32_t pairs and appends two trailing zeros.
+ * @param cheats_in Input array of cheat_file_code_t entries to scan.
+ * @param cheats_out Output buffer which will receive address/value pairs; must hold at least (MAX_CHEAT_CODES * 2 + 2) uint32_t elements.
+ * @return Number of uint32_t values written into cheats_out, including the two trailing zeros.
  */
 size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *cheats_out) {
     size_t count = 0;
@@ -42,17 +40,23 @@ size_t generate_enabled_cheats_array(cheat_file_code_t *cheats_in, uint32_t *che
     return count;
 }
 
-/** * @brief Get the cheat codes.
- * 
- * @return Pointer to the array of cheat codes.
+/**
+ * Provide access to the global cheat codes array.
+ *
+ * @return Pointer to the first element of the global `cheat_codes` array (type `cheat_file_code_t *`).
  */
 cheat_file_code_t *get_cheat_codes(void) {
     return cheat_codes;
 }
 
-/** * @brief Set the cheat codes.
- * 
- * @param cheats Pointer to the array of cheat codes.
+/**
+ * Replace the global cheat codes array or clear it.
+ *
+ * If `cheats` is non-NULL, copies exactly MAX_CHEAT_CODES entries into the global
+ * `cheat_codes` array. If `cheats` is NULL, clears the global `cheat_codes`
+ * array by setting all entries to zero.
+ *
+ * @param cheats Pointer to an array of cheat_file_code_t to copy from, or NULL to clear the global array.
  */
 void set_cheat_codes(cheat_file_code_t *cheats) {
     if (cheats) {
@@ -62,10 +66,10 @@ void set_cheat_codes(cheat_file_code_t *cheats) {
     }
 }
 
-/** * @brief Populate a cheat code with a description.
- * 
- * @param code Pointer to the cheat code structure.
- * @param description The description string to set.
+/**
+ * Set the cheat code's description to the provided string, truncating as needed.
+ * @param code Pointer to the cheat code to update; if NULL the function does nothing.
+ * @param description Null-terminated string to copy into the code's description; if NULL the function does nothing.
  */
 void populate_cheat_code_description(cheat_file_code_t *code, const char *description) {
     if (code && description) {
@@ -74,10 +78,18 @@ void populate_cheat_code_description(cheat_file_code_t *code, const char *descri
     }
 }
 
-/** * @brief Parse a cheat code string and populate the cheat code structure.
- * 
- * @param code Pointer to the cheat code structure to populate.
- * @param code_str The cheat code string in the format "address value description".
+/**
+ * Parse a single cheat code line and populate the provided cheat_file_code_t.
+ *
+ * Parses an input string containing a hexadecimal address and value with an optional
+ * textual description, and writes the parsed fields into `code`. On successful parse
+ * of address and value the entry is marked enabled; if a description is present it is
+ * stored (truncated to 31 characters plus NUL). On parse failure the code is cleared
+ * (address and value set to 0), disabled, and its description cleared.
+ *
+ * @param code Pointer to the cheat_file_code_t to populate; if NULL the function only logs an error.
+ * @param code_str Input string in the form "address value [description]" where `address` and `value`
+ *                 are hexadecimal numbers and `description` is optional text up to 31 characters.
  */
 void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
     if (code && code_str) {
@@ -113,7 +125,10 @@ void parse_cheat_code_string(cheat_file_code_t *code, const char *code_str) {
 }
 
 /**
- * @brief Deinitialize the cheat file.
+ * Release resources associated with the currently opened cheat file and reset internal state.
+ *
+ * Closes the open file (if any), frees the file contents buffer and the cheat_file_t structure,
+ * and sets the internal cheat_file_text pointer to NULL.
  */
 static void deinit_cheat_file (void) {
     if (cheat_file_text) {
@@ -128,6 +143,20 @@ static void deinit_cheat_file (void) {
     }
 }
 
+/**
+ * Open and load a cheat file into the internal cheat_file_text structure.
+ *
+ * @param path Filesystem path to the cheat file to open and read.
+ * @returns CHEAT_FILE_LOAD_OK on success.
+ *          CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL if allocation of the internal structure fails.
+ *          CHEAT_FILE_LOAD_ERR_FILE_OPEN_FAIL if the file cannot be opened for reading.
+ *          CHEAT_FILE_LOAD_ERR_FILE_STAT_FAIL if retrieving the file's metadata fails.
+ *          CHEAT_FILE_LOAD_ERR_FILE_EMPTY if the file length is zero or negative.
+ *          CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG if the file exceeds MAX_FILE_SIZE.
+ *          CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL if allocation for file contents fails.
+ *          CHEAT_FILE_LOAD_ERR_FILE_READ_FAIL if reading the file contents fails.
+ *          CHEAT_FILE_LOAD_ERR_FILE_CLOSE_FAIL if closing the file fails after reading.
+ */
 cheat_file_load_err_t open_cheat_file(char *path) {
     if ((cheat_file_text = calloc(1, sizeof(cheat_file_t))) == NULL) {
         return CHEAT_FILE_LOAD_ERR_MEMORY_ALLOC_FAIL;
@@ -177,6 +206,11 @@ cheat_file_load_err_t open_cheat_file(char *path) {
     return CHEAT_FILE_LOAD_OK;
 }
 
+/**
+ * Print a human-readable debug message corresponding to a cheat file load result.
+ *
+ * @param res Result code returned by open_cheat_file; the function logs a descriptive message for each defined `cheat_file_load_err_t` value (or "Unknown error" for unrecognized codes).
+ */
 void cheat_file_open_res_debug(cheat_file_load_err_t res) {
     switch (res) {
         case CHEAT_FILE_LOAD_OK:
@@ -211,6 +245,17 @@ void cheat_file_open_res_debug(cheat_file_load_err_t res) {
     }
 }
 
+/**
+ * Load cheat codes from a text file and populate the global cheat_codes array.
+ *
+ * Parses the file at the given filesystem path, reading up to MAX_CHEAT_CODES entries.
+ * Each non-empty, non-comment line is interpreted as a cheat entry in the form
+ * "address value [description]". A leading ":" (optionally followed by whitespace)
+ * marks the entry as disabled but still parsed. Lines beginning with '#', ';', or "//"
+ * are ignored. After parsing, any remaining entries in the global array are zeroed.
+ *
+ * @param path Filesystem path to the cheat file to read.
+ */
 void load_cheats_from_file(char *path) {
 
     debugf("Cheat Editor: Loading cheats from path %s.\n", path);
@@ -275,6 +320,16 @@ void load_cheats_from_file(char *path) {
     }
 }
 
+/**
+ * Write the in-memory cheat codes to a text file at the specified path.
+ *
+ * Each non-empty cheat is written as a single line. Disabled cheats are prefixed with ": ".
+ * Lines use the format "AAAAAAAA VVVV [description]" where AAAAAAAA is the address as
+ * eight uppercase hexadecimal digits and VVVV is the value as four uppercase hexadecimal digits.
+ * If a cheat has a non-empty description it is appended after the address and value separated by a space.
+ *
+ * @param path Filesystem path to create or overwrite with the saved cheat list.
+ */
 void save_cheats_to_file(char *path) {
 
     FILE *f = fopen(path, "w");

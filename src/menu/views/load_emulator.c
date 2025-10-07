@@ -34,6 +34,16 @@ static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
 }
 
 
+/**
+ * Process input actions for the load-emulator menu.
+ *
+ * When the Enter action is active, marks an emulated ROM load as pending.
+ * When the Back action is active, plays the exit sound and requests a switch
+ * to the browser menu mode.
+ *
+ * @param menu Pointer to the current menu context used to read actions and
+ *             update pending state and next_mode. Must not be NULL.
+ */
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->load_pending.emulator_file = true;
@@ -43,6 +53,16 @@ static void process (menu_t *menu) {
     }
 }
 
+/**
+ * Render the "Load Emulated ROM" view to the provided drawing surface.
+ *
+ * If a ROM load is pending (menu->load_pending.emulator_file), renders the loader UI;
+ * otherwise renders the main layout including the centered title, the emulated system
+ * and ROM name, and the actions bar.
+ *
+ * @param menu Pointer to the menu state; used for load_pending flag and browser entry name.
+ * @param d Surface to render into.
+ */
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -81,6 +101,15 @@ static void draw (menu_t *menu, surface_t *d) {
     rdpq_detach_show();
 }
 
+/**
+ * Render the emulated-ROM loading UI with a progress indicator.
+ *
+ * If a display is available, draws the background and a loader bar labeled
+ * "Loading emulated ROM..." reflecting the given progress.
+ *
+ * @param progress Progress value from 0.0 to 1.0; values greater than or equal
+ *                 to 1.0 are treated as complete.
+ */
 static void draw_progress (float progress) {
     surface_t *d = (progress >= 1.0f) ? display_get() : display_try_get();
 
@@ -111,6 +140,16 @@ static void load (menu_t *menu) {
 }
 
 
+/**
+ * Initialize emulator-load state and select the emulator type based on the selected file's extension.
+ *
+ * Initializes the menu's load_pending.emulator_file flag and inspects the currently selected browser
+ * entry's filename to determine and set the global `emu_type` to the matching emulator (NES, SNES,
+ * Game Boy, Game Boy Color, SEGA 8-bit, or Fairchild Channel F). If the file extension is not
+ * recognized, reports "Unsupported ROM" via the menu error display.
+ *
+ * @param menu Menu context whose browser entry is inspected and whose load_pending flag is initialized.
+ */
 void view_load_emulator_init (menu_t *menu) {
     menu->load_pending.emulator_file = false;
 
@@ -135,6 +174,16 @@ void view_load_emulator_init (menu_t *menu) {
     path_free(path);
 }
 
+/**
+ * Update and render the Load Emulated ROM view; if a ROM load is pending, clear the pending
+ * flag and begin loading the ROM.
+ *
+ * Processes input state, draws the view to the provided display surface, and when
+ * menu->load_pending.emulator_file is set, resets that flag and invokes the loader.
+ *
+ * @param menu Current menu state used for input, UI state, and initiating the load.
+ * @param display Surface to render the view onto.
+ */
 void view_load_emulator_display (menu_t *menu, surface_t *display) {
     process(menu);
 

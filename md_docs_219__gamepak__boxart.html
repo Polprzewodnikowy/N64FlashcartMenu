@@ -88,21 +88,23 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="el" href="md_docs_200__index.html">Return to the index</a> </p>
-<h2><a class="anchor" id="autotoc_md66"></a>
+<h2><a class="anchor" id="autotoc_md73"></a>
 Game Art Images</h2>
-<p>To use N64 game box art images, place your PNG files within the <code>sd:/menu/boxart/</code> folder.</p>
-<h4><a class="anchor" id="autotoc_md67"></a>
+<p>To use N64 game boxart images, place your PNG files within the <code>sd:/menu/metadata/</code> folder.</p>
+<dl class="section warning"><dt>Warning</dt><dd>Game Boxart is now stored in <code>sd:/menu/metadata/</code>, rather than the previous <code>sd:/menu/boxart/</code> folder, please update your folder name and structure/content to ensure compatibility.</dd></dl>
+<h4><a class="anchor" id="autotoc_md74"></a>
 Supported images</h4>
 <p>Files must be in <code>PNG</code> format and use the following dimensions:</p><ul>
-<li>American/European N64 box art sprites: 158x112</li>
-<li>Japanese N64 box art sprites: 112x158</li>
-<li>64DD box art sprites: 129x112</li>
+<li>American/European N64 boxart sprites: 158x112</li>
+<li>Japanese N64 boxart sprites: 112x158</li>
+<li>64DD boxart sprites: 129x112</li>
 </ul>
 <p>Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information): <br  />
- i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/boxart/N/G/E/E/boxart_front.png</code>. <br  />
- i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/boxart/N/G/E/P/boxart_front.png</code>.</p>
+ i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/metadata/N/G/E/E/boxart_front.png</code>. <br  />
+ i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/metadata/N/G/E/P/boxart_front.png</code>.</p>
 <p>To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead: <br  />
- i.e. for GoldenEye, this would be <code>sd:/menu/boxart/N/G/E/boxart_front.png</code>.</p>
+ i.e. for GoldenEye, this would be <code>sd:/menu/metadata/N/G/E/boxart_front.png</code>.</p>
+<p>ROMs that use the <a href="https://n64brew.dev/wiki/ROM_Header">"Advanced Homebrew ROM Header"</a> Game ID (<code>xEDx</code>) are matched using the "Game Title" (not the Game Code): e.g. <code>sd:/menu/metadata/homebrew/{game title}/boxart_front.png</code></p>
 <p><b>Warning</b>: Excluding the region ID may show a box art of the wrong region. <br  />
  <b>Note</b>: For future support, box art sprites should also include: <br  />
 </p><ul>
@@ -122,7 +124,7 @@ Supported images</h4>
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 24 2025 16:04:48 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 7 2025 18:54:05 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

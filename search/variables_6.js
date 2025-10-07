@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['f_0',['f',['../mp3__player_8c.html#a1ad0ad738e15b5e0996337f7511e5862',1,'mp3player_t::f'],['../png__decoder_8c.html#a872f22369ce1fdfcdc993906e00dccc5',1,'png_decoder_t::f'],['../text__viewer_8c.html#a1e6dce28848b0f59fa2c2a4f2565a042',1,'text_file_t::f']]],
+  ['f_0',['f',['../structcheat__file__t.html#ad3ccbb616bb72b2a9f5c718040094a0d',1,'cheat_file_t::f'],['../mp3__player_8c.html#a1ad0ad738e15b5e0996337f7511e5862',1,'mp3player_t::f'],['../png__decoder_8c.html#a872f22369ce1fdfcdc993906e00dccc5',1,'png_decoder_t::f'],['../text__viewer_8c.html#a1e6dce28848b0f59fa2c2a4f2565a042',1,'text_file_t::f']]],
   ['favorite_5fitems_1',['favorite_items',['../bookkeeping_8h.html#a46c6385ac0aae23c588cc83bfd8a5e1c',1,'bookkeeping_t']]],
   ['feat_2',['feat',['../rom__info_8c.html#a1ba8aba1a88b9c65257f4a4e1b3cad3d',1,'match_t.data']]],
   ['features_3',['features',['../rom__info_8h.html#a7eda06a6294dca780f036d3802aaed3e',1,'rom_info_t']]],

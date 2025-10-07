@@ -114,8 +114,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:structmenu__t_8browser"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structmenu__t_8load" id="r_structmenu__t_8load"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structmenu__t_8load">menu_t.load</a></td></tr>
 <tr class="separator:structmenu__t_8load"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structmenu__t_8boot__pending" id="r_structmenu__t_8boot__pending"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structmenu__t_8boot__pending">menu_t.boot_pending</a></td></tr>
-<tr class="separator:structmenu__t_8boot__pending"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structmenu__t_8load__pending" id="r_structmenu__t_8load__pending"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structmenu__t_8load__pending">menu_t.load_pending</a></td></tr>
+<tr class="separator:structmenu__t_8load__pending"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -133,33 +133,45 @@ Enumerations</h2></td></tr>
 &#160;&#160;<b>MENU_MODE_CREDITS</b>
 , <b>MENU_MODE_SETTINGS_EDITOR</b>
 , <b>MENU_MODE_RTC</b>
-, <b>MENU_MODE_FLASHCART</b>
+, <b>MENU_MODE_CONTROLLER_PAKFS</b>
 , <br />
-&#160;&#160;<b>MENU_MODE_LOAD_ROM</b>
-, <b>MENU_MODE_LOAD_DISK</b>
+&#160;&#160;<b>MENU_MODE_CONTROLLER_PAK_DUMP_INFO</b>
+, <b>MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO</b>
+, <b>MENU_MODE_FLASHCART</b>
+, <b>MENU_MODE_LOAD_ROM</b>
+, <br />
+&#160;&#160;<b>MENU_MODE_LOAD_DISK</b>
 , <b>MENU_MODE_LOAD_EMULATOR</b>
 , <b>MENU_MODE_ERROR</b>
+, <b>MENU_MODE_FAULT</b>
 , <br />
-&#160;&#160;<b>MENU_MODE_FAULT</b>
-, <b>MENU_MODE_BOOT</b>
+&#160;&#160;<b>MENU_MODE_BOOT</b>
 , <b>MENU_MODE_FAVORITE</b>
 , <b>MENU_MODE_HISTORY</b>
+, <b>MENU_MODE_DATEL_CODE_EDITOR</b>
+, <br />
+&#160;&#160;<b>MENU_MODE_EXTRACT_FILE</b>
 <br />
  }</td></tr>
 <tr class="memdesc:aea8b3793f8f84c964eb96c91b0768a70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Menu mode enumeration. <br /></td></tr>
 <tr class="separator:aea8b3793f8f84c964eb96c91b0768a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e00527da87fefde59d447ebc4aedd7a" id="r_a7e00527da87fefde59d447ebc4aedd7a"><td class="memItemLeft" align="right" valign="top"><a id="a7e00527da87fefde59d447ebc4aedd7a" name="a7e00527da87fefde59d447ebc4aedd7a"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e00527da87fefde59d447ebc4aedd7a">entry_type_t</a> { <br />
 &#160;&#160;<b>ENTRY_TYPE_DIR</b>
-, <b>ENTRY_TYPE_ROM</b>
 , <b>ENTRY_TYPE_DISK</b>
 , <b>ENTRY_TYPE_EMULATOR</b>
-, <br />
-&#160;&#160;<b>ENTRY_TYPE_SAVE</b>
 , <b>ENTRY_TYPE_IMAGE</b>
-, <b>ENTRY_TYPE_MUSIC</b>
-, <b>ENTRY_TYPE_TEXT</b>
 , <br />
-&#160;&#160;<b>ENTRY_TYPE_OTHER</b>
+&#160;&#160;<b>ENTRY_TYPE_MUSIC</b>
+, <b>ENTRY_TYPE_OTHER</b>
+, <b>ENTRY_TYPE_ROM</b>
+, <b>ENTRY_TYPE_ROM_CHEAT</b>
+, <br />
+&#160;&#160;<b>ENTRY_TYPE_ROM_PATCH</b>
+, <b>ENTRY_TYPE_SAVE</b>
+, <b>ENTRY_TYPE_TEXT</b>
+, <b>ENTRY_TYPE_ARCHIVE</b>
+, <br />
+&#160;&#160;<b>ENTRY_TYPE_ARCHIVED</b>
 <br />
  }</td></tr>
 <tr class="memdesc:a7e00527da87fefde59d447ebc4aedd7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">File entry type enumeration. <br /></td></tr>
@@ -198,6 +210,12 @@ type</td>
 <a id="ab5549139121823e53d1ceb31d7c99ccd" name="ab5549139121823e53d1ceb31d7c99ccd"></a>int64_t</td>
 <td class="fieldname">
 size</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a505205a7877f2cca3b15355b9df628f6" name="a505205a7877f2cca3b15355b9df628f6"></a>int32_t</td>
+<td class="fieldname">
+index</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -291,9 +309,9 @@ load</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a1dda23190b3b05d95a77540a1da19ecf" name="a1dda23190b3b05d95a77540a1da19ecf"></a>struct <a class="el" href="#structmenu__t_8boot__pending">menu_t.boot_pending</a></td>
+<a id="ab018c2a218f515d85cc16662d3294778" name="ab018c2a218f515d85cc16662d3294778"></a>struct <a class="el" href="#structmenu__t_8load__pending">menu_t.load_pending</a></td>
 <td class="fieldname">
-boot_pending</td>
+load_pending</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -373,18 +391,6 @@ settings</td>
 lz_context</td>
 <td class="fielddoc">
 </td></tr>
-<tr><td class="fieldtype">
-<a id="a115bafbc2950f5d4c1350cd9baf6f9ae" name="a115bafbc2950f5d4c1350cd9baf6f9ae"></a>bool</td>
-<td class="fieldname">
-previous_tab</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a1a96a7453775f02b93073e43609f67d3" name="a1a96a7453775f02b93073e43609f67d3"></a>bool</td>
-<td class="fieldname">
-next_tab</td>
-<td class="fielddoc">
-</td></tr>
 </table>
 
 </div>
@@ -415,6 +421,18 @@ reload</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
+<a id="a888d0ee361af3603736f32131e7b20a2" name="a888d0ee361af3603736f32131e7b20a2"></a>bool</td>
+<td class="fieldname">
+archive</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="aadcdbd79a8d84175c229b192aadc02f2" name="aadcdbd79a8d84175c229b192aadc02f2"></a>mz_zip_archive</td>
+<td class="fieldname">
+zip</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
 <a id="a5f8f22b8cdbaeee8cf857673a9b6ba20" name="a5f8f22b8cdbaeee8cf857673a9b6ba20"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
 <td class="fieldname">
 directory</td>
@@ -427,7 +445,7 @@ list</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a5fce916b625108149ee3ea5f48d9b0d1" name="a5fce916b625108149ee3ea5f48d9b0d1"></a>int</td>
+<a id="a5fce916b625108149ee3ea5f48d9b0d1" name="a5fce916b625108149ee3ea5f48d9b0d1"></a>int32_t</td>
 <td class="fieldname">
 entries</td>
 <td class="fielddoc">
@@ -439,9 +457,15 @@ entry</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="aef7de3f485174ff47f061ad27d83d0ee" name="aef7de3f485174ff47f061ad27d83d0ee"></a>int</td>
+<a id="aef7de3f485174ff47f061ad27d83d0ee" name="aef7de3f485174ff47f061ad27d83d0ee"></a>int32_t</td>
 <td class="fieldname">
 selected</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a7b373de5cde05658b01daf6980cb34ce" name="a7b373de5cde05658b01daf6980cb34ce"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
+<td class="fieldname">
+select_file</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -486,15 +510,15 @@ disk_info</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="ad1495bfb153a209f74f4fbca76b2a7c6" name="ad1495bfb153a209f74f4fbca76b2a7c6"></a>int</td>
+<a id="a266ed093fadda5fe78f634ffb0831421" name="a266ed093fadda5fe78f634ffb0831421"></a>int32_t</td>
 <td class="fieldname">
-load_history</td>
+load_history_id</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="a4f26929cc2581a9f602c49d55dd07853" name="a4f26929cc2581a9f602c49d55dd07853"></a>int</td>
+<a id="a1262189e5e5803e7b880b69249a5b736" name="a1262189e5e5803e7b880b69249a5b736"></a>int32_t</td>
 <td class="fieldname">
-load_favorite</td>
+load_favorite_id</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
@@ -507,14 +531,14 @@ combined_disk_rom</td>
 
 </div>
 </div>
-<a name="structmenu__t_8boot__pending" id="structmenu__t_8boot__pending"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structmenu__t_8boot__pending">&#9670;&#160;</a></span>menu_t.boot_pending</h2>
+<a name="structmenu__t_8load__pending" id="structmenu__t_8load__pending"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structmenu__t_8load__pending">&#9670;&#160;</a></span>menu_t.load_pending</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct menu_t.boot_pending</td>
+          <td class="memname">struct menu_t.load_pending</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -538,6 +562,12 @@ disk_file</td>
 emulator_file</td>
 <td class="fielddoc">
 </td></tr>
+<tr><td class="fieldtype">
+<a id="ab63139bbde456c129d0aaa114c0277e3" name="ab63139bbde456c129d0aaa114c0277e3"></a>bool</td>
+<td class="fieldname">
+extract_file</td>
+<td class="fielddoc">
+</td></tr>
 </table>
 
 </div>
@@ -545,7 +575,7 @@ emulator_file</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 24 2025 16:04:48 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 7 2025 18:54:05 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

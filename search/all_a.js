@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['background_20image_0',['How to add a background image',['../md_docs_216__background__images.html#autotoc_md69',1,'']]],
-  ['background_20images_1',['Background Images',['../md_docs_216__background__images.html#autotoc_md68',1,'']]],
-  ['background_20music_2',['Background music',['../md_docs_240__sound.html#autotoc_md92',1,'']]],
+  ['background_20image_0',['How to add a background image',['../md_docs_216__background__images.html#autotoc_md70',1,'']]],
+  ['background_20images_1',['Background Images',['../md_docs_216__background__images.html#autotoc_md69',1,'']]],
+  ['background_20music_2',['Background music',['../md_docs_240__sound.html#autotoc_md93',1,'']]],
   ['background_2ec_3',['background.c',['../background_8c.html',1,'']]],
   ['background_5fempty_5fcolor_4',['BACKGROUND_EMPTY_COLOR',['../constants_8h.html#ad34ec4463c7da0f6da7f56f6d43f9f33',1,'constants.h']]],
   ['background_5foverlay_5fcolor_5',['BACKGROUND_OVERLAY_COLOR',['../constants_8h.html#ab399c3a31a6aacaea384ee5552292590',1,'constants.h']]],
   ['bad_5fsystem_5farea_5flbas_6',['bad_system_area_lbas',['../flashcart_8h.html#ac06bc2621cde4d7e0b0677725e07d41b',1,'flashcart_disk_parameters_t']]],
-  ['basic_20controls_7',['Basic Controls',['../md_docs_211__menu__controls.html#autotoc_md45',1,'']]],
-  ['before_20adding_20them_20to_20the_20sd_20card_8',['before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md105',1,'I am using macOS and want to clean unwanted files before adding them to the SD card'],['../md_docs_281__faq.html#autotoc_md104',1,'My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card']]],
+  ['basic_20controls_7',['Basic Controls',['../md_docs_211__menu__controls.html#autotoc_md46',1,'']]],
+  ['before_20adding_20them_20to_20the_20sd_20card_8',['before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md106',1,'I am using macOS and want to clean unwanted files before adding them to the SD card'],['../md_docs_281__faq.html#autotoc_md105',1,'My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card']]],
   ['bgm_5fenabled_9',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
   ['bitrate_10',['BITRATE',['../boot__io_8h.html#a43e0411e186298f185d39b80ea5f1d4f',1,'ai_regs_t']]],
   ['bitrate_11',['bitrate',['../mp3__player_8c.html#a116b2a534bba89a34edd8144c6e223de',1,'mp3player_t']]],
@@ -66,8 +66,8 @@ var searchData=
   ['boxart_5fy_63',['BOXART_Y',['../constants_8h.html#a42e7d267ca14ca1060cab46284922dea',1,'constants.h']]],
   ['boxart_5fy_5fdd_64',['BOXART_Y_DD',['../constants_8h.html#aa6c714745010c0c56c59122639644a18',1,'constants.h']]],
   ['boxart_5fy_5fjp_65',['BOXART_Y_JP',['../constants_8h.html#a409fb72df45fb8225b31d6b9dbb413a6',1,'constants.h']]],
-  ['browser_66',['File Browser',['../md_docs_231__file__browser.html#autotoc_md77',1,'']]],
-  ['browser_20options_67',['Browser options',['../md_docs_211__menu__controls.html#autotoc_md48',1,'']]],
+  ['browser_66',['File Browser',['../md_docs_231__file__browser.html#autotoc_md78',1,'']]],
+  ['browser_20options_67',['Browser options',['../md_docs_211__menu__controls.html#autotoc_md49',1,'']]],
   ['buf_5fbusy_68',['BUF_BUSY',['../boot__io_8h.html#add46d8fc540c7ae8d608d0a80ba2f0e4',1,'dpc_regs_t']]],
   ['buffer_69',['BUFFER',['../group__drive.html#aa89b0ceb97ae22e5801b5fc37c458bbf',1,'d64_regs_t::BUFFER'],['../group__sc64.html#ab90d55ba92c5e014210a1338c1d3554c',1,'sc64_buffers_t::BUFFER']]],
   ['buffer_70',['buffer',['../mp3__player_8c.html#a978a0a3ab662d5537747bcb9db76dd40',1,'mp3player_t::buffer'],['../path_8h.html#a450a4fe6729c5cef4dac864ffc81f148',1,'path_t::buffer']]],
@@ -78,5 +78,5 @@ var searchData=
   ['button_5fmode_5fnone_75',['BUTTON_MODE_NONE',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefa365b5ec9d504646251a700062f19bc3f',1,'sc64_ll.h']]],
   ['button_5fmode_5fusb_5fpacket_76',['BUTTON_MODE_USB_PACKET',['../group__sc64.html#gga813206271f5521b500a359ba0cd52fefafac0b304877fefda7edc5e2e49ae5141',1,'sc64_ll.h']]],
   ['button_5fupgrade_77',['BUTTON_UPGRADE',['../group__drive.html#a9c1ff2b030a6ebcb953fc895d77adf7f',1,'d64_regs_t']]],
-  ['byteswap_20on_20load_20command_78',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md25',1,'']]]
+  ['byteswap_20on_20load_20command_78',['&quot;Enable/disable byteswap on load&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md26',1,'']]]
 ];

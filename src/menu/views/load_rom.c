@@ -621,9 +621,18 @@ void view_load_rom_init (menu_t *menu) {
             );
         }
 
-        // Initialize boxart - start with front image
-        current_image_index = 0;
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+        // Find first available image to display
+        int first_available = 0;
+        for (int i = 0; i < image_cycle_length; i++) {
+            if (image_available[i]) {
+                first_available = i;
+                break;
+            }
+        }
+
+        // Initialize boxart - start with first available image
+        current_image_index = first_available;
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, image_cycle[first_available]);
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }

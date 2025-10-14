@@ -636,6 +636,7 @@ void view_load_rom_init (menu_t *menu) {
     }
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
+#endif
         // Initialize boxart - try front image first
         current_image_index = 0;
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);

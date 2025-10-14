@@ -13,6 +13,67 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
+// Boxart cycling state
+static int current_image_index = 0;
+static const file_image_type_t image_cycle[] = {
+    IMAGE_BOXART_FRONT,
+    IMAGE_BOXART_BACK,
+    IMAGE_BOXART_LEFT,
+    IMAGE_BOXART_RIGHT,
+    IMAGE_BOXART_TOP,
+    IMAGE_BOXART_BOTTOM,
+    IMAGE_GAMEPAK_FRONT,
+    IMAGE_GAMEPAK_BACK
+};
+static const int image_cycle_length = 8;
+static bool image_available[8] = {false};
+static bool images_scanned = false;
+
+static bool check_boxart_file_exists(const char *storage_prefix, char *game_code, file_image_type_t image_type) {
+    char boxart_id_path[8];
+    char filename[32];
+
+    switch (image_type) {
+        case IMAGE_GAMEPAK_FRONT: strcpy(filename, "gamepak_front.png"); break;
+        case IMAGE_GAMEPAK_BACK: strcpy(filename, "gamepak_back.png"); break;
+        case IMAGE_BOXART_BACK: strcpy(filename, "boxart_back.png"); break;
+        case IMAGE_BOXART_LEFT: strcpy(filename, "boxart_left.png"); break;
+        case IMAGE_BOXART_RIGHT: strcpy(filename, "boxart_right.png"); break;
+        case IMAGE_BOXART_BOTTOM: strcpy(filename, "boxart_bottom.png"); break;
+        case IMAGE_BOXART_TOP: strcpy(filename, "boxart_top.png"); break;
+        default: strcpy(filename, "boxart_front.png"); break;
+    }
+
+    path_t *path = path_init(storage_prefix, "menu/boxart");
+    sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+    path_push(path, boxart_id_path);
+
+    if (!directory_exists(path_get(path))) {
+        path_pop(path);
+    }
+
+    path_push(path, filename);
+    bool exists = file_exists(path_get(path));
+    path_free(path);
+
+    return exists;
+}
+
+static void scan_boxart_images(menu_t *menu) {
+    if (images_scanned) {
+        return;
+    }
+
+    for (int i = 0; i < image_cycle_length; i++) {
+        image_available[i] = check_boxart_file_exists(
+            menu->storage_prefix,
+            menu->load.rom_info.game_code,
+            image_cycle[i]
+        );
+    }
+
+    images_scanned = true;
+}
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -297,6 +358,60 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.go_right) {
+        // Scan images on first use
+        scan_boxart_images(menu);
+
+        // C-Right: cycle to next available image
+        int start_index = current_image_index;
+        int next_index = (current_image_index + 1) % image_cycle_length;
+
+        // Find next available image from our cached list
+        while (next_index != start_index) {
+            if (image_available[next_index]) {
+                component_boxart_t *new_boxart = ui_components_boxart_init(
+                    menu->storage_prefix,
+                    menu->load.rom_info.game_code,
+                    image_cycle[next_index]
+                );
+
+                if (new_boxart != NULL) {
+                    ui_components_boxart_free(boxart);
+                    boxart = new_boxart;
+                    current_image_index = next_index;
+                    sound_play_effect(SFX_SETTING);
+                    break;
+                }
+            }
+            next_index = (next_index + 1) % image_cycle_length;
+        }
+    } else if (menu->actions.go_left) {
+        // Scan images on first use
+        scan_boxart_images(menu);
+
+        // C-Left: cycle to previous available image
+        int start_index = current_image_index;
+        int prev_index = (current_image_index - 1 + image_cycle_length) % image_cycle_length;
+
+        // Find previous available image from our cached list
+        while (prev_index != start_index) {
+            if (image_available[prev_index]) {
+                component_boxart_t *new_boxart = ui_components_boxart_init(
+                    menu->storage_prefix,
+                    menu->load.rom_info.game_code,
+                    image_cycle[prev_index]
+                );
+
+                if (new_boxart != NULL) {
+                    ui_components_boxart_free(boxart);
+                    boxart = new_boxart;
+                    current_image_index = prev_index;
+                    sound_play_effect(SFX_SETTING);
+                    break;
+                }
+            }
+            prev_index = (prev_index - 1 + image_cycle_length) % image_cycle_length;
+        }
     }
 }
 
@@ -476,6 +591,13 @@ static void load (menu_t *menu) {
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
+    current_image_index = 0;
+    images_scanned = false;
+
+    // Clear availability cache
+    for (int i = 0; i < image_cycle_length; i++) {
+        image_available[i] = false;
+    }
 }
 
 
@@ -515,7 +637,9 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
+        // Initialize boxart - try front image first
+        current_image_index = 0;
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }

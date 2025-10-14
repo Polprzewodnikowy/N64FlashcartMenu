@@ -25,6 +25,7 @@ static const file_image_type_t image_cycle[] = {
 };
 static const int image_cycle_length = 8;
 static bool image_available[8] = {false};
+static bool images_scanned = false;
 
 static bool check_boxart_file_exists(const char *storage_prefix, char *game_code, file_image_type_t image_type) {
     char boxart_id_path[8];
@@ -54,6 +55,22 @@ static bool check_boxart_file_exists(const char *storage_prefix, char *game_code
     path_free(path);
 
     return exists;
+}
+
+static void scan_boxart_images(menu_t *menu) {
+    if (images_scanned) {
+        return;
+    }
+
+    for (int i = 0; i < image_cycle_length; i++) {
+        image_available[i] = check_boxart_file_exists(
+            menu->storage_prefix,
+            menu->load.rom_info.game_code,
+            image_cycle[i]
+        );
+    }
+
+    images_scanned = true;
 }
 
 static char *convert_error_message (rom_err_t err) {
@@ -279,6 +296,9 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.go_right) {
+        // Scan images on first use
+        scan_boxart_images(menu);
+
         // C-Right: cycle to next available image
         int start_index = current_image_index;
         int next_index = (current_image_index + 1) % image_cycle_length;
@@ -303,6 +323,9 @@ static void process (menu_t *menu) {
             next_index = (next_index + 1) % image_cycle_length;
         }
     } else if (menu->actions.go_left) {
+        // Scan images on first use
+        scan_boxart_images(menu);
+
         // C-Left: cycle to previous available image
         int start_index = current_image_index;
         int prev_index = (current_image_index - 1 + image_cycle_length) % image_cycle_length;
@@ -467,6 +490,7 @@ static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
     current_image_index = 0;
+    images_scanned = false;
 
     // Clear availability cache
     for (int i = 0; i < image_cycle_length; i++) {
@@ -504,27 +528,9 @@ void view_load_rom_init (menu_t *menu) {
     }
 
     if (!menu->settings.rom_autoload_enabled) {
-        // Scan which images exist (just file checks, no loading)
-        for (int i = 0; i < image_cycle_length; i++) {
-            image_available[i] = check_boxart_file_exists(
-                menu->storage_prefix,
-                menu->load.rom_info.game_code,
-                image_cycle[i]
-            );
-        }
-
-        // Find first available image to display
-        int first_available = 0;
-        for (int i = 0; i < image_cycle_length; i++) {
-            if (image_available[i]) {
-                first_available = i;
-                break;
-            }
-        }
-
-        // Initialize boxart - start with first available image
-        current_image_index = first_available;
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, image_cycle[first_available]);
+        // Initialize boxart - try front image first
+        current_image_index = 0;
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
     }
 }

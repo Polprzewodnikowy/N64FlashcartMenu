@@ -265,6 +265,40 @@ static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
+static void cycle_image(menu_t *menu, int direction) {
+    // Scan images on first use
+    scan_boxart_images(menu);
+
+    // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
+    int start_index = current_image_index;
+    int new_index = (current_image_index + direction + image_cycle_length) % image_cycle_length;
+
+    // Find next available image from our cached list
+    while (new_index != start_index) {
+        if (image_available[new_index]) {
+            component_boxart_t *new_boxart = ui_components_boxart_init(
+                menu->storage_prefix,
+                menu->load.rom_info.game_code,
+                menu->load.rom_info.title,
+                image_cycle[new_index]
+            );
+
+            if (new_boxart != NULL) {
+                ui_components_boxart_free(boxart);
+                boxart = new_boxart;
+                current_image_index = new_index;
+                sound_play_effect(SFX_SETTING);
+                break;
+            }
+        }
+        new_index = (new_index + direction + image_cycle_length) % image_cycle_length;
+    }
+}
+
+static void cycle_image_next(menu_t *menu, void *arg) {
+    cycle_image(menu, 1);
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -323,6 +357,7 @@ static void set_menu_next_mode (menu_t *menu, void *arg) {
 }
 
 static component_context_menu_t options_context_menu = { .list = {
+    { .text = "Cycle Next Image", .action = cycle_image_next },
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
@@ -358,62 +393,12 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right) {
-        // Scan images on first use
-        scan_boxart_images(menu);
-
-        // C-Right: cycle to next available image
-        int start_index = current_image_index;
-        int next_index = (current_image_index + 1) % image_cycle_length;
-
-        // Find next available image from our cached list
-        while (next_index != start_index) {
-            if (image_available[next_index]) {
-                component_boxart_t *new_boxart = ui_components_boxart_init(
-                    menu->storage_prefix,
-                    menu->load.rom_info.game_code,
-                    menu->load.rom_info.title,
-                    image_cycle[next_index]
-                );
-
-                if (new_boxart != NULL) {
-                    ui_components_boxart_free(boxart);
-                    boxart = new_boxart;
-                    current_image_index = next_index;
-                    sound_play_effect(SFX_SETTING);
-                    break;
-                }
-            }
-            next_index = (next_index + 1) % image_cycle_length;
-        }
-    } else if (menu->actions.go_left) {
-        // Scan images on first use
-        scan_boxart_images(menu);
-
-        // C-Left: cycle to previous available image
-        int start_index = current_image_index;
-        int prev_index = (current_image_index - 1 + image_cycle_length) % image_cycle_length;
-
-        // Find previous available image from our cached list
-        while (prev_index != start_index) {
-            if (image_available[prev_index]) {
-                component_boxart_t *new_boxart = ui_components_boxart_init(
-                    menu->storage_prefix,
-                    menu->load.rom_info.game_code,
-                    menu->load.rom_info.title,
-                    image_cycle[prev_index]
-                );
-
-                if (new_boxart != NULL) {
-                    ui_components_boxart_free(boxart);
-                    boxart = new_boxart;
-                    current_image_index = prev_index;
-                    sound_play_effect(SFX_SETTING);
-                    break;
-                }
-            }
-            prev_index = (prev_index - 1 + image_cycle_length) % image_cycle_length;
-        }
+    } else if (menu->actions.go_right && !menu->actions.go_fast) {
+        // D-pad Right: cycle to next available image (C-buttons excluded via go_fast check)
+        cycle_image(menu, 1);
+    } else if (menu->actions.go_left && !menu->actions.go_fast) {
+        // D-pad Left: cycle to previous available image (C-buttons excluded via go_fast check)
+        cycle_image(menu, -1);
     }
 }
 
@@ -470,6 +455,7 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R: Adv. Options\n"
+            "D-pad </>: Cycle Images\n"
         );
 
         if (boxart != NULL) {

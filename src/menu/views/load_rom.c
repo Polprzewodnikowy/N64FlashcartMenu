@@ -372,6 +372,7 @@ static void process (menu_t *menu) {
                 component_boxart_t *new_boxart = ui_components_boxart_init(
                     menu->storage_prefix,
                     menu->load.rom_info.game_code,
+                    menu->load.rom_info.title,
                     image_cycle[next_index]
                 );
 
@@ -399,6 +400,7 @@ static void process (menu_t *menu) {
                 component_boxart_t *new_boxart = ui_components_boxart_init(
                     menu->storage_prefix,
                     menu->load.rom_info.game_code,
+                    menu->load.rom_info.title,
                     image_cycle[prev_index]
                 );
 
@@ -639,7 +641,7 @@ void view_load_rom_init (menu_t *menu) {
 #endif
         // Initialize boxart - try front image first
         current_image_index = 0;
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, IMAGE_BOXART_FRONT);
+        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }

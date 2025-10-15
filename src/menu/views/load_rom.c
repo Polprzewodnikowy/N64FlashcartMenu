@@ -455,7 +455,6 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_RIGHT, VALIGN_TOP,
             "L|Z: Extra Info\n"
             "R: Adv. Options\n"
-            "D-pad </>: Cycle Images\n"
         );
 
         if (boxart != NULL) {

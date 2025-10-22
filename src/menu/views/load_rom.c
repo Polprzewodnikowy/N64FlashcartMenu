@@ -28,50 +28,70 @@ static const file_image_type_t image_cycle[] = {
 static const int image_cycle_length = 8;
 static bool image_available[8] = {false};
 static bool images_scanned = false;
-
-static bool check_boxart_file_exists(const char *storage_prefix, char *game_code, file_image_type_t image_type) {
-    char boxart_id_path[8];
-    char filename[32];
-
-    switch (image_type) {
-        case IMAGE_GAMEPAK_FRONT: strcpy(filename, "gamepak_front.png"); break;
-        case IMAGE_GAMEPAK_BACK: strcpy(filename, "gamepak_back.png"); break;
-        case IMAGE_BOXART_BACK: strcpy(filename, "boxart_back.png"); break;
-        case IMAGE_BOXART_LEFT: strcpy(filename, "boxart_left.png"); break;
-        case IMAGE_BOXART_RIGHT: strcpy(filename, "boxart_right.png"); break;
-        case IMAGE_BOXART_BOTTOM: strcpy(filename, "boxart_bottom.png"); break;
-        case IMAGE_BOXART_TOP: strcpy(filename, "boxart_top.png"); break;
-        default: strcpy(filename, "boxart_front.png"); break;
-    }
-
-    path_t *path = path_init(storage_prefix, "menu/boxart");
-    sprintf(boxart_id_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
-    path_push(path, boxart_id_path);
-
-    if (!directory_exists(path_get(path))) {
-        path_pop(path);
-    }
-
-    path_push(path, filename);
-    bool exists = file_exists(path_get(path));
-    path_free(path);
-
-    return exists;
-}
+static bool last_go_left = false;
+static bool last_go_right = false;
 
 static void scan_boxart_images(menu_t *menu) {
     if (images_scanned) {
         return;
     }
 
-    for (int i = 0; i < image_cycle_length; i++) {
-        image_available[i] = check_boxart_file_exists(
-            menu->storage_prefix,
-            menu->load.rom_info.game_code,
-            image_cycle[i]
-        );
+    // Build base path once and check directory existence once to minimize SD card access
+    path_t *path = path_init(menu->storage_prefix, "menu/metadata");
+    char boxart_id_path[8];
+    sprintf(boxart_id_path, "%c/%c/%c/%c",
+            menu->load.rom_info.game_code[0],
+            menu->load.rom_info.game_code[1],
+            menu->load.rom_info.game_code[2],
+            menu->load.rom_info.game_code[3]);
+    path_push(path, boxart_id_path);
+
+    // Fall back to 3-char code if 4-char directory doesn't exist
+    if (!directory_exists(path_get(path))) {
+        path_pop(path);
     }
 
+    // Check if metadata directory exists, fallback to old boxart directory
+    if (!directory_exists(path_get(path))) {
+        path_free(path);
+        path = path_init(menu->storage_prefix, "menu/boxart");
+        path_push(path, boxart_id_path);
+
+        if (!directory_exists(path_get(path))) {
+            path_pop(path);
+        }
+    }
+
+    // Only proceed if directory exists
+    bool dir_exists = directory_exists(path_get(path));
+
+    if (dir_exists) {
+        // Map image types to filenames
+        char *filenames[] = {
+            "boxart_front.png",   // IMAGE_BOXART_FRONT
+            "boxart_back.png",    // IMAGE_BOXART_BACK
+            "boxart_left.png",    // IMAGE_BOXART_LEFT
+            "boxart_right.png",   // IMAGE_BOXART_RIGHT
+            "boxart_top.png",     // IMAGE_BOXART_TOP
+            "boxart_bottom.png",  // IMAGE_BOXART_BOTTOM
+            "gamepak_front.png",  // IMAGE_GAMEPAK_FRONT
+            "gamepak_back.png"    // IMAGE_GAMEPAK_BACK
+        };
+
+        // Check each file without re-checking directory
+        for (int i = 0; i < image_cycle_length; i++) {
+            path_push(path, filenames[i]);
+            image_available[i] = file_exists(path_get(path));
+            path_pop(path);
+        }
+    } else {
+        // No directory exists, mark all images as unavailable
+        for (int i = 0; i < image_cycle_length; i++) {
+            image_available[i] = false;
+        }
+    }
+
+    path_free(path);
     images_scanned = true;
 }
 
@@ -266,7 +286,8 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static void cycle_image(menu_t *menu, int direction) {
-    // Scan images on first use
+    // Lazy scan on first use to avoid overhead if user loads ROM immediately
+    // Optimized to minimize SD card stat() operations
     scan_boxart_images(menu);
 
     // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
@@ -276,6 +297,8 @@ static void cycle_image(menu_t *menu, int direction) {
     // Find next available image from our cached list
     while (new_index != start_index) {
         if (image_available[new_index]) {
+            // ui_components_boxart_init returns NULL if PNG decoder is busy
+            // This prevents switching during ongoing decode (rapid button presses)
             component_boxart_t *new_boxart = ui_components_boxart_init(
                 menu->storage_prefix,
                 menu->load.rom_info.game_code,
@@ -284,6 +307,8 @@ static void cycle_image(menu_t *menu, int direction) {
             );
 
             if (new_boxart != NULL) {
+                // Only free old boxart after successful new allocation
+                // PNG decode happens asynchronously in png_decoder_poll()
                 ui_components_boxart_free(boxart);
                 boxart = new_boxart;
                 current_image_index = new_index;
@@ -393,13 +418,19 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right && !menu->actions.go_fast) {
+    } else if (menu->actions.go_right && !menu->actions.go_fast && !last_go_right) {
         // D-pad Right: cycle to next available image (C-buttons excluded via go_fast check)
+        // Only trigger on button press, not hold
         cycle_image(menu, 1);
-    } else if (menu->actions.go_left && !menu->actions.go_fast) {
+    } else if (menu->actions.go_left && !menu->actions.go_fast && !last_go_left) {
         // D-pad Left: cycle to previous available image (C-buttons excluded via go_fast check)
+        // Only trigger on button press, not hold
         cycle_image(menu, -1);
     }
+
+    // Track button state for edge detection
+    last_go_left = menu->actions.go_left && !menu->actions.go_fast;
+    last_go_right = menu->actions.go_right && !menu->actions.go_fast;
 }
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -580,6 +611,8 @@ static void deinit (void) {
     boxart = NULL;
     current_image_index = 0;
     images_scanned = false;
+    last_go_left = false;
+    last_go_right = false;
 
     // Clear availability cache
     for (int i = 0; i < image_cycle_length; i++) {

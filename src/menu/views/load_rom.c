@@ -279,17 +279,13 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static void cycle_image(menu_t *menu, int direction) {
-    // Lazy scan on first use to avoid overhead if user loads ROM immediately
     scan_boxart_images(menu);
 
-    // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
     int start_index = current_image_index;
     int new_index = (current_image_index + direction + image_cycle_length) % image_cycle_length;
 
-    // Find next available image from our cached list
     while (new_index != start_index) {
         if (image_available[new_index]) {
-            // ui_components_boxart_init returns NULL if PNG decoder is busy
             component_boxart_t *new_boxart = ui_components_boxart_init(
                 menu->storage_prefix,
                 menu->load.rom_info.game_code,
@@ -298,7 +294,6 @@ static void cycle_image(menu_t *menu, int direction) {
             );
 
             if (new_boxart != NULL) {
-                // Only free old boxart after successful new allocation
                 ui_components_boxart_free(boxart);
                 boxart = new_boxart;
                 current_image_index = new_index;
@@ -414,7 +409,6 @@ static void process (menu_t *menu) {
         cycle_image(menu, -1);
     }
 
-    // Track button state for edge detection
     last_go_left = menu->actions.go_left && !menu->actions.go_fast;
     last_go_right = menu->actions.go_right && !menu->actions.go_fast;
 }
@@ -643,10 +637,9 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
-        // Initialize boxart - try front image first
-        current_image_index = 0;
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
-        ui_components_context_menu_init(&options_context_menu);
+    current_image_index = 0;
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
+    ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
 #endif

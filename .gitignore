@@ -24,3 +24,6 @@
 
 # Ignore macOS filesystem cruft
 .DS_Store
+.claude/agents/n64-dev-expert.md
+.claude/settings.local.json
+CLAUDE.md

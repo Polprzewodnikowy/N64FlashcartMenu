@@ -24,8 +24,8 @@ static const file_image_type_t image_cycle[] = {
     IMAGE_GAMEPAK_FRONT,
     IMAGE_GAMEPAK_BACK
 };
-static const int image_cycle_length = 8;
-static bool image_available[8] = {false};
+static const int image_cycle_length = sizeof(image_cycle) / sizeof(image_cycle[0]);
+static bool image_available[sizeof(image_cycle) / sizeof(image_cycle[0])] = {false};
 static bool images_scanned = false;
 static bool last_go_left = false;
 static bool last_go_right = false;
@@ -37,7 +37,7 @@ static void scan_boxart_images(menu_t *menu) {
 
     path_t *path = path_init(menu->storage_prefix, "menu/metadata");
     char boxart_id_path[8];
-    sprintf(boxart_id_path, "%c/%c/%c/%c",
+    snprintf(boxart_id_path, sizeof(boxart_id_path), "%c/%c/%c/%c",
             menu->load.rom_info.game_code[0],
             menu->load.rom_info.game_code[1],
             menu->load.rom_info.game_code[2],
@@ -61,6 +61,9 @@ static void scan_boxart_images(menu_t *menu) {
     bool dir_exists = directory_exists(path_get(path));
 
     if (dir_exists) {
+        // Filenames array matches image_cycle order for indexed access
+        // Note: This mapping is also present in boxart.c but duplicated here
+        // for efficient scanning without calling into the component layer
         char *filenames[] = {
             "boxart_front.png",
             "boxart_back.png",

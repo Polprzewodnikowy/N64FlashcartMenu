@@ -24,4 +24,3 @@
 
 # Ignore macOS filesystem cruft
 .DS_Store
-/.claude

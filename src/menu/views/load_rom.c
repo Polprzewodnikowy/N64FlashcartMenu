@@ -13,7 +13,6 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
-// Boxart cycling state
 static int current_image_index = 0;
 static const file_image_type_t image_cycle[] = {
     IMAGE_BOXART_FRONT,
@@ -36,7 +35,6 @@ static void scan_boxart_images(menu_t *menu) {
         return;
     }
 
-    // Build base path once and check directory existence once to minimize SD card access
     path_t *path = path_init(menu->storage_prefix, "menu/metadata");
     char boxart_id_path[8];
     sprintf(boxart_id_path, "%c/%c/%c/%c",
@@ -46,12 +44,10 @@ static void scan_boxart_images(menu_t *menu) {
             menu->load.rom_info.game_code[3]);
     path_push(path, boxart_id_path);
 
-    // Fall back to 3-char code if 4-char directory doesn't exist
     if (!directory_exists(path_get(path))) {
         path_pop(path);
     }
 
-    // Check if metadata directory exists, fallback to old boxart directory
     if (!directory_exists(path_get(path))) {
         path_free(path);
         path = path_init(menu->storage_prefix, "menu/boxart");
@@ -62,23 +58,20 @@ static void scan_boxart_images(menu_t *menu) {
         }
     }
 
-    // Only proceed if directory exists
     bool dir_exists = directory_exists(path_get(path));
 
     if (dir_exists) {
-        // Map image types to filenames
         char *filenames[] = {
-            "boxart_front.png",   // IMAGE_BOXART_FRONT
-            "boxart_back.png",    // IMAGE_BOXART_BACK
-            "boxart_left.png",    // IMAGE_BOXART_LEFT
-            "boxart_right.png",   // IMAGE_BOXART_RIGHT
-            "boxart_top.png",     // IMAGE_BOXART_TOP
-            "boxart_bottom.png",  // IMAGE_BOXART_BOTTOM
-            "gamepak_front.png",  // IMAGE_GAMEPAK_FRONT
-            "gamepak_back.png"    // IMAGE_GAMEPAK_BACK
+            "boxart_front.png",
+            "boxart_back.png",
+            "boxart_left.png",
+            "boxart_right.png",
+            "boxart_top.png",
+            "boxart_bottom.png",
+            "gamepak_front.png",
+            "gamepak_back.png"
         };
 
-        // Check each file without re-checking directory
         for (int i = 0; i < image_cycle_length; i++) {
             path_push(path, filenames[i]);
             image_available[i] = file_exists(path_get(path));
@@ -287,7 +280,6 @@ static void add_favorite (menu_t *menu, void *arg) {
 
 static void cycle_image(menu_t *menu, int direction) {
     // Lazy scan on first use to avoid overhead if user loads ROM immediately
-    // Optimized to minimize SD card stat() operations
     scan_boxart_images(menu);
 
     // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
@@ -298,7 +290,6 @@ static void cycle_image(menu_t *menu, int direction) {
     while (new_index != start_index) {
         if (image_available[new_index]) {
             // ui_components_boxart_init returns NULL if PNG decoder is busy
-            // This prevents switching during ongoing decode (rapid button presses)
             component_boxart_t *new_boxart = ui_components_boxart_init(
                 menu->storage_prefix,
                 menu->load.rom_info.game_code,
@@ -308,7 +299,6 @@ static void cycle_image(menu_t *menu, int direction) {
 
             if (new_boxart != NULL) {
                 // Only free old boxart after successful new allocation
-                // PNG decode happens asynchronously in png_decoder_poll()
                 ui_components_boxart_free(boxart);
                 boxart = new_boxart;
                 current_image_index = new_index;
@@ -419,12 +409,8 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.go_right && !menu->actions.go_fast && !last_go_right) {
-        // D-pad Right: cycle to next available image (C-buttons excluded via go_fast check)
-        // Only trigger on button press, not hold
         cycle_image(menu, 1);
     } else if (menu->actions.go_left && !menu->actions.go_fast && !last_go_left) {
-        // D-pad Left: cycle to previous available image (C-buttons excluded via go_fast check)
-        // Only trigger on button press, not hold
         cycle_image(menu, -1);
     }
 

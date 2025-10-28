@@ -12,7 +12,7 @@ This menu is not affiliated with any particular flashcart and does not necessari
 > New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
 
 > [!WARNING]
-> **This project considers flashcart sellers that provide this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
+> **Flashcart sellers that provide this menu together with copyrighted ROMs as part of their product offering goes against the spirit of this project and breaches its terms and conditions. Copyright infringement may result in future action by Nintendo.**  
 
 ## Flashcart Support
 This menu aims to support as many N64 flashcarts as possible.  

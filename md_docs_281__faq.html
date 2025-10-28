@@ -88,27 +88,27 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="el" href="md_docs_200__index.html">Return to the index</a> </p>
-<h2><a class="anchor" id="autotoc_md103"></a>
+<h2><a class="anchor" id="autotoc_md104"></a>
 Frequently Asked Questions (FAQ)</h2>
-<h3><a class="anchor" id="autotoc_md104"></a>
+<h3><a class="anchor" id="autotoc_md105"></a>
 ROM hack (insert hack name here) does not work</h3>
 <ul>
 <li>Most ROM hacks rely on an Expansion Pak, or might be only compatible with emulators.</li>
 <li>Some (very old) hacks override the CIC or save type that is expected from the internal N64FlashcartMenu database. (for more information on how to change the expected types, <a class="el" href="md_docs_212__rom__configuration.html">read here</a>).</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md105"></a>
+<h3><a class="anchor" id="autotoc_md106"></a>
 My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card</h3>
 <p>You can try running a powershell script to extract them before adding them to the SD card: </p><div class="fragment"><div class="line">$exts = @(&quot;*.n64&quot;, &quot;*.z64&quot;, &quot;*.v64&quot;); Get-ChildItem -Filter &quot;*.zip&quot; | ForEach-Object { Expand-Archive $_.FullName -DestinationPath &quot;$($_.BaseName)_temp&quot; -Force; Get-ChildItem &quot;$($_.BaseName)_temp\*&quot; -File -Include $exts | Move-Item -Destination .; Remove-Item &quot;$($_.BaseName)_temp&quot; -Recurse -Force }</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md106"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md107"></a>
 I am using macOS and want to clean unwanted files before adding them to the SD card</h3>
 <p>On macOS, if you have extracted ROM's from ZIP or other compressed files, run <code>dot_clean -m /Volumes/SummerCart</code> to clear those awful dotfiles.</p>
-<h3><a class="anchor" id="autotoc_md107"></a>
+<h3><a class="anchor" id="autotoc_md108"></a>
 I have changed the menu/config.ini file manually and things are not working.</h3>
 <p>Delete the file. It will be re-created automatically with the default settings.</p>
-<h3><a class="anchor" id="autotoc_md108"></a>
+<h3><a class="anchor" id="autotoc_md109"></a>
 Filenames have incorrect or missing characters</h3>
 <p>Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.</p>
-<h3><a class="anchor" id="autotoc_md109"></a>
+<h3><a class="anchor" id="autotoc_md110"></a>
 Loading ROM's are slower than on other flashcart menus</h3>
 <dl class="section remark"><dt>Remarks</dt><dd>An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed. </dd></dl>
@@ -116,7 +116,7 @@ Loading ROM's are slower than on other flashcart menus</h3>
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 18:21:40 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 19:36:03 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

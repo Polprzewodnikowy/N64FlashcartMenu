@@ -45,7 +45,7 @@ var searchData=
   ['usb_5fcomm_5fpoll_42',['usb_comm_poll',['../usb__comm_8c.html#af0661dedfab86268071a3733e0755c21',1,'usb_comm_poll(menu_t *menu):&#160;usb_comm.c'],['../usb__comm_8h.html#af0661dedfab86268071a3733e0755c21',1,'usb_comm_poll(menu_t *menu):&#160;usb_comm.c']]],
   ['usb_5fcommand_5fstatus_43',['USB_COMMAND_STATUS',['../group__drive.html#a5d0203172218fad9dfcc32788ab4b02f',1,'d64_regs_t']]],
   ['usb_5fparam_5fresult_44',['USB_PARAM_RESULT',['../group__drive.html#a832e3aba767408815c234471081d63b4',1,'d64_regs_t']]],
-  ['use_45',['Terms of Use',['../md_docs_201__terms__of__use.html',1,'']]],
+  ['use_45',['Terms of Use',['../md_docs_201__expected__terms__of__use.html',1,'']]],
   ['use_20at_20own_20risk_46',['EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md10',1,'']]],
   ['use_20save_20folders_47',['Use Save Folders',['../md_docs_232__menu__settings.html#autotoc_md86',1,'']]],
   ['use_5fsaves_5ffolder_48',['use_saves_folder',['../settings_8h.html#abf8e54596905858b3ada7f163b07d6a6',1,'settings_t']]],

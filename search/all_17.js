@@ -2,7 +2,7 @@ var searchData=
 [
   ['of_20an_20sd_20card_0',['Initial Setup of an SD Card',['../md_docs_210__getting__started__sd.html#autotoc_md37',1,'']]],
   ['of_20the_20sd_20card_20look_20like_1',['So what could the layout of the SD card look like?',['../md_docs_210__getting__started__sd.html#autotoc_md44',1,'']]],
-  ['of_20use_2',['Terms of Use',['../md_docs_201__terms__of__use.html',1,'']]],
+  ['of_20use_2',['Terms of Use',['../md_docs_201__expected__terms__of__use.html',1,'']]],
   ['official_20documentation_3',['Official documentation',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md22',1,'Official documentation'],['..//github/workspace/src/flashcart/sc64/README.md#autotoc_md29',1,'Official documentation']]],
   ['offset_4',['offset',['../text__viewer_8c.html#a4475afb4b1e32025201c1672ac73552b',1,'text_file_t']]],
   ['offset_20in_20sdram_5',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md23',1,'']]],

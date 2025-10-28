@@ -7,7 +7,7 @@ var searchData=
   ['tab_5finactive_5fborder_5fcolor_4',['TAB_INACTIVE_BORDER_COLOR',['../constants_8h.html#a2894fadecf4b307bb5453e925dfc89ef',1,'constants.h']]],
   ['tabs_2ec_5',['tabs.c',['../tabs_8c.html',1,'']]],
   ['target_6',['target',['../vr4300__asm_8h.html#a42aefbae01d2dfd981f7da7d823d689e',1,'vr4300_instruction_t.j_type']]],
-  ['terms_20of_20use_7',['Terms of Use',['../md_docs_201__terms__of__use.html',1,'']]],
+  ['terms_20of_20use_7',['Terms of Use',['../md_docs_201__expected__terms__of__use.html',1,'']]],
   ['test_20generated_20docs_20in_20the_20dev_20container_8',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md128',1,'']]],
   ['text_9',['text',['../ui__components_8h.html#a1cb251ec0d568de6a929b520c4aed8d1',1,'component_context_menu_t.list']]],
   ['text_5ffile_5ft_10',['text_file_t',['../text__viewer_8c.html#structtext__file__t',1,'']]],

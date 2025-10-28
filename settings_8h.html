@@ -120,6 +120,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>settings_load</b> (<a
 void&#160;</td><td class="memItemRight" valign="bottom"><b>settings_save</b> (<a class="el" href="#structsettings__t">settings_t</a> *settings)</td></tr>
 <tr class="memdesc:afdd03c789a4efd13147e1e7ef25bab9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The settings to save. <br /></td></tr>
 <tr class="separator:afdd03c789a4efd13147e1e7ef25bab9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1481006f9b416dc72e687ec74549ff94" id="r_a1481006f9b416dc72e687ec74549ff94"><td class="memItemLeft" align="right" valign="top"><a id="a1481006f9b416dc72e687ec74549ff94" name="a1481006f9b416dc72e687ec74549ff94"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>settings_reset_to_defaults</b> ()</td></tr>
+<tr class="memdesc:a1481006f9b416dc72e687ec74549ff94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset settings to defaults. <br /></td></tr>
+<tr class="separator:a1481006f9b416dc72e687ec74549ff94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Menu Settings. </p>
@@ -187,6 +191,12 @@ use_saves_folder</td>
 <td class="fielddoc">
 Put saves into separate directory. </td></tr>
 <tr><td class="fieldtype">
+<a id="a47d3f0406ff4118b83c8a9b0216e8306" name="a47d3f0406ff4118b83c8a9b0216e8306"></a>bool</td>
+<td class="fieldname">
+show_saves_folder</td>
+<td class="fielddoc">
+Show saves folder in file browser. </td></tr>
+<tr><td class="fieldtype">
 <a id="a5645dd794323484289ca8b1f8fcc872e" name="a5645dd794323484289ca8b1f8fcc872e"></a>bool</td>
 <td class="fieldname">
 bgm_enabled</td>
@@ -204,18 +214,6 @@ Enable Sound effects within the menu. </td></tr>
 rumble_enabled</td>
 <td class="fielddoc">
 Enable rumble feedback within the menu. </td></tr>
-<tr><td class="fieldtype">
-<a id="a211bb7e33c5c9d5162648ef7e2c4873d" name="a211bb7e33c5c9d5162648ef7e2c4873d"></a>bool</td>
-<td class="fieldname">
-loading_progress_bar_enabled</td>
-<td class="fielddoc">
-Show progress bar when loading a ROM. </td></tr>
-<tr><td class="fieldtype">
-<a id="a9dc5b0415bed5421bdc2e58e55ac22eb" name="a9dc5b0415bed5421bdc2e58e55ac22eb"></a>bool</td>
-<td class="fieldname">
-rom_autoload_enabled</td>
-<td class="fielddoc">
-Enable the ability to bypass the menu and instantly load a ROM on power and reset button. </td></tr>
 <tr><td class="fieldtype">
 <a id="ac6c7114eddb24a992f4a0880d988fa03" name="ac6c7114eddb24a992f4a0880d988fa03"></a>bool</td>
 <td class="fieldname">
@@ -241,7 +239,7 @@ A filename of the autoloaded ROM. </td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 20:06:35 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 21:29:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

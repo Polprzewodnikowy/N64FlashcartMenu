@@ -122,18 +122,18 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a51e99b3862e8ac4f0d4702177a93a231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disk region enumeration. <br /></td></tr>
 <tr class="separator:a51e99b3862e8ac4f0d4702177a93a231"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb390b720ed32b8426c2f6c74124c7a0" id="r_abb390b720ed32b8426c2f6c74124c7a0"><td class="memItemLeft" align="right" valign="top"><a id="abb390b720ed32b8426c2f6c74124c7a0" name="abb390b720ed32b8426c2f6c74124c7a0"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0">disk_type_t</a> { <br />
-&#160;&#160;<b>DISK_TYPE_0</b>
-, <b>DISK_TYPE_1</b>
-, <b>DISK_TYPE_2</b>
-, <b>DISK_TYPE_3</b>
+<tr class="memitem:abb390b720ed32b8426c2f6c74124c7a0" id="r_abb390b720ed32b8426c2f6c74124c7a0"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0">disk_type_t</a> { <br />
+&#160;&#160;<a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a2811e42d6144809ac83d2a7b848c510f">DISK_TYPE_0</a>
+, <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a26336c54e4c303f0083093444779c10b">DISK_TYPE_1</a>
+, <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0ae2b9bbc37bad1046718dfc6bd35c708d">DISK_TYPE_2</a>
+, <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a5640d30beb4afee43255bd5595f29604">DISK_TYPE_3</a>
 , <br />
-&#160;&#160;<b>DISK_TYPE_4</b>
-, <b>DISK_TYPE_5</b>
-, <b>DISK_TYPE_6</b>
+&#160;&#160;<a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a77b387ddc14f51ddecea897be54dcc69">DISK_TYPE_4</a>
+, <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a1e5e9d0d540f8ead3778e7d49749e4e8">DISK_TYPE_5</a>
+, <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0a21ad778450900d78aed733e0dde5267f">DISK_TYPE_6</a>
 <br />
  }</td></tr>
-<tr class="memdesc:abb390b720ed32b8426c2f6c74124c7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disk type enumeration. <br /></td></tr>
+<tr class="memdesc:abb390b720ed32b8426c2f6c74124c7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disk type enumeration.  <a href="#abb390b720ed32b8426c2f6c74124c7a0">More...</a><br /></td></tr>
 <tr class="separator:abb390b720ed32b8426c2f6c74124c7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -199,6 +199,40 @@ defect_tracks[16][12]</td>
 
 </div>
 </div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="abb390b720ed32b8426c2f6c74124c7a0" name="abb390b720ed32b8426c2f6c74124c7a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb390b720ed32b8426c2f6c74124c7a0">&#9670;&#160;</a></span>disk_type_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#abb390b720ed32b8426c2f6c74124c7a0">disk_type_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disk type enumeration. </p>
+<p>The disk type is used to identify the type of 64DD disk. The values correspond to the disk types defined in the 64DD specification. There are 7 disk types, 0 - 6, corresponding to the relative sizes of the RAM area and the ROM area on the disk. The disk type of a particular disk is determined by the size of the writable area needed by the programmer. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a2811e42d6144809ac83d2a7b848c510f" name="abb390b720ed32b8426c2f6c74124c7a0a2811e42d6144809ac83d2a7b848c510f"></a>DISK_TYPE_0&#160;</td><td class="fielddoc"><p>ROM: Zone 0-2, RAM: Zone 3-8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a26336c54e4c303f0083093444779c10b" name="abb390b720ed32b8426c2f6c74124c7a0a26336c54e4c303f0083093444779c10b"></a>DISK_TYPE_1&#160;</td><td class="fielddoc"><p>ROM: Zone 0-3, RAM: Zone 4-8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0ae2b9bbc37bad1046718dfc6bd35c708d" name="abb390b720ed32b8426c2f6c74124c7a0ae2b9bbc37bad1046718dfc6bd35c708d"></a>DISK_TYPE_2&#160;</td><td class="fielddoc"><p>ROM: Zone 0-4, RAM: Zone 5-8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a5640d30beb4afee43255bd5595f29604" name="abb390b720ed32b8426c2f6c74124c7a0a5640d30beb4afee43255bd5595f29604"></a>DISK_TYPE_3&#160;</td><td class="fielddoc"><p>ROM: Zone 0-5, RAM: Zone 6-8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a77b387ddc14f51ddecea897be54dcc69" name="abb390b720ed32b8426c2f6c74124c7a0a77b387ddc14f51ddecea897be54dcc69"></a>DISK_TYPE_4&#160;</td><td class="fielddoc"><p>ROM: Zone 0-6, RAM: Zone 7-8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a1e5e9d0d540f8ead3778e7d49749e4e8" name="abb390b720ed32b8426c2f6c74124c7a0a1e5e9d0d540f8ead3778e7d49749e4e8"></a>DISK_TYPE_5&#160;</td><td class="fielddoc"><p>ROM: Zone 0-7, RAM: Zone 8 </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abb390b720ed32b8426c2f6c74124c7a0a21ad778450900d78aed733e0dde5267f" name="abb390b720ed32b8426c2f6c74124c7a0a21ad778450900d78aed733e0dde5267f"></a>DISK_TYPE_6&#160;</td><td class="fielddoc"><p>ROM: Zone 0-8, RAM: None </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a2c1242de9a3cfce96318374d38190d18" name="a2c1242de9a3cfce96318374d38190d18"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c1242de9a3cfce96318374d38190d18">&#9670;&#160;</a></span>disk_info_load()</h2>
@@ -244,7 +278,7 @@ defect_tracks[16][12]</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 20:06:35 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 21:29:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

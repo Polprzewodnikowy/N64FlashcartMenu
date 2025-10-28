@@ -88,14 +88,24 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="el" href="md_docs_200__index.html">Return to the index</a> </p>
-<h2><a class="anchor" id="autotoc_md60"></a>
+<h2><a class="anchor" id="autotoc_md67"></a>
 Controller Paks</h2>
-<p>At the time of writing, N64FlashcartMenu can only recognize if a Controller Pak is inserted on a Controller. Controller Pak backups, backup restoration and handling are not yet supported. Check the <a href="https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls">Pull Requests section</a> for work towards it. </p>
+<dl class="section warning"><dt>Warning</dt><dd><b>THIS FEATURE IS EXPERIMENTAL (PRE-RELEASE ONLY)</b></dd></dl>
+<p>The N64FlashcartMenu has a Controller Pak Manager.</p>
+<dl class="section attention"><dt>Attention</dt><dd>Mileage may vary when hot swapping paks without exiting and re-entering the screen (and may contain incorrect content), and/or re-powering the console.</dd></dl>
+<p>Features:</p><ul>
+<li>Full pak backup and restore (saved to <code>SD:/cpak_saves/</code>).</li>
+<li>Partial pak ('note') backup and restore (saved to <code>SD:/cpak_saves/notes/</code>).</li>
+</ul>
+<h3><a class="anchor" id="autotoc_md68"></a>
+Controller Pak Manager</h3>
+<p>Use the "Controller Pak Manager" (accessed using <code>Start</code> button ) to backup and manage the pak. <img src="cpak-manager.png" alt="" class="inline" title="Backup Controller Pak confirmation"/>    </p>
+<p>Browse to the saved file (usually contained within <code>SD:/cpak_saves/</code>) to restore it. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 20:06:35 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 21:29:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

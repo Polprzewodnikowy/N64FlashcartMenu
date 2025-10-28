@@ -88,29 +88,29 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="el" href="md_docs_200__index.html">Return to the index</a> </p>
-<h2><a class="anchor" id="autotoc_md51"></a>
+<h2><a class="anchor" id="autotoc_md54"></a>
 ROM Configuration</h2>
 <p>The N64FlashcartMenu allows overriding the ROM's default configuration that is provided from the internal database.</p>
 <p>The internal database is contained within <code><a class="el" href="rom__info_8c.html" title="ROM Information component implementation.">rom_info.c</a></code>.</p>
 <p>The N64FlashcartMenu expects that you are using a flashcart that has an <a href="https://n64brew.dev/wiki/Checking_Integrated_Circuit">UltraCIC</a> available.</p>
 <dl class="section remark"><dt>Remarks</dt><dd>Some old ROM hacks may have adjusted the ROM code to manipulate the expected CIC and save type in order to allow compatibility with more available chips (usually 6102) as was used on flashcarts prior to 2018. If it does, you may need to override the internal database using the override settings.</dd></dl>
 <p>If you override the defaults and want to go back to the default ones, delete the <code>&lt;rom name&gt;.ini</code> file.</p>
-<h3><a class="anchor" id="autotoc_md52"></a>
+<h3><a class="anchor" id="autotoc_md55"></a>
 Homebrew Header</h3>
 <p>The N64FlashcartMenu fully supports the <a href="https://n64brew.dev/wiki/ROM_Header#Advanced_Homebrew_ROM_Header">homebrew header</a></p>
-<h3><a class="anchor" id="autotoc_md53"></a>
+<h3><a class="anchor" id="autotoc_md56"></a>
 Available Overrides</h3>
-<h4><a class="anchor" id="autotoc_md54"></a>
+<h4><a class="anchor" id="autotoc_md57"></a>
 CIC type</h4>
 <p>The Checking Integrated Circuit <a href="https://n64brew.dev/wiki/Checking_Integrated_Circuit">CIC</a> was a physical security chip used by retail Nintendo 64 game cartridges that prevented unlicensed and pirated game cartridges from running and used in conjunction with the <a href="https://n64brew.dev/wiki/PIF-NUS">PIF</a>.</p>
 <dl class="section warning"><dt>Warning</dt><dd>Changing the CIC type to an unsupported one may result in a blank screen for that particular ROM until you manually delete the override file!</dd></dl>
 <p>For more detailed information regarding the various CIC chips, please visit <a href="http://micro-64.com/database/gamecic.shtml">micro-64.com's game CIC database</a>.</p>
-<h4><a class="anchor" id="autotoc_md55"></a>
+<h4><a class="anchor" id="autotoc_md58"></a>
 Save type</h4>
 <p>Games that have been programmed to include an internal save system might use various types of chips, methods and sizes.</p>
 <dl class="section warning"><dt>Warning</dt><dd>Using the wrong save type can cause unwanted behaviors on games and/or corrupt existing ones!</dd></dl>
 <p>For more detailed information regarding the various saving methods, please visit <a href="http://micro-64.com/database/gamesave.shtml">micro-64.com's game save database</a></p>
-<h4><a class="anchor" id="autotoc_md56"></a>
+<h4><a class="anchor" id="autotoc_md59"></a>
 TV Region type</h4>
 <p>All ROMs are generally programmed to work with a single type of television output setting, whether it's NTSC, PAL or MPAL or their multiple variants. Forcing the region will generally make the ROM work on your display, however:</p>
 <ol type="1">
@@ -123,14 +123,14 @@ TV Region type</h4>
 </ul>
 </li>
 </ol>
-<h3><a class="anchor" id="autotoc_md57"></a>
+<h3><a class="anchor" id="autotoc_md60"></a>
 Autoload</h3>
 <p>See the <a class="el" href="md_docs_222__autoload__roms.html">Autoload N64 ROMs</a> page. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 20:06:35 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 21:29:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

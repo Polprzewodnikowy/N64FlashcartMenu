@@ -6,5 +6,6 @@ var searchData=
   ['main_3',['main',['../cheats_8c.html#a823def8d6bc733f646105437e29e3351',1,'cheat_entry_t']]],
   ['major_4',['major',['../flashcart_8h.html#a7c129daf16078573c4b80086aa9d22c7',1,'flashcart_firmware_version_t']]],
   ['metadata_5',['metadata',['../rom__info_8h.html#a3d9c6a2e54a75a16155d5e4fe4f8ad0f',1,'rom_info_t']]],
-  ['minor_6',['minor',['../flashcart_8h.html#a5c58f767519c97848e7343bbc0c76466',1,'flashcart_firmware_version_t']]]
+  ['minor_6',['minor',['../flashcart_8h.html#a5c58f767519c97848e7343bbc0c76466',1,'flashcart_firmware_version_t']]],
+  ['mtime_7',['mtime',['../ui__components_8h.html#a8d131d693eca8d47806643b3578ce86a',1,'file_info_t']]]
 ];

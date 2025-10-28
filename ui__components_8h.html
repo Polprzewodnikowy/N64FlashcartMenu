@@ -104,6 +104,9 @@ $(function(){ initResizable(false); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
+<tr class="memitem:structfile__info__t" id="r_structfile__info__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structfile__info__t">file_info_t</a></td></tr>
+<tr class="memdesc:structfile__info__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">File information Structure.  <a href="#structfile__info__t">More...</a><br /></td></tr>
+<tr class="separator:structfile__info__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structcomponent__context__menu__t" id="r_structcomponent__context__menu__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structcomponent__context__menu__t">component_context_menu_t</a></td></tr>
 <tr class="memdesc:structcomponent__context__menu__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Context menu structure.  <a href="#structcomponent__context__menu__t">More...</a><br /></td></tr>
 <tr class="separator:structcomponent__context__menu__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,9 +161,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a86fb1ca1e34bcb2e657394c83ce3790b" id="r_a86fb1ca1e34bcb2e657394c83ce3790b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86fb1ca1e34bcb2e657394c83ce3790b">ui_components_seekbar_draw</a> (float progress)</td></tr>
 <tr class="memdesc:a86fb1ca1e34bcb2e657394c83ce3790b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a seek bar component.  <br /></td></tr>
 <tr class="separator:a86fb1ca1e34bcb2e657394c83ce3790b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe89a346987638090e9faaadccc05d79" id="r_afe89a346987638090e9faaadccc05d79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe89a346987638090e9faaadccc05d79">ui_components_loader_draw</a> (float position)</td></tr>
-<tr class="memdesc:afe89a346987638090e9faaadccc05d79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a loader component.  <br /></td></tr>
-<tr class="separator:afe89a346987638090e9faaadccc05d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9083a4dbd1b374633445fce4781025c" id="r_ae9083a4dbd1b374633445fce4781025c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9083a4dbd1b374633445fce4781025c">ui_components_loader_draw</a> (float progress, const char *msg)</td></tr>
+<tr class="memdesc:ae9083a4dbd1b374633445fce4781025c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a loader component.  <br /></td></tr>
+<tr class="separator:ae9083a4dbd1b374633445fce4781025c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7ef483e79ce878eac283808e415d5c4" id="r_ab7ef483e79ce878eac283808e415d5c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7ef483e79ce878eac283808e415d5c4">ui_components_scrollbar_draw</a> (int x, int y, int width, int height, int position, int items, int visible_items)</td></tr>
 <tr class="memdesc:ab7ef483e79ce878eac283808e415d5c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a scrollbar component.  <br /></td></tr>
 <tr class="separator:ab7ef483e79ce878eac283808e415d5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,12 +176,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a2a0e7f4688bff44d1e41a3b49ffbc791" id="r_a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a0e7f4688bff44d1e41a3b49ffbc791">ui_components_messagebox_draw</a> (char *fmt,...)</td></tr>
 <tr class="memdesc:a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a message box component.  <br /></td></tr>
 <tr class="separator:a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25b8a39daddb449472425521a679f171" id="r_a25b8a39daddb449472425521a679f171"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25b8a39daddb449472425521a679f171">ui_components_main_text_draw</a> (rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
-<tr class="memdesc:a25b8a39daddb449472425521a679f171"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main text component.  <br /></td></tr>
-<tr class="separator:a25b8a39daddb449472425521a679f171"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20d5f8de756694863150fc9fdb165df5" id="r_a20d5f8de756694863150fc9fdb165df5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20d5f8de756694863150fc9fdb165df5">ui_components_actions_bar_text_draw</a> (rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
-<tr class="memdesc:a20d5f8de756694863150fc9fdb165df5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the actions bar text component.  <br /></td></tr>
-<tr class="separator:a20d5f8de756694863150fc9fdb165df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eeb3a6154571a382cd721f3825f00b8" id="r_a3eeb3a6154571a382cd721f3825f00b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3eeb3a6154571a382cd721f3825f00b8">ui_components_main_text_draw</a> (<a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a> style, rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
+<tr class="memdesc:a3eeb3a6154571a382cd721f3825f00b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main text component.  <br /></td></tr>
+<tr class="separator:a3eeb3a6154571a382cd721f3825f00b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52ef5e75e3fad6f6ed8aaa32d3c8796e" id="r_a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52ef5e75e3fad6f6ed8aaa32d3c8796e">ui_components_actions_bar_text_draw</a> (<a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a> style, rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
+<tr class="memdesc:a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the actions bar text component.  <br /></td></tr>
+<tr class="separator:a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e46cb883ffa851e48a4d40beeb1a107" id="r_a9e46cb883ffa851e48a4d40beeb1a107"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e46cb883ffa851e48a4d40beeb1a107">ui_components_background_init</a> (char *cache_location)</td></tr>
 <tr class="memdesc:a9e46cb883ffa851e48a4d40beeb1a107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the background component.  <br /></td></tr>
 <tr class="separator:a9e46cb883ffa851e48a4d40beeb1a107"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,9 +209,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a70e42afc6a29c48031a5cc9b468e5ef0" id="r_a70e42afc6a29c48031a5cc9b468e5ef0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70e42afc6a29c48031a5cc9b468e5ef0">ui_components_context_menu_draw</a> (<a class="el" href="#structcomponent__context__menu__t">component_context_menu_t</a> *cm)</td></tr>
 <tr class="memdesc:a70e42afc6a29c48031a5cc9b468e5ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the context menu component.  <br /></td></tr>
 <tr class="separator:a70e42afc6a29c48031a5cc9b468e5ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd907af4f432f262676bb167d09fd70c" id="r_afd907af4f432f262676bb167d09fd70c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structcomponent__boxart__t">component_boxart_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd907af4f432f262676bb167d09fd70c">ui_components_boxart_init</a> (const char *storage_prefix, char *game_code, <a class="el" href="#aa77ed4c6e4f6494fea90d148786d15e0">file_image_type_t</a> current_image_view)</td></tr>
-<tr class="memdesc:afd907af4f432f262676bb167d09fd70c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the box art component.  <br /></td></tr>
-<tr class="separator:afd907af4f432f262676bb167d09fd70c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac59a8da801d945a9467c641e4ffc7779" id="r_ac59a8da801d945a9467c641e4ffc7779"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structcomponent__boxart__t">component_boxart_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac59a8da801d945a9467c641e4ffc7779">ui_components_boxart_init</a> (const char *storage_prefix, const char *game_code, const char *rom_title, <a class="el" href="#aa77ed4c6e4f6494fea90d148786d15e0">file_image_type_t</a> current_image_view)</td></tr>
+<tr class="memdesc:ac59a8da801d945a9467c641e4ffc7779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the box art component.  <br /></td></tr>
+<tr class="separator:ac59a8da801d945a9467c641e4ffc7779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6936fee273ef656c6bc72f7378f22ca" id="r_ac6936fee273ef656c6bc72f7378f22ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6936fee273ef656c6bc72f7378f22ca">ui_components_boxart_free</a> (<a class="el" href="#structcomponent__boxart__t">component_boxart_t</a> *b)</td></tr>
 <tr class="memdesc:ac6936fee273ef656c6bc72f7378f22ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the box art component resources.  <br /></td></tr>
 <tr class="separator:ac6936fee273ef656c6bc72f7378f22ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -221,10 +224,98 @@ Functions</h2></td></tr>
 <tr class="memitem:a2165adf223aa5c97eba018cf21b82035" id="r_a2165adf223aa5c97eba018cf21b82035"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2165adf223aa5c97eba018cf21b82035">ui_components_tabs_common_draw</a> (int selected)</td></tr>
 <tr class="memdesc:a2165adf223aa5c97eba018cf21b82035"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the common part of the tabs component.  <br /></td></tr>
 <tr class="separator:a2165adf223aa5c97eba018cf21b82035"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa31dd59a37e716b20f0d65796d8bb63f" id="r_aa31dd59a37e716b20f0d65796d8bb63f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa31dd59a37e716b20f0d65796d8bb63f">ui_component_value_editor</a> (const char **header_text, const char **value_text, int count, int selected, float width_adjustment)</td></tr>
+<tr class="memdesc:aa31dd59a37e716b20f0d65796d8bb63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a value editor component.  <br /></td></tr>
+<tr class="separator:aa31dd59a37e716b20f0d65796d8bb63f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cdc4926164c85646e030e0020164516" id="r_a4cdc4926164c85646e030e0020164516"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cdc4926164c85646e030e0020164516">ui_components_file_info_draw</a> (char *filename, <a class="el" href="#structfile__info__t">file_info_t</a> *info)</td></tr>
+<tr class="memdesc:a4cdc4926164c85646e030e0020164516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the file info component.  <br /></td></tr>
+<tr class="separator:a4cdc4926164c85646e030e0020164516"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Menu Graphical User Interface Components. </p>
 </div><hr/><h2 class="groupheader">Data Structure Documentation</h2>
+<a name="structfile__info__t" id="structfile__info__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structfile__info__t">&#9670;&#160;</a></span>file_info_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct file_info_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>File information Structure. </p>
+<p>Structure with file information displayed used in the user interface. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a049287e5caeae123362fd8cdeb51749f" name="a049287e5caeae123362fd8cdeb51749f"></a>bool</td>
+<td class="fieldname">
+directory</td>
+<td class="fielddoc">
+<p>Directory rather than a file </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ad68ec911ef925a70e282b87ba9153bc2" name="ad68ec911ef925a70e282b87ba9153bc2"></a>bool</td>
+<td class="fieldname">
+writeable</td>
+<td class="fielddoc">
+<p>File is writeable </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="afc2704956a72f4edcd6d19e69121b64e" name="afc2704956a72f4edcd6d19e69121b64e"></a>bool</td>
+<td class="fieldname">
+encrypted</td>
+<td class="fielddoc">
+<p>File is encrypted </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a8d131d693eca8d47806643b3578ce86a" name="a8d131d693eca8d47806643b3578ce86a"></a>time_t</td>
+<td class="fieldname">
+mtime</td>
+<td class="fielddoc">
+<p>Last modification time </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ae0be7ce776c6ae4552e889e26e9bcc97" name="ae0be7ce776c6ae4552e889e26e9bcc97"></a>uint64_t</td>
+<td class="fieldname">
+size</td>
+<td class="fielddoc">
+<p>File size in bytes </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a05bc2353cfff0bc7672df089e3ca3a3c" name="a05bc2353cfff0bc7672df089e3ca3a3c"></a>uint64_t</td>
+<td class="fieldname">
+compressed</td>
+<td class="fielddoc">
+<p>File size in bytes while compressed </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a5dd252fa9c213c83226f5351b5467a27" name="a5dd252fa9c213c83226f5351b5467a27"></a>uint32_t</td>
+<td class="fieldname">
+crc32</td>
+<td class="fielddoc">
+<p>Checksum for compressed files </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a2d8204b4e1dacb11ca9b5d0a8aae759d" name="a2d8204b4e1dacb11ca9b5d0a8aae759d"></a>bool</td>
+<td class="fieldname">
+is_controller_pak_dump</td>
+<td class="fielddoc">
+<p>file is a controller pak dump </p>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="ab40236cdd3bfad696bda100bdc6c48a3" name="ab40236cdd3bfad696bda100bdc6c48a3"></a>bool</td>
+<td class="fieldname">
+is_controller_pak_dump_note</td>
+<td class="fielddoc">
+<p>file is a controller pak dump note </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a name="structcomponent__context__menu__t" id="structcomponent__context__menu__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structcomponent__context__menu__t">&#9670;&#160;</a></span>component_context_menu_t</h2>
 
@@ -661,8 +752,8 @@ submenu</td>
 
 </div>
 </div>
-<a id="afe89a346987638090e9faaadccc05d79" name="afe89a346987638090e9faaadccc05d79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afe89a346987638090e9faaadccc05d79">&#9670;&#160;</a></span>ui_components_loader_draw()</h2>
+<a id="ae9083a4dbd1b374633445fce4781025c" name="ae9083a4dbd1b374633445fce4781025c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9083a4dbd1b374633445fce4781025c">&#9670;&#160;</a></span>ui_components_loader_draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -670,8 +761,12 @@ submenu</td>
         <tr>
           <td class="memname">void ui_components_loader_draw </td>
           <td>(</td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>progress</em></span></td><td>)</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>progress</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>msg</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -679,7 +774,8 @@ submenu</td>
 <p>Draw a loader component. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">position</td><td>Position value (0.0 to 1.0).</td></tr>
+    <tr><td class="paramname">position</td><td>Position value (0.0 to 1.0). </td></tr>
+    <tr><td class="paramname">msg</td><td>Message to display, truncated to 30 characters.</td></tr>
   </table>
   </dd>
 </dl>
@@ -687,6 +783,7 @@ submenu</td>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">progress</td><td>The progress value (0.0 to 1.0). </td></tr>
+    <tr><td class="paramname">msg</td><td>The message to display truncated to 30 characters. </td></tr>
   </table>
   </dd>
 </dl>
@@ -887,8 +984,8 @@ submenu</td>
 
 </div>
 </div>
-<a id="a25b8a39daddb449472425521a679f171" name="a25b8a39daddb449472425521a679f171"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25b8a39daddb449472425521a679f171">&#9670;&#160;</a></span>ui_components_main_text_draw()</h2>
+<a id="a3eeb3a6154571a382cd721f3825f00b8" name="a3eeb3a6154571a382cd721f3825f00b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3eeb3a6154571a382cd721f3825f00b8">&#9670;&#160;</a></span>ui_components_main_text_draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -896,6 +993,11 @@ submenu</td>
         <tr>
           <td class="memname">void ui_components_main_text_draw </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a></td>          <td class="paramname"><span class="paramname"><em>style</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">rdpq_align_t</td>          <td class="paramname"><span class="paramname"><em>align</em></span>, </td>
         </tr>
         <tr>
@@ -919,6 +1021,7 @@ submenu</td>
 <p>Draw the main text component. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
     <tr><td class="paramname">align</td><td>Horizontal alignment. </td></tr>
     <tr><td class="paramname">valign</td><td>Vertical alignment. </td></tr>
     <tr><td class="paramname">fmt</td><td>Format string for the text. </td></tr>
@@ -929,6 +1032,7 @@ submenu</td>
 <p>Draw the main text component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
     <tr><td class="paramname">align</td><td>The horizontal alignment. </td></tr>
     <tr><td class="paramname">valign</td><td>The vertical alignment. </td></tr>
     <tr><td class="paramname">fmt</td><td>The format string. </td></tr>
@@ -939,8 +1043,8 @@ submenu</td>
 
 </div>
 </div>
-<a id="a20d5f8de756694863150fc9fdb165df5" name="a20d5f8de756694863150fc9fdb165df5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20d5f8de756694863150fc9fdb165df5">&#9670;&#160;</a></span>ui_components_actions_bar_text_draw()</h2>
+<a id="a52ef5e75e3fad6f6ed8aaa32d3c8796e" name="a52ef5e75e3fad6f6ed8aaa32d3c8796e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52ef5e75e3fad6f6ed8aaa32d3c8796e">&#9670;&#160;</a></span>ui_components_actions_bar_text_draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -948,6 +1052,11 @@ submenu</td>
         <tr>
           <td class="memname">void ui_components_actions_bar_text_draw </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a></td>          <td class="paramname"><span class="paramname"><em>style</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">rdpq_align_t</td>          <td class="paramname"><span class="paramname"><em>align</em></span>, </td>
         </tr>
         <tr>
@@ -971,6 +1080,7 @@ submenu</td>
 <p>Draw the actions bar text component. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
     <tr><td class="paramname">align</td><td>Horizontal alignment. </td></tr>
     <tr><td class="paramname">valign</td><td>Vertical alignment. </td></tr>
     <tr><td class="paramname">fmt</td><td>Format string for the text. </td></tr>
@@ -981,6 +1091,7 @@ submenu</td>
 <p>Draw the actions bar text component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
     <tr><td class="paramname">align</td><td>The horizontal alignment. </td></tr>
     <tr><td class="paramname">valign</td><td>The vertical alignment. </td></tr>
     <tr><td class="paramname">fmt</td><td>The format string. </td></tr>
@@ -1240,8 +1351,8 @@ submenu</td>
 
 </div>
 </div>
-<a id="afd907af4f432f262676bb167d09fd70c" name="afd907af4f432f262676bb167d09fd70c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd907af4f432f262676bb167d09fd70c">&#9670;&#160;</a></span>ui_components_boxart_init()</h2>
+<a id="ac59a8da801d945a9467c641e4ffc7779" name="ac59a8da801d945a9467c641e4ffc7779"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac59a8da801d945a9467c641e4ffc7779">&#9670;&#160;</a></span>ui_components_boxart_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1254,7 +1365,12 @@ submenu</td>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>game_code</em></span>, </td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>game_code</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>rom_title</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1269,6 +1385,7 @@ submenu</td>
   <table class="params">
     <tr><td class="paramname">storage_prefix</td><td>Prefix for the storage location. </td></tr>
     <tr><td class="paramname">game_code</td><td>Game code for the box art. </td></tr>
+    <tr><td class="paramname">rom_title</td><td>Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety. </td></tr>
     <tr><td class="paramname">current_image_view</td><td>Current image view type. </td></tr>
   </table>
   </dd>
@@ -1279,6 +1396,7 @@ submenu</td>
   <table class="params">
     <tr><td class="paramname">storage_prefix</td><td>The storage prefix. </td></tr>
     <tr><td class="paramname">game_code</td><td>The game code. </td></tr>
+    <tr><td class="paramname">rom_title</td><td>Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety. </td></tr>
     <tr><td class="paramname">current_image_view</td><td>The current image view type. </td></tr>
   </table>
   </dd>
@@ -1435,10 +1553,91 @@ submenu</td>
 
 </div>
 </div>
+<a id="aa31dd59a37e716b20f0d65796d8bb63f" name="aa31dd59a37e716b20f0d65796d8bb63f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa31dd59a37e716b20f0d65796d8bb63f">&#9670;&#160;</a></span>ui_component_value_editor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ui_component_value_editor </td>
+          <td>(</td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>header_text</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>value_text</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>count</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>selected</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>width_adjustment</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw a value editor component. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">header_text</td><td>Array of header text for the values. </td></tr>
+    <tr><td class="paramname">value_text</td><td>Array of value text to be displayed. </td></tr>
+    <tr><td class="paramname">count</td><td>Number of values. </td></tr>
+    <tr><td class="paramname">selected</td><td>Index of the selected value. </td></tr>
+    <tr><td class="paramname">width_adjustment</td><td>Negative width adjustment of each value box. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4cdc4926164c85646e030e0020164516" name="a4cdc4926164c85646e030e0020164516"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cdc4926164c85646e030e0020164516">&#9670;&#160;</a></span>ui_components_file_info_draw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ui_components_file_info_draw </td>
+          <td>(</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>filename</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#structfile__info__t">file_info_t</a> *</td>          <td class="paramname"><span class="paramname"><em>info</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Draw the file info component. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Name of the file for which to show the information. </td></tr>
+    <tr><td class="paramname">info</td><td>Metadata information of the file to be displayed.</td></tr>
+    <tr><td class="paramname">list</td><td>Pointer to the list of entries. </td></tr>
+    <tr><td class="paramname">entries</td><td>Number of entries in the list. </td></tr>
+    <tr><td class="paramname">selected</td><td>Index of the currently selected entry. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Oct 28 2025 20:06:35 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Oct 28 2025 21:29:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -13,8 +13,8 @@ static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
-static int current_image_index = 0;
-static const file_image_type_t image_cycle[] = {
+static int16_t current_metadata_image_index = 0;
+static const file_image_type_t metadata_image_cycle[] = {
     IMAGE_BOXART_FRONT,
     IMAGE_BOXART_BACK,
     IMAGE_BOXART_LEFT,
@@ -24,14 +24,14 @@ static const file_image_type_t image_cycle[] = {
     IMAGE_GAMEPAK_FRONT,
     IMAGE_GAMEPAK_BACK
 };
-static const int image_cycle_length = sizeof(image_cycle) / sizeof(image_cycle[0]);
-static bool image_available[sizeof(image_cycle) / sizeof(image_cycle[0])] = {false};
-static bool images_scanned = false;
+static const uint16_t metadata_image_cycle_length = sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0]);
+static bool metadata_image_available[sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0])] = {false};
+static bool metadata_images_scanned = false;
 static bool last_go_left = false;
 static bool last_go_right = false;
 
-static void scan_boxart_images(menu_t *menu) {
-    if (images_scanned) {
+static void scan_metadata_images(menu_t *menu) {
+    if (metadata_images_scanned) {
         return;
     }
 
@@ -48,6 +48,7 @@ static void scan_boxart_images(menu_t *menu) {
         path_pop(path);
     }
 
+    // This is deprecated, but keep for backwards compatibility
     if (!directory_exists(path_get(path))) {
         path_free(path);
         path = path_init(menu->storage_prefix, "menu/boxart");
@@ -61,7 +62,7 @@ static void scan_boxart_images(menu_t *menu) {
     bool dir_exists = directory_exists(path_get(path));
 
     if (dir_exists) {
-        // Filenames array matches image_cycle order for indexed access
+        // Filenames array matches metadata_image_cycle order for indexed access
         // Note: This mapping is also present in boxart.c but duplicated here
         // for efficient scanning without calling into the component layer
         char *filenames[] = {
@@ -75,20 +76,20 @@ static void scan_boxart_images(menu_t *menu) {
             "gamepak_back.png"
         };
 
-        for (int i = 0; i < image_cycle_length; i++) {
+        for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
             path_push(path, filenames[i]);
-            image_available[i] = file_exists(path_get(path));
+            metadata_image_available[i] = file_exists(path_get(path));
             path_pop(path);
         }
     } else {
         // No directory exists, mark all images as unavailable
-        for (int i = 0; i < image_cycle_length; i++) {
-            image_available[i] = false;
+        for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
+            metadata_image_available[i] = false;
         }
     }
 
     path_free(path);
-    images_scanned = true;
+    metadata_images_scanned = true;
 }
 
 static char *convert_error_message (rom_err_t err) {
@@ -281,39 +282,35 @@ static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
-static void cycle_image(menu_t *menu, int direction) {
-    scan_boxart_images(menu);
+static void cycle_metadata_image(menu_t *menu, int direction) {
+    scan_metadata_images(menu);
 
     // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
-    int start_index = current_image_index;
-    int new_index = (current_image_index + direction + image_cycle_length) % image_cycle_length;
+    int16_t start_metadata_image_index = current_metadata_image_index;
+    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_cycle_length) % metadata_image_cycle_length;
 
     // Find next available image from our cached list
-    while (new_index != start_index) {
-        if (image_available[new_index]) {
+    while (new_metadata_image_index != start_metadata_image_index) {
+        if (metadata_image_available[new_metadata_image_index]) {
             // ui_components_boxart_init returns NULL if PNG decoder is busy
             component_boxart_t *new_boxart = ui_components_boxart_init(
                 menu->storage_prefix,
                 menu->load.rom_info.game_code,
                 menu->load.rom_info.title,
-                image_cycle[new_index]
+                metadata_image_cycle[new_metadata_image_index]
             );
 
             if (new_boxart != NULL) {
                 // Only free old boxart after successful new allocation
                 ui_components_boxart_free(boxart);
                 boxart = new_boxart;
-                current_image_index = new_index;
+                current_metadata_image_index = new_metadata_image_index;
                 sound_play_effect(SFX_SETTING);
                 break;
             }
         }
-        new_index = (new_index + direction + image_cycle_length) % image_cycle_length;
+        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_cycle_length) % metadata_image_cycle_length;
     }
-}
-
-static void cycle_image_next(menu_t *menu, void *arg) {
-    cycle_image(menu, 1);
 }
 
 static component_context_menu_t set_cic_type_context_menu = { .list = {
@@ -374,7 +371,6 @@ static void set_menu_next_mode (menu_t *menu, void *arg) {
 }
 
 static component_context_menu_t options_context_menu = { .list = {
-    { .text = "Cycle Next Image", .action = cycle_image_next },
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
     { .text = "Set TV Type", .submenu = &set_tv_type_context_menu },
@@ -410,15 +406,17 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right && !menu->actions.go_fast && !last_go_right) {
-        cycle_image(menu, 1);
-    } else if (menu->actions.go_left && !menu->actions.go_fast && !last_go_left) {
-        cycle_image(menu, -1);
+    } else if (menu->actions.go_right && !last_go_right) {
+        cycle_metadata_image(menu, 1);
+        sound_play_effect(SFX_CURSOR);
+    } else if (menu->actions.go_left && !last_go_left) {
+        cycle_metadata_image(menu, -1);
+        sound_play_effect(SFX_CURSOR);
     }
 
     // Track button state for edge detection
-    last_go_left = menu->actions.go_left && !menu->actions.go_fast;
-    last_go_right = menu->actions.go_right && !menu->actions.go_fast;
+    last_go_left = menu->actions.go_left;
+    last_go_right = menu->actions.go_right;
 }
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -597,14 +595,14 @@ static void load (menu_t *menu) {
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
-    current_image_index = 0;
-    images_scanned = false;
+    current_metadata_image_index = 0;
+    metadata_images_scanned = false;
     last_go_left = false;
     last_go_right = false;
 
     // Clear availability cache
-    for (int i = 0; i < image_cycle_length; i++) {
-        image_available[i] = false;
+    for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
+        metadata_image_available[i] = false;
     }
 }
 
@@ -645,7 +643,7 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
-        current_image_index = 0;
+        current_metadata_image_index = 0;
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED

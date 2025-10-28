@@ -1,6 +1,6 @@
 [Return to the index](./00_index.md)
 ## Game Art Images
-To use N64 game boxart images, place your PNG files within the `sd:/menu/metadata/` folder.
+To use N64 game art images, place your PNG files within the `sd:/menu/metadata/` folder.
 
 > [!WARNING]
 > ** PRE-RELEASE ONLY**
@@ -11,7 +11,7 @@ Files must be in `PNG` format and use the following dimensions:
 * American/European N64 boxart sprites: 158x112
 * Japanese N64 boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
-* GamePak front and back: 158x112
+* GamePak front and back sprites: 158x112
 
 Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information):  
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
@@ -32,8 +32,8 @@ e.g. `sd:/menu/metadata/homebrew/{game title}/boxart_front.png`
 - `gamepak_front.png`
 - `gamepak_back.png`
 
-#### Cycling through images
-On the ROM load screen, you can cycle through available images using the **D-pad left** and **D-pad right** buttons, or by selecting **Cycle Next Image** from the context menu. The menu will display any available images from the list above, skipping images that don't exist.
+#### Cycling through game art images
+On the ROM load screen, you can cycle through available images using the **D-pad left** and **D-pad right** buttons. The menu will display any available images from the list above, skipping images that don't exist.
 
 As a starting point, here is a link to a box art pack, that has `boxart_front.png`:  
 - [Third party box art](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)

@@ -10,9 +10,6 @@ An open source menu for N64 flashcarts that aims to support as many as possible.
 > [!TIP]
 > New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
 
-> [!WARNING]
-> **This project considers flashcart sellers that ship this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
-
 ## Flashcart Support
 This menu aims to support as many N64 flashcarts as possible. The current state of support is:
 

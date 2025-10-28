@@ -2,7 +2,6 @@
 ## N64FlashcartMenu User Guide
 
 ### General
-- [Terms of use](./01_terms_of_use.md)
 - [Initial Setup of an SD Card](./10_getting_started_sd.md)
 - [Basic Controls](./11_menu_controls.md)
 - [ROM Configuration](./12_rom_configuration.md)

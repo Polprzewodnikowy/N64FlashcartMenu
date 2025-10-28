@@ -9,6 +9,9 @@ An open source menu for N64 flashcarts that aims to support as many as possible.
 This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 
 > [!TIP]
+> Help sponsor development [NetworkFusion on Ko-Fi](https://https://ko-fi.com/networkfusion). Or submit your Pull Request.
+
+> [!TIP]
 > New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
 
 ## Flashcart Support

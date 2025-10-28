@@ -9,7 +9,5 @@ var searchData=
   ['imem_6',['IMEM',['../boot__io_8h.html#a902eb2ad7b99b7f94e5d09a81e516a48',1,'sp_mem_t']]],
   ['imm_7',['imm',['../vr4300__asm_8h.html#aa9c69f2215acca631d4656a30b52db93',1,'vr4300_instruction_t.i_type']]],
   ['info_8',['info',['../mp3__player_8c.html#a1d76743c0ae9296728b203dbf5806c65',1,'mp3player_t']]],
-  ['init_9',['init',['../flashcart_8h.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t::init'],['../menu_8c.html#adcab02eb618506530bafb1c42965c1a5',1,'view_t::init']]],
-  ['is_5fcontroller_5fpak_5fdump_10',['is_controller_pak_dump',['../ui__components_8h.html#a2d8204b4e1dacb11ca9b5d0a8aae759d',1,'file_info_t']]],
-  ['is_5fcontroller_5fpak_5fdump_5fnote_11',['is_controller_pak_dump_note',['../ui__components_8h.html#ab40236cdd3bfad696bda100bdc6c48a3',1,'file_info_t']]]
+  ['init_9',['init',['../flashcart_8h.html#ae9fbf76776c3074703a1f26c233e8a41',1,'flashcart_t::init'],['../menu_8c.html#adcab02eb618506530bafb1c42965c1a5',1,'view_t::init']]]
 ];

@@ -18,14 +18,12 @@ var searchData=
   ['color_5fburst_15',['COLOR_BURST',['../boot__io_8h.html#ac2f4fd1da8557ce8056df383b8c1da22',1,'vi_regs_t']]],
   ['combo_5from_5fdisk_5fgame_16',['combo_rom_disk_game',['../rom__info_8h.html#acfc37790fe0523c178563968f3e75cbd',1,'rom_info_t.features']]],
   ['command_17',['COMMAND',['../group__drive.html#a8f3d70e62046f64948d52a107ae70a40',1,'d64_regs_t']]],
-  ['compressed_18',['compressed',['../ui__components_8h.html#a05bc2353cfff0bc7672df089e3ca3a3c',1,'file_info_t']]],
-  ['contents_19',['contents',['../structcheat__file__t.html#a8ff3c91617afbe63252bc59268f2bb96',1,'cheat_file_t::contents'],['../text__viewer_8c.html#a5ef34cf4bc3e7bd3c242fb0758939457',1,'text_file_t::contents']]],
-  ['controller_5fpak_20',['controller_pak',['../rom__info_8h.html#abc8f75ba9e5f5aecf91a3bdc63dea327',1,'rom_info_t.features']]],
-  ['count_21',['count',['../group__sc64.html#a4871a999fa2fc37aae0c25d972df6b49',1,'sc64_disk_mapping_t']]],
-  ['cr_22',['CR',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
-  ['crc32_23',['crc32',['../ui__components_8h.html#a5dd252fa9c213c83226f5351b5467a27',1,'file_info_t']]],
-  ['ctx_24',['ctx',['../png__decoder_8c.html#a1ab1a67fa8337e5f7baf15ef040bcc7b',1,'png_decoder_t']]],
-  ['curr_5fline_25',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]],
-  ['current_26',['CURRENT',['../boot__io_8h.html#a3d374c4bec049d42ab0e986f290511cc',1,'dpc_regs_t']]],
-  ['current_5fline_27',['current_line',['../text__viewer_8c.html#a1891506b7653998367a22fea0c9e3e91',1,'text_file_t']]]
+  ['contents_18',['contents',['../text__viewer_8c.html#a5ef34cf4bc3e7bd3c242fb0758939457',1,'text_file_t']]],
+  ['controller_5fpak_19',['controller_pak',['../rom__info_8h.html#abc8f75ba9e5f5aecf91a3bdc63dea327',1,'rom_info_t.features']]],
+  ['count_20',['count',['../group__sc64.html#a4871a999fa2fc37aae0c25d972df6b49',1,'sc64_disk_mapping_t']]],
+  ['cr_21',['CR',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
+  ['ctx_22',['ctx',['../png__decoder_8c.html#a1ab1a67fa8337e5f7baf15ef040bcc7b',1,'png_decoder_t']]],
+  ['curr_5fline_23',['CURR_LINE',['../boot__io_8h.html#a16300cb685dffb0761649b885f36eeb3',1,'vi_regs_t']]],
+  ['current_24',['CURRENT',['../boot__io_8h.html#a3d374c4bec049d42ab0e986f290511cc',1,'dpc_regs_t']]],
+  ['current_5fline_25',['current_line',['../text__viewer_8c.html#a1891506b7653998367a22fea0c9e3e91',1,'text_file_t']]]
 ];

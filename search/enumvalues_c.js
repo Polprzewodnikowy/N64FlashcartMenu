@@ -30,6 +30,5 @@ var searchData=
   ['stl_5fgray_27',['STL_GRAY',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9a530f8c6b2d5b8bd5b2ef3f883ea55abe',1,'fonts.h']]],
   ['stl_5fgreen_28',['STL_GREEN',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9a4a41a07d2b33962d2dc8c60829591f99',1,'fonts.h']]],
   ['stl_5forange_29',['STL_ORANGE',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9a332a278156fb36c1026aa368bddafed8',1,'fonts.h']]],
-  ['stl_5fred_30',['STL_RED',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9a129b52507e38c018d55c7dcd8d0b7ddc',1,'fonts.h']]],
-  ['stl_5fyellow_31',['STL_YELLOW',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9aa3dcc1f1f5ebfa108f9c2a6f01cae000',1,'fonts.h']]]
+  ['stl_5fyellow_30',['STL_YELLOW',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9aa3dcc1f1f5ebfa108f9c2a6f01cae000',1,'fonts.h']]]
 ];

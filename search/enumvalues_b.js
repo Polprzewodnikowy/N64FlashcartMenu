@@ -18,16 +18,10 @@ var searchData=
   ['rom_5ferr_5fload_5fio_15',['ROM_ERR_LOAD_IO',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a02ee20defaacc7cf5ba90fad1755f908',1,'rom_info.h']]],
   ['rom_5ferr_5fno_5ffile_16',['ROM_ERR_NO_FILE',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037adfeb4a0def7c746dbd3bf81b377886d7',1,'rom_info.h']]],
   ['rom_5ferr_5fsave_5fio_17',['ROM_ERR_SAVE_IO',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a04fdc076bf21c5450a03b707f724c827',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5fadult_18',['ROM_ESRB_AGE_RATING_ADULT',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3afbb6cd1f0cd508c5bbf9cb70d486cf09',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5feveryone_19',['ROM_ESRB_AGE_RATING_EVERYONE',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3a0400d1b13a1532ec369389529a576ec2',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5feveryone_5f10_5fplus_20',['ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3a2c9d4b1a987db75983356cb6f231ff5c',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5fmature_21',['ROM_ESRB_AGE_RATING_MATURE',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3ae4eb04c9687eeb3689ccf77a0ea1d8b9',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5fnone_22',['ROM_ESRB_AGE_RATING_NONE',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3a63137dd70010e12ad3a51159657e3b28',1,'rom_info.h']]],
-  ['rom_5fesrb_5fage_5frating_5fteen_23',['ROM_ESRB_AGE_RATING_TEEN',['../rom__info_8h.html#a01643ede8d93039facebac7ccc8974b3a2f2b77633c28cbf1753bc1968c926909',1,'rom_info.h']]],
-  ['rom_5fok_24',['ROM_OK',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a4f2c5b35b101f121dc810b7c354a7f4b',1,'rom_info.h']]],
-  ['rom_5ftv_5ftype_5fautomatic_25',['ROM_TV_TYPE_AUTOMATIC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca32eb46c583b63bf5f3fc13b202e7ce53',1,'rom_info.h']]],
-  ['rom_5ftv_5ftype_5fmpal_26',['ROM_TV_TYPE_MPAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca07c6a2edd29299dbde271f47b07ab829',1,'rom_info.h']]],
-  ['rom_5ftv_5ftype_5fntsc_27',['ROM_TV_TYPE_NTSC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca3e9079cd83d60e89698902a726951cfa',1,'rom_info.h']]],
-  ['rom_5ftv_5ftype_5fpal_28',['ROM_TV_TYPE_PAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca5289e25c6d999e91f859e1f6b3a46637',1,'rom_info.h']]],
-  ['rom_5ftv_5ftype_5funknown_29',['ROM_TV_TYPE_UNKNOWN',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca9badbf7a8e5e0c152a932933a06091ee',1,'rom_info.h']]]
+  ['rom_5fok_18',['ROM_OK',['../rom__info_8h.html#aa88b4550e60dc0ba7d3317eda7ea6037a4f2c5b35b101f121dc810b7c354a7f4b',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fautomatic_19',['ROM_TV_TYPE_AUTOMATIC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca32eb46c583b63bf5f3fc13b202e7ce53',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fmpal_20',['ROM_TV_TYPE_MPAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca07c6a2edd29299dbde271f47b07ab829',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fntsc_21',['ROM_TV_TYPE_NTSC',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca3e9079cd83d60e89698902a726951cfa',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5fpal_22',['ROM_TV_TYPE_PAL',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca5289e25c6d999e91f859e1f6b3a46637',1,'rom_info.h']]],
+  ['rom_5ftv_5ftype_5funknown_23',['ROM_TV_TYPE_UNKNOWN',['../rom__info_8h.html#ac8fdf85ad8aa6e19519a262184541d7ca9badbf7a8e5e0c152a932933a06091ee',1,'rom_info.h']]]
 ];

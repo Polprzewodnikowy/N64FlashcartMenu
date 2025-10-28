@@ -10,13 +10,6 @@ var searchData=
   ['disk_5fstate_5fchanged_7',['DISK_STATE_CHANGED',['../group__sc64.html#gga4d939d07904cc93a638c25152b8be055a6176b1e8d86a7da93ba9dc077e4d69cc',1,'sc64_ll.h']]],
   ['disk_5fstate_5fejected_8',['DISK_STATE_EJECTED',['../group__sc64.html#gga4d939d07904cc93a638c25152b8be055a4b0cd9bd680b71b8ff6ae097057d9214',1,'sc64_ll.h']]],
   ['disk_5fstate_5finserted_9',['DISK_STATE_INSERTED',['../group__sc64.html#gga4d939d07904cc93a638c25152b8be055a36bcf894bb0a89f23fdadba1fbfe6fd8',1,'sc64_ll.h']]],
-  ['disk_5ftype_5f0_10',['DISK_TYPE_0',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a2811e42d6144809ac83d2a7b848c510f',1,'disk_info.h']]],
-  ['disk_5ftype_5f1_11',['DISK_TYPE_1',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a26336c54e4c303f0083093444779c10b',1,'disk_info.h']]],
-  ['disk_5ftype_5f2_12',['DISK_TYPE_2',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0ae2b9bbc37bad1046718dfc6bd35c708d',1,'disk_info.h']]],
-  ['disk_5ftype_5f3_13',['DISK_TYPE_3',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a5640d30beb4afee43255bd5595f29604',1,'disk_info.h']]],
-  ['disk_5ftype_5f4_14',['DISK_TYPE_4',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a77b387ddc14f51ddecea897be54dcc69',1,'disk_info.h']]],
-  ['disk_5ftype_5f5_15',['DISK_TYPE_5',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a1e5e9d0d540f8ead3778e7d49749e4e8',1,'disk_info.h']]],
-  ['disk_5ftype_5f6_16',['DISK_TYPE_6',['../disk__info_8h.html#abb390b720ed32b8426c2f6c74124c7a0a21ad778450900d78aed733e0dde5267f',1,'disk_info.h']]],
-  ['drive_5ftype_5fdevelopment_17',['DRIVE_TYPE_DEVELOPMENT',['../group__sc64.html#gga7274e47ae7e8ec1cb99e0ebd10e1a6dfab3379cee15c3e11f0ed958bbecd37c6a',1,'sc64_ll.h']]],
-  ['drive_5ftype_5fretail_18',['DRIVE_TYPE_RETAIL',['../group__sc64.html#gga7274e47ae7e8ec1cb99e0ebd10e1a6dfa9605e6ff660dd858430a256ee4b185c5',1,'sc64_ll.h']]]
+  ['drive_5ftype_5fdevelopment_10',['DRIVE_TYPE_DEVELOPMENT',['../group__sc64.html#gga7274e47ae7e8ec1cb99e0ebd10e1a6dfab3379cee15c3e11f0ed958bbecd37c6a',1,'sc64_ll.h']]],
+  ['drive_5ftype_5fretail_11',['DRIVE_TYPE_RETAIL',['../group__sc64.html#gga7274e47ae7e8ec1cb99e0ebd10e1a6dfa9605e6ff660dd858430a256ee4b185c5',1,'sc64_ll.h']]]
 ];

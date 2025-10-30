@@ -6,12 +6,24 @@ To use N64 game art images, place your PNG files within the `sd:/menu/metadata/`
 > ** PRE-RELEASE ONLY**
 Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder, please update your folder name and structure/content to ensure compatibility.
 
-#### Supported images
+#### Supported file names
+- `boxart_front.png` (DEFAULT)
+- `boxart_back.png`
+- `boxart_top.png`
+- `boxart_bottom.png`
+- `boxart_left.png`
+- `boxart_right.png`
+- `gamepak_front.png`
+- `gamepak_back.png`
+
+#### Supported image sizes
 Files must be in `PNG` format and use the following dimensions:
 * American/European N64 boxart sprites: 158x112
 * Japanese N64 boxart sprites: 112x158
 * 64DD boxart sprites: 129x112
 * GamePak front and back sprites: 158x112
+* Boxart top/bottom spines: 158x22
+* Boxart left/right spines: 112x22
 
 Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information):  
 i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
@@ -24,6 +36,9 @@ ROMs that use the ["Advanced Homebrew ROM Header"](https://n64brew.dev/wiki/ROM_
 e.g. `sd:/menu/metadata/homebrew/{game title}/boxart_front.png`
 
 **Warning**: Excluding the region ID may show a box art of the wrong region.
+
+#### Itterating through game art images
+When added, extra images will be used if available to itterate:
 - `boxart_back.png`
 - `boxart_top.png`
 - `boxart_bottom.png`
@@ -32,8 +47,7 @@ e.g. `sd:/menu/metadata/homebrew/{game title}/boxart_front.png`
 - `gamepak_front.png`
 - `gamepak_back.png`
 
-#### Cycling through game art images
-On the ROM load screen, you can cycle through available images using the **D-pad left** and **D-pad right** buttons. The menu will display any available images from the list above, skipping images that don't exist.
+On the ROM load screen, you can cycle through available images using the **D-pad left**/**C-pad left** and **D-pad right**/**C-pad right** buttons. The menu will display any available images from the list above, skipping images that don't exist.
 
 As a starting point, here is a link to a box art pack, that has `boxart_front.png`:  
-- [Third party box art](https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link)
+- [Third party box art](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases)

@@ -51,6 +51,7 @@ Pre-release only:
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).
+* Game art image switching.
 
 
 ## Aims

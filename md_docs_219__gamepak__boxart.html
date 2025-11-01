@@ -93,20 +93,9 @@ Game Art Images</h2>
 <p>To use N64 game art images, place your PNG files within the <code>sd:/menu/metadata/</code> folder.</p>
 <dl class="section warning"><dt>Warning</dt><dd>** PRE-RELEASE ONLY** Game Boxart is now stored in <code>sd:/menu/metadata/</code>, rather than the previous <code>sd:/menu/boxart/</code> folder, please update your folder name and structure/content to ensure compatibility.</dd></dl>
 <h4><a class="anchor" id="autotoc_md75"></a>
-Supported images</h4>
-<p>Files must be in <code>PNG</code> format and use the following dimensions:</p><ul>
-<li>American/European N64 boxart sprites: 158x112</li>
-<li>Japanese N64 boxart sprites: 112x158</li>
-<li>64DD boxart sprites: 129x112</li>
-<li>GamePak front and back sprites: 158x112</li>
-</ul>
-<p>Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information): <br  />
- i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/boxart/N/G/E/E/boxart_front.png</code>. <br  />
- i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/boxart/N/G/E/P/boxart_front.png</code>.</p>
-<p>To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead: <br  />
- i.e. for GoldenEye, this would be <code>sd:/menu/boxart/N/G/E/boxart_front.png</code>.</p>
-<p>ROMs that use the <a href="https://n64brew.dev/wiki/ROM_Header">"Advanced Homebrew ROM Header"</a> Game ID (<code>xEDx</code>) are matched using the "Game Title" (not the Game Code): e.g. <code>sd:/menu/metadata/homebrew/{game title}/boxart_front.png</code></p>
-<p><b>Warning</b>: Excluding the region ID may show a box art of the wrong region.</p><ul>
+Supported file names</h4>
+<ul>
+<li><code>boxart_front.png</code> (DEFAULT)</li>
 <li><code>boxart_back.png</code></li>
 <li><code>boxart_top.png</code></li>
 <li><code>boxart_bottom.png</code></li>
@@ -116,17 +105,43 @@ Supported images</h4>
 <li><code>gamepak_back.png</code></li>
 </ul>
 <h4><a class="anchor" id="autotoc_md76"></a>
-Cycling through game art images</h4>
-<p>On the ROM load screen, you can cycle through available images using the <b>D-pad left</b> and <b>D-pad right</b> buttons. The menu will display any available images from the list above, skipping images that don't exist.</p>
+Supported image sizes</h4>
+<p>Files must be in <code>PNG</code> format and use the following dimensions:</p><ul>
+<li>American/European N64 boxart sprites: 158x112</li>
+<li>Japanese N64 boxart sprites: 112x158</li>
+<li>64DD boxart sprites: 129x112</li>
+<li>GamePak front and back sprites: 158x112</li>
+<li>Boxart top/bottom spines: 158x22</li>
+<li>Boxart left/right spines: 112x22</li>
+</ul>
+<p>Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information): <br  />
+ i.e. for GoldenEye NTSC USA (NGEE), this would be <code>sd:/menu/boxart/N/G/E/E/boxart_front.png</code>. <br  />
+ i.e. for GoldenEye PAL (NGEP), this would be <code>sd:/menu/boxart/N/G/E/P/boxart_front.png</code>.</p>
+<p>To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead: <br  />
+ i.e. for GoldenEye, this would be <code>sd:/menu/boxart/N/G/E/boxart_front.png</code>.</p>
+<p>ROMs that use the <a href="https://n64brew.dev/wiki/ROM_Header">"Advanced Homebrew ROM Header"</a> Game ID (<code>xEDx</code>) are matched using the "Game Title" (not the Game Code): e.g. <code>sd:/menu/metadata/homebrew/{game title}/boxart_front.png</code></p>
+<p><b>Warning</b>: Excluding the region ID may show a box art of the wrong region.</p>
+<h4><a class="anchor" id="autotoc_md77"></a>
+Itterating through game art images</h4>
+<p>When added, extra images will be used if available to itterate:</p><ul>
+<li><code>boxart_back.png</code></li>
+<li><code>boxart_top.png</code></li>
+<li><code>boxart_bottom.png</code></li>
+<li><code>boxart_left.png</code></li>
+<li><code>boxart_right.png</code></li>
+<li><code>gamepak_front.png</code></li>
+<li><code>gamepak_back.png</code></li>
+</ul>
+<p>On the ROM load screen, you can cycle through available images using the <b>D-pad left</b>/**C-pad left** and <b>D-pad right</b>/**C-pad right** buttons. The menu will display any available images from the list above, skipping images that don't exist.</p>
 <p>As a starting point, here is a link to a box art pack, that has <code>boxart_front.png</code>: <br  />
 </p><ul>
-<li><a href="https://drive.google.com/file/d/1IpCmFqmGgGwKKmlRBxYObfFR9XywaC6n/view?usp=drive_link">Third party box art</a> </li>
+<li><a href="https://github.com/n64-tools/n64-flashcart-menu-metadata/releases">Third party box art</a> </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 30 2025 22:12:56 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 1 2025 23:10:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

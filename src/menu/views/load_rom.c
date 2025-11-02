@@ -35,26 +35,28 @@ static void scan_metadata_images(menu_t *menu) {
         return;
     }
 
-    path_t *path = path_init(menu->storage_prefix, "menu/metadata");
+    path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
     char boxart_id_path[8];
-    snprintf(boxart_id_path, sizeof(boxart_id_path), "%c/%c/%c/%c",
+
+    if (menu->load.rom_info.game_code[1] == 'E' && menu->load.rom_info.game_code[2] == 'D') {
+        // This is using a homebrew ROM ID, use the title for the file name instead.
+        // Create a null-terminated copy of the title for safe string operations
+        char safe_title[21];  // 20 chars + null terminator
+        memcpy(safe_title, menu->load.rom_info.title, 20);
+        safe_title[20] = '\0';
+        
+        sprintf(boxart_id_path, "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
+        path_push(path, boxart_id_path);
+    }
+    else {
+        snprintf(boxart_id_path, sizeof(boxart_id_path), "%c/%c/%c/%c",
             menu->load.rom_info.game_code[0],
             menu->load.rom_info.game_code[1],
             menu->load.rom_info.game_code[2],
             menu->load.rom_info.game_code[3]);
-    path_push(path, boxart_id_path);
-
-    if (!directory_exists(path_get(path))) {
-        path_pop(path);
-    }
-
-    // This is deprecated, but keep for backwards compatibility
-    if (!directory_exists(path_get(path))) {
-        path_free(path);
-        path = path_init(menu->storage_prefix, "menu/boxart");
         path_push(path, boxart_id_path);
 
-        if (!directory_exists(path_get(path))) {
+        if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
             path_pop(path);
         }
     }

@@ -12,13 +12,13 @@
 
 static const char *dir_prefix = "";
 static const char *directory_icon = "[DIR] ";
-// static const char *archive_icon = "[Z] ";
-// static const char *rom_icon = "[R] ";
-// static const char *disk_icon = "[O] ";
-// static const char *music_icon = "[M] ";
-// static const char *text_icon = "[T] ";
-// static const char *image_icon = "[I] ";
-// static const char *save_icon = "[S] ";
+// static const char *archive_icon = "[Zip] ";
+// static const char *rom_icon = "[Rom] ";
+// static const char *disk_icon = "[Disk] ";
+// static const char *music_icon = "[Mp3] ";
+// static const char *text_icon = "[Txt] ";
+// static const char *image_icon = "[Png] ";
+// static const char *save_icon = "[Save] ";
 // static const char *other_icon = "[?] ";
 
 /**

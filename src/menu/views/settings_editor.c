@@ -51,6 +51,17 @@ static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
 }
 #endif
 
+static void set_hide_extension_type(menu_t *menu, void *arg) {
+    menu->settings.hide_extension = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+    menu->browser.reload = true;
+}
+
+static void set_hide_rom_tags_type (menu_t *menu, void *arg) {
+    menu->settings.hide_rom_tags = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 #ifdef BETA_SETTINGS
 static void set_pal60_type (menu_t *menu, void *arg) {
     menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
@@ -118,6 +129,18 @@ static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list =
 }};
 #endif
 
+static component_context_menu_t set_hide_extension_context_menu = { .list = {
+    { .text = "On", .action = set_hide_extension_type, .arg = (void *)(uintptr_t)(true) },
+    { .text = "Off", .action = set_hide_extension_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static component_context_menu_t set_hide_rom_tags_context_menu = { .list = {
+    {.text = "On", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 #ifdef BETA_SETTINGS
 static component_context_menu_t set_pal60_type_context_menu = { .list = {
     {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
@@ -146,7 +169,6 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = { .list =
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
-    { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
@@ -154,6 +176,9 @@ static component_context_menu_t options_context_menu = { .list = {
 #else
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
 #endif
+    { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
+    { .text = "Hide Extensions", .submenu = &set_hide_extension_context_menu },
+    { .text = "Hide ROM Tags", .submenu = &set_hide_rom_tags_context_menu },
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
@@ -224,6 +249,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Use Saves folder  : %s\n"
         "     Show Saves folder : %s\n"
         "     Sound Effects     : %s\n"
+        "     Hide Extensions   : %s\n"
+        "     Hide ROM Tags     : %s\n"
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
         "*    PAL60 Mod Compat  : %s\n"
@@ -244,7 +271,9 @@ static void draw (menu_t *menu, surface_t *d) {
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.show_saves_folder),
-        format_switch(menu->settings.soundfx_enabled)
+        format_switch(menu->settings.soundfx_enabled),
+        format_switch(menu->settings.hide_extension),
+        format_switch(menu->settings.hide_rom_tags)
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),

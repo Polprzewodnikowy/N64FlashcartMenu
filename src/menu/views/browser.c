@@ -57,6 +57,30 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
+static char *strip_extension(const char *filename) { 
+    char *copy = strdup(filename);
+    if (!copy) return NULL;
+
+    char *dot = strrchr(copy, '.');
+    if (dot) *dot = '\0';
+
+    return copy;
+}
+
+static char *strip_rom_tags (const char *filename) {
+    char *name = strdup(filename);
+    for (char *p = name; *p; ++p) {
+        if (*p == '(' || *p == '[') {
+            *p = '\0';
+            break;
+        }
+    }
+    // Trim trailing space
+    for (char *end = name + strlen(name) - 1; end > name && *end == ' '; --end) {
+        *end = '\0';
+    }
+    return name;
+}
 
 static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
@@ -216,6 +240,14 @@ static bool load_directory (menu_t *menu) {
 
     path_t *path = path_clone(menu->browser.directory);
 
+    if (!path_is_root(menu->browser.directory)) {
+        menu->browser.list = malloc(sizeof(entry_t));
+        entry_t *up = &menu->browser.list[0];
+        up->name = strdup("..");
+        up->type = ENTRY_TYPE_DIR;
+        up->size = 0;
+        menu->browser.entries = 1;
+    }
     result = dir_findfirst(path_get(path), &info);
 
     while (result == 0) {
@@ -283,17 +315,22 @@ static bool load_directory (menu_t *menu) {
 
     path_free(path);
 
-    if (result < -1) {
-        browser_list_free(menu);
-        return true;
+    {
+        int offset = path_is_root(menu->browser.directory) ? 0 : 1;
+        if (menu->browser.entries > offset) {
+            qsort(
+                menu->browser.list + offset,
+                menu->browser.entries - offset,
+                sizeof(entry_t),
+                compare_entry
+            );
+        }
     }
 
     if (menu->browser.entries > 0) {
         menu->browser.selected = 0;
-        menu->browser.entry = &menu->browser.list[menu->browser.selected];
+        menu->browser.entry = &menu->browser.list[0];
     }
-
-    qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
 
     return false;
 }
@@ -461,6 +498,7 @@ static void process (menu_t *menu) {
     }
 
     int scroll_speed = menu->actions.go_fast ? 10 : 1;
+    int min_index   = 0;
 
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
@@ -481,6 +519,10 @@ static void process (menu_t *menu) {
 
     if (menu->actions.enter && menu->browser.entry) {
         sound_play_effect(SFX_ENTER);
+        if (menu->browser.selected == 0 && !path_is_root(menu->browser.directory)) {
+            pop_directory(menu);
+            return;
+        }
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_ARCHIVE:
                 if (push_directory(menu, menu->browser.entry->name, true)) {
@@ -556,8 +598,39 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw_tabbed();
 
-    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
-
+    if (menu->settings.hide_extension || menu->settings.hide_rom_tags) {
+        entry_t *stripped_entries = malloc(sizeof(entry_t) * menu->browser.entries);
+        for (int i = 0; i < menu->browser.entries; i++) {
+            stripped_entries[i] = menu->browser.list[i];
+            char *name = menu->browser.list[i].name;
+    
+            if (menu->settings.hide_extension &&
+                (menu->browser.list[i].type == ENTRY_TYPE_ROM || menu->browser.list[i].type == ENTRY_TYPE_DISK || menu->browser.list[i].type == ENTRY_TYPE_EMULATOR)) {
+                name = strip_extension(name);
+            } else {
+                name = strdup(name);
+            }
+    
+            if (menu->settings.hide_rom_tags &&
+                (menu->browser.list[i].type == ENTRY_TYPE_ROM || menu->browser.list[i].type == ENTRY_TYPE_DISK || menu->browser.list[i].type == ENTRY_TYPE_EMULATOR)) {
+                char *stripped = strip_rom_tags(name);
+                free(name);
+                name = stripped;
+            }
+    
+            stripped_entries[i].name = name;
+        }
+    
+        ui_components_file_list_draw(stripped_entries, menu->browser.entries, menu->browser.selected);
+    
+        for (int i = 0; i < menu->browser.entries; i++) {
+            free(stripped_entries[i].name);
+        }
+        free(stripped_entries);
+    } else {
+        ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    }
+    
     const char *action = NULL;
 
     if (menu->browser.entry) {

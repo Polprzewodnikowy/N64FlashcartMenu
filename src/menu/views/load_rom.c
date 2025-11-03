@@ -13,7 +13,7 @@ static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
 static int16_t current_metadata_image_index = 0;
-static const file_image_type_t metadata_image_cycle[] = {
+static const file_image_type_t metadata_image_filename_cache[] = {
     IMAGE_BOXART_FRONT,
     IMAGE_BOXART_BACK,
     IMAGE_BOXART_LEFT,
@@ -23,8 +23,8 @@ static const file_image_type_t metadata_image_cycle[] = {
     IMAGE_GAMEPAK_FRONT,
     IMAGE_GAMEPAK_BACK
 };
-static const uint16_t metadata_image_cycle_length = sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0]);
-static bool metadata_image_available[sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0])] = {false};
+static const uint16_t metadata_image_filename_cache_length = sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0]);
+static bool metadata_image_available[sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0])] = {false};
 static bool metadata_images_scanned = false;
 
 static void scan_metadata_images(menu_t *menu) {
@@ -61,7 +61,7 @@ static void scan_metadata_images(menu_t *menu) {
     bool dir_exists = directory_exists(path_get(path));
 
     if (dir_exists) {
-        // Filenames array matches metadata_image_cycle order for indexed access
+        // Filenames array matches metadata_image_filename_cache order for indexed access
         // Note: This mapping is also present in boxart.c but duplicated here
         // for efficient scanning without calling into the component layer
         char *filenames[] = {
@@ -75,14 +75,14 @@ static void scan_metadata_images(menu_t *menu) {
             "gamepak_back.png"
         };
 
-        for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
+        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
             path_push(path, filenames[i]);
             metadata_image_available[i] = file_exists(path_get(path));
             path_pop(path);
         }
     } else {
         // No directory exists, mark all images as unavailable
-        for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
+        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
             metadata_image_available[i] = false;
         }
     }
@@ -289,12 +289,12 @@ static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
-static void cycle_metadata_image(menu_t *menu, int direction) {
+static void iterate_metadata_image(menu_t *menu, int direction) {
     scan_metadata_images(menu);
 
-    // Cycle to next/previous available image based on direction (1 = next, -1 = previous)
+    // Transverse to next/previous available image based on direction (1 = next, -1 = previous)
     int16_t start_metadata_image_index = current_metadata_image_index;
-    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_cycle_length) % metadata_image_cycle_length;
+    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
 
     // Find next available image from our cached list
     while (new_metadata_image_index != start_metadata_image_index) {
@@ -304,7 +304,7 @@ static void cycle_metadata_image(menu_t *menu, int direction) {
                 menu->storage_prefix,
                 menu->load.rom_info.game_code,
                 menu->load.rom_info.title,
-                metadata_image_cycle[new_metadata_image_index]
+                metadata_image_filename_cache[new_metadata_image_index]
             );
 
             if (new_boxart != NULL) {
@@ -316,7 +316,7 @@ static void cycle_metadata_image(menu_t *menu, int direction) {
                 break;
             }
         }
-        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_cycle_length) % metadata_image_cycle_length;
+        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
     }
 }
 
@@ -414,10 +414,10 @@ static void process (menu_t *menu) {
         }
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.go_right) {
-        cycle_metadata_image(menu, 1);
+        iterate_metadata_image(menu, 1);
         sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.go_left) {
-        cycle_metadata_image(menu, -1);
+        iterate_metadata_image(menu, -1);
         sound_play_effect(SFX_CURSOR);
     }
 }
@@ -603,7 +603,7 @@ static void deinit (void) {
     metadata_images_scanned = false;
 
     // Clear availability cache
-    for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {
+    for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
         metadata_image_available[i] = false;
     }
 }

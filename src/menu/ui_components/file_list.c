@@ -10,7 +10,16 @@
 #include "../fonts.h"
 #include "constants.h"
 
-static const char *dir_prefix = "/";
+static const char *dir_prefix = "";
+static const char *directory_icon = "[DIR] ";
+// static const char *archive_icon = "[Z] ";
+// static const char *rom_icon = "[R] ";
+// static const char *disk_icon = "[O] ";
+// static const char *music_icon = "[M] ";
+// static const char *text_icon = "[T] ";
+// static const char *image_icon = "[I] ";
+// static const char *save_icon = "[S] ";
+// static const char *other_icon = "[?] ";
 
 /**
  * @brief Format the file size into a human-readable string.
@@ -120,6 +129,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
 
             rdpq_paragraph_builder_style(style);
 
+            //TODO: if settings use dir prefix
             if (entry->type == ENTRY_TYPE_DIR) {
                 rdpq_paragraph_builder_span(dir_prefix, strlen(dir_prefix));
             }
@@ -174,6 +184,9 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
             // TODO: add option to use font icons instead of file sizes.
             if (entry->type != ENTRY_TYPE_DIR) {
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
+            }
+            else {
+                rdpq_paragraph_builder_span(directory_icon, 5);
             }
 
             if ((i + 1) == (starting_position + LIST_ENTRIES)) {

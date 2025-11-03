@@ -8,7 +8,6 @@
 #include "views.h"
 #include <string.h>
 
-
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
@@ -27,8 +26,6 @@ static const file_image_type_t metadata_image_cycle[] = {
 static const uint16_t metadata_image_cycle_length = sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0]);
 static bool metadata_image_available[sizeof(metadata_image_cycle) / sizeof(metadata_image_cycle[0])] = {false};
 static bool metadata_images_scanned = false;
-static bool last_go_left = false;
-static bool last_go_right = false;
 
 static void scan_metadata_images(menu_t *menu) {
     if (metadata_images_scanned) {
@@ -36,7 +33,7 @@ static void scan_metadata_images(menu_t *menu) {
     }
 
     path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
-    char boxart_id_path[8];
+    char game_code_path[8];
 
     if (menu->load.rom_info.game_code[1] == 'E' && menu->load.rom_info.game_code[2] == 'D') {
         // This is using a homebrew ROM ID, use the title for the file name instead.
@@ -45,16 +42,16 @@ static void scan_metadata_images(menu_t *menu) {
         memcpy(safe_title, menu->load.rom_info.title, 20);
         safe_title[20] = '\0';
         
-        sprintf(boxart_id_path, "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
-        path_push(path, boxart_id_path);
+        sprintf(game_code_path, "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
+        path_push(path, game_code_path);
     }
     else {
-        snprintf(boxart_id_path, sizeof(boxart_id_path), "%c/%c/%c/%c",
+        snprintf(game_code_path, sizeof(game_code_path), "%c/%c/%c/%c",
             menu->load.rom_info.game_code[0],
             menu->load.rom_info.game_code[1],
             menu->load.rom_info.game_code[2],
             menu->load.rom_info.game_code[3]);
-        path_push(path, boxart_id_path);
+        path_push(path, game_code_path);
 
         if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
             path_pop(path);
@@ -90,8 +87,16 @@ static void scan_metadata_images(menu_t *menu) {
         }
     }
 
+    debugf("Metadata: Scanned metadata for ROM ID %s. \n", game_code_path);
+
     path_free(path);
     metadata_images_scanned = true;
+}
+
+static const char *format_rom_description(menu_t *menu) {
+    char *rom_description = NULL;
+
+    return rom_description ? rom_description : "No description available.";
 }
 
 static char *convert_error_message (rom_err_t err) {
@@ -408,17 +413,13 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right && !last_go_right) {
+    } else if (menu->actions.go_right) {
         cycle_metadata_image(menu, 1);
         sound_play_effect(SFX_CURSOR);
-    } else if (menu->actions.go_left && !last_go_left) {
+    } else if (menu->actions.go_left) {
         cycle_metadata_image(menu, -1);
         sound_play_effect(SFX_CURSOR);
     }
-
-    // Track button state for edge detection
-    last_go_left = menu->actions.go_left;
-    last_go_right = menu->actions.go_right;
 }
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -439,10 +440,11 @@ static void draw (menu_t *menu, surface_t *d) {
             rom_filename
         );
 
-        ui_components_main_text_draw( // TODO:"\t%.300s\n" for description.
+        ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n"
+            "\n\n\t%.300s\n",
+            format_rom_description(menu)
             
         );
 
@@ -599,8 +601,6 @@ static void deinit (void) {
     boxart = NULL;
     current_metadata_image_index = 0;
     metadata_images_scanned = false;
-    last_go_left = false;
-    last_go_right = false;
 
     // Clear availability cache
     for (uint16_t i = 0; i < metadata_image_cycle_length; i++) {

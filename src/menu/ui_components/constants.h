@@ -148,7 +148,7 @@
 #define DIALOG_BG_COLOR                 RGBA32(0x00, 0x00, 0x00, 0xFF)
 
 /** @brief The boxart loading colour. */
-#define BOXART_LOADING_COLOR            RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
+#define BOXART_LOADING_COLOR            RGBA32(0x00, 0x00, 0x00, 0xFF)
 
 /** @brief The file list highlight colour. */
 #define FILE_LIST_HIGHLIGHT_COLOR       RGBA32(0x3F, 0x3F, 0x3F, 0xFF)

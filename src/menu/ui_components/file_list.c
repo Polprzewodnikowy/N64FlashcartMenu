@@ -10,7 +10,15 @@
 #include "../fonts.h"
 #include "constants.h"
 
-static const char *dir_prefix = "/";
+static const char *directory_icon = "[DIR] ";
+// static const char *archive_icon = "[Zip] ";
+// static const char *rom_icon = "[Rom] ";
+// static const char *disk_icon = "[Disk] ";
+// static const char *music_icon = "[Mp3] ";
+// static const char *text_icon = "[Txt] ";
+// static const char *image_icon = "[Png] ";
+// static const char *save_icon = "[Save] ";
+// static const char *other_icon = "[?] ";
 
 /**
  * @brief Format the file size into a human-readable string.
@@ -77,7 +85,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
             } else {
                 size_t length = strlen(list[entry_index].name);
                 name_lengths[i] = length;
-                total_length += length + (list[entry_index].type == ENTRY_TYPE_DIR ? strlen(dir_prefix) : 0);
+                total_length += length;
             }
         }
 
@@ -119,10 +127,6 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
             }
 
             rdpq_paragraph_builder_style(style);
-
-            if (entry->type == ENTRY_TYPE_DIR) {
-                rdpq_paragraph_builder_span(dir_prefix, strlen(dir_prefix));
-            }
 
             rdpq_paragraph_builder_span(entry->name, name_lengths[i]);
 
@@ -171,9 +175,12 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];
 
-            // TODO: add option to use font icons instead of file sizes.
             if (entry->type != ENTRY_TYPE_DIR) {
+                // TODO: add option to use font icons instead of file sizes.
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
+            }
+            else {
+                rdpq_paragraph_builder_span(directory_icon, 5);
             }
 
             if ((i + 1) == (starting_position + LIST_ENTRIES)) {

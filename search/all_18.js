@@ -37,7 +37,7 @@ var searchData=
   ['pi_5fregs_5ft_2edom_34',['pi_regs_t.DOM',['../boot__io_8h.html#structpi__regs__t_8DOM',1,'']]],
   ['pipe_5fbusy_35',['PIPE_BUSY',['../boot__io_8h.html#aa1709fd6a872cee8824310647a6ee1f6',1,'dpc_regs_t']]],
   ['planned_36',['Not yet planned',['../index.html#autotoc_md4',1,'']]],
-  ['player_37',['MP3 Player',['../md_docs_241__mp3__player.html#autotoc_md97',1,'']]],
+  ['player_37',['MP3 Player',['../md_docs_241__mp3__player.html#autotoc_md99',1,'']]],
   ['png_5fcallback_5ft_38',['png_callback_t',['../png__decoder_8h.html#a85923de55a2f9fb330741fee267bb57b',1,'png_decoder.h']]],
   ['png_5fdecoder_2ec_39',['png_decoder.c',['../png__decoder_8c.html',1,'']]],
   ['png_5fdecoder_2eh_40',['png_decoder.h',['../png__decoder_8h.html',1,'']]],

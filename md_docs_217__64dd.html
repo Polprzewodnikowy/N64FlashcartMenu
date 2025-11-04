@@ -96,12 +96,34 @@ $(function(){ initResizable(false); });
 <dl class="section warning"><dt>Warning</dt><dd>It is not yet possible to swap 64DD disks via N64FlashcartMenu, though this feature will be added in future.</dd></dl>
 <h3><a class="anchor" id="autotoc_md72"></a>
 Conversion ROMs</h3>
-<p>The N64Flashcart Menu is able to load and run conversion ROMs (but does not perform saves). </p>
+<p>The N64Flashcart Menu is able to load and run conversion ROMs (but does not perform saves).</p>
+<h3><a class="anchor" id="autotoc_md73"></a>
+Swap disks</h3>
+<p>The menu does not "yet" support disk swapping (WiP), however it is supported in the firmware (and can be use by the SummerCart64 terminal app).</p>
+<p>For correct swapping, ensure that you switch them in a compatible context: Disk Swap Compatibility:</p><ul>
+<li>From DMPJ: DMPJ, DMTJ, DMGJ, DMBJ, EFZJ</li>
+<li>From DMTJ: DMPJ, DMTJ, DMGJ, DMBJ, EFZJ</li>
+<li>From DMGJ: DMPJ, DMTJ, DMGJ, DMBJ, EFZJ</li>
+<li>From DMBJ: DMPJ, DMTJ, DMGJ, DMBJ, EFZJ</li>
+<li>From DKKJ: itself, and DKDJ (required)</li>
+<li>From DSCJ: DMPJ</li>
+</ul>
+<p>It is preferable that disks are switched back to the primary disk between each swap, for example: 1, 2, 1, 3, 1, 4...</p>
+<h3><a class="anchor" id="autotoc_md74"></a>
+Expansion disks</h3>
+<p>N64 and 64DD Compatible Combo Matches:</p><ul>
+<li>Mario Party 1: CLB* -&gt; ELB*</li>
+<li>F-Zero X: CFZ* -&gt; EFZ*</li>
+<li>Zelda OoT: CZL* -&gt; EZL*</li>
+<li>Pokémon Stadium 1 (JPN): CPSJ -&gt; <em>PSJ (E to Z)</em></li>
+<li><em>Pokémon Stadium 2 (JPN): CP2J -&gt; *P2J (E to Z)</em></li>
+<li><em>Dezaemon 3D: CDZ</em> -&gt; EDZ* &amp; DEZA (Prototype) (Could just be handled with C*** corresponding to E*** aside from Dezaemon 3D that I think the exception is worth doing) </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Nov 3 2025 22:52:08 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Tue Nov 4 2025 00:33:36 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

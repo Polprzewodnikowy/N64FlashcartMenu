@@ -11,7 +11,7 @@ var searchData=
   ['version_8',['version',['../rom__info_8h.html#aa4fa4e1a40bd152b26b22bceeeb72baf',1,'rom_info_t::version'],['../rom__info_8c.html#a2af72f100c356273d46284f6fd1dfc08',1,'match_t.fields.__unnamed19__::version'],['../rom__info_8h.html#a2af72f100c356273d46284f6fd1dfc08',1,'rom_info_t.libultra::version']]],
   ['vertical_5fscroll_5fpossible_9',['vertical_scroll_possible',['../text__viewer_8c.html#ad577758d0b0f5ffce3f530a8b64de89c',1,'text_file_t']]],
   ['vi_5fregs_5ft_10',['vi_regs_t',['../boot__io_8h.html#structvi__regs__t',1,'']]],
-  ['video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_11',['A quick start video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md113',1,'']]],
+  ['video_20tutorial_20on_20how_20to_20set_20up_20your_20environment_11',['A quick start video tutorial on how to set up your environment',['../md_docs_299__developer__guide.html#autotoc_md115',1,'']]],
   ['view_12',['View',['../group__view.html',1,'']]],
   ['view_5fbrowser_5fdisplay_13',['view_browser_display',['../group__view.html#gabafa23005a668b366f51f79010388444',1,'view_browser_display(menu_t *menu, surface_t *display):&#160;browser.c'],['../group__view.html#gabafa23005a668b366f51f79010388444',1,'view_browser_display(menu_t *menu, surface_t *display):&#160;browser.c']]],
   ['view_5fbrowser_5finit_14',['view_browser_init',['../group__view.html#ga3c7f6eae733ea2171df63a6849b4e978',1,'view_browser_init(menu_t *menu):&#160;browser.c'],['../group__view.html#ga3c7f6eae733ea2171df63a6849b4e978',1,'view_browser_init(menu_t *menu):&#160;browser.c']]],

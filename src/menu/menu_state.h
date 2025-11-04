@@ -56,6 +56,12 @@ typedef enum {
     ENTRY_TYPE_OTHER,
 } entry_type_t;
 
+/** @brief Display mode enumeration */
+typedef enum {
+    DISPLAY_MODE_LIST,
+    DISPLAY_MODE_GRID,
+} display_mode_t;
+
 /** @brief File Entry Structure */
 typedef struct {
     char *name;
@@ -102,6 +108,11 @@ typedef struct {
         int entries;
         entry_t *entry;
         int selected;
+        display_mode_t display_mode;
+        bool is_gameflix_mode;
+        int current_page;
+        int grid_row;
+        int grid_col;
     } browser;
 
     struct {

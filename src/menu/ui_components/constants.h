@@ -165,4 +165,36 @@
 /** @brief The tab active background colour. */
 #define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
+/** @brief The number of rows in the grid view. */
+#define GRID_ROWS                       (2)
+/** @brief The number of columns in the grid view. */
+#define GRID_COLS                       (3)
+/** @brief The number of items per page in grid view. */
+#define GRID_ITEMS_PER_PAGE             (GRID_ROWS * GRID_COLS)
+
+/** @brief The width of each grid cell. */
+#define GRID_CELL_WIDTH                 (192)
+/** @brief The height of each grid cell. */
+#define GRID_CELL_HEIGHT                (178)
+
+/** @brief The width of thumbnail images in grid view. */
+#define GRID_IMAGE_WIDTH                (180)
+/** @brief The height of thumbnail images in grid view. */
+#define GRID_IMAGE_HEIGHT               (120)
+
+/** @brief The horizontal spacing between grid cells. */
+#define GRID_SPACING_X                  (0)
+/** @brief The vertical spacing between grid cells. */
+#define GRID_SPACING_Y                  (6)
+
+/** @brief The grid starting position on the X axis. */
+#define GRID_START_X                    (VISIBLE_AREA_X0)
+/** @brief The grid starting position on the Y axis. */
+#define GRID_START_Y                    (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
+
+/** @brief The grid selection highlight color. */
+#define GRID_HIGHLIGHT_COLOR            RGBA32(0xFF, 0xFF, 0xFF, 0xFF)
+/** @brief The grid cell background color. */
+#define GRID_CELL_BG_COLOR              RGBA32(0x1F, 0x1F, 0x1F, 0xFF)
+
 #endif /* COMPONENTS_CONSTANTS_H__ */

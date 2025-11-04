@@ -229,8 +229,115 @@ static bool reload_directory (menu_t *menu) {
     return false;
 }
 
+/**
+ * @brief Recursively scan for ROMs, disks, and emulator files
+ */
+static bool load_gameflix_collection (menu_t *menu, path_t *search_path) {
+    dir_t dir_info;
+    int result;
+
+    result = dir_findfirst(path_get(search_path), &dir_info);
+
+    while (result == 0) {
+        // Skip hidden files/directories
+        bool hide = false;
+        if (!menu->settings.show_protected_entries) {
+            path_push(search_path, dir_info.d_name);
+            hide = path_is_hidden(search_path);
+            path_pop(search_path);
+        }
+
+        if (!hide) {
+            if (dir_info.d_type == DT_DIR) {
+                // Skip the gameflix directory itself to avoid recursion
+                if (strcmp(dir_info.d_name, "gameflix") != 0) {
+                    // Recurse into subdirectory
+                    path_push(search_path, dir_info.d_name);
+                    load_gameflix_collection(menu, search_path);
+                    path_pop(search_path);
+                }
+            } else {
+                // Check if file is a ROM/disk/emulator
+                entry_type_t type = ENTRY_TYPE_OTHER;
+
+                if (file_has_extensions(dir_info.d_name, rom_extensions)) {
+                    type = ENTRY_TYPE_ROM;
+                } else if (file_has_extensions(dir_info.d_name, disk_extensions)) {
+                    type = ENTRY_TYPE_DISK;
+                } else if (file_has_extensions(dir_info.d_name, emulator_extensions)) {
+                    type = ENTRY_TYPE_EMULATOR;
+                }
+
+                // Only add ROM/disk/emulator files
+                if (type == ENTRY_TYPE_ROM || type == ENTRY_TYPE_DISK || type == ENTRY_TYPE_EMULATOR) {
+                    menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
+
+                    if (!menu->browser.list) {
+                        return true;
+                    }
+
+                    entry_t *entry = &menu->browser.list[menu->browser.entries++];
+
+                    entry->name = strdup(dir_info.d_name);
+                    if (!entry->name) {
+                        browser_list_free(menu);
+                        return true;
+                    }
+
+                    entry->type = type;
+                    entry->size = dir_info.d_size;
+                }
+            }
+        }
+
+        result = dir_findnext(path_get(search_path), &dir_info);
+    }
+
+    if (result < -1) {
+        return true;
+    }
+
+    // Sort alphabetically after collecting all entries
+    if (menu->browser.entries > 0) {
+        qsort(menu->browser.list, menu->browser.entries, sizeof(entry_t), compare_entry);
+    }
+
+    return false;
+}
+
 static bool push_directory (menu_t *menu, char *directory) {
     path_t *previous_directory = path_clone(menu->browser.directory);
+
+    // Check if entering gameflix virtual directory
+    if (strcmp(directory, "gameflix") == 0 && path_is_root(menu->browser.directory)) {
+        browser_list_free(menu);
+
+        // Start recursive ROM scan from root
+        path_t *scan_path = path_init(menu->storage_prefix, "");
+        if (load_gameflix_collection(menu, scan_path)) {
+            path_free(scan_path);
+            path_free(previous_directory);
+            menu->browser.valid = false;
+            return true;
+        }
+        path_free(scan_path);
+
+        // Set up gameflix mode
+        path_push(menu->browser.directory, directory);
+        menu->browser.is_gameflix_mode = true;
+        menu->browser.display_mode = DISPLAY_MODE_GRID;
+        menu->browser.current_page = 0;
+        menu->browser.grid_row = 0;
+        menu->browser.grid_col = 0;
+        menu->browser.selected = 0;
+
+        if (menu->browser.entries > 0) {
+            menu->browser.entry = &menu->browser.list[0];
+        }
+
+        path_free(previous_directory);
+        return false;
+    }
 
     path_push(menu->browser.directory, directory);
 
@@ -247,6 +354,13 @@ static bool push_directory (menu_t *menu, char *directory) {
 
 static bool pop_directory (menu_t *menu) {
     path_t *previous_directory = path_clone(menu->browser.directory);
+
+    // Reset gameflix mode when exiting
+    if (menu->browser.is_gameflix_mode) {
+        menu->browser.is_gameflix_mode = false;
+        menu->browser.display_mode = DISPLAY_MODE_LIST;
+        ui_components_grid_free();
+    }
 
     path_pop(menu->browser.directory);
 
@@ -338,20 +452,89 @@ static void process (menu_t *menu) {
     int scroll_speed = menu->actions.go_fast ? 10 : 1;
 
     if (menu->browser.entries > 1) {
-        if (menu->actions.go_up) {
-            menu->browser.selected -= scroll_speed;
-            if (menu->browser.selected < 0) {
-                menu->browser.selected = 0;
+        if (menu->browser.display_mode == DISPLAY_MODE_GRID) {
+            // Grid navigation (2D)
+            int total_pages = (menu->browser.entries + GRID_ITEMS_PER_PAGE - 1) / GRID_ITEMS_PER_PAGE;
+            bool moved = false;
+
+            if (menu->actions.go_up) {
+                menu->browser.grid_row--;
+                if (menu->browser.grid_row < 0) {
+                    // Move to previous page
+                    if (menu->browser.current_page > 0) {
+                        menu->browser.current_page--;
+                        menu->browser.grid_row = GRID_ROWS - 1;
+                        moved = true;
+                    } else {
+                        menu->browser.grid_row = 0;
+                    }
+                } else {
+                    moved = true;
+                }
+            } else if (menu->actions.go_down) {
+                menu->browser.grid_row++;
+                if (menu->browser.grid_row >= GRID_ROWS) {
+                    // Move to next page
+                    if (menu->browser.current_page < total_pages - 1) {
+                        menu->browser.current_page++;
+                        menu->browser.grid_row = 0;
+                        moved = true;
+                    } else {
+                        menu->browser.grid_row = GRID_ROWS - 1;
+                    }
+                } else {
+                    moved = true;
+                }
+            } else if (menu->actions.go_left) {
+                menu->browser.grid_col--;
+                if (menu->browser.grid_col < 0) {
+                    menu->browser.grid_col = GRID_COLS - 1;
+                }
+                moved = true;
+            } else if (menu->actions.go_right) {
+                menu->browser.grid_col++;
+                if (menu->browser.grid_col >= GRID_COLS) {
+                    menu->browser.grid_col = 0;
+                }
+                moved = true;
             }
-            sound_play_effect(SFX_CURSOR);
-        } else if (menu->actions.go_down) {
-            menu->browser.selected += scroll_speed;
-            if (menu->browser.selected >= menu->browser.entries) {
-                menu->browser.selected = menu->browser.entries - 1;
+
+            if (moved) {
+                // Calculate selected index from grid position
+                int new_selected = (menu->browser.current_page * GRID_ITEMS_PER_PAGE) +
+                                   (menu->browser.grid_row * GRID_COLS) +
+                                   menu->browser.grid_col;
+
+                // Clamp to valid range
+                if (new_selected >= menu->browser.entries) {
+                    new_selected = menu->browser.entries - 1;
+                    // Adjust grid position to match
+                    int page_index = new_selected % GRID_ITEMS_PER_PAGE;
+                    menu->browser.grid_row = page_index / GRID_COLS;
+                    menu->browser.grid_col = page_index % GRID_COLS;
+                }
+
+                menu->browser.selected = new_selected;
+                menu->browser.entry = &menu->browser.list[menu->browser.selected];
+                sound_play_effect(SFX_CURSOR);
             }
-            sound_play_effect(SFX_CURSOR);
+        } else {
+            // List navigation (1D)
+            if (menu->actions.go_up) {
+                menu->browser.selected -= scroll_speed;
+                if (menu->browser.selected < 0) {
+                    menu->browser.selected = 0;
+                }
+                sound_play_effect(SFX_CURSOR);
+            } else if (menu->actions.go_down) {
+                menu->browser.selected += scroll_speed;
+                if (menu->browser.selected >= menu->browser.entries) {
+                    menu->browser.selected = menu->browser.entries - 1;
+                }
+                sound_play_effect(SFX_CURSOR);
+            }
+            menu->browser.entry = &menu->browser.list[menu->browser.selected];
         }
-        menu->browser.entry = &menu->browser.list[menu->browser.selected];
     }
 
     if (menu->actions.enter && menu->browser.entry) {
@@ -413,7 +596,19 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw_tabbed();
 
-    ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    // Draw either grid or list view based on display mode
+    if (menu->browser.display_mode == DISPLAY_MODE_GRID) {
+        ui_components_grid_draw(
+            menu->browser.list,
+            menu->browser.entries,
+            menu->browser.selected,
+            menu->browser.current_page,
+            menu->browser.grid_row,
+            menu->browser.grid_col
+        );
+    } else {
+        ui_components_file_list_draw(menu->browser.list, menu->browser.entries, menu->browser.selected);
+    }
 
     const char *action = NULL;
 
@@ -491,6 +686,16 @@ void view_browser_init (menu_t *menu) {
 
 void view_browser_display (menu_t *menu, surface_t *display) {
     process(menu);
+
+    // Load thumbnails for current page in grid mode
+    if (menu->browser.display_mode == DISPLAY_MODE_GRID && menu->browser.entries > 0) {
+        ui_components_grid_load_page(
+            menu->storage_prefix,
+            menu->browser.list,
+            menu->browser.entries,
+            menu->browser.current_page
+        );
+    }
 
     draw(menu, display);
 }

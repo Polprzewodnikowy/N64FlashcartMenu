@@ -269,9 +269,36 @@ void ui_components_tabs_draw(const char **text, int count, int selected, float w
 
 /**
  * @brief Draw the common part of the tabs component.
- * 
+ *
  * @param selected Index of the selected tab.
  */
 void ui_components_tabs_common_draw(int selected);
+
+/**
+ * @brief Free grid component resources.
+ */
+void ui_components_grid_free(void);
+
+/**
+ * @brief Load thumbnails for a specific page in grid view.
+ *
+ * @param storage_prefix Prefix for the storage location.
+ * @param list Pointer to the list of entries.
+ * @param entries Number of entries in the list.
+ * @param page Page number to load.
+ */
+void ui_components_grid_load_page(const char *storage_prefix, entry_t *list, int entries, int page);
+
+/**
+ * @brief Draw the grid view component.
+ *
+ * @param list Pointer to the list of entries.
+ * @param entries Number of entries in the list.
+ * @param selected Index of the currently selected entry.
+ * @param current_page Current page number.
+ * @param grid_row Current grid row (0-1).
+ * @param grid_col Current grid column (0-2).
+ */
+void ui_components_grid_draw(entry_t *list, int entries, int selected, int current_page, int grid_row, int grid_col);
 
 #endif /* UI_COMPONENTS_H__ */

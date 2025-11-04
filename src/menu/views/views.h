@@ -165,6 +165,15 @@ void view_rtc_init(menu_t *menu);
  */
 void view_rtc_display(menu_t *menu, surface_t *display);
 
+void view_controller_pakfs_init (menu_t *menu);
+void view_controller_pakfs_display (menu_t *menu, surface_t *display);
+
+void view_controller_pak_dump_info_init (menu_t *menu);
+void view_controller_pak_dump_info_display (menu_t *menu, surface_t *display);
+
+void view_controller_pak_note_dump_info_init (menu_t *menu);
+void view_controller_pak_note_dump_info_display (menu_t *menu, surface_t *display);
+
 /**
  * @brief Initialize the flashcart info view.
  * 
@@ -284,6 +293,36 @@ void view_history_init(menu_t *menu);
  * @param display Pointer to the display surface.
  */
 void view_history_display(menu_t *menu, surface_t *display);
+
+/**
+ * @brief Initialize the cheats editor view.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
+void view_datel_code_editor_init(menu_t *menu);
+
+/**
+ * @brief Display the cheats editor view.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_datel_code_editor_display(menu_t *menu, surface_t *display);
+
+/**
+ * @brief Initialize the archive browser view.
+ * 
+ * @param menu Pointer to the menu structure.
+ */
+void view_extract_file_init(menu_t *menu);
+
+/**
+ * @brief Display the archive browser view.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_extract_file_display(menu_t *menu, surface_t *display);
 
 /**
  * @brief Show an error message in the menu.

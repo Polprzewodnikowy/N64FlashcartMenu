@@ -8,12 +8,21 @@
 static component_boxart_t *boxart;
 static char *disk_filename;
 
-static char *convert_error_message (disk_err_t err) {
+static char *convert_disk_error_message (disk_err_t err) {
     switch (err) {
         case DISK_ERR_IO: return "I/O error during loading 64DD disk information";
         case DISK_ERR_NO_FILE: return "Couldn't open 64DD disk file";
         case DISK_ERR_INVALID: return "Invalid 64DD disk file";
         default: return "Unknown disk info load error";
+    }
+}
+
+static char *convert_rom_error_message (rom_err_t err) {
+    switch (err) {
+        case ROM_ERR_LOAD_IO: return "I/O error during loading ROM information and/or options";
+        case ROM_ERR_SAVE_IO: return "I/O error during storing ROM options";
+        case ROM_ERR_NO_FILE: return "Couldn't open ROM file";
+        default: return "Unknown ROM info load error";
     }
 }
 
@@ -43,10 +52,10 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
@@ -63,7 +72,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.disk_file) {
+    if (menu->load_pending.disk_file) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
@@ -212,7 +221,7 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
         if (err != ROM_OK) {
             path_free(menu->load.rom_path);
             menu->load.rom_path = NULL;
-            menu_show_error(menu, convert_error_message(err));
+            menu_show_error(menu, convert_rom_error_message(err));
             return false;
         }        
     }
@@ -226,28 +235,36 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.primary_dd_disk_file_path = NULL;
     }
 
-    menu->boot_pending.disk_file = false;
+    menu->load_pending.disk_file = false;
 
-    if(menu->load.load_history != -1 || menu->load.load_favorite != -1) {
-        int id = -1;
+    if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         bookkeeping_item_t* items;
+        int item_id = -1;
+        int max_count = 0;
 
-        if(menu->load.load_history != -1) {
-            id = menu->load.load_history;
+        if(menu->load.load_history_id != -1) {
+            item_id = menu->load.load_history_id;
             items = menu->bookkeeping.history_items;
-        } else if (menu->load.load_favorite != -1) {
-            id = menu->load.load_favorite;
+            max_count = HISTORY_COUNT;
+        } else if (menu->load.load_favorite_id != -1) {
+            item_id = menu->load.load_favorite_id;
             items = menu->bookkeeping.favorite_items;
+            max_count = FAVORITES_COUNT;
         }
 
-        menu->load.load_history = -1;
-        menu->load.load_favorite = -1;
+        // Reset IDs
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
 
         menu->load.primary_dd_disk_file_path = path_clone(items[id].primary_path);
         if(!load_rom(menu, items[id].secondary_path)) {
             return;
         }
 
+        menu->load.disk_path = path_clone(items[item_id].primary_path);
+        if(!load_rom(menu, items[item_id].secondary_path)) {
+            return;  // load_rom handles its own error messages
+        }
     } else {
         menu->load.primary_dd_disk_file_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);            
     }
@@ -258,12 +275,12 @@ void view_load_disk_init (menu_t *menu) {
     disk_filename = path_last_get(menu->load.primary_dd_disk_file_path);
     disk_err_t err = disk_info_load(menu->load.primary_dd_disk_file_path, &menu->load.disk_info);
     if (err != DISK_OK) {
-        menu_show_error(menu, convert_error_message(err));
+        menu_show_error(menu, convert_disk_error_message(err));
         return;
     }
 
     ui_components_context_menu_init(&options_context_menu);
-    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, IMAGE_BOXART_FRONT);
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, NULL, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {
@@ -271,8 +288,8 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.disk_file) {
-        menu->boot_pending.disk_file = false;
+    if (menu->load_pending.disk_file) {
+        menu->load_pending.disk_file = false;
         load(menu);
     }
 

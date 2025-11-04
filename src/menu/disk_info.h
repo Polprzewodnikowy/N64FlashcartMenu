@@ -29,15 +29,21 @@ typedef enum {
     DISK_REGION_USA,
 } disk_region_t;
 
-/** @brief Disk type enumeration. */
+/** @brief Disk type enumeration.
+ *
+ * The disk type is used to identify the type of 64DD disk.
+ * The values correspond to the disk types defined in the 64DD specification.
+ * There are 7 disk types, 0 - 6, corresponding to the relative sizes of the RAM area and the ROM area on the disk.
+ * The disk type of a particular disk is determined by the size of the writable area needed by the programmer.
+ */
 typedef enum {
-    DISK_TYPE_0,
-    DISK_TYPE_1,
-    DISK_TYPE_2,
-    DISK_TYPE_3,
-    DISK_TYPE_4,
-    DISK_TYPE_5,
-    DISK_TYPE_6,
+    DISK_TYPE_0,    /**< ROM: Zone 0-2, RAM: Zone 3-8 */
+    DISK_TYPE_1,    /**< ROM: Zone 0-3, RAM: Zone 4-8 */
+    DISK_TYPE_2,    /**< ROM: Zone 0-4, RAM: Zone 5-8 */
+    DISK_TYPE_3,    /**< ROM: Zone 0-5, RAM: Zone 6-8 */
+    DISK_TYPE_4,    /**< ROM: Zone 0-6, RAM: Zone 7-8 */
+    DISK_TYPE_5,    /**< ROM: Zone 0-7, RAM: Zone 8 */
+    DISK_TYPE_6,    /**< ROM: Zone 0-8, RAM: None */
 } disk_type_t;
 
 /** @brief Disk Information Structure. */

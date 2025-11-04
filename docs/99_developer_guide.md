@@ -65,9 +65,15 @@ To upload and run the ROM (requires power toggle):
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run
 ```
 
-To debug the ROM:
+To debug the ROM (requires power toggle):
 ```
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
+```
+
+To debug the ROM with upload and auto reboot:
+(note: the current debugging session menu may not be the same as the file uploaded. you need to `make all` first to ensure the latest menu is uploaded).
+```
+REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```
 
 #### Directly From your host (Windows) OS
@@ -103,6 +109,18 @@ Within the code, use the `debugf` command, and then deploy using a debug build e
     );
 ```
 The output will then be shown within the terminal.
+
+### Using feature flags
+To enable features that are not build by default, you can input flags as part of the build.
+i.e. the current notible flags are:
+```
+FEATURE_AUTOLOAD_ROM_ENABLED
+FEATURE_PATCHER_GUI_ENABLED
+BETA_SETTINGS
+FEATURE_DEPRECATED_FUNCTIONALITY
+```
+An example build command would be:
+`make clean && FLAGS="-DFEATURE_PATCHER_GUI_ENABLED -DFEATURE_DEPRECATED_FUNCTIONALITY" make all`
 
 
 ### Update submodules

@@ -18,7 +18,7 @@ N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \
@@ -43,6 +43,7 @@ SRCS = \
 	menu/actions.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
+	menu/datel_codes.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
@@ -57,12 +58,15 @@ SRCS = \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
+	menu/ui_components/file_info.c \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
 	menu/views/browser.c \
 	menu/views/credits.c \
+	menu/views/datel_code_editor.c \
 	menu/views/error.c \
+	menu/views/extract_file.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/history_favorites.c \
@@ -77,10 +81,14 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
+	menu/views/cpakfs_manager.c \
+	menu/views/cpak_dump_info.c \
+	menu/views/cpak_note_dump_info.c \
+	utils/cpakfs_utils.c \
 	utils/fs.c
 
 FONTS = \
-	FiraMonoBold.ttf
+	Firple-Bold.ttf
 
 SOUNDS = \
 	cursorsound.wav \
@@ -99,9 +107,9 @@ FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
-$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
-$(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/FiraMonoBold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 16 --range 20-7F --range 80-1FF --range 2026-2026 --ellipsis 2026,1
+$(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
+$(SPNG_OBJS): N64_CFLAGS+=-DSPNG_USE_MINIZ -fcompare-debug-second
+$(FILESYSTEM_DIR)/Firple-Bold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --charset charset.txt --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
@@ -184,6 +192,14 @@ else
 	./remotedeploy.sh -d
 endif
 .PHONY: run-debug
+
+run-debug-upload: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /du
+else
+	./remotedeploy.sh -du
+endif
+.PHONY: run-debug-upload
 
 # test:
 #   TODO: run tests

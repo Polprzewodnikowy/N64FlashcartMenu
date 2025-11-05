@@ -167,12 +167,12 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
     path_t *path = path_init(menu->storage_prefix, DDIPL_LOCATION);
     flashcart_disk_parameters_t disk_parameters;
 
-    disk_parameters.development_drive = (menu->load.disk_info.region == DISK_REGION_DEVELOPMENT);
-    disk_parameters.disk_type = menu->load.disk_info.disk_type;
-    memcpy(disk_parameters.bad_system_area_lbas, menu->load.disk_info.bad_system_area_lbas, sizeof(disk_parameters.bad_system_area_lbas));
-    memcpy(disk_parameters.defect_tracks, menu->load.disk_info.defect_tracks, sizeof(disk_parameters.defect_tracks));
+    disk_parameters.development_drive = (menu->load.disk_slot[0].disk_info.region == DISK_REGION_DEVELOPMENT);
+    disk_parameters.disk_type = menu->load.disk_slot[0].disk_info.disk_type;
+    memcpy(disk_parameters.bad_system_area_lbas, menu->load.disk_slot[0].disk_info.bad_system_area_lbas, sizeof(disk_parameters.bad_system_area_lbas));
+    memcpy(disk_parameters.defect_tracks, menu->load.disk_slot[0].disk_info.defect_tracks, sizeof(disk_parameters.defect_tracks));
 
-    switch (menu->load.disk_info.region) {
+    switch (menu->load.disk_slot[0].disk_info.region) {
         case DISK_REGION_DEVELOPMENT:
             path_push(path, "NDXJ0.n64");
             break;
@@ -197,7 +197,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_path), &disk_parameters);
+    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slot[0].disk_path), &disk_parameters);
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }

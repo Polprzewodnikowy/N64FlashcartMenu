@@ -9,10 +9,10 @@ An open source menu for N64 flashcarts that aims to support as many as possible.
 This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 
 > [!TIP]
-> New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
+> Help sponsor development [NetworkFusion on Ko-Fi](https://https://ko-fi.com/networkfusion). Or submit your Pull Request.
 
-> [!WARNING]
-> **This project considers flashcart sellers that provide this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
+> [!TIP]
+> New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
 
 ## Flashcart Support
 This menu aims to support as many N64 flashcarts as possible.  
@@ -51,6 +51,7 @@ Pre-release only:
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).
+* Game art image switching.
 
 
 ## Aims

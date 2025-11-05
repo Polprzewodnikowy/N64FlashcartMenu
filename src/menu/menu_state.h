@@ -82,9 +82,7 @@ typedef struct {
 
 typedef struct {
     disk_slot_entry_t primary;
-    disk_slot_entry_t slot_one;
-    disk_slot_entry_t slot_two;
-    disk_slot_entry_t slot_three;
+    disk_slot_entry_t slot[4];
 } disk_slot_t;
 
 /** @brief Menu Structure */

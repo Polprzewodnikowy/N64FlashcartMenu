@@ -285,7 +285,7 @@ void view_load_disk_init (menu_t *menu) {
         return;
     }
     // load swap disks
-    // disk_err_t err = disk_info_load(menu->load.disk_slot[1].disk_path, &menu->load.disk_slot[1].disk_info);
+    // disk_err_t err = disk_info_load(menu->load.disk_slots.slot[0].disk_path, &menu->load.disk_slots.slot[0].disk_info);
     // if (err != DISK_OK) {
     //     menu_show_error(menu, convert_disk_error_message(err));
     //     return;

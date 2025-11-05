@@ -105,6 +105,8 @@ Data Structures</h2></td></tr>
 <tr class="memitem:structentry__t" id="r_structentry__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structentry__t">entry_t</a></td></tr>
 <tr class="memdesc:structentry__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">File Entry Structure.  <a href="#structentry__t">More...</a><br /></td></tr>
 <tr class="separator:structentry__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structdisk__slot__entry__t" id="r_structdisk__slot__entry__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structdisk__slot__entry__t">disk_slot_entry_t</a></td></tr>
+<tr class="separator:structdisk__slot__entry__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structmenu__t" id="r_structmenu__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structmenu__t">menu_t</a></td></tr>
 <tr class="memdesc:structmenu__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Menu Structure.  <a href="#structmenu__t">More...</a><br /></td></tr>
 <tr class="separator:structmenu__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,6 +218,35 @@ size</td>
 <a id="a505205a7877f2cca3b15355b9df628f6" name="a505205a7877f2cca3b15355b9df628f6"></a>int32_t</td>
 <td class="fieldname">
 index</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="structdisk__slot__entry__t" id="structdisk__slot__entry__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structdisk__slot__entry__t">&#9670;&#160;</a></span>disk_slot_entry_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct disk_slot_entry_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"></div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a3aba7892ba50e7ea2a23b4f23ee2764f" name="a3aba7892ba50e7ea2a23b4f23ee2764f"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
+<td class="fieldname">
+disk_path</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a878ab4f223b60d335f28f42ffef69f54" name="a878ab4f223b60d335f28f42ffef69f54"></a><a class="el" href="disk__info_8h.html#structdisk__info__t">disk_info_t</a></td>
+<td class="fieldname">
+disk_info</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -498,15 +529,9 @@ rom_info</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a id="aa15da35798f753cd041bb3877e15ae69" name="aa15da35798f753cd041bb3877e15ae69"></a><a class="el" href="path_8h.html#structpath__t">path_t</a> *</td>
+<a id="a99d9c18dadfee1a004d9ffa860930945" name="a99d9c18dadfee1a004d9ffa860930945"></a><a class="el" href="#structdisk__slot__entry__t">disk_slot_entry_t</a></td>
 <td class="fieldname">
-disk_path</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a id="aea0f64b3818cf4031cb0e0551f0b359f" name="aea0f64b3818cf4031cb0e0551f0b359f"></a><a class="el" href="disk__info_8h.html#structdisk__info__t">disk_info_t</a></td>
-<td class="fieldname">
-disk_info</td>
+disk_slot[4]</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
@@ -575,7 +600,7 @@ extract_file</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 4 2025 02:19:41 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Wed Nov 5 2025 22:30:03 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

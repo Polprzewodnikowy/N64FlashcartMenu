@@ -37,7 +37,7 @@ static char *format_disk_region (disk_region_t region) {
 
 
 static void add_favorite (menu_t *menu, void *arg) {
-    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_slot[0].disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_slots.primary.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
 }
 
 static component_context_menu_t options_context_menu = { .list = {
@@ -113,10 +113,10 @@ static void draw (menu_t *menu, surface_t *d) {
             " Disk type:\t%d\n"
             "\n"
             ,
-            format_disk_region(menu->load.disk_slot[0].disk_info.region),
-            menu->load.disk_slot[0].disk_info.id,
-            menu->load.disk_slot[0].disk_info.version,
-            menu->load.disk_slot[0].disk_info.disk_type
+            format_disk_region(menu->load.disk_slots.primary.disk_info.region),
+            menu->load.disk_slots.primary.disk_info.id,
+            menu->load.disk_slots.primary.disk_info.version,
+            menu->load.disk_slots.primary.disk_info.disk_type
         );
 
         ui_components_actions_bar_text_draw(
@@ -183,7 +183,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_slot[0].disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_slots.primary.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (menu->load.combined_disk_rom) {
@@ -230,9 +230,9 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
 }
 
 void view_load_disk_init (menu_t *menu) {
-    if (menu->load.disk_slot[0].disk_path) {
-        path_free(menu->load.disk_slot[0].disk_path);
-        menu->load.disk_slot[0].disk_path = NULL;
+    if (menu->load.disk_slots.primary.disk_path) {
+        path_free(menu->load.disk_slots.primary.disk_path);
+        menu->load.disk_slots.primary.disk_path = NULL;
     }
 
     menu->load_pending.disk_file = false;
@@ -269,17 +269,17 @@ void view_load_disk_init (menu_t *menu) {
             return;
         }
 
-        menu->load.disk_slot[0].disk_path = path_clone(items[item_id].primary_path);
+        menu->load.disk_slots.primary.disk_path = path_clone(items[item_id].primary_path);
         if(!load_rom(menu, items[item_id].secondary_path)) {
             return;  // load_rom handles its own error messages
         }
     } else {
         // Existing browser path logic
-        menu->load.disk_slot[0].disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        menu->load.disk_slots.primary.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
 
-    disk_filename = path_last_get(menu->load.disk_slot[0].disk_path);
-    disk_err_t err = disk_info_load(menu->load.disk_slot[0].disk_path, &menu->load.disk_slot[0].disk_info);
+    disk_filename = path_last_get(menu->load.disk_slots.primary.disk_path);
+    disk_err_t err = disk_info_load(menu->load.disk_slots.primary.disk_path, &menu->load.disk_slots.primary.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_disk_error_message(err));
         return;
@@ -292,7 +292,7 @@ void view_load_disk_init (menu_t *menu) {
     // }
 
     ui_components_context_menu_init(&options_context_menu);
-    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_slot[0].disk_info.id, NULL, IMAGE_BOXART_FRONT);
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_slots.primary.disk_info.id, NULL, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {

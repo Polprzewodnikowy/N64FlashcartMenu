@@ -8,7 +8,5 @@ var searchData=
   ['has_5ffeature_5',['has_feature',['../flashcart_8h.html#aa2fe700083b66bd2eabf3dd61fa822d7',1,'flashcart_t']]],
   ['height_6',['height',['../background_8c.html#a91a944d389d76792077ff64bf966e467',1,'cache_metadata_t']]],
   ['hide_5fpending_7',['hide_pending',['../ui__components_8h.html#a3f9c7fdf201044d4a5c2b26481a1e947',1,'component_context_menu_t']]],
-  ['hide_5from_5fextension_8',['hide_rom_extension',['../settings_8h.html#a3f82e90c9d5b60217087b9a9ec2f1053',1,'settings_t']]],
-  ['hide_5from_5ftags_9',['hide_rom_tags',['../settings_8h.html#aad7fc4b77aaefcfdc7d45f4c386aab50',1,'settings_t']]],
-  ['history_5fitems_10',['history_items',['../bookkeeping_8h.html#ae3c2f929ccfe4534dc071cde336285f3',1,'bookkeeping_t']]]
+  ['history_5fitems_8',['history_items',['../bookkeeping_8h.html#ae3c2f929ccfe4534dc071cde336285f3',1,'bookkeeping_t']]]
 ];

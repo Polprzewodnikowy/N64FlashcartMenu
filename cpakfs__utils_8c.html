@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>N64FlashcartMenu: cpakfs_utils.h File Reference</title>
+<title>N64FlashcartMenu: cpakfs_utils.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,182 +89,61 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
-  <div class="headertitle"><div class="title">cpakfs_utils.h File Reference</div></div>
+  <div class="headertitle"><div class="title">cpakfs_utils.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Utilities for working with Controller Pak file systems.  
+<p>Implementation of Controller Pak file system utilities.  
 <a href="#details">More...</a></p>
-
-<p><a href="cpakfs__utils_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:structcpakfs__path__strings__t" id="r_structcpakfs__path__strings__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structcpakfs__path__strings__t">cpakfs_path_strings_t</a></td></tr>
-<tr class="memdesc:structcpakfs__path__strings__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure holding parsed components of a Controller Pak file path.  <a href="#structcpakfs__path__strings__t">More...</a><br /></td></tr>
-<tr class="separator:structcpakfs__path__strings__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a5461070c02b8db2645b69608529d7604" id="r_a5461070c02b8db2645b69608529d7604"><td class="memItemLeft" align="right" valign="top"><a id="a5461070c02b8db2645b69608529d7604" name="a5461070c02b8db2645b69608529d7604"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>FS_BLOCK_DIVIDER</b>&#160;&#160;&#160;(8 * 32)</td></tr>
-<tr class="memdesc:a5461070c02b8db2645b69608529d7604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Divider constant for file system block calculations. <br /></td></tr>
-<tr class="separator:a5461070c02b8db2645b69608529d7604"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5439852860af56d4fe2ccf9910bd119b" id="r_a5439852860af56d4fe2ccf9910bd119b"><td class="memItemLeft" align="right" valign="top"><a id="a5439852860af56d4fe2ccf9910bd119b" name="a5439852860af56d4fe2ccf9910bd119b"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_NUM_NOTES</b>&#160;&#160;&#160;16</td></tr>
-<tr class="memdesc:a5439852860af56d4fe2ccf9910bd119b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of notes (files) supported on a Controller Pak. <br /></td></tr>
-<tr class="separator:a5439852860af56d4fe2ccf9910bd119b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab91af506e07a9d9a262e599df0e03b2b" id="r_ab91af506e07a9d9a262e599df0e03b2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab91af506e07a9d9a262e599df0e03b2b">get_block_size_from_fs_path</a> (const char *filename_cpak)</td></tr>
-<tr class="memdesc:ab91af506e07a9d9a262e599df0e03b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the block size from a Controller Pak file system path.  <br /></td></tr>
-<tr class="separator:ab91af506e07a9d9a262e599df0e03b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea3880dc78e1cb50fb95d6736287fd0f" id="r_aea3880dc78e1cb50fb95d6736287fd0f"><td class="memItemLeft" align="right" valign="top"><a id="aea3880dc78e1cb50fb95d6736287fd0f" name="aea3880dc78e1cb50fb95d6736287fd0f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>unmount_all_cpakfs</b> (void)</td></tr>
-<tr class="memdesc:aea3880dc78e1cb50fb95d6736287fd0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmount all Controller Pak file systems. <br /></td></tr>
-<tr class="separator:aea3880dc78e1cb50fb95d6736287fd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a317839c959ab5ced2cbc3eb0c16d6377" id="r_a317839c959ab5ced2cbc3eb0c16d6377"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a317839c959ab5ced2cbc3eb0c16d6377">mount_cpakfs</a> (int controller)</td></tr>
-<tr class="memdesc:a317839c959ab5ced2cbc3eb0c16d6377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mount the Controller Pak file system for a given controller.  <br /></td></tr>
-<tr class="separator:a317839c959ab5ced2cbc3eb0c16d6377"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa558ad2522aba52f6cb3a2ad43ea5cdb" id="r_aa558ad2522aba52f6cb3a2ad43ea5cdb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa558ad2522aba52f6cb3a2ad43ea5cdb">has_cpak</a> (int controller)</td></tr>
 <tr class="memdesc:aa558ad2522aba52f6cb3a2ad43ea5cdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a Controller Pak is present in the given controller.  <br /></td></tr>
 <tr class="separator:aa558ad2522aba52f6cb3a2ad43ea5cdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab91af506e07a9d9a262e599df0e03b2b" id="r_ab91af506e07a9d9a262e599df0e03b2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab91af506e07a9d9a262e599df0e03b2b">get_block_size_from_fs_path</a> (const char *filename_cpak)</td></tr>
+<tr class="memdesc:ab91af506e07a9d9a262e599df0e03b2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the block size from a Controller Pak file system path.  <br /></td></tr>
+<tr class="separator:ab91af506e07a9d9a262e599df0e03b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab60c976955f46d4edcca087af0e2717" id="r_aab60c976955f46d4edcca087af0e2717"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab60c976955f46d4edcca087af0e2717">get_file_size_from_fs_path</a> (const char *filename_cpak)</td></tr>
 <tr class="memdesc:aab60c976955f46d4edcca087af0e2717"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the file size from a Controller Pak file system path.  <br /></td></tr>
 <tr class="separator:aab60c976955f46d4edcca087af0e2717"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a194a3e60d6a8d0555a69cd75dc069b6b" id="r_a194a3e60d6a8d0555a69cd75dc069b6b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194a3e60d6a8d0555a69cd75dc069b6b">extract_title_from_absolute_path</a> (const char *path, char *outbuf, size_t outbuf_size)</td></tr>
-<tr class="memdesc:a194a3e60d6a8d0555a69cd75dc069b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the title from an absolute file path.  <br /></td></tr>
-<tr class="separator:a194a3e60d6a8d0555a69cd75dc069b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bd4fdfcc94976008ab08ac6e0c506b6" id="r_a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bd4fdfcc94976008ab08ac6e0c506b6">parse_cpakfs_fullname</a> (const char *fullname, <a class="el" href="#structcpakfs__path__strings__t">cpakfs_path_strings_t</a> *out)</td></tr>
-<tr class="memdesc:a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a Controller Pak full filename into its components.  <br /></td></tr>
-<tr class="separator:a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6cfc0d92dc4af1f293f89921ae74b676" id="r_a6cfc0d92dc4af1f293f89921ae74b676"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cfc0d92dc4af1f293f89921ae74b676">file_exists_full</a> (const char *full_mounted_path)</td></tr>
-<tr class="memdesc:a6cfc0d92dc4af1f293f89921ae74b676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a file exists at the given full mounted path.  <br /></td></tr>
-<tr class="separator:a6cfc0d92dc4af1f293f89921ae74b676"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6d568dba346ad786b8e2f76b0553152" id="r_ac6d568dba346ad786b8e2f76b0553152"><td class="memItemLeft" align="right" valign="top"><a id="ac6d568dba346ad786b8e2f76b0553152" name="ac6d568dba346ad786b8e2f76b0553152"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>unmount_all_cpakfs</b> ()</td></tr>
+<tr class="memdesc:ac6d568dba346ad786b8e2f76b0553152"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unmount all Controller Pak file systems. <br /></td></tr>
+<tr class="separator:ac6d568dba346ad786b8e2f76b0553152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a358564e756f44cdd5697e7c7dd034bbe" id="r_a358564e756f44cdd5697e7c7dd034bbe"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a358564e756f44cdd5697e7c7dd034bbe">inc_index_note</a> (int current_index)</td></tr>
 <tr class="memdesc:a358564e756f44cdd5697e7c7dd034bbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increment a note index, wrapping around MAX_NUM_NOTES.  <br /></td></tr>
 <tr class="separator:a358564e756f44cdd5697e7c7dd034bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa9a8b21dbb10f350a49233192847329" id="r_afa9a8b21dbb10f350a49233192847329"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa9a8b21dbb10f350a49233192847329">dec_index_note</a> (int current_index)</td></tr>
 <tr class="memdesc:afa9a8b21dbb10f350a49233192847329"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrement a note index, wrapping around MAX_NUM_NOTES.  <br /></td></tr>
 <tr class="separator:afa9a8b21dbb10f350a49233192847329"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a317839c959ab5ced2cbc3eb0c16d6377" id="r_a317839c959ab5ced2cbc3eb0c16d6377"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a317839c959ab5ced2cbc3eb0c16d6377">mount_cpakfs</a> (int controller)</td></tr>
+<tr class="memdesc:a317839c959ab5ced2cbc3eb0c16d6377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mount the Controller Pak file system for a given controller.  <br /></td></tr>
+<tr class="separator:a317839c959ab5ced2cbc3eb0c16d6377"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a194a3e60d6a8d0555a69cd75dc069b6b" id="r_a194a3e60d6a8d0555a69cd75dc069b6b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194a3e60d6a8d0555a69cd75dc069b6b">extract_title_from_absolute_path</a> (const char *path, char *outbuf, size_t outbuf_size)</td></tr>
+<tr class="memdesc:a194a3e60d6a8d0555a69cd75dc069b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the title from an absolute file path.  <br /></td></tr>
+<tr class="separator:a194a3e60d6a8d0555a69cd75dc069b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bd4fdfcc94976008ab08ac6e0c506b6" id="r_a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2bd4fdfcc94976008ab08ac6e0c506b6">parse_cpakfs_fullname</a> (const char *fullname, <a class="el" href="cpakfs__utils_8h.html#structcpakfs__path__strings__t">cpakfs_path_strings_t</a> *out)</td></tr>
+<tr class="memdesc:a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a Controller Pak full filename into its components.  <br /></td></tr>
+<tr class="separator:a2bd4fdfcc94976008ab08ac6e0c506b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22f8aaef686aad01a388adf83ff9e944" id="r_a22f8aaef686aad01a388adf83ff9e944"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22f8aaef686aad01a388adf83ff9e944">pick_unique_fullname_with_mount</a> (const char *mount_prefix, const char *desired_name, char *out_fullpath, size_t outsz, int(*exists_fullpath)(const char *fullpath))</td></tr>
 <tr class="memdesc:a22f8aaef686aad01a388adf83ff9e944"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pick a unique full filename with mount prefix, avoiding collisions.  <br /></td></tr>
 <tr class="separator:a22f8aaef686aad01a388adf83ff9e944"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cfc0d92dc4af1f293f89921ae74b676" id="r_a6cfc0d92dc4af1f293f89921ae74b676"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cfc0d92dc4af1f293f89921ae74b676">file_exists_full</a> (const char *full_mounted_path)</td></tr>
+<tr class="memdesc:a6cfc0d92dc4af1f293f89921ae74b676"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a file exists at the given full mounted path.  <br /></td></tr>
+<tr class="separator:a6cfc0d92dc4af1f293f89921ae74b676"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a219b82594417201920623e82d79354d8" id="r_a219b82594417201920623e82d79354d8"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a219b82594417201920623e82d79354d8">CPAK_MOUNT_ARRAY</a> [4]</td></tr>
-<tr class="memdesc:a219b82594417201920623e82d79354d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of Controller Pak mount point strings (e.g., "cpak1:/").  <br /></td></tr>
+<tr class="memdesc:a219b82594417201920623e82d79354d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of Controller Pak mount point strings.  <br /></td></tr>
 <tr class="separator:a219b82594417201920623e82d79354d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utilities for working with Controller Pak file systems. </p>
-</div><hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="structcpakfs__path__strings__t" id="structcpakfs__path__strings__t"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structcpakfs__path__strings__t">&#9670;&#160;</a></span>cpakfs_path_strings_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct cpakfs_path_strings_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><p>Structure holding parsed components of a Controller Pak file path. </p>
-<p>This struct contains the game code, publisher code, filename, and extension parsed from a Controller Pak file path. </p>
-</div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="ae9da9578e7b8ae989a881e322a82ceed" name="ae9da9578e7b8ae989a881e322a82ceed"></a>char</td>
-<td class="fieldname">
-gamecode[5]</td>
-<td class="fielddoc">
-<p>Game code (4 chars + null terminator) </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a560d02fb4ddef8f05a86b4856c9ce34a" name="a560d02fb4ddef8f05a86b4856c9ce34a"></a>char</td>
-<td class="fieldname">
-pubcode[5]</td>
-<td class="fielddoc">
-<p>Publisher code (up to 4 chars + null terminator) </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="abe07678dec513bae87d3f303c5cc7edb" name="abe07678dec513bae87d3f303c5cc7edb"></a>char</td>
-<td class="fieldname">
-filename[17]</td>
-<td class="fielddoc">
-<p>Filename (up to 16 chars + null terminator) </p>
-</td></tr>
-<tr><td class="fieldtype">
-<a id="a8336f174a81765e129e1e30570a7d058" name="a8336f174a81765e129e1e30570a7d058"></a>char</td>
-<td class="fieldname">
-ext[5]</td>
-<td class="fielddoc">
-<p>Extension (up to 4 chars + null terminator) </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ab91af506e07a9d9a262e599df0e03b2b" name="ab91af506e07a9d9a262e599df0e03b2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab91af506e07a9d9a262e599df0e03b2b">&#9670;&#160;</a></span>get_block_size_from_fs_path()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int get_block_size_from_fs_path </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>filename_cpak</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the block size from a Controller Pak file system path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">filename_cpak</td><td>The Controller Pak file path. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The block size, or -1 on error. </dd></dl>
-
-</div>
-</div>
-<a id="a317839c959ab5ced2cbc3eb0c16d6377" name="a317839c959ab5ced2cbc3eb0c16d6377"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a317839c959ab5ced2cbc3eb0c16d6377">&#9670;&#160;</a></span>mount_cpakfs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int mount_cpakfs </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>controller</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Mount the Controller Pak file system for a given controller. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">controller</td><td>The controller index (0-3). </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, -1 on failure. </dd></dl>
-
-</div>
-</div>
+<div class="textblock"><p>Implementation of Controller Pak file system utilities. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="aa558ad2522aba52f6cb3a2ad43ea5cdb" name="aa558ad2522aba52f6cb3a2ad43ea5cdb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa558ad2522aba52f6cb3a2ad43ea5cdb">&#9670;&#160;</a></span>has_cpak()</h2>
 
@@ -291,6 +170,32 @@ ext[5]</td>
 
 </div>
 </div>
+<a id="ab91af506e07a9d9a262e599df0e03b2b" name="ab91af506e07a9d9a262e599df0e03b2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab91af506e07a9d9a262e599df0e03b2b">&#9670;&#160;</a></span>get_block_size_from_fs_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int get_block_size_from_fs_path </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>filename_cpak</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the block size from a Controller Pak file system path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename_cpak</td><td>The Controller Pak file path. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The block size, or -1 on error. </dd></dl>
+
+</div>
+</div>
 <a id="aab60c976955f46d4edcca087af0e2717" name="aab60c976955f46d4edcca087af0e2717"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab60c976955f46d4edcca087af0e2717">&#9670;&#160;</a></span>get_file_size_from_fs_path()</h2>
 
@@ -314,110 +219,6 @@ ext[5]</td>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The file size in bytes, or -1 on error. </dd></dl>
-
-</div>
-</div>
-<a id="a194a3e60d6a8d0555a69cd75dc069b6b" name="a194a3e60d6a8d0555a69cd75dc069b6b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a194a3e60d6a8d0555a69cd75dc069b6b">&#9670;&#160;</a></span>extract_title_from_absolute_path()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int extract_title_from_absolute_path </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>outbuf</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outbuf_size</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Extract the title from an absolute file path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>The absolute file path. </td></tr>
-    <tr><td class="paramname">outbuf</td><td>Output buffer for the title. </td></tr>
-    <tr><td class="paramname">outbuf_size</td><td>Size of the output buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error.</dd></dl>
-<p>The title is the filename up to the first underscore or dot, or the whole filename if neither is present.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>The absolute file path. </td></tr>
-    <tr><td class="paramname">outbuf</td><td>Output buffer for the title. </td></tr>
-    <tr><td class="paramname">outbuf_size</td><td>Size of the output buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
-
-</div>
-</div>
-<a id="a2bd4fdfcc94976008ab08ac6e0c506b6" name="a2bd4fdfcc94976008ab08ac6e0c506b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bd4fdfcc94976008ab08ac6e0c506b6">&#9670;&#160;</a></span>parse_cpakfs_fullname()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int parse_cpakfs_fullname </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>fullname</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="#structcpakfs__path__strings__t">cpakfs_path_strings_t</a> *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parse a Controller Pak full filename into its components. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">fullname</td><td>The full filename string. </td></tr>
-    <tr><td class="paramname">out</td><td>Output struct for parsed components. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
-
-</div>
-</div>
-<a id="a6cfc0d92dc4af1f293f89921ae74b676" name="a6cfc0d92dc4af1f293f89921ae74b676"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cfc0d92dc4af1f293f89921ae74b676">&#9670;&#160;</a></span>file_exists_full()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int file_exists_full </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>full_mounted_path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Check if a file exists at the given full mounted path. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">full_mounted_path</td><td>The full mounted file path. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>1 if the file exists, 0 otherwise. </dd></dl>
 
 </div>
 </div>
@@ -473,6 +274,101 @@ ext[5]</td>
 
 </div>
 </div>
+<a id="a317839c959ab5ced2cbc3eb0c16d6377" name="a317839c959ab5ced2cbc3eb0c16d6377"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a317839c959ab5ced2cbc3eb0c16d6377">&#9670;&#160;</a></span>mount_cpakfs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int mount_cpakfs </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>controller</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Mount the Controller Pak file system for a given controller. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">controller</td><td>The controller index (0-3). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, -1 on failure. </dd></dl>
+
+</div>
+</div>
+<a id="a194a3e60d6a8d0555a69cd75dc069b6b" name="a194a3e60d6a8d0555a69cd75dc069b6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a194a3e60d6a8d0555a69cd75dc069b6b">&#9670;&#160;</a></span>extract_title_from_absolute_path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int extract_title_from_absolute_path </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>outbuf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>outbuf_size</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Extract the title from an absolute file path. </p>
+<p>The title is the filename up to the first underscore or dot, or the whole filename if neither is present.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The absolute file path. </td></tr>
+    <tr><td class="paramname">outbuf</td><td>Output buffer for the title. </td></tr>
+    <tr><td class="paramname">outbuf_size</td><td>Size of the output buffer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
+
+</div>
+</div>
+<a id="a2bd4fdfcc94976008ab08ac6e0c506b6" name="a2bd4fdfcc94976008ab08ac6e0c506b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bd4fdfcc94976008ab08ac6e0c506b6">&#9670;&#160;</a></span>parse_cpakfs_fullname()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int parse_cpakfs_fullname </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>fullname</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cpakfs__utils_8h.html#structcpakfs__path__strings__t">cpakfs_path_strings_t</a> *</td>          <td class="paramname"><span class="paramname"><em>out</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parse a Controller Pak full filename into its components. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fullname</td><td>The full filename string. </td></tr>
+    <tr><td class="paramname">out</td><td>Output struct for parsed components. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
+
+</div>
+</div>
 <a id="a22f8aaef686aad01a388adf83ff9e944" name="a22f8aaef686aad01a388adf83ff9e944"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a22f8aaef686aad01a388adf83ff9e944">&#9670;&#160;</a></span>pick_unique_fullname_with_mount()</h2>
 
@@ -508,18 +404,6 @@ ext[5]</td>
 </div><div class="memdoc">
 
 <p>Pick a unique full filename with mount prefix, avoiding collisions. </p>
-<p>Attempts to find a unique filename by incrementing the extension in base36 if needed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mount_prefix</td><td>The mount prefix (e.g., "cpak1:/"). </td></tr>
-    <tr><td class="paramname">desired_name</td><td>The desired base filename. </td></tr>
-    <tr><td class="paramname">out_fullpath</td><td>Output buffer for the unique full path. </td></tr>
-    <tr><td class="paramname">outsz</td><td>Size of the output buffer. </td></tr>
-    <tr><td class="paramname">exists_fullpath</td><td>Function pointer to check if a full path exists. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error.</dd></dl>
 <p>This function attempts to find a unique filename by incrementing the extension in base36 if needed.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -535,28 +419,49 @@ ext[5]</td>
 
 </div>
 </div>
+<a id="a6cfc0d92dc4af1f293f89921ae74b676" name="a6cfc0d92dc4af1f293f89921ae74b676"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfc0d92dc4af1f293f89921ae74b676">&#9670;&#160;</a></span>file_exists_full()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int file_exists_full </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>full_mounted_path</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a file exists at the given full mounted path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">full_mounted_path</td><td>The full mounted file path. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if the file exists, 0 otherwise. </dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a id="a219b82594417201920623e82d79354d8" name="a219b82594417201920623e82d79354d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a219b82594417201920623e82d79354d8">&#9670;&#160;</a></span>CPAK_MOUNT_ARRAY</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">const char* const CPAK_MOUNT_ARRAY[4]</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-
-<p>Array of Controller Pak mount point strings (e.g., "cpak1:/"). </p>
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    <span class="stringliteral">&quot;cpak1:/&quot;</span>, <span class="stringliteral">&quot;cpak2:/&quot;</span>, <span class="stringliteral">&quot;cpak3:/&quot;</span>, <span class="stringliteral">&quot;cpak4:/&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment -->
+<p>Array of Controller Pak mount point strings. </p>
 <p>Array of Controller Pak mount point strings (e.g., "cpak1:/"). </p>
 
 </div>

@@ -9,7 +9,7 @@ var searchData=
   ['hack_20name_20here_20does_20not_20work_6',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md108',1,'']]],
   ['hacks_20fan_20translations_20etc_7',['ROM Patches (Hacks, Fan Translations, etc.)',['../md_docs_214__rom__patches.html#autotoc_md66',1,'']]],
   ['hardware_20modifications_20compatibility_8',['N64 Hardware Modifications Compatibility',['../md_docs_262__hardware__mods.html#autotoc_md101',1,'']]],
-  ['has_5fcpak_9',['has_cpak',['../cpakfs__utils_8h.html#aa558ad2522aba52f6cb3a2ad43ea5cdb',1,'cpakfs_utils.c']]],
+  ['has_5fcpak_9',['has_cpak',['../cpakfs__utils_8c.html#aa558ad2522aba52f6cb3a2ad43ea5cdb',1,'has_cpak(int controller):&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#aa558ad2522aba52f6cb3a2ad43ea5cdb',1,'has_cpak(int controller):&#160;cpakfs_utils.c']]],
   ['has_5ffeature_10',['has_feature',['../flashcart_8h.html#aa2fe700083b66bd2eabf3dd61fa822d7',1,'flashcart_t']]],
   ['hassle_20to_20extract_20them_20before_20adding_20them_20to_20the_20sd_20card_11',['My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md109',1,'']]],
   ['have_20changed_20the_20menu_20config_20ini_20file_20manually_20and_20things_20are_20not_20working_12',['I have changed the menu/config.ini file manually and things are not working.',['../md_docs_281__faq.html#autotoc_md111',1,'']]],

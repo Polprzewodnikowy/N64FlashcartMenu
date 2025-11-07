@@ -1,6 +1,6 @@
 /**
  * @file file_info.c
- * @brief File information component implementation
+ * @brief Implementation of the file information UI component.
  * @ingroup ui_components
  */
 
@@ -25,13 +25,13 @@ static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 
 /**
- * @brief Format the file extension into a human-readable string.
- * 
+ * @brief Format the file extension into a human-readable file type string.
+ *
  * @param name The filename including the extension.
- * @param is_directory Whether the file is a directory.
- * @return A constant string describing the file type.
+ * @param info Pointer to the file information structure (used for flags).
+ * @return Constant string describing the file type.
  */
-static const char *format_file_type (char *name, file_info_t *info) {
+static const char *format_file_type(char *name, file_info_t *info) {
     if (info->directory) {
         return "";
     } if (file_has_extensions(name, n64_rom_extensions)) {
@@ -66,13 +66,12 @@ static const char *format_file_type (char *name, file_info_t *info) {
 }
 
 /**
- * @brief Draw the file info component.
- * 
- * @param list Pointer to the list of entries.
- * @param entries Number of entries in the list.
- * @param selected Index of the currently selected entry.
+ * @brief Draw the file information UI component.
+ *
+ * @param filename Name of the file to display information for.
+ * @param info Pointer to the file information structure.
  */
-void ui_components_file_info_draw (char* filename, file_info_t *info) {
+void ui_components_file_info_draw(char* filename, file_info_t *info) {
     if (!info) {
         return;
     }

@@ -1,168 +1,365 @@
 /**
  * @file constants.h
- * @brief Menu components constants
- * @ingroup menu
+ * @brief UI component layout and color constants for the menu system.
+ * @ingroup ui_components
+ *
+ * This header defines all layout, sizing, and color constants used by UI components.
  */
 
 #ifndef COMPONENTS_CONSTANTS_H__
 #define COMPONENTS_CONSTANTS_H__
 
-/** @brief The height of the tabs in the main menu. */
+/**
+ * @def TAB_HEIGHT
+ * @brief Height of the tabs in the main menu (pixels).
+ */
 #define TAB_HEIGHT                      (20)
 
-/** @brief The thickness of borders. */
+/**
+ * @def BORDER_THICKNESS
+ * @brief Thickness of UI borders (pixels).
+ */
 #define BORDER_THICKNESS                (4)
 
-/** @brief The display width. */
+/**
+ * @def DISPLAY_WIDTH
+ * @brief Width of the display (pixels).
+ */
 #define DISPLAY_WIDTH                   (640)
-/** @brief The display height. */
+/**
+ * @def DISPLAY_HEIGHT
+ * @brief Height of the display (pixels).
+ */
 #define DISPLAY_HEIGHT                  (480)
 
-/** @brief The centre of the display on the X axis. */
+/**
+ * @def DISPLAY_CENTER_X
+ * @brief Center X coordinate of the display.
+ */
 #define DISPLAY_CENTER_X                (DISPLAY_WIDTH / 2)
-/** @brief The centre of the display on the Y axis. */
+/**
+ * @def DISPLAY_CENTER_Y
+ * @brief Center Y coordinate of the display.
+ */
 #define DISPLAY_CENTER_Y                (DISPLAY_HEIGHT / 2)
 
-/** @brief The overscan on the X axis. */
+/**
+ * @def OVERSCAN_WIDTH
+ * @brief Overscan margin on the X axis (pixels).
+ */
 #define OVERSCAN_WIDTH                  (32)
-/** @brief The overscan on the Y axis. */
+/**
+ * @def OVERSCAN_HEIGHT
+ * @brief Overscan margin on the Y axis (pixels).
+ */
 #define OVERSCAN_HEIGHT                 (24)
 
-/** @brief The start position of the visible display on the X axis. */
+/**
+ * @def VISIBLE_AREA_X0
+ * @brief Start X coordinate of the visible display area.
+ */
 #define VISIBLE_AREA_X0                 (OVERSCAN_WIDTH)
-/** @brief The start position of the visible display on the Y axis. */
+/**
+ * @def VISIBLE_AREA_Y0
+ * @brief Start Y coordinate of the visible display area.
+ */
 #define VISIBLE_AREA_Y0                 (OVERSCAN_HEIGHT)
-/** @brief The end position of the visible display on the X axis. */
+/**
+ * @def VISIBLE_AREA_X1
+ * @brief End X coordinate of the visible display area.
+ */
 #define VISIBLE_AREA_X1                 (DISPLAY_WIDTH - OVERSCAN_WIDTH)
-/** @brief The end position of the visible display on the Y axis. */
+/**
+ * @def VISIBLE_AREA_Y1
+ * @brief End Y coordinate of the visible display area.
+ */
 #define VISIBLE_AREA_Y1                 (DISPLAY_HEIGHT - OVERSCAN_HEIGHT)
 
-/** @brief The width of the visible display. */
+/**
+ * @def VISIBLE_AREA_WIDTH
+ * @brief Width of the visible display area (pixels).
+ */
 #define VISIBLE_AREA_WIDTH              (VISIBLE_AREA_X1 - VISIBLE_AREA_X0)
-/** @brief The height of the visible display. */
+/**
+ * @def VISIBLE_AREA_HEIGHT
+ * @brief Height of the visible display area (pixels).
+ */
 #define VISIBLE_AREA_HEIGHT             (VISIBLE_AREA_Y1 - VISIBLE_AREA_Y0)
 
-/** @brief The layout actions separator Y position. */
+/**
+ * @def LAYOUT_ACTIONS_SEPARATOR_Y
+ * @brief Y coordinate for the layout actions separator.
+ */
 #define LAYOUT_ACTIONS_SEPARATOR_Y      (400)
 
-/** @brief The seek bar height. */
+/**
+ * @def SEEKBAR_HEIGHT
+ * @brief Height of the seek bar (pixels).
+ */
 #define SEEKBAR_HEIGHT                  (24)
-/** @brief The seek bar width. */
+/**
+ * @def SEEKBAR_WIDTH
+ * @brief Width of the seek bar (pixels).
+ */
 #define SEEKBAR_WIDTH                   (524)
-/** @brief The seek bar position on the X axis. */
+/**
+ * @def SEEKBAR_X
+ * @brief X coordinate of the seek bar.
+ */
 #define SEEKBAR_X                       (DISPLAY_CENTER_X - (SEEKBAR_WIDTH / 2))
-/** @brief The seek bar position on the Y axis. */
+/**
+ * @def SEEKBAR_Y
+ * @brief Y coordinate of the seek bar.
+ */
 #define SEEKBAR_Y                       (VISIBLE_AREA_Y1 - SEEKBAR_HEIGHT - 80)
 
-/** @brief The loader bar width. */
+/**
+ * @def LOADER_WIDTH
+ * @brief Width of the loader bar (pixels).
+ */
 #define LOADER_WIDTH                    (320)
-/** @brief The loader bar height. */
+/**
+ * @def LOADER_HEIGHT
+ * @brief Height of the loader bar (pixels).
+ */
 #define LOADER_HEIGHT                   (24)
-/** @brief The loader bar position on the X axis. */
+/**
+ * @def LOADER_X
+ * @brief X coordinate of the loader bar.
+ */
 #define LOADER_X                        (DISPLAY_CENTER_X - (LOADER_WIDTH / 2))
-/** @brief The loader bar position on the Y axis. Accounting for the message height */
+/**
+ * @def LOADER_Y
+ * @brief Y coordinate of the loader bar (accounts for message height).
+ */
 #define LOADER_Y                        (DISPLAY_CENTER_Y - (LOADER_HEIGHT / 2) - 8)
 
-/** @brief The maximum width of a message box. */
+/**
+ * @def MESSAGEBOX_MAX_WIDTH
+ * @brief Maximum width of a message box (pixels).
+ */
 #define MESSAGEBOX_MAX_WIDTH            (360)
-/** @brief The margin of a message box. */
+/**
+ * @def MESSAGEBOX_MARGIN
+ * @brief Margin around a message box (pixels).
+ */
 #define MESSAGEBOX_MARGIN               (32)
 
-/** @brief The horizontal text margin. */
+/**
+ * @def TEXT_MARGIN_HORIZONTAL
+ * @brief Horizontal margin for text (pixels).
+ */
 #define TEXT_MARGIN_HORIZONTAL          (10)
-/** @brief The vertical text margin. */
+/**
+ * @def TEXT_MARGIN_VERTICAL
+ * @brief Vertical margin for text (pixels).
+ */
 #define TEXT_MARGIN_VERTICAL            (6)
-/** @brief The vertical text offset. */
+/**
+ * @def TEXT_OFFSET_VERTICAL
+ * @brief Vertical offset for text (pixels).
+ */
 #define TEXT_OFFSET_VERTICAL            (1)
-/** @brief The text line spacing adjustment. */
+/**
+ * @def TEXT_LINE_SPACING_ADJUST
+ * @brief Adjustment for text line spacing (pixels).
+ */
 #define TEXT_LINE_SPACING_ADJUST        (0)
 
-/** @brief The boxart picture width. */
+/**
+ * @def BOXART_WIDTH
+ * @brief Width of the boxart image (pixels).
+ */
 #define BOXART_WIDTH                    (158)
-/** @brief The boxart picture height. */
+/**
+ * @def BOXART_HEIGHT
+ * @brief Height of the boxart image (pixels).
+ */
 #define BOXART_HEIGHT                   (112)
 
-/** @brief The boxart picture width (64DD). */
+/**
+ * @def BOXART_WIDTH_DD
+ * @brief Width of the 64DD boxart image (pixels).
+ */
 #define BOXART_WIDTH_DD                 (129)
-/** @brief The boxart picture height (64DD). */
+/**
+ * @def BOXART_HEIGHT_DD
+ * @brief Height of the 64DD boxart image (pixels).
+ */
 #define BOXART_HEIGHT_DD                (112)
 
-/** @brief The boxart picture maximum width. */
+/**
+ * @def BOXART_WIDTH_MAX
+ * @brief Maximum width of the boxart image (pixels).
+ */
 #define BOXART_WIDTH_MAX                (158)
-/** @brief The boxart picture maximum height. */
+/**
+ * @def BOXART_HEIGHT_MAX
+ * @brief Maximum height of the boxart image (pixels).
+ */
 #define BOXART_HEIGHT_MAX               (158)
 
-/** @brief The box art position on the X axis. */
+/**
+ * @def BOXART_X
+ * @brief X coordinate for boxart image.
+ */
 #define BOXART_X                        (VISIBLE_AREA_X1 - BOXART_WIDTH - 24)
-/** @brief The box art position on the Y axis. */
+/**
+ * @def BOXART_Y
+ * @brief Y coordinate for boxart image.
+ */
 #define BOXART_Y                        (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT - 24)
-/** @brief The box art position on the X axis for Japanese caratules. */
+/**
+ * @def BOXART_X_JP
+ * @brief X coordinate for Japanese boxart image.
+ */
 #define BOXART_X_JP                     (VISIBLE_AREA_X1 - BOXART_WIDTH_MAX + 21)
-/** @brief The box art position on the Y axis for Japanese caratules. */
+/**
+ * @def BOXART_Y_JP
+ * @brief Y coordinate for Japanese boxart image.
+ */
 #define BOXART_Y_JP                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_MAX - 24)
 
-/** @brief The box art position on the X axis for 64DD caratules. */
+/**
+ * @def BOXART_X_DD
+ * @brief X coordinate for 64DD boxart image.
+ */
 #define BOXART_X_DD                     (VISIBLE_AREA_X1 - BOXART_WIDTH_DD - 23)
-/** @brief The box art position on the Y axis for 64DD caratules. */
+/**
+ * @def BOXART_Y_DD
+ * @brief Y coordinate for 64DD boxart image.
+ */
 #define BOXART_Y_DD                     (LAYOUT_ACTIONS_SEPARATOR_Y - BOXART_HEIGHT_DD - 24)
 
-/** @brief The scroll bar width. */
+/**
+ * @def LIST_SCROLLBAR_WIDTH
+ * @brief Width of the list scrollbar (pixels).
+ */
 #define LIST_SCROLLBAR_WIDTH            (12)
-/** @brief The scroll bar height. */
+/**
+ * @def LIST_SCROLLBAR_HEIGHT
+ * @brief Height of the list scrollbar (pixels).
+ */
 #define LIST_SCROLLBAR_HEIGHT           (LAYOUT_ACTIONS_SEPARATOR_Y - OVERSCAN_HEIGHT - TAB_HEIGHT - BORDER_THICKNESS)
-/** @brief The scroll bar position on the X axis. */
+/**
+ * @def LIST_SCROLLBAR_X
+ * @brief X coordinate of the list scrollbar.
+ */
 #define LIST_SCROLLBAR_X                (VISIBLE_AREA_X1 - LIST_SCROLLBAR_WIDTH)
-/** @brief The scroll bar position on the Y axis. */
+/**
+ * @def LIST_SCROLLBAR_Y
+ * @brief Y coordinate of the list scrollbar.
+ */
 #define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
 
-/** @brief The maximum amount of file list entries. */
+/**
+ * @def LIST_ENTRIES
+ * @brief Maximum number of file list entries.
+ */
 #define LIST_ENTRIES                    (19)
-/** @brief The maximum width available for a file list entry. */
+/**
+ * @def FILE_LIST_MAX_WIDTH
+ * @brief Maximum width for a file list entry (pixels).
+ */
 #define FILE_LIST_MAX_WIDTH             (480)
-/** @brief The file list highlight width. */
+/**
+ * @def FILE_LIST_HIGHLIGHT_WIDTH
+ * @brief Width of the file list highlight (pixels).
+ */
 #define FILE_LIST_HIGHLIGHT_WIDTH       (VISIBLE_AREA_X1 - VISIBLE_AREA_X0 - LIST_SCROLLBAR_WIDTH)
-/** @brief The file list highlight X position. */
+/**
+ * @def FILE_LIST_HIGHLIGHT_X
+ * @brief X coordinate of the file list highlight.
+ */
 #define FILE_LIST_HIGHLIGHT_X           (VISIBLE_AREA_X0)
 
-/** @brief The default background colour. */
+/**
+ * @def BACKGROUND_EMPTY_COLOR
+ * @brief Color used when no background image is present (RGBA8888).
+ */
 #define BACKGROUND_EMPTY_COLOR          RGBA32(0x00, 0x00, 0x00, 0xFF)
-/** @brief The default background overlay colour. */
+/**
+ * @def BACKGROUND_OVERLAY_COLOR
+ * @brief Overlay color for the background (RGBA8888, semi-transparent).
+ */
 #define BACKGROUND_OVERLAY_COLOR        RGBA32(0x00, 0x00, 0x00, 0xA0)
 
-/** @brief The border colour. */
+/**
+ * @def BORDER_COLOR
+ * @brief Color of UI borders (RGBA8888).
+ */
 #define BORDER_COLOR                    RGBA32(0xFF, 0xFF, 0xFF, 0xFF)
 
-/** @brief The progress bar background colour. */
+/**
+ * @def PROGRESSBAR_BG_COLOR
+ * @brief Background color of the progress bar (RGBA8888).
+ */
 #define PROGRESSBAR_BG_COLOR            RGBA32(0x00, 0x00, 0x00, 0xFF)
-/** @brief The progress bar progressed colour. */
+/**
+ * @def PROGRESSBAR_DONE_COLOR
+ * @brief Color of the completed portion of the progress bar (RGBA8888).
+ */
 #define PROGRESSBAR_DONE_COLOR          RGBA32(0x3B, 0x7C, 0xF5, 0xFF)
 
-/** @brief The scroll bar background colour. */
+/**
+ * @def SCROLLBAR_BG_COLOR
+ * @brief Background color of the scrollbar (RGBA8888).
+ */
 #define SCROLLBAR_BG_COLOR              RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
-/** @brief The scroll bar inactive colour. */
+/**
+ * @def SCROLLBAR_INACTIVE_COLOR
+ * @brief Inactive color of the scrollbar (RGBA8888).
+ */
 #define SCROLLBAR_INACTIVE_COLOR        RGBA32(0x5F, 0x5F, 0x5F, 0xFF)
-/** @brief The scroll bar position colour. */
+/**
+ * @def SCROLLBAR_POSITION_COLOR
+ * @brief Color of the scrollbar position indicator (RGBA8888).
+ */
 #define SCROLLBAR_POSITION_COLOR        RGBA32(0x7F, 0x7F, 0x7F, 0xFF)
 
-/** @brief The dialogue background colour. */
+/**
+ * @def DIALOG_BG_COLOR
+ * @brief Background color for dialog boxes (RGBA8888).
+ */
 #define DIALOG_BG_COLOR                 RGBA32(0x00, 0x00, 0x00, 0xFF)
 
-/** @brief The boxart loading colour. */
+/**
+ * @def BOXART_LOADING_COLOR
+ * @brief Color used while boxart is loading (RGBA8888).
+ */
 #define BOXART_LOADING_COLOR            RGBA32(0x00, 0x00, 0x00, 0xFF)
 
-/** @brief The file list highlight colour. */
+/**
+ * @def FILE_LIST_HIGHLIGHT_COLOR
+ * @brief Highlight color for file list entries (RGBA8888).
+ */
 #define FILE_LIST_HIGHLIGHT_COLOR       RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
-/** @brief The menu highlight colour. */
+/**
+ * @def CONTEXT_MENU_HIGHLIGHT_COLOR
+ * @brief Highlight color for context menu entries (RGBA8888).
+ */
 #define CONTEXT_MENU_HIGHLIGHT_COLOR    RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
 
-/** @brief The tab inactive border colour. */
+/**
+ * @def TAB_INACTIVE_BORDER_COLOR
+ * @brief Border color for inactive tabs (RGBA8888).
+ */
 #define TAB_INACTIVE_BORDER_COLOR       RGBA32(0x5F, 0x5F, 0x5F, 0xFF)
-/** @brief The tab active border colour. */
+/**
+ * @def TAB_ACTIVE_BORDER_COLOR
+ * @brief Border color for active tabs (RGBA8888).
+ */
 #define TAB_ACTIVE_BORDER_COLOR         RGBA32(0xFF, 0xFF, 0xFF, 0xFF)
-/** @brief The tab inactive background colour. */
+/**
+ * @def TAB_INACTIVE_BACKGROUND_COLOR
+ * @brief Background color for inactive tabs (RGBA8888).
+ */
 #define TAB_INACTIVE_BACKGROUND_COLOR   RGBA32(0x3F, 0x3F, 0x3F, 0xFF)
-/** @brief The tab active background colour. */
+/**
+ * @def TAB_ACTIVE_BACKGROUND_COLOR
+ * @brief Background color for active tabs (RGBA8888).
+ */
 #define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
 #endif /* COMPONENTS_CONSTANTS_H__ */

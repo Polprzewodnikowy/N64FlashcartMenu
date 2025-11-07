@@ -104,5 +104,6 @@ body:
     attributes:
       value: |
         ### Make an effort to fix the bug
+        Try using github co-pilot or other AI tools to help you further describe and/or fix the bug.
         
         Attempt to submit a [Pull Request (PR)](https://help.github.com/articles/about-pull-requests/) that fixes the bug. Include in this PR a test that verifies the fix. If you were not able to fix the bug, a PR that illustrates your partial progress will suffice.

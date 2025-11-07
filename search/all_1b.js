@@ -149,7 +149,7 @@ var searchData=
   ['stl_5fred_146',['STL_RED',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9a129b52507e38c018d55c7dcd8d0b7ddc',1,'fonts.h']]],
   ['stl_5fyellow_147',['STL_YELLOW',['../fonts_8h.html#aeb0b0991bf09df33ca77508f77456ad9aa3dcc1f1f5ebfa108f9c2a6f01cae000',1,'fonts.h']]],
   ['storage_20register_148',['&quot;Persistent variable storage&quot; register',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md24',1,'']]],
-  ['strip_5ffs_5fprefix_149',['strip_fs_prefix',['../fs_8h.html#a8987b0ef768d66b5e65637c5c4cf9e81',1,'fs.c']]],
+  ['strip_5ffs_5fprefix_149',['strip_fs_prefix',['../fs_8c.html#a8987b0ef768d66b5e65637c5c4cf9e81',1,'strip_fs_prefix(char *path):&#160;fs.c'],['../fs_8h.html#a8987b0ef768d66b5e65637c5c4cf9e81',1,'strip_fs_prefix(char *path):&#160;fs.c']]],
   ['sub_150',['sub',['../cheats_8c.html#aa6b48e504813823bcded53dbb2645315',1,'cheat_entry_t']]],
   ['subject_20to_20change_151',['Subject to change',['../md_docs_200__index.html#autotoc_md34',1,'Experimental Features (Subject to change)'],['../md_docs_265__experimental.html#autotoc_md102',1,'Experimental Features (Subject to change)']]],
   ['submenu_152',['submenu',['../ui__components_8h.html#ad4f2b342246c13cee51a157e581dd2b0',1,'component_context_menu_t::submenu'],['../ui__components_8h.html#a7662837116dd5f902c5934e710b051c4',1,'component_context_menu_t.list::submenu']]],

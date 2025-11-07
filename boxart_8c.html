@@ -95,7 +95,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Boxart component implementation.  
+<p>Implementation of the boxart UI component.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -113,17 +113,17 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac59a8da801d945a9467c641e4ffc7779" id="r_ac59a8da801d945a9467c641e4ffc7779"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ui__components_8h.html#structcomponent__boxart__t">component_boxart_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac59a8da801d945a9467c641e4ffc7779">ui_components_boxart_init</a> (const char *storage_prefix, const char *game_code, const char *rom_title, <a class="el" href="ui__components_8h.html#aa77ed4c6e4f6494fea90d148786d15e0">file_image_type_t</a> current_image_view)</td></tr>
-<tr class="memdesc:ac59a8da801d945a9467c641e4ffc7779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the boxart component.  <br /></td></tr>
+<tr class="memdesc:ac59a8da801d945a9467c641e4ffc7779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize and load the boxart component for a game.  <br /></td></tr>
 <tr class="separator:ac59a8da801d945a9467c641e4ffc7779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6936fee273ef656c6bc72f7378f22ca" id="r_ac6936fee273ef656c6bc72f7378f22ca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac6936fee273ef656c6bc72f7378f22ca">ui_components_boxart_free</a> (<a class="el" href="ui__components_8h.html#structcomponent__boxart__t">component_boxart_t</a> *b)</td></tr>
-<tr class="memdesc:ac6936fee273ef656c6bc72f7378f22ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the boxart component.  <br /></td></tr>
+<tr class="memdesc:ac6936fee273ef656c6bc72f7378f22ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the boxart component and its resources.  <br /></td></tr>
 <tr class="separator:ac6936fee273ef656c6bc72f7378f22ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada31b54d8e469084084abd5d7f78a57a" id="r_ada31b54d8e469084084abd5d7f78a57a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada31b54d8e469084084abd5d7f78a57a">ui_components_boxart_draw</a> (<a class="el" href="ui__components_8h.html#structcomponent__boxart__t">component_boxart_t</a> *b)</td></tr>
-<tr class="memdesc:ada31b54d8e469084084abd5d7f78a57a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the boxart component.  <br /></td></tr>
+<tr class="memdesc:ada31b54d8e469084084abd5d7f78a57a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the boxart image or a loading placeholder.  <br /></td></tr>
 <tr class="separator:ada31b54d8e469084084abd5d7f78a57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Boxart component implementation. </p>
+<div class="textblock"><p>Implementation of the boxart UI component. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="ac59a8da801d945a9467c641e4ffc7779" name="ac59a8da801d945a9467c641e4ffc7779"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac59a8da801d945a9467c641e4ffc7779">&#9670;&#160;</a></span>ui_components_boxart_init()</h2>
@@ -154,18 +154,19 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize the boxart component. </p>
+<p>Initialize and load the boxart component for a game. </p>
 <p>Initialize the box art component.</p>
+<p>Attempts to locate and load the appropriate boxart image for the given game code and ROM title.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">storage_prefix</td><td>The storage prefix. </td></tr>
-    <tr><td class="paramname">game_code</td><td>The game code. </td></tr>
+    <tr><td class="paramname">storage_prefix</td><td>The storage prefix (e.g., SD card root). </td></tr>
+    <tr><td class="paramname">game_code</td><td>The 4-character game code. </td></tr>
     <tr><td class="paramname">rom_title</td><td>Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety. </td></tr>
-    <tr><td class="paramname">current_image_view</td><td>The current image view type. </td></tr>
+    <tr><td class="paramname">current_image_view</td><td>The current image view type (front, back, etc.). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>component_boxart_t* Pointer to the initialized boxart component. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the initialized boxart component, or NULL on failure. </dd></dl>
 
 </div>
 </div>
@@ -184,7 +185,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Free the boxart component. </p>
+<p>Free the boxart component and its resources. </p>
 <p>Free the box art component resources.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -210,8 +211,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Draw the boxart component. </p>
+<p>Draw the boxart image or a loading placeholder. </p>
 <p>Draw the box art component.</p>
+<p>Draws the loaded boxart image at the appropriate position, or a placeholder if not loaded.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">b</td><td>Pointer to the boxart component. </td></tr>
@@ -224,7 +226,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 5 2025 23:25:13 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:11:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

@@ -1121,7 +1121,13 @@ submenu</td>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cache_location</td><td>Location of the cache.</td></tr>
-    <tr><td class="paramname">cache_location</td><td>The cache location. </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Initialize the background component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cache_location</td><td>Path to the cache file location. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1167,7 +1173,13 @@ submenu</td>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">image</td><td>New background image.</td></tr>
-    <tr><td class="paramname">image</td><td>The new background image. </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Replace the background image.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">image</td><td>Pointer to the new background image surface. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1224,7 +1236,13 @@ submenu</td>
     <tr><td class="paramname">list</td><td>List of entries. </td></tr>
     <tr><td class="paramname">entries</td><td>Number of entries. </td></tr>
     <tr><td class="paramname">selected</td><td>Index of the selected entry.</td></tr>
-    <tr><td class="paramname">list</td><td>Pointer to the list of entries. </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Draw the file list component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">list</td><td>Pointer to the list of file entries. </td></tr>
     <tr><td class="paramname">entries</td><td>Number of entries in the list. </td></tr>
     <tr><td class="paramname">selected</td><td>Index of the currently selected entry. </td></tr>
   </table>
@@ -1278,6 +1296,12 @@ submenu</td>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu structure.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Show the context menu component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu component. </td></tr>
   </table>
   </dd>
@@ -1344,6 +1368,12 @@ submenu</td>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu structure.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Draw the context menu component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu component. </td></tr>
   </table>
   </dd>
@@ -1392,16 +1422,17 @@ submenu</td>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to the initialized box art component.</dd></dl>
 <p>Initialize the box art component.</p>
+<p>Attempts to locate and load the appropriate boxart image for the given game code and ROM title.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">storage_prefix</td><td>The storage prefix. </td></tr>
-    <tr><td class="paramname">game_code</td><td>The game code. </td></tr>
+    <tr><td class="paramname">storage_prefix</td><td>The storage prefix (e.g., SD card root). </td></tr>
+    <tr><td class="paramname">game_code</td><td>The 4-character game code. </td></tr>
     <tr><td class="paramname">rom_title</td><td>Title of the ROM (may be NULL). If used, it is sanitized for filesystem safety. </td></tr>
-    <tr><td class="paramname">current_image_view</td><td>The current image view type. </td></tr>
+    <tr><td class="paramname">current_image_view</td><td>The current image view type (front, back, etc.). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>component_boxart_t* Pointer to the initialized boxart component. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the initialized boxart component, or NULL on failure. </dd></dl>
 
 </div>
 </div>
@@ -1460,6 +1491,7 @@ submenu</td>
   </dd>
 </dl>
 <p>Draw the box art component.</p>
+<p>Draws the loaded boxart image at the appropriate position, or a placeholder if not loaded.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">b</td><td>Pointer to the boxart component. </td></tr>
@@ -1546,7 +1578,7 @@ submenu</td>
 <p>Draw the common part of the tabs component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">selected</td><td>The index of the currently selected tab. </td></tr>
+    <tr><td class="paramname">selected</td><td>Index of the currently selected tab. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1625,9 +1657,14 @@ submenu</td>
   <table class="params">
     <tr><td class="paramname">filename</td><td>Name of the file for which to show the information. </td></tr>
     <tr><td class="paramname">info</td><td>Metadata information of the file to be displayed.</td></tr>
-    <tr><td class="paramname">list</td><td>Pointer to the list of entries. </td></tr>
-    <tr><td class="paramname">entries</td><td>Number of entries in the list. </td></tr>
-    <tr><td class="paramname">selected</td><td>Index of the currently selected entry. </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Draw the file info component.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Name of the file to display information for. </td></tr>
+    <tr><td class="paramname">info</td><td>Pointer to the file information structure. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1637,7 +1674,7 @@ submenu</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 5 2025 23:25:13 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:11:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

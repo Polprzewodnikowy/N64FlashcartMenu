@@ -6,5 +6,6 @@ var searchData=
   ['end_3',['END',['../boot__io_8h.html#ac211d738f5a6bce56ddfb3c215d5cc98',1,'dpc_regs_t']]],
   ['endianness_4',['endianness',['../rom__info_8h.html#a0b802f6d76c318b3077b4b076fa29c15',1,'rom_info_t']]],
   ['esrb_5fage_5frating_5',['esrb_age_rating',['../rom__info_8h.html#a022eed0ad726ecb498f0848092589d7e',1,'rom_info_t.metadata']]],
-  ['expansion_5fpak_6',['expansion_pak',['../rom__info_8h.html#a18e69616d5ba4d1164edba4298653cfc',1,'rom_info_t.features']]]
+  ['expansion_5fpak_6',['expansion_pak',['../rom__info_8h.html#a18e69616d5ba4d1164edba4298653cfc',1,'rom_info_t.features']]],
+  ['ext_7',['ext',['../cpakfs__utils_8h.html#a8336f174a81765e129e1e30570a7d058',1,'cpakfs_path_strings_t']]]
 ];

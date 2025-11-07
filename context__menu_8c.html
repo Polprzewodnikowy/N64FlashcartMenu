@@ -94,7 +94,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Context menu component implementation.  
+<p>Implementation of the context menu UI component.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -103,17 +103,17 @@ Functions</h2></td></tr>
 <tr class="memdesc:af42a44cb942201920ae50554013ae624"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the context menu component.  <br /></td></tr>
 <tr class="separator:af42a44cb942201920ae50554013ae624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b3e6c2e1c5f4525162f58f5b26f57d9" id="r_a8b3e6c2e1c5f4525162f58f5b26f57d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b3e6c2e1c5f4525162f58f5b26f57d9">ui_components_context_menu_show</a> (<a class="el" href="ui__components_8h.html#structcomponent__context__menu__t">component_context_menu_t</a> *cm)</td></tr>
-<tr class="memdesc:a8b3e6c2e1c5f4525162f58f5b26f57d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the context menu component.  <br /></td></tr>
+<tr class="memdesc:a8b3e6c2e1c5f4525162f58f5b26f57d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the context menu component (reset selection and submenu).  <br /></td></tr>
 <tr class="separator:a8b3e6c2e1c5f4525162f58f5b26f57d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5f3e5007fdc55383741cbabe4164fa8" id="r_ac5f3e5007fdc55383741cbabe4164fa8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5f3e5007fdc55383741cbabe4164fa8">ui_components_context_menu_process</a> (<a class="el" href="menu__state_8h.html#structmenu__t">menu_t</a> *menu, <a class="el" href="ui__components_8h.html#structcomponent__context__menu__t">component_context_menu_t</a> *cm)</td></tr>
-<tr class="memdesc:ac5f3e5007fdc55383741cbabe4164fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the context menu actions.  <br /></td></tr>
+<tr class="memdesc:ac5f3e5007fdc55383741cbabe4164fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process the context menu actions (navigation, selection, etc).  <br /></td></tr>
 <tr class="separator:ac5f3e5007fdc55383741cbabe4164fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70e42afc6a29c48031a5cc9b468e5ef0" id="r_a70e42afc6a29c48031a5cc9b468e5ef0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a70e42afc6a29c48031a5cc9b468e5ef0">ui_components_context_menu_draw</a> (<a class="el" href="ui__components_8h.html#structcomponent__context__menu__t">component_context_menu_t</a> *cm)</td></tr>
-<tr class="memdesc:a70e42afc6a29c48031a5cc9b468e5ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the context menu component.  <br /></td></tr>
+<tr class="memdesc:a70e42afc6a29c48031a5cc9b468e5ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the context menu UI component.  <br /></td></tr>
 <tr class="separator:a70e42afc6a29c48031a5cc9b468e5ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Context menu component implementation. </p>
+<div class="textblock"><p>Implementation of the context menu UI component. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="af42a44cb942201920ae50554013ae624" name="af42a44cb942201920ae50554013ae624"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af42a44cb942201920ae50554013ae624">&#9670;&#160;</a></span>ui_components_context_menu_init()</h2>
@@ -155,7 +155,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Show the context menu component. </p>
+<p>Show the context menu component (reset selection and submenu). </p>
+<p>Show the context menu component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu component. </td></tr>
@@ -184,7 +185,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Process the context menu actions. </p>
+<p>Process the context menu actions (navigation, selection, etc). </p>
 <p>Process the context menu component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -212,7 +213,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Draw the context menu component. </p>
+<p>Draw the context menu UI component. </p>
+<p>Draw the context menu component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">cm</td><td>Pointer to the context menu component. </td></tr>
@@ -225,7 +227,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 5 2025 23:25:13 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:11:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

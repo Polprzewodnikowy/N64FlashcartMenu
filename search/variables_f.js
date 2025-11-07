@@ -10,5 +10,6 @@ var searchData=
   ['pgs_7',['PGS',['../boot__io_8h.html#a27eb8b9c1e2bbaa238edca6206308db0',1,'pi_regs_t.DOM']]],
   ['pipe_5fbusy_8',['PIPE_BUSY',['../boot__io_8h.html#aa1709fd6a872cee8824310647a6ee1f6',1,'dpc_regs_t']]],
   ['primary_5fpath_9',['primary_path',['../bookkeeping_8h.html#a4c263fa0661f89e907e4a5b302e7ef7a',1,'bookkeeping_item_t']]],
-  ['pwd_10',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
+  ['pubcode_10',['pubcode',['../cpakfs__utils_8h.html#a560d02fb4ddef8f05a86b4856c9ce34a',1,'cpakfs_path_strings_t']]],
+  ['pwd_11',['PWD',['../boot__io_8h.html#a0d35c1f17675a8a2bf3caaacd59a65de',1,'pi_regs_t.DOM']]]
 ];

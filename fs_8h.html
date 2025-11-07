@@ -95,7 +95,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>File system utility functions.  
+<p>File system utility functions for file and directory operations.  
 <a href="#details">More...</a></p>
 
 <p><a href="fs_8h_source.html">Go to the source code of this file.</a></p>
@@ -104,40 +104,41 @@ $(function(){ initResizable(false); });
 Macros</h2></td></tr>
 <tr class="memitem:afe729a4849f2ed2c78651c2e195d1256" id="r_afe729a4849f2ed2c78651c2e195d1256"><td class="memItemLeft" align="right" valign="top"><a id="afe729a4849f2ed2c78651c2e195d1256" name="afe729a4849f2ed2c78651c2e195d1256"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>FS_SECTOR_SIZE</b>&#160;&#160;&#160;(512)</td></tr>
+<tr class="memdesc:afe729a4849f2ed2c78651c2e195d1256"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of a file system sector in bytes. <br /></td></tr>
 <tr class="separator:afe729a4849f2ed2c78651c2e195d1256"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a8987b0ef768d66b5e65637c5c4cf9e81" id="r_a8987b0ef768d66b5e65637c5c4cf9e81"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8987b0ef768d66b5e65637c5c4cf9e81">strip_fs_prefix</a> (char *path)</td></tr>
-<tr class="memdesc:a8987b0ef768d66b5e65637c5c4cf9e81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strips the file system prefix from the given path.  <br /></td></tr>
+<tr class="memdesc:a8987b0ef768d66b5e65637c5c4cf9e81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strip the file system prefix from a path.  <br /></td></tr>
 <tr class="separator:a8987b0ef768d66b5e65637c5c4cf9e81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdb9fde5909ebbc44e94c02cc099d2dd" id="r_abdb9fde5909ebbc44e94c02cc099d2dd"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdb9fde5909ebbc44e94c02cc099d2dd">file_basename</a> (char *path)</td></tr>
-<tr class="memdesc:abdb9fde5909ebbc44e94c02cc099d2dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the basename of the given path.  <br /></td></tr>
+<tr class="memdesc:abdb9fde5909ebbc44e94c02cc099d2dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the basename of a path.  <br /></td></tr>
 <tr class="separator:abdb9fde5909ebbc44e94c02cc099d2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00f488c306a5c7b143778a410dcaee38" id="r_a00f488c306a5c7b143778a410dcaee38"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00f488c306a5c7b143778a410dcaee38">file_exists</a> (char *path)</td></tr>
-<tr class="memdesc:a00f488c306a5c7b143778a410dcaee38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a file exists at the given path.  <br /></td></tr>
+<tr class="memdesc:a00f488c306a5c7b143778a410dcaee38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a file exists at the given path.  <br /></td></tr>
 <tr class="separator:a00f488c306a5c7b143778a410dcaee38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a057fa020d009ca0d4c905ad0a08d3a4a" id="r_a057fa020d009ca0d4c905ad0a08d3a4a"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a057fa020d009ca0d4c905ad0a08d3a4a">file_get_size</a> (char *path)</td></tr>
-<tr class="memdesc:a057fa020d009ca0d4c905ad0a08d3a4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the file at the given path.  <br /></td></tr>
+<tr class="memdesc:a057fa020d009ca0d4c905ad0a08d3a4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of a file at the given path.  <br /></td></tr>
 <tr class="separator:a057fa020d009ca0d4c905ad0a08d3a4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5167c33a861fd03594036fae575ae05d" id="r_a5167c33a861fd03594036fae575ae05d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5167c33a861fd03594036fae575ae05d">file_allocate</a> (char *path, size_t size)</td></tr>
-<tr class="memdesc:a5167c33a861fd03594036fae575ae05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a file of the specified size at the given path.  <br /></td></tr>
+<tr class="memdesc:a5167c33a861fd03594036fae575ae05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a file of the specified size at the given path.  <br /></td></tr>
 <tr class="separator:a5167c33a861fd03594036fae575ae05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c05d10732999219a533e0a85f1314b9" id="r_a0c05d10732999219a533e0a85f1314b9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c05d10732999219a533e0a85f1314b9">file_fill</a> (char *path, uint8_t value)</td></tr>
-<tr class="memdesc:a0c05d10732999219a533e0a85f1314b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a file with the specified value.  <br /></td></tr>
+<tr class="memdesc:a0c05d10732999219a533e0a85f1314b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a file with the specified value.  <br /></td></tr>
 <tr class="separator:a0c05d10732999219a533e0a85f1314b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a87bfc1c76e0c55313c8e24512b6805" id="r_a1a87bfc1c76e0c55313c8e24512b6805"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a87bfc1c76e0c55313c8e24512b6805">file_has_extensions</a> (char *path, const char *extensions[])</td></tr>
-<tr class="memdesc:a1a87bfc1c76e0c55313c8e24512b6805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a file has one of the specified extensions.  <br /></td></tr>
+<tr class="memdesc:a1a87bfc1c76e0c55313c8e24512b6805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a file has one of the specified extensions.  <br /></td></tr>
 <tr class="separator:a1a87bfc1c76e0c55313c8e24512b6805"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5190e4595a9337b2d243b8b745aac81f" id="r_a5190e4595a9337b2d243b8b745aac81f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5190e4595a9337b2d243b8b745aac81f">directory_exists</a> (char *path)</td></tr>
-<tr class="memdesc:a5190e4595a9337b2d243b8b745aac81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a directory exists at the given path.  <br /></td></tr>
+<tr class="memdesc:a5190e4595a9337b2d243b8b745aac81f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a directory exists at the given path.  <br /></td></tr>
 <tr class="separator:a5190e4595a9337b2d243b8b745aac81f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2fadd59478f68865638b39b339a4d55c" id="r_a2fadd59478f68865638b39b339a4d55c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fadd59478f68865638b39b339a4d55c">directory_create</a> (char *path)</td></tr>
-<tr class="memdesc:a2fadd59478f68865638b39b339a4d55c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a directory at the given path.  <br /></td></tr>
+<tr class="memdesc:a2fadd59478f68865638b39b339a4d55c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a directory at the given path.  <br /></td></tr>
 <tr class="separator:a2fadd59478f68865638b39b339a4d55c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>File system utility functions. </p>
+<div class="textblock"><p>File system utility functions for file and directory operations. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a8987b0ef768d66b5e65637c5c4cf9e81" name="a8987b0ef768d66b5e65637c5c4cf9e81"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8987b0ef768d66b5e65637c5c4cf9e81">&#9670;&#160;</a></span>strip_fs_prefix()</h2>
@@ -154,8 +155,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Strips the file system prefix from the given path. </p>
-<p>This function removes the file system prefix from the provided path.</p>
+<p>Strip the file system prefix from a path. </p>
+<p>Removes the file system prefix (such as ":/") from the provided path string.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path from which to strip the prefix. </td></tr>
@@ -181,8 +182,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets the basename of the given path. </p>
-<p>This function returns the basename of the provided path.</p>
+<p>Get the basename of a path. </p>
+<p>Returns a pointer to the basename (the final component) of the provided path.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path from which to get the basename. </td></tr>
@@ -208,8 +209,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if a file exists at the given path. </p>
-<p>This function checks if a file exists at the specified path.</p>
+<p>Check if a file exists at the given path. </p>
+<p>Checks if a file exists at the specified path.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the file. </td></tr>
@@ -235,15 +236,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Gets the size of the file at the given path. </p>
-<p>This function returns the size of the file at the specified path.</p>
+<p>Get the size of a file at the given path. </p>
+<p>Returns the size of the file at the specified path in bytes.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the file. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The size of the file in bytes, or -1 if the file does not exist. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The size of the file in bytes, or -1 if the file does not exist or an error occurs. </dd></dl>
 
 </div>
 </div>
@@ -266,12 +267,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Allocates a file of the specified size at the given path. </p>
-<p>This function creates a file of the specified size at the provided path.</p>
+<p>Allocate a file of the specified size at the given path. </p>
+<p>Creates a file of the specified size at the provided path. The file is filled with zeros.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the file. </td></tr>
-    <tr><td class="paramname">size</td><td>The size of the file to create. </td></tr>
+    <tr><td class="paramname">size</td><td>The size of the file to create in bytes. </td></tr>
   </table>
   </dd>
 </dl>
@@ -298,12 +299,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Fills a file with the specified value. </p>
-<p>This function fills the file at the given path with the specified value.</p>
+<p>Fill a file with the specified value. </p>
+<p>Fills the file at the given path with the specified byte value.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the file. </td></tr>
-    <tr><td class="paramname">value</td><td>The value to fill the file with. </td></tr>
+    <tr><td class="paramname">value</td><td>The value to fill the file with (byte). </td></tr>
   </table>
   </dd>
 </dl>
@@ -330,12 +331,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if a file has one of the specified extensions. </p>
-<p>This function checks if the file at the given path has one of the specified extensions.</p>
+<p>Check if a file has one of the specified extensions. </p>
+<p>Checks if the file at the given path has one of the specified extensions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the file. </td></tr>
-    <tr><td class="paramname">extensions</td><td>An array of extensions to check. </td></tr>
+    <tr><td class="paramname">extensions</td><td>An array of extensions to check (NULL-terminated). </td></tr>
   </table>
   </dd>
 </dl>
@@ -358,8 +359,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Checks if a directory exists at the given path. </p>
-<p>This function checks if a directory exists at the specified path.</p>
+<p>Check if a directory exists at the given path. </p>
+<p>Checks if a directory exists at the specified path.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the directory. </td></tr>
@@ -385,8 +386,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Creates a directory at the given path. </p>
-<p>This function creates a directory at the specified path.</p>
+<p>Create a directory at the given path. </p>
+<p>Creates a directory at the specified path, including any necessary parent directories.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The path to the directory. </td></tr>
@@ -400,7 +401,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 5 2025 23:25:13 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:11:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

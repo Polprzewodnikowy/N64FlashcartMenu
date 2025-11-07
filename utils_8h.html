@@ -94,7 +94,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Utility macros and functions.  
+<p>Utility macros for alignment, min/max, and size conversions.  
 <a href="#details">More...</a></p>
 
 <p><a href="utils_8h_source.html">Go to the source code of this file.</a></p>
@@ -102,23 +102,23 @@ $(function(){ initResizable(false); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a9ac102be1cec0ce473aa3819ff297a26" id="r_a9ac102be1cec0ce473aa3819ff297a26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ac102be1cec0ce473aa3819ff297a26">ALIGN</a>(x,  a)</td></tr>
-<tr class="memdesc:a9ac102be1cec0ce473aa3819ff297a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aligns a value to the specified alignment.  <br /></td></tr>
+<tr class="memdesc:a9ac102be1cec0ce473aa3819ff297a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Align a value to the specified alignment boundary.  <br /></td></tr>
 <tr class="separator:a9ac102be1cec0ce473aa3819ff297a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa99ec4acc4ecb2dc3c2d05da15d0e3f" id="r_afa99ec4acc4ecb2dc3c2d05da15d0e3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa99ec4acc4ecb2dc3c2d05da15d0e3f">MAX</a>(a,  b)</td></tr>
-<tr class="memdesc:afa99ec4acc4ecb2dc3c2d05da15d0e3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the maximum of two values.  <br /></td></tr>
+<tr class="memdesc:afa99ec4acc4ecb2dc3c2d05da15d0e3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the maximum of two values.  <br /></td></tr>
 <tr class="separator:afa99ec4acc4ecb2dc3c2d05da15d0e3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3acffbd305ee72dcd4593c0d8af64a4f" id="r_a3acffbd305ee72dcd4593c0d8af64a4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>(a,  b)</td></tr>
-<tr class="memdesc:a3acffbd305ee72dcd4593c0d8af64a4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the minimum of two values.  <br /></td></tr>
+<tr class="memdesc:a3acffbd305ee72dcd4593c0d8af64a4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the minimum of two values.  <br /></td></tr>
 <tr class="separator:a3acffbd305ee72dcd4593c0d8af64a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae40428faaf55c32976e3e9bd81aa1f15" id="r_ae40428faaf55c32976e3e9bd81aa1f15"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae40428faaf55c32976e3e9bd81aa1f15">KiB</a>(x)</td></tr>
-<tr class="memdesc:ae40428faaf55c32976e3e9bd81aa1f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a value to kibibytes.  <br /></td></tr>
+<tr class="memdesc:ae40428faaf55c32976e3e9bd81aa1f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a value to kibibytes.  <br /></td></tr>
 <tr class="separator:ae40428faaf55c32976e3e9bd81aa1f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66926c4792f38d56984ea477b5b6f45a" id="r_a66926c4792f38d56984ea477b5b6f45a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66926c4792f38d56984ea477b5b6f45a">MiB</a>(x)</td></tr>
-<tr class="memdesc:a66926c4792f38d56984ea477b5b6f45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a value to mebibytes.  <br /></td></tr>
+<tr class="memdesc:a66926c4792f38d56984ea477b5b6f45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a value to mebibytes.  <br /></td></tr>
 <tr class="separator:a66926c4792f38d56984ea477b5b6f45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utility macros and functions. </p>
+<div class="textblock"><p>Utility macros for alignment, min/max, and size conversions. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a9ac102be1cec0ce473aa3819ff297a26" name="a9ac102be1cec0ce473aa3819ff297a26"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ac102be1cec0ce473aa3819ff297a26">&#9670;&#160;</a></span>ALIGN</h2>
@@ -140,12 +140,12 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">(((x) + ((typeof(x))(a) - 1)) &amp; ~((typeof(x))(a) - 1))</div>
 </div><!-- fragment -->
-<p>Aligns a value to the specified alignment. </p>
+<p>Align a value to the specified alignment boundary. </p>
 <p>This macro aligns the given value <code>x</code> to the specified alignment <code>a</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The value to align. </td></tr>
-    <tr><td class="paramname">a</td><td>The alignment boundary. </td></tr>
+    <tr><td class="paramname">a</td><td>The alignment boundary (must be a power of two). </td></tr>
   </table>
   </dd>
 </dl>
@@ -173,7 +173,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">({ typeof(a) _a = a; typeof(b) _b = b; _a &gt; _b ? _a : _b; })</div>
 </div><!-- fragment -->
-<p>Returns the maximum of two values. </p>
+<p>Return the maximum of two values. </p>
 <p>This macro returns the maximum of the two provided values <code>a</code> and <code>b</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -206,7 +206,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">({ typeof(a) _a = a; typeof(b) _b = b; _a &lt; _b ? _a : _b; })</div>
 </div><!-- fragment -->
-<p>Returns the minimum of two values. </p>
+<p>Return the minimum of two values. </p>
 <p>This macro returns the minimum of the two provided values <code>a</code> and <code>b</code>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -235,8 +235,8 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">((x) * 1024)</div>
 </div><!-- fragment -->
-<p>Converts a value to kibibytes. </p>
-<p>This macro converts the given value <code>x</code> to kibibytes.</p>
+<p>Convert a value to kibibytes. </p>
+<p>This macro converts the given value <code>x</code> to kibibytes (multiplying by 1024).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The value to convert. </td></tr>
@@ -263,8 +263,8 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">((x) * 1024 * 1024)</div>
 </div><!-- fragment -->
-<p>Converts a value to mebibytes. </p>
-<p>This macro converts the given value <code>x</code> to mebibytes.</p>
+<p>Convert a value to mebibytes. </p>
+<p>This macro converts the given value <code>x</code> to mebibytes (multiplying by 1024*1024).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The value to convert. </td></tr>
@@ -278,7 +278,7 @@ Macros</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Nov 5 2025 23:25:13 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:11:18 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

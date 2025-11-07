@@ -18,6 +18,8 @@ static settings_t init = {
     .default_directory = "/",
     .use_saves_folder = true,
     .show_saves_folder = false,
+    .hide_rom_extension = false,
+    .hide_rom_tags = false,
     .soundfx_enabled = false,
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     .rom_autoload_enabled = false,
@@ -56,6 +58,8 @@ void settings_load (settings_t *settings) {
     settings->default_directory = strdup(mini_get_string(ini, "menu", "default_directory", init.default_directory));
     settings->use_saves_folder = mini_get_bool(ini, "menu", "use_saves_folder", init.use_saves_folder);
     settings->show_saves_folder = mini_get_bool(ini, "menu", "show_saves_folder", init.show_saves_folder);
+    settings->hide_rom_extension = mini_get_bool(ini, "menu", "hide_rom_extension", init.hide_rom_extension);
+    settings->hide_rom_tags = mini_get_bool(ini, "menu", "hide_rom_tags", init.hide_rom_tags);
     settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
     
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
@@ -85,6 +89,8 @@ void settings_save (settings_t *settings) {
     mini_set_string(ini, "menu", "default_directory", settings->default_directory);
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
     mini_set_bool(ini, "menu", "show_saves_folder", settings->show_saves_folder);
+    mini_set_bool(ini, "menu", "hide_rom_extension", settings->hide_rom_extension);
+    mini_set_bool(ini, "menu", "hide_rom_tags", settings->hide_rom_tags);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);

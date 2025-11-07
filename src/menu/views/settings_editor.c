@@ -62,14 +62,14 @@ static void set_mod_pal60_compatibility_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-static void set_hide_rom_extension_type(menu_t *menu, void *arg) {
-    menu->settings.hide_rom_extension = (bool)(uintptr_t)(arg);
+static void set_show_browser_file_extensions_type(menu_t *menu, void *arg) {
+    menu->settings.show_browser_file_extensions = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
     menu->browser.reload = true;
 }
 
-static void set_hide_rom_tags_type (menu_t *menu, void *arg) {
-    menu->settings.hide_rom_tags = (bool)(uintptr_t)(arg);
+static void set_show_browser_rom_tags_type (menu_t *menu, void *arg) {
+    menu->settings.show_browser_rom_tags = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
@@ -142,15 +142,15 @@ static component_context_menu_t set_pal60_mod_compatibility_type_context_menu = 
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_hide_rom_extension_context_menu = { .list = {
-    { .text = "On", .action = set_hide_rom_extension_type, .arg = (void *)(uintptr_t)(true) },
-    { .text = "Off", .action = set_hide_rom_extension_type, .arg = (void *)(uintptr_t)(false) },
+static component_context_menu_t set_show_browser_file_extensions_context_menu = { .list = {
+    { .text = "On", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(true) },
+    { .text = "Off", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_hide_rom_tags_context_menu = { .list = {
-    {.text = "On", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_hide_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
+static component_context_menu_t set_show_browser_rom_tags_context_menu = { .list = {
+    {.text = "On", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
+    {.text = "Off", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -180,8 +180,8 @@ static component_context_menu_t options_context_menu = { .list = {
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
-    { .text = "Hide ROM Extensions", .submenu = &set_hide_rom_extension_context_menu },
-    { .text = "Hide ROM Tags", .submenu = &set_hide_rom_tags_context_menu },
+    { .text = "Hide ROM Extensions", .submenu = &set_show_browser_file_extensions_context_menu },
+    { .text = "Hide ROM Tags", .submenu = &set_show_browser_rom_tags_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
     // { .text = "Restore Defaults", .action = set_use_default_settings },
@@ -276,8 +276,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ,
         format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.pal60_compatibility_mode),
-        format_switch(menu->settings.hide_rom_extension),
-        format_switch(menu->settings.hide_rom_tags),
+        format_switch(menu->settings.show_browser_file_extensions),
+        format_switch(menu->settings.show_browser_rom_tags),
         format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
 #endif

@@ -33,7 +33,7 @@ var searchData=
   ['ui_5fcomponents_5ftabs_5fdraw_30',['ui_components_tabs_draw',['../ui__components_8h.html#ad0e0f91b54697e10a583bfead945cb57',1,'ui_components_tabs_draw(const char **text, int count, int selected, float width):&#160;common.c'],['../common_8c.html#ad0e0f91b54697e10a583bfead945cb57',1,'ui_components_tabs_draw(const char **text, int count, int selected, float width):&#160;common.c']]],
   ['uncached_31',['UNCACHED',['../boot__io_8h.html#a964757ef34b581942b554637d3a4fd66',1,'boot_io.h']]],
   ['unique_5fcode_32',['unique_code',['../rom__info_8h.html#aa1e3ff593f139ee836b46892bd5f799f',1,'rom_info_t.__unnamed22__.__unnamed28__']]],
-  ['unmount_5fall_5fcpakfs_33',['unmount_all_cpakfs',['../cpakfs__utils_8h.html#aea3880dc78e1cb50fb95d6736287fd0f',1,'cpakfs_utils.c']]],
+  ['unmount_5fall_5fcpakfs_33',['unmount_all_cpakfs',['../cpakfs__utils_8c.html#ac6d568dba346ad786b8e2f76b0553152',1,'unmount_all_cpakfs():&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#aea3880dc78e1cb50fb95d6736287fd0f',1,'unmount_all_cpakfs(void):&#160;cpakfs_utils.c']]],
   ['unsupported_20use_20at_20own_20risk_34',['EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md10',1,'']]],
   ['untested_20and_20unsupported_20use_20at_20own_20risk_35',['EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK',['../index.html#autotoc_md10',1,'']]],
   ['unwanted_20files_20before_20adding_20them_20to_20the_20sd_20card_36',['I am using macOS and want to clean unwanted files before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md110',1,'']]],

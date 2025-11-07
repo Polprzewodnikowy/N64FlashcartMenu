@@ -33,7 +33,7 @@ var searchData=
   ['debug_20to_20other_20flashcarts_20emulators_30',['How to deploy and/or debug to other flashcarts/emulators',['../md_docs_299__developer__guide.html#autotoc_md123',1,'']]],
   ['debug_20to_20the_20sc64_31',['How to deploy and/or debug to the SC64',['../md_docs_299__developer__guide.html#autotoc_md117',1,'']]],
   ['dec_32',['dec',['../mp3__player_8c.html#ac4bbcc9cc56f965a488de3eb9c483845',1,'mp3player_t']]],
-  ['dec_5findex_5fnote_33',['dec_index_note',['../cpakfs__utils_8h.html#afa9a8b21dbb10f350a49233192847329',1,'cpakfs_utils.c']]],
+  ['dec_5findex_5fnote_33',['dec_index_note',['../cpakfs__utils_8c.html#afa9a8b21dbb10f350a49233192847329',1,'dec_index_note(int current_index):&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#afa9a8b21dbb10f350a49233192847329',1,'dec_index_note(int current_index):&#160;cpakfs_utils.c']]],
   ['decoded_5frows_34',['decoded_rows',['../png__decoder_8c.html#ad5632e8a4278d2319750d27da763b31d',1,'png_decoder_t']]],
   ['default_5fdirectory_35',['default_directory',['../settings_8h.html#a7b25ac0c578507eb002025f1e5ad6041',1,'settings_t']]],
   ['defect_5ftracks_36',['defect_tracks',['../flashcart_8h.html#ad62dae6f881576251e1df08274d2ccc8',1,'flashcart_disk_parameters_t']]],

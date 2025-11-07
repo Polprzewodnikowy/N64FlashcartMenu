@@ -9,6 +9,5 @@ var searchData=
   ['common_2ec_6',['common.c',['../common_8c.html',1,'']]],
   ['constants_2eh_7',['constants.h',['../constants_8h.html',1,'']]],
   ['context_5fmenu_2ec_8',['context_menu.c',['../context__menu_8c.html',1,'']]],
-  ['cpakfs_5futils_2ec_9',['cpakfs_utils.c',['../cpakfs__utils_8c.html',1,'']]],
-  ['cpakfs_5futils_2eh_10',['cpakfs_utils.h',['../cpakfs__utils_8h.html',1,'']]]
+  ['cpakfs_5futils_2eh_9',['cpakfs_utils.h',['../cpakfs__utils_8h.html',1,'']]]
 ];

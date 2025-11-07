@@ -158,8 +158,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unmount_all_cpakfs</b
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a219b82594417201920623e82d79354d8" id="r_a219b82594417201920623e82d79354d8"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a219b82594417201920623e82d79354d8">CPAK_MOUNT_ARRAY</a> [4]</td></tr>
-<tr class="memdesc:a219b82594417201920623e82d79354d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of Controller Pak mount point strings (e.g., "cpak1:/").  <br /></td></tr>
+<tr class="memitem:a219b82594417201920623e82d79354d8" id="r_a219b82594417201920623e82d79354d8"><td class="memItemLeft" align="right" valign="top"><a id="a219b82594417201920623e82d79354d8" name="a219b82594417201920623e82d79354d8"></a>
+const char *const&#160;</td><td class="memItemRight" valign="bottom"><b>CPAK_MOUNT_ARRAY</b> [4]</td></tr>
+<tr class="memdesc:a219b82594417201920623e82d79354d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of Controller Pak mount point strings (e.g., "cpak1:/"). <br /></td></tr>
 <tr class="separator:a219b82594417201920623e82d79354d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -350,16 +351,6 @@ ext[5]</td>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error.</dd></dl>
-<p>The title is the filename up to the first underscore or dot, or the whole filename if neither is present.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>The absolute file path. </td></tr>
-    <tr><td class="paramname">outbuf</td><td>Output buffer for the title. </td></tr>
-    <tr><td class="paramname">outbuf_size</td><td>Size of the output buffer. </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
 
 </div>
@@ -519,52 +510,14 @@ ext[5]</td>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error.</dd></dl>
-<p>This function attempts to find a unique filename by incrementing the extension in base36 if needed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mount_prefix</td><td>The mount prefix (e.g., "cpak1:/"). </td></tr>
-    <tr><td class="paramname">desired_name</td><td>The desired base filename. </td></tr>
-    <tr><td class="paramname">out_fullpath</td><td>Output buffer for the unique full path. </td></tr>
-    <tr><td class="paramname">outsz</td><td>Size of the output buffer. </td></tr>
-    <tr><td class="paramname">exists_fullpath</td><td>Function pointer to check if a full path exists. </td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="section return"><dt>Returns</dt><dd>0 on success, negative value on error. </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a219b82594417201920623e82d79354d8" name="a219b82594417201920623e82d79354d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a219b82594417201920623e82d79354d8">&#9670;&#160;</a></span>CPAK_MOUNT_ARRAY</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const CPAK_MOUNT_ARRAY[4]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Array of Controller Pak mount point strings (e.g., "cpak1:/"). </p>
-<p>Array of Controller Pak mount point strings (e.g., "cpak1:/"). </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 7 2025 13:27:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:33:37 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

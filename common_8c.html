@@ -89,126 +89,64 @@ $(function(){ initResizable(false); });
 <div id="doc-content">
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">common.c File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation of common UI components.  
+<p>Common UI components implementation.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a19fde3f83a0b9050ffd8345ea0050032" id="r_a19fde3f83a0b9050ffd8345ea0050032"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19fde3f83a0b9050ffd8345ea0050032">ui_components_box_draw</a> (int x0, int y0, int x1, int y1, color_t color)</td></tr>
-<tr class="memdesc:a19fde3f83a0b9050ffd8345ea0050032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a filled rectangle (box) with the specified color.  <br /></td></tr>
+<tr class="memdesc:a19fde3f83a0b9050ffd8345ea0050032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a box with the specified color.  <br /></td></tr>
 <tr class="separator:a19fde3f83a0b9050ffd8345ea0050032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e4221f0e019cd6a5242964a275c7fa3" id="r_a3e4221f0e019cd6a5242964a275c7fa3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e4221f0e019cd6a5242964a275c7fa3">ui_components_border_draw</a> (int x0, int y0, int x1, int y1)</td></tr>
-<tr class="memdesc:a3e4221f0e019cd6a5242964a275c7fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a border rectangle with the default border color.  <br /></td></tr>
+<tr class="memdesc:a3e4221f0e019cd6a5242964a275c7fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a border with the default border color.  <br /></td></tr>
 <tr class="separator:a3e4221f0e019cd6a5242964a275c7fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1ac5e0f73a6d0d64acfc1f3d0147011" id="r_aa1ac5e0f73a6d0d64acfc1f3d0147011"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1ac5e0f73a6d0d64acfc1f3d0147011">ui_components_layout_draw_tabbed</a> (void)</td></tr>
-<tr class="memdesc:aa1ac5e0f73a6d0d64acfc1f3d0147011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main layout border and separator for tabbed layouts.  <br /></td></tr>
+<tr class="memdesc:aa1ac5e0f73a6d0d64acfc1f3d0147011"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the layout with tabs.  <br /></td></tr>
 <tr class="separator:aa1ac5e0f73a6d0d64acfc1f3d0147011"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49736b8aac4d3edaa97c998fbbb84c3a" id="r_a49736b8aac4d3edaa97c998fbbb84c3a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49736b8aac4d3edaa97c998fbbb84c3a">ui_components_layout_draw</a> (void)</td></tr>
-<tr class="memdesc:a49736b8aac4d3edaa97c998fbbb84c3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main layout border and separator.  <br /></td></tr>
+<tr class="memdesc:a49736b8aac4d3edaa97c998fbbb84c3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the layout.  <br /></td></tr>
 <tr class="separator:a49736b8aac4d3edaa97c998fbbb84c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a150f8458f19c9d03bfd7297676fc7680" id="r_a150f8458f19c9d03bfd7297676fc7680"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a150f8458f19c9d03bfd7297676fc7680">ui_components_progressbar_draw</a> (int x0, int y0, int x1, int y1, float progress)</td></tr>
 <tr class="memdesc:a150f8458f19c9d03bfd7297676fc7680"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a progress bar.  <br /></td></tr>
 <tr class="separator:a150f8458f19c9d03bfd7297676fc7680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae782b574b2bfcca12eeeae6a788aa537" id="r_ae782b574b2bfcca12eeeae6a788aa537"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae782b574b2bfcca12eeeae6a788aa537">ui_components_seekbar_draw</a> (float position)</td></tr>
-<tr class="memdesc:ae782b574b2bfcca12eeeae6a788aa537"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a seek bar at the default position.  <br /></td></tr>
+<tr class="memdesc:ae782b574b2bfcca12eeeae6a788aa537"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a seek bar.  <br /></td></tr>
 <tr class="separator:ae782b574b2bfcca12eeeae6a788aa537"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9083a4dbd1b374633445fce4781025c" id="r_ae9083a4dbd1b374633445fce4781025c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9083a4dbd1b374633445fce4781025c">ui_components_loader_draw</a> (float progress, const char *msg)</td></tr>
-<tr class="memdesc:ae9083a4dbd1b374633445fce4781025c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a loader with a progress bar and optional message.  <br /></td></tr>
+<tr class="memdesc:ae9083a4dbd1b374633445fce4781025c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a loader.  <br /></td></tr>
 <tr class="separator:ae9083a4dbd1b374633445fce4781025c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7ef483e79ce878eac283808e415d5c4" id="r_ab7ef483e79ce878eac283808e415d5c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7ef483e79ce878eac283808e415d5c4">ui_components_scrollbar_draw</a> (int x, int y, int width, int height, int position, int items, int visible_items)</td></tr>
-<tr class="memdesc:ab7ef483e79ce878eac283808e415d5c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a vertical scrollbar.  <br /></td></tr>
+<tr class="memdesc:ab7ef483e79ce878eac283808e415d5c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a scrollbar.  <br /></td></tr>
 <tr class="separator:ab7ef483e79ce878eac283808e415d5c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7813f3fda3c7021a40579f523c84bdc" id="r_ab7813f3fda3c7021a40579f523c84bdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7813f3fda3c7021a40579f523c84bdc">ui_components_list_scrollbar_draw</a> (int position, int items, int visible_items)</td></tr>
-<tr class="memdesc:ab7813f3fda3c7021a40579f523c84bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a list scrollbar at the default position.  <br /></td></tr>
+<tr class="memdesc:ab7813f3fda3c7021a40579f523c84bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a list scrollbar.  <br /></td></tr>
 <tr class="separator:ab7813f3fda3c7021a40579f523c84bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38d9464112258ff472b96fac7e5511f7" id="r_a38d9464112258ff472b96fac7e5511f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38d9464112258ff472b96fac7e5511f7">ui_components_dialog_draw</a> (int width, int height)</td></tr>
-<tr class="memdesc:a38d9464112258ff472b96fac7e5511f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a dialog box centered on the display.  <br /></td></tr>
+<tr class="memdesc:a38d9464112258ff472b96fac7e5511f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a dialog box.  <br /></td></tr>
 <tr class="separator:a38d9464112258ff472b96fac7e5511f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a0e7f4688bff44d1e41a3b49ffbc791" id="r_a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a0e7f4688bff44d1e41a3b49ffbc791">ui_components_messagebox_draw</a> (char *fmt,...)</td></tr>
-<tr class="memdesc:a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a message box with formatted text (variadic arguments).  <br /></td></tr>
+<tr class="memdesc:a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a message box with formatted text.  <br /></td></tr>
 <tr class="separator:a2a0e7f4688bff44d1e41a3b49ffbc791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3eeb3a6154571a382cd721f3825f00b8" id="r_a3eeb3a6154571a382cd721f3825f00b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3eeb3a6154571a382cd721f3825f00b8">ui_components_main_text_draw</a> (<a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a> style, rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
-<tr class="memdesc:a3eeb3a6154571a382cd721f3825f00b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main text with formatted content (variadic arguments).  <br /></td></tr>
+<tr class="memdesc:a3eeb3a6154571a382cd721f3825f00b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the main text with formatted content.  <br /></td></tr>
 <tr class="separator:a3eeb3a6154571a382cd721f3825f00b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaccdd202ad6ef7d18c115402ebbaa5a7" id="r_aaccdd202ad6ef7d18c115402ebbaa5a7"><td class="memItemLeft" align="right" valign="top"><a id="aaccdd202ad6ef7d18c115402ebbaa5a7" name="aaccdd202ad6ef7d18c115402ebbaa5a7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>va_start</b> (va, fmt)</td></tr>
-<tr class="separator:aaccdd202ad6ef7d18c115402ebbaa5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42dceeeba57fd78d1ef8f04b23d36fa2" id="r_a42dceeeba57fd78d1ef8f04b23d36fa2"><td class="memItemLeft" align="right" valign="top"><a id="a42dceeeba57fd78d1ef8f04b23d36fa2" name="a42dceeeba57fd78d1ef8f04b23d36fa2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>va_end</b> (va)</td></tr>
-<tr class="separator:a42dceeeba57fd78d1ef8f04b23d36fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2b5faf61bff0b7726b646e707a1b1fb" id="r_af2b5faf61bff0b7726b646e707a1b1fb"><td class="memItemLeft" align="right" valign="top"><a id="af2b5faf61bff0b7726b646e707a1b1fb" name="af2b5faf61bff0b7726b646e707a1b1fb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (formatted !=buffer)</td></tr>
-<tr class="separator:af2b5faf61bff0b7726b646e707a1b1fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52ef5e75e3fad6f6ed8aaa32d3c8796e" id="r_a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52ef5e75e3fad6f6ed8aaa32d3c8796e">ui_components_actions_bar_text_draw</a> (<a class="el" href="fonts_8h.html#a4f821600c8abd1a0aafc99675fc04f5b">menu_font_type_t</a> style, rdpq_align_t align, rdpq_valign_t valign, char *fmt,...)</td></tr>
-<tr class="memdesc:a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the actions bar text with formatted content (variadic arguments).  <br /></td></tr>
+<tr class="memdesc:a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the actions bar text with formatted content.  <br /></td></tr>
 <tr class="separator:a52ef5e75e3fad6f6ed8aaa32d3c8796e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff48abb2f1d6e23e4399993cfff8e633" id="r_aff48abb2f1d6e23e4399993cfff8e633"><td class="memItemLeft" align="right" valign="top">*brief Draw the tabs **param text Array of tab text *param count Number of tabs *param selected Index of the selected tab *param width Width of each tab *void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff48abb2f1d6e23e4399993cfff8e633">ui_components_tabs_draw</a> (const char **text, int count, int selected, float width)</td></tr>
-<tr class="memdesc:aff48abb2f1d6e23e4399993cfff8e633"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a row of tabs with text labels.  <br /></td></tr>
-<tr class="separator:aff48abb2f1d6e23e4399993cfff8e633"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bf7f0f3690c4d8aeeee3f9d32816935" id="r_a0bf7f0f3690c4d8aeeee3f9d32816935"><td class="memItemLeft" align="right" valign="top"><a id="a0bf7f0f3690c4d8aeeee3f9d32816935" name="a0bf7f0f3690c4d8aeeee3f9d32816935"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>for</b> (int i=0;i&lt; count;i++)</td></tr>
-<tr class="separator:a0bf7f0f3690c4d8aeeee3f9d32816935"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af80835fcd8363db3c7913eb0afdfaa26" id="r_af80835fcd8363db3c7913eb0afdfaa26"><td class="memItemLeft" align="right" valign="top"><a id="af80835fcd8363db3c7913eb0afdfaa26" name="af80835fcd8363db3c7913eb0afdfaa26"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>if</b> (selected &gt;=0 &amp;&amp;selected&lt; count)</td></tr>
-<tr class="separator:af80835fcd8363db3c7913eb0afdfaa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a686b4db894c136b43709755b4513e0aa" id="r_a686b4db894c136b43709755b4513e0aa"><td class="memItemLeft" align="right" valign="top"><a id="a686b4db894c136b43709755b4513e0aa" name="a686b4db894c136b43709755b4513e0aa"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ui_components_border_draw</b> (starting_x, y, x, y+height+24)</td></tr>
-<tr class="separator:a686b4db894c136b43709755b4513e0aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0e0f91b54697e10a583bfead945cb57" id="r_ad0e0f91b54697e10a583bfead945cb57"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0e0f91b54697e10a583bfead945cb57">ui_components_tabs_draw</a> (const char **text, int count, int selected, float width)</td></tr>
+<tr class="memdesc:ad0e0f91b54697e10a583bfead945cb57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw the tabs.  <br /></td></tr>
+<tr class="separator:ad0e0f91b54697e10a583bfead945cb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa31dd59a37e716b20f0d65796d8bb63f" id="r_aa31dd59a37e716b20f0d65796d8bb63f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa31dd59a37e716b20f0d65796d8bb63f">ui_component_value_editor</a> (const char **header_text, const char **value_text, int count, int selected, float width_adjustment)</td></tr>
-<tr class="memdesc:aa31dd59a37e716b20f0d65796d8bb63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a value editor with selectable fields.  <br /></td></tr>
+<tr class="memdesc:aa31dd59a37e716b20f0d65796d8bb63f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw a value editor component.  <br /></td></tr>
 <tr class="separator:aa31dd59a37e716b20f0d65796d8bb63f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ad5e2d3a85512c52e869f6ad9a4c2808e" id="r_ad5e2d3a85512c52e869f6ad9a4c2808e"><td class="memItemLeft" align="right" valign="top"><a id="ad5e2d3a85512c52e869f6ad9a4c2808e" name="ad5e2d3a85512c52e869f6ad9a4c2808e"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>buffer</b> [256]</td></tr>
-<tr class="separator:ad5e2d3a85512c52e869f6ad9a4c2808e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f9b5a565017318745b4f85807f5c60d" id="r_a3f9b5a565017318745b4f85807f5c60d"><td class="memItemLeft" align="right" valign="top"><a id="a3f9b5a565017318745b4f85807f5c60d" name="a3f9b5a565017318745b4f85807f5c60d"></a>
-size_t&#160;</td><td class="memItemRight" valign="bottom"><b>nbytes</b> = sizeof(buffer)</td></tr>
-<tr class="separator:a3f9b5a565017318745b4f85807f5c60d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b2898181bcabf5ba975cb26ab76b5f4" id="r_a9b2898181bcabf5ba975cb26ab76b5f4"><td class="memItemLeft" align="right" valign="top"><a id="a9b2898181bcabf5ba975cb26ab76b5f4" name="a9b2898181bcabf5ba975cb26ab76b5f4"></a>
-va_list&#160;</td><td class="memItemRight" valign="bottom"><b>va</b></td></tr>
-<tr class="separator:a9b2898181bcabf5ba975cb26ab76b5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a378888a1f6fa473f812652343acf46e7" id="r_a378888a1f6fa473f812652343acf46e7"><td class="memItemLeft" align="right" valign="top"><a id="a378888a1f6fa473f812652343acf46e7" name="a378888a1f6fa473f812652343acf46e7"></a>
-char *&#160;</td><td class="memItemRight" valign="bottom"><b>formatted</b> = vasnprintf(buffer, &amp;nbytes, fmt, va)</td></tr>
-<tr class="separator:a378888a1f6fa473f812652343acf46e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34e72e58b4b5c094c96535d4e9fbbb44" id="r_a34e72e58b4b5c094c96535d4e9fbbb44"><td class="memItemLeft" align="right" valign="top">rdpq_text_printn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34e72e58b4b5c094c96535d4e9fbbb44">rdpq_textparms_t</a></td></tr>
-<tr class="separator:a34e72e58b4b5c094c96535d4e9fbbb44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a294ba4216478a6e1f8d0b51c82b5c4d1" id="r_a294ba4216478a6e1f8d0b51c82b5c4d1"><td class="memItemLeft" align="right" valign="top"><a id="a294ba4216478a6e1f8d0b51c82b5c4d1" name="a294ba4216478a6e1f8d0b51c82b5c4d1"></a>
-rdpq_text_printn&#160;</td><td class="memItemRight" valign="bottom"><b>FNT_DEFAULT</b></td></tr>
-<tr class="separator:a294ba4216478a6e1f8d0b51c82b5c4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae54c2df39267876b7c0c2fec1ed19e80" id="r_ae54c2df39267876b7c0c2fec1ed19e80"><td class="memItemLeft" align="right" valign="top"><a id="ae54c2df39267876b7c0c2fec1ed19e80" name="ae54c2df39267876b7c0c2fec1ed19e80"></a>
-rdpq_text_printn <a class="el" href="constants_8h.html#a9b677c2a6549810814fa608f4697910a">VISIBLE_AREA_X0</a>&#160;</td><td class="memItemRight" valign="bottom"><b>TEXT_MARGIN_HORIZONTAL</b></td></tr>
-<tr class="separator:ae54c2df39267876b7c0c2fec1ed19e80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b3bd53b4f4bece91298a786d149ef66" id="r_a6b3bd53b4f4bece91298a786d149ef66"><td class="memItemLeft" align="right" valign="top"><a id="a6b3bd53b4f4bece91298a786d149ef66" name="a6b3bd53b4f4bece91298a786d149ef66"></a>
-rdpq_text_printn <a class="el" href="constants_8h.html#a9b677c2a6549810814fa608f4697910a">VISIBLE_AREA_X0</a> <a class="el" href="constants_8h.html#ad241be673ca939293dcea11dbd50b422">LAYOUT_ACTIONS_SEPARATOR_Y</a> <a class="el" href="constants_8h.html#a8ed7a0f0ea48c9733bf7e57fe6eaf0f4">BORDER_THICKNESS</a> <a class="el" href="constants_8h.html#afd261f5f4e18ab22e21c4a40bead2c6e">TEXT_MARGIN_VERTICAL</a>&#160;</td><td class="memItemRight" valign="bottom"><b>TEXT_OFFSET_VERTICAL</b></td></tr>
-<tr class="separator:a6b3bd53b4f4bece91298a786d149ef66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf2ca82a5c6ce9cc4af6c4c648be6881" id="r_adf2ca82a5c6ce9cc4af6c4c648be6881"><td class="memItemLeft" align="right" valign="top"><a id="adf2ca82a5c6ce9cc4af6c4c648be6881" name="adf2ca82a5c6ce9cc4af6c4c648be6881"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>field_width</b> = (<a class="el" href="constants_8h.html#a6372292a7f4e97871a7cbb8acd5530c7">VISIBLE_AREA_WIDTH</a> - (<a class="el" href="constants_8h.html#ade82fd33009513ae56e2c1d7bcfed2bb">TEXT_MARGIN_HORIZONTAL</a> * 2)) / width_adjustment</td></tr>
-<tr class="separator:adf2ca82a5c6ce9cc4af6c4c648be6881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53d96cfbe94133862f2e4e76eed92435" id="r_a53d96cfbe94133862f2e4e76eed92435"><td class="memItemLeft" align="right" valign="top"><a id="a53d96cfbe94133862f2e4e76eed92435" name="a53d96cfbe94133862f2e4e76eed92435"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>starting_x</b> = <a class="el" href="constants_8h.html#a9052e52bd99cbd5a17923051f3c920d9">DISPLAY_CENTER_X</a> - (field_width * count / 2.0f)</td></tr>
-<tr class="separator:a53d96cfbe94133862f2e4e76eed92435"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9336ebf25087d91c818ee6e9ec29f8c1" id="r_a9336ebf25087d91c818ee6e9ec29f8c1"><td class="memItemLeft" align="right" valign="top"><a id="a9336ebf25087d91c818ee6e9ec29f8c1" name="a9336ebf25087d91c818ee6e9ec29f8c1"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> = starting_x</td></tr>
-<tr class="separator:a9336ebf25087d91c818ee6e9ec29f8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4f0d3eebc3c443f9be81bf48561a217" id="r_aa4f0d3eebc3c443f9be81bf48561a217"><td class="memItemLeft" align="right" valign="top"><a id="aa4f0d3eebc3c443f9be81bf48561a217" name="aa4f0d3eebc3c443f9be81bf48561a217"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>y</b> = <a class="el" href="constants_8h.html#a00874cb140e18d8f2858e9d122acf0a0">DISPLAY_CENTER_Y</a></td></tr>
-<tr class="separator:aa4f0d3eebc3c443f9be81bf48561a217"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48083b65ac9a863566dc3e3fff09a5b4" id="r_a48083b65ac9a863566dc3e3fff09a5b4"><td class="memItemLeft" align="right" valign="top"><a id="a48083b65ac9a863566dc3e3fff09a5b4" name="a48083b65ac9a863566dc3e3fff09a5b4"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a class="el" href="constants_8h.html#a277b8b2978837abff020380f7206b510">TAB_HEIGHT</a></td></tr>
-<tr class="separator:a48083b65ac9a863566dc3e3fff09a5b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a495141048bad20f1a3e029efbe95b6a0" id="r_a495141048bad20f1a3e029efbe95b6a0"><td class="memItemLeft" align="right" valign="top">rdpq_textparms_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a495141048bad20f1a3e029efbe95b6a0">value_textparms</a></td></tr>
-<tr class="separator:a495141048bad20f1a3e029efbe95b6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation of common UI components. </p>
+<div class="textblock"><p>Common UI components implementation. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a19fde3f83a0b9050ffd8345ea0050032" name="a19fde3f83a0b9050ffd8345ea0050032"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a19fde3f83a0b9050ffd8345ea0050032">&#9670;&#160;</a></span>ui_components_box_draw()</h2>
@@ -244,15 +182,15 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a filled rectangle (box) with the specified color. </p>
+<p>Draw a box with the specified color. </p>
 <p>Draw a box component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x0</td><td>X-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">y0</td><td>Y-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">x1</td><td>X-coordinate of the bottom-right corner. </td></tr>
-    <tr><td class="paramname">y1</td><td>Y-coordinate of the bottom-right corner. </td></tr>
-    <tr><td class="paramname">color</td><td>Fill color of the box. </td></tr>
+    <tr><td class="paramname">x0</td><td>The x-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">y0</td><td>The y-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">x1</td><td>The x-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">y1</td><td>The y-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">color</td><td>The color of the box. </td></tr>
   </table>
   </dd>
 </dl>
@@ -288,14 +226,14 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a border rectangle with the default border color. </p>
+<p>Draw a border with the default border color. </p>
 <p>Draw a border component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x0</td><td>X-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">y0</td><td>Y-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">x1</td><td>X-coordinate of the bottom-right corner. </td></tr>
-    <tr><td class="paramname">y1</td><td>Y-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">x0</td><td>The x-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">y0</td><td>The y-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">x1</td><td>The x-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">y1</td><td>The y-coordinate of the bottom-right corner. </td></tr>
   </table>
   </dd>
 </dl>
@@ -317,7 +255,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw the main layout border and separator for tabbed layouts. </p>
+<p>Draw the layout with tabs. </p>
 <p>Draw the layout component with tabs. </p>
 
 </div>
@@ -337,7 +275,7 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw the main layout border and separator. </p>
+<p>Draw the layout. </p>
 <p>Draw the layout component. </p>
 
 </div>
@@ -380,11 +318,11 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
 <p>Draw a progress bar component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x0</td><td>X-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">y0</td><td>Y-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">x1</td><td>X-coordinate of the bottom-right corner. </td></tr>
-    <tr><td class="paramname">y1</td><td>Y-coordinate of the bottom-right corner. </td></tr>
-    <tr><td class="paramname">progress</td><td>Progress value (0.0 to 1.0). </td></tr>
+    <tr><td class="paramname">x0</td><td>The x-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">y0</td><td>The y-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">x1</td><td>The x-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">y1</td><td>The y-coordinate of the bottom-right corner. </td></tr>
+    <tr><td class="paramname">progress</td><td>The progress value (0.0 to 1.0). </td></tr>
   </table>
   </dd>
 </dl>
@@ -406,11 +344,11 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a seek bar at the default position. </p>
+<p>Draw a seek bar. </p>
 <p>Draw a seek bar component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">position</td><td>Seek position value (0.0 to 1.0). </td></tr>
+    <tr><td class="paramname">position</td><td>The position value (0.0 to 1.0). </td></tr>
   </table>
   </dd>
 </dl>
@@ -436,12 +374,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a loader with a progress bar and optional message. </p>
+<p>Draw a loader. </p>
 <p>Draw a loader component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">progress</td><td>Progress value (0.0 to 1.0). </td></tr>
-    <tr><td class="paramname">msg</td><td>Message to display (truncated to 30 characters), or NULL for no message. </td></tr>
+    <tr><td class="paramname">progress</td><td>The progress value (0.0 to 1.0). </td></tr>
+    <tr><td class="paramname">msg</td><td>The message to display truncated to 30 characters. </td></tr>
   </table>
   </dd>
 </dl>
@@ -492,17 +430,17 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a vertical scrollbar. </p>
+<p>Draw a scrollbar. </p>
 <p>Draw a scrollbar component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">x</td><td>X-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">y</td><td>Y-coordinate of the top-left corner. </td></tr>
-    <tr><td class="paramname">width</td><td>Width of the scrollbar. </td></tr>
-    <tr><td class="paramname">height</td><td>Height of the scrollbar. </td></tr>
-    <tr><td class="paramname">position</td><td>Current scroll position (item index). </td></tr>
-    <tr><td class="paramname">items</td><td>Total number of items. </td></tr>
-    <tr><td class="paramname">visible_items</td><td>Number of visible items. </td></tr>
+    <tr><td class="paramname">x</td><td>The x-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">y</td><td>The y-coordinate of the top-left corner. </td></tr>
+    <tr><td class="paramname">width</td><td>The width of the scrollbar. </td></tr>
+    <tr><td class="paramname">height</td><td>The height of the scrollbar. </td></tr>
+    <tr><td class="paramname">position</td><td>The current position. </td></tr>
+    <tr><td class="paramname">items</td><td>The total number of items. </td></tr>
+    <tr><td class="paramname">visible_items</td><td>The number of visible items. </td></tr>
   </table>
   </dd>
 </dl>
@@ -533,13 +471,13 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a list scrollbar at the default position. </p>
+<p>Draw a list scrollbar. </p>
 <p>Draw a list scrollbar component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">position</td><td>Current scroll position (item index). </td></tr>
-    <tr><td class="paramname">items</td><td>Total number of items. </td></tr>
-    <tr><td class="paramname">visible_items</td><td>Number of visible items. </td></tr>
+    <tr><td class="paramname">position</td><td>The current position. </td></tr>
+    <tr><td class="paramname">items</td><td>The total number of items. </td></tr>
+    <tr><td class="paramname">visible_items</td><td>The number of visible items. </td></tr>
   </table>
   </dd>
 </dl>
@@ -565,12 +503,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a dialog box centered on the display. </p>
+<p>Draw a dialog box. </p>
 <p>Draw a dialog component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">width</td><td>Width of the dialog box. </td></tr>
-    <tr><td class="paramname">height</td><td>Height of the dialog box. </td></tr>
+    <tr><td class="paramname">width</td><td>The width of the dialog box. </td></tr>
+    <tr><td class="paramname">height</td><td>The height of the dialog box. </td></tr>
   </table>
   </dd>
 </dl>
@@ -596,12 +534,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a message box with formatted text (variadic arguments). </p>
+<p>Draw a message box with formatted text. </p>
 <p>Draw a message box component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fmt</td><td>Format string for the message. </td></tr>
-    <tr><td class="paramname">...</td><td>Format arguments. </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string. </td></tr>
+    <tr><td class="paramname">...</td><td>The format arguments. </td></tr>
   </table>
   </dd>
 </dl>
@@ -642,15 +580,15 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw the main text with formatted content (variadic arguments). </p>
+<p>Draw the main text with formatted content. </p>
 <p>Draw the main text component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">style</td><td>Font style. </td></tr>
-    <tr><td class="paramname">align</td><td>Horizontal alignment. </td></tr>
-    <tr><td class="paramname">valign</td><td>Vertical alignment. </td></tr>
-    <tr><td class="paramname">fmt</td><td>Format string. </td></tr>
-    <tr><td class="paramname">...</td><td>Format arguments. </td></tr>
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
+    <tr><td class="paramname">align</td><td>The horizontal alignment. </td></tr>
+    <tr><td class="paramname">valign</td><td>The vertical alignment. </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string. </td></tr>
+    <tr><td class="paramname">...</td><td>The format arguments. </td></tr>
   </table>
   </dd>
 </dl>
@@ -691,29 +629,29 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw the actions bar text with formatted content (variadic arguments). </p>
+<p>Draw the actions bar text with formatted content. </p>
 <p>Draw the actions bar text component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">style</td><td>Font style. </td></tr>
-    <tr><td class="paramname">align</td><td>Horizontal alignment. </td></tr>
-    <tr><td class="paramname">valign</td><td>Vertical alignment. </td></tr>
-    <tr><td class="paramname">fmt</td><td>Format string. </td></tr>
-    <tr><td class="paramname">...</td><td>Format arguments. </td></tr>
+    <tr><td class="paramname">style</td><td>The font style. </td></tr>
+    <tr><td class="paramname">align</td><td>The horizontal alignment. </td></tr>
+    <tr><td class="paramname">valign</td><td>The vertical alignment. </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string. </td></tr>
+    <tr><td class="paramname">...</td><td>The format arguments. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="aff48abb2f1d6e23e4399993cfff8e633" name="aff48abb2f1d6e23e4399993cfff8e633"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff48abb2f1d6e23e4399993cfff8e633">&#9670;&#160;</a></span>ui_components_tabs_draw()</h2>
+<a id="ad0e0f91b54697e10a583bfead945cb57" name="ad0e0f91b54697e10a583bfead945cb57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0e0f91b54697e10a583bfead945cb57">&#9670;&#160;</a></span>ui_components_tabs_draw()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">*brief Draw the tabs **param text Array of tab text *param count Number of tabs *param selected Index of the selected tab *param width Width of each tab *void ui_components_tabs_draw </td>
+          <td class="memname">void ui_components_tabs_draw </td>
           <td>(</td>
           <td class="paramtype">const char **</td>          <td class="paramname"><span class="paramname"><em>text</em></span>, </td>
         </tr>
@@ -735,11 +673,11 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a row of tabs with text labels. </p>
+<p>Draw the tabs. </p>
 <p>Draw the tabs component.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">text</td><td>Array of tab text labels. </td></tr>
+    <tr><td class="paramname">text</td><td>Array of tab text. </td></tr>
     <tr><td class="paramname">count</td><td>Number of tabs. </td></tr>
     <tr><td class="paramname">selected</td><td>Index of the selected tab. </td></tr>
     <tr><td class="paramname">width</td><td>Width of each tab. </td></tr>
@@ -783,76 +721,24 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>height</b> = <a clas
       </table>
 </div><div class="memdoc">
 
-<p>Draw a value editor with selectable fields. </p>
-<p>Draw a value editor component.</p>
+<p>Draw a value editor component. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">header_text</td><td>Array of header text labels for each field. </td></tr>
-    <tr><td class="paramname">value_text</td><td>Array of value text labels for each field. </td></tr>
-    <tr><td class="paramname">count</td><td>Number of fields. </td></tr>
-    <tr><td class="paramname">selected</td><td>Index of the selected field. </td></tr>
-    <tr><td class="paramname">width_adjustment</td><td>Adjustment factor for field width. </td></tr>
+    <tr><td class="paramname">header_text</td><td>Array of header text for the values. </td></tr>
+    <tr><td class="paramname">value_text</td><td>Array of value text to be displayed. </td></tr>
+    <tr><td class="paramname">count</td><td>Number of values. </td></tr>
+    <tr><td class="paramname">selected</td><td>Index of the selected value. </td></tr>
+    <tr><td class="paramname">width_adjustment</td><td>Negative width adjustment of each value box. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a34e72e58b4b5c094c96535d4e9fbbb44" name="a34e72e58b4b5c094c96535d4e9fbbb44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34e72e58b4b5c094c96535d4e9fbbb44">&#9670;&#160;</a></span>rdpq_textparms_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rdpq_text_printn rdpq_textparms_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">            .style_id = style,</div>
-<div class="line">            .width = <a class="code hl_define" href="constants_8h.html#a6372292a7f4e97871a7cbb8acd5530c7">VISIBLE_AREA_WIDTH</a> - (<a class="code hl_define" href="constants_8h.html#ade82fd33009513ae56e2c1d7bcfed2bb">TEXT_MARGIN_HORIZONTAL</a> * 2),</div>
-<div class="line">            .height = <a class="code hl_define" href="constants_8h.html#a993f4bc0369a4835a2cddd44f38241ee">VISIBLE_AREA_Y1</a> - <a class="code hl_define" href="constants_8h.html#ad241be673ca939293dcea11dbd50b422">LAYOUT_ACTIONS_SEPARATOR_Y</a> - <a class="code hl_define" href="constants_8h.html#a8ed7a0f0ea48c9733bf7e57fe6eaf0f4">BORDER_THICKNESS</a> - (<a class="code hl_define" href="constants_8h.html#afd261f5f4e18ab22e21c4a40bead2c6e">TEXT_MARGIN_VERTICAL</a> * 2),</div>
-<div class="line">            .align = align,</div>
-<div class="line">            .valign = valign,</div>
-<div class="line">            .wrap = WRAP_ELLIPSES,</div>
-<div class="line">            .line_spacing = <a class="code hl_define" href="constants_8h.html#af516fead612db683adb101aa9bff6660">TEXT_LINE_SPACING_ADJUST</a>,</div>
-<div class="line">        }</div>
-<div class="ttc" id="aconstants_8h_html_a6372292a7f4e97871a7cbb8acd5530c7"><div class="ttname"><a href="constants_8h.html#a6372292a7f4e97871a7cbb8acd5530c7">VISIBLE_AREA_WIDTH</a></div><div class="ttdeci">#define VISIBLE_AREA_WIDTH</div><div class="ttdoc">Width of the visible display area (pixels).</div><div class="ttdef"><b>Definition</b> constants.h:82</div></div>
-<div class="ttc" id="aconstants_8h_html_a8ed7a0f0ea48c9733bf7e57fe6eaf0f4"><div class="ttname"><a href="constants_8h.html#a8ed7a0f0ea48c9733bf7e57fe6eaf0f4">BORDER_THICKNESS</a></div><div class="ttdeci">#define BORDER_THICKNESS</div><div class="ttdoc">Thickness of UI borders (pixels).</div><div class="ttdef"><b>Definition</b> constants.h:22</div></div>
-<div class="ttc" id="aconstants_8h_html_a993f4bc0369a4835a2cddd44f38241ee"><div class="ttname"><a href="constants_8h.html#a993f4bc0369a4835a2cddd44f38241ee">VISIBLE_AREA_Y1</a></div><div class="ttdeci">#define VISIBLE_AREA_Y1</div><div class="ttdoc">End Y coordinate of the visible display area.</div><div class="ttdef"><b>Definition</b> constants.h:76</div></div>
-<div class="ttc" id="aconstants_8h_html_ad241be673ca939293dcea11dbd50b422"><div class="ttname"><a href="constants_8h.html#ad241be673ca939293dcea11dbd50b422">LAYOUT_ACTIONS_SEPARATOR_Y</a></div><div class="ttdeci">#define LAYOUT_ACTIONS_SEPARATOR_Y</div><div class="ttdoc">Y coordinate for the layout actions separator.</div><div class="ttdef"><b>Definition</b> constants.h:93</div></div>
-<div class="ttc" id="aconstants_8h_html_ade82fd33009513ae56e2c1d7bcfed2bb"><div class="ttname"><a href="constants_8h.html#ade82fd33009513ae56e2c1d7bcfed2bb">TEXT_MARGIN_HORIZONTAL</a></div><div class="ttdeci">#define TEXT_MARGIN_HORIZONTAL</div><div class="ttdoc">Horizontal margin for text (pixels).</div><div class="ttdef"><b>Definition</b> constants.h:152</div></div>
-<div class="ttc" id="aconstants_8h_html_af516fead612db683adb101aa9bff6660"><div class="ttname"><a href="constants_8h.html#af516fead612db683adb101aa9bff6660">TEXT_LINE_SPACING_ADJUST</a></div><div class="ttdeci">#define TEXT_LINE_SPACING_ADJUST</div><div class="ttdoc">Adjustment for text line spacing (pixels).</div><div class="ttdef"><b>Definition</b> constants.h:167</div></div>
-<div class="ttc" id="aconstants_8h_html_afd261f5f4e18ab22e21c4a40bead2c6e"><div class="ttname"><a href="constants_8h.html#afd261f5f4e18ab22e21c4a40bead2c6e">TEXT_MARGIN_VERTICAL</a></div><div class="ttdeci">#define TEXT_MARGIN_VERTICAL</div><div class="ttdoc">Vertical margin for text (pixels).</div><div class="ttdef"><b>Definition</b> constants.h:157</div></div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a495141048bad20f1a3e029efbe95b6a0" name="a495141048bad20f1a3e029efbe95b6a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a495141048bad20f1a3e029efbe95b6a0">&#9670;&#160;</a></span>value_textparms</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">rdpq_textparms_t value_textparms</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
-<div class="line">        .width = field_width,</div>
-<div class="line">        .height = 24,</div>
-<div class="line">        .align = ALIGN_CENTER,</div>
-<div class="line">        .wrap = WRAP_NONE</div>
-<div class="line">    }</div>
-</div><!-- fragment -->
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 7 2025 13:27:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Fri Nov 7 2025 13:33:37 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

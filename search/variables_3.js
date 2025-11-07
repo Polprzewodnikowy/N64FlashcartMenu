@@ -22,7 +22,7 @@ var searchData=
   ['contents_19',['contents',['../structcheat__file__t.html#a8ff3c91617afbe63252bc59268f2bb96',1,'cheat_file_t::contents'],['../text__viewer_8c.html#a5ef34cf4bc3e7bd3c242fb0758939457',1,'text_file_t::contents']]],
   ['controller_5fpak_20',['controller_pak',['../rom__info_8h.html#abc8f75ba9e5f5aecf91a3bdc63dea327',1,'rom_info_t.features']]],
   ['count_21',['count',['../group__sc64.html#a4871a999fa2fc37aae0c25d972df6b49',1,'sc64_disk_mapping_t']]],
-  ['cpak_5fmount_5farray_22',['CPAK_MOUNT_ARRAY',['../cpakfs__utils_8c.html#a219b82594417201920623e82d79354d8',1,'CPAK_MOUNT_ARRAY:&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#a219b82594417201920623e82d79354d8',1,'CPAK_MOUNT_ARRAY:&#160;cpakfs_utils.c']]],
+  ['cpak_5fmount_5farray_22',['CPAK_MOUNT_ARRAY',['../cpakfs__utils_8h.html#a219b82594417201920623e82d79354d8',1,'cpakfs_utils.c']]],
   ['cr_23',['CR',['../boot__io_8h.html#acb0559579506d3949f0b35d39d98156a',1,'vi_regs_t::CR'],['../boot__io_8h.html#ad443725846fa9e299773a8f57b357c73',1,'ai_regs_t::CR']]],
   ['crc32_24',['crc32',['../ui__components_8h.html#a5dd252fa9c213c83226f5351b5467a27',1,'file_info_t']]],
   ['ctx_25',['ctx',['../png__decoder_8c.html#a1ab1a67fa8337e5f7baf15ef040bcc7b',1,'png_decoder_t']]],

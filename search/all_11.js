@@ -27,7 +27,7 @@ var searchData=
   ['in_20progress_24',['Work in Progress',['../index.html#autotoc_md3',1,'']]],
   ['in_20sdram_25',['Save location offset in SDRAM',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md23',1,'']]],
   ['in_20the_20dev_20container_26',['Test generated docs in the dev-container',['../md_docs_299__developer__guide.html#autotoc_md131',1,'']]],
-  ['inc_5findex_5fnote_27',['inc_index_note',['../cpakfs__utils_8c.html#a358564e756f44cdd5697e7c7dd034bbe',1,'inc_index_note(int current_index):&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#a358564e756f44cdd5697e7c7dd034bbe',1,'inc_index_note(int current_index):&#160;cpakfs_utils.c']]],
+  ['inc_5findex_5fnote_27',['inc_index_note',['../cpakfs__utils_8h.html#a358564e756f44cdd5697e7c7dd034bbe',1,'cpakfs_utils.c']]],
   ['incorrect_20or_20missing_20characters_28',['Filenames have incorrect or missing characters',['../md_docs_281__faq.html#autotoc_md112',1,'']]],
   ['individual_20zip_20files_20and_20it_20is_20hassle_20to_20extract_20them_20before_20adding_20them_20to_20the_20sd_20card_29',['My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md109',1,'']]],
   ['info_30',['info',['../mp3__player_8c.html#a1d76743c0ae9296728b203dbf5806c65',1,'mp3player_t']]],

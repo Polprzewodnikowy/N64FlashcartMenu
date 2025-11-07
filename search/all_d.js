@@ -46,5 +46,5 @@ var searchData=
   ['ext_43',['ext',['../cpakfs__utils_8h.html#a8336f174a81765e129e1e30570a7d058',1,'cpakfs_path_strings_t']]],
   ['extended_20address_20mode_20command_44',['&quot;Enable/disable extended address mode&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md27',1,'']]],
   ['extract_20them_20before_20adding_20them_20to_20the_20sd_20card_45',['My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md109',1,'']]],
-  ['extract_5ftitle_5ffrom_5fabsolute_5fpath_46',['extract_title_from_absolute_path',['../cpakfs__utils_8c.html#a194a3e60d6a8d0555a69cd75dc069b6b',1,'extract_title_from_absolute_path(const char *path, char *outbuf, size_t outbuf_size):&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#a194a3e60d6a8d0555a69cd75dc069b6b',1,'extract_title_from_absolute_path(const char *path, char *outbuf, size_t outbuf_size):&#160;cpakfs_utils.c']]]
+  ['extract_5ftitle_5ffrom_5fabsolute_5fpath_46',['extract_title_from_absolute_path',['../cpakfs__utils_8h.html#a194a3e60d6a8d0555a69cd75dc069b6b',1,'cpakfs_utils.c']]]
 ];

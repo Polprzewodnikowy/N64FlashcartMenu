@@ -71,7 +71,7 @@ var searchData=
   ['missing_20characters_68',['Filenames have incorrect or missing characters',['../md_docs_281__faq.html#autotoc_md112',1,'']]],
   ['mode_20command_69',['&quot;Enable/disable extended address mode&quot; command',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md27',1,'']]],
   ['modifications_20compatibility_70',['N64 Hardware Modifications Compatibility',['../md_docs_262__hardware__mods.html#autotoc_md101',1,'']]],
-  ['mount_5fcpakfs_71',['mount_cpakfs',['../cpakfs__utils_8c.html#a317839c959ab5ced2cbc3eb0c16d6377',1,'mount_cpakfs(int controller):&#160;cpakfs_utils.c'],['../cpakfs__utils_8h.html#a317839c959ab5ced2cbc3eb0c16d6377',1,'mount_cpakfs(int controller):&#160;cpakfs_utils.c']]],
+  ['mount_5fcpakfs_71',['mount_cpakfs',['../cpakfs__utils_8h.html#a317839c959ab5ced2cbc3eb0c16d6377',1,'cpakfs_utils.c']]],
   ['mp3_20player_72',['MP3 Player',['../md_docs_241__mp3__player.html#autotoc_md99',1,'']]],
   ['mp3_5fplayer_2ec_73',['mp3_player.c',['../mp3__player_8c.html',1,'']]],
   ['mp3_5fplayer_2eh_74',['mp3_player.h',['../mp3__player_8h.html',1,'']]],

@@ -65,10 +65,12 @@ Pre-release only:
 ## Flashcart specific information
 
 ### SummerCart64
-* Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-* Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-
-![SC64 flashcart information](./docs/images/sc64-flashcart-information.png "example SC64 flashcart information")
+Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.  
+  
+> [!TIP]
+> A quick video tutorial can be found here:
+>
+> [![Video tutorial](https://img.youtube.com/vi/IGX0XXf0wgo/default.jpg)](https://www.youtube.com/shorts/IGX0XXf0wgo)
 
 
 ### 64drive

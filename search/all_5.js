@@ -7,7 +7,7 @@ var searchData=
   ['64_20x_20series_4',['EverDrive-64 (X series)',['../index.html#autotoc_md12',1,'']]],
   ['64dd_20disk_20support_5',['64DD Disk support',['../md_docs_217__64dd.html#autotoc_md71',1,'64DD Disk support'],['../md_docs_210__getting__started__sd.html#autotoc_md42',1,'Add 64DD Disk support']]],
   ['64dd_20related_6',['64DD-related',['../md_docs_211__menu__controls.html#autotoc_md51',1,'']]],
-  ['64drive_7',['64drive',['../index.html#autotoc_md9',1,'']]],
+  ['64drive_7',['64drive',['../index.html#autotoc_md9',1,'64drive'],['../md_docs_280__update__the__menu.html#autotoc_md110',1,'64drive']]],
   ['64drive_2ec_8',['64drive.c',['../64drive_8c.html',1,'']]],
   ['64drive_2eh_9',['64drive.h',['../64drive_8h.html',1,'']]],
   ['64drive_5fll_2ec_10',['64drive_ll.c',['../64drive__ll_8c.html',1,'']]],

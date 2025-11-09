@@ -8,7 +8,7 @@ var searchData=
   ['background_5foverlay_5fcolor_5',['BACKGROUND_OVERLAY_COLOR',['../constants_8h.html#ab399c3a31a6aacaea384ee5552292590',1,'constants.h']]],
   ['bad_5fsystem_5farea_5flbas_6',['bad_system_area_lbas',['../flashcart_8h.html#ac06bc2621cde4d7e0b0677725e07d41b',1,'flashcart_disk_parameters_t']]],
   ['basic_20controls_7',['Basic Controls',['../md_docs_211__menu__controls.html#autotoc_md46',1,'']]],
-  ['before_20adding_20them_20to_20the_20sd_20card_8',['before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md110',1,'I am using macOS and want to clean unwanted files before adding them to the SD card'],['../md_docs_281__faq.html#autotoc_md109',1,'My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card']]],
+  ['before_20adding_20them_20to_20the_20sd_20card_8',['before adding them to the SD card',['../md_docs_281__faq.html#autotoc_md114',1,'I am using macOS and want to clean unwanted files before adding them to the SD card'],['../md_docs_281__faq.html#autotoc_md113',1,'My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card']]],
   ['bgm_5fenabled_9',['bgm_enabled',['../settings_8h.html#a5645dd794323484289ca8b1f8fcc872e',1,'settings_t']]],
   ['bitrate_10',['BITRATE',['../boot__io_8h.html#a43e0411e186298f185d39b80ea5f1d4f',1,'ai_regs_t']]],
   ['bitrate_11',['bitrate',['../mp3__player_8c.html#a116b2a534bba89a34edd8144c6e223de',1,'mp3player_t']]],

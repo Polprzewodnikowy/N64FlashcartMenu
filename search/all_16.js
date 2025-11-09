@@ -12,11 +12,11 @@ var searchData=
   ['n64flashcartmenu_9',['N64FlashcartMenu',['../index.html',1,'']]],
   ['n64flashcartmenu_20settings_10',['N64FlashcartMenu settings',['../md_docs_211__menu__controls.html#autotoc_md48',1,'']]],
   ['n64flashcartmenu_20user_20guide_11',['N64FlashcartMenu User Guide',['../md_docs_200__index.html#autotoc_md30',1,'']]],
-  ['name_20here_20does_20not_20work_12',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md108',1,'']]],
+  ['name_20here_20does_20not_20work_12',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md112',1,'']]],
   ['names_13',['Supported file names',['../md_docs_219__gamepak__boxart.html#autotoc_md77',1,'']]],
-  ['native_20os_14',['To the native OS',['../md_docs_299__developer__guide.html#autotoc_md119',1,'']]],
-  ['not_20work_15',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md108',1,'']]],
-  ['not_20working_16',['I have changed the menu/config.ini file manually and things are not working.',['../md_docs_281__faq.html#autotoc_md111',1,'']]],
+  ['native_20os_14',['To the native OS',['../md_docs_299__developer__guide.html#autotoc_md123',1,'']]],
+  ['not_20work_15',['ROM hack (insert hack name here) does not work',['../md_docs_281__faq.html#autotoc_md112',1,'']]],
+  ['not_20working_16',['I have changed the menu/config.ini file manually and things are not working.',['../md_docs_281__faq.html#autotoc_md115',1,'']]],
   ['not_20yet_20planned_17',['Not yet planned',['../index.html#autotoc_md4',1,'']]],
   ['notable_20menu_20features_18',['Current (notable) menu features',['../index.html#autotoc_md5',1,'']]]
 ];

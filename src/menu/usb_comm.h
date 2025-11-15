@@ -31,7 +31,7 @@ void usb_comm_poll(menu_t *menu);
  *
  * @param menu Pointer to the menu structure.
  */
-#define usb_comm_poll(menu)
+void usb_comm_poll(menu_t *menu);
 #endif
 
 #endif /* USB_COMM_H__ */

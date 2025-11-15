@@ -161,13 +161,25 @@ Macros</h2></td></tr>
 <tr class="separator:a120ef8d450f20e707ce64c044b44cbac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb65702a9f2073bb38c7664b4a1fa4d8" id="r_acb65702a9f2073bb38c7664b4a1fa4d8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb65702a9f2073bb38c7664b4a1fa4d8">IS_DOUBLE_ENTRY</a>(t)</td></tr>
 <tr class="separator:acb65702a9f2073bb38c7664b4a1fa4d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a611f64a07596427dd71d908198b2795c" id="r_a611f64a07596427dd71d908198b2795c"><td class="memItemLeft" align="right" valign="top"><a id="a611f64a07596427dd71d908198b2795c" name="a611f64a07596427dd71d908198b2795c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>X106_XOR_CONSTANT</b>&#160;&#160;&#160;(0x0260BCD5)</td></tr>
+<tr class="separator:a611f64a07596427dd71d908198b2795c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac58e7fc60666d451e2f4a89fad9b6007" id="r_ac58e7fc60666d451e2f4a89fad9b6007"><td class="memItemLeft" align="right" valign="top"><a id="ac58e7fc60666d451e2f4a89fad9b6007" name="ac58e7fc60666d451e2f4a89fad9b6007"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>X106_ENC_START</b>&#160;&#160;&#160;(0x13C)</td></tr>
+<tr class="separator:ac58e7fc60666d451e2f4a89fad9b6007"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a8cee37d6e945b230bea26c02eff4adf7" id="r_a8cee37d6e945b230bea26c02eff4adf7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7">cheat_type_special_t</a> { <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c">SPECIAL_DISABLE_EXPANSION_PAK</a> = 0xEE
-, <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a1577fff2d2f12543bbdf133e9b60f8cb">SPECIAL_WRITE_BYTE_ON_BOOT</a> = 0xF0
+<tr class="memitem:a8cee37d6e945b230bea26c02eff4adf7" id="r_a8cee37d6e945b230bea26c02eff4adf7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7">cheat_type_special_t</a> { <br />
+&#160;&#160;<a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a16d4d468baf976f40b0647b7b4db2020">SPECIAL_CLEAR_MEMORY</a> = 0x20
+, <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7adc0d41496947963f2907ffe83d43d844">SPECIAL_SECONDARY_EXCEPTION_HANDLER</a> = 0xCC
+, <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a0e94c526239bbdd974ea8466744da16e">SPECIAL_SET_ENTRYPOINT_ADDR</a> = 0xDE
+, <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c">SPECIAL_DISABLE_EXPANSION_PAK</a> = 0xEE
+, <br />
+&#160;&#160;<a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a1577fff2d2f12543bbdf133e9b60f8cb">SPECIAL_WRITE_BYTE_ON_BOOT</a> = 0xF0
 , <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7a47d2db62325ad5651a5f36d53fe67e46">SPECIAL_WRITE_SHORT_ON_BOOT</a> = 0xF1
 , <a class="el" href="#a8cee37d6e945b230bea26c02eff4adf7aa0522900392154b8301386fe900ff631">SPECIAL_SET_STORE_LOCATION</a> = 0xFF
+<br />
  }</td></tr>
 <tr class="memdesc:a8cee37d6e945b230bea26c02eff4adf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Special cheat types enumeration.  <a href="#a8cee37d6e945b230bea26c02eff4adf7">More...</a><br /></td></tr>
 <tr class="separator:a8cee37d6e945b230bea26c02eff4adf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -394,7 +406,13 @@ sub</td>
 
 <p>Special cheat types enumeration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c" name="a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c"></a>SPECIAL_DISABLE_EXPANSION_PAK&#160;</td><td class="fielddoc"><p>Disable Expansion Pak </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7a16d4d468baf976f40b0647b7b4db2020" name="a8cee37d6e945b230bea26c02eff4adf7a16d4d468baf976f40b0647b7b4db2020"></a>SPECIAL_CLEAR_MEMORY&#160;</td><td class="fielddoc"><p>Clear memory between 0x80000200-0x80000300 on boot </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7adc0d41496947963f2907ffe83d43d844" name="a8cee37d6e945b230bea26c02eff4adf7adc0d41496947963f2907ffe83d43d844"></a>SPECIAL_SECONDARY_EXCEPTION_HANDLER&#160;</td><td class="fielddoc"><p>Use alternate exception handler </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7a0e94c526239bbdd974ea8466744da16e" name="a8cee37d6e945b230bea26c02eff4adf7a0e94c526239bbdd974ea8466744da16e"></a>SPECIAL_SET_ENTRYPOINT_ADDR&#160;</td><td class="fielddoc"><p>Set boot entrypoint address </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c" name="a8cee37d6e945b230bea26c02eff4adf7a5cd9996fc5d5f1d5c2ede1557562526c"></a>SPECIAL_DISABLE_EXPANSION_PAK&#160;</td><td class="fielddoc"><p>Disable Expansion Pak </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a8cee37d6e945b230bea26c02eff4adf7a1577fff2d2f12543bbdf133e9b60f8cb" name="a8cee37d6e945b230bea26c02eff4adf7a1577fff2d2f12543bbdf133e9b60f8cb"></a>SPECIAL_WRITE_BYTE_ON_BOOT&#160;</td><td class="fielddoc"><p>Write byte on boot </p>
 </td></tr>
@@ -442,7 +460,7 @@ sub</td>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 15 2025 15:30:07 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 15 2025 15:37:42 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

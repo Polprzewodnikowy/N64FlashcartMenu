@@ -3,7 +3,7 @@
 To use N64 game art images, place your PNG files within the `sd:/menu/metadata/` folder.
 
 > [!WARNING]
-> Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder, please update your folder name and structure/content to ensure compatibility.
+> Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder. Please update your folder name and structure/content to ensure compatibility.
 
 #### Supported file names
 - `boxart_front.png` (DEFAULT)

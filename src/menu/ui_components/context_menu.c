@@ -1,6 +1,6 @@
 /**
  * @file context_menu.c
- * @brief Context menu component implementation
+ * @brief Implementation of the context menu UI component.
  * @ingroup ui_components
  */
 
@@ -10,12 +10,12 @@
 #include "constants.h"
 
 /**
- * @brief Get the current submenu.
- * 
+ * @brief Get the current submenu from a context menu component.
+ *
  * @param cm Pointer to the context menu component.
- * @return component_context_menu_t* Pointer to the current submenu.
+ * @return Pointer to the current submenu (deepest submenu in the chain).
  */
-static component_context_menu_t *get_current_submenu (component_context_menu_t *cm) {
+static component_context_menu_t *get_current_submenu(component_context_menu_t *cm) {
     while (cm->submenu != NULL) {
         cm = cm->submenu;
     }
@@ -24,10 +24,10 @@ static component_context_menu_t *get_current_submenu (component_context_menu_t *
 
 /**
  * @brief Initialize the context menu component.
- * 
+ *
  * @param cm Pointer to the context menu component.
  */
-void ui_components_context_menu_init (component_context_menu_t *cm) {
+void ui_components_context_menu_init(component_context_menu_t *cm) {
     cm->row_selected = -1;
     cm->row_count = 0;
     cm->hide_pending = false;
@@ -38,23 +38,23 @@ void ui_components_context_menu_init (component_context_menu_t *cm) {
 }
 
 /**
- * @brief Show the context menu component.
- * 
+ * @brief Show the context menu component (reset selection and submenu).
+ *
  * @param cm Pointer to the context menu component.
  */
-void ui_components_context_menu_show (component_context_menu_t *cm) {
+void ui_components_context_menu_show(component_context_menu_t *cm) {
     cm->row_selected = 0;
     cm->submenu = NULL;
 }
 
 /**
- * @brief Process the context menu actions.
- * 
+ * @brief Process the context menu actions (navigation, selection, etc).
+ *
  * @param menu Pointer to the menu structure.
  * @param cm Pointer to the context menu component.
  * @return true if the context menu is processed, false otherwise.
  */
-bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t *cm) {
+bool ui_components_context_menu_process(menu_t *menu, component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return false;
     }
@@ -99,11 +99,11 @@ bool ui_components_context_menu_process (menu_t *menu, component_context_menu_t 
 }
 
 /**
- * @brief Draw the context menu component.
- * 
+ * @brief Draw the context menu UI component.
+ *
  * @param cm Pointer to the context menu component.
  */
-void ui_components_context_menu_draw (component_context_menu_t *cm) {
+void ui_components_context_menu_draw(component_context_menu_t *cm) {
     if (!cm || (cm->row_selected < 0)) {
         return;
     }

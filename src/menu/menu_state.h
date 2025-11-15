@@ -75,6 +75,16 @@ typedef struct {
     int32_t index;
 } entry_t;
 
+typedef struct {
+    path_t *disk_path;
+    disk_info_t disk_info;
+} disk_slot_entry_t;
+
+typedef struct {
+    disk_slot_entry_t primary;
+    disk_slot_entry_t slot[4];
+} disk_slot_t;
+
 /** @brief Menu Structure */
 typedef struct {
     menu_mode_t mode;
@@ -120,8 +130,7 @@ typedef struct {
     struct {
         path_t *rom_path;
         rom_info_t rom_info;
-        path_t *disk_path;
-        disk_info_t disk_info;
+        disk_slot_t disk_slots;
         int32_t load_history_id;
         int32_t load_favorite_id;
         bool combined_disk_rom;

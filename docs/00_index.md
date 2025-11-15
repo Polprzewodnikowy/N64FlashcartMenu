@@ -27,6 +27,7 @@
 - [MP3 Player](./41_mp3_player.md)
 - [Advanced Customization](./61_advanced_customization.md)
 - [N64 Hardware Modifications Compatibility](./62_hardware_mods.md)
+- [Update the menu](./80_update_the_menu.md)
 - [FAQ](./81_faq.md)
 
 #### Experimental Features (Subject to change)

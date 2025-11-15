@@ -2,7 +2,7 @@
 ## Cheats (Gameshark, etc.)
 
 > [!WARNING]
-> **THIS FEATURE IS EXPERIMENTAL**
+> **THIS FEATURE IS EXPERIMENTAL (PRE-RELEASE ONLY)**
 
 The N64FlashcartMenu has underlying support for the cheat code types made popular by the peripherals:
 - GameShark

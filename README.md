@@ -5,16 +5,18 @@
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
 # N64 Flashcart Menu
-An open source menu for N64 flashcarts that aims to support as many as possible. This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
+An open source menu for N64 flashcarts that aims to support as many as possible.  
+This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
+
+> [!TIP]
+> Help sponsor development [NetworkFusion on Ko-Fi](https://https://ko-fi.com/networkfusion). Or submit your Pull Request.
 
 > [!TIP]
 > New users are invited to read the latest [Documentation / User Guide](./docs/00_index.md).
 
-> [!WARNING]
-> **This project considers flashcart sellers that ship this menu together with copyrighted ROMs as part of their product offering to be licence offenders which may result in future action.**  
-
 ## Flashcart Support
-This menu aims to support as many N64 flashcarts as possible. The current state of support is:
+This menu aims to support as many N64 flashcarts as possible.  
+The current state of support is:
 
 ### Supported
 * SummerCart64
@@ -43,10 +45,13 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 * Music playback (MP3).
 * Menu sound effects.
 * N64 ROM fast reboot option (on reset).
-* ROM history and favorites.
+* ROM history and favorites.  
+
+Pre-release only:
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).
+* Game art image switching.
 
 
 ## Aims
@@ -60,10 +65,12 @@ This menu aims to support as many N64 flashcarts as possible. The current state 
 ## Flashcart specific information
 
 ### SummerCart64
-* Ensure the cart has the latest [firmware](https://github.com/Polprzewodnikowy/SummerCart64/releases/latest) installed.
-* Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
-
-![SC64 flashcart information](./docs/images/sc64-flashcart-information.png "example SC64 flashcart information")
+Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.  
+  
+> [!TIP]
+> A quick video tutorial can be found here:
+>
+> [![Video tutorial](https://img.youtube.com/vi/IGX0XXf0wgo/default.jpg)](https://www.youtube.com/shorts/IGX0XXf0wgo)
 
 
 ### 64drive
@@ -91,20 +98,22 @@ The aim is to reach feature parity with [Altra64](https://github.com/networkfusi
 
 * Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
 
+# Contributors
+The features in this project were made possible by the [contributors](https://github.com/Polprzewodnikowy/N64FlashcartMenu/graphs/contributors).
 
 # License
 This project is released under the [GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md) as compatible with all other dependent project licenses.  
 Other license options may be available upon request with permissions of the original `N64FlashcartMenu` project authors / maintainers.  
-* Mateusz Faderewski / Polprzewodnikowy
-* Robin Jones / NetworkFusion
+* [Mateusz Faderewski / Polprzewodnikowy](https://github.com/Polprzewodnikowy)
+* [Robin Jones / NetworkFusion](https://github.com/networkfusion)
 
 # Open source software and licenses used
 ## Libraries
-* [libdragon](https://github.com/DragonMinded/libdragon/tree/preview) (UNLICENSE License)
-* [libspng](https://github.com/randy408/libspng) (BSD 2-Clause License)
-* [mini.c](https://github.com/univrsal/mini.c) (BSD 2-Clause License)
-* [minimp3](https://github.com/lieff/minimp3) (CC0 1.0 Universal)
-* [miniz](https://github.com/richgel999/miniz) (MIT License)
+* [libdragon](https://github.com/DragonMinded/libdragon/tree/preview) - [UNLICENSE License](https://github.com/DragonMinded/libdragon/blob/preview/LICENSE.md)
+* [libspng](https://github.com/randy408/libspng) - [BSD 2-Clause License](https://github.com/randy408/libspng/blob/master/LICENSE)
+* [mini.c](https://github.com/univrsal/mini.c) - [BSD 2-Clause License](https://github.com/univrsal/mini.c?tab=BSD-2-Clause-1-ov-file#readme)
+* [minimp3](https://github.com/lieff/minimp3) - [CC0 1.0 Universal](https://github.com/lieff/minimp3/blob/master/LICENSE)
+* [miniz](https://github.com/richgel999/miniz) - [MIT License](https://github.com/richgel999/miniz/blob/master/LICENSE)
 
 ## Sounds
 See [License](https://pixabay.com/en/service/license-summary/) for the following sounds:
@@ -113,11 +122,11 @@ See [License](https://pixabay.com/en/service/license-summary/) for the following
 * [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)
 
 ## Emulators
-* [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - (ISC License)
-* [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - (GPL-3.0 License)
-* [gb64](https://github.com/lambertjamesd/gb64) by *lambertjamesd* - (MIT License)
-* [smsPlus64](https://github.com/fhoedemakers/smsplus64) by *fhoedmakers* - (GPL-3.0 License)
-* [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra) by *celerizer* - (MIT License)
+* [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - [ISC License](https://github.com/hcs64/neon64v2/blob/master/LICENSE.txt)
+* [sodium64](https://github.com/Hydr8gon/sodium64) by *Hydr8gon* - [GPL-3.0 License](https://github.com/Hydr8gon/sodium64/blob/master/LICENSE)
+* [gb64](https://github.com/lambertjamesd/gb64) by *lambertjamesd* - [MIT License](https://github.com/lambertjamesd/gb64/blob/master/LICENSE)
+* [smsPlus64](https://github.com/fhoedemakers/smsplus64) by *fhoedmakers* - [GPL-3.0 License](https://github.com/fhoedemakers/smsplus64/blob/main/LICENSE)
+* [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra) by *celerizer* - [MIT License](https://github.com/celerizer/Press-F-Ultra/blob/master/LICENSE)
 
 ## Fonts
 * [Firple](https://github.com/negset/Firple) by *negset* - (SIL Open Font License 1.1)

@@ -19,6 +19,7 @@ built from latest commit on main branch.
 	- Add ability to extract files from ZIP archives (thanks [VicesOfTheMind](https://github.com/VicesOfTheMind)).
 	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
 	- Add Controller Pak manager (thanks [LuEnCam](https://github.com/LuEnCam))
+	- Add Game art image switching (thanks [dpranker](https://github.com/dpranker))
 
 - **Bug Fixes**
 	- Fix ability to set the RTC via menu (Hotfixed in last release).

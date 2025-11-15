@@ -1,6 +1,6 @@
 /**
  * @file file_list.c
- * @brief File list component implementation
+ * @brief Implementation of the file list UI component.
  * @ingroup ui_components
  */
 
@@ -10,16 +10,27 @@
 #include "../fonts.h"
 #include "constants.h"
 
-static const char *dir_prefix = "/";
+/**
+ * @brief Icon string for directory entries in the file list.
+ */
+static const char *directory_icon = "[DIR] ";
+// static const char *archive_icon = "[Zip] ";
+// static const char *rom_icon = "[Rom] ";
+// static const char *disk_icon = "[Disk] ";
+// static const char *music_icon = "[Mp3] ";
+// static const char *text_icon = "[Txt] ";
+// static const char *image_icon = "[Png] ";
+// static const char *save_icon = "[Save] ";
+// static const char *other_icon = "[?] ";
 
 /**
  * @brief Format the file size into a human-readable string.
- * 
+ *
  * @param buffer Buffer to store the formatted string.
- * @param size Size of the file.
- * @return int Number of characters written to the buffer.
+ * @param size Size of the file in bytes.
+ * @return Number of characters written to the buffer.
  */
-static int format_file_size (char *buffer, int64_t size) {
+static int format_file_size(char *buffer, int64_t size) {
     if (size < 0) {
         return sprintf(buffer, "unknown");
     } else if (size == 0) {
@@ -36,13 +47,13 @@ static int format_file_size (char *buffer, int64_t size) {
 }
 
 /**
- * @brief Draw the file list component.
- * 
- * @param list Pointer to the list of entries.
+ * @brief Draw the file list UI component.
+ *
+ * @param list Pointer to the list of file entries.
  * @param entries Number of entries in the list.
  * @param selected Index of the currently selected entry.
  */
-void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
+void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
     int starting_position = 0;
 
     if (entries > LIST_ENTRIES && selected >= (LIST_ENTRIES / 2)) {
@@ -77,7 +88,7 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
             } else {
                 size_t length = strlen(list[entry_index].name);
                 name_lengths[i] = length;
-                total_length += length + (list[entry_index].type == ENTRY_TYPE_DIR ? strlen(dir_prefix) : 0);
+                total_length += length;
             }
         }
 
@@ -119,10 +130,6 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
             }
 
             rdpq_paragraph_builder_style(style);
-
-            if (entry->type == ENTRY_TYPE_DIR) {
-                rdpq_paragraph_builder_span(dir_prefix, strlen(dir_prefix));
-            }
 
             rdpq_paragraph_builder_span(entry->name, name_lengths[i]);
 
@@ -171,9 +178,12 @@ void ui_components_file_list_draw (entry_t *list, int entries, int selected) {
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];
 
-            // TODO: add option to use font icons instead of file sizes.
             if (entry->type != ENTRY_TYPE_DIR) {
+                // TODO: add option to use font icons instead of file sizes.
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
+            }
+            else {
+                rdpq_paragraph_builder_span(directory_icon, 5);
             }
 
             if ((i + 1) == (starting_position + LIST_ENTRIES)) {

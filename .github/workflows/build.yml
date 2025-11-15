@@ -117,10 +117,20 @@ jobs:
         with:
           doxyfile-path: './Doxyfile'
 
-      - name: Deploy to GitHub Pages
+      # - name: Deploy docs to GitHub Pages (main)
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   if: github.ref == 'refs/heads/main'
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./output/docs
+      #     cname: menu.summercart64.dev
+
+      - name: Deploy docs to GitHub Pages (develop)
         uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/develop'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./output/docs
           cname: menu.summercart64.dev
+          # publish_branch: gh-pages-develop
+          # cname: prerelease.menu.summercart64.dev

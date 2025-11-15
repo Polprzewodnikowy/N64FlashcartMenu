@@ -14,7 +14,7 @@ built from latest commit on main branch.
 	- Updated the UI font to Firple-Bold which supports more characters.
 	- Shows info message within the loading progress bar.
 	- Add the ability to display ESRB age ratings (see [documentation](./docs/65_experimental.md)).
-	- Add Alpha Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
+	- Add Beta Datel code GUI (see [documentation](./docs/13_datel_cheats.md)).
 	- Add ability to load boxart from ROMs that use the homebrew header (see [documentation](./docs/19_gamepak_boxart.md)).
 	- Add ability to extract files from ZIP archives (thanks [VicesOfTheMind](https://github.com/VicesOfTheMind)).
 	- Add Alpha FEATURE_PATCHER_GUI_ENABLED (build flag to enable it).
@@ -50,17 +50,16 @@ built from latest commit on main branch.
 
 
 ### Current known Issues
-* The RTC UI requires improvement (awaiting UI developer).
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 
 ### Deprecation notices
-* TBD
+* Boxart directory has changed to metadata directory.
 
 
-## Release Notes 2025-03-31
+## Release Notes 2025-03-31 - Tagged 0.2.0
 
 - **New Features**
 	- Introduced tabs in main menu for ROM favorites and recently played ROM history.
@@ -105,8 +104,6 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz.
-* Game ID (used by PixelFX HDMI mods) sent over Joybus is not working.
-* Setting the RTC reports a write fail.
 
 
 ### Deprecation notices

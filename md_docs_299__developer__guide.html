@@ -173,14 +173,17 @@ Using feature flags</h3>
 <div class="line">BETA_SETTINGS</div>
 <div class="line">FEATURE_DEPRECATED_FUNCTIONALITY</div>
 </div><!-- fragment --><p> An example build command would be: <code>make clean &amp;&amp; FLAGS="-DFEATURE_PATCHER_GUI_ENABLED -DFEATURE_DEPRECATED_FUNCTIONALITY" make all</code></p>
+<p>An example that updates the menu version would be: <code>make clean &amp;&amp; MENU_VERSION=V0.x.0 make all</code></p>
 <h3><a class="anchor" id="autotoc_md132"></a>
 Update submodules</h3>
 <p>To update to the latest version, use <code>git submodule update --remote</code> from the terminal.</p>
 <h4><a class="anchor" id="autotoc_md133"></a>
 libdragon</h4>
 <p>This repo currently uses the <code>preview</code> branch as a submodule at a specific commit.</p><ul>
-<li>To ensure your local instance is building against it, use <code>cd ./libdragon &amp;&amp; make clobber -j &amp;&amp; make libdragon tools -j &amp;&amp; make install tools-install -j &amp;&amp; cd ..</code></li>
+<li>To ensure your local instance is building against it, use <code>cd ./libdragon &amp;&amp; make clobber -j &amp;&amp; make libdragon tools -j &amp;&amp; make install tools-install -j &amp;&amp; cd ..</code> <br  />
+</li>
 </ul>
+<p>Or rebuild the dev container.</p>
 <h3><a class="anchor" id="autotoc_md134"></a>
 Generate documentation</h3>
 <p>Run <code>doxygen</code> from the dev container terminal. Make sure you fix the warnings before creating a PR! <br  />
@@ -196,7 +199,7 @@ Test generated docs in the dev-container</h4>
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sat Nov 15 2025 15:46:10 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+Generated on Sat Nov 15 2025 17:39:05 for N64FlashcartMenu by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
 </small></address>
 </div><!-- doc-content -->
 </body>

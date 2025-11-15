@@ -2,7 +2,7 @@
 ## Controller Paks
 
 > [!WARNING]
-> **THIS FEATURE IS EXPERIMENTAL (PRE-RELEASE ONLY)**
+> **THIS FEATURE IS EXPERIMENTAL**
 
 The N64FlashcartMenu has a Controller Pak Manager.
 

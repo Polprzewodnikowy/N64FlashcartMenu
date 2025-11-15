@@ -47,7 +47,7 @@ The current state of support is:
 * N64 ROM fast reboot option (on reset).
 * ROM history and favorites.  
 
-Pre-release only:
+Experimental (beta):
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).

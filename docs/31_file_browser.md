@@ -8,7 +8,7 @@ The File Browser allows you to navigate and manage files on your N64 flashcart. 
 - **File operations**: Perform operations such as delete and show properties.
 - **File information**: View detailed information about each file, including size and date modified.
 - **Load files**: Load files from the file system.
-- **Extract files (Pre-release only)**: Extract files from ZIP archives.
+- **Extract files**: Extract files from ZIP archives.
 - **Switching tabs**: Switch between the file browser, favorites and history tabs.
 
 ### Usage Instructions
@@ -28,7 +28,7 @@ The File Browser allows you to navigate and manage files on your N64 flashcart. 
 4. **Switching tabs**:
     - Press the `C-Right` and `C-Left` Buttons to switch between the file browser, favorites and history tabs.
 
-5. **Extract files (Pre-release only)**:
+5. **Extract files**:
     - Press the `A` Button on a ZIP file to open the archive.
     - Navigate to the file you want to extract.
     - Press the `A` button to open the file info and press `A` again to extract the file.

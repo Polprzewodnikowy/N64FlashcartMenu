@@ -122,13 +122,18 @@ FEATURE_DEPRECATED_FUNCTIONALITY
 An example build command would be:
 `make clean && FLAGS="-DFEATURE_PATCHER_GUI_ENABLED -DFEATURE_DEPRECATED_FUNCTIONALITY" make all`
 
+An example that updates the menu version would be:
+`make clean && MENU_VERSION=V0.x.0 make all`
+
 
 ### Update submodules
 To update to the latest version, use `git submodule update --remote` from the terminal.
 
 #### libdragon
 This repo currently uses the `preview` branch as a submodule at a specific commit.
-* To ensure your local instance is building against it, use `cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd ..`
+* To ensure your local instance is building against it, use `cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd ..`  
+
+Or rebuild the dev container.
 
 ### Generate documentation
 Run `doxygen` from the dev container terminal. Make sure you fix the warnings before creating a PR!  

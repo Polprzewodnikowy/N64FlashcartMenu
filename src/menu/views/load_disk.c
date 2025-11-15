@@ -37,7 +37,7 @@ static char *format_disk_region (disk_region_t region) {
 
 
 static void add_favorite (menu_t *menu, void *arg) {
-    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_slots.primary.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
 }
 
 static component_context_menu_t options_context_menu = { .list = {
@@ -52,10 +52,10 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
     } else if (menu->actions.lz_context && menu->load.rom_path) {
-        menu->boot_pending.disk_file = true;
+        menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.back) {
@@ -72,7 +72,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.disk_file) {
+    if (menu->load_pending.disk_file) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
@@ -113,10 +113,10 @@ static void draw (menu_t *menu, surface_t *d) {
             " Disk type:\t%d\n"
             "\n"
             ,
-            format_disk_region(menu->load.disk_info.region),
-            menu->load.disk_info.id,
-            menu->load.disk_info.version,
-            menu->load.disk_info.disk_type
+            format_disk_region(menu->load.disk_slots.primary.disk_info.region),
+            menu->load.disk_slots.primary.disk_info.id,
+            menu->load.disk_slots.primary.disk_info.version,
+            menu->load.disk_slots.primary.disk_info.disk_type
         );
 
         ui_components_actions_bar_text_draw(
@@ -183,7 +183,7 @@ static void load (menu_t *menu) {
         return;
     }
 
-    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
+    bookkeeping_history_add(&menu->bookkeeping, menu->load.disk_slots.primary.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
     menu->next_mode = MENU_MODE_BOOT;
 
     if (menu->load.combined_disk_rom) {
@@ -230,12 +230,12 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
 }
 
 void view_load_disk_init (menu_t *menu) {
-    if (menu->load.disk_path) {
-        path_free(menu->load.disk_path);
-        menu->load.disk_path = NULL;
+    if (menu->load.disk_slots.primary.disk_path) {
+        path_free(menu->load.disk_slots.primary.disk_path);
+        menu->load.disk_slots.primary.disk_path = NULL;
     }
 
-    menu->boot_pending.disk_file = false;
+    menu->load_pending.disk_file = false;
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         bookkeeping_item_t* items;
@@ -269,24 +269,30 @@ void view_load_disk_init (menu_t *menu) {
             return;
         }
 
-        menu->load.disk_path = path_clone(items[item_id].primary_path);
+        menu->load.disk_slots.primary.disk_path = path_clone(items[item_id].primary_path);
         if(!load_rom(menu, items[item_id].secondary_path)) {
             return;  // load_rom handles its own error messages
         }
     } else {
         // Existing browser path logic
-        menu->load.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+        menu->load.disk_slots.primary.disk_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
     }
 
-    disk_filename = path_last_get(menu->load.disk_path);
-    disk_err_t err = disk_info_load(menu->load.disk_path, &menu->load.disk_info);
+    disk_filename = path_last_get(menu->load.disk_slots.primary.disk_path);
+    disk_err_t err = disk_info_load(menu->load.disk_slots.primary.disk_path, &menu->load.disk_slots.primary.disk_info);
     if (err != DISK_OK) {
         menu_show_error(menu, convert_disk_error_message(err));
         return;
     }
+    // load swap disks
+    // disk_err_t err = disk_info_load(menu->load.disk_slots.slot[0].disk_path, &menu->load.disk_slots.slot[0].disk_info);
+    // if (err != DISK_OK) {
+    //     menu_show_error(menu, convert_disk_error_message(err));
+    //     return;
+    // }
 
     ui_components_context_menu_init(&options_context_menu);
-    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_info.id, NULL, IMAGE_BOXART_FRONT);
+    boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_slots.primary.disk_info.id, NULL, IMAGE_BOXART_FRONT);
 }
 
 void view_load_disk_display (menu_t *menu, surface_t *display) {
@@ -294,8 +300,8 @@ void view_load_disk_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.disk_file) {
-        menu->boot_pending.disk_file = false;
+    if (menu->load_pending.disk_file) {
+        menu->load_pending.disk_file = false;
         load(menu);
     }
 

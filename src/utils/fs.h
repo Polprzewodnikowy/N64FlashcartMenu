@@ -5,18 +5,22 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/**
+ * @def FS_SECTOR_SIZE
+ * @brief The size of a file system sector in bytes.
+ */
 #define FS_SECTOR_SIZE      (512)
 
 /**
  * @file fs.h
- * @brief File system utility functions.
+ * @brief File system utility functions for file and directory operations.
  * @ingroup utils
  */
 
 /**
- * @brief Strips the file system prefix from the given path.
+ * @brief Strip the file system prefix from a path.
  *
- * This function removes the file system prefix from the provided path.
+ * Removes the file system prefix (such as ":/") from the provided path string.
  *
  * @param path The path from which to strip the prefix.
  * @return A pointer to the path without the prefix.
@@ -24,9 +28,9 @@
 char *strip_fs_prefix(char *path);
 
 /**
- * @brief Gets the basename of the given path.
+ * @brief Get the basename of a path.
  *
- * This function returns the basename of the provided path.
+ * Returns a pointer to the basename (the final component) of the provided path.
  *
  * @param path The path from which to get the basename.
  * @return A pointer to the basename of the path.
@@ -34,9 +38,9 @@ char *strip_fs_prefix(char *path);
 char *file_basename(char *path);
 
 /**
- * @brief Checks if a file exists at the given path.
+ * @brief Check if a file exists at the given path.
  *
- * This function checks if a file exists at the specified path.
+ * Checks if a file exists at the specified path.
  *
  * @param path The path to the file.
  * @return true if the file exists, false otherwise.
@@ -44,52 +48,52 @@ char *file_basename(char *path);
 bool file_exists(char *path);
 
 /**
- * @brief Gets the size of the file at the given path.
+ * @brief Get the size of a file at the given path.
  *
- * This function returns the size of the file at the specified path.
+ * Returns the size of the file at the specified path in bytes.
  *
  * @param path The path to the file.
- * @return The size of the file in bytes, or -1 if the file does not exist.
+ * @return The size of the file in bytes, or -1 if the file does not exist or an error occurs.
  */
 int64_t file_get_size(char *path);
 
 /**
- * @brief Allocates a file of the specified size at the given path.
+ * @brief Allocate a file of the specified size at the given path.
  *
- * This function creates a file of the specified size at the provided path.
+ * Creates a file of the specified size at the provided path. The file is filled with zeros.
  *
  * @param path The path to the file.
- * @param size The size of the file to create.
+ * @param size The size of the file to create in bytes.
  * @return true if the file was successfully created, false otherwise.
  */
 bool file_allocate(char *path, size_t size);
 
 /**
- * @brief Fills a file with the specified value.
+ * @brief Fill a file with the specified value.
  *
- * This function fills the file at the given path with the specified value.
+ * Fills the file at the given path with the specified byte value.
  *
  * @param path The path to the file.
- * @param value The value to fill the file with.
+ * @param value The value to fill the file with (byte).
  * @return true if the file was successfully filled, false otherwise.
  */
 bool file_fill(char *path, uint8_t value);
 
 /**
- * @brief Checks if a file has one of the specified extensions.
+ * @brief Check if a file has one of the specified extensions.
  *
- * This function checks if the file at the given path has one of the specified extensions.
+ * Checks if the file at the given path has one of the specified extensions.
  *
  * @param path The path to the file.
- * @param extensions An array of extensions to check.
+ * @param extensions An array of extensions to check (NULL-terminated).
  * @return true if the file has one of the specified extensions, false otherwise.
  */
 bool file_has_extensions(char *path, const char *extensions[]);
 
 /**
- * @brief Checks if a directory exists at the given path.
+ * @brief Check if a directory exists at the given path.
  *
- * This function checks if a directory exists at the specified path.
+ * Checks if a directory exists at the specified path.
  *
  * @param path The path to the directory.
  * @return true if the directory exists, false otherwise.
@@ -97,12 +101,12 @@ bool file_has_extensions(char *path, const char *extensions[]);
 bool directory_exists(char *path);
 
 /**
- * @brief Creates a directory at the given path.
+ * @brief Create a directory at the given path.
  *
- * This function creates a directory at the specified path.
+ * Creates a directory at the specified path, including any necessary parent directories.
  *
  * @param path The path to the directory.
- * @return true if the directory was successfully created, false otherwise.
+ * @return false if the directory was successfully created, true if there was an error.
  */
 bool directory_create(char *path);
 

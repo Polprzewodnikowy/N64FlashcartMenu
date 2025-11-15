@@ -8,11 +8,96 @@
 #include "views.h"
 #include <string.h>
 
-
 static bool show_extra_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
+static int16_t current_metadata_image_index = 0;
+static const file_image_type_t metadata_image_filename_cache[] = {
+    IMAGE_BOXART_FRONT,
+    IMAGE_BOXART_BACK,
+    IMAGE_BOXART_LEFT,
+    IMAGE_BOXART_RIGHT,
+    IMAGE_BOXART_TOP,
+    IMAGE_BOXART_BOTTOM,
+    IMAGE_GAMEPAK_FRONT,
+    IMAGE_GAMEPAK_BACK
+};
+static const uint16_t metadata_image_filename_cache_length = sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0]);
+static bool metadata_image_available[sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0])] = {false};
+static bool metadata_images_scanned = false;
+
+static void scan_metadata_images(menu_t *menu) {
+    if (metadata_images_scanned) {
+        return;
+    }
+
+    path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
+    char game_code_path[8];
+
+    if (menu->load.rom_info.game_code[1] == 'E' && menu->load.rom_info.game_code[2] == 'D') {
+        // This is using a homebrew ROM ID, use the title for the file name instead.
+        // Create a null-terminated copy of the title for safe string operations
+        char safe_title[21];  // 20 chars + null terminator
+        memcpy(safe_title, menu->load.rom_info.title, 20);
+        safe_title[20] = '\0';
+        
+        sprintf(game_code_path, "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
+        path_push(path, game_code_path);
+    }
+    else {
+        snprintf(game_code_path, sizeof(game_code_path), "%c/%c/%c/%c",
+            menu->load.rom_info.game_code[0],
+            menu->load.rom_info.game_code[1],
+            menu->load.rom_info.game_code[2],
+            menu->load.rom_info.game_code[3]);
+        path_push(path, game_code_path);
+
+        if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.
+            path_pop(path);
+        }
+    }
+
+    bool dir_exists = directory_exists(path_get(path));
+
+    if (dir_exists) {
+        // Filenames array matches metadata_image_filename_cache order for indexed access
+        // Note: This mapping is also present in boxart.c but duplicated here
+        // for efficient scanning without calling into the component layer
+        char *filenames[] = {
+            "boxart_front.png",
+            "boxart_back.png",
+            "boxart_left.png",
+            "boxart_right.png",
+            "boxart_top.png",
+            "boxart_bottom.png",
+            "gamepak_front.png",
+            "gamepak_back.png"
+        };
+
+        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+            path_push(path, filenames[i]);
+            metadata_image_available[i] = file_exists(path_get(path));
+            path_pop(path);
+        }
+    } else {
+        // No directory exists, mark all images as unavailable
+        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+            metadata_image_available[i] = false;
+        }
+    }
+
+    debugf("Metadata: Scanned metadata for ROM ID %s. \n", game_code_path);
+
+    path_free(path);
+    metadata_images_scanned = true;
+}
+
+static const char *format_rom_description(menu_t *menu) {
+    char *rom_description = NULL;
+
+    return rom_description ? rom_description : "No description available.";
+}
 
 static char *convert_error_message (rom_err_t err) {
     switch (err) {
@@ -204,6 +289,37 @@ static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
 
+static void iterate_metadata_image(menu_t *menu, int direction) {
+    scan_metadata_images(menu);
+
+    // Transverse to next/previous available image based on direction (1 = next, -1 = previous)
+    int16_t start_metadata_image_index = current_metadata_image_index;
+    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
+
+    // Find next available image from our cached list
+    while (new_metadata_image_index != start_metadata_image_index) {
+        if (metadata_image_available[new_metadata_image_index]) {
+            // ui_components_boxart_init returns NULL if PNG decoder is busy
+            component_boxart_t *new_boxart = ui_components_boxart_init(
+                menu->storage_prefix,
+                menu->load.rom_info.game_code,
+                menu->load.rom_info.title,
+                metadata_image_filename_cache[new_metadata_image_index]
+            );
+
+            if (new_boxart != NULL) {
+                // Only free old boxart after successful new allocation
+                ui_components_boxart_free(boxart);
+                boxart = new_boxart;
+                current_metadata_image_index = new_metadata_image_index;
+                sound_play_effect(SFX_SETTING);
+                break;
+            }
+        }
+        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
+    }
+}
+
 static component_context_menu_t set_cic_type_context_menu = { .list = {
     {.text = "Automatic", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_AUTOMATIC) },
     {.text = "CIC-6101", .action = set_cic_type, .arg = (void *) (ROM_CIC_TYPE_6101) },
@@ -283,7 +399,7 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->boot_pending.rom_file = true;
+        menu->load_pending.rom_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -297,6 +413,12 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.go_right) {
+        iterate_metadata_image(menu, 1);
+        sound_play_effect(SFX_CURSOR);
+    } else if (menu->actions.go_left) {
+        iterate_metadata_image(menu, -1);
+        sound_play_effect(SFX_CURSOR);
     }
 }
 
@@ -305,7 +427,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (menu->boot_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
+    if (menu->load_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
 #endif
@@ -318,10 +440,11 @@ static void draw (menu_t *menu, surface_t *d) {
             rom_filename
         );
 
-        ui_components_main_text_draw( // TODO:"\t%.300s\n" for description.
+        ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n"
+            "\n\n\t%.300s\n",
+            format_rom_description(menu)
             
         );
 
@@ -476,6 +599,13 @@ static void load (menu_t *menu) {
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
+    current_metadata_image_index = 0;
+    metadata_images_scanned = false;
+
+    // Clear availability cache
+    for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+        metadata_image_available[i] = false;
+    }
 }
 
 
@@ -515,6 +645,7 @@ void view_load_rom_init (menu_t *menu) {
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif
+        current_metadata_image_index = 0;
         boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
@@ -528,8 +659,8 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.rom_file) {
-        menu->boot_pending.rom_file = false;
+    if (menu->load_pending.rom_file) {
+        menu->load_pending.rom_file = false;
         load(menu);
     }
 

@@ -27,7 +27,9 @@ static settings_t init = {
 #else
     .rom_fast_reboot_enabled = false,
 #endif    
-    /* Beta feature flags (should always init to off) */
+    /* Beta feature flags (should always init to default) */
+    .show_browser_file_extensions = true,
+    .show_browser_rom_tags = true,
     .bgm_enabled = false,
     .rumble_enabled = false,
 };
@@ -67,6 +69,8 @@ void settings_load (settings_t *settings) {
     settings->rom_fast_reboot_enabled = mini_get_bool(ini, "menu", "reboot_rom_enabled", init.rom_fast_reboot_enabled);
 #endif
     /* Beta feature flags, they might not be in the file */
+    settings->show_browser_file_extensions = mini_get_bool(ini, "menu", "show_browser_file_extensions", init.show_browser_file_extensions);
+    settings->show_browser_rom_tags = mini_get_bool(ini, "menu", "show_browser_rom_tags", init.show_browser_rom_tags);
     settings->bgm_enabled = mini_get_bool(ini, "menu_beta_flag", "bgm_enabled", init.bgm_enabled);
     settings->rumble_enabled = mini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
 
@@ -96,6 +100,8 @@ void settings_save (settings_t *settings) {
 #endif
 
     /* Beta feature flags, they should not save until production ready! */
+    // mini_set_bool(ini, "menu", "show_browser_file_extensions", settings->show_browser_file_extensions);
+    // mini_set_bool(ini, "menu", "show_browser_rom_tags", settings->show_browser_rom_tags);
     // mini_set_bool(ini, "menu_beta_flag", "bgm_enabled", settings->bgm_enabled);
     // mini_set_bool(ini, "menu_beta_flag", "rumble_enabled", settings->rumble_enabled);
 

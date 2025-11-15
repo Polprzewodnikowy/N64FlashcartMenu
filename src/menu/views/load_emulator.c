@@ -39,7 +39,7 @@ static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
 
 static void process (menu_t *menu) {
     if (menu->actions.enter) {
-        menu->boot_pending.emulator_file = true;
+        menu->load_pending.emulator_file = true;
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -51,7 +51,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    if (menu->boot_pending.emulator_file) {
+    if (menu->load_pending.emulator_file) {
         ui_components_loader_draw(0.0f, NULL);
     } else {
         ui_components_layout_draw();
@@ -115,7 +115,7 @@ static void load (menu_t *menu) {
 
 
 void view_load_emulator_init (menu_t *menu) {
-    menu->boot_pending.emulator_file = false;
+    menu->load_pending.emulator_file = false;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
@@ -145,8 +145,8 @@ void view_load_emulator_display (menu_t *menu, surface_t *display) {
 
     draw(menu, display);
 
-    if (menu->boot_pending.emulator_file) {
-        menu->boot_pending.emulator_file = false;
+    if (menu->load_pending.emulator_file) {
+        menu->load_pending.emulator_file = false;
         load(menu);
     }
 }

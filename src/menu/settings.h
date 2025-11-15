@@ -37,6 +37,12 @@ typedef struct {
     /** @brief Show saves folder in file browser */ 
     bool show_saves_folder;
 
+    /** @brief Hide rom file extensions */    
+    bool show_browser_file_extensions;
+
+    /** @brief Hide rom tags */  
+    bool show_browser_rom_tags;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 

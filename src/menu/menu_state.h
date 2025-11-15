@@ -8,6 +8,8 @@
 #define MENU_STRUCT_H__
 
 
+#include <miniz.h>
+#include <miniz_zip.h>
 #include <time.h>
 
 #include "boot/boot.h"
@@ -32,6 +34,9 @@ typedef enum {
     MENU_MODE_CREDITS,
     MENU_MODE_SETTINGS_EDITOR,
     MENU_MODE_RTC,
+    MENU_MODE_CONTROLLER_PAKFS,
+    MENU_MODE_CONTROLLER_PAK_DUMP_INFO,
+    MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO,
     MENU_MODE_FLASHCART,
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
@@ -41,7 +46,8 @@ typedef enum {
     MENU_MODE_BOOT,
     MENU_MODE_FAVORITE,
     MENU_MODE_HISTORY,
-    MENU_MODE_DATEL_CODE_EDITOR
+    MENU_MODE_DATEL_CODE_EDITOR,
+    MENU_MODE_EXTRACT_FILE
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -56,7 +62,9 @@ typedef enum {
     ENTRY_TYPE_ROM_CHEAT,
     ENTRY_TYPE_ROM_PATCH,
     ENTRY_TYPE_SAVE,
-    ENTRY_TYPE_TEXT
+    ENTRY_TYPE_TEXT,
+    ENTRY_TYPE_ARCHIVE,
+    ENTRY_TYPE_ARCHIVED
 } entry_type_t;
 
 /** @brief File Entry Structure */
@@ -64,7 +72,18 @@ typedef struct {
     char *name;
     entry_type_t type;
     int64_t size;
+    int32_t index;
 } entry_t;
+
+typedef struct {
+    path_t *disk_path;
+    disk_info_t disk_info;
+} disk_slot_entry_t;
+
+typedef struct {
+    disk_slot_entry_t primary;
+    disk_slot_entry_t slot[4];
+} disk_slot_t;
 
 /** @brief Menu Structure */
 typedef struct {
@@ -98,20 +117,22 @@ typedef struct {
     struct {
         bool valid;
         bool reload;
+        bool archive;
+        mz_zip_archive zip;
         path_t *directory;
         entry_t *list;
-        int entries;
+        int32_t entries;
         entry_t *entry;
-        int selected;
+        int32_t selected;
+        path_t* select_file;
     } browser;
 
     struct {
         path_t *rom_path;
         rom_info_t rom_info;
-        path_t *disk_path;
-        disk_info_t disk_info;
-        int load_history_id;
-        int load_favorite_id;
+        disk_slot_t disk_slots;
+        int32_t load_history_id;
+        int32_t load_favorite_id;
         bool combined_disk_rom;
     } load;
 
@@ -119,7 +140,8 @@ typedef struct {
         bool rom_file;
         bool disk_file;
         bool emulator_file;
-    } boot_pending;
+        bool extract_file;
+    } load_pending;
 } menu_t;
 
 

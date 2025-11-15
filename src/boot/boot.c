@@ -6,12 +6,12 @@
 #include "cic.h"
 #include "reboot.h"
 
-
-#define C0_STATUS_FR    (1 << 26)
-#define C0_STATUS_CU0   (1 << 28)
-#define C0_STATUS_CU1   (1 << 29)
-
-
+/**
+ * Selects the base IO address for the configured boot device.
+ *
+ * @param params Boot parameters whose `device_type` determines the base.
+ * @returns Pointer to the boot device base IO registers corresponding to `params->device_type` (e.g., `ROM_CART` or `ROM_DDIPL`).
+ */
 static io32_t *boot_get_device_base (boot_params_t *params) {
     io32_t *device_base_address = ROM_CART;
     if (params->device_type == BOOT_DEVICE_TYPE_64DD) {
@@ -32,7 +32,13 @@ static cic_type_t boot_detect_cic (boot_params_t *params) {
     return cic_detect(ipl3);
 }
 
-
+/**
+ * Prepare system hardware, load reboot code and IPL3, install cheats, and transfer control to the reboot routine using the provided boot parameters.
+ *
+ * This performs CIC detection (and optionally populates the CIC seed), normalizes passthrough TV type, configures and resets CPU/SP/PI/VI/AI state, programs PI DOM timing from the boot device, copies the reboot routine into SP IMEM and IPL3 into SP DMEM, installs cheats, arranges boot-time registers, and jumps to the in-memory reboot entry. If control returns, the function loops indefinitely.
+ *
+ * @param params Boot configuration and state. Fields read include device_type, tv_type, detect_cic_seed, and cheat_list. On return this function may modify params->tv_type (when passthrough normalization is applied) and params->cic_seed (when detect_cic_seed is true).
+ */
 void boot (boot_params_t *params) {
     cic_type_t cic_type = boot_detect_cic(params);
 

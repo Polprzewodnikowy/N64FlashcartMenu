@@ -160,39 +160,75 @@ static component_context_menu_t set_use_rom_fast_reboot_context_menu = {
 #endif
 
 #ifdef BETA_SETTINGS
-static component_context_menu_t set_pal60_type_context_menu = { .list = {
-    {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
+static int get_pal60_current_selection (menu_t *menu) {
+    return menu->settings.pal60_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_pal60_type_context_menu = {
+    .get_default_selection = get_pal60_current_selection,
+    .list = {
+        {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_pal60_mod_compatibility_type_context_menu = { .list = {
-    {.text = "On", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(false) },
+static int get_pal60_mod_compatibility_current_selection (menu_t *menu) {
+    return menu->settings.pal60_compatibility_mode ? 0 : 1;
+}
+
+static component_context_menu_t set_pal60_mod_compatibility_type_context_menu = {
+    .get_default_selection = get_pal60_mod_compatibility_current_selection,
+    .list = {
+        {.text = "On", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_show_browser_file_extensions_context_menu = { .list = {
-    { .text = "On", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(true) },
-    { .text = "Off", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(false) },
+static int get_show_browser_file_extensions_current_selection (menu_t *menu) {
+    return menu->settings.show_browser_file_extensions ? 0 : 1;
+}
+
+static component_context_menu_t set_show_browser_file_extensions_context_menu = {
+    .get_default_selection = get_show_browser_file_extensions_current_selection,
+    .list = {
+        { .text = "On", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(true) },
+        { .text = "Off", .action = set_show_browser_file_extensions_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_show_browser_rom_tags_context_menu = { .list = {
-    {.text = "On", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
+static int get_show_browser_rom_tags_current_selection (menu_t *menu) {
+    return menu->settings.show_browser_rom_tags ? 0 : 1;
+}
+
+static component_context_menu_t set_show_browser_rom_tags_context_menu = {
+    .get_default_selection = get_show_browser_rom_tags_current_selection,
+    .list = {
+        {.text = "On", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_show_browser_rom_tags_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_bgm_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static int get_bgm_enabled_current_selection (menu_t *menu) {
+    return menu->settings.bgm_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_bgm_enabled_type_context_menu = {
+    .get_default_selection = get_bgm_enabled_current_selection,
+    .list = {
+        {.text = "On", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_rumble_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static int get_rumble_enabled_current_selection (menu_t *menu) {
+    return menu->settings.rumble_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_rumble_enabled_type_context_menu = {
+    .get_default_selection = get_rumble_enabled_current_selection,
+    .list = {
+        {.text = "On", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_rumble_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif

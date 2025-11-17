@@ -71,14 +71,16 @@ jobs:
           name: SC64
           path: ./output/sc64menu.n64
 
-      - name: Upload rolling release
+    # FIXME: tag releases to main as draft releases
+      - name: Upload rolling pre-release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
           name: Rolling release
           body_path: ${{ github.workspace }}/CHANGELOG.md
           tag_name: 'rolling_release'
-          make_latest: true
+          make_latest: false
+          prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin
@@ -87,20 +89,20 @@ jobs:
             ./output/sc64menu.n64
         continue-on-error: true
 
-      - name: Upload dev rolling release
+      - name: Upload rolling alpha-release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/develop'
         with:
-          name: 'Rolling pre-release'
-          body: Experimental pre-release built from latest commit on `develop` branch. Check the commit history for more details.
+          name: 'Rolling alpha-release'
+          body: Experimental alpha-release built from latest commit on `develop` branch. Check the commit history for more details.
           target_commitish: develop
           tag_name: 'rolling_pre-release'
           prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin
-            # ./output/OS64.v64
-            # ./output/OS64P.v64
+            ./output/OS64.v64
+            ./output/OS64P.v64
             ./output/sc64menu.n64
         continue-on-error: true
 
@@ -117,20 +119,20 @@ jobs:
         with:
           doxyfile-path: './Doxyfile'
 
-      - name: Deploy docs to GitHub Pages (main)
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output/docs
-          cname: menu.summercart64.dev
-
-      # - name: Deploy docs to GitHub Pages (develop)
+      # - name: Deploy docs to GitHub Pages (main)
       #   uses: peaceiris/actions-gh-pages@v4
-      #   if: github.ref == 'refs/heads/develop'
+      #   if: github.ref == 'refs/heads/main'
       #   with:
       #     github_token: ${{ secrets.GITHUB_TOKEN }}
       #     publish_dir: ./output/docs
       #     cname: menu.summercart64.dev
-      #     # publish_branch: gh-pages-develop
-      #     # cname: prerelease.menu.summercart64.dev
+
+      - name: Deploy docs to GitHub Pages (develop)
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/develop'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output/docs
+          cname: menu.summercart64.dev
+          # publish_branch: gh-pages-develop
+          # cname: prerelease.menu.summercart64.dev

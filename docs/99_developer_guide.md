@@ -123,7 +123,7 @@ An example build command would be:
 `make clean && FLAGS="-DFEATURE_PATCHER_GUI_ENABLED -DFEATURE_DEPRECATED_FUNCTIONALITY" make all`
 
 An example that updates the menu version would be:
-`make clean && MENU_VERSION=V0.x.0 make all`
+`make clean && MENU_VERSION=V0.X.0 FLAGS=-DNDEBUG make all`
 
 
 ### Update submodules

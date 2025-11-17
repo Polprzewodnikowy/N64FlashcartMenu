@@ -206,6 +206,7 @@ typedef struct component_context_menu {
     bool hide_pending; /**< Flag to indicate if hiding is pending */
     struct component_context_menu *parent; /**< Pointer to the parent context menu */
     struct component_context_menu *submenu; /**< Pointer to the submenu */
+    int (*get_default_selection)(menu_t *menu); /**< Optional function to get the default selected row */
     struct {
         const char *text; /**< Text of the menu item */
         void (*action)(menu_t *menu, void *arg); /**< Action function for the menu item */

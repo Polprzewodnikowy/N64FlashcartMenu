@@ -97,34 +97,64 @@ static component_context_menu_t set_loading_progress_bar_enabled_context_menu = 
 }};
 #endif
 
-static component_context_menu_t set_protected_entries_type_context_menu = { .list = {
-    {.text = "On", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(false) },
+static int get_protected_entries_current_selection (menu_t *menu) {
+    return menu->settings.show_protected_entries ? 0 : 1;
+}
+
+static component_context_menu_t set_protected_entries_type_context_menu = {
+    .get_default_selection = get_protected_entries_current_selection,
+    .list = {
+        {.text = "On", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_protected_entries_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_soundfx_enabled_type_context_menu = { .list = {
-    {.text = "On", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static int get_soundfx_enabled_current_selection (menu_t *menu) {
+    return menu->settings.soundfx_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_soundfx_enabled_type_context_menu = {
+    .get_default_selection = get_soundfx_enabled_current_selection,
+    .list = {
+        {.text = "On", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_use_saves_folder_type_context_menu = { .list = {
-    {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
+static int get_use_saves_folder_current_selection (menu_t *menu) {
+    return menu->settings.use_saves_folder ? 0 : 1;
+}
+
+static component_context_menu_t set_use_saves_folder_type_context_menu = {
+    .get_default_selection = get_use_saves_folder_current_selection,
+    .list = {
+        {.text = "On", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_use_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static component_context_menu_t set_show_saves_folder_type_context_menu = { .list = {
-    {.text = "On", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
+static int get_show_saves_folder_current_selection (menu_t *menu) {
+    return menu->settings.show_saves_folder ? 0 : 1;
+}
+
+static component_context_menu_t set_show_saves_folder_type_context_menu = {
+    .get_default_selection = get_show_saves_folder_current_selection,
+    .list = {
+        {.text = "On", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_show_saves_folder_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED
-static component_context_menu_t set_use_rom_fast_reboot_context_menu = { .list = {
-    {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static int get_use_rom_fast_reboot_current_selection (menu_t *menu) {
+    return menu->settings.rom_fast_reboot_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_use_rom_fast_reboot_context_menu = {
+    .get_default_selection = get_use_rom_fast_reboot_current_selection,
+    .list = {
+        {.text = "On", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_use_rom_fast_reboot_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif

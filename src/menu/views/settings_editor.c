@@ -90,9 +90,15 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 #endif
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-static component_context_menu_t set_loading_progress_bar_enabled_context_menu = { .list = {
-    {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
-    {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
+static int get_loading_progress_bar_enabled_current_selection (menu_t *menu) {
+    return menu->settings.loading_progress_bar_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_loading_progress_bar_enabled_context_menu = {
+    .default_selection = get_loading_progress_bar_enabled_current_selection,
+    .list = {
+        {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif

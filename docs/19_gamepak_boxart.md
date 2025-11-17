@@ -25,11 +25,11 @@ Files must be in `PNG` format and use the following dimensions:
 * Boxart left/right spines: 112x22
 
 Images will be loaded by directories using each character (case-sensitive) of the full 4-character Game Code (as identified in the menu ROM information):  
-i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/boxart/N/G/E/E/boxart_front.png`.  
-i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/boxart/N/G/E/P/boxart_front.png`.
+i.e. for GoldenEye NTSC USA (NGEE), this would be `sd:/menu/metadata/N/G/E/E/boxart_front.png`.  
+i.e. for GoldenEye PAL (NGEP), this would be `sd:/menu/metadata/N/G/E/P/boxart_front.png`.
 
 To improve compatibility between regions (as a fallback), you may exclude the region ID (last matched directory) for GamePaks to match with 3-character IDs instead:  
-i.e. for GoldenEye, this would be `sd:/menu/boxart/N/G/E/boxart_front.png`.
+i.e. for GoldenEye, this would be `sd:/menu/metadata/N/G/E/boxart_front.png`.
 
 ROMs that use the ["Advanced Homebrew ROM Header"](https://n64brew.dev/wiki/ROM_Header) Game ID (`xEDx`) are matched using the "Game Title" (not the Game Code):
 e.g. `sd:/menu/metadata/homebrew/{game title}/boxart_front.png`

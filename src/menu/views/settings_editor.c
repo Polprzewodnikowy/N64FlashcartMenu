@@ -95,7 +95,7 @@ static int get_loading_progress_bar_enabled_current_selection (menu_t *menu) {
 }
 
 static component_context_menu_t set_loading_progress_bar_enabled_context_menu = {
-    .default_selection = get_loading_progress_bar_enabled_current_selection,
+    .get_default_selection = get_loading_progress_bar_enabled_current_selection,
     .list = {
         {.text = "On", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(true) },
         {.text = "Off", .action = set_loading_progress_bar_enabled_type, .arg = (void *)(uintptr_t)(false) },

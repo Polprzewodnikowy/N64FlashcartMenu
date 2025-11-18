@@ -9,10 +9,10 @@ built from latest commit on main branch.
 ## Release Notes 2026-{next}
 
 - **New Features**
-	- TBD.
+	- Settings contexts now preset to the saved option.
 
 - **Bug Fixes**
-	- TBD.
+	- MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 - **Documentation**
 	- TBD.
@@ -30,7 +30,6 @@ built from latest commit on main branch.
 ### Current known Issues
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
-- MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 
 ### Deprecation notices

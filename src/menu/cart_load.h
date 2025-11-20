@@ -42,6 +42,8 @@ typedef enum {
     CART_LOAD_ERR_EXP_PAK_NOT_FOUND,
     /** @brief An unexpected response. */
     CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED,
+    /** @brief Failed to load the 64DD Modem file. */
+    CART_LOAD_ERR_MODEM_NOT_FOUND,
 } cart_load_err_t;
 
 /** @brief Cart load type enumeration */

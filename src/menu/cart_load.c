@@ -20,6 +20,9 @@
 #ifndef EMU_LOCATION
 #define EMU_LOCATION            "/menu/emulators"
 #endif
+#ifndef MODEM_LOCATION
+#define MODEM_LOCATION          "/menu/modem"
+#endif
 
 /**
  * @brief Check if the 64DD is connected.
@@ -92,6 +95,27 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
     }
 }
 
+cart_load_err_t cart_load_modem (menu_t *menu, flashcart_progress_callback_t progress) {
+    path_t *path = path_init(menu->storage_prefix, MODEM_LOCATION);
+    path_push(path, "CMDJ0.n64");
+    if (!file_exists(path_get(path))) {
+        path_free(path);
+        return CART_LOAD_ERR_MODEM_NOT_FOUND;
+    }
+
+    bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
+    menu->flashcart_err = flashcart_load_second_rom(path_get(path), byte_swap, progress);
+    
+    if (menu->flashcart_err != FLASHCART_OK) {
+        path_free(path);
+        return CART_LOAD_ERR_ROM_LOAD_FAIL;
+    }
+
+    path_free(path);
+
+    return CART_LOAD_OK;
+}
+
 /**
  * @brief Load an N64 ROM and its save file.
  * 
@@ -100,6 +124,7 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
  * @return cart_load_err_t Error code.
  */
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
+    cart_load_modem(menu, NULL);
     path_t *path = path_clone(menu->load.rom_path);
 
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
@@ -152,6 +177,8 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
  * @return cart_load_err_t Error code.
  */
 cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
+    //cart_load_modem(menu, NULL);
+
     if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
         return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
     }

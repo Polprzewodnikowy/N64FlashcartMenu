@@ -86,6 +86,8 @@ typedef struct {
     flashcart_firmware_version_t (*get_firmware_version) (void);
     /** @brief The flashcart ROM load function */
     flashcart_err_t (*load_rom) (char *rom_path, flashcart_progress_callback_t *progress);
+    /** @brief The flashcart secondary ROM load function */
+    flashcart_err_t (*load_second_rom)(char *rom_path, flashcart_progress_callback_t *progress);
     /** @brief The flashcart file load function */
     flashcart_err_t (*load_file) (char *file_path, uint32_t rom_offset, uint32_t file_offset);
     /** @brief The flashcart save file load function */
@@ -149,6 +151,16 @@ flashcart_firmware_version_t flashcart_get_firmware_version (void);
  * @return flashcart_err_t Error code.
  */
 flashcart_err_t flashcart_load_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
+
+/**
+ * @brief Load a secondary ROM onto the flashcart.
+ *
+ * @param rom_path The path to the ROM file.
+ * @param byte_swap Whether to byte swap the ROM.
+ * @param progress Callback function for progress updates.
+ * @return flashcart_err_t Error code.
+ */
+flashcart_err_t flashcart_load_second_rom (char *rom_path, bool byte_swap, flashcart_progress_callback_t *progress);
 
 /**
  * @brief Load a file onto the flashcart.

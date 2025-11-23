@@ -33,7 +33,7 @@ static void scan_metadata_images(menu_t *menu) {
     }
 
     path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
-    char game_code_path[8];
+    char game_code_path[50];
 
     if (menu->load.rom_info.game_code[1] == 'E' && menu->load.rom_info.game_code[2] == 'D') {
         // This is using a homebrew ROM ID, use the title for the file name instead.

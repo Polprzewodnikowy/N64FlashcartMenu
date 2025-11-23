@@ -80,10 +80,10 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
         return FLASHCART_ERR_LOAD;
     }
 
-    size_t sdram_size = MiB(64);
+    size_t sdram_size = rom_size; // (MiB(64) - KiB(128));
 
     size_t chunk_size = KiB(128);
-    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+    for (unsigned int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
@@ -93,7 +93,7 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
             progress(f_tell(&fil) / (float) (f_size(&fil)));
         }
     }
-    if (f_tell(&fil) != rom_size) {
+    if (f_tell(&fil) != sdram_size) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }

@@ -197,6 +197,7 @@ static const match_t database[] = {
     MATCH_ID("NIC", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                         // Indy Racing 2000
     MATCH_ID("NIJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_EXP_PAK_RECOMMENDED),                              // Indiana Jones and the Infernal Machine
     MATCH_ID("NIR", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                         // Utchan Nanchan no Hono no Challenger: Denryuu Ira Ira Bou
+    MATCH_ID("NJK", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                         // Viewpoint 2064 (Final Prototype) (J)
     MATCH_ID("NJM", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                         // Earthworm Jim 3D
     MATCH_ID("NK2", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                         // Snowboard Kids 2 [Chou Snobow Kids (J)]
     MATCH_ID("NKA", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // Fighters Destiny [Fighting Cup (J)]

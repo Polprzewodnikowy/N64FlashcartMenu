@@ -3,7 +3,10 @@
 To use N64 game art images, place your PNG files within the `sd:/menu/metadata/` folder.
 
 > [!WARNING]
-> Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder. Please update your folder name and structure/content to ensure compatibility.
+> Older menu versions may not show boxart anymore. Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder. Please update your folder name and structure/content to ensure compatibility.
+
+> [!TIP]
+> As a starting point, here is a link to the latest, menu metadata: [Metadata link](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases), which requires regular and independent updates.
 
 #### Supported file names
 - `boxart_front.png` (DEFAULT)
@@ -47,6 +50,3 @@ When added, extra images will be used if available to itterate:
 - `gamepak_back.png`
 
 On the ROM load screen, you can cycle through available images using the **D-pad left**/**C-pad left** and **D-pad right**/**C-pad right** buttons. The menu will display any available images from the list above, skipping images that don't exist.
-
-As a starting point, here is a link to a box art pack, that has `boxart_front.png`:  
-- [Third party box art](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases)

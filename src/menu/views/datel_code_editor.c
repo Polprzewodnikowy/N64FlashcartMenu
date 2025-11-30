@@ -418,7 +418,7 @@ static void draw (menu_t *menu, surface_t *display) {
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "L|Z: Save changes\n"
-        "R: Item options\n"
+        "  R: Item options\n"
     );
 
     ui_components_context_menu_draw(&options_context_menu);

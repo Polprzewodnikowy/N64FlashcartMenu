@@ -12,6 +12,10 @@
 #include "menu_state.h"
 #include "rom_info.h"
 
+#ifndef SAVES_SUBDIRECTORY
+#define SAVES_SUBDIRECTORY      "saves"
+#endif
+
 /** @brief Cart load state enumeration. */
 typedef enum {
     /** @brief Returned no error. */
@@ -59,6 +63,13 @@ typedef enum {
     /** @brief The ROM is designed for a Fairchild Channel F system. */
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
 } cart_load_emu_type_t;
+
+/**
+ * @brief Check if the 64DD is connected.
+ * 
+ * @return true if the 64DD is connected, false otherwise.
+ */
+bool is_64dd_connected (void);
 
 /**
  * @brief Convert a cart load error code to a human-readable error message.

@@ -181,7 +181,7 @@ static void draw(menu_t *menu, surface_t *display) {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Remove item\n"
+                "Ⓡ Remove item\n"
                 "\n"
             );
         }
@@ -190,7 +190,7 @@ static void draw(menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "< Change Tab >\n"
+        "◀ Change Tab ▶\n"
         "\n"
     );    
 

@@ -645,7 +645,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
-        "Controller: < %d >\n",
+        "Controller: ◀ %d ▶\n",
             controller_selected + 1
     );
 
@@ -855,8 +855,8 @@ static void draw (menu_t *menu, surface_t *d) {
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Backup a Note\n"
-            "R: Options\n"
+            "Ⓛ|Ⓩ Backup a Note\n"
+            "   Ⓡ       Options\n"
         );
     } else {
         ui_components_actions_bar_text_draw(style,
@@ -869,7 +869,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(style,
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
-        "< Change Controller >\n"
+        "◀ Change Controller ▶\n"
     );
 
     if (error_message_displayed) {

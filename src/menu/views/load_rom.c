@@ -474,8 +474,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Extra Info\n"
-            "R: Adv. Options\n"
+            "Ⓛ|Ⓩ   Extra Info\n"
+            "   Ⓡ Adv. Options\n"
         );
 
         if (boxart != NULL) {
@@ -498,7 +498,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Boot address: 0x%08lX\n"
                 "SDK version: %.1f%c\n"
                 "Clock Rate: %.2fMHz\n\n\n"
-                "Press L|Z to return.\n",
+                "Press Ⓛ|Ⓩ to return.\n",
                 format_rom_endianness(menu->load.rom_info.endianness),
                 menu->load.rom_info.title,
                 menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],

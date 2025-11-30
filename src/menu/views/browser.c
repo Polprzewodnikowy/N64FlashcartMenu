@@ -585,8 +585,8 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
-        "^%02XR:  Options^00",
+        "^%02XⓈ Settings^00\n"
+        "^%02XⓇ  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
@@ -594,7 +594,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-Up/Down: Fast Scroll\n"
+            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -602,7 +602,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "< Change Tab >\n"
+            "◀ Change Tab ▶\n"
             "\n"
         );
     }

@@ -11,9 +11,6 @@
 #include "utils/fs.h"
 #include "utils/utils.h"
 
-#ifndef SAVES_SUBDIRECTORY
-#define SAVES_SUBDIRECTORY      "saves"
-#endif
 #ifndef DDIPL_LOCATION
 #define DDIPL_LOCATION          "/menu/64ddipl"
 #endif
@@ -41,7 +38,7 @@ static bool is_64dd_connected (void) {
 static bool create_saves_subdirectory (path_t *path) {
     path_t *save_folder_path = path_clone(path);
     path_pop(save_folder_path);
-    path_push(save_folder_path, SAVES_SUBDIRECTORY);
+    path_push(save_folder_path, SAVE_DIRECTORY_NAME);
     bool error = directory_create(path_get(save_folder_path));
     path_free(save_folder_path);
     return error;
@@ -117,7 +114,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
@@ -287,7 +284,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);

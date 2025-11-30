@@ -191,7 +191,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_messagebox_draw(
         "Do you want to restore this note dump to the Controller Pak?\n\n"
         "Controller selected: %d\n\n"
-        "A: Yes  B: No \n"
+        "Ⓐ Yes  Ⓑ No \n"
         "<- / ->: Change controller",
         controller_selected + 1
     );

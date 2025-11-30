@@ -869,7 +869,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(style,
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
-        "< Change Controller >\n"
+        "◀ Change Controller ▶\n"
     );
 
     if (error_message_displayed) {

@@ -499,6 +499,7 @@ static flashcart_err_t sc64_load_save (char *save_path) {
         case SAVE_TYPE_FLASHRAM_1MBIT:
         case SAVE_TYPE_SRAM_BANKED:
         case SAVE_TYPE_SRAM_1MBIT:
+        case SAVE_TYPE_FLASHRAM_FAKE:
             address = (void *) (SRAM_FLASHRAM_ADDRESS);
             break;
         case SAVE_TYPE_NONE:
@@ -639,6 +640,9 @@ static flashcart_err_t sc64_set_save_type (flashcart_save_type_t save_type) {
             break;
         case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
             type = SAVE_TYPE_FLASHRAM_1MBIT;
+            break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_FAKE:
+            type = SAVE_TYPE_FLASHRAM_FAKE;
             break;
         default:
             return FLASHCART_ERR_ARGS;

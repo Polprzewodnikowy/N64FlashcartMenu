@@ -37,7 +37,7 @@ static int format_file_size(char *buffer, int64_t size) {
         return sprintf(buffer, "empty");
     } else if (size < 8 * 1024) {
         return sprintf(buffer, "%lld B", size);
-    } else if (size < 8 * 1024 * 1024) {
+    } else if (size < 4 * 1024 * 1024) {
         return sprintf(buffer, "%lld kB", size / 1024);
     } else if (size < 1 * 1024 * 1024 * 1024) {
         return sprintf(buffer, "%lld MB", size / 1024 / 1024);

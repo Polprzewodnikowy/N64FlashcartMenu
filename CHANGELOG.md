@@ -6,35 +6,44 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-## Release Notes 2026-{next}
+## Release Notes 2025-12-04 - Tagged 0.3.1
 
 - **New Features**
-	- TBD.
+	- Settings contexts now preset to the saved option.
+	- Added latest Viewpoint64 final proto ROM to database.
+	- Added Rumble PAK and Transfer PAK features to ROM info screen.
 
 - **Bug Fixes**
-	- TBD.
+	- Fixed MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+	- Fixed game_code_path size that caused crash when loading homebrew boxart.
+	- Fixed boot process which could lead to blank screens or crashes.
+	- Fixed a potential issue that could happen when a RTC was not detected.
+
 
 - **Documentation**
-	- TBD.
+	- Moved ED64 documentation to [98_flashcart_wip.md](./docs/98_flashcart_wip.md)
+	- Other minor fixes.
 
 - **Refactor**
-	- TBD.
+	- Output 4MB files as MB, rather than kB.
+	- Improved icons for direction.
+	- Controller Pak now selects notes using up/down rather than left/right.
 
 - **Other**
 	- Updated libDragon SDK.
+	- Updated docker container to Trixy
 
 ### Breaking changes
-- TBD.
+- None.
 
 
 ### Current known Issues
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
-- MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
 
 
 ### Deprecation notices
-- TBD.
+- None.
 
 
 ## Release Notes 2025-11-15 - Tagged 0.3.0

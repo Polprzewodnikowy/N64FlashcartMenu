@@ -325,7 +325,7 @@ static void dump_single_note(int _port, int16_t selected_index) {
         "Which note would you like to dump?\n\n"
         "Note selected: N.%-2.2d\n\n"
         "A: Select    B: No\n"
-        "<- / ->: Select note number",
+        "▼▲: Select note number",
         index_selected + 1
     );
     ui_components_loader_draw(0, "Saving Controller Pak note...");
@@ -539,10 +539,10 @@ static void process (menu_t *menu) {
                 } else if (menu->actions.back) {
                     sound_play_effect(SFX_EXIT);
                     show_single_note_dump_confirm_message = false;                    
-                } else if (menu->actions.go_left) {
+                } else if (menu->actions.go_up) {
                     sound_play_effect(SFX_CURSOR);
                     index_selected = dec_index_note(index_selected);
-                } else if (menu->actions.go_right) {
+                } else if (menu->actions.go_down) {
                     sound_play_effect(SFX_CURSOR);
                     index_selected = inc_index_note(index_selected);
                 }
@@ -869,7 +869,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(style,
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
-        "< Change Controller >\n"
+        "◀ Change Controller ▶\n"
     );
 
     if (error_message_displayed) {
@@ -933,7 +933,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "Which note would you like to backup?\n\n"
             "Note selected: N.%-2.2d\n\n"
             "A: Select    B: No\n"
-            "<- / ->: Select note number",
+            "▼▲: Select note number",
             index_selected + 1
         );
     }
@@ -944,7 +944,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "Which note would you like to delete?\n\n"
             "Note selected: N.%-2.2d\n\n"
             "A: Select    B: No\n"
-            "<- / ->: Select note number",
+            "▼▲: Select note number",
             index_selected + 1
         );
     }

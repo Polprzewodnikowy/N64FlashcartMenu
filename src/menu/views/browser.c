@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "../cart_load.h"
 #include "../fonts.h"
 #include "utils/fs.h"
 #include "views.h"
@@ -230,7 +231,7 @@ static bool load_directory (menu_t *menu) {
         if (!menu->settings.show_saves_folder) {
             path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
-            if (strcmp(info.d_name, "saves") == 0) { // TODO: use SAVES_SUBDIRECTORY from cart_load.c
+            if (strcmp(info.d_name, SAVE_DIRECTORY_NAME) == 0) {
                 hide = true;
             }
             path_pop(path);
@@ -594,7 +595,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-Up/Down: Fast Scroll\n"
+            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -602,7 +603,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "< Change Tab >\n"
+            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
             "\n"
         );
     }

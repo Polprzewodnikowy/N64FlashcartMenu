@@ -131,7 +131,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
                 "L|Z: Load with ROM\n"
-                "R:   Options\n"
+                "  R:       Options\n"
             );
         } else {
             ui_components_actions_bar_text_draw(

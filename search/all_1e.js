@@ -1,12 +1,12 @@
 var searchData=
 [
-  ['v_20series_0',['EverDrive-64 (V series)',['../index.html#autotoc_md11',1,'']]],
+  ['v_20series_0',['EverDrive-64 (V series)',['../md_docs_298__flashcart__wip.html#autotoc_md115',1,'']]],
   ['v_5fintr_1',['V_INTR',['../boot__io_8h.html#af3a2374353eaa0de3c38607693057cfa',1,'vi_regs_t']]],
   ['v_5flimits_2',['V_LIMITS',['../boot__io_8h.html#a8a17677bc1236677903d6312d64b73b8',1,'vi_regs_t']]],
   ['v_5fscale_3',['V_SCALE',['../boot__io_8h.html#ad640b8c4be56e5e183f09f78368e2328',1,'vi_regs_t']]],
   ['v_5fsync_4',['V_SYNC',['../boot__io_8h.html#ac7797f5ba82e82db9cda5c459a8a7cea',1,'vi_regs_t']]],
   ['value_5',['value',['../cheats_8c.html#a4811d39b00bf77c2b7aa4c14f84a39d7',1,'cheat_t::value'],['../datel__codes_8h.html#ac5cac97ba923a96d36002845327f1da4',1,'cheat_file_code_t::value']]],
-  ['variable_20storage_20register_6',['&quot;Persistent variable storage&quot; register',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md24',1,'']]],
+  ['variable_20storage_20register_6',['&quot;Persistent variable storage&quot; register',['..//github/workspace/src/flashcart/64drive/README.md#autotoc_md20',1,'']]],
   ['variant_7',['VARIANT',['../group__drive.html#a3122016a331cc742f3ae981bde92c5fb',1,'d64_regs_t']]],
   ['version_8',['version',['../rom__info_8h.html#aa4fa4e1a40bd152b26b22bceeeb72baf',1,'rom_info_t::version'],['../rom__info_8c.html#a2af72f100c356273d46284f6fd1dfc08',1,'match_t.fields.__unnamed19__::version'],['../rom__info_8h.html#a2af72f100c356273d46284f6fd1dfc08',1,'rom_info_t.libultra::version']]],
   ['vertical_5fscroll_5fpossible_9',['vertical_scroll_possible',['../text__viewer_8c.html#ad577758d0b0f5ffce3f530a8b64de89c',1,'text_file_t']]],

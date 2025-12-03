@@ -10,18 +10,28 @@ built from latest commit on main branch.
 
 - **New Features**
 	- Settings contexts now preset to the saved option.
+	- Added latest Viewpoint64 final proto ROM to database.
+	- Added Rumble PAK and Transfer PAK features to ROM info screen.
 
 - **Bug Fixes**
-	- MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+	- Fixed MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+	- Fixed game_code_path size that caused crash when loading homebrew boxart.
+	- Fixed boot process which could lead to blank screens or crashes.
+	- Fixed a potential issue that could happen when a RTC was not detected.
+
 
 - **Documentation**
-	- TBD.
+	- Moved ED64 documentation to [98_flashcart_wip.md](./docs/98_flashcart_wip.md)
+	- Other minor fixes.
 
 - **Refactor**
-	- TBD.
+	- Output 4MB files as MB, rather than kB.
+	- Improved icons for direction.
+	- Controller Pak now selects notes using up/down rather than left/right.
 
 - **Other**
 	- Updated libDragon SDK.
+	- Updated docker container to Trixy
 
 ### Breaking changes
 - TBD.

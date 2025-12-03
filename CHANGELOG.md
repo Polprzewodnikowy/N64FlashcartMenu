@@ -6,7 +6,7 @@ built from latest commit on main branch.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-## Release Notes 2026-{next}
+## Release Notes 2025-12-04 - Tagged 0.3.1
 
 - **New Features**
 	- Settings contexts now preset to the saved option.
@@ -34,7 +34,7 @@ built from latest commit on main branch.
 	- Updated docker container to Trixy
 
 ### Breaking changes
-- TBD.
+- None.
 
 
 ### Current known Issues
@@ -43,7 +43,7 @@ built from latest commit on main branch.
 
 
 ### Deprecation notices
-- TBD.
+- None.
 
 
 ## Release Notes 2025-11-15 - Tagged 0.3.0

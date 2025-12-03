@@ -1,0 +1,77 @@
+- name: Introduction
+	href: 00_index.md
+
+- name: Getting Started
+	items:
+		- name: SD card setup
+			href: 10_getting_started_sd.md
+		- name: Updating the menu
+			href: 80_update_the_menu.md
+		- name: FAQ
+			href: 81_faq.md
+
+- name: Basic Menu Usage
+	items:
+		- name: Menu controls
+			href: 11_menu_controls.md
+		- name: File browser
+			href: 31_file_browser.md
+		- name: Menu settings
+			href: 32_menu_settings.md
+		- name: RTC settings
+			href: 33_rtc_settings.md
+		- name: Menu information
+			href: 35_menu_information.md
+
+- name: ROMs, Patches & Metadata
+	items:
+		- name: ROM configuration
+			href: 12_rom_configuration.md
+		- name: ROM patches
+			href: 14_rom_patches.md
+		- name: Datel cheats
+			href: 13_datel_cheats.md
+		- name: Autoload ROMs
+			href: 22_autoload_roms.md
+		- name: Gamepak box art
+			href: 19_gamepak_boxart.md
+
+- name: Playback & Media
+	items:
+		- name: Sound
+			href: 40_sound.md
+		- name: MP3 player
+			href: 41_mp3_player.md
+		- name: Background images
+			href: 16_background_images.md
+
+- name: Hardware & Flashcarts
+	items:
+		- name: Flashcart information
+			href: 36_flashcart_information.md
+		- name: Flashcart Work In Progress
+			href: 98_flashcart_wip.md
+		- name: Hardware modifications
+			href: 62_hardware_mods.md
+		- name: Controller Paks
+			href: 15_controller_paks.md
+
+- name: Platform-specific Features
+	items:
+		- name: 64DD
+			href: 17_64dd.md
+		- name: Emulators
+			href: 18_emulators.md
+
+- name: Advanced & Experimental
+	items:
+		- name: Advanced customization
+			href: 61_advanced_customization.md
+		- name: Experimental features
+			href: 65_experimental.md
+
+- name: Developer
+	items:
+		- name: Developer guide
+			href: 99_developer_guide.md
+

@@ -3,7 +3,7 @@
 To use N64 game art images, place your PNG files within the `sd:/menu/metadata/` folder.
 
 > [!WARNING]
-> Older menu versions may not show boxart anymore. Game Boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder. Please update your folder name and structure/content to ensure compatibility.
+> Older menu versions may not show boxart anymore. Game boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder. Please update your folder name and structure/content to ensure compatibility.
 
 > [!TIP]
 > As a starting point, here is a link to the latest, menu metadata: [Metadata link](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases), which requires regular and independent updates.

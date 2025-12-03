@@ -12,6 +12,10 @@
 #include "menu_state.h"
 #include "rom_info.h"
 
+#ifndef SAVE_DIRECTORY_NAME
+#define SAVE_DIRECTORY_NAME "saves"
+#endif
+
 /** @brief Cart load state enumeration. */
 typedef enum {
     /** @brief Returned no error. */

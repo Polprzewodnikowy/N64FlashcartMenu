@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG SC64_DEPLOYER_VERSION=v2.20.2
 RUN apt-get update && \

@@ -5,13 +5,13 @@ ARG SC64_DEPLOYER_VERSION=v2.20.2
 # Minimal image: install only what's needed for doc building and the project's toolchain
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install build-essential doxygen git python3 wget -y
+    apt-get install build-essential doxygen git python3 wget dotnet-sdk-8.0 -y
 
 # Add Microsoft package repository and install .NET SDK (apt will pick latest patch)
-# RUN apt-get install software-properties-common && \
-#     add-apt-repository ppa:dotnet/backports && \
+#     apt-get install software-properties-common && \
+# RUN add-apt-repository ppa:dotnet/backports && \
 #     apt-get update && \
-#     apt-get install dotnet-sdk-10.0 -y
+#     apt-get install dotnet-sdk-8.0 -y
 
 # Install libdragon toolchain (packaged .deb)
 RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \

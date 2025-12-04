@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ARG SC64_DEPLOYER_VERSION=v2.20.2
 
@@ -8,7 +8,7 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 # Minimal image: install only what's needed for doc building and the project's toolchain
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        ca-certificates wget gnupg curl apt-transport-https unzip git && \
+        build-essential doxygen git python3 wgetca-certificates wget gnupg curl apt-transport-https unzip git && \
     # Add Microsoft package repository and install .NET SDK 7.0 (apt will pick latest patch)
     wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb && \

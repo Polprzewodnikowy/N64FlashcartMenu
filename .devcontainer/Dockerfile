@@ -7,8 +7,8 @@ ENV PATH="$PATH:/root/.dotnet/tools"
 
 # Minimal image: install only what's needed for doc building and the project's toolchain
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential doxygen git python3 wgetca-certificates wget gnupg curl apt-transport-https unzip git && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential doxygen git python3 wgetca-certificates wget gnupg curl apt-transport-https unzip git && \
     # Add Microsoft package repository and install .NET SDK 7.0 (apt will pick latest patch)
     wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && rm packages-microsoft-prod.deb && \
@@ -18,11 +18,13 @@ RUN apt-get update && \
     dotnet tool install -g docfx && \
     ln -sf /root/.dotnet/tools/docfx /usr/local/bin/docfx || true && \
     # Install libdragon toolchain (packaged .deb)
-    wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb -O /tmp/gcc-toolchain.deb && \
-    dpkg -i /tmp/gcc-toolchain.deb || true && rm /tmp/gcc-toolchain.deb && \
+    wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \
+    dpkg -i gcc-toolchain-mips64-x86_64.deb && \
+    rm gcc-toolchain-mips64-x86_64.deb && \
     # Install SummerCart64 deployer
-    wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC64_DEPLOYER_VERSION/sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -O /tmp/sc64.tar.gz && \
-    tar -xf /tmp/sc64.tar.gz -C /usr/local/bin && rm /tmp/sc64.tar.gz || true && \
+    wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC64_DEPLOYER_VERSION/sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
+    tar -xf sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -C /usr/local/bin && \
+    rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
     # Misc config
     git config --global --add safe.directory "*" && \
     echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" >> /root/.bashrc && \

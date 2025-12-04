@@ -110,7 +110,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            st.m_is_supported ? "A: Extract\nB: Exit" : "\nB: Exit"
+            st.m_is_supported ? "Ⓐ Extract\nⒷ Exit" : "\nⒷ Exit"
         );
     }
 

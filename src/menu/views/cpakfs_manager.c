@@ -324,7 +324,7 @@ static void dump_single_note(int _port, int16_t selected_index) {
     ui_components_messagebox_draw(
         "Which note would you like to dump?\n\n"
         "Note selected: N.%-2.2d\n\n"
-        "A: Select    B: No\n"
+        "Ⓐ Select    Ⓑ No\n"
         "▼▲: Select note number",
         index_selected + 1
     );
@@ -645,7 +645,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_main_text_draw(STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
-        "Controller: < %d >\n",
+        "Controller: ◀ %d ▶\n",
             controller_selected + 1
     );
 
@@ -850,18 +850,18 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Backup whole Pak\n"
-            "B: Back\n"
+            "Ⓐ Backup whole Pak\n"
+            "Ⓑ Back\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Backup a Note\n"
-            "R: Options\n"
+            "Ⓛ|Ⓩ Backup a Note\n"
+            "   Ⓡ       Options\n"
         );
     } else {
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Format Controller Pak\n"
+            "Ⓐ Format Controller Pak\n"
             "\n"
         );
     }
@@ -875,7 +875,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (error_message_displayed) {
         ui_components_messagebox_draw(
             "Error: %s\n\n"
-            "Press A to continue.",
+            "Press Ⓐ to continue.",
             failure_message_note
         );   
     }
@@ -883,7 +883,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (process_complete_format) {
         ui_components_messagebox_draw(
             "Controller Pak formatted.\n\n"
-            "Press A to continue."
+            "Press Ⓐ to continue."
         );   
     }
 
@@ -891,7 +891,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_messagebox_draw(
             "Pak saved to:\n"
             "%s\n\n"
-            "Press A to continue.",
+            "Press Ⓐ to continue.",
             CPAK_PATH
         );   
     }
@@ -900,7 +900,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_messagebox_draw(
             "Note saved to:\n"
             "%s/notes\n\n"
-            "Press A to continue.",
+            "Press Ⓐ to continue.",
             CPAK_PATH
         );   
     }
@@ -908,7 +908,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (process_complete_delete) {
         ui_components_messagebox_draw(
             "Note %d deleted from Controller Pak.\n\n"
-            "Press A to continue.",
+            "Press Ⓐ to continue.",
             index_selected + 1
         );   
     }
@@ -917,13 +917,13 @@ static void draw (menu_t *menu, surface_t *d) {
         !start_complete_dump) {
         ui_components_messagebox_draw(
             "Do you want to backup the Controller Pak?\n\n"
-            "A: Yes        B: No"
+            "Ⓐ Yes        Ⓑ No"
         );   
     } else if (show_complete_write_confirm_message) {
         ui_components_messagebox_draw(
             "To write a complete backup, browse to a file"
             " with the extension \".mpk\" or \".pak\".\n\n"
-            "B: Back"
+            "Ⓑ Back"
         );   
     } 
 
@@ -932,7 +932,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_messagebox_draw(
             "Which note would you like to backup?\n\n"
             "Note selected: N.%-2.2d\n\n"
-            "A: Select    B: No\n"
+            "Ⓐ Select    Ⓑ No\n"
             "▼▲: Select note number",
             index_selected + 1
         );
@@ -943,7 +943,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_messagebox_draw(
             "Which note would you like to delete?\n\n"
             "Note selected: N.%-2.2d\n\n"
-            "A: Select    B: No\n"
+            "Ⓐ Select    Ⓑ No\n"
             "▼▲: Select note number",
             index_selected + 1
         );
@@ -953,7 +953,7 @@ static void draw (menu_t *menu, surface_t *d) {
         !start_format_controller_pak) {
         ui_components_messagebox_draw(
             "Do you want to format the Controller pak?\n\n"
-            "A: Yes        B: No"
+            "Ⓐ Yes        Ⓑ No"
         );   
     }
 

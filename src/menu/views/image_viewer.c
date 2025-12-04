@@ -75,7 +75,7 @@ static void draw (menu_t *menu, surface_t *d) {
         if (show_message) {
             ui_components_messagebox_draw(
                 "Set \"%s\" as background image?\n\n"
-                "A: Yes, B: Back",
+                "Ⓐ Yes, Ⓑ Back",
                 menu->browser.entry->name
             );
         } else if (image_set_as_background) {

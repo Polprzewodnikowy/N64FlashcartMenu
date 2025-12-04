@@ -105,7 +105,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "^%02XUp / Down: Scroll^00\n"
-        "B: Back",
+        "Ⓑ Back",
         text->vertical_scroll_possible ? STL_DEFAULT : STL_GRAY
     );
 

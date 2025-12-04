@@ -563,14 +563,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->browser.entry) {
         switch (menu->browser.entry->type) {
-            case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-            case ENTRY_TYPE_ROM: action = "A: Load"; break;
-            case ENTRY_TYPE_DISK: action = "A: Load"; break;
-            case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
-            case ENTRY_TYPE_TEXT: action = "A: View"; break;
-            case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
-            case ENTRY_TYPE_ARCHIVE: action = "A: Open"; break;
-            default: action = "A: Info"; break;
+            case ENTRY_TYPE_DIR: action = "Ⓐ Enter"; break;
+            case ENTRY_TYPE_ROM: action = "Ⓐ Load"; break;
+            case ENTRY_TYPE_DISK: action = "Ⓐ Load"; break;
+            case ENTRY_TYPE_IMAGE: action = "Ⓐ Show"; break;
+            case ENTRY_TYPE_TEXT: action = "Ⓐ View"; break;
+            case ENTRY_TYPE_MUSIC: action = "Ⓐ Play"; break;
+            case ENTRY_TYPE_ARCHIVE: action = "Ⓐ Open"; break;
+            default: action = "Ⓐ Info"; break;
         }
     }
 
@@ -578,7 +578,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
-        "^%02XB: Back^00",
+        "^%02XⒷ Back^00",
         menu->browser.entries == 0 ? "" : action,
         path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
     );
@@ -586,8 +586,8 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
-        "^%02XR:  Options^00",
+        "^%02XⓈ Settings^00\n"
+        "^%02XⓇ  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 

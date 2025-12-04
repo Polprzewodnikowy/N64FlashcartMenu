@@ -30,4 +30,3 @@ RUN apt-get update && \
     SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
     echo "$SNIPPET" >> "/root/.bashrc" && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-

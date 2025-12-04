@@ -5,7 +5,7 @@ ARG SC64_DEPLOYER_VERSION=v2.20.2
 # Minimal image: install only what's needed for doc building and the project's toolchain
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y build-essential doxygen git python3 wget
+    apt-get install -y build-essential doxygen git python3 wget software-properties-common
 
 # Add Microsoft package repository and install .NET SDK (apt will pick latest patch)
 #     apt-get install software-properties-common && \

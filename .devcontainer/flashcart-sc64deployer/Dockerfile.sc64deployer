@@ -1,12 +1,11 @@
 FROM debian:trixie-slim
 
 ARG SC64_DEPLOYER_VERSION=v2.20.2
-ARG UNF_LOADER_VERSION=v2.2
 
 # Minimal image: install only what's needed for building and the project's toolchain
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y build-essential git python3 wget unzip
+    apt-get install -y build-essential git python3 wget
 
 # Install libdragon toolchain (packaged .deb)
 RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \

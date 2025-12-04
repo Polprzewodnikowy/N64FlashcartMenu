@@ -4,10 +4,12 @@ ARG SC64_DEPLOYER_VERSION=v2.20.2
 
 RUN apt-get update && \
     apt-get upgrade -y
-RUN apt-get install software-properties-common && \
-    add-apt-repository ppa:dotnet/backports
+# RUN apt-get install software-properties-common && \
+#     add-apt-repository ppa:dotnet/backports && \
+#     apt-get update && \
+#     apt-get install dotnet-sdk-7.0 -y
 RUN apt-get update && \
-    apt-get install build-essential doxygen git python3 wget dotnet-sdk-10.0 -y && \
+    apt-get install build-essential doxygen git python3 wget -y && \
     wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \
     dpkg -i gcc-toolchain-mips64-x86_64.deb && \
     rm gcc-toolchain-mips64-x86_64.deb && \

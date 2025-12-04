@@ -27,6 +27,7 @@ RUN apt-get update && \
     rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
     # Misc config
     git config --global --add safe.directory "*" && \
-    echo "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" >> /root/.bashrc && \
+    SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+    echo "$SNIPPET" >> "/root/.bashrc" && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 

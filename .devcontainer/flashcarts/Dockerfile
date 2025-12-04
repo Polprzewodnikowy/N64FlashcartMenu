@@ -17,7 +17,7 @@ RUN wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC6
     tar -xf sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -C /usr/local/bin && \
     rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz
 
-# Misc config
+# Envirnment Config
 RUN git config --global --add safe.directory "*" && \
     SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
     echo "$SNIPPET" >> "/root/.bashrc"

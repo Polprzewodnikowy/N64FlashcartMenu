@@ -1,0 +1,16 @@
+FROM debian:trixie-slim
+
+# Minimal image: install only what's needed for building and the project's toolchain
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential doxygen git python3 wget
+
+# Install libdragon toolchain (packaged .deb)
+RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \
+    dpkg -i gcc-toolchain-mips64-x86_64.deb && \
+    rm gcc-toolchain-mips64-x86_64.deb
+
+# Environment Config
+RUN git config --global --add safe.directory "*" && \
+    SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+    echo "$SNIPPET" >> "/root/.bashrc"

@@ -1,7 +1,7 @@
 {
     "name": "N64FlashcartMenu",
     "build": {
-        "dockerfile": "Dockerfile.all"
+        "dockerfile": "Dockerfile.doxygen"
     },
     "mounts": [
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"

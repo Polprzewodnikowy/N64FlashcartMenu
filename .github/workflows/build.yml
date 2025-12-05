@@ -32,6 +32,7 @@ jobs:
         with:
           imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
           cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
+          configFile: .devcontainer/flashcart-all/devcontainer.json
           push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
           refFilterForPush: refs/heads/main
           runCmd: |

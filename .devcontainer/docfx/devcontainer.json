@@ -1,12 +1,15 @@
 {
     "name": "N64FlashcartMenu",
     "build": {
-        "dockerfile": "Dockerfile.all"
+        "dockerfile": "Dockerfile.docfx"
+    },
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/root/.dotnet/tools"
     },
     "mounts": [
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j",
+    "postCreateCommand": "dotnet tool update -g docfx && git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j",
     "customizations": {
         "vscode": {
             "extensions": [

@@ -3,6 +3,9 @@
     "build": {
         "dockerfile": "Dockerfile.docfx"
     },
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/root/.dotnet/tools"
+    },
     "mounts": [
         "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
     ],

@@ -535,6 +535,7 @@ static flashcart_err_t sc64_load_64dd_ipl (char *ipl_path, flashcart_progress_ca
     FIL fil;
     UINT br;
 
+    // FIXME: If the IPL is located on the ROM via DFS, then this does not work, as expecting fatfs...
     if (f_open(&fil, strip_fs_prefix(ipl_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }

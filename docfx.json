@@ -1,118 +1,33 @@
 {
-  "metadata": [
-    {
-      "src": [
-        {
-          "files": [
-            "output/**.n64",
-            "output/**.bin",
-            "output/**.v64",
-            "build/**.elf",
-            "build/**.map"
-          ],
-          "exclude": [
-            "**/obj/**",
-            "_site/**",
-            "**/Tests/**",
-            "**/Test/**",
-            "Test**/**",
-            "**/**.Test*",
-            "**/*.Test*",
-            "**/**.Test",
-            "**/*.Test",
-            "**/**.Test.*",
-            "**/*.Test.*",
-            "**/*Test/**"
-          ]
-        }
-      ],
-      "dest": "api",
-      "disableGitFeatures": true
-    }
-  ],
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
   "build": {
     "content": [
       {
         "files": [
-          "api/**.yml",
-          "api/index.md",
-          "devices/**.yml",
-          "devices/index.md",
-          "devicesdetails/**.md",
-          "devicesdetails/**/**.md",
-          "devicesdetails/**.yml",
-          "samplesdetails/**.yml",
-          "samplesdetails/index.md",
-          "samplesdetails/**.md",
-          "devices/**/**.md",
-          "devices/**.yml",
-          "x-cross/**.yml"
-        ]
-      },
-      {
-        "files": [
-          "content/**.md",
-          "content/**/toc.yml",
-          "toc.yml",
-          "*.md"
+          "**/*.{md,yml}"
         ],
         "exclude": [
-          "obj/**",
-          "_site/**",
-          "README.md",
-          "LICENSE",
-          "LICENSE-CODE"
+          "_site/**"
         ]
       }
     ],
     "resource": [
       {
         "files": [
-          "images/**",
-          "favicons/**",
-          "devicesimages/**",
-          "samplesimages/**"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
+          "images/**"
         ]
       }
     ],
-    "overwrite": [
-      {
-        "files": [
-          "apidoc/**.md"
-        ],
-        "exclude": [
-          "obj/**",
-          "_site/**"
-        ]
-      }
-    ],
-    "dest": "_site",
-    "markdownEngineName": "markdig",
-    "globalMetadataFiles": [],
-    "fileMetadataFiles": [],
+    "output": "_site",
     "template": [
       "default",
-      "templates/nano",
-      "modern",
-      "templates/material"
+      "modern"
     ],
-    "postProcessors": [ "ExtractSearchIndex" ],
-    "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ],
-    "noLangKeyword": false,
-    "keepFileLink": false,
-    "cleanupCacheHistory": false,
-    "disableGitFeatures": false,
     "globalMetadata": {
-      "_appTitle": "N64 Flashcart Menu Documentation",
+      "_appName": "N64 Flashcart Menu",
+      "_appTitle": "N64 Flashcart Menu",
       "_enableSearch": true,
-      "_gitContribute": {
-        "branch": "pages-source"
-      },
-      "_lang": "en"
+      "pdf": false
     }
   }
 }

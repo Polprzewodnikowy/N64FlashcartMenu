@@ -3,6 +3,20 @@
 
 #include "views.h"
 
+
+static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
+static const char *text_extensions[] = { "txt", NULL };
+static const char *config_extensions[] = { "ini", "cfg", "yml", "yaml", "toml", NULL };
+static const char *save_extensions[] = { "sav", "eep", "eeprom", "sra", "srm", "ram", "fla", "flashram", NULL };
+static const char *patch_extensions[] = { "aps", "bps", "ips", "pps", "ups", "xdelta", NULL };
+static const char *archive_extensions[] = { "zip", "rar", "7z", "tar", "gz", NULL };
+static const char *image_extensions[] = { "png", "jpg", "gif", NULL };
+static const char *music_extensions[] = { "mp3", "wav", "ogg", "wma", "flac", NULL };
+static const char *controller_pak_extensions[] = { "mpk", "pak", NULL };
+static const char *emulator_extensions[] = { "nes", "smc", "gb", "gbc", "sms", "gg", "chf", "rzx", NULL };
+static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
+
+
 static struct stat st;
 
 static file_info_t info;

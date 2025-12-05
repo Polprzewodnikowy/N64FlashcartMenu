@@ -246,6 +246,10 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_push(path, "Press-F.z64");
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
+        case CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM:
+            path_push(path, "zx-spectrum.z64");
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
     }
 
     if (!file_exists(path_get(path))) {

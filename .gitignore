@@ -4,6 +4,7 @@
 # Ignore compilation result directories
 /build
 /output
+/_site
 
 # Ignore generated files in the libdragon FS
 /filesystem/Firple-Bold.font64

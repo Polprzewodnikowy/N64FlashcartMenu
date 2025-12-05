@@ -4,7 +4,11 @@
       "src": [
         {
           "files": [
-            "output/**.n64"
+            "output/**.n64",
+            "output/**.bin",
+            "output/**.v64",
+            "build/**.elf",
+            "build/**.map"
           ],
           "exclude": [
             "**/obj/**",

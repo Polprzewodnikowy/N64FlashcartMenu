@@ -1,15 +1,14 @@
-- name: Documentation
-  href: docs/index.md
-  topicHref: docs/index.md
-- name: Preview Documentation
-  href: preview-docs/index.md
-  topicHref: preview-docs/index.md
-- name: SRC Reference
-  href: src/
-  topicHref: src/index.md
+# - name: Documentation
+#   href: docs/00_index.md
+# - name: Preview Documentation
+#   href: preview-docs/index.md
+#   topicHref: preview-docs/index.md
+# - name: SRC Reference
+#   href: ./src/
+#   topicHref: src/index.md
 - name: Contributing
-  href: content/contributing/index.md
+  href: ./CONTRIBUTING.md
 - name: GitHub
   href: https://www.github.com/Polprzewodnikowy/N64FlashcartMenu
-- name: Discord
-  href: 
+# - name: Discord
+#   href: 

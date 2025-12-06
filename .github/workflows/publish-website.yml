@@ -20,7 +20,7 @@ jobs:
   publish-docs:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: menu.summercart64.dev # url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -41,7 +41,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v4
       with:
-        # Upload entire repository
+        # Upload entire docfx site folder
         path: '_site'
     - name: Deploy to GitHub Pages
       id: deployment

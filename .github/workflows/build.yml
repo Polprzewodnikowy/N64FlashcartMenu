@@ -16,7 +16,7 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -106,34 +106,3 @@ jobs:
             ./output/OS64P.v64
             ./output/sc64menu.n64
         continue-on-error: true
-
-  generate-docs:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Run Doxygen
-        uses: mattnotmitt/doxygen-action@v1
-        with:
-          doxyfile-path: './Doxyfile'
-
-      # - name: Deploy docs to GitHub Pages (main)
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   if: github.ref == 'refs/heads/main'
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./output/docs
-      #     cname: menu.summercart64.dev
-
-      - name: Deploy docs to GitHub Pages (develop)
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/develop'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output/docs
-          cname: menu.summercart64.dev
-          # publish_branch: gh-pages-develop
-          # cname: prerelease.menu.summercart64.dev

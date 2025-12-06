@@ -2,3 +2,5 @@
   href: docs/
 - name: Contributing
   href: CONTRIBUTING.md
+- name: API Reference
+  href: output/api/docs/index.html

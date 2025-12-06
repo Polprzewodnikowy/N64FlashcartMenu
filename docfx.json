@@ -27,6 +27,7 @@
     "globalMetadata": {
       "_appName": "N64 Flashcart Menu",
       "_appTitle": "N64 Flashcart Menu",
+      "_appFooter": "© 2024 N64 Flashcart Menu Contributors",
       "_enableSearch": true,
       "pdf": true
     }

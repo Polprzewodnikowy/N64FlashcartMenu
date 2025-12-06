@@ -6,6 +6,11 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 
 #### Preparations for SC64
 
+> [!CAUTION]
+> Install the battery correctly,
+> A quick video tutorial can be found here:
+> [![Video tutorial](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)
+
 > [!TIP]
 > Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and don't require re-formatting.
 
@@ -22,6 +27,9 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 ### Advanced Steps
 Advanced steps are optional, which adds additional capabilities.
 
+#### Add Boxart support
+See the [Boxart](./19_gamepak_boxart.md) page.
+
 #### Add Emulator support
 See the [Emulators](./18_emulators.md) page.
 
@@ -37,6 +45,10 @@ SD:\
 │
 ├── menu\
 │   │
+│   ├── metadata\
+│   │    ├── N\G\E\E\boxart_front.png
+│   │    ├── N\G\E\E\boxart_back.png
+│   │    └── homebrew\myromname\boxart_front.png
 │   │
 │   ├── 64ddipl\
 │   │    ├── NDDE0.n64

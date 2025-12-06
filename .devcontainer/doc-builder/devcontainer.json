@@ -1,7 +1,7 @@
 {
-    "name": "N64FlashcartMenu",
+    "name": "N64FlashcartMenu-docbuilder",
     "build": {
-        "dockerfile": "Dockerfile.docfx"
+        "dockerfile": "Dockerfile.docbuilder"
     },
     "remoteEnv": {
         "PATH": "${containerEnv:PATH}:/root/.dotnet/tools"
@@ -12,9 +12,6 @@
     "postCreateCommand": "dotnet tool update -g docfx && git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j",
     "customizations": {
         "vscode": {
-            "extensions": [
-                "ms-vscode.makefile-tools"
-            ],
             "settings": {
                 "git.ignoredRepositories": [
                     "libdragon",

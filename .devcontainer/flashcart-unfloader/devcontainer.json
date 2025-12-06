@@ -1,5 +1,5 @@
 {
-    "name": "N64FlashcartMenu",
+    "name": "N64FlashcartMenu-Unfloader",
     "build": {
         "dockerfile": "Dockerfile.unfloader"
     },

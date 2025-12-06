@@ -7,14 +7,15 @@
           "**/*.{md,yml}"
         ],
         "exclude": [
-          "_site/**"
+          "_site/**",
+          "/src/libs/**"
         ]
       }
     ],
     "resource": [
       {
         "files": [
-          "images/**"
+          "/docs/images/**"
         ]
       }
     ],

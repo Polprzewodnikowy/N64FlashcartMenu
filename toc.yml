@@ -1,2 +1,4 @@
 - name: Docs
   href: docs/
+- name: Contributing
+  href: CONTRIBUTING.md

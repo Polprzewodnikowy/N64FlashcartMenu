@@ -1,4 +1,4 @@
-[Return to README](README.md)
+[Return to README](../README.md)
 ## N64FlashcartMenu User Guide
 
 ### General

@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Frequently Asked Questions (FAQ)
 
 ### ROM hack (insert hack name here) does not work

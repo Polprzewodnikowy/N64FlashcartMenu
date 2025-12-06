@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## File Browser
 <!-- Could use a beauty screenshot here -->
 The File Browser allows you to navigate and manage files on your N64 flashcart. Below are the key features and instructions on how to use the File Browser effectively.

@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## ROM Configuration
 
 The N64FlashcartMenu allows overriding the ROM's default configuration that is provided from the internal database.

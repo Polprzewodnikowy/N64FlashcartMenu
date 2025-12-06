@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Basic Controls
 <!-- Could use a sample screenshot of the controller and labels here -->
 

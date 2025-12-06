@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Emulators
 N64FlashcartMenu supports multiple emulators that are compatible with the N64. At the time of writing, current emulator support includes NES, SNES, GB, GBC, SMS, GG, and CHF ROMs.
 

@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Initial Setup of an SD Card
 
 ### First steps

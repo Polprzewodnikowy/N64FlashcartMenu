@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Sound effects
 The menu has the ability to play sound effects during navigation. It is not currently possible to customize them.
 

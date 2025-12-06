@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Game Art Images
 To use N64 game art images, place your PNG files within the `sd:/menu/metadata/` folder.
 

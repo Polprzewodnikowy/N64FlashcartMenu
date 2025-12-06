@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 
 :Warning: this feature is superseded on the `SummerCart64` and `64 Drive` with [Fast Reboot](./32_menu_settings.md#fast-rom-reboots).
 Similar functionality can be obtained by keeping the USB port of the flashcart powered after sending a ROM via the terminal application. Further more, this feature is still possible as a build flag using `FEATURE_AUTOLOAD_ROM_ENABLED`.

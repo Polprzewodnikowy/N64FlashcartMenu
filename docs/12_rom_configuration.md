@@ -42,6 +42,3 @@ All ROMs are generally programmed to work with a single type of television outpu
    - Speed issues
    - Audio/visual desynchronization
    - Other unexpected/unwanted behaviors
-
-### Autoload
-See the [Autoload N64 ROMs](./22_autoload_roms.md) page.

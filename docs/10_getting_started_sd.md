@@ -3,7 +3,6 @@
 ### First steps
 Insert the (Micro) SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.
 
-
 #### Preparations for SC64
 
 > [!CAUTION]
@@ -17,12 +16,6 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 - Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your Micro SD card.
 - Place your ROM files on the Micro SD card, **in any folder except the root directory `menu` folder**.
 - Remove the Micro SD Card from your computer and insert it into the SC64. 
-
-#### Preparations for OTHER supported flashcarts
-- It is recommended to format the SD Card to FAT32 with the default cluster size.
-- Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
-- Remove the Micro SD Card from your computer and insert it into the flashcart.
-
 
 ### Advanced Steps
 Advanced steps are optional, which adds additional capabilities.

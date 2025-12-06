@@ -1,4 +1,5 @@
-## Developer Guide
+## Menu Developer Guide
+This document is to aid those that want to contribute to this project.
 
 > [!TIP]
 > You should use the pre-configured dev container in VSCode to ensure easy development.
@@ -52,7 +53,7 @@ Make sure that the remote target device (i.e. the one with the carts USB connect
 > [!TIP]
 > Make sure you specify its accessible IP and port.
 
-```
+```bash
 ./sc64deployer server [THE_LAN_IP_ADDRESS]:9064
 ```
 
@@ -60,18 +61,18 @@ Make sure that the remote target device (i.e. the one with the carts USB connect
 The following commands can then be run from the docker environment terminal:
 
 To upload and run the ROM (requires power toggle):
-```
+```bash
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run
 ```
 
 To debug the ROM (requires power toggle):
-```
+```bash
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
 ```
 
 To debug the ROM with upload and auto reboot:
 (note: the current debugging session menu may not be the same as the file uploaded. you need to `make all` first to ensure the latest menu is uploaded).
-```
+```bash
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```
 
@@ -135,13 +136,15 @@ This repo currently uses the `preview` branch as a submodule at a specific commi
 Or rebuild the dev container.
 
 ### Generate documentation
-Run `doxygen` from the dev container terminal. Make sure you fix the warnings before creating a PR!  
-Generated documentation is located in the `output/docs` folder and auto-published to the `gh-pages` branch when merged with `main`.
+Run `doxygen` from the dev container terminal.  
+Generated documentation is located in the `output/api/docs`.
+Run `docfx` from the dev container terminal, The full website will now be generated in `_site/` folder.
+documentation is auto-published to the `gh-pages` branch when merged with `main`. Make sure you fix the warnings before creating a PR!
 
 Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/).
 
-#### Test generated docs in the dev-container
-Testing the documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.
+#### Test generated api docs in the dev-container
+Testing the api documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.
 
 Install Prerequisites:
 ```bash
@@ -151,5 +154,10 @@ gem install jekyll bundler
 
 You can then serve the webpage:
 ```bash
-cd output/docs && jekyll serve
+cd output/api/docs && jekyll serve
+```
+
+#### Test generated website in the dev-container
+```bash
+docfx docfx.json --serve
 ```

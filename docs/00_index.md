@@ -1,5 +1,5 @@
 [Return to README](../README.md)
-## N64FlashcartMenu User Guide
+## N64FlashcartMenu - User Guide
 
 ### General
 - [Initial Setup of an SD Card](./10_getting_started_sd.md)

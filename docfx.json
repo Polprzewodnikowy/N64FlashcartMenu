@@ -8,7 +8,8 @@
         ],
         "exclude": [
           "_site/**",
-          "/src/libs/**"
+          "/src/libs/**",
+          "/libdragon/**"
         ]
       }
     ],

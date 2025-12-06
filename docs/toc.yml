@@ -48,7 +48,5 @@
   href: 81_faq.md
 - name: Experimental Features
   href: 65_experimental.md
-- name: Developer Guide
+- name: Menu Developer Guide
   href: 99_developer_guide.md
-- name: Contributing
-  href: https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md

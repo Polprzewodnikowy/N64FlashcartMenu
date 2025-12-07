@@ -82,15 +82,17 @@ typedef enum {
 
 /** @brief ROM save type enumeration. */
 typedef enum {
-    SAVE_TYPE_NONE = 0,             /**< No expected save type */
-    SAVE_TYPE_EEPROM_4KBIT = 1,     /**< EEPROM 4Kbit */
-    SAVE_TYPE_EEPROM_16KBIT = 2,    /**< EEPROM 16Kbit */
-    SAVE_TYPE_SRAM_256KBIT = 3,     /**< SRAM 256Kbit */
-    SAVE_TYPE_SRAM_BANKED = 4,      /**< SRAM Banked */
-    SAVE_TYPE_SRAM_1MBIT = 5,       /**< SRAM 1Mbit */
-    SAVE_TYPE_FLASHRAM_1MBIT = 6,   /**< FlashRAM 1Mbit */
-    SAVE_TYPE_FLASHRAM_PKST2 = 7,   /**< FlashRAM PKST2 */
-    SAVE_TYPE_AUTOMATIC = -1,       /**< Automatic save type detection */
+    /** @brief There is no expected save type. */
+    SAVE_TYPE_NONE = 0,                     /**< No expected save type */
+    SAVE_TYPE_EEPROM_4KBIT = 1,             /**< EEPROM 4Kbit */
+    SAVE_TYPE_EEPROM_16KBIT = 2,            /**< EEPROM 16Kbit */
+    SAVE_TYPE_SRAM_256KBIT = 3,             /**< SRAM 256Kbit */
+    SAVE_TYPE_SRAM_BANKED = 4,              /**< SRAM Banked */
+    SAVE_TYPE_SRAM_1MBIT = 5,               /**< SRAM 1Mbit - Not a real save type, but used for some ROMs due to ED64 support. */
+    SAVE_TYPE_FLASHRAM_1MBIT = 6,           /**< FlashRAM 1Mbit */
+    SAVE_TYPE_FLASHRAM_PKST2 = 7,           /**< FlashRAM PKST2 */
+    SAVE_TYPE_FLASHRAM_FAKE = 8,            /**< Fake FlashRAM 1Mbit - Not a real save type, but used for some ROMs due to ED64 support. */
+    SAVE_TYPE_AUTOMATIC = -1,               /**< Automatic save type detection */
 } rom_save_type_t;
 
 /** @brief ROM TV type enumeration. */

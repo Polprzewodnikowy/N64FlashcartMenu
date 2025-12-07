@@ -93,3 +93,6 @@ For example, a save file called `Glover (USA).eep` should have its extension cha
 You may also need to pad/trim the files to their original size:
 - For EEPROM 4Kbit games, remove the padding (this may require a hex editor).
 - For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
+
+### Recommended Action
+- Make sure you regularly back up important files from the SD Card to your computer to avoid accidental loss.

@@ -27,3 +27,10 @@ Western Europe and most Japanese characters are fully compatible. Other Unicode 
 
 > [!TIP]
 > An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.
+
+### I am getting file operation failures 
+- Make sure there is enough space on the SD card and that the file is not write-protected.
+- If the flashcart included a Micro SD card as part of the purchase and a file operation fails, follow this section in full.
+
+### N64 plays the game for xxx minutes before blank screen
+The flashcart uses more power than a stock game and (especially when used in conjunction with other mods or accessories) may cause weak power supplies to "brownout".

@@ -34,3 +34,9 @@ Western Europe and most Japanese characters are fully compatible. Other Unicode 
 
 ### N64 plays the game for xxx minutes before blank screen
 The flashcart uses more power than a stock game and (especially when used in conjunction with other mods or accessories) may cause weak power supplies to "brownout".
+
+### My Clock keeps resetting
+> [!CAUTION]
+> Install the battery correctly (you have likely flattened the tabs by inserting it incorrectly),
+> A quick video tutorial on how to do it correctly can be found here:
+> [![Video tutorial](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)

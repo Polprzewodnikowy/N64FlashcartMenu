@@ -23,7 +23,7 @@ Western Europe and most Japanese characters are fully compatible. Other Unicode 
 
 ### Loading ROM's are slower than on other flashcart menus
 > [!WARNING]
-> On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only decrease in ROM load speed.
+> On the first load of a ROM, the menu may need to create a save file. This may lead to a one-time decrease in ROM load speed.
 
 > [!TIP]
 > An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.

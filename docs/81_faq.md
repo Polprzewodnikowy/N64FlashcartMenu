@@ -19,11 +19,11 @@ On macOS, if you have extracted ROM's from ZIP or other compressed files, run `d
 Delete the file. It will be re-created automatically with the default settings.
 
 ### Filenames have incorrect or missing characters
-Filenames are expected to be written in ASCII, with Western Europe characters fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia, Asia or Middle East regions (to name just a few examples) are not fully supported and may not be displayed.
+Western Europe and most Japanese characters are fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia or Middle East regions (to name just a few examples) may not fully supported and not displayed.
 
 ### Loading ROM's are slower than on other flashcart menus
+> [!WARNING]
+> On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only decrease in ROM load speed.
+
 > [!TIP]
 > An SD formatted to EXFAT with 128 kiB cluster size may improve load speeds.
-
-> [!WARNING]
-> On the first load of a ROM, the menu may need to create a save file. This may lead to a one time only increase in ROM load speed.

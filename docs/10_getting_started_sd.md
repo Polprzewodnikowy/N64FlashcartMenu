@@ -13,7 +13,7 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 > [!TIP]
 > Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and don't require re-formatting.
 
-- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your Micro SD card.
+- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then place it in the root directory of your Micro SD card.
 - Place your ROM files on the Micro SD card, **in any folder except the root directory `menu` folder**.
 - Remove the Micro SD Card from your computer and insert it into the SC64. 
 
@@ -87,9 +87,9 @@ the "cartridge save memory".
 If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
 For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 
-You may also need to pad/trim the files to their original size:
-- For EEPROM 4Kbit games, remove the padding.
-- For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
-
 > [!CAUTION]
 > Saves created with certain emulator versions, or created for a different ROM version (as in revisions of the same game), or region (as in between NTSC and PAL versions of a same game) may be incompatible.
+
+You may also need to pad/trim the files to their original size:
+- For EEPROM 4Kbit games, remove the padding (this may require a hex editor).
+- For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).

@@ -39,6 +39,8 @@ You will need to download a copy of the `sc64deployer` from [here](https://githu
 > Toggle the N64 POWER switch to load and run the ROM.
 
 #### From within the devcontainer
+Select the `flashcart-all` or `flashcart-sc64deployer` dev container.
+
 ##### To the native OS
 It is not currently possible to directly communicate with USB devices from a devcontainer. BUT, you can use a proxy TCP/IP connection as a workaround.  
 To set up a "proxy", open a terminal window on the native OS, then `cd ./tools/sc64` and then `./sc64deployer.exe server`.
@@ -136,6 +138,7 @@ This repo currently uses the `preview` branch as a submodule at a specific commi
 Or rebuild the dev container.
 
 ### Generate documentation
+Select the `doc-builder` dev container.
 Run `doxygen` from the dev container terminal to generate the source documentation:
 
 ```bash

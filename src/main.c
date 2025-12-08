@@ -5,6 +5,8 @@
 
 
 int main (void) {
+    *(volatile uint32_t*)0xA4700004 = 0x40;
+    
     boot_params_t boot_params;
 
     menu_run(&boot_params);

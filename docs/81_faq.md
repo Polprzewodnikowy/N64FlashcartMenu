@@ -7,7 +7,7 @@
 ### My Roms are all in individual ZIP files and it is hassle to extract them before adding them to the SD card
 The menu supports the ability to extract a file from a zipped folder, however it is best to extract them on a PC first.
 You can try running a powershell script to extract them before adding them to the SD card:
-```
+```powershell
 $exts = @("*.n64", "*.z64", "*.v64"); Get-ChildItem -Filter "*.zip" | ForEach-Object { Expand-Archive $_.FullName -DestinationPath "$($_.BaseName)_temp" -Force; Get-ChildItem "$($_.BaseName)_temp\*" -File -Include $exts | Move-Item -Destination .; Remove-Item "$($_.BaseName)_temp" -Recurse -Force }
 ```
 
@@ -37,6 +37,5 @@ The flashcart uses more power than a stock game and (especially when used in con
 
 ### My Clock keeps resetting
 > [!CAUTION]
-> Install the battery correctly (you have likely flattened the tabs by inserting it incorrectly),
-> A quick video tutorial on how to do it correctly can be found here:
-> [![Video tutorial](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)
+> The battery was inserted incorrectly (you have likely flattened the positive tabs by inserting it incorrectly),
+> [![Watch how to install the battery correctly](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)

@@ -1,27 +1,27 @@
-[Return to the index](./00_index.md)
 ## Initial Setup of an SD Card
 
 ### First steps
 Insert the (Micro) SD card to your PC and ensure it is properly formatted to be compatible with your flashcart.
 
-
 #### Preparations for SC64
+
+> [!CAUTION]
+> Install the battery correctly,
+> A quick video tutorial can be found here:
+> [![Video tutorial](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)
 
 > [!TIP]
 > Most (Micro) SD cards are factory formatted to FAT32 or EXFAT and don't require re-formatting.
 
-- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your Micro SD card.
+- Download the latest `sc64menu.n64` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then place it in the root directory of your Micro SD card.
 - Place your ROM files on the Micro SD card, **in any folder except the root directory `menu` folder**.
 - Remove the Micro SD Card from your computer and insert it into the SC64. 
 
-#### Preparations for OTHER supported flashcarts
-- It is recommended to format the SD Card to FAT32 with the default cluster size.
-- Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
-- Remove the Micro SD Card from your computer and insert it into the flashcart.
-
-
 ### Advanced Steps
 Advanced steps are optional, which adds additional capabilities.
+
+#### Add Boxart support
+See the [Boxart](./19_gamepak_boxart.md) page.
 
 #### Add Emulator support
 See the [Emulators](./18_emulators.md) page.
@@ -38,6 +38,10 @@ SD:\
 │
 ├── menu\
 │   │
+│   ├── metadata\
+│   │    ├── N\G\E\E\boxart_front.png
+│   │    ├── N\G\E\E\boxart_back.png
+│   │    └── homebrew\myromname\boxart_front.png
 │   │
 │   ├── 64ddipl\
 │   │    ├── NDDE0.n64
@@ -83,9 +87,12 @@ the "cartridge save memory".
 If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
 For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 
-You may also need to pad/trim the files to their original size:
-- For EEPROM 4Kbit games, remove the padding.
-- For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
-
 > [!CAUTION]
 > Saves created with certain emulator versions, or created for a different ROM version (as in revisions of the same game), or region (as in between NTSC and PAL versions of a same game) may be incompatible.
+
+You may also need to pad/trim the files to their original size:
+- For EEPROM 4Kbit games, remove the padding (this may require a hex editor).
+- For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
+
+### Recommended Action
+- Make sure you regularly back up important files from the SD Card to your computer to avoid accidental loss.

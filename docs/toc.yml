@@ -1,0 +1,52 @@
+- name: Index
+  href: 00_index.md
+- name: Getting Started
+  href: 10_getting_started_sd.md
+- name: Basic Controls
+  href: 11_menu_controls.md
+- name: ROM Configuration
+  href: 12_rom_configuration.md
+- name: Datel Cheats (Gameshark, Action Replay, etc.)
+  href: 13_datel_cheats.md
+- name: ROM Patches (Hacks, Fan Translations, etc.)
+  href: 14_rom_patches.md
+- name: Controller PAKs
+  href: 15_controller_paks.md
+- name: Background Images
+  href: 16_background_images.md
+- name: 64DD
+  href: 17_64dd.md
+- name: Emulators
+  href: 18_emulators.md
+- name: Game Art Images
+  href: 19_gamepak_boxart.md
+- name: Autoloading N64 ROMs
+  href: 22_autoload_roms.md
+- name: Sounds
+  href: 40_sound.md
+- name: File Browser
+  href: 31_file_browser.md
+- name: Menu Settings
+  href: 32_menu_settings.md
+- name: Date-Time (RTC) Settings
+  href: 33_rtc_settings.md
+- name: Menu Information
+  href: 35_menu_information.md
+- name: Flashcart Information
+  href: 36_flashcart_information.md
+- name: N64 Information
+  href: 37_n64_information.md
+- name: MP3 Player
+  href: 41_mp3_player.md
+- name: Advanced Customization
+  href: 61_advanced_customization.md
+- name: N64 Hardware Modifications Compatibility
+  href: 62_hardware_mods.md
+- name: Update the menu
+  href: 80_update_the_menu.md
+- name: FAQ
+  href: 81_faq.md
+- name: Experimental Features
+  href: 65_experimental.md
+- name: Menu Developer Guide
+  href: 99_developer_guide.md

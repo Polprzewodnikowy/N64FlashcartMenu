@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Experimental Features (Subject to change)
 
 ### Cheats

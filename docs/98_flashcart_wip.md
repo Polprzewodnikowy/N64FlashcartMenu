@@ -1,3 +1,8 @@
+## Preparations for OTHER supported flashcarts
+- It is recommended to format the SD Card to FAT32 with the default cluster size.
+- Download the latest [menu](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) file specific for your flashcart and place it in the expected location.
+- Remove the Micro SD Card from your computer and insert it into the flashcart.
+
 ### EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
 Currently not supported, but work is in progress (See [PRs](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
 > [!CAUTION]

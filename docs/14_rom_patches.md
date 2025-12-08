@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## ROM Patches (Hacks, Fan Translations, etc.)
 
 At the time of writing, N64FlashcartMenu does not support patching on-the-fly, although you can use various offline and online utilities to patch your games.

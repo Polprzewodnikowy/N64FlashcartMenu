@@ -4,7 +4,7 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Percentage of issues still open")
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
-# N64 Flashcart Menu
+# N64FlashcartMenu
 An open source menu for N64 flashcarts that aims to support as many as possible.  
 This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 

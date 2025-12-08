@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**",
+          "/src/libs/**",
+          "/libdragon/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "/docs/images/**",
+          "/output/api/docs/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "N64 Flashcart Menu",
+      "_appTitle": "N64 Flashcart Menu",
+      "_appLogoPath": "/docs/images/icon.svg",
+      "_appFaviconPath": "/docs/images/favicon.svg",
+      "_appFooter": "© 2024 N64 Flashcart Menu Contributors",
+      "_enableSearch": true,
+      "pdf": true
+    }
+  }
+}

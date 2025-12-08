@@ -141,7 +141,7 @@ Generated documentation is located in the `output/api/docs`.
 Run `docfx` from the dev container terminal, The full website will now be generated in `_site/` folder.
 documentation is auto-published to the `gh-pages` branch when merged with `main`. Make sure you fix the warnings before creating a PR!
 
-Once merged, they can be viewed [here](https://polprzewodnikowy.github.io/N64FlashcartMenu/).
+Once merged, they can be viewed on the [N64FlashcartMenu website](https://polprzewodnikowy.github.io/N64FlashcartMenu/).
 
 #### Test generated api docs in the dev-container
 Testing the api documentation locally allows you to preview changes and ensure everything renders correctly before submitting your changes.

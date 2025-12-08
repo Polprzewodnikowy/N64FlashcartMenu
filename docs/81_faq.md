@@ -19,7 +19,7 @@ On macOS, if you have extracted ROM's from ZIP or other compressed files, run `d
 Delete the file. It will be re-created automatically with the default settings.
 
 ### Filenames have incorrect or missing characters
-Western Europe and most Japanese characters are fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia or Middle East regions (to name just a few examples) may not fully supported and not displayed.
+Western Europe and most Japanese characters are fully compatible. Other Unicode characters, such as those from Eastern Europe, Russia or Middle East regions (to name just a few examples) may not be fully supported and may not be displayed.
 
 ### Loading ROM's are slower than on other flashcart menus
 > [!WARNING]

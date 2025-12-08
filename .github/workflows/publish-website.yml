@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - develop # TODO: Change to 'main' for production releases
+      - main
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

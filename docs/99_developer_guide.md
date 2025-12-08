@@ -155,7 +155,7 @@ docfx docfx.json
 
 The full website will be generated in the `_site/` folder.
 
-Documentation is auto-published to the `gh-pages` branch when merged with `develop`. Make sure you fix the warnings before creating a PR!
+Documentation is auto-published to the `gh-pages` branch when merged with `main`. Make sure you fix the warnings before creating a PR!
 
 Once merged, they can be viewed on the [N64FlashcartMenu website](https://polprzewodnikowy.github.io/N64FlashcartMenu/).
 

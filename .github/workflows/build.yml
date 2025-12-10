@@ -72,16 +72,16 @@ jobs:
           name: SC64
           path: ./output/sc64menu.n64
 
-    # FIXME: tag releases to main as draft releases
-      - name: Upload rolling pre-release
+    # tag releases to main as draft releases
+      - name: Upload draft release
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          name: Rolling release
+          draft: true
+          # tag_name: 'V0.X.${{ github.event.release.tag_name }}'
           body_path: ${{ github.workspace }}/CHANGELOG.md
-          tag_name: 'rolling_release'
           make_latest: false
-          prerelease: true
+          prerelease: false
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin

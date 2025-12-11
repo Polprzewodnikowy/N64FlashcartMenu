@@ -122,23 +122,23 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run 64DD disk\n"
-            "B: Exit\n"
+            "Ⓐ Load and run 64DD disk\n"
+            "Ⓑ Exit\n"
         );
 
         if (menu->load.rom_path) {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
-                "L|Z: Load with ROM\n"
-                "  R:       Options\n"
+                "Ⓛ|Ⓩ Load with ROM\n"
+                "   Ⓡ       Options\n"
             );
         } else {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
                 "\n"
-                "R:   Options\n"
+                "Ⓡ   Options\n"
             );
         }
 

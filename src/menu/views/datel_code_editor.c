@@ -410,15 +410,15 @@ static void draw (menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "A: Apply to ROM\n"
-        "B: Back"
+        "Ⓐ Apply to ROM\n"
+        "Ⓑ Back"
     );
 
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "L|Z: Save changes\n"
-        "  R: Item options\n"
+        "Ⓛ|Ⓩ Save changes\n"
+        "   Ⓡ Item options\n"
     );
 
     ui_components_context_menu_draw(&options_context_menu);
@@ -440,7 +440,7 @@ static void draw (menu_t *menu, surface_t *display) {
     if (show_message_save_confirm) {
         ui_components_messagebox_draw(
             "Overwrite file?\n\n"
-            "A: Yes, B: No"
+            "Ⓐ Yes, Ⓑ No"
         );
     }
 

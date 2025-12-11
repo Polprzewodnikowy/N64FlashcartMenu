@@ -169,8 +169,8 @@ static void draw (menu_t *menu, surface_t *d) {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
-                "A: Adjust time\n"
-                "B: Back"
+                "Ⓐ Adjust time\n"
+                "Ⓑ Back"
             );
          }
          else {
@@ -192,7 +192,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
-                "B: Back"
+                "Ⓑ Back"
             );
          }
     }
@@ -206,8 +206,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "R: Save\n"
-            "B: Back"
+            "Ⓡ Save\n"
+            "Ⓑ Back"
         );
     }
 

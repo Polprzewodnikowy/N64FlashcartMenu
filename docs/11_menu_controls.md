@@ -27,5 +27,8 @@ selected ROM file, such as its endianness, regional variant, set clock rate, and
 #### Expansion disks
 To load an expansion disk (such as F-Zero X), first browse to the N64 ROM and load it (**but not start it!**), then browse to the 64DD expansion file and press either the `L` or `Z` button.
 
+> [!TIP]
+> Before pressing the `L` or `Z` button, Press the `R` button and add the combination (ROM + Expansion disk) to your favorites.
+
 #### Disk swapping
 This feature is not currently available in N64FlashcartMenu.

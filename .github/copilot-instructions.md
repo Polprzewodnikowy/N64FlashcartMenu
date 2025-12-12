@@ -50,11 +50,12 @@ This file contains focused, actionable knowledge to help an assistant become pro
 - Update a flashcart low-level routine: edit `src/flashcart/sc64/sc64_ll.c` or the corresponding `*_ll.c` file.
 
 ### Tests & linting
-- There are no automated unit tests present. `Makefile` has a commented `test` placeholder.
+- There are no automated unit tests currently present. `Makefile` has a commented `test` placeholder ready for action.
 - Use `make format` to apply `clang-format` across the repository sources.
 
 ### Where to look for documentation and help
 - User/developer docs: `docs/*.md` and generated `_site/` HTML.
 - Toolchain and low-level N64 details: [libdragon/README.md](libdragon/README.md)
 
+Document any errors encountered as well as the steps taken to work-around them.
 If any area above is unclear or you'd like more detail (examples, specific functions to inspect, or CI notes), tell me which section to expand and I will iterate.

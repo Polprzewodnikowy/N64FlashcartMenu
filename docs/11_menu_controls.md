@@ -1,5 +1,6 @@
 ## Basic Controls
-<!-- Could use a sample screenshot of the controller and labels here -->
+All menu interactions are performed using the controller and its associated buttons.
+![Controller button layout](./images/controller.png "Controller button layout") 
 
 ### File Browser
 See [File Brower operations](31_file_browser.md) for additional information.

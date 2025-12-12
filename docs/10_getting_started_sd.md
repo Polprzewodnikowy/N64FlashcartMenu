@@ -6,8 +6,8 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 #### Preparations for SC64
 
 > [!CAUTION]
-> Install the battery correctly,
-> A quick video tutorial can be found here:
+> Install the battery correctly, most issues encountered are due to the positive battery terminals being bent due to forced insertion.
+> A quick video tutorial on correct insertion can be found here:
 > [![Video tutorial](https://img.youtube.com/vi/LV5Aj_P3U_E/default.jpg)](https://www.youtube.com/shorts/LV5Aj_P3U_E)
 
 > [!TIP]

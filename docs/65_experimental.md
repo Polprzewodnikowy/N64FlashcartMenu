@@ -21,15 +21,15 @@ The age rating of the original ROM as matched to the [ESRB](https://www.esrb.org
 ```
     esrb_age_rating=0   /**< No age rating defined */
     esrb_age_rating=1   /**< Everyone */
-    esrb_age_rating=2   /**< Everyone 10+ */
-    esrb_age_rating=3   /**< Teen */
-    esrb_age_rating=4   /**< Mature */
-    esrb_age_rating=5   /**< Adults Only */
+    esrb_age_rating=10   /**< Everyone 10+ */
+    esrb_age_rating=13   /**< Teen */
+    esrb_age_rating=17   /**< Mature */
+    esrb_age_rating=18   /**< Adults Only */
 ```
 an example for an age rating of "Everyone 10+" would be:
 ```ini
 [metadata]
-esrb_age_rating=2
+esrb_age_rating=10
 ```
 
 Note: [PEGI](https://pegi.info/) support may be added as an option at a later date.

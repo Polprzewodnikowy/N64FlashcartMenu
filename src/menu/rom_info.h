@@ -115,10 +115,10 @@ typedef enum {
 typedef enum {
     ROM_ESRB_AGE_RATING_NONE = 0,                /**< No age rating defined */
     ROM_ESRB_AGE_RATING_EVERYONE = 1,            /**< Everyone */
-    ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS = 2,    /**< Everyone 10+ */
-    ROM_ESRB_AGE_RATING_TEEN = 3,                /**< Teen */
-    ROM_ESRB_AGE_RATING_MATURE = 4,              /**< Mature */
-    ROM_ESRB_AGE_RATING_ADULT = 5,               /**< Adults Only */
+    ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS = 10,    /**< Everyone 10+ */
+    ROM_ESRB_AGE_RATING_TEEN = 13,                /**< Teen */
+    ROM_ESRB_AGE_RATING_MATURE = 17,              /**< Mature */
+    ROM_ESRB_AGE_RATING_ADULT = 18,               /**< Adults Only */
 }
 rom_esrb_age_rating_t;
 

@@ -83,16 +83,18 @@ the "cartridge save memory".
         └── b_rom_whatever.sav
 ```
 
-### Transferring saves from an ED64
-If you are transferring a file from a different flashcart, such as the ED64, you must change the file extension to `sav`. 
+### Transferring saves from an ED64 or emulator
+If you are transferring a file from a different flashcart, such as the ED64, or an emulator you must change the file extension to `sav`. 
 For example, a save file called `Glover (USA).eep` should have its extension changed to `Glover (USA).sav` to work with N64FlashcartMenu.
 
 > [!CAUTION]
 > Saves created with certain emulator versions, or created for a different ROM version (as in revisions of the same game), or region (as in between NTSC and PAL versions of a same game) may be incompatible.
 
-You may also need to pad/trim the files to their original size:
-- For EEPROM 4Kbit games, remove the padding (this may require a hex editor).
-- For others, use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
+Dependent on the original save, you may need to correct the byte order and/or pad/trim the files to their expected size:
+
+> [!TIP]
+> use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
+> Certain files may need parsing multiple times.
 
 ### Recommended Action
 - Make sure you regularly back up important files from the SD Card to your computer to avoid accidental loss.

@@ -2,6 +2,8 @@
   href: docs/
 - name: Contributing
   href: CONTRIBUTING.md
+- name: Changelog
+  href: CHANGELOG.md
 - name: API Reference
   href: output/api/docs/index.html
 - name: License

@@ -1,10 +1,15 @@
 ## Experimental Features (Subject to change)
 
+### Controller Paks
+See: [Controller Paks](15_controller_paks.md)
+
 ### Cheats
 See: [Cheats (Gameshark, etc.)](./13_datel_cheats.md)
 
 ### Rom information metadata
 To show certain (metadata) information on the N64 ROM information screen, add a `.ini` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
+
+The aim is to add full support for [https://n64brew.dev/wiki/ROM_Metadata](https://n64brew.dev/wiki/ROM_Metadata)
 
 > [!TIP]
 > A rom called `my N64 game rom.z64` will load Rom information metadata from `my N64 game rom.ini`.
@@ -12,29 +17,42 @@ To show certain (metadata) information on the N64 ROM information screen, add a 
 and the following content under the file content header:
 
 ```ini
-[metadata]
+[meta]
 ```
 Examples of the "key=values" are:
 
-#### ROM age rating
-The age rating of the original ROM as matched to the [ESRB](https://www.esrb.org/) rating (at the time of the game release). 
-```
-    esrb_age_rating=0   /**< No age rating defined */
-    esrb_age_rating=1   /**< Everyone */
-    esrb_age_rating=10   /**< Everyone 10+ */
-    esrb_age_rating=13   /**< Teen */
-    esrb_age_rating=17   /**< Mature */
-    esrb_age_rating=18   /**< Adults Only */
+#### ROM minimum age rating
+The minimum age rating of the game.  
+
+In future, this can be used for content filtering.  
+Any number can be used and the menu will (currently) try to align it with the [ESRB](https://www.esrb.org/) rating;  
+```ini
+    age_rating=0    /**< No age rating defined */
+    age_rating=1    /**< Everyone */
+    age_rating=10   /**< Everyone 10+ */
+    age_rating=13   /**< Teen */
+    age_rating=17   /**< Mature */
+    age_rating=18   /**< Adults Only */
 ```
 an example for an age rating of "Everyone 10+" would be:
 ```ini
-[metadata]
-esrb_age_rating=10
+[meta]
+; Self-certified age rating for the game. This is a number
+; identifying the minimum suggested age for a player (0-18).
+; This allows readers to provide some kind of content filtering
+; capability. You can follow ESBR/PEGI guidelines to get
+; some suggestions on this.
+age_rating=10
 ```
 
-Note: [PEGI](https://pegi.info/) support may be added as an option at a later date.
-In future, this can be of use for content filtering.
-
+#### ROM release date
+The release date of the game.
+This will not yet be shown in the menu.  
+```ini
+[meta]
+; Release date of the game. Use YYYY-MM-DD format.
+release-date = 2025-11-04
+```
 
 ### Customizing the font
 The N64FlashcartMenu allows the ability to test new fonts or adding regional characters without recompiling the menu. However the font is explicitly linked to the currently used version of the libdragon SDK.  

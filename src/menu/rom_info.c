@@ -755,7 +755,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
     }
 
-    rom_info->metadata.esrb_age_rating = ROM_ESRB_AGE_RATING_NONE;
+    rom_info->meta.age_rating = 0;
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
 }
@@ -776,8 +776,8 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
         rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
 
-        // metadata
-        rom_info->metadata.esrb_age_rating = mini_get_int(rom_config_ini, "metadata", "esrb_age_rating", ROM_ESRB_AGE_RATING_NONE);
+        // meta
+        rom_info->meta.age_rating = mini_get_int(rom_config_ini, "meta", "age_rating", 0);
         
         // overrides
         rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);

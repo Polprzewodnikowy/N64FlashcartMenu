@@ -12,6 +12,7 @@ The N64FlashcartMenu allows overriding the ROM's database through the Rom Info m
 
 ### Homebrew Header
 The N64FlashcartMenu fully supports the [homebrew header](https://n64brew.dev/wiki/ROM_Header#Advanced_Homebrew_ROM_Header)
+ROM's that use this do not need to be in the internal database and are automatically setup using its suggested settings.
 
 ### Available Manual Overrides
 Overrides will be stored in a file `<rom name>.ini` adjacent to the ROM.

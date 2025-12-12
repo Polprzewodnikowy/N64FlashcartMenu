@@ -16,7 +16,7 @@ ROM's that use this do not need to be in the internal database and are automatic
 
 ### Available Manual Overrides
 Overrides will be stored in a file `<rom name>.ini` adjacent to the ROM.
-If you override the defaults and want to go back to the default ones, delete the `<rom name>.ini` file.
+If you override the defaults and want to go back to the default ones, delete the `<rom name>.ini` file.  
 ![ROM advanced options menu](./images/rom-advanced-options.png "ROM advanced options menu") 
 
 #### CIC type

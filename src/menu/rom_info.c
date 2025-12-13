@@ -755,8 +755,12 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
     }
 
-    rom_info->meta.age_rating = 0;
+    rom_info->meta.name = "";
+    rom_info->meta.author = "";
     rom_info->meta.release_date = "";
+    rom_info->meta.osi_license = "";
+    rom_info->meta.website = "";
+    rom_info->meta.age_rating = 0;
     rom_info->meta.short_description = "";
 
     rom_info->settings.cheats_enabled = false;

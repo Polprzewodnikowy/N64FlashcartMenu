@@ -7,15 +7,18 @@ See: [Controller Paks](15_controller_paks.md)
 See: [Cheats (Gameshark, etc.)](./13_datel_cheats.md)
 
 ### Rom information metadata
-To show certain (metadata) information on the N64 ROM information screen, add a `.meta` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
-Although the filename is .meta, its content is based on an `ini` file.
+To show certain (metadata) information on the N64 ROM information screen, add a `.meta.txt` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
+Although the filename is `.meta.txt`, its content is based on an `ini` file.
 
 The aim is to add full support for [https://n64brew.dev/wiki/ROM_Metadata](https://n64brew.dev/wiki/ROM_Metadata)
 
 > [!TIP]
-> A rom called `my N64 game rom.z64` will load Rom information metadata from `my N64 game rom.meta`.
+> A rom called `my N64 game rom.z64` will load Rom information metadata from `my N64 game rom.meta.txt`.
 
 and the following content under the file content header:
+
+> [!WARNING]
+> The line endings must be `LF`.
 
 ```ini
 [meta]
@@ -52,7 +55,7 @@ This will not yet be shown in the menu.
 ```ini
 [meta]
 ; Release date of the game. Use YYYY-MM-DD format.
-release-date = 2025-11-04
+release-date=2025-11-04
 ```
 
 #### ROM Short description
@@ -62,7 +65,7 @@ A short description with a length of 120 characters.
 ; Short description of the game, to be displayed in
 ; menu or ROM managers. Suggested maximum length is
 ; 120 chars.
-short-desc = Shoot your way to the heaven, fighting against birds and aliens
+short-desc=Shoot your way to the heaven, fighting against birds and aliens
 ```
 
 ### Customizing the font

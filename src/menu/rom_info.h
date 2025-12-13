@@ -165,14 +165,14 @@ typedef struct {
     } settings;                     /**< The ROM settings */
 
     struct {
-        char *name;          /**< The game release name */
-        char *author;        /**< The game author or developer */
-        char *release_date;  /**< The game release date */
-        char *osi_license;  /**< The game OSI license type */
-        char *website;      /**< The game official website URL */
-        uint32_t age_rating;    /**< The minimum game age rating */
-        char *short_description; /**< The short game description */
-    } meta;                     /**< The ROM metadata */
+        char *name;                 /**< The game release name */
+        char *author;               /**< The game author or developer */
+        char *release_date;         /**< The game release date */
+        char *osi_license;          /**< The game OSI license type */
+        char *website;              /**< The game official website URL */
+        uint32_t age_rating;        /**< The minimum game age rating */
+        char *short_description;    /**< The short game description */
+    } meta;                         /**< The ROM metadata */
 } rom_info_t;
 
 /**

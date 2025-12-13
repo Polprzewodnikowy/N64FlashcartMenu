@@ -771,11 +771,13 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     mini_t *rom_meta_ini = mini_load(path_get(rom_info_meta_path));
 
     if (rom_meta_ini) {
-        rom_info->meta.age_rating = mini_get_int(rom_meta_ini, "meta", "age_rating", 0);
-        // FIXME: potential memory issue: currently just pointing to mini INI internal data without handling max length
-        rom_info->meta.short_description = strdup(mini_get_string(rom_meta_ini, "meta", "short-desc", ""));
-
+        rom_info->meta.name = strdup(mini_get_string(rom_meta_ini, "meta", "name", ""));
+        rom_info->meta.author = strdup(mini_get_string(rom_meta_ini, "meta", "author", ""));
         rom_info->meta.release_date = strdup(mini_get_string(rom_meta_ini, "meta", "release-date", ""));
+        rom_info->meta.osi_license = strdup(mini_get_string(rom_meta_ini, "meta", "osi-license", ""));
+        rom_info->meta.website = strdup(mini_get_string(rom_meta_ini, "meta", "website", ""));
+        rom_info->meta.age_rating = mini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.short_description = strdup(mini_get_string(rom_meta_ini, "meta", "short-desc", ""));
 
         mini_free(rom_meta_ini);
     }

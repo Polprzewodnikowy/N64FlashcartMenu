@@ -31,12 +31,12 @@ The minimum age rating of the game.
 In future, this can be used for content filtering.  
 Any number can be used and the menu will (currently) try to align it with the [ESRB](https://www.esrb.org/) rating;  
 ```ini
-    age_rating=0    /**< No age rating defined */
-    age_rating=1    /**< Everyone */
-    age_rating=10   /**< Everyone 10+ */
-    age_rating=13   /**< Teen */
-    age_rating=17   /**< Mature */
-    age_rating=18   /**< Adults Only */
+    age-rating=0    /**< No age rating defined */
+    age-rating=1    /**< Everyone */
+    age-rating=10   /**< Everyone 10+ */
+    age-rating=13   /**< Teen */
+    age-rating=17   /**< Mature */
+    age-rating=18   /**< Adults Only */
 ```
 an example for an age rating of "Everyone 10+" would be:
 ```ini
@@ -46,7 +46,7 @@ an example for an age rating of "Everyone 10+" would be:
 ; This allows readers to provide some kind of content filtering
 ; capability. You can follow ESBR/PEGI guidelines to get
 ; some suggestions on this.
-age_rating=10
+age-rating=10
 ```
 
 #### ROM release date
@@ -73,4 +73,3 @@ The N64FlashcartMenu allows the ability to test new fonts or adding regional cha
 Add a `font64` file to the `sd:/menu/` directory called `custom.font64`.
 
 You can build a font64 file with `Mkfont`, one of `libdragon`'s tools. At the time of writing, you will need to obtain `libdragon`'s [preview branch artifacts](https://github.com/DragonMinded/libdragon/actions/workflows/build-tool-windows.yml) to find out a copy of the prebuilt Windows executable. [Read its related Wiki page](https://github.com/DragonMinded/libdragon/wiki/Mkfont) for usage information.
-

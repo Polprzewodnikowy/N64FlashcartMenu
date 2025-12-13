@@ -756,8 +756,31 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 
     rom_info->meta.age_rating = 0;
+    rom_info->meta.release_date = "";
+    rom_info->meta.short_description = "";
+
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
+}
+
+static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
+    path_t *rom_info_meta_path = path_clone(path);
+
+    path_ext_replace(rom_info_meta_path, "meta.txt");
+
+    mini_t *rom_meta_ini = mini_load(path_get(rom_info_meta_path));
+
+    if (rom_meta_ini) {
+        rom_info->meta.age_rating = mini_get_int(rom_meta_ini, "meta", "age_rating", 0);
+        // FIXME: potential memory issue: currently just pointing to mini INI internal data without handling max length
+        rom_info->meta.short_description = strdup(mini_get_string(rom_meta_ini, "meta", "short-desc", ""));
+
+        rom_info->meta.release_date = strdup(mini_get_string(rom_meta_ini, "meta", "release-date", ""));
+
+        mini_free(rom_meta_ini);
+    }
+
+    path_free(rom_info_meta_path);
 }
 
 static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
@@ -775,9 +798,6 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         // general
         rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
         rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
-
-        // meta
-        rom_info->meta.age_rating = mini_get_int(rom_config_ini, "meta", "age_rating", 0);
         
         // overrides
         rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
@@ -957,6 +977,8 @@ rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     extract_rom_info(&match, &rom_header, rom_info);
 
     load_rom_config_from_file(path, rom_info);
+
+    load_rom_meta_from_file(path, rom_info);
 
     return ROM_OK;
 }

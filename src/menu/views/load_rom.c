@@ -94,7 +94,11 @@ static void scan_metadata_images(menu_t *menu) {
 }
 
 static const char *format_rom_description(menu_t *menu) {
-    char *rom_description = NULL;
+    const char *rom_description = NULL;
+
+    if (menu->load.rom_info.meta.short_description != NULL && strlen(menu->load.rom_info.meta.short_description) > 0) {
+        rom_description = menu->load.rom_info.meta.short_description;
+    }
 
     return rom_description ? rom_description : "No description available.";
 }
@@ -463,7 +467,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\t%.300s\n",
+            "\n\n\t%.120s\n",
             format_rom_description(menu)
             
         );

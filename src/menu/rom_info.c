@@ -770,7 +770,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     path_t *rom_info_meta_path = path_clone(path);
 
-    path_ext_replace(rom_info_meta_path, "meta.txt");
+    path_ext_replace(rom_info_meta_path, "meta");
 
     mini_t *rom_meta_ini = mini_load(path_get(rom_info_meta_path));
 

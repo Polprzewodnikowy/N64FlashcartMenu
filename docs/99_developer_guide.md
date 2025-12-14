@@ -145,7 +145,7 @@ Run `doxygen` from the dev container terminal to generate the source documentati
 doxygen
 ```
 
-Generated source documentation is located in the `output/api/docs`.
+Generated source documentation is located in the `docs/api/docs`.
 
 Run `docfx` from the dev container terminal to generate the full website:
 
@@ -170,7 +170,7 @@ gem install jekyll bundler
 
 You can then serve the webpage:
 ```bash
-cd output/api/docs && jekyll serve
+cd docs/api/docs && jekyll serve
 ```
 
 #### Test generated website in the dev-container

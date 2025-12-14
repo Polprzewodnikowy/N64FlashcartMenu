@@ -16,8 +16,7 @@
     "resource": [
       {
         "files": [
-          "/docs/images/**",
-          "/docs/api/docs/**"
+          "/docs/images/**"
         ]
       }
     ],

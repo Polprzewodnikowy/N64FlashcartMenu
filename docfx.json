@@ -17,7 +17,7 @@
       {
         "files": [
           "/docs/images/**",
-          "/docs/api/**"
+          "/docs/api/docs/**"
         ]
       }
     ],

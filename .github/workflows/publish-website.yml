@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - develop
+      - develop-docs
+  workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -23,22 +25,20 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@v6
-    - name: Dotnet Setup
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: 8.x
 
-    - name: Run Doxygen to generate API docs
-      uses: mattnotmitt/doxygen-action@v1
+    - name: Build documentation site
+      uses: devcontainers/ci@v0.3
       with:
-        doxyfile-path: './Doxyfile'
-
-    - run: dotnet tool update -g docfx
-    - run: docfx docfx.json
+        configFile: .devcontainer/doc-builder/devcontainer.json
+        runCmd: |
+          doxygen Doxyfile
+          docfx docfx.json
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v4
@@ -47,6 +47,6 @@ jobs:
         path: '_site'
 
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop-docs'
       id: deployment
       uses: actions/deploy-pages@v4

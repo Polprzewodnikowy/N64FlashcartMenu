@@ -37,7 +37,7 @@ jobs:
       with:
         configFile: .devcontainer/doc-builder/devcontainer.json
         runCmd: |
-          doxygen Doxyfile
+          doxygen
           docfx docfx.json
 
     - name: Upload artifact

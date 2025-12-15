@@ -37,7 +37,6 @@ jobs:
       with:
         configFile: .devcontainer/doc-builder/devcontainer.json
         runCmd: |
-          mkdir -p /output/api
           doxygen
           docfx docfx.json
 

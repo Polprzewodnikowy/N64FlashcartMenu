@@ -19,9 +19,14 @@
 **/*.n64
 **/*.v64
 **/*.z64
+**/*.rom
 
 # Ignore exe files
 *.exe
 
 # Ignore macOS filesystem cruft
 .DS_Store
+
+# Dont ignore the default emulator or 64ddipl files
+!/filesystem/menu/emulators/*
+!/filesystem/menu/64ddipl/*

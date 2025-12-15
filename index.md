@@ -1,4 +1,4 @@
 [!include [getting-started](README.md)]
 
-If you see this; A better website is being uploaded!
-Give it 5 minutes...
+<p>If you see this; A better website is being uploaded!
+Give it 5 minutes... </p>

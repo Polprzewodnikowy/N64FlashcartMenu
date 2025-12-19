@@ -36,9 +36,8 @@ Western Europe and most Japanese characters are fully compatible. Other Unicode 
 The flashcart uses more power than a stock game and (especially when used in conjunction with other mods or accessories) may cause weak power supplies to "brownout".
 
 ### My games crash
-The flashcart will use more power than an original cartridge, Be sure to check the power supply.
-If this still happens and it is an original known dump of a commercial game; 
-- it is possible that an anti-piracy check is occuring (please raise an issue).
+The flashcart uses more power than an original cartridge. Check the power supply first.
+If this still happens, and it is an original known dump of a commercial game, an anti-piracy check may be occurring (please raise an issue).
 
 ### My Clock keeps resetting
 > [!CAUTION]

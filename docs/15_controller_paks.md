@@ -4,7 +4,7 @@ This feature still relies on a controller PAK being "plugged in" to a physical c
 > [!WARNING]
 > **THIS FEATURE IS EXPERIMENTAL**
 
-The N64FlashcartMenu has a Controller Pak Manager.
+The N64FlashcartMenu has a Controller Pak Manager accessed from the `Start` button within the main file browser.
 
 > [!CAUTION]
 > Mileage may vary when hot swapping paks without exiting and re-entering the screen (and may contain incorrect content), and/or re-powering the console.

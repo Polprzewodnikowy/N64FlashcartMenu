@@ -1,10 +1,10 @@
 {
-    "name": "N64FlashcartMenu",
+    "name": "N64FlashcartMenu-sc64deployer",
     "build": {
-        "dockerfile": "Dockerfile.all"
+        "dockerfile": "Dockerfile.sc64deployer"
     },
     "mounts": [
-        "source=n64flashcartmenu-bashhistory,target=/commandhistory,type=volume"
+        "source=n64flashcartmenu-flashcart-bashhistory,target=/commandhistory,type=volume"
     ],
     "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j",
     "customizations": {

@@ -27,8 +27,12 @@ Caveats:
 ### Enable Cheats
 Ensure you have a cheat file and have accessed the Datel Code Editor screen, then from the ROM info screen, press `R` to set `Use Cheats` to `Enabled`.
 
+![MM ROM info](./images/rom-info-NZSE.png "MM ROM info")  
+
 #### Datel Code Editor
 When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adjust the cheat codes as needed then press `A` to `Apply ROM with these cheats`.
+
+![MM Datel Code Editor](./images/datel-code-editor-NZSE.png "MM Datel Code Editor")  
 
 > [!WARNING]
 > Any changes made in the code editor are totally volatile (i.e. not saved when returning to the current screen). Press `L|Z` to save them.

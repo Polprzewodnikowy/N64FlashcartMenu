@@ -1,6 +1,4 @@
-# Rolling release
-built from latest commit on main branch.  
-**Note**: the attached source code files may be out of date.
+# Release Notes
 
 - For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.

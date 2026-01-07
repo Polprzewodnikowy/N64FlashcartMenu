@@ -94,7 +94,11 @@ static void scan_metadata_images(menu_t *menu) {
 }
 
 static const char *format_rom_description(menu_t *menu) {
-    char *rom_description = NULL;
+    const char *rom_description = NULL;
+
+    if (menu->load.rom_info.meta.short_description != NULL && strlen(menu->load.rom_info.meta.short_description) > 0) {
+        rom_description = menu->load.rom_info.meta.short_description;
+    }
 
     return rom_description ? rom_description : "No description available.";
 }
@@ -216,15 +220,27 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
-static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
-    switch (esrb_age_rating) {
-        case ROM_ESRB_AGE_RATING_NONE: return "None";
-        case ROM_ESRB_AGE_RATING_EVERYONE: return "Everyone";
-        case ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS: return "Everyone 10+";
-        case ROM_ESRB_AGE_RATING_TEEN: return "Teen";
-        case ROM_ESRB_AGE_RATING_MATURE: return "Mature";
-        case ROM_ESRB_AGE_RATING_ADULT: return "Adults Only";
-        default: return "Unknown";
+static const char *format_age_rating (uint32_t age_rating) {
+    if (age_rating >= 18) {
+        return "Adults Only";
+    }
+    else if (age_rating == 17) {
+        return "Mature";
+    }
+    else if (age_rating >= 13) {
+        return "Teen";
+    }
+    else if (age_rating >= 10) {
+        return "Everyone 10+";
+    }
+    else if (age_rating == 1) {
+        return "Everyone";
+    }
+    if (age_rating == 0) {
+        return "None";
+    }
+    else {
+        return "Unknown";
     }
 }
 
@@ -451,7 +467,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\t%.300s\n",
+            "\n\n\t%.120s\n",
             format_rom_description(menu)
             
         );
@@ -504,7 +520,8 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Media type: %s\n"
                 "Variant: %s\n"
                 "Version: %hhu\n"
-                "ESRB Age Rating: %s\n"
+                "Age Rating: %s\n"
+                "Release Date: %s\n"
                 "Check code: 0x%016llX\n"
                 "CIC: %s\n"
                 "Boot address: 0x%08lX\n"
@@ -517,7 +534,8 @@ static void draw (menu_t *menu, surface_t *d) {
                 format_rom_media_type(menu->load.rom_info.category_code),
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
-                format_esrb_age_rating(menu->load.rom_info.metadata.esrb_age_rating),
+                format_age_rating(menu->load.rom_info.meta.age_rating),
+                menu->load.rom_info.meta.release_date,
                 menu->load.rom_info.check_code,
                 format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
                 menu->load.rom_info.boot_address,

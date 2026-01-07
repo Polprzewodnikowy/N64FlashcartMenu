@@ -37,13 +37,6 @@
 
 static menu_t *menu;
 
-/** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
- *  with hardware mods that don't really understand the VI output.
- **/
-static tv_type_t tv_type;
-extern int __boot_tvtype;
-/* -- */
-
 static bool interlaced = true;
 
 /**
@@ -94,11 +87,15 @@ static void menu_init (boot_params_t *boot_params) {
     menu->load.load_favorite_id = -1;
     path_pop(path);
   
-    if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output
-        tv_type = get_tv_type();
-        if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
-            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-            __boot_tvtype = (int)TV_NTSC;
+    if (menu->settings.pal60_enabled) { // it is not given that hardware VI mods understand the output
+        tv_type_t tv_type = get_tv_type();
+        if (tv_type == TV_PAL) {
+            // Set VI timing so it will use 60Hz signal.
+            vi_set_timing_preset(&VI_TIMING_PAL60);
+
+            // FIXME: timeout and restore to PAL 50Hz if not shown, 
+            // this should be added as a button confirm, or reset combo, rather than re-setting via manual edit of the INI?.
+            //vi_set_timing_preset(&VI_TIMING_PAL);
         }
     }
 
@@ -109,7 +106,6 @@ static void menu_init (boot_params_t *boot_params) {
         .width = 640,
         .height = 480,
         .interlaced = interlaced ? INTERLACE_HALF : INTERLACE_OFF,
-        .pal60 = menu->settings.pal60_enabled, // this may be overridden by the PAL60 compatibility mode.
     };
 
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, interlaced ? FILTERS_DISABLED : FILTERS_RESAMPLE);

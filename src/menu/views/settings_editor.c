@@ -57,11 +57,6 @@ static void set_pal60_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-static void set_mod_pal60_compatibility_type (menu_t *menu, void *arg) {
-    menu->settings.pal60_compatibility_mode = (bool)(uintptr_t)(arg);
-    settings_save(&menu->settings);
-}
-
 static void set_show_browser_file_extensions_type(menu_t *menu, void *arg) {
     menu->settings.show_browser_file_extensions = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -178,18 +173,6 @@ static component_context_menu_t set_pal60_type_context_menu = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static int get_pal60_mod_compatibility_current_selection (menu_t *menu) {
-    return menu->settings.pal60_compatibility_mode ? 0 : 1;
-}
-
-static component_context_menu_t set_pal60_mod_compatibility_type_context_menu = {
-    .get_default_selection = get_pal60_mod_compatibility_current_selection,
-    .list = {
-        {.text = "On", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(true) },
-        {.text = "Off", .action = set_mod_pal60_compatibility_type, .arg = (void *)(uintptr_t)(false) },
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-
 static int get_show_browser_file_extensions_current_selection (menu_t *menu) {
     return menu->settings.show_browser_file_extensions ? 0 : 1;
 }
@@ -251,7 +234,6 @@ static component_context_menu_t options_context_menu = { .list = {
 #endif
 #ifdef BETA_SETTINGS
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
-    { .text = "PAL60 Compatibility", .submenu = &set_pal60_mod_compatibility_type_context_menu },
     { .text = "Hide ROM Extensions", .submenu = &set_show_browser_file_extensions_context_menu },
     { .text = "Hide ROM Tags", .submenu = &set_show_browser_rom_tags_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
@@ -321,7 +303,6 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
 #ifdef BETA_SETTINGS
         "*    PAL60 Mode        : %s\n"
-        "*    PAL60 Mod Compat  : %s\n"
         "     Hide ROM Extension: %s\n"
         "     Hide ROM Tags     : %s\n"
         "     Background Music  : %s\n"
@@ -345,7 +326,6 @@ static void draw (menu_t *menu, surface_t *d) {
 #ifdef BETA_SETTINGS
         ,
         format_switch(menu->settings.pal60_enabled),
-        format_switch(menu->settings.pal60_compatibility_mode),
         format_switch(menu->settings.show_browser_file_extensions),
         format_switch(menu->settings.show_browser_rom_tags),
         format_switch(menu->settings.bgm_enabled),

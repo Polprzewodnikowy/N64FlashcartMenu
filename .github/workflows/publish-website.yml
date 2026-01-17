@@ -3,10 +3,10 @@ on:
   # pull_request:
   push:
     branches:
-      # - main
+      - main
       # - develop
       - develop-docs
-  # workflow_dispatch:
+  workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

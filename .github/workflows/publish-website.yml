@@ -1,12 +1,12 @@
 # Trigger the action
 on:
-  pull_request:
+  # pull_request:
   push:
     branches:
-      - main
-      - develop
+      # - main
+      # - develop
       - develop-docs
-  workflow_dispatch:
+  # workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:

@@ -44,6 +44,11 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_pal60_type (menu_t *menu, void *arg) {
+    menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
     menu->settings.rom_fast_reboot_enabled = (bool)(uintptr_t)(arg);
@@ -52,11 +57,6 @@ static void set_use_rom_fast_reboot_enabled_type (menu_t *menu, void *arg) {
 #endif
 
 #ifdef BETA_SETTINGS
-static void set_pal60_type (menu_t *menu, void *arg) {
-    menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
-    settings_save(&menu->settings);
-}
-
 static void set_show_browser_file_extensions_type(menu_t *menu, void *arg) {
     menu->settings.show_browser_file_extensions = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
@@ -146,6 +146,18 @@ static component_context_menu_t set_show_saves_folder_type_context_menu = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
+static int get_pal60_current_selection (menu_t *menu) {
+    return menu->settings.pal60_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_pal60_type_context_menu = {
+    .get_default_selection = get_pal60_current_selection,
+    .list = {
+        {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED
 static int get_use_rom_fast_reboot_current_selection (menu_t *menu) {
     return menu->settings.rom_fast_reboot_enabled ? 0 : 1;
@@ -161,18 +173,6 @@ static component_context_menu_t set_use_rom_fast_reboot_context_menu = {
 #endif
 
 #ifdef BETA_SETTINGS
-static int get_pal60_current_selection (menu_t *menu) {
-    return menu->settings.pal60_enabled ? 0 : 1;
-}
-
-static component_context_menu_t set_pal60_type_context_menu = {
-    .get_default_selection = get_pal60_current_selection,
-    .list = {
-        {.text = "On", .action = set_pal60_type, .arg = (void *)(uintptr_t)(true) },
-        {.text = "Off", .action = set_pal60_type, .arg = (void *)(uintptr_t)(false) },
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-
 static int get_show_browser_file_extensions_current_selection (menu_t *menu) {
     return menu->settings.show_browser_file_extensions ? 0 : 1;
 }
@@ -227,13 +227,13 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
-#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+    { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
+    #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     { .text = "ROM Loading Bar", .submenu = &set_loading_progress_bar_enabled_context_menu },
 #else
     { .text = "Fast Reboot ROM", .submenu = &set_use_rom_fast_reboot_context_menu },
 #endif
 #ifdef BETA_SETTINGS
-    { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
     { .text = "Hide ROM Extensions", .submenu = &set_show_browser_file_extensions_context_menu },
     { .text = "Hide ROM Tags", .submenu = &set_show_browser_rom_tags_context_menu },
     { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
@@ -295,28 +295,28 @@ static void draw (menu_t *menu, surface_t *d) {
         "     Sound Effects     : %s\n"
         "     Use Saves folder  : %s\n"
         "     Show Saves folder : %s\n"
+        "*    PAL60 Mode        : %s\n"
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-        "  Autoload ROM      : %s\n\n"
-        "    ROM Loading Bar   : %s\n"
+        "     Autoload ROM      : %s\n\n"
+        "     ROM Loading Bar   : %s\n"
 #else
         "     Fast Reboot ROM   : %s\n"
 #endif
 #ifdef BETA_SETTINGS
-        "*    PAL60 Mode        : %s\n"
         "     Hide ROM Extension: %s\n"
         "     Hide ROM Tags     : %s\n"
         "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
-        "\n\n"
-        "Note: Certain settings have the following caveats:\n"
-        "*    Requires rebooting the N64 Console.\n"
 #endif
+        "\n\n"
+        "* NOTE: This setting may cause the display to go dark on next power cycle. If you get it wrong, you must manually edit the menu/config.ini on the SD card to re-disable it.\n"
         ,
         menu->settings.default_directory,
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.soundfx_enabled),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.show_saves_folder),
+        format_switch(menu->settings.pal60_enabled),
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
         format_switch(menu->settings.rom_autoload_enabled),
         format_switch(menu->settings.loading_progress_bar_enabled)
@@ -325,7 +325,6 @@ static void draw (menu_t *menu, surface_t *d) {
 #endif
 #ifdef BETA_SETTINGS
         ,
-        format_switch(menu->settings.pal60_enabled),
         format_switch(menu->settings.show_browser_file_extensions),
         format_switch(menu->settings.show_browser_rom_tags),
         format_switch(menu->settings.bgm_enabled),

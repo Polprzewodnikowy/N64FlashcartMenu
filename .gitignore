@@ -4,6 +4,7 @@
 # Ignore compilation result directories
 /build
 /output
+/docs/api
 /_site
 
 # Ignore generated files in the libdragon FS

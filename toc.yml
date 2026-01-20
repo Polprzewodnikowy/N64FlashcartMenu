@@ -5,7 +5,7 @@
 - name: Changelog
   href: CHANGELOG.md
 - name: API Reference
-  href: output/api/docs/index.html
+  href: docs/api/docs/index.html
 - name: License
   href: LICENSE.md
   

@@ -35,6 +35,10 @@ Western Europe and most Japanese characters are fully compatible. Other Unicode 
 ### N64 plays the game for xxx minutes before blank screen
 The flashcart uses more power than a stock game and (especially when used in conjunction with other mods or accessories) may cause weak power supplies to "brownout".
 
+### My games crash
+The flashcart uses more power than an original cartridge. Check the power supply first.
+If this still happens, and it is an original known dump of a commercial game, an anti-piracy check may be occurring (please raise an issue).
+
 ### My Clock keeps resetting
 > [!CAUTION]
 > The battery was inserted incorrectly (you have likely flattened the positive tabs by inserting it incorrectly),

@@ -17,7 +17,8 @@
       {
         "files": [
           "/docs/images/**",
-          "/output/api/docs/**"
+          "/docs/resources/templates/**",
+          "/docs/api/docs/**"
         ]
       }
     ],
@@ -33,7 +34,9 @@
       "_appFaviconPath": "/docs/images/favicon.svg",
       "_appFooter": "© 2023 N64 Flashcart Menu Contributors",
       "_enableSearch": true,
-      "pdf": true
+      "pdf": true,
+      "pdfCoverPage": "./docs/resources/templates/pdf_coverpage.html",
+      "pdfFooterTemplate": "./docs/resources/templates/pdf_footer.html"
     }
   }
 }

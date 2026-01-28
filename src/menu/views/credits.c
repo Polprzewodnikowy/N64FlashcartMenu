@@ -60,7 +60,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
-        "B: Exit"
+        "Ⓑ Exit"
     );
 
     rdpq_detach_show();

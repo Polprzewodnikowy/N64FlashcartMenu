@@ -4,6 +4,8 @@
 #include "../mp3_player.h"
 #include "../sound.h"
 #include "../path.h"
+#include "../fonts.h"
+#include "../ui_components/constants.h"
 #include "views.h"
 
 
@@ -85,20 +87,13 @@ static void process (menu_t *menu) {
     }
 }
 
-static void format_elapsed_duration (char *buffer, float elapsed, float duration) {
-    strcpy(buffer, "");
-
-    if (duration >= 3600) {
-        sprintf(buffer + strlen(buffer), "%02d:", (int) (elapsed) / 3600);
+static void format_time (char *buffer, float seconds) {
+    int s = (int) seconds;
+    if (s >= 3600) {
+        sprintf(buffer, "%02d:%02d:%02d", s / 3600, (s % 3600) / 60, s % 60);
+    } else {
+        sprintf(buffer, "%02d:%02d", s / 60, s % 60);
     }
-    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (elapsed) % 3600) / 60, (int) (elapsed) % 60);
-
-    strcat(buffer, " / ");
-
-    if (duration >= 3600) {
-        sprintf(buffer + strlen(buffer), "%02d:", (int) (duration) / 3600);
-    }
-    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (duration) % 3600) / 60, (int) (duration) % 60);
 }
 
 static void draw (menu_t *menu, surface_t *d) {
@@ -126,11 +121,15 @@ static void draw (menu_t *menu, surface_t *d) {
             "MUSIC PLAYER\n"
             "\n"
             "%s\n"
-            "%s%s%s",
+            "%s%s%s\n"
+            "\n"
+            " %.0f kbps  |  %d Hz",
             title_line,
             meta->artist[0] ? meta->artist : "",
             (meta->artist[0] && meta->album[0]) ? " - " : "",
-            meta->album[0] ? meta->album : ""
+            meta->album[0] ? meta->album : "",
+            mp3player_get_bitrate() / 1000,
+            mp3player_get_samplerate()
         );
     } else {
         ui_components_main_text_draw(
@@ -138,37 +137,43 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_CENTER, VALIGN_TOP,
             "MUSIC PLAYER\n"
             "\n"
-            "%s",
-            menu->browser.entry->name
+            "%s\n"
+            "\n"
+            "\n"
+            " %.0f kbps  |  %d Hz",
+            menu->browser.entry->name,
+            mp3player_get_bitrate() / 1000,
+            mp3player_get_samplerate()
         );
     }
 
-    char formatted_track_elapsed_length[64];
+    char elapsed_str[16];
+    char duration_str[16];
+    float duration = mp3player_get_duration();
+    format_time(elapsed_str, duration * mp3player_get_progress());
+    format_time(duration_str, duration);
 
-    format_elapsed_duration(
-        formatted_track_elapsed_length,
-        mp3player_get_duration() * mp3player_get_progress(),
-        mp3player_get_duration()
+    int seekbar_bottom_y = SEEKBAR_Y + 18;
+    int seekbar_bottom_x = SEEKBAR_X + 4;
+    int seekbar_bottom_w = SEEKBAR_WIDTH - 4;
+
+    rdpq_text_printn(
+        &(rdpq_textparms_t) { .style_id = STL_DEFAULT },
+        FNT_DEFAULT,
+        seekbar_bottom_x, seekbar_bottom_y,
+        elapsed_str, strlen(elapsed_str)
     );
 
-    ui_components_main_text_draw(
-        STL_DEFAULT,
-        ALIGN_LEFT, VALIGN_TOP,
-        "\n"
-        "\n"
-        "\n"
-        "\n"
-        " Track elapsed / length:\n"
-        "  %s\n"
-        "\n"
-        " Average bitrate:\n"
-        "  %.0f kbps\n"
-        "\n"
-        " Samplerate:\n"
-        "  %d Hz",
-        formatted_track_elapsed_length,
-        mp3player_get_bitrate() / 1000,
-        mp3player_get_samplerate()
+    int dur_len = strlen(duration_str);
+    rdpq_text_printn(
+        &(rdpq_textparms_t) {
+            .style_id = STL_DEFAULT,
+            .width = seekbar_bottom_w,
+            .align = ALIGN_RIGHT,
+        },
+        FNT_DEFAULT,
+        seekbar_bottom_x, seekbar_bottom_y,
+        duration_str, dur_len
     );
 
     ui_components_actions_bar_text_draw(

@@ -97,7 +97,7 @@ static bool path_is_hidden (path_t *path) {
         }
     }
 
-    if (file_is_fat_hidden(stripped_path)) {
+    if (file_is_fat_hidden(path_get(path))) {
         return true;
     }
 

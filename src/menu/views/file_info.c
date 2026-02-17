@@ -64,7 +64,7 @@ void view_file_info_init (menu_t *menu) {
             .directory = S_ISDIR(st.st_mode),
             .mtime = st.st_mtime,
             .size = st.st_size,
-            .fat_file_attributes = { .is_read_only = false, .is_hidden = false, .is_system = false, .is_archive = false },
+            .fat_file_attributes = { .is_read_only = FAT_ATTR_IS_RDO(&st), .is_hidden = FAT_ATTR_IS_HID(&st), .is_system = FAT_ATTR_IS_SYS(&st), .is_archive = FAT_ATTR_IS_ARC(&st) },
             .zip_file_attributes = { .writeable = (st.st_mode & S_IWUSR), .encrypted = false, .compressed_size = 0, .crc32 = 0 },
             .pak_file_attributes = { .is_controller_pak_dump = false, .is_controller_pak_dump_note = false }
         };

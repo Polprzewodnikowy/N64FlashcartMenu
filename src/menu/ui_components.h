@@ -35,7 +35,6 @@ typedef struct fat_file_attributes {
     bool is_read_only;    /**< Read-only attribute */
     bool is_hidden;       /**< Hidden attribute */
     bool is_system;       /**< System attribute */
-    bool is_directory;    /**< Directory attribute */
     bool is_archive;      /**< Archive attribute */
 } fat_file_attributes_t;
 

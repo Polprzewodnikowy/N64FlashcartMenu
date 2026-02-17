@@ -73,22 +73,17 @@ static const char *format_file_type(char *name, file_info_t *info) {
  * @return Constant string describing the FAT attributes.
  */
 static const char *format_fat_file_attributes_type(char *name, file_info_t *info) {
-    
-    if (info->directory) {
-        return "";
-    }
+    static char fat_attributes[5]; // 4 attributes + null terminator (R, H, S, A)
 
-    // TODO: fix this to show all fat file attributes.
+    sprintf(fat_attributes, "%s%s%s%s",
+        (info->fat_file_attributes.is_read_only ? "R" : "-"), // Read-only attribute
+        (info->fat_file_attributes.is_hidden ? "H" : "-"), // Hidden attribute
+        (info->fat_file_attributes.is_system ? "S" : "-"), // System attribute
+        (info->fat_file_attributes.is_archive ? "A" : "-") // Archive attribute
+    );
 
-    // Readonly
-    // Hidden
-    // System
-    // Directory
-    // Archive
+    return fat_attributes;
 
-    // Some of them have been assigned to other fields in the file_info_t struct, and may use other POSIX file attributes (or fatfs directly) instead of the `fat_file_attributes`, 
-    // so we may need to align source files in other places.
-    return "----";
 }
 
 /**

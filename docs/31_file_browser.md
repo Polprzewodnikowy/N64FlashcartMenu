@@ -9,6 +9,7 @@ The File Browser allows you to navigate and manage files on your N64 flashcart. 
 - **Load files**: Load files from the file system.
 - **Extract files**: Extract files from ZIP archives.
 - **Switching tabs**: Switch between the file browser, favorites and history tabs.
+- **Hide (system) files and folders**: Hides specific files/folders from view. Check menu settings documentation.
 
 ### Usage Instructions
 <!-- Maybe all the Control pages could be merged into this section? -->

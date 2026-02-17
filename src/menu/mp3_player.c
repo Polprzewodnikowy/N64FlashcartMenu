@@ -4,7 +4,6 @@
  * @ingroup ui_components
  */
 
-#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -22,6 +21,7 @@
 #include <minimp3/minimp3.h>
 
 #define SEEK_PREDECODE_FRAMES   (5)
+#define COVER_ART_TEMP_PATH     "sd:/menu/cache/cover_tmp.png"
 
 /** @brief MP3 File Information Structure. */
 typedef struct {
@@ -234,7 +234,7 @@ static bool parse_id3v2 (const uint8_t *buf, size_t buf_size, mp3_metadata_t *me
 
                         /* Remaining bytes are the PNG image data */
                         if (apic_len > 8) {
-                            const char *tmp_path = "sd:/menu/cache/cover_tmp.png";
+                            const char *tmp_path = COVER_ART_TEMP_PATH;
                             FILE *tmp = fopen(tmp_path, "wb");
                             if (tmp) {
                                 fwrite(apic, 1, apic_len, tmp);
@@ -438,8 +438,9 @@ mp3player_err_t mp3player_load (char *path) {
             long tag_end = tag_start + (long)id3v2_skip;
 
             /* Extract metadata from ID3v2 — read the full tag into a temp buffer
-             * since it can be much larger than our 8KB read-ahead buffer. */
-            if (!p->metadata.has_metadata) {
+             * since it can be much larger than our 8KB read-ahead buffer.
+             * Cap at 1MB to guard against corrupted size fields. */
+            if (!p->metadata.has_metadata && id3v2_skip <= (1024 * 1024)) {
                 uint8_t *tag_buf = malloc(id3v2_skip);
                 if (tag_buf) {
                     fseek(p->f, tag_start, SEEK_SET);

@@ -13,8 +13,6 @@ static int16_t controller_selected;
 static char failure_message[255];
 static bool start_complete_restore;
 
-#define CONTROLLERPAK_BANK_SIZE 32768
-
 static bool restore_controller_pak(int controller) {
     sprintf(failure_message, " ");
 
@@ -25,83 +23,56 @@ static bool restore_controller_pak(int controller) {
 
     cpakfs_unmount(controller);
 
-    uint8_t *data = malloc(CONTROLLERPAK_BANK_SIZE);
-    if (!data) {
-        sprintf(failure_message, "Memory allocation failed!");
-        return false;
+    cpak_io_context_t ctx;
+    cpak_io_err_t err = cpak_restore_from_file(controller, cpak_path, &ctx);
+
+    /* Log restore attempt after validation passes */
+    if (err == CPAK_IO_OK || err == CPAK_IO_ERR_FILE_READ || err == CPAK_IO_ERR_PAK_WRITE) {
+        debugf("Restoring Controller Pak: %ld bytes (%d banks)\n", ctx.filesize, ctx.total_banks);
     }
 
-    FILE *fp = fopen(cpak_path, "rb");
-    if (!fp) {
-        sprintf(failure_message, "Failed to open file for reading!");
-        free(data);
-        return false;
-    }
-
-    if (fseek(fp, 0, SEEK_END) != 0) {
-        sprintf(failure_message, "Seek failed!");
-        fclose(fp);
-        free(data);
-        return false;
-    }
-    long filesize = ftell(fp);
-    if (filesize < 0) {
-        sprintf(failure_message, "ftell failed!");
-        fclose(fp);
-        free(data);
-        return false;
-    }
-    rewind(fp);
-
-    int total_banks = (int)((filesize + CONTROLLERPAK_BANK_SIZE - 1) / CONTROLLERPAK_BANK_SIZE);
-
-    int banks_on_device = cpak_probe_banks(controller);
-    if (banks_on_device < 1) {
-        sprintf(failure_message, "Cannot probe Controller Pak banks (err=%d)!", banks_on_device);
-        fclose(fp);
-        free(data);
-        return false;
-    }
-    if (total_banks > banks_on_device) {
-        sprintf(failure_message, "Dump file too large (%d banks) for controller (%d banks)!",
-                total_banks, banks_on_device);
-        fclose(fp);
-        free(data);
-        return false;
-    }
-
-    debugf("Restoring Controller Pak: %ld bytes (%d banks)\n", filesize, total_banks);
-
-    for (int bank = 0; bank < total_banks; bank++) {
-        size_t bytesRead = fread(data, 1, CONTROLLERPAK_BANK_SIZE, fp);
-        if (bytesRead == 0 && ferror(fp)) {
+    switch (err) {
+        case CPAK_IO_OK:
+            sprintf(failure_message, "Dump restored on controller %d!", controller + 1);
+            return true;
+        case CPAK_IO_ERR_NO_PAK:
+            sprintf(failure_message, "No Controller Pak detected on controller %d!", controller + 1);
+            return false;
+        case CPAK_IO_ERR_ALLOC:
+            sprintf(failure_message, "Memory allocation failed!");
+            return false;
+        case CPAK_IO_ERR_FILE_OPEN:
+            sprintf(failure_message, "Failed to open file for reading!");
+            return false;
+        case CPAK_IO_ERR_FILE_SEEK:
+            sprintf(failure_message, "Seek failed!");
+            return false;
+        case CPAK_IO_ERR_FILE_FTELL:
+            sprintf(failure_message, "ftell failed!");
+            return false;
+        case CPAK_IO_ERR_PROBE_BANKS:
+            sprintf(failure_message, "Cannot probe Controller Pak banks (err=%d)!", ctx.error_code);
+            return false;
+        case CPAK_IO_ERR_TOO_LARGE:
+            sprintf(failure_message, "Dump file too large (%d banks) for controller (%d banks)!",
+                    ctx.total_banks, ctx.device_banks);
+            return false;
+        case CPAK_IO_ERR_FILE_READ:
             sprintf(failure_message, "Read error from dump file!");
-            fclose(fp);
-            free(data);
             return false;
-        }
-        if (bytesRead == 0 && feof(fp)) break; // empty trailing chunk (shouldn't happen)
-
-        int written = cpak_write((joypad_port_t)controller, (uint8_t)bank, 0, data, bytesRead);
-        if (written < 0) {
-            sprintf(failure_message, "Failed to write bank %d to Controller Pak! errno=%d", bank, written);
-            fclose(fp);
-            free(data);
+        case CPAK_IO_ERR_PAK_WRITE:
+            if (ctx.bytes_actual != (int)ctx.bytes_expected && ctx.error_code >= 0) {
+                sprintf(failure_message, "Short write on bank %d: wrote %d / %zu bytes",
+                        ctx.failed_bank, ctx.bytes_actual, ctx.bytes_expected);
+            } else {
+                sprintf(failure_message, "Failed to write bank %d to Controller Pak! errno=%d",
+                        ctx.failed_bank, ctx.error_code);
+            }
             return false;
-        }
-        if ((size_t)written != bytesRead) {
-            sprintf(failure_message, "Short write on bank %d: wrote %d / %zu bytes", bank, written, bytesRead);
-            fclose(fp);
-            free(data);
+        default:
+            sprintf(failure_message, "Unknown error restoring Controller Pak!");
             return false;
-        }
     }
-
-    fclose(fp);
-    free(data);
-
-    sprintf(failure_message, "Dump restored on controller %d!", controller + 1);
-    return true;
 }
 
 static void process (menu_t *menu) {

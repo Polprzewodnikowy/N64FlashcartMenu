@@ -162,6 +162,7 @@ typedef struct {
     struct {
         bool cheats_enabled;        /**< Cheats enabled */
         bool patches_enabled;       /**< Patches enabled */
+        char last_cpak_file[64];    /**< Last used virtual Controller Pak filename */
     } settings;                     /**< The ROM settings */
 
     struct {
@@ -256,6 +257,16 @@ rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv
  * @return rom_err_t Error code
  */
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
+
+/**
+ * @brief Set the last used Controller Pak file for the ROM.
+ *
+ * @param path Pointer to the path structure
+ * @param rom_info Pointer to the ROM information structure
+ * @param cpak_filename The filename of the last used virtual Controller Pak
+ * @return rom_err_t Error code
+ */
+rom_err_t rom_config_setting_set_last_cpak(path_t *path, rom_info_t *rom_info, const char *cpak_filename);
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 /**

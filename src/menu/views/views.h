@@ -355,6 +355,32 @@ void view_extract_file_init(menu_t *menu);
 void view_extract_file_display(menu_t *menu, surface_t *display);
 
 /**
+ * @brief Initialize the virtual Controller Pak selection view.
+ * @param menu Pointer to the menu structure.
+ */
+void view_vcpak_select_init(menu_t *menu);
+
+/**
+ * @brief Display the virtual Controller Pak selection view.
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_vcpak_select_display(menu_t *menu, surface_t *display);
+
+/**
+ * @brief Initialize the virtual Controller Pak recovery view.
+ * @param menu Pointer to the menu structure.
+ */
+void view_vcpak_recovery_init(menu_t *menu);
+
+/**
+ * @brief Display the virtual Controller Pak recovery view.
+ * @param menu Pointer to the menu structure.
+ * @param display Pointer to the display surface.
+ */
+void view_vcpak_recovery_display(menu_t *menu, surface_t *display);
+
+/**
  * @brief Show an error message in the menu.
  *
  * @param menu Pointer to the menu structure.

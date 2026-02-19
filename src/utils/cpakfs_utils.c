@@ -6,6 +6,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <libdragon.h>
 #include <fatfs/ff.h>
 #include <errno.h>
@@ -397,4 +398,194 @@ int file_exists_full(const char *full_mounted_path) {
     FILE *f = fopen(full_mounted_path, "rb");
     if (f) { fclose(f); return 1; }
     return 0;
+}
+
+/**
+ * @brief Initialize a cpak_io_context_t structure with default values.
+ *
+ * @param ctx Pointer to context structure to initialize.
+ */
+static void cpak_io_context_init(cpak_io_context_t *ctx) {
+    if (ctx) {
+        ctx->failed_bank = -1;
+        ctx->total_banks = 0;
+        ctx->device_banks = 0;
+        ctx->filesize = 0;
+        ctx->bytes_expected = 0;
+        ctx->bytes_actual = 0;
+        ctx->error_code = 0;
+    }
+}
+
+/**
+ * @brief Restore a Controller Pak from a file.
+ *
+ * Reads a .pak file and writes its contents to the physical Controller Pak.
+ * The caller is responsible for unmounting cpakfs before calling if needed.
+ *
+ * @param controller The controller index (0-3).
+ * @param filepath The path to the .pak file to restore from.
+ * @param ctx Optional pointer to context struct for detailed error info (can be NULL).
+ * @return CPAK_IO_OK on success, or an error code on failure.
+ */
+cpak_io_err_t cpak_restore_from_file(int controller, const char *filepath, cpak_io_context_t *ctx) {
+    cpak_io_context_init(ctx);
+
+    if (!has_cpak(controller)) {
+        return CPAK_IO_ERR_NO_PAK;
+    }
+
+    uint8_t *data = malloc(CPAK_BANK_SIZE);
+    if (!data) {
+        return CPAK_IO_ERR_ALLOC;
+    }
+
+    FILE *fp = fopen(filepath, "rb");
+    if (!fp) {
+        free(data);
+        return CPAK_IO_ERR_FILE_OPEN;
+    }
+
+    /* Get file size */
+    if (fseek(fp, 0, SEEK_END) != 0) {
+        fclose(fp);
+        free(data);
+        return CPAK_IO_ERR_FILE_SEEK;
+    }
+    long filesize = ftell(fp);
+    if (filesize < 0) {
+        fclose(fp);
+        free(data);
+        return CPAK_IO_ERR_FILE_FTELL;
+    }
+    rewind(fp);
+
+    int total_banks = (int)((filesize + CPAK_BANK_SIZE - 1) / CPAK_BANK_SIZE);
+
+    /* Check if file fits on physical pak */
+    int banks_on_device = cpak_probe_banks(controller);
+
+    /* Populate context with bank/file info */
+    if (ctx) {
+        ctx->total_banks = total_banks;
+        ctx->device_banks = banks_on_device;
+        ctx->filesize = filesize;
+    }
+
+    if (banks_on_device < 1) {
+        if (ctx) {
+            ctx->error_code = banks_on_device;
+        }
+        fclose(fp);
+        free(data);
+        return CPAK_IO_ERR_PROBE_BANKS;
+    }
+    if (total_banks > banks_on_device) {
+        fclose(fp);
+        free(data);
+        return CPAK_IO_ERR_TOO_LARGE;
+    }
+
+    /* Write banks to physical pak */
+    for (int bank = 0; bank < total_banks; bank++) {
+        size_t bytes_read = fread(data, 1, CPAK_BANK_SIZE, fp);
+        if (bytes_read == 0 && ferror(fp)) {
+            if (ctx) {
+                ctx->failed_bank = bank;
+            }
+            fclose(fp);
+            free(data);
+            return CPAK_IO_ERR_FILE_READ;
+        }
+        if (bytes_read == 0 && feof(fp)) {
+            break;
+        }
+
+        int written = cpak_write((joypad_port_t)controller, (uint8_t)bank, 0, data, bytes_read);
+        if (written < 0 || (size_t)written != bytes_read) {
+            if (ctx) {
+                ctx->failed_bank = bank;
+                ctx->bytes_expected = bytes_read;
+                ctx->bytes_actual = written;
+                ctx->error_code = written;
+            }
+            fclose(fp);
+            free(data);
+            return CPAK_IO_ERR_PAK_WRITE;
+        }
+    }
+
+    fclose(fp);
+    free(data);
+    return CPAK_IO_OK;
+}
+
+/**
+ * @brief Backup a Controller Pak to a file.
+ *
+ * Reads all banks from the physical Controller Pak and writes them to a file.
+ *
+ * @param controller The controller index (0-3).
+ * @param filepath The path to the .pak file to write.
+ * @param ctx Optional pointer to context struct for detailed error info (can be NULL).
+ * @return CPAK_IO_OK on success, or an error code on failure.
+ */
+cpak_io_err_t cpak_backup_to_file(int controller, const char *filepath, cpak_io_context_t *ctx) {
+    cpak_io_context_init(ctx);
+
+    if (!has_cpak(controller)) {
+        return CPAK_IO_ERR_NO_PAK;
+    }
+
+    int banks = cpak_probe_banks(controller);
+    if (ctx) {
+        ctx->device_banks = banks;
+    }
+    if (banks < 1) {
+        banks = 1;  /* Fallback to 1 bank */
+    }
+
+    uint8_t *data = malloc(CPAK_BANK_SIZE);
+    if (!data) {
+        return CPAK_IO_ERR_ALLOC;
+    }
+
+    FILE *fp = fopen(filepath, "wb");
+    if (!fp) {
+        free(data);
+        return CPAK_IO_ERR_FILE_OPEN;
+    }
+
+    /* Read banks from physical pak and write to file */
+    for (int bank = 0; bank < banks; bank++) {
+        int bytes_read = cpak_read((joypad_port_t)controller, (uint8_t)bank, 0,
+                                    data, CPAK_BANK_SIZE);
+        if (bytes_read < 0 || bytes_read != CPAK_BANK_SIZE) {
+            if (ctx) {
+                ctx->failed_bank = bank;
+                ctx->bytes_expected = (size_t)CPAK_BANK_SIZE;
+                ctx->bytes_actual = bytes_read;
+                ctx->error_code = (bytes_read < 0) ? errno : -1;
+            }
+            fclose(fp);
+            free(data);
+            return CPAK_IO_ERR_PAK_READ;
+        }
+
+        size_t written = fwrite(data, 1, CPAK_BANK_SIZE, fp);
+        if (written != CPAK_BANK_SIZE) {
+            if (ctx) {
+                ctx->failed_bank = bank;
+                ctx->bytes_expected = (size_t)CPAK_BANK_SIZE;
+                ctx->bytes_actual = (int)written;
+            }
+            fclose(fp);
+            free(data);
+            return CPAK_IO_ERR_FILE_WRITE;
+        }
+    }
+
+    fclose(fp);
+    free(data);
+    return CPAK_IO_OK;
 }

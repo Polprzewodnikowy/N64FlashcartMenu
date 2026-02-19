@@ -49,6 +49,9 @@ typedef struct {
     /** @brief Enable rumble feedback within the menu */
     bool rumble_enabled;
 
+    /** @brief Enable Virtual Controller Pak system for per-game pak management */
+    bool virtual_cpak_enabled;
+
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     /** @brief Show progress bar when loading a ROM */
     bool loading_progress_bar_enabled;

@@ -25,6 +25,12 @@
 #define MAX_NUM_NOTES 16
 
 /**
+ * @def CPAK_BANK_SIZE
+ * @brief Size of one Controller Pak bank in bytes (32KB).
+ */
+#define CPAK_BANK_SIZE 32768
+
+/**
  * @struct cpakfs_path_strings_t
  * @brief Structure holding parsed components of a Controller Pak file path.
  *
@@ -37,6 +43,40 @@ typedef struct {
     char filename[17];  /**< Filename (up to 16 chars + null terminator) */
     char ext[5];        /**< Extension (up to 4 chars + null terminator) */
 } cpakfs_path_strings_t;
+
+/**
+ * @brief Error codes for Controller Pak raw I/O operations.
+ */
+typedef enum {
+    CPAK_IO_OK = 0,
+    CPAK_IO_ERR_NO_PAK,
+    CPAK_IO_ERR_ALLOC,
+    CPAK_IO_ERR_FILE_OPEN,
+    CPAK_IO_ERR_FILE_READ,
+    CPAK_IO_ERR_FILE_WRITE,
+    CPAK_IO_ERR_FILE_SEEK,
+    CPAK_IO_ERR_FILE_FTELL,
+    CPAK_IO_ERR_PROBE_BANKS,
+    CPAK_IO_ERR_TOO_LARGE,
+    CPAK_IO_ERR_PAK_READ,
+    CPAK_IO_ERR_PAK_WRITE,
+} cpak_io_err_t;
+
+/**
+ * @brief Context structure for detailed error information from Controller Pak I/O operations.
+ *
+ * This structure is optionally populated by cpak_restore_from_file() and cpak_backup_to_file()
+ * to provide additional context for error messages.
+ */
+typedef struct {
+    int failed_bank;        /**< Bank number where operation failed (-1 if not applicable) */
+    int total_banks;        /**< Total banks in file (for restore operations) */
+    int device_banks;       /**< Banks available on device (from cpak_probe_banks) */
+    long filesize;          /**< File size in bytes (for restore operations) */
+    size_t bytes_expected;  /**< Expected byte count for read/write operation */
+    int bytes_actual;       /**< Actual byte count from read/write operation */
+    int error_code;         /**< Raw error code from failed operation */
+} cpak_io_context_t;
 
 /**
  * @brief Array of Controller Pak mount point strings (e.g., "cpak1:/").
@@ -139,5 +179,30 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
                                     const char *desired_name,
                                     char *out_fullpath, size_t outsz,
                                     int (*exists_fullpath)(const char *fullpath));
+
+/**
+ * @brief Restore a Controller Pak from a file.
+ *
+ * Reads a .pak file and writes its contents to the physical Controller Pak.
+ * The caller is responsible for unmounting cpakfs before calling if needed.
+ *
+ * @param controller The controller index (0-3).
+ * @param filepath The path to the .pak file to restore from.
+ * @param ctx Optional pointer to context struct for detailed error info (can be NULL).
+ * @return CPAK_IO_OK on success, or an error code on failure.
+ */
+cpak_io_err_t cpak_restore_from_file(int controller, const char *filepath, cpak_io_context_t *ctx);
+
+/**
+ * @brief Backup a Controller Pak to a file.
+ *
+ * Reads all banks from the physical Controller Pak and writes them to a file.
+ *
+ * @param controller The controller index (0-3).
+ * @param filepath The path to the .pak file to write.
+ * @param ctx Optional pointer to context struct for detailed error info (can be NULL).
+ * @return CPAK_IO_OK on success, or an error code on failure.
+ */
+cpak_io_err_t cpak_backup_to_file(int controller, const char *filepath, cpak_io_context_t *ctx);
 
 #endif // CPAKFS_UTILS__H__

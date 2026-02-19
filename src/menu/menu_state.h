@@ -47,7 +47,9 @@ typedef enum {
     MENU_MODE_FAVORITE,
     MENU_MODE_HISTORY,
     MENU_MODE_DATEL_CODE_EDITOR,
-    MENU_MODE_EXTRACT_FILE
+    MENU_MODE_EXTRACT_FILE,
+    MENU_MODE_VCPAK_SELECT,
+    MENU_MODE_VCPAK_RECOVERY
 } menu_mode_t;
 
 /** @brief File entry type enumeration */
@@ -134,6 +136,9 @@ typedef struct {
         int32_t load_history_id;
         int32_t load_favorite_id;
         bool combined_disk_rom;
+        bool vcpak_enabled;
+        char vcpak_selected[256];
+        bool vcpak_no_physical;
     } load;
 
     struct {

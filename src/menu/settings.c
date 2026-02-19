@@ -31,6 +31,7 @@ static settings_t init = {
     .show_browser_rom_tags = true,
     .bgm_enabled = false,
     .rumble_enabled = false,
+    .virtual_cpak_enabled = false,
 };
 
 
@@ -57,7 +58,8 @@ void settings_load (settings_t *settings) {
     settings->use_saves_folder = mini_get_bool(ini, "menu", "use_saves_folder", init.use_saves_folder);
     settings->show_saves_folder = mini_get_bool(ini, "menu", "show_saves_folder", init.show_saves_folder);
     settings->soundfx_enabled = mini_get_bool(ini, "menu", "soundfx_enabled", init.soundfx_enabled);
-    
+    settings->virtual_cpak_enabled = mini_get_bool(ini, "menu", "virtual_cpak_enabled", init.virtual_cpak_enabled);
+
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     settings->rom_autoload_enabled = mini_get_bool(ini, "menu", "autoload_rom_enabled", init.rom_autoload_enabled);
     settings->rom_autoload_path = strdup(mini_get_string(ini, "autoload", "rom_path", init.rom_autoload_path));
@@ -87,6 +89,7 @@ void settings_save (settings_t *settings) {
     mini_set_bool(ini, "menu", "use_saves_folder", settings->use_saves_folder);
     mini_set_bool(ini, "menu", "show_saves_folder", settings->show_saves_folder);
     mini_set_bool(ini, "menu", "soundfx_enabled", settings->soundfx_enabled);
+    mini_set_bool(ini, "menu", "virtual_cpak_enabled", settings->virtual_cpak_enabled);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     mini_set_bool(ini, "menu", "autoload_rom_enabled", settings->rom_autoload_enabled);
     mini_set_string(ini, "autoload", "rom_path", settings->rom_autoload_path);

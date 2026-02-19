@@ -770,6 +770,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
+    rom_info->settings.last_cpak_file[0] = '\0';
 }
 
 static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
@@ -809,6 +810,11 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         // general
         rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
         rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
+
+        // virtual controller pak
+        const char *last_cpak = mini_get_string(rom_config_ini, NULL, "last_cpak_file", "");
+        strncpy(rom_info->settings.last_cpak_file, last_cpak, sizeof(rom_info->settings.last_cpak_file) - 1);
+        rom_info->settings.last_cpak_file[sizeof(rom_info->settings.last_cpak_file) - 1] = '\0';
         
         // overrides
         rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
@@ -832,54 +838,71 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
     path_free(rom_info_path);
 }
 
+/**
+ * @brief Helper to finalize INI save: save if non-empty, remove if empty, cleanup resources.
+ */
+static rom_err_t rom_config_finalize_save(mini_t *ini, path_t *ini_path, int mini_err) {
+    if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
+        path_free(ini_path);
+        mini_free(ini);
+        return ROM_ERR_SAVE_IO;
+    }
+
+    bool empty = mini_empty(ini);
+
+    if (!empty) {
+        if (mini_save(ini, MINI_FLAGS_NONE) != MINI_OK) {
+            path_free(ini_path);
+            mini_free(ini);
+            return ROM_ERR_SAVE_IO;
+        }
+    }
+
+    mini_free(ini);
+
+    if (empty) {
+        if (remove(path_get(ini_path)) && (errno != ENOENT)) {
+            path_free(ini_path);
+            return ROM_ERR_SAVE_IO;
+        }
+    }
+
+    path_free(ini_path);
+    return ROM_OK;
+}
+
 static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type, const char *id, int value, int default_value) {
     path_t *rom_info_path = path_clone(path);
-
     path_ext_replace(rom_info_path, "ini");
 
     mini_t *rom_config_ini = mini_try_load(path_get(rom_info_path));
-
     if (!rom_config_ini) {
         path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
 
-    int mini_err;
+    int mini_err = (value == default_value)
+        ? mini_delete_value(rom_config_ini, type, id)
+        : mini_set_int(rom_config_ini, type, id, value);
 
-    if (value == default_value) {
-        mini_err = mini_delete_value(rom_config_ini, type, id);
-    } else {
-        mini_err = mini_set_int(rom_config_ini, type, id, value);
-    }
+    return rom_config_finalize_save(rom_config_ini, rom_info_path, mini_err);
+}
 
-    if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
+static rom_err_t save_rom_config_setting_string_to_file (path_t *path, const char *type, const char *id, const char *value) {
+    path_t *rom_info_path = path_clone(path);
+    path_ext_replace(rom_info_path, "ini");
+
+    mini_t *rom_config_ini = mini_try_load(path_get(rom_info_path));
+    if (!rom_config_ini) {
         path_free(rom_info_path);
-        mini_free(rom_config_ini);
         return ROM_ERR_SAVE_IO;
     }
 
-    bool empty = mini_empty(rom_config_ini);
+    int mini_err = (value == NULL || value[0] == '\0')
+        ? mini_delete_value(rom_config_ini, type, id)
+        : mini_set_string(rom_config_ini, type, id, value);
 
-    if (!empty) {
-        if (mini_save(rom_config_ini, MINI_FLAGS_NONE) != MINI_OK) {
-            path_free(rom_info_path);
-            mini_free(rom_config_ini);
-            return ROM_ERR_SAVE_IO;
-        }
-    }
-
-    mini_free(rom_config_ini);
-
-    if (empty) {
-        if (remove(path_get(rom_info_path)) && (errno != ENOENT)) {
-            path_free(rom_info_path);
-            return ROM_ERR_SAVE_IO;
-        }
-    }
-
-    path_free(rom_info_path);
-
-    return ROM_OK;
+    return rom_config_finalize_save(rom_config_ini, rom_info_path, mini_err);
 }
 
 
@@ -956,6 +979,16 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
     return save_rom_config_setting_to_file(path, NULL, "cheats_enabled", enabled, false);
+}
+
+rom_err_t rom_config_setting_set_last_cpak (path_t *path, rom_info_t *rom_info, const char *cpak_filename) {
+    if (cpak_filename) {
+        strncpy(rom_info->settings.last_cpak_file, cpak_filename, sizeof(rom_info->settings.last_cpak_file) - 1);
+        rom_info->settings.last_cpak_file[sizeof(rom_info->settings.last_cpak_file) - 1] = '\0';
+    } else {
+        rom_info->settings.last_cpak_file[0] = '\0';
+    }
+    return save_rom_config_setting_string_to_file(path, NULL, "last_cpak_file", cpak_filename);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED

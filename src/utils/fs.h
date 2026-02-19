@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <time.h>
 
 /**
  * @def FS_SECTOR_SIZE
@@ -45,7 +46,7 @@ char *file_basename(char *path);
  * @param path The path to the file.
  * @return true if the file exists, false otherwise.
  */
-bool file_exists(char *path);
+bool file_exists(const char *path);
 
 /**
  * @brief Get the size of a file at the given path.

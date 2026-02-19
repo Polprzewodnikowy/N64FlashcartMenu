@@ -199,7 +199,9 @@ static view_t menu_views[] = {
     { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
     { MENU_MODE_HISTORY, view_history_init, view_history_display },
     { MENU_MODE_DATEL_CODE_EDITOR, view_datel_code_editor_init, view_datel_code_editor_display },
-    { MENU_MODE_EXTRACT_FILE, view_extract_file_init, view_extract_file_display }
+    { MENU_MODE_EXTRACT_FILE, view_extract_file_init, view_extract_file_display },
+    { MENU_MODE_VCPAK_SELECT, view_vcpak_select_init, view_vcpak_select_display },
+    { MENU_MODE_VCPAK_RECOVERY, view_vcpak_recovery_init, view_vcpak_recovery_display }
 };
 
 /**

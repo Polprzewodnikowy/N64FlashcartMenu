@@ -3,10 +3,13 @@
 #include "../datel_codes.h"
 #include "../rom_info.h"
 #include "../sound.h"
+#include "../virtual_cpak.h"
 #include "boot/boot.h"
 #include "utils/fs.h"
+#include "utils/cpakfs_utils.h"
 #include "views.h"
 #include <string.h>
+#include <time.h>
 
 static bool show_extra_info_message = false;
 static bool show_advanced_info_message = false;
@@ -424,7 +427,13 @@ static void process (menu_t *menu) {
     }
 
     if (menu->actions.enter) {
-        menu->load_pending.rom_file = true;
+        if (menu->settings.virtual_cpak_enabled && menu->load.rom_info.features.controller_pak) {
+            // Game supports Controller Pak and virtual cpak is enabled - redirect to pak selection
+            sound_play_effect(SFX_ENTER);
+            menu->next_mode = MENU_MODE_VCPAK_SELECT;
+        } else {
+            menu->load_pending.rom_file = true;
+        }
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -603,6 +612,71 @@ static void draw_progress (float progress) {
 
 static void load (menu_t *menu) {
     debugf("Load ROM: load function called\n");
+
+    // Handle Virtual Controller Pak restore before ROM load
+    if (menu->load.vcpak_enabled) {
+        debugf("Load ROM: Virtual Controller Pak enabled\n");
+
+        // Restore pak contents to physical device
+        // For new paks, this writes the empty pak to clear the physical device
+        // For existing paks, this restores previously saved data
+        debugf("Load ROM: Restoring pak from %s\n", menu->load.vcpak_selected);
+        vcpak_err_t pak_err = vcpak_restore_to_physical(menu->load.vcpak_selected, 0);
+        if (pak_err != VCPAK_OK) {
+            debugf("Load ROM: pak restore failed with error %d\n", pak_err);
+            if (pak_err == VCPAK_ERR_NO_CPAK) {
+                // No physical pak - user was already warned, continue anyway
+                debugf("Load ROM: No physical pak detected, continuing without restore\n");
+            } else {
+                // Serious error - pak file missing, I/O error, or corruption
+                // Do NOT boot the game as the physical pak contains stale data
+                char *err_msg;
+                switch (pak_err) {
+                    case VCPAK_ERR_FILE_NOT_FOUND:
+                        err_msg = "Controller Pak file not found.\nThe pak may not have been created.";
+                        break;
+                    case VCPAK_ERR_IO:
+                        err_msg = "I/O error reading Controller Pak file.";
+                        break;
+                    case VCPAK_ERR_CORRUPTED:
+                        err_msg = "Controller Pak file is corrupted.";
+                        break;
+                    case VCPAK_ERR_ALLOC:
+                        err_msg = "Out of memory restoring Controller Pak.";
+                        break;
+                    case VCPAK_ERR_TOO_LARGE:
+                        err_msg = "Controller Pak file too large for device.";
+                        break;
+                    default:
+                        err_msg = "Failed to restore Controller Pak.";
+                        break;
+                }
+                menu_show_error(menu, err_msg);
+                return;
+            }
+        }
+
+        // Save dirty state so we can recover if power is lost
+        vcpak_state_t state;
+        memset(&state, 0, sizeof(state));
+        state.magic = VCPAK_STATE_MAGIC;
+        strncpy(state.game_code, menu->load.rom_info.game_code, sizeof(state.game_code) - 1);
+        state.game_code[sizeof(state.game_code) - 1] = '\0';
+        strncpy(state.game_title, menu->load.rom_info.title, sizeof(state.game_title) - 1);
+        state.game_title[sizeof(state.game_title) - 1] = '\0';
+        strncpy(state.rom_path, path_get(menu->load.rom_path), sizeof(state.rom_path) - 1);
+        state.rom_path[sizeof(state.rom_path) - 1] = '\0';
+        strncpy(state.pak_path, menu->load.vcpak_selected, sizeof(state.pak_path) - 1);
+        state.pak_path[sizeof(state.pak_path) - 1] = '\0';
+        state.timestamp = (uint32_t)time(NULL);
+        state.is_dirty = 1;
+
+        vcpak_err_t state_err = vcpak_state_save(menu->storage_prefix, &state);
+        if (state_err != VCPAK_OK) {
+            debugf("Load ROM: Warning - failed to save dirty state\n");
+        }
+    }
+
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
@@ -732,7 +806,7 @@ void view_load_rom_display (menu_t *menu, surface_t *display) {
         load(menu);
     }
 
-    if (menu->next_mode != MENU_MODE_LOAD_ROM && menu->next_mode != MENU_MODE_DATEL_CODE_EDITOR) {
+    if (menu->next_mode != MENU_MODE_LOAD_ROM && menu->next_mode != MENU_MODE_DATEL_CODE_EDITOR && menu->next_mode != MENU_MODE_VCPAK_SELECT) {
         menu->load.load_history_id = -1;
         menu->load.load_favorite_id = -1;
         deinit();

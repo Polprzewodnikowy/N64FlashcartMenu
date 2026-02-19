@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include "fs.h"
 #include "utils.h"
@@ -51,7 +52,7 @@ char *file_basename(char *path) {
  * @param path The path to the file.
  * @return true if the file exists, false otherwise.
  */
-bool file_exists(char *path) {
+bool file_exists(const char *path) {
     struct stat st;
     int error = stat(path, &st);
     return ((error == 0) && S_ISREG(st.st_mode));

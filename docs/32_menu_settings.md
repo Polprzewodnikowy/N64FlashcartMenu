@@ -56,6 +56,9 @@ OFF: ROM saves are saved alongside the ROM file.
 
 The menu has default sound effects to improve the user experience. See the [sound documentation](./40_sound.md) for details. This setting is OFF by default.
 
+### Virtual CPak
+Enables the Virtual Controller Pak system for automatic per-game Controller Pak save management. See the [controller paks documentation](./15_controller_paks.md) for details. This setting is OFF by default.
+
 ### Fast ROM reboots
 
 Certain flashcarts support the ability to use the N64 `RESET` button for re-loading the last game, rather than returning to the menu. When enabled (and if supported by your flashcart), the power switch must be toggled to return to the menu.

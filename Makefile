@@ -54,6 +54,7 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/virtual_cpak.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
@@ -84,6 +85,8 @@ SRCS = \
 	menu/views/cpakfs_manager.c \
 	menu/views/cpak_dump_info.c \
 	menu/views/cpak_note_dump_info.c \
+	menu/views/vcpak_select.c \
+	menu/views/vcpak_recovery.c \
 	utils/cpakfs_utils.c \
 	utils/fs.c
 

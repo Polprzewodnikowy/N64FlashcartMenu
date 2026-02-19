@@ -11,8 +11,6 @@
 
 #define MAX_STRING_LENGTH 62
 
-#define MEMPAK_BANK_SIZE 32768
-
 #define CPAK_EXTENSION ".pak"   
 #define CPAK_NOTE_EXTENSION ".paknote"
 
@@ -241,55 +239,43 @@ static void populate_list_cpakfs() {
 static void dump_complete_cpak(int port) {
     sprintf(failure_message_note, " ");
 
-    
-    int banks = cpak_probe_banks(port);
-    if (banks < 1) {
-        // Fallback to 1 bank if probing not available; or show error.
-        banks = 1;
-    }
-
     get_rtc_time(string_datetime_cpak);
     char complete_filename[200];
     sprintf(complete_filename, "%s/CPAK_%s%s", CPAK_PATH, string_datetime_cpak, CPAK_EXTENSION);
 
-    FILE *fp = fopen(complete_filename, "wb");
-    if (!fp) {
-        sprintf(failure_message_note, "Failed to open file for writing: %s\n", complete_filename);
-        error_message_displayed = true;
-        return;
-    }
+    cpak_io_context_t ctx;
+    cpak_io_err_t err = cpak_backup_to_file(port, complete_filename, &ctx);
 
-    uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
-    if (!bankbuf) {
-        sprintf(failure_message_note, "Memory allocation failed!");
-        error_message_displayed = true;
-        fclose(fp);
-        return;
-    }
-
-    for (int b = 0; b < banks; ++b) {
-        int rd = cpak_read((joypad_port_t)port, (uint8_t)b, 0, bankbuf, MEMPAK_BANK_SIZE);
-        if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
-            sprintf(failure_message_note, "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
-            error_message_displayed = true;
-            free(bankbuf);
-            fclose(fp);
+    switch (err) {
+        case CPAK_IO_OK:
+            process_complete_full_dump = true;
             return;
-        }
-
-        size_t wr = fwrite(bankbuf, 1, MEMPAK_BANK_SIZE, fp);
-        if (wr != MEMPAK_BANK_SIZE) {
+        case CPAK_IO_ERR_NO_PAK:
+            sprintf(failure_message_note, "No Controller Pak detected in port %d!", port + 1);
+            error_message_displayed = true;
+            return;
+        case CPAK_IO_ERR_ALLOC:
+            sprintf(failure_message_note, "Memory allocation failed!");
+            error_message_displayed = true;
+            return;
+        case CPAK_IO_ERR_FILE_OPEN:
+            sprintf(failure_message_note, "Failed to open file for writing: %s\n", complete_filename);
+            error_message_displayed = true;
+            return;
+        case CPAK_IO_ERR_PAK_READ:
+            sprintf(failure_message_note, "Failed to read Controller Pak bank %d (err=%d)",
+                    ctx.failed_bank, ctx.error_code);
+            error_message_displayed = true;
+            return;
+        case CPAK_IO_ERR_FILE_WRITE:
             sprintf(failure_message_note, "Failed to write data to file: %s", complete_filename);
             error_message_displayed = true;
-            free(bankbuf);
-            fclose(fp);
             return;
-        }
+        default:
+            sprintf(failure_message_note, "Unknown error backing up Controller Pak!");
+            error_message_displayed = true;
+            return;
     }
-
-    free(bankbuf);
-    fclose(fp);
-    process_complete_full_dump = true;
 }
 
 static void dump_single_note(int _port, int16_t selected_index) {

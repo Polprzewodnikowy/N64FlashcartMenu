@@ -20,8 +20,9 @@
 #include <minimp3/minimp3_ex.h>
 #include <minimp3/minimp3.h>
 
-#define SEEK_PREDECODE_FRAMES   (5)
-#define COVER_ART_TEMP_PATH     "sd:/menu/cache/cover_tmp.png"
+#define SEEK_PREDECODE_FRAMES       (5)
+#define COVER_ART_TEMP_PATH_PNG     "sd:/menu/cache/cover_tmp.png"
+#define COVER_ART_TEMP_PATH_JPG     "sd:/menu/cache/cover_tmp.jpg"
 
 /** @brief MP3 File Information Structure. */
 typedef struct {
@@ -206,7 +207,7 @@ static bool parse_id3v2 (const uint8_t *buf, size_t buf_size, mp3_metadata_t *me
             id3_trim_copy(target, text, text_len, MP3_METADATA_MAX_LEN);
         }
 
-        /* APIC frame — extract embedded PNG cover art */
+        /* APIC frame — extract embedded cover art (PNG or JPEG) */
         if (memcmp(fhdr, "APIC", 4) == 0 && !meta->has_cover_art && data_len > 4) {
             /* Skip encoding byte */
             const uint8_t *apic = data + 1;
@@ -216,12 +217,14 @@ static bool parse_id3v2 (const uint8_t *buf, size_t buf_size, mp3_metadata_t *me
             const uint8_t *mime_end = memchr(apic, '\0', apic_len);
             if (mime_end) {
                 size_t mime_len = mime_end - apic;
-                bool is_png = (mime_len == 9 && memcmp(apic, "image/png", 9) == 0);
+                bool is_png  = (mime_len == 9  && memcmp(apic, "image/png",  9)  == 0);
+                bool is_jpeg = (mime_len == 10 && memcmp(apic, "image/jpeg", 10) == 0) ||
+                               (mime_len == 9  && memcmp(apic, "image/jpg",  9)  == 0);
 
                 apic = mime_end + 1;  /* Skip past MIME + null */
                 apic_len -= (mime_len + 1);
 
-                if (is_png && apic_len > 1) {
+                if ((is_png || is_jpeg) && apic_len > 1) {
                     /* Skip picture type byte */
                     apic++; apic_len--;
 
@@ -232,9 +235,8 @@ static bool parse_id3v2 (const uint8_t *buf, size_t buf_size, mp3_metadata_t *me
                         apic = desc_end + 1;
                         apic_len -= (desc_len + 1);
 
-                        /* Remaining bytes are the PNG image data */
                         if (apic_len > 8) {
-                            const char *tmp_path = COVER_ART_TEMP_PATH;
+                            const char *tmp_path = is_png ? COVER_ART_TEMP_PATH_PNG : COVER_ART_TEMP_PATH_JPG;
                             FILE *tmp = fopen(tmp_path, "wb");
                             if (tmp) {
                                 fwrite(apic, 1, apic_len, tmp);
@@ -393,6 +395,9 @@ mp3player_err_t mp3player_init (void) {
  */
 void mp3player_deinit (void) {
     mp3player_unload();
+    /* Remove any embedded cover art temp files left on the SD card */
+    remove(COVER_ART_TEMP_PATH_PNG);
+    remove(COVER_ART_TEMP_PATH_JPG);
     free(p);
     p = NULL;
 }

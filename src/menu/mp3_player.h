@@ -163,7 +163,7 @@ float mp3player_get_duration(void);
  * 
  * This function gets the bitrate of the currently loaded MP3 file.
  * 
- * @return float Bitrate of the MP3 file in kbps.
+ * @return float Bitrate of the MP3 file in bps.
  */
 float mp3player_get_bitrate(void);
 
@@ -181,7 +181,7 @@ int mp3player_get_samplerate(void);
  * 
  * This function gets the current playback progress of the MP3 file.
  * 
- * @return float Current playback progress as a percentage (0.0 to 100.0).
+ * @return float Current playback progress as a fraction (0.0 to 1.0).
  */
 float mp3player_get_progress(void);
 

@@ -1,17 +1,19 @@
 #include <stdlib.h>
-#include "../sound.h"
-
+#include <string.h>
+#include "../jpeg_decoder.h"
 #include "../png_decoder.h"
+#include "../sound.h"
 #include "views.h"
 
 
 static bool show_message;
 static bool image_loading;
 static bool image_set_as_background;
+static bool loading_jpeg;
 static surface_t *image;
 
 
-static char *convert_error_message (png_err_t err) {
+static char *convert_png_error_message (png_err_t err) {
     switch (err) {
         case PNG_ERR_INT: return "Internal PNG decoder error";
         case PNG_ERR_BUSY: return "PNG decode already in process";
@@ -22,14 +24,32 @@ static char *convert_error_message (png_err_t err) {
     }
 }
 
-static void image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
-    menu_t *menu = (menu_t *) (callback_data);
+static char *convert_jpeg_error_message (jpeg_err_t err) {
+    switch (err) {
+        case JPEG_ERR_INT: return "Internal JPEG decoder error";
+        case JPEG_ERR_BUSY: return "JPEG decode already in process";
+        case JPEG_ERR_OUT_OF_MEM: return "JPEG image is too large to fit in available memory";
+        case JPEG_ERR_NO_FILE: return "JPEG decoder couldn't open file";
+        case JPEG_ERR_BAD_FILE: return "Invalid or unsupported JPEG file";
+        default: return "Unknown JPEG decoder error";
+    }
+}
 
+static void png_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
+    menu_t *menu = (menu_t *)(callback_data);
     image_loading = false;
     image = decoded_image;
-
     if (err != PNG_OK) {
-        menu_show_error(menu, convert_error_message(err));
+        menu_show_error(menu, convert_png_error_message(err));
+    }
+}
+
+static void jpeg_callback (jpeg_err_t err, surface_t *decoded_image, void *callback_data) {
+    menu_t *menu = (menu_t *)(callback_data);
+    image_loading = false;
+    image = decoded_image;
+    if (err != JPEG_OK) {
+        menu_show_error(menu, convert_jpeg_error_message(err));
     }
 }
 
@@ -60,7 +80,8 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(png_decoder_get_progress(), "Loading image...");
+        float progress = loading_jpeg ? jpeg_decoder_get_progress() : png_decoder_get_progress();
+        ui_components_loader_draw(progress, "Loading image...");
     } else {
         rdpq_attach_clear(d, NULL);
 
@@ -88,7 +109,11 @@ static void draw (menu_t *menu, surface_t *d) {
 
 static void deinit (menu_t *menu) {
     if (image_loading) {
-        png_decoder_abort();
+        if (loading_jpeg) {
+            jpeg_decoder_abort();
+        } else {
+            png_decoder_abort();
+        }
     }
 
     if (image) {
@@ -109,10 +134,23 @@ void view_image_viewer_init (menu_t *menu) {
     image = NULL;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
+    const char *name = menu->browser.entry->name;
+    size_t nlen = strlen(name);
+    loading_jpeg = (nlen >= 4 && strcmp(name + nlen - 4, ".jpg")  == 0) ||
+                  (nlen >= 5 && strcmp(name + nlen - 5, ".jpeg") == 0);
 
-    png_err_t err = png_decoder_start(path_get(path), 640, 480, image_callback, menu);
-    if (err != PNG_OK) {
-        menu_show_error(menu, convert_error_message(err));
+    if (loading_jpeg) {
+        jpeg_err_t err = jpeg_decoder_start(path_get(path), 640, 480, jpeg_callback, menu);
+        if (err != JPEG_OK) {
+            menu_show_error(menu, convert_jpeg_error_message(err));
+            image_loading = false;
+        }
+    } else {
+        png_err_t err = png_decoder_start(path_get(path), 640, 480, png_callback, menu);
+        if (err != PNG_OK) {
+            menu_show_error(menu, convert_png_error_message(err));
+            image_loading = false;
+        }
     }
 
     path_free(path);

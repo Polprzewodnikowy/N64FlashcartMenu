@@ -8,6 +8,9 @@
 
 - **New Features**
 	- Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).
+	- MP3 player: display cover art (embedded ID3 APIC PNG or cover.png/folder.png/album.png/front.png in track directory). Note: only PNG cover art is supported — JPEG is not decoded.
+	- MP3 player: ID3v2 metadata display (title, artist, album, track number), bitrate/samplerate info.
+	- MP3 player: track-to-track navigation (up/down), seek (left/right), auto-advance to next track.
 
 - **Bug Fixes**
 	- Neon64 1Mbit SRAM.
@@ -19,6 +22,8 @@
 	- PAL60 (using new libdragon support).
 	- Age ratings (align with homebrew metadata standard).
 	- rom metadata (align with homebrew metadata standard, still requires zip extraction support).
+	- MP3 player: decode optimization (single decode into cached stack buffer), reduced buffer from 16KB to 8KB.
+	- MP3 player: guard against corrupted ID3v2 size fields (1MB allocation cap).
 
 - **Other**
 	- Updated libDragon SDK.

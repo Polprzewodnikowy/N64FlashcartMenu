@@ -57,15 +57,15 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
-static bool file_is_fat_hidden (const char *full_path) {
-    struct stat st;
+// static bool file_is_fat_hidden (const char *full_path) {
+//     struct stat st;
     
-    if (stat(full_path, &st) == 0) {
-        return FAT_ATTR_IS_HID(&st);
-    }
+//     if (stat(full_path, &st) == 0) {
+//         return FAT_ATTR_IS_HID(&st);
+//     }
     
-    return false;
-}
+//     return false;
+// }
 
 static bool path_is_hidden (path_t *path) {
     char *stripped_path = strip_fs_prefix(path_get(path));
@@ -96,9 +96,9 @@ static bool path_is_hidden (path_t *path) {
         }
     }
 
-    if (file_is_fat_hidden(path_get(path))) {
-        return true;
-    }
+    // if (file_is_fat_hidden(path_get(path))) {
+    //     return true;
+    // }
 
     return false;
 }

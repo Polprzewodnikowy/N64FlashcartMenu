@@ -70,14 +70,14 @@ static void process (menu_t *menu) {
 }
 
 static void scan_for_swap_disks(menu_t *menu) {
-    int result;
+    uint16_t result;
     dir_t info;
 
     // Reset swap disk count
     swap_disk_count = 0;
 
     // Free any existing swap disk paths
-    for (int i = 0; i < DISK_SLOTS_MAX; i++) {
+    for (uint16_t i = 0; i < DISK_SLOTS_MAX; i++) {
         if (menu->load.disk_slots.slot[i].disk_path) {
             path_free(menu->load.disk_slots.slot[i].disk_path);
             menu->load.disk_slots.slot[i].disk_path = NULL;
@@ -331,8 +331,8 @@ void view_load_disk_init (menu_t *menu) {
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         bookkeeping_item_t* items;
-        int item_id = -1;
-        int max_count = 0;
+        int16_t item_id = -1;
+        uint16_t max_count = 0;
 
         if(menu->load.load_history_id != -1) {
             item_id = menu->load.load_history_id;

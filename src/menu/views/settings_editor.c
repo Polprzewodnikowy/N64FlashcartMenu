@@ -44,8 +44,37 @@ static void set_soundfx_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+static void set_bgm_enabled_type (menu_t *menu, void *arg) {
+    menu->settings.bgm_enabled = (bool)(uintptr_t)(arg);
+    settings_save(&menu->settings);
+}
+
 static void set_pal60_type (menu_t *menu, void *arg) {
-    menu->settings.pal60_enabled = (bool)(uintptr_t)(arg);
+    bool pal60_try_enable = (bool)(uintptr_t)(arg);
+    tv_type_t tv_type = get_tv_type();
+    // FIXME: we can check it is supported by adding a warning and setting it, with a confirmation.
+    if (pal60_try_enable && (tv_type == TV_PAL)) {
+        //enable it without needing to reboot the console.
+        // FIXME: Add message box to press a button as confirmation. 
+        // Set VI timing so it will use 60Hz signal.
+        vi_set_timing_preset(&VI_TIMING_PAL60);
+
+        // FIXME: timeout and restore to PAL 50Hz if message not shown, 
+        //vi_set_timing_preset(&VI_TIMING_PAL);
+        
+    }
+    else if (!pal60_try_enable && (tv_type == TV_PAL)){
+        //disable it without needing to reboot the console.
+        // Set VI timing so it will use 50Hz signal.
+        vi_set_timing_preset(&VI_TIMING_PAL);
+        
+    }
+    else {
+        //not PAL, cannot enable PAL60
+        pal60_try_enable = false;
+    }
+    
+    menu->settings.pal60_enabled = pal60_try_enable;
     settings_save(&menu->settings);
 }
 
@@ -65,11 +94,6 @@ static void set_show_browser_file_extensions_type(menu_t *menu, void *arg) {
 
 static void set_show_browser_rom_tags_type (menu_t *menu, void *arg) {
     menu->settings.show_browser_rom_tags = (bool)(uintptr_t)(arg);
-    settings_save(&menu->settings);
-}
-
-static void set_bgm_enabled_type (menu_t *menu, void *arg) {
-    menu->settings.bgm_enabled = (bool)(uintptr_t)(arg);
     settings_save(&menu->settings);
 }
 
@@ -119,6 +143,18 @@ static component_context_menu_t set_soundfx_enabled_type_context_menu = {
     .list = {
         {.text = "On", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(true) },
         {.text = "Off", .action = set_soundfx_enabled_type, .arg = (void *)(uintptr_t)(false) },
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
+static int get_bgm_enabled_current_selection (menu_t *menu) {
+    return menu->settings.bgm_enabled ? 0 : 1;
+}
+
+static component_context_menu_t set_bgm_enabled_type_context_menu = {
+    .get_default_selection = get_bgm_enabled_current_selection,
+    .list = {
+        {.text = "On", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(true) },
+        {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(false) },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -197,18 +233,6 @@ static component_context_menu_t set_show_browser_rom_tags_context_menu = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-static int get_bgm_enabled_current_selection (menu_t *menu) {
-    return menu->settings.bgm_enabled ? 0 : 1;
-}
-
-static component_context_menu_t set_bgm_enabled_type_context_menu = {
-    .get_default_selection = get_bgm_enabled_current_selection,
-    .list = {
-        {.text = "On", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(true) },
-        {.text = "Off", .action = set_bgm_enabled_type, .arg = (void *)(uintptr_t)(false) },
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-
 static int get_rumble_enabled_current_selection (menu_t *menu) {
     return menu->settings.rumble_enabled ? 0 : 1;
 }
@@ -225,6 +249,7 @@ static component_context_menu_t set_rumble_enabled_type_context_menu = {
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Show Hidden Files", .submenu = &set_protected_entries_type_context_menu },
     { .text = "Sound Effects", .submenu = &set_soundfx_enabled_type_context_menu },
+    { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Use Saves Folder", .submenu = &set_use_saves_folder_type_context_menu },
     { .text = "Show Saves Folder", .submenu = &set_show_saves_folder_type_context_menu },
     { .text = "PAL60 Mode", .submenu = &set_pal60_type_context_menu },
@@ -236,7 +261,6 @@ static component_context_menu_t options_context_menu = { .list = {
 #ifdef BETA_SETTINGS
     { .text = "Hide ROM Extensions", .submenu = &set_show_browser_file_extensions_context_menu },
     { .text = "Hide ROM Tags", .submenu = &set_show_browser_rom_tags_context_menu },
-    { .text = "Background Music", .submenu = &set_bgm_enabled_type_context_menu },
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
     // { .text = "Restore Defaults", .action = set_use_default_settings },
 #endif
@@ -293,6 +317,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "To change the following menu settings, press 'A':\n"
         "     Show Hidden Files : %s\n"
         "     Sound Effects     : %s\n"
+        "     Background Music  : %s\n"
         "     Use Saves folder  : %s\n"
         "     Show Saves folder : %s\n"
         "*    PAL60 Mode        : %s\n"
@@ -305,15 +330,15 @@ static void draw (menu_t *menu, surface_t *d) {
 #ifdef BETA_SETTINGS
         "     Hide ROM Extension: %s\n"
         "     Hide ROM Tags     : %s\n"
-        "     Background Music  : %s\n"
         "     Rumble Feedback   : %s\n"
 #endif
         "\n\n"
-        "* NOTE: This setting may cause the display to go dark on next power cycle. If you get it wrong, you must manually edit the menu/config.ini on the SD card to re-disable it.\n"
+        "* NOTE: This setting may cause the display to go dark. If you get it wrong, you must manually edit the menu/config.ini on the SD card to re-disable it.\n"
         ,
         menu->settings.default_directory,
         format_switch(menu->settings.show_protected_entries),
         format_switch(menu->settings.soundfx_enabled),
+        format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.use_saves_folder),
         format_switch(menu->settings.show_saves_folder),
         format_switch(menu->settings.pal60_enabled),
@@ -327,7 +352,6 @@ static void draw (menu_t *menu, surface_t *d) {
         ,
         format_switch(menu->settings.show_browser_file_extensions),
         format_switch(menu->settings.show_browser_rom_tags),
-        format_switch(menu->settings.bgm_enabled),
         format_switch(menu->settings.rumble_enabled)
 #endif
     );

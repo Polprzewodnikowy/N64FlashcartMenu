@@ -94,6 +94,8 @@ typedef struct {
     flashcart_err_t (*load_64dd_ipl) (char *ipl_path, flashcart_progress_callback_t *progress);
     /** @brief The flashcart disk load function */
     flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+    /** @brief The flashcart disks load function */
+    flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */

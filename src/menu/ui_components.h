@@ -30,21 +30,42 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+
+typedef struct fat_file_attributes {
+    bool is_read_only;    /**< Read-only attribute */
+    bool is_hidden;       /**< Hidden attribute */
+    bool is_system;       /**< System attribute */
+    bool is_archive;      /**< Archive attribute */
+} fat_file_attributes_t;
+
+
+typedef struct zip_file_attributes {
+    
+    bool writeable;                             /**< File is writeable */
+    bool encrypted;                             /**< File is encrypted */
+    uint64_t compressed_size;                   /**< File size in bytes while compressed */
+    uint32_t crc32;                             /**< Checksum for compressed files */
+} zip_file_attributes_t;
+
+
+typedef struct pak_file_attributes {
+    bool is_controller_pak_dump;                /**< file is a controller pak dump */
+    bool is_controller_pak_dump_note;           /**< file is a controller pak dump note */
+} pak_file_attributes_t;
+
+
 /** 
  * @brief File information Structure.
  * 
  * Structure with file information displayed used in the user interface.
  */
 typedef struct {
-    bool directory;                     /**< Directory rather than a file */
-    bool writeable;                     /**< File is writeable */
-    bool encrypted;                     /**< File is encrypted */
-    time_t mtime;                       /**< Last modification time */
-    uint64_t size;                      /**< File size in bytes */
-    uint64_t compressed;                /**< File size in bytes while compressed */
-    uint32_t crc32;                     /**< Checksum for compressed files */
-    bool is_controller_pak_dump;        /**< file is a controller pak dump */
-    bool is_controller_pak_dump_note;   /**< file is a controller pak dump note */
+    bool directory;                             /**< Directory rather than a file */
+    time_t mtime;                               /**< Last modification time */
+    uint64_t size;                              /**< File size in bytes */
+    fat_file_attributes_t fat_file_attributes;  /**< FAT file attributes */
+    zip_file_attributes_t zip_file_attributes;  /**< ZIP file attributes */
+    pak_file_attributes_t pak_file_attributes;  /**< Additional attributes for pak files */
 } file_info_t;
 
 /**

@@ -43,7 +43,7 @@ When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adj
 > [!TIP]
 > A good reference for cheat codes is: https://gamehacking.org and downloading ED64 text files, though note that usage may vary, as these may have been "corrupted" by the ability to use them in an in-accurate emulator.
 
-Cheat files should be contained in the same directory as the ROM, but with the file extension `datel.txt` (instead of the ROM extension).
+Cheat files should be contained in the same directory as the ROM, but with the file extension `.datel` (instead of the ROM extension).
 The files use the following content format (as aligned to text files made popular by the ED64):
 (one cheat per line).
 - An 8 character address, followed by a space, and then a 4 character value.

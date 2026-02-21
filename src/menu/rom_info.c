@@ -125,6 +125,7 @@ static const match_t database[] = {
     MATCH_CHECK_CODE(0x1F95CAAA047FC22A, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),            // Donkey kong 64 [PAL CRACK]
 
     MATCH_CHECK_CODE(0xE3FF09DFCAE4B0ED, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                    // Banjo tooie [USA CRACK]
+    MATCH_CHECK_CODE(0xAE6B1E11B7CBD69E, SAVE_TYPE_NONE, FEAT_CPAK),                                            // Dragon Sword [Prototype]
 
     MATCH_ID_REGION_VERSION("NK4J", 0, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                      // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
     MATCH_ID_REGION_VERSION("NK4J", 1, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                      // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
@@ -218,6 +219,7 @@ static const match_t database[] = {
     MATCH_ID("NN6", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                         // Dr. Mario 64
     MATCH_ID("NNA", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                         // Star Wars Episode I: Battle for Naboo
     MATCH_ID("NOS", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // 64 Oozumou
+    MATCH_ID("NO2", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // 64 Oozumou 2
     MATCH_ID("NP2", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // Chou Kuukan Night Pro Yakyuu King 2 (J)
     MATCH_ID("NPG", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_VRU),                                              // Hey You, Pikachu! [Pikachu Genki Dechu (J)]
     MATCH_ID("NPT", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_TPAK),                                             // Puyo Puyon Party
@@ -345,8 +347,12 @@ static const match_t database[] = {
     // CONTROLLER PAK / NONE
     MATCH_ID("N22", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Ready 2 Rumble Boxing - Round 2
     MATCH_ID("N2M", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Madden Football 2002
+    MATCH_ID("N2P", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage 2 - Universal Tour
+    MATCH_ID("N2V", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Chameleon Twist 2
     MATCH_ID("N32", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Army Men - Sarge's Heroes 2
     MATCH_ID("N3P", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Triple Play 2000
+    MATCH_ID("N3T", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater 3
+    MATCH_ID("N4W", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // 40 Winks
     MATCH_ID("N64", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Kira to Kaiketsu! 64 Tanteidan
     MATCH_ID("N7I", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // FIFA Soccer 64 [FIFA 64 (E)]
     MATCH_ID("N8I", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // FIFA - Road to World Cup 98 [World Cup e no Michi (J)]
@@ -498,19 +504,19 @@ static const match_t database[] = {
     MATCH_ID("NRK", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Rugrats in Paris - The Movie
     MATCH_ID("NRO", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Road Rash 64
     MATCH_ID("NRP", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage - World Tour
-    MATCH_ID("NRP", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage 2 - Universal Tour
     MATCH_ID("NRR", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Roadster's Trophy
     MATCH_ID("NRT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Rat Attack
-    MATCH_ID("NRT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Robotron 64
     MATCH_ID("NRU", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // San Francisco Rush 2049
     MATCH_ID("NRV", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Re-Volt
     MATCH_ID("NRW", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Turok: Rage Wars
+    MATCH_ID("NRX", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Robotron 64
     MATCH_ID("NS2", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Simcity 2000
     MATCH_ID("NSB", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Twisted Edge - Extreme Snowboarding [King Hill 64 - Extreme Snowboarding (J)]
     MATCH_ID("NSD", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Shadow Man
     MATCH_ID("NSF", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // San Francisco Rush - Extreme Racing
     MATCH_ID("NSG", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Shadowgate 64 - Trials Of The Four Towers
     MATCH_ID("NSH", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Saikyou Habu Shougi (J)
+    MATCH_ID("NSJ", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // J.League Tactics Soccer
     MATCH_ID("NSK", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Snowboard Kids [Snobow Kids (J)]
     MATCH_ID("NSL", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Spider-Man
     MATCH_ID("NSO", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // NBA Showtime - NBA on NBC
@@ -520,9 +526,9 @@ static const match_t database[] = {
     MATCH_ID("NSY", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Scooby-Doo! - Classic Creep Capers
     MATCH_ID("NSZ", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // NFL Blitz - Special Edition
     MATCH_ID("NT2", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Turok 2 - Seeds of Evil [Violence Killer - Turok New Generation (J)]
-    MATCH_ID("NT3", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater 3
     MATCH_ID("NT4", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // CyberTiger
     MATCH_ID("NTA", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Disney's Tarzan
+    MATCH_ID("NTD", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // O.D.T. [Prototype]
     MATCH_ID("NTF", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater
     MATCH_ID("NTH", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Toy Story 2 - Buzz Lightyear to the Rescue!
     MATCH_ID("NTI", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // WWF: Attitude
@@ -532,7 +538,6 @@ static const match_t database[] = {
     MATCH_ID("NTS", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Centre Court Tennis [Let's Smash (J)]
     MATCH_ID("NTT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Tonic Trouble
     MATCH_ID("NTU", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Turok: Dinosaur Hunter [Turok: Jikuu Senshi (J)]
-    MATCH_ID("NV2", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Chameleon Twist 2
     MATCH_ID("NV3", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Micro Machines 64 Turbo
     MATCH_ID("NV8", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Vigilante 8
     MATCH_ID("NVC", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Virtual Chess 64
@@ -756,10 +761,10 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 
     rom_info->meta.name = "";
-    rom_info->meta.author = "";
-    rom_info->meta.release_date = "";
-    rom_info->meta.osi_license = "";
-    rom_info->meta.website = "";
+    rom_info->meta.author = "Unknown";
+    rom_info->meta.release_date = "Unknown";
+    rom_info->meta.osi_license = "Unknown";
+    rom_info->meta.website = "Unknown";
     rom_info->meta.age_rating = 0;
     rom_info->meta.short_description = "";
 

@@ -20,6 +20,9 @@ Insert the (Micro) SD card to your PC and ensure it is properly formatted to be 
 ### Advanced Steps
 Advanced steps are optional, which adds additional capabilities.
 
+> [!TIP]
+> Files and folders with the "hidden" property, will also be hidden in the menu by default.
+
 #### Add Boxart support
 See the [Boxart](./19_gamepak_boxart.md) page.
 

@@ -3,6 +3,15 @@
 
 #include "views.h"
 
+/* WORKAROUND: upstream introduced these macros in the view but never defined them anywhere.
+ * libdragon's fat.c only maps AM_RDO -> st_mode permission bits; it discards hidden/system/archive
+ * bits entirely. RDO is recoverable from st_mode; the rest stub to false.
+ * TODO: remove if upstream defines these properly (e.g. in utils/fs.h or libdragon). */
+#define FAT_ATTR_IS_RDO(s) (!((s)->st_mode & S_IWUSR))
+#define FAT_ATTR_IS_HID(s) (false)
+#define FAT_ATTR_IS_SYS(s) (false)
+#define FAT_ATTR_IS_ARC(s) (false)
+
 static struct stat st;
 
 static file_info_t info;

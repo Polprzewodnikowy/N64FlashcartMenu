@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #include <libdragon.h>
 
@@ -25,15 +26,27 @@
 #define SEEK_SECONDS_MAX        (60)
 #define SEEK_RAMP_TICKS         (120)   /* ticks held before reaching max seek rate (~2s at 60fps) */
 #define SEEK_MAX_DURATION_FRAC  (0.10f) /* max seek = 10% of song duration, capped at SEEK_SECONDS_MAX */
-#define COVER_ART_MAX_SIZE  (158)
-#define COVER_ART_Y         (180)
+#define COVER_ART_MAX_SIZE      (158)
+
+/* Cover art decoder state — tracks which decoder is active */
+typedef enum {
+    COVER_IDLE,
+    COVER_LOADING_JPEG,
+    COVER_LOADING_PNG,
+} cover_state_t;
 
 static bool advance_failed = false;
-static bool cover_loading = false;
-static bool cover_loading_jpeg = false;
+static cover_state_t cover_state = COVER_IDLE;
 static surface_t *cover_image = NULL;
 static int seek_hold_ticks = 0;
 static bool seek_inhibit = false;
+
+/* Cached blit parameters — computed once when cover_image is set */
+static int cover_dst_x;
+static int cover_dst_y;
+static int cover_disp_size;
+static int cover_s0;
+static int cover_t0;
 
 
 static char *convert_error_message (mp3player_err_t err) {
@@ -48,33 +61,46 @@ static char *convert_error_message (mp3player_err_t err) {
 
 static const char *cover_image_extensions[] = { "png", "jpg", "jpeg", NULL };
 
-/* Directory saved for fallback use in PNG async callback */
+/* Directory saved for fallback use in async callbacks */
 static path_t *cover_dir = NULL;
-/* Persistent dir scan state for async continuation across PNG callbacks */
+/* Persistent dir scan state for async continuation across callbacks */
 static dir_t cover_dir_entry;
 static bool cover_dir_scan_active = false;
 
 /* Forward declaration */
 static void try_next_cover_source (void);
 
+/* Compute and cache blit parameters for the loaded cover_image.
+ * Called once when cover_image is assigned. */
+static void cover_cache_blit_params (void) {
+    int iw = cover_image->width;
+    int ih = cover_image->height;
+    cover_s0 = (iw > ih) ? (iw - ih) / 2 : 0;  /* crop to square */
+    cover_t0 = (ih > iw) ? (ih - iw) / 2 : 0;
+    int text_bottom = VISIBLE_AREA_Y0 + 80;
+    int bar_top     = SEEKBAR_Y - 8;
+    int available   = bar_top - text_bottom;
+    cover_disp_size = available - 32;  /* 16px padding top and bottom */
+    cover_dst_y = text_bottom + 16;
+    cover_dst_x = DISPLAY_CENTER_X - (cover_disp_size / 2);
+}
+
 static void cover_art_png_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
-    cover_loading = false;
+    cover_state = COVER_IDLE;
     if (err == PNG_OK && decoded_image) {
-        debugf("[cover] PNG decoded OK\n");
         cover_image = decoded_image;
+        cover_cache_blit_params();
     } else {
-        debugf("[cover] PNG decode failed (err=%d), trying next source\n", err);
         try_next_cover_source();
     }
 }
 
 static void cover_art_jpeg_callback (jpeg_err_t err, surface_t *decoded_image, void *callback_data) {
-    cover_loading = false;
+    cover_state = COVER_IDLE;
     if (err == JPEG_OK && decoded_image) {
-        debugf("[cover] JPEG decoded OK\n");
         cover_image = decoded_image;
+        cover_cache_blit_params();
     } else {
-        debugf("[cover] JPEG decode failed (err=%d), trying next source\n", err);
         try_next_cover_source();
     }
 }
@@ -86,42 +112,31 @@ static int cover_art_budget_size (void) {
     heap_stats_t heap;
     sys_get_heap_stats(&heap);
     size_t budget = (size_t)(heap.total - heap.used) * 8 / 10;
-    int dim = (int)__builtin_sqrt((double)(budget / 2));
+    int dim = (int)sqrtf((float)(budget / 2));
     if (dim < COVER_ART_MAX_SIZE) dim = COVER_ART_MAX_SIZE;
     if (dim > 400)                dim = 400;
-    debugf("[cover] heap free=%u KB, budget dim=%d\n",
-           (unsigned)((heap.total - heap.used) / 1024), dim);
     return dim;
 }
 
-/* Try to load a single image path — starts async decode for both JPEG and PNG.
+/* Try to load a single image path — starts async decode for JPEG or PNG.
+ * max_size is passed in (computed once per scan, not per file).
  * Returns true if loading was initiated successfully. */
-static bool try_cover_path (const char *path) {
+static bool try_cover_path (const char *path, int max_size) {
     if (!path || !path[0]) return false;
-    int64_t fsize = file_get_size((char *)path);
-    if (fsize <= 0) {
-        debugf("[cover] missing or empty: %s\n", path);
-        return false;
-    }
-    int max_size = cover_art_budget_size();
     size_t plen = strlen(path);
     bool is_jpeg = (plen >= 4 && strcmp(path + plen - 4, ".jpg")  == 0) ||
                    (plen >= 5 && strcmp(path + plen - 5, ".jpeg") == 0);
     if (is_jpeg) {
-        debugf("[cover] trying JPEG: %s (max %d)\n", path, max_size);
         if (jpeg_decoder_start((char *)path, max_size, max_size,
                                cover_art_jpeg_callback, NULL) == JPEG_OK) {
-            cover_loading = true;
-            cover_loading_jpeg = true;
+            cover_state = COVER_LOADING_JPEG;
             return true;
         }
         return false;
     } else {
-        debugf("[cover] trying PNG: %s (max %d)\n", path, max_size);
         if (png_decoder_start((char *)path, max_size, max_size,
                               cover_art_png_callback, NULL) == PNG_OK) {
-            cover_loading = true;
-            cover_loading_jpeg = false;
+            cover_state = COVER_LOADING_PNG;
             return true;
         }
         return false;
@@ -130,42 +145,40 @@ static bool try_cover_path (const char *path) {
 
 /* Scan the directory for the next image file and try to load it.
  * Continues from where the previous call left off (via cover_dir_entry state).
- * Called initially and from the PNG callback on failure. */
+ * Called initially and from decoder callbacks on failure. */
 static void try_next_cover_source (void) {
     if (!cover_dir || !cover_dir_scan_active) return;
+
+    /* Budget is computed once per scan pass, not per candidate file */
+    int max_size = cover_art_budget_size();
 
     while (cover_dir_scan_active) {
         if (cover_dir_entry.d_type == DT_REG &&
             file_has_extensions(cover_dir_entry.d_name, cover_image_extensions)) {
             path_t *candidate = path_clone_push(cover_dir, cover_dir_entry.d_name);
-            debugf("[cover] candidate: %s\n", path_get(candidate));
-            /* Advance scan state now — PNG callback may call us again before we return */
+            /* Advance scan state now — callback may call us again before we return */
             if (dir_findnext(path_get(cover_dir), &cover_dir_entry) != 0) {
                 cover_dir_scan_active = false;
             }
-            bool started = try_cover_path(path_get(candidate));
+            bool started = try_cover_path(path_get(candidate), max_size);
             path_free(candidate);
             if (started) return;
-            /* File was empty/corrupt — loop to try the next one */
+            /* File was missing/corrupt — loop to try the next one */
         } else {
             if (dir_findnext(path_get(cover_dir), &cover_dir_entry) != 0) {
                 cover_dir_scan_active = false;
             }
         }
     }
-
-    debugf("[cover] all sources exhausted, no cover art\n");
 }
 
 static void load_cover_art (path_t *dir) {
-    if (cover_loading) {
-        if (cover_loading_jpeg) {
-            jpeg_decoder_abort();
-        } else {
-            png_decoder_abort();
-        }
-        cover_loading = false;
-        cover_loading_jpeg = false;
+    if (cover_state == COVER_LOADING_JPEG) {
+        jpeg_decoder_abort();
+        cover_state = COVER_IDLE;
+    } else if (cover_state == COVER_LOADING_PNG) {
+        png_decoder_abort();
+        cover_state = COVER_IDLE;
     }
     if (cover_image) {
         surface_free(cover_image);
@@ -184,11 +197,8 @@ static void load_cover_art (path_t *dir) {
 
     /* Try embedded cover art from ID3 APIC tag first */
     if (meta->has_cover_art && meta->cover_art_path[0]) {
-        debugf("[cover] has embedded art: %s\n", meta->cover_art_path);
-        if (try_cover_path(meta->cover_art_path)) return;
-        debugf("[cover] embedded art failed, falling back to directory\n");
-    } else {
-        debugf("[cover] no embedded art, trying directory\n");
+        int max_size = cover_art_budget_size();
+        if (try_cover_path(meta->cover_art_path, max_size)) return;
     }
 
     /* Scan directory for any image file */
@@ -284,12 +294,8 @@ static void format_time (char *buffer, float seconds) {
 }
 
 static void draw (menu_t *menu, surface_t *d) {
-    if (cover_loading) {
-        if (cover_loading_jpeg) {
-            jpeg_decoder_poll();
-        } else {
-            png_decoder_poll();
-        }
+    if (cover_state == COVER_LOADING_PNG) {
+        png_decoder_poll();
     }
 
     rdpq_attach(d, NULL);
@@ -334,31 +340,18 @@ static void draw (menu_t *menu, surface_t *d) {
     }
 
     if (cover_image) {
-        int iw = cover_image->width;
-        int ih = cover_image->height;
-        int crop = (iw < ih) ? iw : ih;  /* crop to square using the shorter side */
-        int s0 = (iw - crop) / 2;
-        int t0 = (ih - crop) / 2;
-        /* Center image in the space between title text and the seekbar.
-         * text_bottom: below title/artist/album text (~4 lines at ~20px from y=24)
-         * bar_top: just above the seekbar
-         * Use 16px padding on each side so image floats centered, not pinned. */
-        int text_bottom = VISIBLE_AREA_Y0 + 80;
-        int bar_top     = SEEKBAR_Y - 8;
-        int available   = bar_top - text_bottom;
-        int disp_size   = available - 32;  /* 16px padding top and bottom */
-        int dst_y = text_bottom + (available - disp_size) / 2;
-        int dst_x = DISPLAY_CENTER_X - (disp_size / 2);
+        int crop = (cover_image->width < cover_image->height)
+                   ? cover_image->width : cover_image->height;
         rdpq_mode_push();
         rdpq_set_mode_standard();
         rdpq_mode_filter(FILTER_BILINEAR);
         rdpq_mode_combiner(RDPQ_COMBINER_TEX_FLAT);
         rdpq_mode_blender(0);
-        rdpq_tex_blit(cover_image, dst_x, dst_y, &(rdpq_blitparms_t){
-            .s0 = s0, .t0 = t0,
+        rdpq_tex_blit(cover_image, cover_dst_x, cover_dst_y, &(rdpq_blitparms_t){
+            .s0 = cover_s0, .t0 = cover_t0,
             .width = crop, .height = crop,
-            .scale_x = (float)disp_size / crop,
-            .scale_y = (float)disp_size / crop,
+            .scale_x = (float)cover_disp_size / crop,
+            .scale_y = (float)cover_disp_size / crop,
             .filtering = true,
         });
         rdpq_mode_pop();
@@ -409,30 +402,27 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "A: %s\n"
-        "B: Exit\n",
+        BTN_A " %s\n"
+        BTN_B " Exit\n",
         mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
     );
 
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "^06▲▼^00 ^03▲▼^00: Prev/Next  ^06◀▶^00 ^03◀▶^00: Seek\n"
+        BTN_CU BTN_CD " Prev/Next  " BTN_CL BTN_CR " Seek\n"
     );
 
     rdpq_detach_show();
 }
 
 static void deinit (void) {
-    if (cover_loading) {
-        if (cover_loading_jpeg) {
-            jpeg_decoder_abort();
-        } else {
-            png_decoder_abort();
-        }
-        cover_loading = false;
-        cover_loading_jpeg = false;
+    if (cover_state == COVER_LOADING_JPEG) {
+        jpeg_decoder_abort();
+    } else if (cover_state == COVER_LOADING_PNG) {
+        png_decoder_abort();
     }
+    cover_state = COVER_IDLE;
     if (cover_image) {
         surface_free(cover_image);
         free(cover_image);

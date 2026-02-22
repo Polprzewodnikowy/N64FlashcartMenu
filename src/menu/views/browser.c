@@ -576,14 +576,14 @@ static void draw (menu_t *menu, surface_t *d) {
 
     if (menu->browser.entry) {
         switch (menu->browser.entry->type) {
-            case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-            case ENTRY_TYPE_ROM: action = "A: Load"; break;
-            case ENTRY_TYPE_DISK: action = "A: Load"; break;
-            case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
-            case ENTRY_TYPE_TEXT: action = "A: View"; break;
-            case ENTRY_TYPE_MUSIC: action = "A: Play"; break;
-            case ENTRY_TYPE_ARCHIVE: action = "A: Open"; break;
-            default: action = "A: Info"; break;
+            case ENTRY_TYPE_DIR: action = BTN_A " Enter"; break;
+            case ENTRY_TYPE_ROM: action = BTN_A " Load"; break;
+            case ENTRY_TYPE_DISK: action = BTN_A " Load"; break;
+            case ENTRY_TYPE_IMAGE: action = BTN_A " Show"; break;
+            case ENTRY_TYPE_TEXT: action = BTN_A " View"; break;
+            case ENTRY_TYPE_MUSIC: action = BTN_A " Play"; break;
+            case ENTRY_TYPE_ARCHIVE: action = BTN_A " Open"; break;
+            default: action = BTN_A " Info"; break;
         }
     }
 
@@ -591,24 +591,24 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "%s\n"
-        "^%02XB: Back^00",
+        "^%02XⒷ^00 Back",
         menu->browser.entries == 0 ? "" : action,
-        path_is_root(menu->browser.directory) ? STL_GRAY : STL_DEFAULT
+        path_is_root(menu->browser.directory) ? STL_GRAY : STL_GREEN
     );
 
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
-        "^%02XR:  Options^00",
-        menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
+        "^%02XⓈ^00 Settings\n"
+        BTN_R " Options",
+        menu->browser.entries == 0 ? STL_GRAY : STL_RED
     );
 
     if (menu->current_time >= 0) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            BTN_CD BTN_CU " Fast Scroll | " BTN_CL " Tabs " BTN_CR "\n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -616,7 +616,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            BTN_CD BTN_CU " Fast Scroll | " BTN_CL " Tabs " BTN_CR "\n"
             "\n"
         );
     }

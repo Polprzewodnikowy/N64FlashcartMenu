@@ -173,15 +173,15 @@ static void draw(menu_t *menu, surface_t *display) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load Game\n"
+            BTN_A " Load Game\n"
             "\n"
         );
-        
+
         if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE && selected_item != -1) {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_RIGHT, VALIGN_TOP,
-                "R: Remove item\n"
+                BTN_R " Remove item\n"
                 "\n"
             );
         }
@@ -190,7 +190,7 @@ static void draw(menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "◀ Change Tab ▶\n"
+        BTN_CL " Change Tab " BTN_CR "\n"
         "\n"
     );    
 

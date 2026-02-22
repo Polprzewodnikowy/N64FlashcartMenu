@@ -192,7 +192,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "Do you want to restore this note dump to the Controller Pak?\n\n"
         "Controller selected: %d\n\n"
         "A: Yes  B: No \n"
-        "<- / ->: Change controller",
+        BTN_CL " / " BTN_CR ": Change controller",
         controller_selected + 1
     );
 

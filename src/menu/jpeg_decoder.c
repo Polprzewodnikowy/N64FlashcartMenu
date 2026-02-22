@@ -11,13 +11,10 @@
 #include <jpeglib.h>
 #include <jerror.h>
 #include "jpeg_decoder.h"
-#include "utils/fs.h"
 
 
 typedef struct {
     surface_t      *image;
-    jpeg_err_t      result;
-    bool            done;
     jpeg_callback_t *callback;
     void            *callback_data;
 } jpeg_decoder_t;
@@ -76,6 +73,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
     if (setjmp(jerr.setjmp_buf)) {
         jpeg_destroy_decompress(&cinfo);
         fclose(f);
+        callback(JPEG_ERR_BAD_FILE, NULL, callback_data);
         jpeg_decoder_deinit(false);
         return JPEG_ERR_BAD_FILE;
     }
@@ -131,6 +129,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
         jpeg_abort_decompress(&cinfo);
         jpeg_destroy_decompress(&cinfo);
         fclose(f);
+        callback(JPEG_ERR_OUT_OF_MEM, NULL, callback_data);
         jpeg_decoder_deinit(false);
         return JPEG_ERR_OUT_OF_MEM;
     }
@@ -140,6 +139,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
         jpeg_abort_decompress(&cinfo);
         jpeg_destroy_decompress(&cinfo);
         fclose(f);
+        callback(JPEG_ERR_OUT_OF_MEM, NULL, callback_data);
         jpeg_decoder_deinit(false);
         return JPEG_ERR_OUT_OF_MEM;
     }
@@ -149,6 +149,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
         jpeg_abort_decompress(&cinfo);
         jpeg_destroy_decompress(&cinfo);
         fclose(f);
+        callback(JPEG_ERR_OUT_OF_MEM, NULL, callback_data);
         jpeg_decoder_deinit(true);
         return JPEG_ERR_OUT_OF_MEM;
     }
@@ -158,6 +159,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
         jpeg_abort_decompress(&cinfo);
         jpeg_destroy_decompress(&cinfo);
         fclose(f);
+        callback(JPEG_ERR_OUT_OF_MEM, NULL, callback_data);
         jpeg_decoder_deinit(true);
         return JPEG_ERR_OUT_OF_MEM;
     }
@@ -184,8 +186,9 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
     jpeg_destroy_decompress(&cinfo);
     fclose(f);
 
-    decoder->result = JPEG_OK;
-    decoder->done   = true;
+    surface_t *img = decoder->image;
+    jpeg_decoder_deinit(false);
+    callback(JPEG_OK, img, callback_data);
     return JPEG_OK;
 }
 
@@ -194,15 +197,9 @@ void jpeg_decoder_abort (void) {
 }
 
 float jpeg_decoder_get_progress (void) {
-    if (!decoder) return 0.0f;
-    return decoder->done ? 1.0f : 0.0f;
+    return 0.0f;
 }
 
 void jpeg_decoder_poll (void) {
-    if (!decoder || !decoder->done) return;
-
-    jpeg_err_t result  = decoder->result;
-    surface_t *image   = (result == JPEG_OK) ? decoder->image : NULL;
-    decoder->callback(result, image, decoder->callback_data);
-    jpeg_decoder_deinit(false);
+    /* JPEG decoding is synchronous — callback fires inside jpeg_decoder_start. */
 }

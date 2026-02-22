@@ -509,22 +509,22 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run ROM\n"
-            "B: Back\n"
+            BTN_A " Load and run ROM\n"
+            BTN_B " Back\n"
         );
 
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "Start: Adv. Info\n"
-            "◀ Change game image ▶\n"
+            BTN_START " Adv. Info\n"
+            BTN_CL " Change game image " BTN_CR "\n"
         );
 
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Extra Info\n"
-            "R: Adv. Options\n"
+            BTN_L "|" BTN_Z " Extra Info\n"
+            BTN_R " Adv. Options\n"
         );
 
         if (boxart != NULL) {

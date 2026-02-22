@@ -32,20 +32,20 @@ static void draw (menu_t *menu, surface_t *d) {
     if (info.pak_file_attributes.is_controller_pak_dump) {
         ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Restore to Controller Pak\n"
-            "B: Back"
+            BTN_A " Restore to Controller Pak\n"
+            BTN_B " Back"
         );
     } else if (info.pak_file_attributes.is_controller_pak_dump_note) {
         ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Restore note to Controller Pak\n"
-            "B: Back"
+            BTN_A " Restore note to Controller Pak\n"
+            BTN_B " Back"
         );
     } else {
         ui_components_actions_bar_text_draw(STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
             "\n"
-            "B: Exit"
+            BTN_B " Exit"
         );
     }
 

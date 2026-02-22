@@ -104,8 +104,8 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
-        "^%02XUp / Down: Scroll^00\n"
-        "B: Back",
+        "^%02X" BTN_CU " " BTN_CD " Scroll^00\n"
+        BTN_B " Back",
         text->vertical_scroll_possible ? STL_DEFAULT : STL_GRAY
     );
 

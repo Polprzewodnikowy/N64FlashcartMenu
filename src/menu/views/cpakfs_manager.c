@@ -850,18 +850,18 @@ static void draw (menu_t *menu, surface_t *d) {
 
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Backup whole Pak\n"
-            "B: Back\n"
+            BTN_A " Backup whole Pak\n"
+            BTN_B " Back\n"
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Backup a Note\n"
-            "R: Options\n"
+            BTN_L "|" BTN_Z " Backup a Note\n"
+            BTN_R " Options\n"
         );
     } else {
         ui_components_actions_bar_text_draw(style,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Format Controller Pak\n"
+            BTN_A " Format Controller Pak\n"
             "\n"
         );
     }
@@ -869,7 +869,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(style,
         ALIGN_CENTER, VALIGN_TOP,
         "\n"
-        "◀ Change Controller ▶\n"
+        BTN_CL " Change Controller " BTN_CR "\n"
     );
 
     if (error_message_displayed) {

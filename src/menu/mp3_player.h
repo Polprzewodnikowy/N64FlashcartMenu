@@ -21,7 +21,7 @@ typedef struct {
     char album[MP3_METADATA_MAX_LEN];   /**< Album name */
     int track_number;                    /**< Track number (0 if unknown) */
     bool has_metadata;                   /**< True if any metadata was found */
-    bool has_cover_art;                  /**< True if an APIC PNG was extracted */
+    bool has_cover_art;                  /**< True if an APIC image was extracted */
     char cover_art_path[256];            /**< Path to extracted cover art temp file */
 } mp3_metadata_t;
 

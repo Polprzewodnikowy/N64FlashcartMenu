@@ -11,6 +11,7 @@
 
 #include "../ui_components.h"
 #include "../menu_state.h"
+#include "../ui_components/constants.h"
 
 /**
  * @addtogroup view

@@ -8,7 +8,7 @@
 
 - **New Features**
 	- Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).
-	- MP3 player: display cover art (embedded ID3 APIC PNG or cover.png/folder.png/album.png/front.png in track directory). Note: only PNG cover art is supported — JPEG is not decoded.
+	- MP3 player: display cover art (embedded ID3 APIC tag or cover.png/jpg/folder.png/jpg/album.png/jpg/front.png/jpg in track directory). Supports JPEG and PNG.
 	- MP3 player: ID3v2 metadata display (title, artist, album, track number), bitrate/samplerate info.
 	- MP3 player: track-to-track navigation (up/down), seek (left/right), auto-advance to next track.
 

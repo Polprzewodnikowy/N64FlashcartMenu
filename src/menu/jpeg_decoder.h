@@ -36,18 +36,18 @@ typedef void (jpeg_callback_t)(jpeg_err_t err, surface_t *decoded_image, void *c
  * @param max_height     Maximum output height in pixels.
  * @param callback       Called when decoding completes.
  * @param callback_data  Passed through to callback.
- * @return JPEG_OK if decoding started (or completed synchronously).
+ * @return JPEG_OK on success. The callback is called before this function returns.
  */
 jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
                                jpeg_callback_t *callback, void *callback_data);
 
-/** @brief Abort an in-progress decode and free all resources. */
+/** @brief Abort and free all resources if a decode is in progress. */
 void jpeg_decoder_abort (void);
 
-/** @brief Returns decode progress (0.0–1.0). Currently always 0.0 or 1.0 (synchronous). */
+/** @brief Returns decode progress (0.0–1.0). Provided for API parity with png_decoder. */
 float jpeg_decoder_get_progress (void);
 
-/** @brief Poll for decode completion; fires callback if done. Call once per frame. */
+/** @brief No-op for API parity with png_decoder; JPEG decoding is synchronous. */
 void jpeg_decoder_poll (void);
 
 #endif /* JPEG_DECODER_H__ */

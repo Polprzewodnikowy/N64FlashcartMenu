@@ -362,4 +362,25 @@
  */
 #define TAB_ACTIVE_BACKGROUND_COLOR     RGBA32(0x6F, 0x6F, 0x6F, 0xFF)
 
+/**
+ * @defgroup BTN_LABELS Controller button label macros for action bar text.
+ *
+ * Each macro expands to an inline style-colored glyph string that can be
+ * concatenated directly into any rdpq format string, e.g.:
+ *   BTN_A ": Load\n" BTN_B ": Back"
+ *
+ * Colors match the physical N64 controller buttons:
+ *   A = blue, B = green, Start = red, R/L/Z = gray, C = yellow
+ */
+#define BTN_A       "^02Ⓐ^00"
+#define BTN_B       "^01Ⓑ^00"
+#define BTN_START   "^05Ⓢ^00"
+#define BTN_R       "^06Ⓡ^00"
+#define BTN_L       "^06Ⓛ^00"
+#define BTN_Z       "^06Ⓩ^00"
+#define BTN_CU      "^03▲^00"
+#define BTN_CD      "^03▼^00"
+#define BTN_CL      "^03◀^00"
+#define BTN_CR      "^03▶^00"
+
 #endif /* COMPONENTS_CONSTANTS_H__ */

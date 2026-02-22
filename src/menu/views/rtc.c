@@ -169,8 +169,8 @@ static void draw (menu_t *menu, surface_t *d) {
             ui_components_actions_bar_text_draw(
                 STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
-                "A: Adjust time\n"
-                "B: Back"
+                BTN_A " Adjust time\n"
+                BTN_B " Back"
             );
          }
          else {
@@ -192,7 +192,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
-                "B: Back"
+                BTN_B " Back"
             );
          }
     }
@@ -200,14 +200,14 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
-            "Up/Down: Adjust Field\n"
-            "Left/Right: Switch Field"
+            BTN_CU " " BTN_CD " Adjust Field\n"
+            BTN_CL " " BTN_CR " Switch Field"
         );
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "R: Save\n"
-            "B: Back"
+            BTN_R " Save\n"
+            BTN_B " Back"
         );
     }
 

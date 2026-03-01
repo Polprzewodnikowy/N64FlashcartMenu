@@ -194,11 +194,19 @@ else
 endif
 .PHONY: run-debug
 
+run-debug-reboot: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /dr
+else
+	./remotedeploy.sh -dr
+endif
+.PHONY: run-debug-reboot
+
 run-debug-upload: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)
-	./localdeploy.bat /du
+	./localdeploy.bat /dur
 else
-	./remotedeploy.sh -du
+	./remotedeploy.sh -dur
 endif
 .PHONY: run-debug-upload
 

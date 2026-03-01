@@ -75,7 +75,7 @@ static const char *format_file_type(char *name, file_info_t *info) {
 static const char *format_fat_file_attributes_type(char *name, file_info_t *info) {
     static char fat_attributes[5]; // 4 attributes + null terminator (R, H, S, A)
 
-    sprintf(fat_attributes, "%s%s%s%s",
+    snprintf(fat_attributes, sizeof(fat_attributes), "%s%s%s%s",
         (info->fat_file_attributes.is_read_only ? "R" : "-"), // Read-only attribute
         (info->fat_file_attributes.is_hidden ? "H" : "-"), // Hidden attribute
         (info->fat_file_attributes.is_system ? "S" : "-"), // System attribute

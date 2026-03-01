@@ -361,7 +361,7 @@ void cheat_code_list_draw (cheat_file_code_t *list, int entries, int selected) {
             rdpq_paragraph_builder_style(style);
 
             char str_enabled_buffer[4];
-            sprintf(str_enabled_buffer, "%s",
+            snprintf(str_enabled_buffer, sizeof(str_enabled_buffer), "%s",
                 entry->enabled ? "ON" : "OFF"
             );
 

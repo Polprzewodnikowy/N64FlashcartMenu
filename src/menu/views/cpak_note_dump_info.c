@@ -13,10 +13,10 @@ static char failure_message_note[255];
 static bool start_note_restore;
 
 static bool restore_controller_pak_note(int controller) {
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
 
     if (!has_cpak(controller)) {
-        sprintf(failure_message_note, "No Controller Pak detected on controller %d!", controller + 1);
+        snprintf(failure_message_note, sizeof(failure_message_note), "No Controller Pak detected on controller %d!", controller + 1);
         return false;
     }
 
@@ -87,7 +87,7 @@ static bool restore_controller_pak_note(int controller) {
                                             unique_full, sizeof unique_full,
                                             file_exists_full) == 0)
         {
-            strcpy(filename_note, unique_full);
+            snprintf(filename_note, sizeof(filename_note), "%s", unique_full);
             //debugf("File exists, new name picked: %s\n", filename_note);
         } else {
             cpakfs_unmount(controller);

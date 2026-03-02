@@ -46,7 +46,7 @@ static bool restore_controller_pak_note(int controller) {
     //debugf("Free notes: %d notes\n", free_notes);
 
     if (free_notes <= 0) {
-        sprintf(failure_message_note, "Not enough pages left on Controller Pak in controller %d!\n(Required: 1 / Available: 0)", controller + 1);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Not enough pages left on Controller Pak in controller %d!\n(Required: 1 / Available: 0)", controller + 1);
         cpakfs_unmount(controller);
         return false;
     }
@@ -65,14 +65,14 @@ static bool restore_controller_pak_note(int controller) {
     //debugf("Size in blocks: %d\n", size);
 
     if (size > free_blocks) {
-        sprintf(failure_message_note, "Not enough space on Controller Pak in controller %d!\n(Required: %d / Available: %d)", controller + 1, size, free_blocks);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Not enough space on Controller Pak in controller %d!\n(Required: %d / Available: %d)", controller + 1, size, free_blocks);
         fclose(fSource);
         cpakfs_unmount(controller);
         return false;
     }
 
 
-    sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller], title);
+    snprintf(filename_note, sizeof(filename_note), "%s%s", CPAK_MOUNT_ARRAY[controller], title);
     
     //debugf("Dest. filename: %s\n", filename_note);
 
@@ -133,7 +133,7 @@ static bool restore_controller_pak_note(int controller) {
 
     cpakfs_unmount(controller);
 
-    sprintf(failure_message_note, "Note restored on controller %d!", controller + 1);
+    snprintf(failure_message_note, sizeof(failure_message_note), "Note restored on controller %d!", controller + 1);
 
     return true;
 }
@@ -213,9 +213,9 @@ void view_controller_pak_note_dump_info_init (menu_t *menu) {
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    sprintf(cpak_note_path, "%s", path_get(path));
+    snprintf(cpak_note_path, sizeof(cpak_note_path), "%s", path_get(path));
     start_note_restore = false;
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
 
     path_free(path);
 

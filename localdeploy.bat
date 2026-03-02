@@ -27,8 +27,14 @@ if not "%1" == "/d" goto :not_d
 
 :not_d
 
-if not "%1" == "/du" goto :not_du
+if not "%1" == "/dr" goto :not_dr
+
+%~dp0tools\sc64\sc64deployer debug --no-writeback --init "reboot"
+
+:not_dr
+
+if not "%1" == "/dur" goto :not_dur
 
 %~dp0tools\sc64\sc64deployer debug --no-writeback --init "send-file /sc64menu.n64 @output/sc64menu.n64@;reboot"
 
-:not_du
+:not_dur

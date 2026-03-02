@@ -21,16 +21,16 @@ static void format_elapsed_duration (char *buffer, float elapsed, float duration
     strcpy(buffer, "");
 
     if (duration >= 3600) {
-        snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:", (int) (elapsed) / 3600);
+        snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:", (uint16_t) (elapsed) / 3600);
     }
-    snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:%02d", ((int) (elapsed) % 3600) / 60, (int) (elapsed) % 60);
+    snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:%02d", ((uint16_t) (elapsed) % 3600) / 60, (uint16_t) (elapsed) % 60);
 
     strcat(buffer, " / ");
 
     if (duration >= 3600) {
-        snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:", (int) (duration) / 3600);
+        snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:", (uint16_t) (duration) / 3600);
     }
-    snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:%02d", ((int) (duration) % 3600) / 60, (int) (duration) % 60);
+    snprintf(buffer + strlen(buffer), 64 - strlen(buffer), "%02d:%02d", ((uint16_t) (duration) % 3600) / 60, (uint16_t) (duration) % 60);
 }
 
 

@@ -83,8 +83,10 @@ void sound_init_sfx (void) {
  * @brief Initialize the background music.
  */
 void sound_init_bgm (void) {
-    mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.3f, 0.3f);
     wav64_open(&bgm, "rom:/bgm.wav64");
+    wav64_set_loop(&bgm, true);
+    mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
+    wav64_play(&bgm, SOUND_BGM_CHANNEL);
     bgm_enabled = true;
 }
 
@@ -132,18 +134,6 @@ void sound_play_effect(sound_effect_t sfx) {
             default:
                 break;
         } 
-    }
-}
-
-/**
- * @brief Play background music.
- */
-void sound_play_bgm(void) {
-    if (bgm_enabled) {
-        // wav64_set_loop(&bgm, true);
-        // while (bgm_enabled) {
-            wav64_play(&bgm, SOUND_BGM_CHANNEL); // FIXME: Should be SOUND_BGM_CHANNEL, but wav64_play doesn't support it yet.
-        // }   
     }
 }
 

@@ -83,13 +83,6 @@ void sound_use_bgm(bool enable);
 void sound_play_effect(sound_effect_t sfx);
 
 /**
- * @brief Play background music.
- * 
- * This function starts playing the background music if it is enabled.
- */
-void sound_play_bgm(void);
-
-/**
  * @brief Deinitialize the sound system.
  * 
  * This function deinitializes the sound system, releasing any resources

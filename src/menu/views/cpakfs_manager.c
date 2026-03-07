@@ -954,7 +954,7 @@ static void draw (menu_t *menu, surface_t *d) {
     } else if (show_single_note_write_info_message) {
         ui_components_messagebox_draw(
             "To write a single note, browse to a file"
-            " with the extension \".paknote\".\n\n"
+            " with the extension \".mpkn\" or \".paknote\".\n\n"
             "B: Back"
         );   
     }

@@ -37,13 +37,13 @@ void bookkeeping_init (char *path) {
 void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
     for(uint16_t i = 0; i < count; i++) {
-        sprintf(buf, "%d_primary_path", i);
+        snprintf(buf, sizeof(buf), "%d_primary_path", i);
         list[i].primary_path = path_create(mini_get_string(ini, group, buf, ""));
 
-        sprintf(buf, "%d_secondary_path", i);
+        snprintf(buf, sizeof(buf), "%d_secondary_path", i);
         list[i].secondary_path = path_create(mini_get_string(ini, group, buf, ""));
         
-        sprintf(buf, "%d_type", i);
+        snprintf(buf, sizeof(buf), "%d_type", i);
         list[i].bookkeeping_type = mini_get_int(ini, group, buf, BOOKKEEPING_TYPE_EMPTY);
     }
 }
@@ -76,15 +76,15 @@ void bookkeeping_load (bookkeeping_t *history) {
 static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
     char buf[64];
     for(uint16_t i = 0; i < count; i++) {
-        sprintf(buf, "%d_primary_path", i);
+        snprintf(buf, sizeof(buf), "%d_primary_path", i);
         path_t* path = list[i].primary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
-        sprintf(buf, "%d_secondary_path", i);
+        snprintf(buf, sizeof(buf), "%d_secondary_path", i);
         path = list[i].secondary_path;
         mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
-        sprintf(buf, "%d_type", i);
+        snprintf(buf, sizeof(buf), "%d_type", i);
         mini_set_int(ini, group, buf, list[i].bookkeeping_type);           
     }
 }

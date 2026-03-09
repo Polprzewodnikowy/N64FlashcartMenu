@@ -29,7 +29,7 @@ static const char *format_cart_type () {
 static const char *format_cart_version () {
     flashcart_firmware_version_t version = flashcart_get_firmware_version();
     static char buffer[16];
-    sprintf(buffer, "%u.%u.%lu", version.major, version.minor, version.revision);
+    snprintf(buffer, sizeof(buffer), "%u.%u.%lu", version.major, version.minor, version.revision);
     return buffer;
 }
 

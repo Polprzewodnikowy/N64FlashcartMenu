@@ -8,7 +8,7 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
-MENU_VERSION ?= "Rolling release"
+MENU_VERSION ?= "Preview release"
 BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
 include $(N64_INST)/include/n64.mk
@@ -93,6 +93,7 @@ FONTS = \
 SOUNDS = \
 	cursorsound.wav \
 	back.wav \
+	bgm.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
@@ -193,11 +194,19 @@ else
 endif
 .PHONY: run-debug
 
+run-debug-reboot: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /dr
+else
+	./remotedeploy.sh -dr
+endif
+.PHONY: run-debug-reboot
+
 run-debug-upload: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)
-	./localdeploy.bat /du
+	./localdeploy.bat /dur
 else
-	./remotedeploy.sh -du
+	./remotedeploy.sh -dur
 endif
 .PHONY: run-debug-upload
 

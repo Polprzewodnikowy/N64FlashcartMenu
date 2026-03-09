@@ -9,6 +9,7 @@
 #include <string.h>
 
 static bool show_extra_info_message = false;
+static bool show_advanced_info_message = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
@@ -42,7 +43,7 @@ static void scan_metadata_images(menu_t *menu) {
         memcpy(safe_title, menu->load.rom_info.title, 20);
         safe_title[20] = '\0';
         
-        sprintf(game_code_path, "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
+        snprintf(game_code_path, sizeof(game_code_path), "homebrew/%s", safe_title); // should be HOMEBREW_ID_SUBDIRECTORY
         path_push(path, game_code_path);
     }
     else {
@@ -94,7 +95,11 @@ static void scan_metadata_images(menu_t *menu) {
 }
 
 static const char *format_rom_description(menu_t *menu) {
-    char *rom_description = NULL;
+    const char *rom_description = NULL;
+
+    if (menu->load.rom_info.meta.short_description != NULL && strlen(menu->load.rom_info.meta.short_description) > 0) {
+        rom_description = menu->load.rom_info.meta.short_description;
+    }
 
     return rom_description ? rom_description : "No description available.";
 }
@@ -216,15 +221,27 @@ static const char *format_cic_type (rom_cic_type_t cic_type) {
     }
 }
 
-static const char *format_esrb_age_rating (rom_esrb_age_rating_t esrb_age_rating) {
-    switch (esrb_age_rating) {
-        case ROM_ESRB_AGE_RATING_NONE: return "None";
-        case ROM_ESRB_AGE_RATING_EVERYONE: return "Everyone";
-        case ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS: return "Everyone 10+";
-        case ROM_ESRB_AGE_RATING_TEEN: return "Teen";
-        case ROM_ESRB_AGE_RATING_MATURE: return "Mature";
-        case ROM_ESRB_AGE_RATING_ADULT: return "Adults Only";
-        default: return "Unknown";
+static const char *format_age_rating (uint32_t age_rating) {
+    if (age_rating >= 18) {
+        return "Adults Only";
+    }
+    else if (age_rating >= 17) {
+        return "Mature";
+    }
+    else if (age_rating >= 13) {
+        return "Teen";
+    }
+    else if (age_rating >= 10) {
+        return "Everyone 10+";
+    }
+    else if (age_rating > 0) {
+        return "Everyone";
+    }
+    else if (age_rating == 0) {
+        return "None";
+    }
+    else {
+        return "Unknown";
     }
 }
 
@@ -421,6 +438,13 @@ static void process (menu_t *menu) {
             show_extra_info_message = true;
         }
         sound_play_effect(SFX_SETTING);
+    } else if (menu->actions.settings) { // TODO: change to go_right/go_left when those are implemented
+        if (show_advanced_info_message) {
+            show_advanced_info_message = false;
+        } else {
+            show_advanced_info_message = true;
+        }
+        sound_play_effect(SFX_SETTING);
     } else if (menu->actions.go_right) {
         iterate_metadata_image(menu, 1);
         sound_play_effect(SFX_CURSOR);
@@ -444,14 +468,16 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "%s\n",
-            rom_filename
+            "%s\n"
+            "%.20s\n",
+            rom_filename,
+            menu->load.rom_info.title
         );
 
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\t%.300s\n",
+            "\n\n\n\t%.120s\n",
             format_rom_description(menu)
             
         );
@@ -459,21 +485,25 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n\n"
-            "Datel Cheats:\t\t%s\n"
-            "Patches:\t\t\t%s\n"
+            "\n\n\n\n\n\n\n\n\n\n\n"
+            "Save type:\t\t%s\n"
             "TV region:\t\t%s\n"
+            "\n"
             "Expansion PAK:\t%s\n"
             "Rumble PAK:\t\t%s\n"
             "Transfer PAK:\t\t%s\n"
-            "Save type:\t\t%s\n",
-            format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
-            format_boolean_type(menu->load.rom_info.settings.patches_enabled),
+            "\n"
+            "Datel Cheats:\t\t%s\n"
+            "Patches:\t\t\t%s\n"
+            ,
+            
+            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak),
             format_rom_tv_type(rom_info_get_tv_type(&menu->load.rom_info)),
             format_rom_expansion_pak_info(menu->load.rom_info.features.expansion_pak),
             format_rom_pak_feature_info(menu->load.rom_info.features.rumble_pak),
             format_rom_pak_feature_info(menu->load.rom_info.features.transfer_pak),
-            format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak)
+            format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
+            format_boolean_type(menu->load.rom_info.settings.patches_enabled)
         );
 
         ui_components_actions_bar_text_draw(
@@ -481,6 +511,13 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_LEFT, VALIGN_TOP,
             "A: Load and run ROM\n"
             "B: Back\n"
+        );
+
+        ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
+            ALIGN_CENTER, VALIGN_TOP,
+            "Start: Adv. Info\n"
+            "◀ Change game image ▶\n"
         );
 
         ui_components_actions_bar_text_draw(
@@ -498,31 +535,47 @@ static void draw (menu_t *menu, surface_t *d) {
             ui_components_messagebox_draw(
                 "EXTRA ROM INFO\n"
                 "\n"
-                "Endianness: %s\n"
                 "Title: %.20s\n"
+                "Age Rating: %s\n"
+                "Release Date: %s\n"
+                "Author: %s\n"
+                "Website: %s\n"
+                "License: %s\n"
                 "Game code: %c%c%c%c\n"
                 "Media type: %s\n"
                 "Variant: %s\n"
                 "Version: %hhu\n"
-                "ESRB Age Rating: %s\n"
-                "Check code: 0x%016llX\n"
-                "CIC: %s\n"
-                "Boot address: 0x%08lX\n"
-                "SDK version: %.1f%c\n"
-                "Clock Rate: %.2fMHz\n\n\n"
+                "CIC: %s\n\n\n"
                 "Press L|Z to return.\n",
-                format_rom_endianness(menu->load.rom_info.endianness),
                 menu->load.rom_info.title,
+                format_age_rating(menu->load.rom_info.meta.age_rating),
+                menu->load.rom_info.meta.release_date,
+                menu->load.rom_info.meta.author,
+                menu->load.rom_info.meta.website,
+                menu->load.rom_info.meta.osi_license,
                 menu->load.rom_info.game_code[0], menu->load.rom_info.game_code[1], menu->load.rom_info.game_code[2], menu->load.rom_info.game_code[3],
                 format_rom_media_type(menu->load.rom_info.category_code),
                 format_rom_destination_market(menu->load.rom_info.destination_code),
                 menu->load.rom_info.version,
-                format_esrb_age_rating(menu->load.rom_info.metadata.esrb_age_rating),
-                menu->load.rom_info.check_code,
-                format_cic_type(rom_info_get_cic_type(&menu->load.rom_info)),
+                format_cic_type(rom_info_get_cic_type(&menu->load.rom_info))
+            );
+        }
+
+        if (show_advanced_info_message) {
+            ui_components_messagebox_draw(
+                "ADVANCED ROM INFO\n"
+                "\n"
+                "Boot address: 0x%08lX\n"
+                "SDK version: %.1f%c\n"
+                "Clock Rate: %.2fMHz\n"
+                "Check code: 0x%016llX\n"
+                "Endianness: %s\n\n\n"
+                "Press START to return.\n",
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
-                menu->load.rom_info.clock_rate
+                menu->load.rom_info.clock_rate,
+                menu->load.rom_info.check_code,
+                format_rom_endianness(menu->load.rom_info.endianness)
             );
         }
 
@@ -626,6 +679,7 @@ void view_load_rom_init (menu_t *menu) {
     if (!menu->settings.rom_autoload_enabled) {
 #endif
         if (menu->load.rom_path) {
+            rom_info_free_meta(&menu->load.rom_info);
             path_free(menu->load.rom_path);
         }
 
@@ -645,12 +699,20 @@ void view_load_rom_init (menu_t *menu) {
     if (show_extra_info_message) {
         show_extra_info_message = false;
     }
+    if (show_advanced_info_message) {
+        show_advanced_info_message = false;
+    }
 
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
+        rom_info_free_meta(&menu->load.rom_info);
         path_free(menu->load.rom_path);
         menu->load.rom_path = NULL;
+        //disable the attempt at loading the favorite / history
+        menu->load.load_history_id = -1;
+        menu->load.load_favorite_id = -1;
+        // FIXME: use bookkeeping_favorite_remove() here instead of just showing an error and leaving the broken favorite / history item in place
         menu_show_error(menu, convert_error_message(err));
         return;
     }

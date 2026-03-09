@@ -65,7 +65,7 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
         path_push(path, boxart_path);
     }
     else {
-        sprintf(boxart_path, "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+        snprintf(boxart_path, sizeof(boxart_path), "%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
         path_push(path, boxart_path);
 
         if (!directory_exists(path_get(path))) { // Allow boxart to not specify the region code.

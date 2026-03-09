@@ -10,6 +10,10 @@ if [ "$1" = "-d" ]; then
     sc64deployer $REMOTE debug --no-writeback
 fi
 
-if [ "$1" = "-du" ]; then
+if [ "$1" = "-dr" ]; then
+    sc64deployer $REMOTE debug --no-writeback --init "reboot"
+fi
+
+if [ "$1" = "-dur" ]; then
     sc64deployer $REMOTE debug --no-writeback --init "send-file /sc64menu.n64 @output/sc64menu.n64@;reboot"
 fi

@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Update the menu
 This menu is updated often. It is independent of the flashcart firmware, and must be updated separately.
 

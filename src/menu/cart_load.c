@@ -148,7 +148,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
  * @param progress Progress callback function.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
+cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_callback_t progress) {
     if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
         return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
     }
@@ -194,6 +194,9 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
+    // TODO: Support multi-disk 64DD games and implement rules for disk swapping.
+    // e.g. menu->flashcart_err = flashcart_load_64dd_disks(&menu->load.disk_slots.primary.disk_path, &disk_parameters, menu->load.disk_slot[], swap_disk_count);
+
     menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
@@ -220,9 +223,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
-             // Tested against https://themanbehindcurtain.blogspot.com/2017/12/small-neon64-hdmi-audio-fix.html
-             // Save states in newer versions might require a different save type.
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
+             // Tested against Neon 64 v1.2, v0.3 and v2
+            save_type = FLASHCART_SAVE_TYPE_SRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");

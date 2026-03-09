@@ -4,9 +4,13 @@
 #include "../sound.h"
 #include "views.h"
 #include "../bookkeeping.h"
+#include <string.h>
+
+#define DISK_SLOTS_MAX 3 // Maximum number of disk slots supported (excluding the primary disk)
 
 static component_boxart_t *boxart;
 static char *disk_filename;
+static uint16_t swap_disk_count = 0;
 
 static char *convert_disk_error_message (disk_err_t err) {
     switch (err) {
@@ -35,7 +39,6 @@ static char *format_disk_region (disk_region_t region) {
     }
 }
 
-
 static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.disk_slots.primary.disk_path, menu->load.rom_path, BOOKKEEPING_TYPE_DISK);
 }
@@ -44,7 +47,6 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
-
 
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
@@ -67,6 +69,77 @@ static void process (menu_t *menu) {
     }
 }
 
+static void scan_for_swap_disks(menu_t *menu) {
+    uint16_t result;
+    dir_t info;
+
+    // Reset swap disk count
+    swap_disk_count = 0;
+
+    // Free any existing swap disk paths
+    for (uint16_t i = 0; i < DISK_SLOTS_MAX; i++) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+            path_free(menu->load.disk_slots.swap_slot[i].disk_path);
+            menu->load.disk_slots.swap_slot[i].disk_path = NULL;
+        }
+    }
+
+    // Get directory path from primary disk
+    path_t *dir_path = path_clone(menu->load.disk_slots.primary.disk_path);
+    path_pop(dir_path);
+
+    // Scan directory using dir_findfirst/dir_findnext
+    result = dir_findfirst(path_get(dir_path), &info);
+
+    while (result == 0) {
+        // Skip if we've reached maximum swap disk count
+        if (swap_disk_count >= DISK_SLOTS_MAX) {
+            break;
+        }
+
+        // Skip directories
+        if (info.d_type == DT_DIR) {
+            result = dir_findnext(path_get(dir_path), &info);
+            continue;
+        }
+
+        // Check for .ndd extension
+        size_t name_len = strlen(info.d_name);
+        if (name_len < 4 || strcasecmp(info.d_name + name_len - 4, ".ndd") != 0) {
+            result = dir_findnext(path_get(dir_path), &info);
+            continue;
+        }
+
+        // Skip if this is the primary disk
+        if (strcmp(info.d_name, path_last_get(menu->load.disk_slots.primary.disk_path)) == 0) {
+            result = dir_findnext(path_get(dir_path), &info);
+            continue;
+        }
+
+        // Construct full path for this potential swap disk
+        path_t *candidate_path = path_clone_push(dir_path, info.d_name);
+
+        // Try to load disk info to validate it's a proper disk
+        disk_err_t err = disk_info_load(
+            candidate_path,
+            &menu->load.disk_slots.swap_slot[swap_disk_count].disk_info
+        );
+
+        if (err == DISK_OK) {
+            // Valid disk found - add to swap slots
+            menu->load.disk_slots.swap_slot[swap_disk_count].disk_path = candidate_path;
+            swap_disk_count++;
+        } else {
+            // Invalid disk - free the path
+            path_free(candidate_path);
+        }
+
+        result = dir_findnext(path_get(dir_path), &info);
+    }
+
+    path_free(dir_path);
+}
+
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
@@ -81,7 +154,6 @@ static void draw (menu_t *menu, surface_t *d) {
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
             "64DD disk information\n"
-            "\n"
             "%s",
             disk_filename
         );
@@ -89,35 +161,53 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n"
+            "\n\n\n\t%.120s\n",
+            "No description available."
+        );
+
+        ui_components_main_text_draw(
+            STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n\n\n\n\n\n\n\n"
             "%s%s\n",
-            menu->load.rom_path ? "Loaded ROM:\t" : "",
+            menu->load.rom_path ? "Using Game PAK:\t" : "",
             menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
         );
 
         ui_components_main_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n"
-            "Description:\n\t%s\n",
-            "None."
-        );
+            "\n\n\n\n\n\n\n\n\n"
+            "Primary Disk:\n"
+            "\tRegion:\t\t%s\n"
+            "\tUnique ID:\t%.4s\n"
+            "\tVersion:\t\t%hhu\n"
+            "\tDisk type:\t%d\n"
+            "\tSwap disks:\t%d found\n",
 
-        ui_components_main_text_draw(
-            STL_DEFAULT,
-            ALIGN_LEFT, VALIGN_TOP,
-            "\n\n\n\n\n\n\n\n\n\n\n\n"
-            " Region:\t\t%s\n"
-            " Unique ID:\t%.4s\n"
-            " Version:\t%hhu\n"
-            " Disk type:\t%d\n"
-            "\n"
-            ,
             format_disk_region(menu->load.disk_slots.primary.disk_info.region),
             menu->load.disk_slots.primary.disk_info.id,
             menu->load.disk_slots.primary.disk_info.version,
-            menu->load.disk_slots.primary.disk_info.disk_type
+            menu->load.disk_slots.primary.disk_info.disk_type,
+            swap_disk_count
         );
+
+        // Display swap disk info if available
+        if (swap_disk_count > 0) {
+            ui_components_main_text_draw(
+                STL_DEFAULT,
+                ALIGN_LEFT, VALIGN_TOP,
+                "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+                "\t\t1: %s\n"
+                "\t\t2: %s\n"
+                "\t\t3: %s\n",
+
+                swap_disk_count > 0 ? path_last_get(menu->load.disk_slots.swap_slot[0].disk_path) : "Empty",
+                swap_disk_count > 1 ? path_last_get(menu->load.disk_slots.swap_slot[1].disk_path) : "Empty",
+                swap_disk_count > 2 ? path_last_get(menu->load.disk_slots.swap_slot[2].disk_path) : "Empty"
+            );
+        }
+        
 
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
@@ -159,7 +249,7 @@ static void draw_progress (float progress) {
         rdpq_attach(d, NULL);
 
         ui_components_background_draw();
-        
+
         ui_components_loader_draw(progress, "Loading 64DD disk...");
 
         rdpq_detach_show();
@@ -177,7 +267,7 @@ static void load (menu_t *menu) {
         }
     }
 
-    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
+    err = cart_load_64dd_ipl_and_disks(menu, draw_progress);
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));
         return;
@@ -211,6 +301,7 @@ static void deinit (void) {
 static bool load_rom(menu_t* menu, path_t* rom_path) {
     if(path_has_value(rom_path)) {
         if (menu->load.rom_path) {
+            rom_info_free_meta(&menu->load.rom_info);
             path_free(menu->load.rom_path);
             menu->load.rom_path = NULL;
         }
@@ -219,6 +310,7 @@ static bool load_rom(menu_t* menu, path_t* rom_path) {
 
         rom_err_t err = rom_config_load(rom_path, &menu->load.rom_info);
         if (err != ROM_OK) {
+            rom_info_free_meta(&menu->load.rom_info);
             path_free(menu->load.rom_path);
             menu->load.rom_path = NULL;
             menu_show_error(menu, convert_rom_error_message(err));
@@ -239,8 +331,8 @@ void view_load_disk_init (menu_t *menu) {
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {
         bookkeeping_item_t* items;
-        int item_id = -1;
-        int max_count = 0;
+        int16_t item_id = -1;
+        uint16_t max_count = 0;
 
         if(menu->load.load_history_id != -1) {
             item_id = menu->load.load_history_id;
@@ -261,7 +353,7 @@ void view_load_disk_init (menu_t *menu) {
             menu_show_error(menu, "Invalid selection index");
             return;
         }
-        
+
         // Check if the slot is actually populated
         if (items[item_id].bookkeeping_type == BOOKKEEPING_TYPE_EMPTY || 
             !path_has_value(items[item_id].primary_path)) {
@@ -284,12 +376,9 @@ void view_load_disk_init (menu_t *menu) {
         menu_show_error(menu, convert_disk_error_message(err));
         return;
     }
-    // load swap disks
-    // disk_err_t err = disk_info_load(menu->load.disk_slots.slot[0].disk_path, &menu->load.disk_slots.slot[0].disk_info);
-    // if (err != DISK_OK) {
-    //     menu_show_error(menu, convert_disk_error_message(err));
-    //     return;
-    // }
+
+    // Scan for swap disks in the same directory
+    scan_for_swap_disks(menu);
 
     ui_components_context_menu_init(&options_context_menu);
     boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.disk_slots.primary.disk_info.id, NULL, IMAGE_BOXART_FRONT);

@@ -16,10 +16,10 @@ static bool start_complete_restore;
 #define CONTROLLERPAK_BANK_SIZE 32768
 
 static bool restore_controller_pak(int controller) {
-    sprintf(failure_message, " ");
+    snprintf(failure_message, sizeof(failure_message), " ");
 
     if (!has_cpak(controller)) {
-        sprintf(failure_message, "No Controller Pak detected on controller %d!", controller + 1);
+        snprintf(failure_message, sizeof(failure_message), "No Controller Pak detected on controller %d!", controller + 1);
         return false;
     }
 
@@ -27,26 +27,26 @@ static bool restore_controller_pak(int controller) {
 
     uint8_t *data = malloc(CONTROLLERPAK_BANK_SIZE);
     if (!data) {
-        sprintf(failure_message, "Memory allocation failed!");
+        snprintf(failure_message, sizeof(failure_message), "Memory allocation failed!");
         return false;
     }
 
     FILE *fp = fopen(cpak_path, "rb");
     if (!fp) {
-        sprintf(failure_message, "Failed to open file for reading!");
+        snprintf(failure_message, sizeof(failure_message), "Failed to open file for reading!");
         free(data);
         return false;
     }
 
     if (fseek(fp, 0, SEEK_END) != 0) {
-        sprintf(failure_message, "Seek failed!");
+        snprintf(failure_message, sizeof(failure_message), "Seek failed!");
         fclose(fp);
         free(data);
         return false;
     }
     long filesize = ftell(fp);
     if (filesize < 0) {
-        sprintf(failure_message, "ftell failed!");
+        snprintf(failure_message, sizeof(failure_message), "ftell failed!");
         fclose(fp);
         free(data);
         return false;
@@ -57,13 +57,13 @@ static bool restore_controller_pak(int controller) {
 
     int banks_on_device = cpak_probe_banks(controller);
     if (banks_on_device < 1) {
-        sprintf(failure_message, "Cannot probe Controller Pak banks (err=%d)!", banks_on_device);
+        snprintf(failure_message, sizeof(failure_message), "Cannot probe Controller Pak banks (err=%d)!", banks_on_device);
         fclose(fp);
         free(data);
         return false;
     }
     if (total_banks > banks_on_device) {
-        sprintf(failure_message, "Dump file too large (%d banks) for controller (%d banks)!",
+        snprintf(failure_message, sizeof(failure_message), "Dump file too large (%d banks) for controller (%d banks)!",
                 total_banks, banks_on_device);
         fclose(fp);
         free(data);
@@ -75,7 +75,7 @@ static bool restore_controller_pak(int controller) {
     for (int bank = 0; bank < total_banks; bank++) {
         size_t bytesRead = fread(data, 1, CONTROLLERPAK_BANK_SIZE, fp);
         if (bytesRead == 0 && ferror(fp)) {
-            sprintf(failure_message, "Read error from dump file!");
+            snprintf(failure_message, sizeof(failure_message), "Read error from dump file!");
             fclose(fp);
             free(data);
             return false;
@@ -84,13 +84,13 @@ static bool restore_controller_pak(int controller) {
 
         int written = cpak_write((joypad_port_t)controller, (uint8_t)bank, 0, data, bytesRead);
         if (written < 0) {
-            sprintf(failure_message, "Failed to write bank %d to Controller Pak! errno=%d", bank, written);
+            snprintf(failure_message, sizeof(failure_message), "Failed to write bank %d to Controller Pak! errno=%d", bank, written);
             fclose(fp);
             free(data);
             return false;
         }
         if ((size_t)written != bytesRead) {
-            sprintf(failure_message, "Short write on bank %d: wrote %d / %zu bytes", bank, written, bytesRead);
+            snprintf(failure_message, sizeof(failure_message), "Short write on bank %d: wrote %d / %zu bytes", bank, written, bytesRead);
             fclose(fp);
             free(data);
             return false;
@@ -100,7 +100,7 @@ static bool restore_controller_pak(int controller) {
     fclose(fp);
     free(data);
 
-    sprintf(failure_message, "Dump restored on controller %d!", controller + 1);
+    snprintf(failure_message, sizeof(failure_message), "Dump restored on controller %d!", controller + 1);
     return true;
 }
 
@@ -176,9 +176,9 @@ void view_controller_pak_dump_info_init (menu_t *menu) {
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    sprintf(cpak_path, "%s", path_get(path));
+    snprintf(cpak_path, sizeof(cpak_path), "%s", path_get(path));
     start_complete_restore = false;
-    sprintf(failure_message, " ");
+    snprintf(failure_message, sizeof(failure_message), " ");
 
     path_free(path);
 }

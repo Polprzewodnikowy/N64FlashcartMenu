@@ -1,10 +1,48 @@
-# Rolling release
-built from latest commit on main branch.  
-**Note**: the attached source code files may be out of date.
+# Release Notes
 
 - For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
+
+## Release Notes 2026-Vnext
+
+- **New Features**
+	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- Adds settings to hide cheat and save file types in the browser.
+
+- **Bug Fixes**
+	- Neon64 1Mbit SRAM.
+
+- **Documentation**
+	- Minor fixes.
+
+- **Refactor**
+	- PAL60 (using new libdragon support).
+	- Age ratings (align with homebrew metadata standard).
+	- rom metadata (align with homebrew metadata standard, still requires zip extraction support).
+
+- **Other**
+	- Updated libDragon SDK.
+	- Updated miniz lib.
+	- Add docfx devcontiner.
+	- Remove rolling prerelease (all releases to main should be tagged).
+	- Added AI instructions to repo.
+	- Improved disk view.
+
+### Breaking changes
+- None.
+
+
+### Current known Issues
+- Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
+
+
+### Deprecation notices
+- None.
+
 
 ## Release Notes 2025-12-04 - Tagged 0.3.1
 
@@ -40,6 +78,8 @@ built from latest commit on main branch.
 ### Current known Issues
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
+- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
 
 
 ### Deprecation notices
@@ -93,6 +133,8 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
 
 
 ### Deprecation notices

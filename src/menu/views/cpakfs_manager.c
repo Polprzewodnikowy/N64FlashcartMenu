@@ -51,6 +51,7 @@ static bool show_single_note_dump_confirm_message;
 static bool show_single_note_delete_confirm_message;
 static bool show_format_controller_pak_confirm_message;
 static bool show_complete_write_confirm_message;
+static bool show_single_note_write_info_message;
 
 static bool start_complete_dump;
 static bool start_single_note_dump;
@@ -71,6 +72,7 @@ static void reset_vars(){
     show_single_note_delete_confirm_message = false;
     show_format_controller_pak_confirm_message = false;
     show_complete_write_confirm_message = false;
+    show_single_note_write_info_message = false;
     start_complete_dump = false;
     start_single_note_dump = false;
     start_single_note_delete = false;
@@ -106,12 +108,12 @@ static void get_rtc_time(char* formatted_time) {
 
 static void free_controller_pak_name_notes() {
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
-        sprintf(controller_pak_name_notes[i], " ");
-        sprintf(controller_pak_name_notes_bank_size[i], " ");
-        sprintf(cpakfs_path_strings[i].gamecode, " ");
-        sprintf(cpakfs_path_strings[i].pubcode, " ");
-        sprintf(cpakfs_path_strings[i].filename, " ");
-        sprintf(cpakfs_path_strings[i].ext, " ");
+        snprintf(controller_pak_name_notes[i], sizeof(controller_pak_name_notes[i]), " ");
+        snprintf(controller_pak_name_notes_bank_size[i], sizeof(controller_pak_name_notes_bank_size[i]), " ");
+        snprintf(cpakfs_path_strings[i].gamecode, sizeof(cpakfs_path_strings[i].gamecode), " ");
+        snprintf(cpakfs_path_strings[i].pubcode, sizeof(cpakfs_path_strings[i].pubcode), " ");
+        snprintf(cpakfs_path_strings[i].filename, sizeof(cpakfs_path_strings[i].filename), " ");
+        snprintf(cpakfs_path_strings[i].ext, sizeof(cpakfs_path_strings[i].ext), " ");
     }
 }
 
@@ -166,10 +168,10 @@ static void check_accessories(int controller) {
 }
 
 static void format_controller_pak () {
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
     int res = cpakfs_format(controller_selected, false);
     if (res < 0) {
-        sprintf(failure_message_note, "Unable to format Controller Pak on controller %d!\nError code: %d", controller_selected + 1, res);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Unable to format Controller Pak on controller %d!\nError code: %d", controller_selected + 1, res);
         error_message_displayed = true;
     }
     reset_vars();
@@ -192,24 +194,29 @@ static void active_restore_controller_pak_message(menu_t *menu, void *arg) {
     show_complete_write_confirm_message = true;
 }
 
+static void active_restore_controller_pak_note_message(menu_t *menu, void *arg) {
+    show_single_note_write_info_message = true;
+}
+
 static component_context_menu_t options_context_menu = {
     .list = {
         { .text = "Format Controller Pak", .action = active_format_controller_pak_message },
         { .text = "Delete single note", .action = active_single_note_delete_message },
         { .text = "Restore a dump to the Controller Pak", .action = active_restore_controller_pak_message },
+        { .text = "Restore a note to the Controller Pak", .action = active_restore_controller_pak_note_message },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
 
 static void write_note_name_info_list(int16_t controller, int index, char* entry_name) {
     char filename_cpak[256];
-    sprintf(filename_cpak, "%s%s", CPAK_MOUNT_ARRAY[controller], entry_name);
+    snprintf(filename_cpak, sizeof(filename_cpak), "%s%s", CPAK_MOUNT_ARRAY[controller], entry_name);
     int size = get_block_size_from_fs_path(filename_cpak);
 
     if (size < 0) {
-        sprintf(controller_pak_name_notes_bank_size[index], " ");
+        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), " ");
     } else {
-        sprintf(controller_pak_name_notes_bank_size[index], "(%-3.3d)", size);
+        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), "(%-3.3d)", size);
     }
     snprintf(controller_pak_name_notes[index], MAX_STRING_LENGTH, "%s", entry_name);
     parse_cpakfs_fullname(entry_name, &cpakfs_path_strings[index]);
@@ -239,7 +246,7 @@ static void populate_list_cpakfs() {
 }
 
 static void dump_complete_cpak(int port) {
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
 
     
     int banks = cpak_probe_banks(port);
@@ -250,18 +257,18 @@ static void dump_complete_cpak(int port) {
 
     get_rtc_time(string_datetime_cpak);
     char complete_filename[200];
-    sprintf(complete_filename, "%s/CPAK_%s%s", CPAK_PATH, string_datetime_cpak, CPAK_EXTENSION);
+    snprintf(complete_filename, sizeof(complete_filename), "%s/CPAK_%s%s", CPAK_PATH, string_datetime_cpak, CPAK_EXTENSION);
 
     FILE *fp = fopen(complete_filename, "wb");
     if (!fp) {
-        sprintf(failure_message_note, "Failed to open file for writing: %s\n", complete_filename);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Failed to open file for writing: %s\n", complete_filename);
         error_message_displayed = true;
         return;
     }
 
     uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
     if (!bankbuf) {
-        sprintf(failure_message_note, "Memory allocation failed!");
+        snprintf(failure_message_note, sizeof(failure_message_note), "Memory allocation failed!");
         error_message_displayed = true;
         fclose(fp);
         return;
@@ -270,7 +277,7 @@ static void dump_complete_cpak(int port) {
     for (int b = 0; b < banks; ++b) {
         int rd = cpak_read((joypad_port_t)port, (uint8_t)b, 0, bankbuf, MEMPAK_BANK_SIZE);
         if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
-            sprintf(failure_message_note, "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
+            snprintf(failure_message_note, sizeof(failure_message_note), "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
             error_message_displayed = true;
             free(bankbuf);
             fclose(fp);
@@ -279,7 +286,7 @@ static void dump_complete_cpak(int port) {
 
         size_t wr = fwrite(bankbuf, 1, MEMPAK_BANK_SIZE, fp);
         if (wr != MEMPAK_BANK_SIZE) {
-            sprintf(failure_message_note, "Failed to write data to file: %s", complete_filename);
+            snprintf(failure_message_note, sizeof(failure_message_note), "Failed to write data to file: %s", complete_filename);
             error_message_displayed = true;
             free(bankbuf);
             fclose(fp);
@@ -293,26 +300,26 @@ static void dump_complete_cpak(int port) {
 }
 
 static void dump_single_note(int _port, int16_t selected_index) {
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
     FILE *fSource, *fDump;
     char filename_note[256];
 
     get_rtc_time(string_datetime_cpak);
 
-    sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
+    snprintf(filename_note, sizeof(filename_note), "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
 
     fSource = fopen(filename_note, "rb");
     if (fSource == NULL) {
-        sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
+        snprintf(failure_message_note, sizeof(failure_message_note), "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
         error_message_displayed = true;
         return;
     }
 
-    sprintf(filename_note, "%s/%s_%s%s", CPAK_NOTES_PATH, controller_pak_name_notes[selected_index], string_datetime_cpak, CPAK_NOTE_EXTENSION);
+    snprintf(filename_note, sizeof(filename_note), "%s/%s_%s%s", CPAK_NOTES_PATH, controller_pak_name_notes[selected_index], string_datetime_cpak, CPAK_NOTE_EXTENSION);
 
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {
-        sprintf(failure_message_note, "Unable to create dump file: %s", filename_note);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Unable to create dump file: %s", filename_note);
         fclose(fSource);
         error_message_displayed = true;
         return;
@@ -339,7 +346,7 @@ static void dump_single_note(int _port, int16_t selected_index) {
         if (bytesWritten < bytesRead) {
             fclose(fSource);
             fclose(fDump);
-            sprintf(failure_message_note, "Write error while copying to destination!");
+            snprintf(failure_message_note, sizeof(failure_message_note), "Write error while copying to destination!");
             error_message_displayed = true;
             return;
         }
@@ -364,13 +371,13 @@ static bool file_exists(const char *filename)
 }
 
 static void delete_single_note(int _port, unsigned short selected_index) {
-    sprintf(failure_message_note, " ");
+    snprintf(failure_message_note, sizeof(failure_message_note), " ");
     char filename_note[256];
 
-    sprintf(filename_note, "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
+    snprintf(filename_note, sizeof(filename_note), "%s%s", CPAK_MOUNT_ARRAY[controller_selected], controller_pak_name_notes[selected_index]);
 
     if (!file_exists(filename_note)) {
-        sprintf(failure_message_note, "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
+        snprintf(failure_message_note, sizeof(failure_message_note), "No note found in controller %d at slot %d!", controller_selected + 1, selected_index + 1);
         error_message_displayed = true;
         return;
     }
@@ -378,7 +385,7 @@ static void delete_single_note(int _port, unsigned short selected_index) {
     remove(filename_note);
 
     if (file_exists(filename_note)) {
-        sprintf(failure_message_note, "Failed to delete file: %s", filename_note);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Failed to delete file: %s", filename_note);
         error_message_displayed = true;
         return;
     }  
@@ -443,6 +450,7 @@ static void process (menu_t *menu) {
 
         if (!show_complete_dump_confirm_message && 
             !show_complete_write_confirm_message && 
+            !show_single_note_write_info_message &&
             !show_single_note_dump_confirm_message &&
             !show_single_note_delete_confirm_message &&
             !show_format_controller_pak_confirm_message) {
@@ -482,6 +490,7 @@ static void process (menu_t *menu) {
                 use_rtc && 
                 !show_complete_dump_confirm_message && 
                 !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_single_note_delete_confirm_message &&
                 !show_format_controller_pak_confirm_message) {
@@ -493,7 +502,8 @@ static void process (menu_t *menu) {
             // Pressing L or Z : dump a single note
             else if (menu->actions.lz_context && 
                 use_rtc && 
-                !show_complete_write_confirm_message && 
+                !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_complete_dump_confirm_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_single_note_delete_confirm_message &&
@@ -505,6 +515,7 @@ static void process (menu_t *menu) {
 
             if (show_complete_dump_confirm_message && 
                 !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_single_note_delete_confirm_message &&
                 !show_format_controller_pak_confirm_message) {
@@ -517,7 +528,8 @@ static void process (menu_t *menu) {
                     show_complete_dump_confirm_message = false;
                 }
                 return;
-            } else if (show_complete_write_confirm_message && 
+            } else if (show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_complete_dump_confirm_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_single_note_delete_confirm_message &&
@@ -527,9 +539,21 @@ static void process (menu_t *menu) {
                     show_complete_write_confirm_message = false;                    
                 }
                 return;
+            } else if (show_single_note_write_info_message &&
+                !show_complete_write_confirm_message &&
+                !show_complete_dump_confirm_message &&
+                !show_single_note_dump_confirm_message &&
+                !show_single_note_delete_confirm_message &&
+                !show_format_controller_pak_confirm_message) {
+                if (menu->actions.back) {
+                    sound_play_effect(SFX_EXIT);
+                    show_single_note_write_info_message = false;                    
+                }
+                return;
             } else if (show_single_note_dump_confirm_message && 
                 !show_complete_dump_confirm_message &&
                 !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_single_note_delete_confirm_message &&
                 !show_format_controller_pak_confirm_message) {
                 if (menu->actions.enter) {
@@ -550,6 +574,7 @@ static void process (menu_t *menu) {
             }  else if (show_single_note_delete_confirm_message && 
                 !show_complete_dump_confirm_message &&
                 !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_format_controller_pak_confirm_message) {
                 if (menu->actions.enter) {
@@ -570,6 +595,7 @@ static void process (menu_t *menu) {
             } else if (show_format_controller_pak_confirm_message && 
                 !show_complete_dump_confirm_message &&
                 !show_complete_write_confirm_message &&
+                !show_single_note_write_info_message &&
                 !show_single_note_dump_confirm_message &&
                 !show_single_note_delete_confirm_message) {
                 if (menu->actions.enter) {
@@ -620,21 +646,21 @@ static void draw (menu_t *menu, surface_t *d) {
     style = STL_DEFAULT;
 
     if (has_mem) {
-        sprintf(has_mem_text, "Controller Pak detected");
+            snprintf(has_mem_text, sizeof(has_mem_text), "Controller Pak detected");
         style = STL_GREEN;
 
         if (has_mem && !corrupted_pak) {
             style = STL_GREEN;
-            sprintf(free_space_cpak_text, "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
+            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
         } else if (has_mem && corrupted_pak) {
-            sprintf(has_mem_text, "%s %s", has_mem_text, " (is NOT valid. Corrupted)");
+            snprintf(has_mem_text, sizeof(has_mem_text), "%s %s", has_mem_text, " (is NOT valid. Corrupted)");
             style = STL_ORANGE;
-            sprintf(free_space_cpak_text, " ");
+            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), " ");
         }
     } else {
-        sprintf(has_mem_text, "No Controller Pak detected");
+        snprintf(has_mem_text, sizeof(has_mem_text), "No Controller Pak detected");
         style = STL_ORANGE;
-        sprintf(free_space_cpak_text, " ");
+        snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), " ");
     }
 
     ui_components_main_text_draw(STL_DEFAULT,
@@ -925,7 +951,13 @@ static void draw (menu_t *menu, surface_t *d) {
             " with the extension \".mpk\" or \".pak\".\n\n"
             "B: Back"
         );   
-    } 
+    } else if (show_single_note_write_info_message) {
+        ui_components_messagebox_draw(
+            "To write a single note, browse to a file"
+            " with the extension \".mpkn\" or \".paknote\".\n\n"
+            "B: Back"
+        );   
+    }
 
     if (show_single_note_dump_confirm_message &&
         !start_single_note_dump) {
@@ -961,7 +993,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (cpakfs_stats.pages.used <= 0) {
             rdpq_detach_show();
-            sprintf(failure_message_note, "No data found on Controller Pak on controller %d!", controller_selected + 1);
+            snprintf(failure_message_note, sizeof(failure_message_note), "No data found on Controller Pak on controller %d!", controller_selected + 1);
             error_message_displayed = true;
             start_complete_dump = false;
             return;

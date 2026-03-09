@@ -62,6 +62,8 @@ typedef enum {
     CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT,
     /** @brief The ROM is designed for a Fairchild Channel F system. */
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
+    /** @brief The ROM is designed for a Microsoft MSX system */
+    CART_LOAD_EMU_TYPE_MICROSOFT_MSX,
 } cart_load_emu_type_t;
 
 /**

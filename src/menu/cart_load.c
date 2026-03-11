@@ -274,6 +274,11 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             // NOTE: The emulator expects the header to be removed from the ROM being uploaded.
             emulated_file_offset = ((file_get_size(path_get(path)) & 0x3FF) == 0x200) ? 0x200 : 0;
             break;
+        case CART_LOAD_EMU_TYPE_MICROSOFT_MSX:
+            // NOTE: The emulator expects the ROM to be loaded at an offset of 0x2DF48,
+            // which is where the MSX BIOS ROM is located in the emulator's memory map.
+            // This allows the emulator to support both cartridge-based MSX games and disk-based MSX games that rely on the BIOS for disk access routines.
+            emulated_rom_offset = 0x2DF48;
         default:
             break;
     }

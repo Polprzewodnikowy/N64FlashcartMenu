@@ -175,6 +175,9 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             const char *section_end = strchr(section_start, ']');
             if (section_end && section_end > section_start) {
                 size_t section_name_len = section_end - section_start;
+                if (section_name_len >= INI_MAX_NAME_LENGTH) {
+                    section_name_len = INI_MAX_NAME_LENGTH - 1;
+                }
                 char section_name[INI_MAX_NAME_LENGTH];
                 strncpy(section_name, section_start, section_name_len);
                 section_name[section_name_len] = '\0';

@@ -24,6 +24,7 @@
 	- Menu credits.
 	- Disk Drive, disk info view.
 	- CPak manager, Added menu option to for notes restore.
+	- Replace mini.c INI lib with custom implementation.
 
 - **Other**
 	- Updated libDragon {preview} SDK.

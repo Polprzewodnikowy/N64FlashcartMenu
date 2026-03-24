@@ -774,9 +774,38 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 }
 
 /**
+ * @brief Check if a position is inside a comment
+ * 
+ * Returns true if the character at pos is part of a comment
+ * (after ; or # on the same line)
+ */
+static bool is_in_comment(const char *buffer, const char *pos) {
+    if (!buffer || !pos || pos < buffer) return false;
+    
+    // Scan backwards to the start of the line
+    const char *line_start = pos;
+    while (line_start > buffer && *(line_start - 1) != '\n') {
+        line_start--;
+    }
+    
+    // Scan forward from line start, looking for comment markers
+    const char *search = line_start;
+    while (search < pos) {
+        if (*search == ';' || *search == '#') {
+            // Found comment marker before our position
+            return true;
+        }
+        search++;
+    }
+    
+    return false;
+}
+
+/**
  * @brief Extract a value from an INI-format buffer
  * 
  * Simple parser for metadata.ini format. Looks for [meta] section and key=value pairs.
+ * Handles comments (; and #), flexible whitespace around =, and various line endings.
  * Returns a pointer to the start of the value (still part of the buffer).
  * Buffer must be null-terminated.
  */
@@ -794,11 +823,11 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
     // Start search after [meta]
     const char *search_start = meta_section + 6;  // len("[meta]")
     
-    // Build search string: "key=" (with possible leading whitespace)
+    // Build search string: just the key (without =)
     char search_key[256];
-    snprintf(search_key, sizeof(search_key), "%s=", key);
+    snprintf(search_key, sizeof(search_key), "%s", key);
     
-    // Search for the key in the [meta] section (until next [ or end)
+    // Search for the key in the [meta] section
     const char *search_pos = search_start;
     int attempts = 0;
     while (search_pos && *search_pos) {
@@ -809,26 +838,53 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
         }
         attempts++;
         
+        // Skip if in a comment
+        if (is_in_comment(buffer, search_pos)) {
+            debugf("[META] parse_ini_value(%s): found in comment at offset %d, skipping\n", key, (int)(search_pos - buffer));
+            search_pos++;
+            continue;
+        }
+        
+        // After the key, we should find optional whitespace and then '='
+        const char *after_key = search_pos + strlen(search_key);
+        
+        // Skip any whitespace after the key
+        while (*after_key && (*after_key == ' ' || *after_key == '\t')) {
+            after_key++;
+        }
+        
+        // Check if next character is '='
+        if (*after_key != '=') {
+            // Not a key=value pair, this was a partial match (e.g., "name" in "rename")
+            debugf("[META] parse_ini_value(%s): found key but no '=' after at offset %d (char=0x%02x)\n", 
+                   key, (int)(search_pos - buffer), (unsigned char)*after_key);
+            search_pos++;
+            continue;
+        }
+        
         // Make sure it's at the start of a line or start of section
-        // (allows leading whitespace like tabs/spaces)
         if (search_pos == search_start) {
             // At the start of the section (right after [meta])
             debugf("[META] parse_ini_value(%s): found at section start\n", key);
-            return search_pos + strlen(search_key);
+            const char *value_start = after_key + 1;  // Point to char after '='
+            return value_start;
         }
         
-        // Check if previous character is newline
-        if (*(search_pos - 1) == '\n') {
-            debugf("[META] parse_ini_value(%s): found after newline at offset %d\n", key, (int)(search_pos - buffer));
-            return search_pos + strlen(search_key);
+        // Check if previous character is newline (or space/tab at line start is ok too)
+        const char *char_before = search_pos - 1;
+        if (*char_before == '\n' || *char_before == '\r') {
+            debugf("[META] parse_ini_value(%s): found at line start (offset %d)\n", key, (int)(search_pos - buffer));
+            const char *value_start = after_key + 1;  // Point to char after '='
+            return value_start;
         }
         
-        // Check if we've reached another section (starts with [)
+        // Check if we've reached another section
         if (*search_pos == '[') {
             debugf("[META] parse_ini_value(%s): reached next section, key not in [meta]\n", key);
             return NULL;
         }
         
+        debugf("[META] parse_ini_value(%s): found key but not at line start (prev char=0x%02x)\n", key, (unsigned char)*char_before);
         search_pos++;  // Try next occurrence
     }
     
@@ -839,8 +895,8 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
 /**
  * @brief Extract a line value from INI buffer
  * 
- * Gets the value after key=, up to the next newline or quote.
- * Returns an allocated string (caller must free).
+ * Gets the value after key=, up to the next newline or comment.
+ * Trims leading and trailing whitespace. Returns an allocated string.
  */
 static char* get_ini_string_value(const char *buffer, const char *key) {
     const char *value_start = parse_ini_value(buffer, key);
@@ -851,9 +907,14 @@ static char* get_ini_string_value(const char *buffer, const char *key) {
     
     debugf("[META] get_ini_string_value(%s): found at buffer offset %d\n", key, (int)(value_start - buffer));
     
-    // Find the end of the value (newline or end of string)
+    // Trim leading whitespace
+    while (*value_start && (*value_start == ' ' || *value_start == '\t')) {
+        value_start++;
+    }
+    
+    // Find the end of the value (newline, comment, or end of string)
     const char *value_end = value_start;
-    while (*value_end && *value_end != '\n' && *value_end != '\r') {
+    while (*value_end && *value_end != '\n' && *value_end != '\r' && *value_end != ';' && *value_end != '#') {
         value_end++;
     }
     
@@ -865,7 +926,7 @@ static char* get_ini_string_value(const char *buffer, const char *key) {
     // Handle quoted values
     if (*value_start == '"') {
         value_start++;
-        if (*(value_end - 1) == '"') {
+        if (value_end > value_start && *(value_end - 1) == '"') {
             value_end--;
         }
     }
@@ -876,6 +937,7 @@ static char* get_ini_string_value(const char *buffer, const char *key) {
     if (result) {
         memcpy(result, value_start, len);
         result[len] = '\0';
+        debugf("[META] get_ini_string_value(%s): extracted '%s' (len=%zu)\n", key, result, len);
     }
     return result;
 }
@@ -929,7 +991,12 @@ static bool parse_metadata_from_buffer (const char *content, size_t size, rom_in
     // Parse age-rating as integer
     const char *rating_str = parse_ini_value(content, "age-rating");
     if (rating_str) {
+        // Trim leading whitespace
+        while (*rating_str && (*rating_str == ' ' || *rating_str == '\t')) {
+            rating_str++;
+        }
         rom_info->meta.age_rating = atoi(rating_str);
+        debugf("[META] age-rating parsed as %lu\n", (unsigned long)rom_info->meta.age_rating);
     } else {
         rom_info->meta.age_rating = 0;
     }

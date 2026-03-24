@@ -9,8 +9,8 @@
  * - Support for sections, comments, and flexible whitespace
  */
 
-#ifndef __INI_PARSER_H__
-#define __INI_PARSER_H__
+#ifndef INI_PARSER_H__
+#define INI_PARSER_H__
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -196,4 +196,4 @@ bool ini_is_empty(ini_t *ini);
 bool ini_save(ini_t *ini, const char *path);
 
 
-#endif // __INI_PARSER_H__
+#endif // INI_PARSER_H__

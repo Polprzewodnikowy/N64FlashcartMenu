@@ -20,7 +20,7 @@
 #define INI_MAX_SECTIONS 16
 
 /** @brief Maximum length of a key or section name */
-#define INI_MAX_NAME_LENGTH 64
+#define INI_MAX_NAME_LENGTH 512
 
 /** @brief Maximum length of a value */
 #define INI_MAX_VALUE_LENGTH 512

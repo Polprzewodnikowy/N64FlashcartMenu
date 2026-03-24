@@ -199,6 +199,10 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
                 key_len--;
             }
             
+            if (key_len >= INI_MAX_NAME_LENGTH) {
+                key_len = INI_MAX_NAME_LENGTH - 1;
+            }
+            
             char key[INI_MAX_NAME_LENGTH];
             strncpy(key, key_start, key_len);
             key[key_len] = '\0';

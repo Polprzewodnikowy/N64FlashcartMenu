@@ -785,7 +785,11 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
     
     // Look for [meta] section first
     const char *meta_section = strstr(buffer, "[meta]");
-    if (!meta_section) return NULL;
+    if (!meta_section) {
+        debugf("[META] parse_ini_value: [meta] section not found\n");
+        return NULL;
+    }
+    debugf("[META] parse_ini_value: found [meta] section at offset %d\n", (int)(meta_section - buffer));
     
     // Start search after [meta]
     const char *search_start = meta_section + 6;  // len("[meta]")
@@ -796,19 +800,39 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
     
     // Search for the key in the [meta] section (until next [ or end)
     const char *search_pos = search_start;
-    while (search_pos) {
+    int attempts = 0;
+    while (search_pos && *search_pos) {
         search_pos = strstr(search_pos, search_key);
-        if (!search_pos) return NULL;
+        if (!search_pos) {
+            debugf("[META] parse_ini_value(%s): key not found after %d attempts\n", key, attempts);
+            return NULL;
+        }
+        attempts++;
         
-        // Make sure it's at the start of a line (preceded by newline or start of section)
-        if (search_pos == search_start || *(search_pos - 1) == '\n') {
-            // Found it - return pointer to the value (after the =)
+        // Make sure it's at the start of a line or start of section
+        // (allows leading whitespace like tabs/spaces)
+        if (search_pos == search_start) {
+            // At the start of the section (right after [meta])
+            debugf("[META] parse_ini_value(%s): found at section start\n", key);
             return search_pos + strlen(search_key);
+        }
+        
+        // Check if previous character is newline
+        if (*(search_pos - 1) == '\n') {
+            debugf("[META] parse_ini_value(%s): found after newline at offset %d\n", key, (int)(search_pos - buffer));
+            return search_pos + strlen(search_key);
+        }
+        
+        // Check if we've reached another section (starts with [)
+        if (*search_pos == '[') {
+            debugf("[META] parse_ini_value(%s): reached next section, key not in [meta]\n", key);
+            return NULL;
         }
         
         search_pos++;  // Try next occurrence
     }
     
+    debugf("[META] parse_ini_value(%s): exhausted search\n", key);
     return NULL;
 }
 
@@ -820,7 +844,12 @@ static const char* parse_ini_value(const char *buffer, const char *key) {
  */
 static char* get_ini_string_value(const char *buffer, const char *key) {
     const char *value_start = parse_ini_value(buffer, key);
-    if (!value_start) return NULL;
+    if (!value_start) {
+        debugf("[META] get_ini_string_value(%s): value not found\n", key);
+        return NULL;
+    }
+    
+    debugf("[META] get_ini_string_value(%s): found at buffer offset %d\n", key, (int)(value_start - buffer));
     
     // Find the end of the value (newline or end of string)
     const char *value_end = value_start;

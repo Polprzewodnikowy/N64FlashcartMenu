@@ -115,14 +115,14 @@ typedef enum {
 typedef struct {
     rom_endianness_t endianness;    /**< The file endian */
     float clock_rate;               /**< The clock rate defined in the ROM's header */
-    uint32_t boot_address;          /**< The boot address defined in the ROM's header */
+    int32_t boot_address;          /**< The boot address defined in the ROM's header */
 
     struct {
         uint8_t version;            /**< The SDK version defined in the ROM's header */
         char revision;              /**< The SDK revision defined in the ROM's header */
     } libultra;
 
-    uint64_t check_code;            /**< The check code defined in the ROM's header */
+    int64_t check_code;            /**< The check code defined in the ROM's header */
     char title[20];                 /**< The title defined in the ROM's header */
 
     union {

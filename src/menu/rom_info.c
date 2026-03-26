@@ -1006,10 +1006,22 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     
     // Fall back to flat INI format
     debugf("[META] load_rom_meta_from_file: trying flat INI format\n");
+    // check for ROM metadata INI file by replacing the current path's ROM extension with metadata.ini
     path_ext_replace(rom_info_meta_path, "metadata.ini");
     meta_path_str = path_get(rom_info_meta_path);
-    ini_t *rom_meta_ini = ini_load(meta_path_str);
 
+    // FIXME: if that file does not exist, fall back to metadata database using game_code (like boxart uses).
+    // snprintf(rom_info_meta_path, sizeof(rom_info_meta_path), "menu/metadata/%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+
+    // if (!directory_exists(path_get(rom_info_meta_path))) { // Allow metadata to not specify the region code.
+    //     path_pop(rom_info_meta_path);
+    
+    // }
+
+    // path_push(rom_info_meta_path, "metadata.ini");
+    // meta_path_str = path_get(rom_info_meta_path);
+
+    ini_t *rom_meta_ini = ini_load(meta_path_str);
     if (rom_meta_ini) {
         debugf("[META] load_rom_meta_from_file: loaded as INI file\n");
         free(rom_info->meta.name);

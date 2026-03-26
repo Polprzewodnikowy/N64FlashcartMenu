@@ -843,12 +843,18 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     
     bool success = false;
     if (meta_ini) {
+        free(rom_info->meta.name);
         rom_info->meta.name = strdup(ini_get_string(meta_ini, "meta", "name", ""));
+        free(rom_info->meta.author);
         rom_info->meta.author = strdup(ini_get_string(meta_ini, "meta", "author", ""));
+        free(rom_info->meta.release_date);
         rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", ""));
+        free(rom_info->meta.osi_license);
         rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", ""));
+        free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", ""));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        free(rom_info->meta.short_description);
         rom_info->meta.short_description = strdup(ini_get_string(meta_ini, "meta", "short-desc", ""));
         ini_free(meta_ini);
         success = true;
@@ -961,12 +967,18 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     bool success = false;
     if (meta_ini) {
+        free(rom_info->meta.name);
         rom_info->meta.name = strdup(ini_get_string(meta_ini, "meta", "name", ""));
+        free(rom_info->meta.author);
         rom_info->meta.author = strdup(ini_get_string(meta_ini, "meta", "author", ""));
+        free(rom_info->meta.release_date);
         rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", ""));
+        free(rom_info->meta.osi_license);
         rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", ""));
+        free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", ""));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        free(rom_info->meta.short_description);
         rom_info->meta.short_description = strdup(ini_get_string(meta_ini, "meta", "short-desc", ""));
         ini_free(meta_ini);
         success = true;
@@ -994,16 +1006,26 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     
     // Fall back to flat INI format
     debugf("[META] load_rom_meta_from_file: trying flat INI format\n");
+    path_ext_replace(rom_info_meta_path, "metadata.ini");
+    meta_path_str = path_get(rom_info_meta_path);
     ini_t *rom_meta_ini = ini_load(meta_path_str);
 
     if (rom_meta_ini) {
         debugf("[META] load_rom_meta_from_file: loaded as INI file\n");
+        free(rom_info->meta.name);
         rom_info->meta.name = strdup(ini_get_string(rom_meta_ini, "meta", "name", ""));
+        free(rom_info->meta.author);
         rom_info->meta.author = strdup(ini_get_string(rom_meta_ini, "meta", "author", ""));
+        free(rom_info->meta.release_date);
+
         rom_info->meta.release_date = strdup(ini_get_string(rom_meta_ini, "meta", "release-date", ""));
+        free(rom_info->meta.osi_license);
         rom_info->meta.osi_license = strdup(ini_get_string(rom_meta_ini, "meta", "osi-license", ""));
+        free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(rom_meta_ini, "meta", "website", ""));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        
+        free(rom_info->meta.short_description);
         rom_info->meta.short_description = strdup(ini_get_string(rom_meta_ini, "meta", "short-desc", ""));
 
         ini_free(rom_meta_ini);

@@ -8,16 +8,17 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <limits.h>
 #include <libdragon.h>
 
 #include "ini_parser.h"
 
 
 /** @brief Maximum number of key-value pairs */
-#define INI_MAX_PAIRS 256
+#define INI_MAX_PAIRS 64
 
 /** @brief Maximum number of sections */
-#define INI_MAX_SECTIONS 16
+#define INI_MAX_SECTIONS 8
 
 /** @brief Maximum length of a key or section name */
 #define INI_MAX_NAME_LENGTH 512
@@ -207,31 +208,67 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             strncpy(key, key_start, key_len);
             key[key_len] = '\0';
             
-            // Get value
+            // Get value – handle quoted and unquoted forms
             const char *value_start = eq_pos + 1;
             while (*value_start && (*value_start == ' ' || *value_start == '\t')) {
                 value_start++;
             }
-            
-            const char *value_end = value_start;
-            while (*value_end && *value_end != '\n' && *value_end != '\r' && *value_end != ';' && *value_end != '#') {
-                value_end++;
+            char parsed_value[INI_MAX_VALUE_LENGTH];
+            size_t parsed_len = 0;
+            const char *new_pos;
+
+            if (*value_start == '"' || *value_start == '\'') {
+                // Quoted value: scan until matching closing quote,
+                // honouring \\ and \" / \' escape sequences.
+                char quote = *value_start;
+                const char *vp = value_start + 1;
+                while (*vp && *vp != quote && *vp != '\n' && *vp != '\r') {
+                    if (*vp == '\\' && *(vp + 1) != '\0') {
+                        char next = *(vp + 1);
+                        if (next == quote || next == '\\') {
+                            if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
+                                parsed_value[parsed_len++] = next;
+                            }
+                            vp += 2;
+                            continue;
+                        }
+                    }
+                    if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
+                        parsed_value[parsed_len++] = *vp;
+                    }
+                    vp++;
+                }
+                parsed_value[parsed_len] = '\0';
+                // Advance past closing quote when present
+                new_pos = (*vp == quote) ? vp + 1 : vp;
+            } else {
+                // Unquoted value: stop at comment character or end-of-line
+                const char *value_end = value_start;
+                while (*value_end && *value_end != '\n' && *value_end != '\r' &&
+                       *value_end != ';' && *value_end != '#') {
+                    value_end++;
+                }
+                // Trim trailing whitespace
+                while (value_end > value_start &&
+                       (*(value_end - 1) == ' ' || *(value_end - 1) == '\t')) {
+                    value_end--;
+                }
+                parsed_len = (size_t)(value_end - value_start);
+                if (parsed_len >= INI_MAX_VALUE_LENGTH) {
+                    parsed_len = INI_MAX_VALUE_LENGTH - 1;
+                }
+                strncpy(parsed_value, value_start, parsed_len);
+                parsed_value[parsed_len] = '\0';
+                new_pos = value_end;
             }
-            
-            // Trim trailing whitespace from value
-            while (value_end > value_start && (*(value_end - 1) == ' ' || *(value_end - 1) == '\t')) {
-                value_end--;
-            }
-            
-            size_t value_len = value_end - value_start;
             
             ini_pair_t *pair = find_or_create_pair(section, key);
-            if (pair && value_len < INI_MAX_VALUE_LENGTH) {
-                strncpy(pair->value, value_start, value_len);
-                pair->value[value_len] = '\0';
+            if (pair) {
+                strncpy(pair->value, parsed_value, INI_MAX_VALUE_LENGTH - 1);
+                pair->value[INI_MAX_VALUE_LENGTH - 1] = '\0';
             }
-            
-            pos = value_end;
+
+            pos = new_pos;
             continue;
         }
         
@@ -308,7 +345,13 @@ int ini_get_int(ini_t *ini, const char *section, const char *key, int default_va
     const char *str_value = ini_get_string(ini, section, key, NULL);
     if (!str_value) return default_value;
     
-    return atoi(str_value);
+    char *end = NULL;
+    long parsed = strtol(str_value, &end, 10);
+    if (end == str_value || *end != '\0' || parsed < INT_MIN || parsed > INT_MAX) {
+        return default_value;
+    }
+
+    return (int)parsed;
 }
 
 
@@ -393,6 +436,26 @@ bool ini_is_empty(ini_t *ini) {
 }
 
 
+/**
+ * `@brief` Returns true when a stored value must be quoted on write.
+ *
+ * Quoting is required when the value contains a comment marker (';' or '#'),
+ * a quote character, or leading/trailing whitespace that would otherwise be
+ * stripped on the next read.
+ */
+static bool value_needs_quoting(const char *value) {
+    if (!value || *value == '\0') return false;
+    if (*value == ' ' || *value == '\t') return true;
+    size_t len = strlen(value);
+    if (value[len - 1] == ' ' || value[len - 1] == '\t') return true;
+    for (size_t i = 0; i < len; i++) {
+        char c = value[i];
+        if (c == ';' || c == '#' || c == '"' || c == '\'') return true;
+    }
+    return false;
+}
+
+
 bool ini_save(ini_t *ini, const char *path) {
     if (!ini || !path) return false;
     
@@ -418,7 +481,19 @@ bool ini_save(ini_t *ini, const char *path) {
             // Skip empty pairs
             if (pair->value[0] == '\0') continue;
             
-            fprintf(file, "%s = %s\n", pair->key, pair->value);
+            if (value_needs_quoting(pair->value)) {
+                // Double-quote the value and escape internal '"' and '\'
+                fprintf(file, "%s = \"", pair->key);
+                for (const char *vp = pair->value; *vp; vp++) {
+                    if (*vp == '"' || *vp == '\\') {
+                        fputc('\\', file);
+                    }
+                    fputc(*vp, file);
+                }
+                fprintf(file, "\"\n");
+            } else {
+                fprintf(file, "%s = %s\n", pair->key, pair->value);
+            }
         }
         
         // Add blank line between sections

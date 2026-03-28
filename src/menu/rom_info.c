@@ -1010,17 +1010,27 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     path_ext_replace(rom_info_meta_path, "metadata.ini");
     meta_path_str = path_get(rom_info_meta_path);
 
-    // FIXME: if that file does not exist, fall back to metadata database using game_code (like boxart uses).
-    // snprintf(rom_info_meta_path, sizeof(rom_info_meta_path), "menu/metadata/%c/%c/%c/%c", game_code[0], game_code[1], game_code[2], game_code[3]);
+    if (!file_exists(path_get(rom_info_meta_path))) {
+        debugf("[META] load_rom_meta_from_file: metadata.ini not found at '%s'\n", meta_path_str);
+        // If that file does not exist, fall back to metadata database using game_code (like boxart uses).
+        // TODO: we should probably check the homebrew path as well.
+        char gamecode_str[8];
+        path_t *fallback_meta_path= path_init("sd:/", "menu/metadata"); // should be menu->storage_prefix and METADATA_BASE_DIRECTORY
+        // FIXME: should use METADATA_BASE_DIRECTORY and path functions, but this is simpler for now since we just want to check for existence of the file.
+        snprintf(
+            gamecode_str,
+            sizeof(gamecode_str),
+            "%c/%c/%c/%c",
+            rom_info->game_code[0], rom_info->game_code[1], rom_info->game_code[2], rom_info->game_code[3]
+        );
+        path_push(fallback_meta_path, gamecode_str);
 
-    // if (!directory_exists(path_get(rom_info_meta_path))) { // Allow metadata to not specify the region code.
-    //     path_pop(rom_info_meta_path);
+        path_push(fallback_meta_path, "metadata.ini");
+        debugf("[META] load_rom_meta_from_file: trying fallback path '%s'\n", path_get(fallback_meta_path));
+        meta_path_str = path_get(fallback_meta_path);
+    }
     
-    // }
-
-    // path_push(rom_info_meta_path, "metadata.ini");
-    // meta_path_str = path_get(rom_info_meta_path);
-
+    debugf("[META] load_rom_meta_from_file: using metadata.ini at '%s'\n", meta_path_str);
     ini_t *rom_meta_ini = ini_load(meta_path_str);
     if (rom_meta_ini) {
         debugf("[META] load_rom_meta_from_file: loaded as INI file\n");

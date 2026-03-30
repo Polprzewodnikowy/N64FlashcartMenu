@@ -227,11 +227,20 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             while (*pos && *pos != '\n') pos++;
             continue;
         }
-        
+
+        // Find end of current line for bounded searches
+        const char *line_end = pos;
+        while (*line_end && *line_end != '\n' && *line_end != '\r') {
+            line_end++;
+        }
+
         // Check for section header
         if (*pos == '[') {
             const char *section_start = pos + 1;
-            const char *section_end = strchr(section_start, ']');
+            ptrdiff_t section_avail = line_end - section_start;
+            const char *section_end = (section_avail > 0)
+                ? (const char *)memchr(section_start, ']', (size_t)section_avail)
+                : NULL;
             if (section_end && section_end > section_start) {
                 size_t section_name_len = section_end - section_start;
                 if (section_name_len >= INI_MAX_NAME_LENGTH) {
@@ -245,11 +254,17 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
                 pos = section_end + 1;
                 continue;
             }
+            // Malformed section line — skip to next line
+            pos = (*line_end) ? line_end + 1 : line_end;
+            continue;
         }
         
         // Parse key=value pair
         const char *key_start = pos;
-        const char *eq_pos = strchr(key_start, '=');
+        ptrdiff_t key_avail = line_end - key_start;
+        const char *eq_pos = (key_avail > 0)
+            ? (const char *)memchr(key_start, '=', (size_t)key_avail)
+            : NULL;
         if (eq_pos && eq_pos > key_start && section) {
             size_t key_len = eq_pos - key_start;
             

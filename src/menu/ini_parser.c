@@ -389,7 +389,7 @@ const char* ini_get_string(ini_t *ini, const char *section, const char *key, con
     for (int i = 0; i < ini->section_count; i++) {
         if (strcmp(ini->sections[i].name, section) == 0) {
             ini_pair_t *pair = find_pair(&ini->sections[i], key);
-            if (pair && pair->value[0] != '\0') {
+            if (pair && pair->value != NULL) {
                 return pair->value;
             }
         }
@@ -486,7 +486,7 @@ bool ini_is_empty(ini_t *ini) {
     for (int i = 0; i < ini->section_count; i++) {
         for (int j = 0; j < ini->sections[i].pair_count; j++) {
             const char *v = ini->sections[i].pairs[j].value;
-            if (v && v[0] != '\0') {
+            if (v != NULL) {
                 return false;
             }
         }
@@ -538,8 +538,8 @@ bool ini_save(ini_t *ini, const char *path) {
         for (int j = 0; j < section->pair_count; j++) {
             ini_pair_t *pair = &section->pairs[j];
             
-            // Skip deleted/empty pairs
-            if (!pair->value || pair->value[0] == '\0') continue;
+            // Skip deleted pairs
+            if (!pair->value) continue;
             
             if (value_needs_quoting(pair->value)) {
                 // Double-quote the value and escape internal '"' and '\'

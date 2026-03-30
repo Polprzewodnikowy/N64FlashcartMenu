@@ -322,8 +322,13 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             
             ini_pair_t *pair = find_or_create_pair(section, key);
             if (pair) {
-                free(pair->value);
-                pair->value = strdup(parsed_value);
+                char *new_value = strdup(parsed_value);
+                if (new_value) {
+                    free(pair->value);
+                    pair->value = new_value;
+                } else {
+                    debugf("[INI] failed to allocate pair value\n");
+                }
             }
 
             pos = new_pos;
@@ -440,8 +445,13 @@ void ini_set_string(ini_t *ini, const char *section, const char *key, const char
     
     ini_pair_t *pair = find_or_create_pair(sec, key);
     if (pair) {
-        free(pair->value);
-        pair->value = strdup(value);
+        char *new_value = strdup(value);
+        if (new_value) {
+            free(pair->value);
+            pair->value = new_value;
+        } else {
+            debugf("[INI] failed to allocate pair value\n");
+        }
     }
 }
 

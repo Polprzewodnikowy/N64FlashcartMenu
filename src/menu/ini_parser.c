@@ -454,6 +454,12 @@ bool ini_get_bool(ini_t *ini, const char *section, const char *key, bool default
 
 void ini_set_string(ini_t *ini, const char *section, const char *key, const char *value) {
     if (!ini || !section || !key || !value) return;
+    if (strlen(section) >= INI_MAX_NAME_LENGTH ||
+        strlen(key) >= INI_MAX_NAME_LENGTH ||
+        strlen(value) >= INI_MAX_VALUE_LENGTH) {
+        debugf("[INI] input exceeds configured limits\n");
+        return;
+    }
     
     ini_section_t *sec = find_or_create_section(ini, section);
     if (!sec) return;

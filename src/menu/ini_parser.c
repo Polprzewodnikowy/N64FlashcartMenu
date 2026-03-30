@@ -14,38 +14,46 @@
 #include "ini_parser.h"
 
 
-/** @brief Maximum number of key-value pairs */
+/** @brief Maximum number of key-value pairs (logical cap, not pre-allocated) */
 #define INI_MAX_PAIRS 64
 
-/** @brief Maximum number of sections */
+/** @brief Maximum number of sections (logical cap, not pre-allocated) */
 #define INI_MAX_SECTIONS 8
 
-/** @brief Maximum length of a key or section name */
+/** @brief Maximum length of a key or section name (parse-time stack buffer) */
 #define INI_MAX_NAME_LENGTH 512
 
-/** @brief Maximum length of a value */
+/** @brief Maximum length of a value (parse-time stack buffer) */
 #define INI_MAX_VALUE_LENGTH 512
+
+/** `@brief` Initial allocated capacity for the sections array */
+#define INI_INITIAL_SECTION_CAPACITY 4
+
+/** `@brief` Initial allocated capacity for the pairs array in each section */
+#define INI_INITIAL_PAIR_CAPACITY    8
 
 
 /** @brief Key-value pair structure */
 typedef struct {
-    char key[INI_MAX_NAME_LENGTH];
-    char value[INI_MAX_VALUE_LENGTH];
+    char *key;    /**< Heap-allocated key string */
+    char *value;  /**< Heap-allocated value string; NULL when deleted/unset */
 } ini_pair_t;
 
 
 /** @brief Section structure */
 typedef struct {
-    char name[INI_MAX_NAME_LENGTH];
-    ini_pair_t pairs[INI_MAX_PAIRS];
-    int pair_count;
+    char       *name;          /**< Heap-allocated section name */
+    ini_pair_t *pairs;         /**< Heap-allocated array of key-value pairs */
+    int         pair_count;    /**< Current number of pairs */
+    int         pair_capacity; /**< Allocated capacity of pairs array */
 } ini_section_t;
 
 
 /** @brief INI structure */
 struct ini_s {
-    ini_section_t sections[INI_MAX_SECTIONS];
-    int section_count;
+    ini_section_t *sections;         /**< Heap-allocated array of sections */
+    int            section_count;    /**< Current number of sections */
+    int            section_capacity; /**< Allocated capacity of sections array */
 };
 
 
@@ -62,16 +70,35 @@ static ini_section_t* find_or_create_section(ini_t *ini, const char *section_nam
         }
     }
     
-    // Create new section if space available
+    // Enforce logical cap on number of sections
     if (ini->section_count >= INI_MAX_SECTIONS) {
         debugf("[INI] section limit reached\n");
         return NULL;
     }
     
+    // Grow sections array if needed
+    if (ini->section_count >= ini->section_capacity) {
+        int new_cap = ini->section_capacity == 0
+            ? INI_INITIAL_SECTION_CAPACITY
+            : ini->section_capacity * 2;
+        ini_section_t *grown = realloc(ini->sections, new_cap * sizeof(ini_section_t));
+        if (!grown) {
+            debugf("[INI] failed to allocate sections\n");
+            return NULL;
+        }
+        ini->sections = grown;
+        ini->section_capacity = new_cap;
+    }
+
     ini_section_t *new_section = &ini->sections[ini->section_count];
-    strncpy(new_section->name, section_name, INI_MAX_NAME_LENGTH - 1);
-    new_section->name[INI_MAX_NAME_LENGTH - 1] = '\0';
+    new_section->name = strdup(section_name);
+    if (!new_section->name) {
+        debugf("[INI] failed to allocate section name\n");
+        return NULL;
+    }
+    new_section->pairs = NULL;
     new_section->pair_count = 0;
+    new_section->pair_capacity = 0;
     ini->section_count++;
     
     return new_section;
@@ -104,16 +131,33 @@ static ini_pair_t* find_or_create_pair(ini_section_t *section, const char *key) 
     ini_pair_t *pair = find_pair(section, key);
     if (pair) return pair;
     
-    // Create new pair if space available
+    // Enforce logical cap on number of pairs per section
     if (section->pair_count >= INI_MAX_PAIRS) {
         debugf("[INI] pair limit reached in section\n");
         return NULL;
     }
     
+    // Grow pairs array if needed
+    if (section->pair_count >= section->pair_capacity) {
+        int new_cap = section->pair_capacity == 0
+            ? INI_INITIAL_PAIR_CAPACITY
+            : section->pair_capacity * 2;
+        ini_pair_t *grown = realloc(section->pairs, new_cap * sizeof(ini_pair_t));
+        if (!grown) {
+            debugf("[INI] failed to allocate pairs\n");
+            return NULL;
+        }
+        section->pairs = grown;
+        section->pair_capacity = new_cap;
+    }
+
     pair = &section->pairs[section->pair_count];
-    strncpy(pair->key, key, INI_MAX_NAME_LENGTH - 1);
-    pair->key[INI_MAX_NAME_LENGTH - 1] = '\0';
-    pair->value[0] = '\0';
+    pair->key = strdup(key);
+    if (!pair->key) {
+        debugf("[INI] failed to allocate pair key\n");
+        return NULL;
+    }
+    pair->value = NULL;
     section->pair_count++;
     
     return pair;
@@ -125,13 +169,27 @@ static ini_pair_t* find_or_create_pair(ini_section_t *section, const char *key) 
 ini_t* ini_create(void) {
     ini_t *ini = malloc(sizeof(ini_t));
     if (ini) {
+        ini->sections = NULL;
         ini->section_count = 0;
+        ini->section_capacity = 0;
     }
     return ini;
 }
 
 
 void ini_free(ini_t *ini) {
+    if (!ini) return;
+
+    for (int i = 0; i < ini->section_count; i++) {
+        ini_section_t *section = &ini->sections[i];
+        for (int j = 0; j < section->pair_count; j++) {
+            free(section->pairs[j].key);
+            free(section->pairs[j].value);
+        }
+        free(section->pairs);
+        free(section->name);
+    }
+    free(ini->sections);
     free(ini);
 }
 
@@ -264,8 +322,8 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             
             ini_pair_t *pair = find_or_create_pair(section, key);
             if (pair) {
-                strncpy(pair->value, parsed_value, INI_MAX_VALUE_LENGTH - 1);
-                pair->value[INI_MAX_VALUE_LENGTH - 1] = '\0';
+                free(pair->value);
+                pair->value = strdup(parsed_value);
             }
 
             pos = new_pos;
@@ -382,8 +440,8 @@ void ini_set_string(ini_t *ini, const char *section, const char *key, const char
     
     ini_pair_t *pair = find_or_create_pair(sec, key);
     if (pair) {
-        strncpy(pair->value, value, INI_MAX_VALUE_LENGTH - 1);
-        pair->value[INI_MAX_VALUE_LENGTH - 1] = '\0';
+        free(pair->value);
+        pair->value = strdup(value);
     }
 }
 
@@ -412,8 +470,9 @@ void ini_delete_key(ini_t *ini, const char *section, const char *key) {
             ini_section_t *sec = &ini->sections[i];
             ini_pair_t *pair = find_pair(sec, key);
             if (pair) {
-                // Mark as deleted by setting empty value
-                pair->value[0] = '\0';
+                // Free and NULL the value to mark as deleted
+                free(pair->value);
+                pair->value = NULL;
             }
             return;
         }
@@ -426,7 +485,8 @@ bool ini_is_empty(ini_t *ini) {
     
     for (int i = 0; i < ini->section_count; i++) {
         for (int j = 0; j < ini->sections[i].pair_count; j++) {
-            if (ini->sections[i].pairs[j].value[0] != '\0') {
+            const char *v = ini->sections[i].pairs[j].value;
+            if (v && v[0] != '\0') {
                 return false;
             }
         }
@@ -478,8 +538,8 @@ bool ini_save(ini_t *ini, const char *path) {
         for (int j = 0; j < section->pair_count; j++) {
             ini_pair_t *pair = &section->pairs[j];
             
-            // Skip empty pairs
-            if (pair->value[0] == '\0') continue;
+            // Skip deleted/empty pairs
+            if (!pair->value || pair->value[0] == '\0') continue;
             
             if (value_needs_quoting(pair->value)) {
                 // Double-quote the value and escape internal '"' and '\'

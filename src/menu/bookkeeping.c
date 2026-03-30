@@ -34,7 +34,7 @@ void bookkeeping_init (char *path) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, ini_t *ini, const char *group) {
+static void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, ini_t *ini, const char *group) {
     char buf[64];
     for(uint16_t i = 0; i < count; i++) {
         snprintf(buf, sizeof(buf), "%d_primary_path", i);

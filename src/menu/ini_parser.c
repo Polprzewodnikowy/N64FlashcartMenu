@@ -389,7 +389,7 @@ ini_t* ini_load(const char *path) {
     char *buffer = malloc(file_size + 1);
     if (!buffer) {
         fclose(file);
-        return ini_create();
+        return NULL;
     }
     
     size_t read_size = fread(buffer, 1, file_size, file);

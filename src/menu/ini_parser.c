@@ -525,17 +525,21 @@ bool ini_save(ini_t *ini, const char *path) {
         return false;
     }
     
-    for (int i = 0; i < ini->section_count; i++) {
+    bool ok = true;
+    for (int i = 0; i < ini->section_count && ok; i++) {
         ini_section_t *section = &ini->sections[i];
         
         // Skip empty sections
         if (section->pair_count == 0) continue;
         
         // Write section header
-        fprintf(file, "[%s]\n", section->name);
+        if (fprintf(file, "[%s]\n", section->name) < 0) {
+            ok = false;
+            break;
+        }
         
         // Write key-value pairs
-        for (int j = 0; j < section->pair_count; j++) {
+        for (int j = 0; j < section->pair_count && ok; j++) {
             ini_pair_t *pair = &section->pairs[j];
             
             // Skip deleted pairs
@@ -543,25 +547,26 @@ bool ini_save(ini_t *ini, const char *path) {
             
             if (value_needs_quoting(pair->value)) {
                 // Double-quote the value and escape internal '"' and '\'
-                fprintf(file, "%s = \"", pair->key);
+                if (fprintf(file, "%s = \"", pair->key) < 0) { ok = false; break; }
                 for (const char *vp = pair->value; *vp; vp++) {
                     if (*vp == '"' || *vp == '\\') {
-                        fputc('\\', file);
+                        if (fputc('\\', file) == EOF) { ok = false; break; }
                     }
-                    fputc(*vp, file);
+                    if (fputc(*vp, file) == EOF) { ok = false; break; }
                 }
-                fprintf(file, "\"\n");
+                if (ok && fprintf(file, "\"\n") < 0) ok = false;
             } else {
-                fprintf(file, "%s = %s\n", pair->key, pair->value);
+                if (fprintf(file, "%s = %s\n", pair->key, pair->value) < 0) {
+                    ok = false;
+                }
             }
         }
         
         // Add blank line between sections
         if (i < ini->section_count - 1) {
-            fprintf(file, "\n");
+            if (fprintf(file, "\n") < 0) ok = false;
         }
     }
     
-    fclose(file);
-    return true;
+    return fclose(file) == 0 && ok;
 }

@@ -370,11 +370,17 @@ ini_t* ini_load(const char *path) {
     }
     
     // Get file size
-    fseek(file, 0, SEEK_END);
+    if (fseek(file, 0, SEEK_END) != 0) {
+        fclose(file);
+        return NULL;
+    }
     long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    if (file_size < 0 || fseek(file, 0, SEEK_SET) != 0) {
+        fclose(file);
+        return NULL;
+    }
     
-    if (file_size <= 0) {
+    if (file_size == 0) {
         fclose(file);
         return ini_create();
     }
@@ -387,13 +393,16 @@ ini_t* ini_load(const char *path) {
     }
     
     size_t read_size = fread(buffer, 1, file_size, file);
-    fclose(file);
+    if (read_size != (size_t)file_size || fclose(file) != 0) {
+        free(buffer);
+        return NULL;
+    }
     
     // Parse buffer
     ini_t *ini = ini_parse_buffer(buffer, read_size);
     free(buffer);
     
-    return ini ? ini : ini_create();
+    return ini;
 }
 
 

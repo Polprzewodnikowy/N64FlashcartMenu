@@ -9,8 +9,8 @@
  * - Support for sections, comments, and flexible whitespace
  */
 
-#ifndef INI_PARSER_H__
-#define INI_PARSER_H__
+#ifndef INI_PARSER_H_
+#define INI_PARSER_H_
 
 #include <stddef.h>
 #include <stdbool.h>

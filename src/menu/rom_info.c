@@ -1027,7 +1027,9 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
 
         path_push(fallback_meta_path, "metadata.ini");
         debugf("[META] load_rom_meta_from_file: trying fallback path '%s'\n", path_get(fallback_meta_path));
-        meta_path_str = path_get(fallback_meta_path);
+        path_free(rom_info_meta_path);
+        rom_info_meta_path = fallback_meta_path;
+        meta_path_str = path_get(rom_info_meta_path);
     }
     
     debugf("[META] load_rom_meta_from_file: using metadata.ini at '%s'\n", meta_path_str);

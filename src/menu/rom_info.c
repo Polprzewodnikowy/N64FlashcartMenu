@@ -765,7 +765,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.name = strdup("");
     rom_info->meta.author = strdup("Unknown");
     rom_info->meta.release_date = strdup("Unknown");
-    rom_info->meta.osi_license = strdup("Unknown");
+    rom_info->meta.osi_license = strdup("Not specified");
     rom_info->meta.website = strdup("Unknown");
     rom_info->meta.age_rating = 0;
     rom_info->meta.short_description = strdup("");
@@ -850,7 +850,7 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         free(rom_info->meta.release_date);
         rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", "Unknown"));
         free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Unknown"));
+        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Not specified"));
         free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", "Unknown"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
@@ -974,7 +974,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         free(rom_info->meta.release_date);
         rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", "Unknown"));
         free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Unknown"));
+        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Not specified"));
         free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", "Unknown"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
@@ -1041,7 +1041,7 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         free(rom_info->meta.release_date);
         rom_info->meta.release_date = strdup(ini_get_string(rom_meta_ini, "meta", "release-date", "Unknown"));
         free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(rom_meta_ini, "meta", "osi-license", "Unknown"));
+        rom_info->meta.osi_license = strdup(ini_get_string(rom_meta_ini, "meta", "osi-license", "Not specified"));
         free(rom_info->meta.website);
         rom_info->meta.website = strdup(ini_get_string(rom_meta_ini, "meta", "website", "Unknown"));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);

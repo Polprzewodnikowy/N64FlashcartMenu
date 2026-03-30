@@ -33,13 +33,15 @@ ini_t* ini_load(const char *path);
 
 
 /**
- * @brief Load INI file from disk (no error on missing file)
- * 
- * Like ini_load, but returns a valid empty INI structure if file
- * doesn't exist. Useful for optional config files.
- * 
+ * @brief Load INI file from disk, returning an empty structure on any error
+ *
+ * Like ini_load, but converts any error (file not found, I/O error, or parse
+ * failure) into a valid empty INI structure created via ini_create().
+ * Useful for optional config files where absence or corruption should be
+ * treated as a fresh/default state.
+ *
  * @param path Path to INI file
- * @return Parsed INI structure, or empty structure on error
+ * @return Parsed INI structure, or a new empty structure on any error (never NULL)
  */
 ini_t* ini_try_load(const char *path);
 

@@ -1135,11 +1135,6 @@ static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type
 
     ini_t *rom_config_ini = ini_try_load(path_get(rom_info_path));
 
-    if (!rom_config_ini) {
-        path_free(rom_info_path);
-        return ROM_ERR_SAVE_IO;
-    }
-
     if (value == default_value) {
         ini_delete_key(rom_config_ini, type, id);
     } else {

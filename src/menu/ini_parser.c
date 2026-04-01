@@ -212,6 +212,7 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
     // Parse sections and key=value pairs
     const char *pos = content;
     ini_section_t *section = NULL;
+    bool allow_global_keys = true;
     
     while (*pos) {
         // Skip whitespace and newlines
@@ -269,7 +270,7 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
             // find_or_create_section returns the existing sentinel if already present.
             ini_section_t *target_section = section
                 ? section
-                : find_or_create_section(ini, "");
+                : (allow_global_keys ? find_or_create_section(ini, "") : NULL);
             if (!target_section) {
                 pos = (*line_end) ? line_end + 1 : line_end;
                 continue;

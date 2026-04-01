@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <libdragon.h>
+#include <errno.h>
 
 #include "ini_parser.h"
 
@@ -442,8 +443,10 @@ int ini_get_int(ini_t *ini, const char *section, const char *key, int default_va
     if (!str_value) return default_value;
     
     char *end = NULL;
+    errno = 0;
     long parsed = strtol(str_value, &end, 10);
-    if (end == str_value || *end != '\0' || parsed < INT_MIN || parsed > INT_MAX) {
+    if (errno == ERANGE || end == str_value || *end != '\0' ||
+        parsed < INT_MIN || parsed > INT_MAX) {
         return default_value;
     }
 

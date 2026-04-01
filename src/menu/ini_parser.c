@@ -237,6 +237,7 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
 
         // Check for section header
         if (*pos == '[') {
+            allow_global_keys = false;
             const char *section_start = pos + 1;
             ptrdiff_t section_avail = line_end - section_start;
             const char *section_end = (section_avail > 0)
@@ -619,6 +620,6 @@ bool ini_save(ini_t *ini, const char *path) {
             if (fprintf(file, "\n") < 0) ok = false;
         }
     }
-    
+    debugf("[INI] ini_save(%s): saving complete\n", path);
     return fclose(file) == 0 && ok;
 }

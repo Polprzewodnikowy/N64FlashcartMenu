@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <limits.h>
 #include <libdragon.h>
 
@@ -265,7 +264,16 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
         const char *eq_pos = (key_avail > 0)
             ? (const char *)memchr(key_start, '=', (size_t)key_avail)
             : NULL;
-        if (eq_pos && eq_pos > key_start && section) {
+        if (eq_pos && eq_pos > key_start) {
+            // Route pre-section keys to a "" sentinel.
+            // find_or_create_section returns the existing sentinel if already present.
+            ini_section_t *target_section = section
+                ? section
+                : find_or_create_section(ini, "");
+            if (!target_section) {
+                pos = (*line_end) ? line_end + 1 : line_end;
+                continue;
+            }
             size_t key_len = eq_pos - key_start;
             
             // Trim trailing whitespace from key
@@ -335,7 +343,7 @@ ini_t* ini_parse_buffer(const char *buffer, size_t size) {
                 new_pos = value_end;
             }
             
-            ini_pair_t *pair = find_or_create_pair(section, key);
+            ini_pair_t *pair = find_or_create_pair(target_section, key);
             if (pair) {
                 char *new_value = strdup(parsed_value);
                 if (new_value) {
@@ -570,7 +578,7 @@ bool ini_save(ini_t *ini, const char *path) {
         ini_section_t *section = &ini->sections[i];
         
         // Skip empty sections
-        if (section->pair_count == 0) continue;
+        if (section->pair_count == 0 || section->name[0] == '\0') continue;
         
         // Write section header
         if (fprintf(file, "[%s]\n", section->name) < 0) {

@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <stdio.h>
 #include <limits.h>
 #include <libdragon.h>
@@ -476,19 +477,22 @@ bool ini_get_bool(ini_t *ini, const char *section, const char *key, bool default
 
 void ini_set_string(ini_t *ini, const char *section, const char *key, const char *value) {
     if (!ini || !section || !key || !value) return;
-    if (strlen(section) >= INI_MAX_NAME_LENGTH ||
-        strlen(key) >= INI_MAX_NAME_LENGTH ||
-        strlen(value) >= INI_MAX_VALUE_LENGTH) {
-        debugf("[INI] input exceeds configured limits\n");
-        return;
-    }
-    
-    ini_section_t *sec = find_or_create_section(ini, section);
+    // Clamp to parse-time limits for consistent round-trip behaviour
+    char sec_buf[INI_MAX_NAME_LENGTH];
+    snprintf(sec_buf, sizeof(sec_buf), "%s", section);
+
+    char key_buf[INI_MAX_NAME_LENGTH];
+    snprintf(key_buf, sizeof(key_buf), "%s", key);
+
+    char val_buf[INI_MAX_VALUE_LENGTH];
+    snprintf(val_buf, sizeof(val_buf), "%s", value);
+
+    ini_section_t *sec = find_or_create_section(ini, sec_buf);
     if (!sec) return;
     
-    ini_pair_t *pair = find_or_create_pair(sec, key);
+    ini_pair_t *pair = find_or_create_pair(sec, key_buf);
     if (pair) {
-        char *new_value = strdup(value);
+        char *new_value = strdup(val_buf);
         if (new_value) {
             free(pair->value);
             pair->value = new_value;
@@ -615,8 +619,13 @@ bool ini_save(ini_t *ini, const char *path) {
             }
         }
         
-        // Add blank line between sections
-        if (i < ini->section_count - 1) {
+        // Add blank line only if there is a subsequent non-empty, named section
+        bool has_next = false;
+        for (int k = i + 1; k < ini->section_count; k++) {
+            ini_section_t *next = &ini->sections[k];
+            if (next->pair_count > 0 && next->name[0] != '\0') { has_next = true; break; }
+        }
+        if (has_next) {
             if (fprintf(file, "\n") < 0) ok = false;
         }
     }

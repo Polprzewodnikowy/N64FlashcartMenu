@@ -1103,8 +1103,8 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     if (rom_config_ini) {
         // general
-        rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "general", "cheats_enabled", false);
-        rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "general", "patches_enabled", false);
+        rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "", "cheats_enabled", false);
+        rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "", "patches_enabled", false);
         
         // overrides
         rom_info->boot_override.cic_type = ini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
@@ -1238,13 +1238,13 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
-    return save_rom_config_setting_to_file(path, "general", "cheats_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "cheats_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.patches_enabled = enabled;
-    return save_rom_config_setting_to_file(path, "general", "patches_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "patches_enabled", enabled, false);
 }
 #endif
 

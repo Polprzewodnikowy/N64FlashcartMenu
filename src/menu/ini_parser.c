@@ -23,16 +23,16 @@
 #define INI_MAX_SECTIONS 8
 
 /** @brief Maximum length of a key or section name (parse-time stack buffer) */
-#define INI_MAX_NAME_LENGTH 512
+#define INI_MAX_NAME_LENGTH 64
 
 /** @brief Maximum length of a value (parse-time stack buffer) */
-#define INI_MAX_VALUE_LENGTH 512
+#define INI_MAX_VALUE_LENGTH 256
 
 /** `@brief` Initial allocated capacity for the sections array */
-#define INI_INITIAL_SECTION_CAPACITY 4
+#define INI_INITIAL_SECTION_CAPACITY 2
 
 /** `@brief` Initial allocated capacity for the pairs array in each section */
-#define INI_INITIAL_PAIR_CAPACITY    8
+#define INI_INITIAL_PAIR_CAPACITY    16
 
 
 /** @brief Key-value pair structure */

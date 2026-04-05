@@ -406,11 +406,12 @@ ini_t* ini_load(const char *path) {
     }
     
     size_t read_size = fread(buffer, 1, file_size, file);
-    if (read_size != (size_t)file_size || fclose(file) != 0) {
+    int close_rc = fclose(file);
+    if (read_size != (size_t)file_size || close_rc != 0) {
         free(buffer);
         return NULL;
     }
-    
+
     // Parse buffer
     ini_t *ini = ini_parse_buffer(buffer, read_size);
     free(buffer);

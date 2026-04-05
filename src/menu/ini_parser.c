@@ -587,9 +587,14 @@ bool ini_save(ini_t *ini, const char *path) {
     for (int i = 0; i < ini->section_count && ok; i++) {
         ini_section_t *section = &ini->sections[i];
         
-        // Skip empty sections
-        if (section->pair_count == 0 || section->name[0] == '\0') continue;
-        
+        // Skip the "" global sentinel and sections with no live pairs
+        if (section->name[0] == '\0') continue;
+        bool has_live_pairs = false;
+        for (int j = 0; j < section->pair_count; j++) {
+            if (section->pairs[j].value) { has_live_pairs = true; break; }
+        }
+        if (!has_live_pairs) continue;
+
         // Write section header
         if (fprintf(file, "[%s]\n", section->name) < 0) {
             ok = false;
@@ -624,7 +629,12 @@ bool ini_save(ini_t *ini, const char *path) {
         bool has_next = false;
         for (int k = i + 1; k < ini->section_count; k++) {
             ini_section_t *next = &ini->sections[k];
-            if (next->pair_count > 0 && next->name[0] != '\0') { has_next = true; break; }
+            if (next->name[0] != '\0') {
+                for (int l = 0; l < next->pair_count; l++) {
+                    if (next->pairs[l].value) { has_next = true; break; }
+                }
+                if (has_next) break;
+            }
         }
         if (has_next) {
             if (fprintf(file, "\n") < 0) ok = false;

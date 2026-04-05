@@ -20,8 +20,7 @@ static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *patch_extensions[] = { "bps", "ips", "aps", "ups", "xdelta", NULL };
-// TODO: "eep", "sra", "srm", "fla" could be used if transfered from different flashcarts.
-static const char *save_extensions[] = { "sav", NULL };
+static const char *save_extensions[] = { "sav", "eep", "sra", "srm", "fla", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
 
@@ -250,6 +249,24 @@ static bool load_directory (menu_t *menu) {
             path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
             if (strcmp(info.d_name, SAVE_DIRECTORY_NAME) == 0) {
+                hide = true;
+            }
+            path_pop(path);
+        }
+
+        if (!menu->settings.show_save_files) {
+            path_push(path, info.d_name);
+            // Skip save files if they are hidden (this is case sensitive)
+            if (file_has_extensions(info.d_name, save_extensions)) {
+                hide = true;
+            }
+            path_pop(path);
+        }
+
+        if (!menu->settings.show_cheat_files) {
+            path_push(path, info.d_name);
+            // Skip cheat files if they are hidden (this is case sensitive)
+            if (file_has_extensions(info.d_name, cheat_extensions)) {
                 hide = true;
             }
             path_pop(path);

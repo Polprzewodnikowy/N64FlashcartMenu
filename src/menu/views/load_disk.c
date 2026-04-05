@@ -78,9 +78,9 @@ static void scan_for_swap_disks(menu_t *menu) {
 
     // Free any existing swap disk paths
     for (uint16_t i = 0; i < DISK_SLOTS_MAX; i++) {
-        if (menu->load.disk_slots.slot[i].disk_path) {
-            path_free(menu->load.disk_slots.slot[i].disk_path);
-            menu->load.disk_slots.slot[i].disk_path = NULL;
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+            path_free(menu->load.disk_slots.swap_slot[i].disk_path);
+            menu->load.disk_slots.swap_slot[i].disk_path = NULL;
         }
     }
 
@@ -122,12 +122,12 @@ static void scan_for_swap_disks(menu_t *menu) {
         // Try to load disk info to validate it's a proper disk
         disk_err_t err = disk_info_load(
             candidate_path,
-            &menu->load.disk_slots.slot[swap_disk_count].disk_info
+            &menu->load.disk_slots.swap_slot[swap_disk_count].disk_info
         );
 
         if (err == DISK_OK) {
             // Valid disk found - add to swap slots
-            menu->load.disk_slots.slot[swap_disk_count].disk_path = candidate_path;
+            menu->load.disk_slots.swap_slot[swap_disk_count].disk_path = candidate_path;
             swap_disk_count++;
         } else {
             // Invalid disk - free the path
@@ -200,13 +200,11 @@ static void draw (menu_t *menu, surface_t *d) {
                 "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
                 "\t\t1: %s\n"
                 "\t\t2: %s\n"
-                "\t\t3: %s\n"
-                "\t\t4: %s\n",
+                "\t\t3: %s\n",
 
-                swap_disk_count > 0 ? path_last_get(menu->load.disk_slots.slot[0].disk_path) : "Empty",
-                swap_disk_count > 1 ? path_last_get(menu->load.disk_slots.slot[1].disk_path) : "Empty",
-                swap_disk_count > 2 ? path_last_get(menu->load.disk_slots.slot[2].disk_path) : "Empty",
-                swap_disk_count > 3 ? path_last_get(menu->load.disk_slots.slot[3].disk_path) : "Empty"
+                swap_disk_count > 0 ? path_last_get(menu->load.disk_slots.swap_slot[0].disk_path) : "Empty",
+                swap_disk_count > 1 ? path_last_get(menu->load.disk_slots.swap_slot[1].disk_path) : "Empty",
+                swap_disk_count > 2 ? path_last_get(menu->load.disk_slots.swap_slot[2].disk_path) : "Empty"
             );
         }
         
@@ -269,7 +267,7 @@ static void load (menu_t *menu) {
         }
     }
 
-    err = cart_load_64dd_ipl_and_disk(menu, draw_progress);
+    err = cart_load_64dd_ipl_and_disks(menu, draw_progress);
     if (err != CART_LOAD_OK) {
         menu_show_error(menu, cart_load_convert_error_message(err));
         return;

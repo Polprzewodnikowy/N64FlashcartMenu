@@ -56,8 +56,7 @@ static const char *format_file_type(char *name, file_info_t *info) {
     } else if (file_has_extensions(name, controller_pak_note_extensions)) {
         info->pak_file_attributes.is_controller_pak_dump_note = true;
         return " Type: Controller Pak note file\n";
-    } 
-    else if (file_has_extensions(name, emulator_extensions)) {
+    } else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
     } else if (file_has_extensions(name, cheat_extensions)) {
         return " Type: Cheats file\n";
@@ -118,8 +117,8 @@ void ui_components_file_info_draw(char* filename, file_info_t *info) {
             "\n"
             "\n"
             "\n"
-            " Actual Size: %d bytes\n"
-            " Compressed Size: %d bytes\n"
+            " Actual Size: %llu bytes\n"
+            " Compressed Size: %llu bytes\n"
             " Attributes: %s %s %s\n"
             "%s"
             " Modified: %s"
@@ -157,7 +156,7 @@ void ui_components_file_info_draw(char* filename, file_info_t *info) {
             "\n"
             "\n"
             "\n"
-            " Size: %d bytes\n"
+            " Size: %llu bytes\n"
             " Attributes: %s %s\n"
             "%s"
             " Modified: %s",

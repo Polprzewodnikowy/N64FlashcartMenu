@@ -2,7 +2,7 @@
 N64FlashcartMenu supports multiple emulators that are compatible with the N64. At the time of writing, current emulator support includes NES, SNES, GB, GBC, SMS, GG, and CHF ROMs.
 
 > [!TIP]
-> All emulators supported DO NOT require additional ROM processing or adjustment steps as may be suggested in their readme and original ROM's can be used out of the box.
+> All emulators supported DO NOT require additional ROM processing or adjustment steps as may be suggested in their readme and original ROMs can be used out of the box.
 
 Emulators should be added to the `/menu/emulators` directory on the SD card. N64FlashcartMenu currently supports the following emulators and associated ROM file names:
 - **NES**: [Neon64 v1.2/v0.3c/v2](https://github.com/hcs64/neon64v2/releases) by *visor / hcs64* - `neon64bu.rom`

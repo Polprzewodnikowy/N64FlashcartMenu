@@ -9,4 +9,4 @@ The N64FlashcartMenu does not currently support background music. It would not b
 > Check the [Pull Requests section](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls) for work towards it.
 
 ## Playing music
-MP3 playback is supported, see [here](./41_mp3_player.md)
+MP3 playback is supported, see [MP3 Player](./41_mp3_player.md)

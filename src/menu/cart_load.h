@@ -88,7 +88,7 @@ cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_call
  * @param progress Callback function for progress updates.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_64dd_ipl_and_disk(menu_t *menu, flashcart_progress_callback_t progress);
+cart_load_err_t cart_load_64dd_ipl_and_disks(menu_t *menu, flashcart_progress_callback_t progress);
 
 /**
  * @brief Load an emulator and its ROM.

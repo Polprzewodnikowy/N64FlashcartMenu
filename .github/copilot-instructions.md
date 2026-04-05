@@ -35,12 +35,12 @@ This file contains focused, actionable knowledge to help an AI assistant become 
 - Useful targets:
   - `make all` — full build + copies for 64drive / ED64 / SC64
   - `make run` — builds then deploys via `remotedeploy.sh` (or `localdeploy.bat` on Windows)
-  - `make run-debug`, `make run-debug-upload` — debug deploy helpers (serial output enabled)
+  - `make run-debug`, `make run-debug-upload`, `make run-debug-reboot` — debug deploy helpers (serial output enabled)
   - `make clean` — removes build and output directories
   - `make format` — runs `clang-format` on `src/` (excludes `src/libs`)
 
 ### Host environment notes
-- Primary development environment: Linux or macOS.
+- Primary development environment: Linux.
 - Windows users typically use WSL or the provided `.bat` deployment helpers.
 - Shell scripts (`*.sh`) assume a POSIX-compatible shell.
 
@@ -54,11 +54,11 @@ This file contains focused, actionable knowledge to help an AI assistant become 
   - `N64_MKFONT`
   - `N64_AUDIOCONV`
   - `N64_MKSPRITE`
-- These tools are invoked automatically by Makefile rules:
-  - Fonts → `filesystem/*.font64`
-  - Audio → `filesystem/*.wav64`
-  - Images → `filesystem/*.sprite`
 - Source assets live under `assets/`.
+- These tools are invoked automatically by Makefile rules, which are generated from the source assets:
+  - Fonts → `filesystem/*.font64`
+  - Audio → `filesystem/*.wav64`, `filesystem/*.xm64`
+  - Images → `filesystem/*.sprite`
 - Documentation site is generated using DocFX:
   - `docfx docfx.json --serve`
   - Sources live in `docs/`
@@ -104,7 +104,7 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - Single binary output:
   - The project builds into one ROM image, with multiple vendor-specific copies generated from it.
 - Asset pipeline:
-  - Modify source assets under `assets/` (PNG / WAV / TTF).
+  - Modify source assets under `assets/` (PNG / WAV/ XM / TTF).
   - Let the Makefile handle conversion and embedding.
 - C code layout:
   - Organized by feature rather than layer.

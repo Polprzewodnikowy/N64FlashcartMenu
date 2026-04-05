@@ -298,8 +298,12 @@ void save_cheats_to_file(char *path) {
             }
         }
     }
+    
 
-    fclose(f);
+    if (fclose(f) != 0) {
+        debugf("Cheat Editor: Failed to close file: %s\n", path);
+        return;
+    }
     debugf("Cheat Editor: Cheats saved to %s.\n", path);
 
 }

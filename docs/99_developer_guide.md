@@ -125,6 +125,7 @@ Use this lightweight rule for new menu code:
 * Avoid local stack arrays larger than 1 KiB.
 * For larger temporary buffers, use heap allocation with error checks or file-scope persistent buffers.
 * Prefer streaming I/O with small chunks (for example 512 bytes) for copy/patch paths.
+* If a larger chunk is justified, keep it off-stack, reuse it where possible, and document why.
 * Keep Pak-sensitive features conservative on Jumper Pak systems and leave headroom for UI/runtime state.
 
 ### Using feature flags

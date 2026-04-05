@@ -124,9 +124,22 @@ static bool restore_controller_pak_note(int controller) {
             //debugf("Write error while copying to destination!\n");
             fclose(fSource);
             fclose(fDestination);
+            remove(filename_note);
             cpakfs_unmount(controller);
+            snprintf(failure_message_note, sizeof failure_message_note,
+                     "Write error while restoring note to controller %d!", controller + 1);
             return false;
         }
+    }
+
+    if (ferror(fSource)) {
+        fclose(fSource);
+        fclose(fDestination);
+        remove(filename_note);
+        cpakfs_unmount(controller);
+        snprintf(failure_message_note, sizeof failure_message_note,
+                 "Read error while restoring note to controller %d!", controller + 1);
+        return false;
     }
 
     fclose(fSource);

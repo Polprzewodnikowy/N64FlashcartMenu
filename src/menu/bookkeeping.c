@@ -5,7 +5,7 @@
  */
 
 #include <libdragon.h>
-#include <mini.c/src/mini.h>
+#include "ini_parser.h"
 
 #include "bookkeeping.h"
 #include "utils/fs.h"
@@ -34,17 +34,17 @@ void bookkeeping_init (char *path) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
+static void bookkeeping_ini_load_list(bookkeeping_item_t *list, uint16_t count, ini_t *ini, const char *group) {
     char buf[64];
     for(uint16_t i = 0; i < count; i++) {
         snprintf(buf, sizeof(buf), "%d_primary_path", i);
-        list[i].primary_path = path_create(mini_get_string(ini, group, buf, ""));
+        list[i].primary_path = path_create(ini_get_string(ini, group, buf, ""));
 
         snprintf(buf, sizeof(buf), "%d_secondary_path", i);
-        list[i].secondary_path = path_create(mini_get_string(ini, group, buf, ""));
+        list[i].secondary_path = path_create(ini_get_string(ini, group, buf, ""));
         
         snprintf(buf, sizeof(buf), "%d_type", i);
-        list[i].bookkeeping_type = mini_get_int(ini, group, buf, BOOKKEEPING_TYPE_EMPTY);
+        list[i].bookkeeping_type = ini_get_int(ini, group, buf, BOOKKEEPING_TYPE_EMPTY);
     }
 }
 
@@ -58,11 +58,11 @@ void bookkeeping_load (bookkeeping_t *history) {
         bookkeeping_save(&init);
     }
 
-    mini_t *bookkeeping_ini = mini_try_load(history_path);
+    ini_t *bookkeeping_ini = ini_try_load(history_path);
     bookkeeping_ini_load_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
     bookkeeping_ini_load_list(history->favorite_items, FAVORITES_COUNT, bookkeeping_ini, "favorite");
 
-    mini_free(bookkeeping_ini);
+    ini_free(bookkeeping_ini);
 }
 
 /**
@@ -73,19 +73,19 @@ void bookkeeping_load (bookkeeping_t *history) {
  * @param ini Pointer to the INI file structure.
  * @param group Name of the group in the INI file.
  */
-static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, mini_t *ini, const char *group) {
+static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, ini_t *ini, const char *group) {
     char buf[64];
     for(uint16_t i = 0; i < count; i++) {
         snprintf(buf, sizeof(buf), "%d_primary_path", i);
         path_t* path = list[i].primary_path;
-        mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
+        ini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
         snprintf(buf, sizeof(buf), "%d_secondary_path", i);
         path = list[i].secondary_path;
-        mini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
+        ini_set_string(ini, group, buf, path != NULL ? path_get(path) : "");   
 
         snprintf(buf, sizeof(buf), "%d_type", i);
-        mini_set_int(ini, group, buf, list[i].bookkeeping_type);           
+        ini_set_int(ini, group, buf, list[i].bookkeeping_type);
     }
 }
 
@@ -95,13 +95,17 @@ static void bookkeeping_ini_save_list(bookkeeping_item_t *list, uint16_t count, 
  * @param history Pointer to the bookkeeping structure.
  */
 void bookkeeping_save (bookkeeping_t *history) {
-    mini_t *bookkeeping_ini = mini_create(history_path);
-
+    ini_t *bookkeeping_ini = ini_create();
+    if (bookkeeping_ini == NULL) {
+        debugf("[BOOKKEEPING] Failed to create INI structure\n");
+        return;
+    }
     bookkeeping_ini_save_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
     bookkeeping_ini_save_list(history->favorite_items, FAVORITES_COUNT, bookkeeping_ini, "favorite");
-
-    mini_save(bookkeeping_ini, MINI_FLAGS_SKIP_EMPTY_GROUPS);
-    mini_free(bookkeeping_ini);    
+    if (!ini_save(bookkeeping_ini, history_path)) {
+        debugf("[BOOKKEEPING] Failed to save history to %s\n", history_path);
+    }
+    ini_free(bookkeeping_ini); 
 }
 
 /**

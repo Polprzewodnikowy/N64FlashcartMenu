@@ -10,6 +10,7 @@
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
 	- Adds settings to hide cheat and save file types in the browser.
 	- Adds ability to display embedded homebrew ROM metadata in ROM info.
+	- Adds ability to display Commercial game metadate using ROM DB.
 
 - **Bug Fixes**
 	- Neon64 1Mbit SRAM.
@@ -24,12 +25,13 @@
 	- Menu credits.
 	- Disk Drive, disk info view.
 	- CPak manager, Added menu option to for notes restore.
+	- Replace mini.c INI lib with custom implementation.
 
 - **Other**
 	- Updated libDragon {preview} SDK.
 	- Updated miniz lib.
 	- Updated minimp3
-	- Add docfx devcontiner.
+	- Add docfx devcontainer.
 	- Remove rolling prerelease (all releases to main should be tagged).
 	- Added AI instructions to repo.
 	- Added an extra build option (run-debug-reboot) that aids debugging remotely without the need for uploading files to the SD card.

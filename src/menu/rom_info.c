@@ -9,8 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <libdragon.h>
-#include <mini.c/src/mini.h>
 #include <miniz.h>
+
+#include "ini_parser.h"
 
 #include "boot/cic.h"
 #include "rom_info.h"
@@ -762,10 +763,10 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     }
 
     rom_info->meta.name = strdup("");
-    rom_info->meta.author = strdup("Unknown");
-    rom_info->meta.release_date = strdup("Unknown");
-    rom_info->meta.osi_license = strdup("Unknown");
-    rom_info->meta.website = strdup("Unknown");
+    rom_info->meta.author = strdup("Not specified");
+    rom_info->meta.release_date = strdup("Not specified");
+    rom_info->meta.osi_license = strdup("Not specified");
+    rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
     rom_info->meta.short_description = strdup("");
 
@@ -774,236 +775,18 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 }
 
 /**
- * @brief Check if a position is inside a comment
- * 
- * Returns true if the character at pos is part of a comment
- * (after ; or # on the same line)
+ * `@brief` Safely replace a heap-allocated string.
+ *
+ * Duplicates `@p` src first. Only if allocation succeeds does it free the
+ * existing *dst and replace it. Returns false on OOM; *dst is unchanged.
  */
-static bool is_in_comment(const char *buffer, const char *pos) {
-    if (!buffer || !pos || pos < buffer) return false;
-    
-    // Scan backwards to the start of the line
-    const char *line_start = pos;
-    while (line_start > buffer && *(line_start - 1) != '\n') {
-        line_start--;
-    }
-    
-    // Scan forward from line start, looking for comment markers
-    const char *search = line_start;
-    while (search < pos) {
-        if (*search == ';' || *search == '#') {
-            // Found comment marker before our position
-            return true;
-        }
-        search++;
-    }
-    
-    return false;
-}
-
-/**
- * @brief Extract a value from an INI-format buffer
- * 
- * Simple parser for metadata.ini format. Looks for [meta] section and key=value pairs.
- * Handles comments (; and #), flexible whitespace around =, and various line endings.
- * Returns a pointer to the start of the value (still part of the buffer).
- * Buffer must be null-terminated.
- */
-static const char* parse_ini_value(const char *buffer, const char *key) {
-    if (!buffer || !key) return NULL;
-    
-    // Look for [meta] section first
-    const char *meta_section = strstr(buffer, "[meta]");
-    if (!meta_section) {
-        debugf("[META] parse_ini_value: [meta] section not found\n");
-        return NULL;
-    }
-    debugf("[META] parse_ini_value: found [meta] section at offset %d\n", (int)(meta_section - buffer));
-    
-    // Start search after [meta]
-    const char *search_start = meta_section + 6;  // len("[meta]")
-    
-    // Build search string: just the key (without =)
-    char search_key[256];
-    snprintf(search_key, sizeof(search_key), "%s", key);
-    
-    // Search for the key in the [meta] section
-    const char *search_pos = search_start;
-    int attempts = 0;
-    while (search_pos && *search_pos) {
-        search_pos = strstr(search_pos, search_key);
-        if (!search_pos) {
-            debugf("[META] parse_ini_value(%s): key not found after %d attempts\n", key, attempts);
-            return NULL;
-        }
-        attempts++;
-        
-        // Skip if in a comment
-        if (is_in_comment(buffer, search_pos)) {
-            debugf("[META] parse_ini_value(%s): found in comment at offset %d, skipping\n", key, (int)(search_pos - buffer));
-            search_pos++;
-            continue;
-        }
-        
-        // After the key, we should find optional whitespace and then '='
-        const char *after_key = search_pos + strlen(search_key);
-        
-        // Skip any whitespace after the key
-        while (*after_key && (*after_key == ' ' || *after_key == '\t')) {
-            after_key++;
-        }
-        
-        // Check if next character is '='
-        if (*after_key != '=') {
-            // Not a key=value pair, this was a partial match (e.g., "name" in "rename")
-            debugf("[META] parse_ini_value(%s): found key but no '=' after at offset %d (char=0x%02x)\n", 
-                   key, (int)(search_pos - buffer), (unsigned char)*after_key);
-            search_pos++;
-            continue;
-        }
-        
-        // Make sure it's at the start of a line or start of section
-        if (search_pos == search_start) {
-            // At the start of the section (right after [meta])
-            debugf("[META] parse_ini_value(%s): found at section start\n", key);
-            const char *value_start = after_key + 1;  // Point to char after '='
-            return value_start;
-        }
-        
-        // Check if previous character is newline (or space/tab at line start is ok too)
-        const char *char_before = search_pos - 1;
-        if (*char_before == '\n' || *char_before == '\r') {
-            debugf("[META] parse_ini_value(%s): found at line start (offset %d)\n", key, (int)(search_pos - buffer));
-            const char *value_start = after_key + 1;  // Point to char after '='
-            return value_start;
-        }
-        
-        // Check if we've reached another section
-        if (*search_pos == '[') {
-            debugf("[META] parse_ini_value(%s): reached next section, key not in [meta]\n", key);
-            return NULL;
-        }
-        
-        debugf("[META] parse_ini_value(%s): found key but not at line start (prev char=0x%02x)\n", key, (unsigned char)*char_before);
-        search_pos++;  // Try next occurrence
-    }
-    
-    debugf("[META] parse_ini_value(%s): exhausted search\n", key);
-    return NULL;
-}
-
-/**
- * @brief Extract a line value from INI buffer
- * 
- * Gets the value after key=, up to the next newline or comment.
- * Trims leading and trailing whitespace. Returns an allocated string.
- */
-static char* get_ini_string_value(const char *buffer, const char *key) {
-    const char *value_start = parse_ini_value(buffer, key);
-    if (!value_start) {
-        debugf("[META] get_ini_string_value(%s): value not found\n", key);
-        return NULL;
-    }
-    
-    debugf("[META] get_ini_string_value(%s): found at buffer offset %d\n", key, (int)(value_start - buffer));
-    
-    // Trim leading whitespace
-    while (*value_start && (*value_start == ' ' || *value_start == '\t')) {
-        value_start++;
-    }
-    
-    // Find the end of the value (newline, comment, or end of string)
-    const char *value_end = value_start;
-    while (*value_end && *value_end != '\n' && *value_end != '\r' && *value_end != ';' && *value_end != '#') {
-        value_end++;
-    }
-    
-    // Trim trailing whitespace
-    while (value_end > value_start && (*(value_end - 1) == ' ' || *(value_end - 1) == '\t')) {
-        value_end--;
-    }
-    
-    // Handle quoted values
-    if (*value_start == '"') {
-        value_start++;
-        if (value_end > value_start && *(value_end - 1) == '"') {
-            value_end--;
-        }
-    }
-    
-    // Allocate and copy
-    size_t len = value_end - value_start;
-    char *result = malloc(len + 1);
-    if (result) {
-        memcpy(result, value_start, len);
-        result[len] = '\0';
-        debugf("[META] get_ini_string_value(%s): extracted '%s' (len=%zu)\n", key, result, len);
-    }
-    return result;
-}
-
-/**
- * @brief Parse metadata from a buffer in memory
- * 
- * Parses metadata.ini format directly from a memory buffer without 
- * writing to disk. Uses simple INI parsing.
- * 
- * @param content Metadata INI content as a string buffer
- * @param size Size of content buffer
- * @param rom_info Output: metadata loaded into rom_info->meta
- * @return true if metadata was parsed successfully, false otherwise
- */
-static bool parse_metadata_from_buffer (const char *content, size_t size, rom_info_t *rom_info) {
-    if (!content || size == 0 || !rom_info) {
-        debugf("[META] parse_metadata_from_buffer: invalid args\n");
+static bool replace_owned_string(char **dst, const char *src) {
+    char *copy = strdup(src ? src : "");
+    if (!copy) {
         return false;
     }
-    
-    // Ensure content is null-terminated for string functions
-    // Note: we rely on the caller to have done this (miniz and malloc paths both do)
-    debugf("[META] parse_metadata_from_buffer: size=%zu, parsing INI from buffer\n", size);
-    
-    // Check if this looks like INI content (has [meta] section)
-    if (!strstr(content, "[meta]")) {
-        debugf("[META] parse_metadata_from_buffer: no [meta] section found\n");
-        return false;
-    }
-    
-    // Parse metadata fields directly from buffer
-    rom_info->meta.name = get_ini_string_value(content, "name");
-    if (!rom_info->meta.name) rom_info->meta.name = strdup("");
-    
-    rom_info->meta.author = get_ini_string_value(content, "author");
-    if (!rom_info->meta.author) rom_info->meta.author = strdup("");
-    
-    rom_info->meta.release_date = get_ini_string_value(content, "release-date");
-    if (!rom_info->meta.release_date) rom_info->meta.release_date = strdup("");
-    
-    rom_info->meta.osi_license = get_ini_string_value(content, "osi-license");
-    if (!rom_info->meta.osi_license) rom_info->meta.osi_license = strdup("");
-    
-    rom_info->meta.website = get_ini_string_value(content, "website");
-    if (!rom_info->meta.website) rom_info->meta.website = strdup("");
-    
-    rom_info->meta.short_description = get_ini_string_value(content, "short-desc");
-    if (!rom_info->meta.short_description) rom_info->meta.short_description = strdup("");
-    
-    // Parse age-rating as integer
-    const char *rating_str = parse_ini_value(content, "age-rating");
-    if (rating_str) {
-        // Trim leading whitespace
-        while (*rating_str && (*rating_str == ' ' || *rating_str == '\t')) {
-            rating_str++;
-        }
-        rom_info->meta.age_rating = atoi(rating_str);
-        debugf("[META] age-rating parsed as %lu\n", (unsigned long)rom_info->meta.age_rating);
-    } else {
-        rom_info->meta.age_rating = 0;
-    }
-    
-    debugf("[META] Loaded: name='%s', author='%s', date='%s'\n", 
-           rom_info->meta.name, rom_info->meta.author, rom_info->meta.release_date);
-    
+    free(*dst);
+    *dst = copy;
     return true;
 }
 
@@ -1070,11 +853,29 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     metadata_content[uncomp_size] = '\0';
     mz_zip_reader_end(&zip);
     
-    // Parse from buffer (no disk I/O)
-    bool success = parse_metadata_from_buffer(metadata_content, uncomp_size, rom_info);
+    // Parse from buffer using ini parser (no disk I/O)
+    ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
     free(metadata_content);
-    debugf("[META] load_metadata_from_zip_file: returning %d\n", success);
     
+    bool success = false;
+    if (meta_ini) {
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
+        ini_free(meta_ini);
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
+    }
+    debugf("[META] load_metadata_from_zip_file: returning %d\n", success);
     return success;
 }
 
@@ -1172,12 +973,30 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     mz_zip_reader_end(&zip);
     fclose(rom_file);
     
-    // Parse from buffer (no disk I/O needed)
-    debugf("[META] load_rom_meta_from_embedded_zip: calling parse_metadata_from_buffer\n");
-    bool success = parse_metadata_from_buffer(metadata_content, uncomp_size, rom_info);
+    // Parse from buffer using ini parser (no disk I/O needed)
+    ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
     free(metadata_content);
-    debugf("[META] load_rom_meta_from_embedded_zip: returning %d\n", success);
     
+    bool success = false;
+    if (meta_ini) {
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
+        ini_free(meta_ini);
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
+    }
+    
+    debugf("[META] load_rom_meta_from_embedded_zip: returning %d\n", success);
     return success;
 }
 
@@ -1198,23 +1017,51 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     
     // Fall back to flat INI format
     debugf("[META] load_rom_meta_from_file: trying flat INI format\n");
-    mini_t *rom_meta_ini = mini_load(meta_path_str);
+    // check for ROM metadata INI file by replacing the current path's ROM extension with metadata.ini
+    path_ext_replace(rom_info_meta_path, "metadata.ini");
+    meta_path_str = path_get(rom_info_meta_path);
 
+    if (!file_exists(path_get(rom_info_meta_path))) {
+        debugf("[META] load_rom_meta_from_file: metadata.ini not found at '%s'\n", meta_path_str);
+        // If that file does not exist, fall back to metadata database using game_code (like boxart uses).
+        // TODO: we should probably check the homebrew path as well.
+        char gamecode_str[8];
+        path_t *fallback_meta_path= path_init("sd:/", "menu/metadata"); // should be menu->storage_prefix and METADATA_BASE_DIRECTORY
+        // FIXME: should use METADATA_BASE_DIRECTORY and path functions, but this is simpler for now since we just want to check for existence of the file.
+        snprintf(
+            gamecode_str,
+            sizeof(gamecode_str),
+            "%c/%c/%c/%c",
+            rom_info->game_code[0], rom_info->game_code[1], rom_info->game_code[2], rom_info->game_code[3]
+        );
+        path_push(fallback_meta_path, gamecode_str);
+
+        path_push(fallback_meta_path, "metadata.ini");
+        debugf("[META] load_rom_meta_from_file: trying fallback path '%s'\n", path_get(fallback_meta_path));
+        path_free(rom_info_meta_path);
+        rom_info_meta_path = fallback_meta_path;
+        meta_path_str = path_get(rom_info_meta_path);
+    }
+    
+    debugf("[META] load_rom_meta_from_file: using metadata.ini at '%s'\n", meta_path_str);
+    ini_t *rom_meta_ini = ini_load(meta_path_str);
     if (rom_meta_ini) {
         debugf("[META] load_rom_meta_from_file: loaded as INI file\n");
-        rom_info->meta.name = strdup(mini_get_string(rom_meta_ini, "meta", "name", ""));
-        rom_info->meta.author = strdup(mini_get_string(rom_meta_ini, "meta", "author", ""));
-        rom_info->meta.release_date = strdup(mini_get_string(rom_meta_ini, "meta", "release-date", ""));
-        rom_info->meta.osi_license = strdup(mini_get_string(rom_meta_ini, "meta", "osi-license", ""));
-        rom_info->meta.website = strdup(mini_get_string(rom_meta_ini, "meta", "website", ""));
-        rom_info->meta.age_rating = mini_get_int(rom_meta_ini, "meta", "age-rating", 0);
-        rom_info->meta.short_description = strdup(mini_get_string(rom_meta_ini, "meta", "short-desc", ""));
-
-        mini_free(rom_meta_ini);
-    } else {
-        debugf("[META] load_rom_meta_from_file: INI load failed (file not found or invalid)\n");
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(rom_meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(rom_meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(rom_meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
+        ini_free(rom_meta_ini);
+        if (ok) {
+            debugf("[META] Loaded from INI file: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_rom_meta_from_file: one or more strdup failed (OOM)\n");
+        }
     }
-
     debugf("[META] load_rom_meta_from_file: complete\n");
     path_free(rom_info_meta_path);
 }
@@ -1255,7 +1102,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_config_ini = mini_load(path_get(rom_info_path));
+    ini_t *rom_config_ini = ini_load(path_get(rom_info_path));
 
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
@@ -1263,26 +1110,26 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     if (rom_config_ini) {
         // general
-        rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
-        rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
+        rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "", "cheats_enabled", false);
+        rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "", "patches_enabled", false);
         
         // overrides
-        rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
+        rom_info->boot_override.cic_type = ini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
         if (rom_info->boot_override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {
             rom_info->boot_override.cic = true;
         }
 
-        rom_info->boot_override.save_type = mini_get_int(rom_config_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
+        rom_info->boot_override.save_type = ini_get_int(rom_config_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
         if (rom_info->boot_override.save_type != SAVE_TYPE_AUTOMATIC) {
             rom_info->boot_override.save = true;
         }
 
-        rom_info->boot_override.tv_type = mini_get_int(rom_config_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
+        rom_info->boot_override.tv_type = ini_get_int(rom_config_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
         if (rom_info->boot_override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
             rom_info->boot_override.tv = true;
         }
 
-        mini_free(rom_config_ini);
+        ini_free(rom_config_ini);
     }
 
     path_free(rom_info_path);
@@ -1293,38 +1140,29 @@ static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_config_ini = mini_try_load(path_get(rom_info_path));
-
+    ini_t *rom_config_ini = ini_try_load(path_get(rom_info_path));
     if (!rom_config_ini) {
         path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
 
-    int mini_err;
-
     if (value == default_value) {
-        mini_err = mini_delete_value(rom_config_ini, type, id);
+        ini_delete_key(rom_config_ini, type, id);
     } else {
-        mini_err = mini_set_int(rom_config_ini, type, id, value);
+        ini_set_int(rom_config_ini, type, id, value);
     }
 
-    if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
-        path_free(rom_info_path);
-        mini_free(rom_config_ini);
-        return ROM_ERR_SAVE_IO;
-    }
-
-    bool empty = mini_empty(rom_config_ini);
+    bool empty = ini_is_empty(rom_config_ini);
 
     if (!empty) {
-        if (mini_save(rom_config_ini, MINI_FLAGS_NONE) != MINI_OK) {
+        if (!ini_save(rom_config_ini, path_get(rom_info_path))) {
             path_free(rom_info_path);
-            mini_free(rom_config_ini);
+            ini_free(rom_config_ini);
             return ROM_ERR_SAVE_IO;
         }
     }
 
-    mini_free(rom_config_ini);
+    ini_free(rom_config_ini);
 
     if (empty) {
         if (remove(path_get(rom_info_path)) && (errno != ENOENT)) {
@@ -1411,13 +1249,13 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
-    return save_rom_config_setting_to_file(path, NULL, "cheats_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "cheats_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.patches_enabled = enabled;
-    return save_rom_config_setting_to_file(path, NULL, "patches_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "patches_enabled", enabled, false);
 }
 #endif
 

@@ -79,7 +79,7 @@ REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
 ```
 
 To debug the ROM and auto reboot:
-(note: the current debugging session menu will not be the same as the file on the SD.
+(note: the current debugging session menu will not be the same as the file on the SD.)
 ```bash
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-reboot
 ```

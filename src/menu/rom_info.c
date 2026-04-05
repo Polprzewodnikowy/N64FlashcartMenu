@@ -8,8 +8,10 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <libdragon.h>
+#include <miniz.h>
 
-#include <mini.c/src/mini.h>
+#include "ini_parser.h"
 
 #include "boot/cic.h"
 #include "rom_info.h"
@@ -125,6 +127,7 @@ static const match_t database[] = {
     MATCH_CHECK_CODE(0x1F95CAAA047FC22A, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK | FEAT_EXP_PAK_REQUIRED),            // Donkey kong 64 [PAL CRACK]
 
     MATCH_CHECK_CODE(0xE3FF09DFCAE4B0ED, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                    // Banjo tooie [USA CRACK]
+    MATCH_CHECK_CODE(0xAE6B1E11B7CBD69E, SAVE_TYPE_NONE, FEAT_CPAK),                                            // Dragon Sword [Prototype]
 
     MATCH_ID_REGION_VERSION("NK4J", 0, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                      // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
     MATCH_ID_REGION_VERSION("NK4J", 1, SAVE_TYPE_SRAM_256KBIT, FEAT_RPAK),                                      // Kirby 64: The Crystal Shards [Hoshi no Kirby 64 (J)]
@@ -218,6 +221,7 @@ static const match_t database[] = {
     MATCH_ID("NN6", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                         // Dr. Mario 64
     MATCH_ID("NNA", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK),                                                         // Star Wars Episode I: Battle for Naboo
     MATCH_ID("NOS", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // 64 Oozumou
+    MATCH_ID("NO2", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // 64 Oozumou 2
     MATCH_ID("NP2", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // Chou Kuukan Night Pro Yakyuu King 2 (J)
     MATCH_ID("NPG", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_VRU),                                              // Hey You, Pikachu! [Pikachu Genki Dechu (J)]
     MATCH_ID("NPT", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_TPAK),                                             // Puyo Puyon Party
@@ -345,8 +349,12 @@ static const match_t database[] = {
     // CONTROLLER PAK / NONE
     MATCH_ID("N22", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Ready 2 Rumble Boxing - Round 2
     MATCH_ID("N2M", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Madden Football 2002
+    MATCH_ID("N2P", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage 2 - Universal Tour
+    MATCH_ID("N2V", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Chameleon Twist 2
     MATCH_ID("N32", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Army Men - Sarge's Heroes 2
     MATCH_ID("N3P", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Triple Play 2000
+    MATCH_ID("N3T", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater 3
+    MATCH_ID("N4W", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // 40 Winks
     MATCH_ID("N64", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Kira to Kaiketsu! 64 Tanteidan
     MATCH_ID("N7I", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // FIFA Soccer 64 [FIFA 64 (E)]
     MATCH_ID("N8I", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // FIFA - Road to World Cup 98 [World Cup e no Michi (J)]
@@ -498,19 +506,19 @@ static const match_t database[] = {
     MATCH_ID("NRK", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Rugrats in Paris - The Movie
     MATCH_ID("NRO", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Road Rash 64
     MATCH_ID("NRP", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage - World Tour
-    MATCH_ID("NRP", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Rampage 2 - Universal Tour
     MATCH_ID("NRR", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Roadster's Trophy
     MATCH_ID("NRT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Rat Attack
-    MATCH_ID("NRT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Robotron 64
     MATCH_ID("NRU", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // San Francisco Rush 2049
     MATCH_ID("NRV", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Re-Volt
     MATCH_ID("NRW", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Turok: Rage Wars
+    MATCH_ID("NRX", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Robotron 64
     MATCH_ID("NS2", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Simcity 2000
     MATCH_ID("NSB", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Twisted Edge - Extreme Snowboarding [King Hill 64 - Extreme Snowboarding (J)]
     MATCH_ID("NSD", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Shadow Man
     MATCH_ID("NSF", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // San Francisco Rush - Extreme Racing
     MATCH_ID("NSG", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Shadowgate 64 - Trials Of The Four Towers
     MATCH_ID("NSH", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Saikyou Habu Shougi (J)
+    MATCH_ID("NSJ", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // J.League Tactics Soccer
     MATCH_ID("NSK", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Snowboard Kids [Snobow Kids (J)]
     MATCH_ID("NSL", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Spider-Man
     MATCH_ID("NSO", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // NBA Showtime - NBA on NBC
@@ -520,9 +528,9 @@ static const match_t database[] = {
     MATCH_ID("NSY", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Scooby-Doo! - Classic Creep Capers
     MATCH_ID("NSZ", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // NFL Blitz - Special Edition
     MATCH_ID("NT2", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Turok 2 - Seeds of Evil [Violence Killer - Turok New Generation (J)]
-    MATCH_ID("NT3", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater 3
     MATCH_ID("NT4", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // CyberTiger
     MATCH_ID("NTA", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Disney's Tarzan
+    MATCH_ID("NTD", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // O.D.T. [Prototype]
     MATCH_ID("NTF", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Tony Hawk's Pro Skater
     MATCH_ID("NTH", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Toy Story 2 - Buzz Lightyear to the Rescue!
     MATCH_ID("NTI", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // WWF: Attitude
@@ -532,7 +540,6 @@ static const match_t database[] = {
     MATCH_ID("NTS", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Centre Court Tennis [Let's Smash (J)]
     MATCH_ID("NTT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Tonic Trouble
     MATCH_ID("NTU", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Turok: Dinosaur Hunter [Turok: Jikuu Senshi (J)]
-    MATCH_ID("NV2", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Chameleon Twist 2
     MATCH_ID("NV3", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Micro Machines 64 Turbo
     MATCH_ID("NV8", SAVE_TYPE_NONE, FEAT_CPAK | FEAT_RPAK),                                                     // Vigilante 8
     MATCH_ID("NVC", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Virtual Chess 64
@@ -755,9 +762,339 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
     }
 
-    rom_info->metadata.esrb_age_rating = ROM_ESRB_AGE_RATING_NONE;
+    rom_info->meta.name = strdup("");
+    rom_info->meta.author = strdup("Not specified");
+    rom_info->meta.release_date = strdup("Not specified");
+    rom_info->meta.osi_license = strdup("Not specified");
+    rom_info->meta.website = strdup("Not specified");
+    rom_info->meta.age_rating = 0;
+    rom_info->meta.short_description = strdup("");
+
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
+}
+
+/**
+ * `@brief` Safely replace a heap-allocated string.
+ *
+ * Duplicates `@p` src first. Only if allocation succeeds does it free the
+ * existing *dst and replace it. Returns false on OOM; *dst is unchanged.
+ */
+static bool replace_owned_string(char **dst, const char *src) {
+    char *copy = strdup(src ? src : "");
+    if (!copy) {
+        return false;
+    }
+    free(*dst);
+    *dst = copy;
+    return true;
+}
+
+/**
+ * @brief Try to load metadata from a ZIP file path (e.g., .meta file)
+ * 
+ * Opens a ZIP file and extracts metadata.ini from it, parsing the content
+ * directly from memory without writing to disk.
+ * 
+ * @param zip_path Path to ZIP file
+ * @param rom_info Output: metadata loaded into rom_info->meta
+ * @return true if metadata was found and loaded, false otherwise
+ */
+static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_info) {
+    debugf("[META] load_metadata_from_zip_file: path='%s'\n", zip_path);
+    
+    if (!zip_path || !rom_info) {
+        debugf("[META] load_metadata_from_zip_file: invalid args\n");
+        return false;
+    }
+    
+    mz_zip_archive zip = {0};
+    if (!mz_zip_reader_init_file(&zip, zip_path, 0)) {
+        debugf("[META] load_metadata_from_zip_file: mz_zip_reader_init_file failed\n");
+        return false;
+    }
+    debugf("[META] load_metadata_from_zip_file: ZIP opened successfully\n");
+    
+    // Look for metadata.ini entry
+    mz_uint file_index = mz_zip_reader_locate_file(&zip, "metadata.ini", NULL, MZ_ZIP_FLAG_CASE_SENSITIVE);
+    if (file_index == MZ_UINT32_MAX) {
+        debugf("[META] load_metadata_from_zip_file: metadata.ini not found in ZIP\n");
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+    debugf("[META] load_metadata_from_zip_file: metadata.ini found (index=%lu)\n", (unsigned long)file_index);
+    
+    // Get file stats
+    mz_zip_archive_file_stat file_stat;
+    if (!mz_zip_reader_file_stat(&zip, file_index, &file_stat)) {
+        debugf("[META] load_metadata_from_zip_file: mz_zip_reader_file_stat failed\n");
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+    
+    // Extract to memory
+    size_t uncomp_size = file_stat.m_uncomp_size;
+    debugf("[META] load_metadata_from_zip_file: compressed=%llu, uncompressed=%zu\n", (unsigned long long)file_stat.m_comp_size, uncomp_size);
+    char *metadata_content = malloc(uncomp_size + 1);
+    if (!metadata_content) {
+        debugf("[META] load_metadata_from_zip_file: malloc failed for %zu bytes\n", uncomp_size + 1);
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+    
+    if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
+        debugf("[META] load_metadata_from_zip_file: mz_zip_reader_extract_to_mem failed\n");
+        free(metadata_content);
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+    debugf("[META] load_metadata_from_zip_file: extracted %zu bytes\n", uncomp_size);
+    
+    metadata_content[uncomp_size] = '\0';
+    mz_zip_reader_end(&zip);
+    
+    // Parse from buffer using ini parser (no disk I/O)
+    ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
+    free(metadata_content);
+    
+    bool success = false;
+    if (meta_ini) {
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
+        ini_free(meta_ini);
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
+    }
+    debugf("[META] load_metadata_from_zip_file: returning %d\n", success);
+    return success;
+}
+
+/**
+ * @brief Try to load metadata from embedded ZIP in ROM file
+ * 
+ * If the ROM has the metadata flag set (header byte 0x38 bit 0),
+ * this function extracts metadata.ini from the embedded ZIP appended
+ * to the ROM and parses it.
+ * 
+ * @param rom_path Path to the ROM file
+ * @param rom_header ROM header to check for metadata flag
+ * @param rom_info Output: metadata loaded into rom_info->meta
+ * @return true if embedded metadata was found and loaded, false otherwise
+ */
+static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t *rom_header, rom_info_t *rom_info) {
+    debugf("[META] load_rom_meta_from_embedded_zip: path='%s'\n", rom_path);
+    
+    // Check if ROM has embedded metadata flag (byte 0x38 bit 0)
+    uint8_t *raw = (uint8_t *)rom_header;
+    uint8_t flag_byte = raw[0x38];
+    debugf("[META] load_rom_meta_from_embedded_zip: header[0x38]=0x%02x, flag=%d\n", flag_byte, (flag_byte & 1));
+    
+    if ((flag_byte & 1) == 0) {
+        // No embedded metadata flag
+        debugf("[META] load_rom_meta_from_embedded_zip: no metadata flag set\n");
+        return false;
+    }
+    
+    FILE *rom_file = fopen(rom_path, "rb");
+    if (!rom_file) {
+        debugf("[META] load_rom_meta_from_embedded_zip: failed to open ROM file\n");
+        return false;
+    }
+    
+    // Get file size
+    fseek(rom_file, 0, SEEK_END);
+    long file_size = ftell(rom_file);
+    rewind(rom_file);
+    debugf("[META] load_rom_meta_from_embedded_zip: ROM file size=%ld bytes\n", file_size);
+    
+    if (file_size < 100) {
+        debugf("[META] load_rom_meta_from_embedded_zip: file too small\n");
+        fclose(rom_file);
+        return false;
+    }
+    
+    mz_zip_archive zip = {0};
+    if (!mz_zip_reader_init_file(&zip, rom_path, 0)) {
+        debugf("[META] load_rom_meta_from_embedded_zip: mz_zip_reader_init_file failed\n");
+        fclose(rom_file);
+        return false;
+    }
+    debugf("[META] load_rom_meta_from_embedded_zip: ZIP initialized\n");
+    
+    // Look for metadata.ini entry
+    mz_uint file_index = mz_zip_reader_locate_file(&zip, "metadata.ini", NULL, MZ_ZIP_FLAG_CASE_SENSITIVE);
+    if (file_index == MZ_UINT32_MAX) {
+        debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini not found in embedded ZIP\n");
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+    debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini found (index=%lu)\n", (unsigned long)file_index);
+    
+    // Extract metadata.ini to memory
+    mz_zip_archive_file_stat file_stat;
+    if (!mz_zip_reader_file_stat(&zip, file_index, &file_stat)) {
+        debugf("[META] load_rom_meta_from_embedded_zip: mz_zip_reader_file_stat failed\n");
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+    
+    size_t uncomp_size = file_stat.m_uncomp_size;
+    debugf("[META] load_rom_meta_from_embedded_zip: size=%zu (compressed=%llu)\n", uncomp_size, (unsigned long long)file_stat.m_comp_size);
+    char *metadata_content = malloc(uncomp_size + 1);
+    if (!metadata_content) {
+        debugf("[META] load_rom_meta_from_embedded_zip: malloc failed\n");
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+    
+    if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
+        debugf("[META] load_rom_meta_from_embedded_zip: mz_zip_reader_extract_to_mem failed\n");
+        free(metadata_content);
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+    debugf("[META] load_rom_meta_from_embedded_zip: extracted successfully\n");
+    
+    metadata_content[uncomp_size] = '\0';
+    mz_zip_reader_end(&zip);
+    fclose(rom_file);
+    
+    // Parse from buffer using ini parser (no disk I/O needed)
+    ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
+    free(metadata_content);
+    
+    bool success = false;
+    if (meta_ini) {
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
+        ini_free(meta_ini);
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
+    }
+    
+    debugf("[META] load_rom_meta_from_embedded_zip: returning %d\n", success);
+    return success;
+}
+
+static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
+    path_t *rom_info_meta_path = path_clone(path);
+
+    path_ext_replace(rom_info_meta_path, "meta");
+
+    const char *meta_path_str = path_get(rom_info_meta_path);
+    debugf("[META] load_rom_meta_from_file: looking for '%s'\n", meta_path_str);
+    
+    // Try to load as ZIP file first (handles .meta files that are ZIP archives)
+    if (load_metadata_from_zip_file(meta_path_str, rom_info)) {
+        debugf("[META] load_rom_meta_from_file: loaded as ZIP file\n");
+        path_free(rom_info_meta_path);
+        return;
+    }
+    
+    // Fall back to flat INI format
+    debugf("[META] load_rom_meta_from_file: trying flat INI format\n");
+    // check for ROM metadata INI file by replacing the current path's ROM extension with metadata.ini
+    path_ext_replace(rom_info_meta_path, "metadata.ini");
+    meta_path_str = path_get(rom_info_meta_path);
+
+    if (!file_exists(path_get(rom_info_meta_path))) {
+        debugf("[META] load_rom_meta_from_file: metadata.ini not found at '%s'\n", meta_path_str);
+        // If that file does not exist, fall back to metadata database using game_code (like boxart uses).
+        // TODO: we should probably check the homebrew path as well.
+        char gamecode_str[8];
+        path_t *fallback_meta_path= path_init("sd:/", "menu/metadata"); // should be menu->storage_prefix and METADATA_BASE_DIRECTORY
+        // FIXME: should use METADATA_BASE_DIRECTORY and path functions, but this is simpler for now since we just want to check for existence of the file.
+        snprintf(
+            gamecode_str,
+            sizeof(gamecode_str),
+            "%c/%c/%c/%c",
+            rom_info->game_code[0], rom_info->game_code[1], rom_info->game_code[2], rom_info->game_code[3]
+        );
+        path_push(fallback_meta_path, gamecode_str);
+
+        path_push(fallback_meta_path, "metadata.ini");
+        debugf("[META] load_rom_meta_from_file: trying fallback path '%s'\n", path_get(fallback_meta_path));
+        path_free(rom_info_meta_path);
+        rom_info_meta_path = fallback_meta_path;
+        meta_path_str = path_get(rom_info_meta_path);
+    }
+    
+    debugf("[META] load_rom_meta_from_file: using metadata.ini at '%s'\n", meta_path_str);
+    ini_t *rom_meta_ini = ini_load(meta_path_str);
+    if (rom_meta_ini) {
+        debugf("[META] load_rom_meta_from_file: loaded as INI file\n");
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(rom_meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(rom_meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(rom_meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
+        rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
+        ini_free(rom_meta_ini);
+        if (ok) {
+            debugf("[META] Loaded from INI file: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_rom_meta_from_file: one or more strdup failed (OOM)\n");
+        }
+    }
+    debugf("[META] load_rom_meta_from_file: complete\n");
+    path_free(rom_info_meta_path);
+}
+
+void rom_info_free_meta(rom_info_t *rom_info) {
+    if (!rom_info) {
+        return;
+    }
+    
+    if (rom_info->meta.name) {
+        free(rom_info->meta.name);
+        rom_info->meta.name = NULL;
+    }
+    if (rom_info->meta.author) {
+        free(rom_info->meta.author);
+        rom_info->meta.author = NULL;
+    }
+    if (rom_info->meta.release_date) {
+        free(rom_info->meta.release_date);
+        rom_info->meta.release_date = NULL;
+    }
+    if (rom_info->meta.osi_license) {
+        free(rom_info->meta.osi_license);
+        rom_info->meta.osi_license = NULL;
+    }
+    if (rom_info->meta.website) {
+        free(rom_info->meta.website);
+        rom_info->meta.website = NULL;
+    }
+    if (rom_info->meta.short_description) {
+        free(rom_info->meta.short_description);
+        rom_info->meta.short_description = NULL;
+    }
 }
 
 static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
@@ -765,7 +1102,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_config_ini = mini_load(path_get(rom_info_path));
+    ini_t *rom_config_ini = ini_load(path_get(rom_info_path));
 
     rom_info->boot_override.cic = false;
     rom_info->boot_override.save = false;
@@ -773,29 +1110,26 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
 
     if (rom_config_ini) {
         // general
-        rom_info->settings.cheats_enabled = mini_get_bool(rom_config_ini, NULL, "cheats_enabled", false);
-        rom_info->settings.patches_enabled = mini_get_bool(rom_config_ini, NULL, "patches_enabled", false);
-
-        // metadata
-        rom_info->metadata.esrb_age_rating = mini_get_int(rom_config_ini, "metadata", "esrb_age_rating", ROM_ESRB_AGE_RATING_NONE);
+        rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "", "cheats_enabled", false);
+        rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "", "patches_enabled", false);
         
         // overrides
-        rom_info->boot_override.cic_type = mini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
+        rom_info->boot_override.cic_type = ini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
         if (rom_info->boot_override.cic_type != ROM_CIC_TYPE_AUTOMATIC) {
             rom_info->boot_override.cic = true;
         }
 
-        rom_info->boot_override.save_type = mini_get_int(rom_config_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
+        rom_info->boot_override.save_type = ini_get_int(rom_config_ini, "custom_boot", "save_type", SAVE_TYPE_AUTOMATIC);
         if (rom_info->boot_override.save_type != SAVE_TYPE_AUTOMATIC) {
             rom_info->boot_override.save = true;
         }
 
-        rom_info->boot_override.tv_type = mini_get_int(rom_config_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
+        rom_info->boot_override.tv_type = ini_get_int(rom_config_ini, "custom_boot", "tv_type", ROM_TV_TYPE_AUTOMATIC);
         if (rom_info->boot_override.tv_type != ROM_TV_TYPE_AUTOMATIC) {
             rom_info->boot_override.tv = true;
         }
 
-        mini_free(rom_config_ini);
+        ini_free(rom_config_ini);
     }
 
     path_free(rom_info_path);
@@ -806,38 +1140,29 @@ static rom_err_t save_rom_config_setting_to_file (path_t *path, const char *type
 
     path_ext_replace(rom_info_path, "ini");
 
-    mini_t *rom_config_ini = mini_try_load(path_get(rom_info_path));
-
+    ini_t *rom_config_ini = ini_try_load(path_get(rom_info_path));
     if (!rom_config_ini) {
         path_free(rom_info_path);
         return ROM_ERR_SAVE_IO;
     }
 
-    int mini_err;
-
     if (value == default_value) {
-        mini_err = mini_delete_value(rom_config_ini, type, id);
+        ini_delete_key(rom_config_ini, type, id);
     } else {
-        mini_err = mini_set_int(rom_config_ini, type, id, value);
+        ini_set_int(rom_config_ini, type, id, value);
     }
 
-    if ((mini_err != MINI_OK) && (mini_err != MINI_VALUE_NOT_FOUND)) {
-        path_free(rom_info_path);
-        mini_free(rom_config_ini);
-        return ROM_ERR_SAVE_IO;
-    }
-
-    bool empty = mini_empty(rom_config_ini);
+    bool empty = ini_is_empty(rom_config_ini);
 
     if (!empty) {
-        if (mini_save(rom_config_ini, MINI_FLAGS_NONE) != MINI_OK) {
+        if (!ini_save(rom_config_ini, path_get(rom_info_path))) {
             path_free(rom_info_path);
-            mini_free(rom_config_ini);
+            ini_free(rom_config_ini);
             return ROM_ERR_SAVE_IO;
         }
     }
 
-    mini_free(rom_config_ini);
+    ini_free(rom_config_ini);
 
     if (empty) {
         if (remove(path_get(rom_info_path)) && (errno != ENOENT)) {
@@ -924,19 +1249,21 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
-    return save_rom_config_setting_to_file(path, NULL, "cheats_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "cheats_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.patches_enabled = enabled;
-    return save_rom_config_setting_to_file(path, NULL, "patches_enabled", enabled, false);
+    return save_rom_config_setting_to_file(path, "", "patches_enabled", enabled, false);
 }
 #endif
 
 rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     FILE *f;
     rom_header_t rom_header;
+    
+    debugf("[META] rom_config_load: starting for '%s'\\n", path_get(path));
 
     if ((f = fopen(path_get(path), "rb")) == NULL) {
         return ROM_ERR_NO_FILE;
@@ -955,8 +1282,26 @@ rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     match_t match = find_rom_in_database(&rom_header);
 
     extract_rom_info(&match, &rom_header, rom_info);
+    debugf("[META] rom_config_load: game_code='%c%c%c%c', CIC type=%d\\n", 
+           rom_info->game_code[0], rom_info->game_code[1], rom_info->game_code[2], rom_info->game_code[3],
+           rom_info->cic_type);
 
     load_rom_config_from_file(path, rom_info);
+
+    // Try to load metadata from external .meta file first, then from embedded ZIP
+    load_rom_meta_from_file(path, rom_info);
+    debugf("[META] rom_config_load: after load_rom_meta_from_file, name='%s'\\n", rom_info->meta.name);
+    
+    // If external .meta load found nothing (name is still empty), try embedded metadata
+    if (rom_info->meta.name && strlen(rom_info->meta.name) == 0) {
+        debugf("[META] rom_config_load: name is empty, trying embedded metadata\\n");
+        load_rom_meta_from_embedded_zip(path_get(path), &rom_header, rom_info);
+        debugf("[META] rom_config_load: after load_rom_meta_from_embedded_zip, name='%s'\\n", rom_info->meta.name);
+    } else {
+        debugf("[META] rom_config_load: external metadata found, skipping embedded\\n");
+    }
+    
+    debugf("[META] rom_config_load: complete\\n");
 
     return ROM_OK;
 }

@@ -1,5 +1,4 @@
-[Return to README](README.md)
-## N64FlashcartMenu User Guide
+## N64FlashcartMenu - User Guide
 
 ### General
 - [Initial Setup of an SD Card](./10_getting_started_sd.md)
@@ -34,5 +33,5 @@
 - [Experimental Features](./65_experimental.md)
 
 ### Developers
-- [Developer Guide](./99_developer_guide.md)
-- [Contributing](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
+- [Menu Developer Guide](./99_developer_guide.md)
+- [Contributing](../CONTRIBUTING.md)

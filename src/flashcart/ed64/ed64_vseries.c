@@ -159,6 +159,7 @@ static flashcart_t flashcart_ed64_vseries = {
     .load_save = ed64_vseries_load_save,
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
+    .load_64dd_disks = NULL,
     .set_save_type = ed64_vseries_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,

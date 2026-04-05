@@ -1,0 +1,11 @@
+- name: User Guide
+  href: docs/
+- name: Contributing
+  href: CONTRIBUTING.md
+- name: Changelog
+  href: CHANGELOG.md
+- name: API Reference
+  href: docs/api/docs/index.html
+- name: License
+  href: LICENSE.md
+  

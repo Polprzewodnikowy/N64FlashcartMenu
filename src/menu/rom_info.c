@@ -775,6 +775,22 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 }
 
 /**
+ * `@brief` Safely replace a heap-allocated string.
+ *
+ * Duplicates `@p` src first. Only if allocation succeeds does it free the
+ * existing *dst and replace it. Returns false on OOM; *dst is unchanged.
+ */
+static bool replace_owned_string(char **dst, const char *src) {
+    char *copy = strdup(src ? src : "");
+    if (!copy) {
+        return false;
+    }
+    free(*dst);
+    *dst = copy;
+    return true;
+}
+
+/**
  * @brief Try to load metadata from a ZIP file path (e.g., .meta file)
  * 
  * Opens a ZIP file and extracts metadata.ini from it, parsing the content
@@ -843,26 +859,22 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     
     bool success = false;
     if (meta_ini) {
-        free(rom_info->meta.name);
-        rom_info->meta.name = strdup(ini_get_string(meta_ini, "meta", "name", ""));
-        free(rom_info->meta.author);
-        rom_info->meta.author = strdup(ini_get_string(meta_ini, "meta", "author", "Not specified"));
-        free(rom_info->meta.release_date);
-        rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
-        free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Not specified"));
-        free(rom_info->meta.website);
-        rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", "Not specified"));
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
-        free(rom_info->meta.short_description);
-        rom_info->meta.short_description = strdup(ini_get_string(meta_ini, "meta", "short-desc", ""));
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
-        success = true;
-        debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
-    } else {
-        debugf("[META] load_metadata_from_zip_file: failed to parse INI\n");
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
     }
-    
     debugf("[META] load_metadata_from_zip_file: returning %d\n", success);
     return success;
 }
@@ -967,22 +979,21 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     bool success = false;
     if (meta_ini) {
-        free(rom_info->meta.name);
-        rom_info->meta.name = strdup(ini_get_string(meta_ini, "meta", "name", ""));
-        free(rom_info->meta.author);
-        rom_info->meta.author = strdup(ini_get_string(meta_ini, "meta", "author", "Not specified"));
-        free(rom_info->meta.release_date);
-        rom_info->meta.release_date = strdup(ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
-        free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(meta_ini, "meta", "osi-license", "Not specified"));
-        free(rom_info->meta.website);
-        rom_info->meta.website = strdup(ini_get_string(meta_ini, "meta", "website", "Not specified"));
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
-        free(rom_info->meta.short_description);
-        rom_info->meta.short_description = strdup(ini_get_string(meta_ini, "meta", "short-desc", ""));
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
-        success = true;
-        debugf("[META] Loaded from embedded ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        success = ok;
+        if (ok) {
+            debugf("[META] Loaded from ZIP: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_metadata_from_zip_file: one or more strdup failed (OOM)\n");
+        }
     }
     
     debugf("[META] load_rom_meta_from_embedded_zip: returning %d\n", success);
@@ -1036,25 +1047,21 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
     ini_t *rom_meta_ini = ini_load(meta_path_str);
     if (rom_meta_ini) {
         debugf("[META] load_rom_meta_from_file: loaded as INI file\n");
-        free(rom_info->meta.name);
-        rom_info->meta.name = strdup(ini_get_string(rom_meta_ini, "meta", "name", ""));
-        free(rom_info->meta.author);
-        rom_info->meta.author = strdup(ini_get_string(rom_meta_ini, "meta", "author", "Not specified"));
-        free(rom_info->meta.release_date);
-        rom_info->meta.release_date = strdup(ini_get_string(rom_meta_ini, "meta", "release-date", "Not specified"));
-        free(rom_info->meta.osi_license);
-        rom_info->meta.osi_license = strdup(ini_get_string(rom_meta_ini, "meta", "osi-license", "Not specified"));
-        free(rom_info->meta.website);
-        rom_info->meta.website = strdup(ini_get_string(rom_meta_ini, "meta", "website", "Not specified"));
+        bool ok = true;
+        ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(rom_meta_ini, "meta", "name",         ""));
+        ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(rom_meta_ini, "meta", "author",       "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(rom_meta_ini, "meta", "release-date", "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
+        ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
-        free(rom_info->meta.short_description);
-        rom_info->meta.short_description = strdup(ini_get_string(rom_meta_ini, "meta", "short-desc", ""));
-
+        ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
         ini_free(rom_meta_ini);
-    } else {
-        debugf("[META] load_rom_meta_from_file: INI load failed (file not found or invalid)\n");
+        if (ok) {
+            debugf("[META] Loaded from INI file: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
+        } else {
+            debugf("[META] load_rom_meta_from_file: one or more strdup failed (OOM)\n");
+        }
     }
-
     debugf("[META] load_rom_meta_from_file: complete\n");
     path_free(rom_info_meta_path);
 }

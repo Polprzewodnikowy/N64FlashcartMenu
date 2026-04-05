@@ -188,6 +188,24 @@ flashcart_err_t flashcart_load_64dd_ipl (char *ipl_path, flashcart_progress_call
  * @return flashcart_err_t Error code.
  */
 flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
+
+/**
+ * @brief Load 64DD disks into the flashcart.
+ *
+ * @param disk_path Path to the primary disk file.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @param swap_disk_paths Array of paths to swap disk files.
+ * @param swap_disk_count Number of swap disks.
+ * @return flashcart_err_t Error code.
+ */
+flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
+
+/**
+* @brief Set the next boot mode for the flashcart.
+* 
+* @param boot_mode The boot mode to set.
+* @return flashcart_err_t Error code.
+*/
 flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode);
 
 #endif /* FLASHCART_H__ */

@@ -64,7 +64,8 @@ typedef enum {
     ENTRY_TYPE_SAVE,
     ENTRY_TYPE_TEXT,
     ENTRY_TYPE_ARCHIVE,
-    ENTRY_TYPE_ARCHIVED
+    ENTRY_TYPE_ARCHIVED,
+    ENTRY_TYPE_ROM_META
 } entry_type_t;
 
 /** @brief File Entry Structure */
@@ -80,9 +81,10 @@ typedef struct {
     disk_info_t disk_info;
 } disk_slot_entry_t;
 
+/** @brief Disk slot structure for multi-disk 64DD games. */
 typedef struct {
-    disk_slot_entry_t primary;
-    disk_slot_entry_t slot[4];
+    disk_slot_entry_t primary; // Primary disk slot
+    disk_slot_entry_t swap_slot[3]; // 3 swap slots
 } disk_slot_t;
 
 /** @brief Menu Structure */

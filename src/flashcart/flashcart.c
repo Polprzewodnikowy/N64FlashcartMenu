@@ -353,18 +353,20 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
 }
 
 /**
-* @brief Load 64DD disks into the flashcart.
-*
-* @param disk_path Path to the disk file.
-* @param disk_parameters Pointer to the disk parameters.
-* @return flashcart_err_t Error code.
-*/
+ * @brief Load 64DD disks into the flashcart.
+ *
+ * @param disk_path Path to the primary disk file.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @param swap_disk_paths Array of paths to swap disk files.
+ * @param swap_disk_count Number of swap disks.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
     if (!flashcart->load_64dd_disks) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
-    if ((disk_path == NULL) || (disk_parameters == NULL)) {
+    if ((disk_path == NULL) || (disk_parameters == NULL) || (swap_disk_count > 0 && swap_disk_paths == NULL)) {
         return FLASHCART_ERR_ARGS;
     }
 

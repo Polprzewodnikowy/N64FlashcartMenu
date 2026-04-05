@@ -96,7 +96,7 @@ For example, a save file called `Glover (USA).eep` should have its extension cha
 Dependent on the original save, you may need to correct the byte order and/or pad/trim the files to their expected size:
 
 > [!TIP]
-> use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
+> Use a tool such as [Ninjiteu's N64SaveConverter](https://github.com/Ninjiteu/N64SaveConverter).
 > Certain files may need parsing multiple times.
 
 ### Recommended Action

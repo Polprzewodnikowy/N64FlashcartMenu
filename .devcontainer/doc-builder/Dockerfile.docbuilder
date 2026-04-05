@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y build-essential doxygen git python3 wget nodejs npm
 
-# Install Playwrite dependencies
+# Install Playwright dependencies
 RUN apt-get install -y libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libatspi2.0-0 libxdamage1 libxkbcommon0 libasound2    
 
 # Install libdragon toolchain (packaged .deb)

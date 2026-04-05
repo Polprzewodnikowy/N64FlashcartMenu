@@ -46,7 +46,7 @@ It is not currently possible to directly communicate with USB devices from a dev
 To set up a "proxy", open a terminal window on the native OS, then `cd ./tools/sc64` and then `./sc64deployer.exe server`.
 Keep this terminal window open.
 
-Then, in the dev container, use `make run` or `make run-debug`.
+Then, in the dev container, use `make run`, `make run-debug`, `make run-debug-reboot` or `make-run-debug-upload`.
 
 ##### To a remote LAN device
 If you want to Deploy and debug to a fully remote target (over your LAN)
@@ -72,10 +72,16 @@ To debug the ROM (requires power toggle):
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug
 ```
 
-To debug the ROM with upload and auto reboot:
+To debug the ROM with upload to the SD and auto reboot:
 (note: the current debugging session menu may not be the same as the file uploaded. you need to `make all` first to ensure the latest menu is uploaded).
 ```bash
 REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-upload
+```
+
+To debug the ROM and auto reboot:
+(note: the current debugging session menu will not be the same as the file on the SD.)
+```bash
+REMOTE=[THE_LAN_IP_ADDRESS]:9064 make run-debug-reboot
 ```
 
 #### Directly From your host (Windows) OS
@@ -89,8 +95,8 @@ NOTE: A "release" version of the SC64 menu is called `sc64menu.n64` and can be g
 
 
 ### How to deploy and/or debug to other flashcarts/emulators
-#### Ares Emulator
-For ease of development and debugging, the N64FlashcartMenu ROM can run in the [Ares emulator](https://ares-emu.net/) (without most flashcart features).
+#### Ares or gopher64 Emulator
+For ease of development and debugging, the N64FlashcartMenu ROM can run in the [Ares emulator](https://ares-emu.net/) or [gopher64 emulator](https://github.com/gopher64/gopher64) (without most flashcart features).
 
 * Ensure you have the Ares emulator on your computer.
 * Load the `N64FlashcartMenu.n64` ROM.

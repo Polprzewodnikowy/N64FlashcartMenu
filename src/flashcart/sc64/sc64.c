@@ -628,6 +628,9 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
 
     // Load swap disks from passed parameters
     for (int i = 0; i < swap_disk_count; i++) {
+        if (mapping.count >= 4) {
+            break;
+        }
         if (swap_disk_paths[i] != NULL) {
             // Use same disk parameters for swap disks (same physical disk type)
             disk_load_thb_table(disk_parameters, &mapping.disks[mapping.count].thb_table, &mapping_offset);

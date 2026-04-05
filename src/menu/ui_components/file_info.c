@@ -56,8 +56,7 @@ static const char *format_file_type(char *name, file_info_t *info) {
     } else if (file_has_extensions(name, controller_pak_note_extensions)) {
         info->pak_file_attributes.is_controller_pak_dump_note = true;
         return " Type: Controller Pak note file\n";
-    } 
-    else if (file_has_extensions(name, emulator_extensions)) {
+    } else if (file_has_extensions(name, emulator_extensions)) {
         return " Type: Emulator ROM file\n";
     } else if (file_has_extensions(name, cheat_extensions)) {
         return " Type: Cheats file\n";
@@ -73,9 +72,10 @@ static const char *format_file_type(char *name, file_info_t *info) {
  * @return Constant string describing the FAT attributes.
  */
 static const char *format_fat_file_attributes_type(char *name, file_info_t *info) {
-    static char fat_attributes[5]; // 4 attributes + null terminator (R, H, S, A)
+    static char fat_attributes[5]; // 4 attributes + null terminator (Read-only, Hidden, System, Archive)
+    // FIXME: we only care about the read-only and hidden attributes. The system and archive attributes are not relevant to the user, and just add confusion. Consider removing them.
 
-    sprintf(fat_attributes, "%s%s%s%s",
+    snprintf(fat_attributes, sizeof(fat_attributes), "%s%s%s%s",
         (info->fat_file_attributes.is_read_only ? "R" : "-"), // Read-only attribute
         (info->fat_file_attributes.is_hidden ? "H" : "-"), // Hidden attribute
         (info->fat_file_attributes.is_system ? "S" : "-"), // System attribute
@@ -117,8 +117,8 @@ void ui_components_file_info_draw(char* filename, file_info_t *info) {
             "\n"
             "\n"
             "\n"
-            " Actual Size: %d bytes\n"
-            " Compressed Size: %d bytes\n"
+            " Actual Size: %llu bytes\n"
+            " Compressed Size: %llu bytes\n"
             " Attributes: %s %s %s\n"
             "%s"
             " Modified: %s"
@@ -156,7 +156,7 @@ void ui_components_file_info_draw(char* filename, file_info_t *info) {
             "\n"
             "\n"
             "\n"
-            " Size: %d bytes\n"
+            " Size: %llu bytes\n"
             " Attributes: %s %s\n"
             "%s"
             " Modified: %s",

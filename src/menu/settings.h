@@ -34,10 +34,19 @@ typedef struct {
     /** @brief Show saves folder in file browser */ 
     bool show_saves_folder;
 
-    /** @brief Hide rom file extensions */    
+    /** @brief Show save files in file browser */
+    bool show_save_files;
+
+    /** @brief Show cheat files in file browser */
+    bool show_cheat_files;
+
+    /** @brief Show rom configuration files in file browser */
+    bool show_rom_configuration_files;
+
+    /** @brief Show rom file extensions in browser */    
     bool show_browser_file_extensions;
 
-    /** @brief Hide rom tags */  
+    /** @brief Show rom tags in browser */  
     bool show_browser_rom_tags;
 
     /** @brief Enable Background music */
@@ -50,21 +59,21 @@ typedef struct {
     bool rumble_enabled;
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    /** @brief Show progress bar when loading a ROM */
-    bool loading_progress_bar_enabled;
-
     /** @brief Enable the ability to bypass the menu and instantly load a ROM on power and reset button */
     bool rom_autoload_enabled;
-#else
-    /** @brief Enable the ability to bypass the menu and instantly load a ROM on reset button */
-    bool rom_fast_reboot_enabled;
-#endif
 
     /** @brief A path to the autoloaded ROM */
     char *rom_autoload_path;
 
     /** @brief A filename of the autoloaded ROM */
     char *rom_autoload_filename;
+    
+    /** @brief Show progress bar when loading a ROM */
+    bool loading_progress_bar_enabled;
+#else
+    /** @brief Enable the ability to bypass the menu and instantly load a ROM on reset button */
+    bool rom_fast_reboot_enabled;
+#endif
 
 } settings_t;
 

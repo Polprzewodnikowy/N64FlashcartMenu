@@ -584,32 +584,16 @@ bool ini_save(ini_t *ini, const char *path) {
     }
     
     bool ok = true;
+    bool wrote_any_block = false;
+
+    // 1) Write global (pre-section) key/value pairs first, without a header
     for (int i = 0; i < ini->section_count && ok; i++) {
         ini_section_t *section = &ini->sections[i];
-        
-        // Skip the "" global sentinel and sections with no live pairs
-        if (section->name[0] == '\0') continue;
-        bool has_live_pairs = false;
-        for (int j = 0; j < section->pair_count; j++) {
-            if (section->pairs[j].value) { has_live_pairs = true; break; }
-        }
-        if (!has_live_pairs) continue;
-
-        // Write section header
-        if (fprintf(file, "[%s]\n", section->name) < 0) {
-            ok = false;
-            break;
-        }
-        
-        // Write key-value pairs
+        if (section->name[0] != '\0') continue; // only the "" sentinel
         for (int j = 0; j < section->pair_count && ok; j++) {
             ini_pair_t *pair = &section->pairs[j];
-            
-            // Skip deleted pairs
-            if (!pair->value) continue;
-            
+            if (!pair->value) continue; // deleted
             if (value_needs_quoting(pair->value)) {
-                // Double-quote the value and escape internal '"' and '\'
                 if (fprintf(file, "%s = \"", pair->key) < 0) { ok = false; break; }
                 for (const char *vp = pair->value; *vp; vp++) {
                     if (*vp == '"' || *vp == '\\') {
@@ -619,26 +603,45 @@ bool ini_save(ini_t *ini, const char *path) {
                 }
                 if (ok && fprintf(file, "\"\n") < 0) ok = false;
             } else {
-                if (fprintf(file, "%s = %s\n", pair->key, pair->value) < 0) {
-                    ok = false;
+                if (fprintf(file, "%s = %s\n", pair->key, pair->value) < 0) { ok = false; }
+            }
+            wrote_any_block = true;
+        }
+        break; // only one global section possible
+    }
+
+    // 2) Then write named sections; add a blank line before each block after the first
+    for (int i = 0; i < ini->section_count && ok; i++) {
+        ini_section_t *section = &ini->sections[i];
+        if (section->name[0] == '\0') continue; // skip global sentinel here
+        bool has_live_pairs = false;
+        for (int j = 0; j < section->pair_count; j++) {
+            if (section->pairs[j].value) { has_live_pairs = true; break; }
+        }
+        if (!has_live_pairs) continue;
+
+        if (wrote_any_block) {
+            if (fprintf(file, "\n") < 0) { ok = false; break; }
+        }
+        if (fprintf(file, "[%s]\n", section->name) < 0) { ok = false; break; }
+
+        for (int j = 0; j < section->pair_count && ok; j++) {
+            ini_pair_t *pair = &section->pairs[j];
+            if (!pair->value) continue;
+            if (value_needs_quoting(pair->value)) {
+                if (fprintf(file, "%s = \"", pair->key) < 0) { ok = false; break; }
+                for (const char *vp = pair->value; *vp; vp++) {
+                    if (*vp == '"' || *vp == '\\') {
+                        if (fputc('\\', file) == EOF) { ok = false; break; }
+                    }
+                    if (fputc(*vp, file) == EOF) { ok = false; break; }
                 }
+                if (ok && fprintf(file, "\"\n") < 0) ok = false;
+            } else {
+                if (fprintf(file, "%s = %s\n", pair->key, pair->value) < 0) { ok = false; }
             }
         }
-        
-        // Add blank line only if there is a subsequent non-empty, named section
-        bool has_next = false;
-        for (int k = i + 1; k < ini->section_count; k++) {
-            ini_section_t *next = &ini->sections[k];
-            if (next->name[0] != '\0') {
-                for (int l = 0; l < next->pair_count; l++) {
-                    if (next->pairs[l].value) { has_next = true; break; }
-                }
-                if (has_next) break;
-            }
-        }
-        if (has_next) {
-            if (fprintf(file, "\n") < 0) ok = false;
-        }
+        wrote_any_block = true;
     }
     debugf("[INI] ini_save(%s): saving complete\n", path);
     return fclose(file) == 0 && ok;

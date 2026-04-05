@@ -18,6 +18,9 @@
 
 #define MAX_FILE_SIZE   MiB(4)
 
+// Keep large USB transfer scratch space off the stack.
+static uint8_t usb_transfer_buffer[8192];
+
 /** @brief The supported USB commands structure. */
 typedef struct {
     /** @brief The command identifier. */
@@ -107,7 +110,6 @@ static void command_reboot (menu_t *menu) {
 static void command_receive_file (menu_t *menu) {
     FILE *f;
     char buffer[256];
-    uint8_t data[8192];
     char length[8];
 
     if (usb_comm_read_string(buffer, sizeof(buffer), ' ')) {
@@ -138,9 +140,9 @@ static void command_receive_file (menu_t *menu) {
     }
 
     while (remaining > 0) {
-        int block_size = MIN(remaining, sizeof(data));
-        usb_read(data, block_size);
-        if (fwrite(data, 1, block_size, f) != block_size) {
+        int block_size = MIN(remaining, sizeof(usb_transfer_buffer));
+        usb_read(usb_transfer_buffer, block_size);
+        if (fwrite(usb_transfer_buffer, 1, block_size, f) != block_size) {
             fclose(f);
             return usb_comm_send_error("Couldn't write all required data to the file\n");
         }

@@ -11,6 +11,8 @@ static char cpak_note_path[255];
 static int16_t controller_selected;
 static char failure_message_note[255];
 static bool start_note_restore;
+// Keep large file-copy scratch space off the stack.
+static uint8_t note_copy_buffer[4096];
 
 static bool restore_controller_pak_note(int controller) {
     sprintf(failure_message_note, " ");
@@ -114,11 +116,10 @@ static bool restore_controller_pak_note(int controller) {
     ui_components_loader_draw(0, "Restoring Controller Pak note...");
     rdpq_detach_show();
 
-    char buffer[4096];
     size_t bytesRead;
 
-    while ((bytesRead = fread(buffer, 1, sizeof(buffer), fSource)) > 0) {
-        size_t bytesWritten = fwrite(buffer, 1, bytesRead, fDestination);
+    while ((bytesRead = fread(note_copy_buffer, 1, sizeof(note_copy_buffer), fSource)) > 0) {
+        size_t bytesWritten = fwrite(note_copy_buffer, 1, bytesRead, fDestination);
         if (bytesWritten < bytesRead) {
             //debugf("Write error while copying to destination!\n");
             fclose(fSource);

@@ -110,6 +110,15 @@ Within the code, use the `debugf` command, and then deploy using a debug build e
 ```
 The output will then be shown within the terminal.
 
+### Stack usage guideline (menu code)
+On N64, stack space is limited and easy to exhaust when multiple systems are active.
+
+Use this lightweight rule for new menu code:
+* Avoid local stack arrays larger than 1 KiB.
+* For larger temporary buffers, use heap allocation with error checks or file-scope persistent buffers.
+* Prefer streaming I/O with small chunks (for example 512 bytes) for copy/patch paths.
+* Keep Pak-sensitive features conservative on Jumper Pak systems and leave headroom for UI/runtime state.
+
 ### Using feature flags
 To enable features that are not build by default, you can input flags as part of the build.
 i.e. the current notible flags are:

@@ -61,6 +61,8 @@ static char * CPAK_PATH = "sd:/cpak_saves";
 static char * CPAK_PATH_NO_PRE = "/cpak_saves";
 static char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
 static char * CPAK_NOTES_PATH_NO_PRE = "/cpak_saves/notes";
+// Keep large file-copy scratch space off the stack.
+static uint8_t cpak_note_copy_buffer[4096];
 
 static void reset_vars(){
     has_mem = false;
@@ -331,11 +333,10 @@ static void dump_single_note(int _port, int16_t selected_index) {
     ui_components_loader_draw(0, "Saving Controller Pak note...");
     rdpq_detach_show();
 
-    char buffer[4096];
     size_t bytesRead;
 
-    while ((bytesRead = fread(buffer, 1, sizeof(buffer), fSource)) > 0) {
-        size_t bytesWritten = fwrite(buffer, 1, bytesRead, fDump);
+    while ((bytesRead = fread(cpak_note_copy_buffer, 1, sizeof(cpak_note_copy_buffer), fSource)) > 0) {
+        size_t bytesWritten = fwrite(cpak_note_copy_buffer, 1, bytesRead, fDump);
         if (bytesWritten < bytesRead) {
             fclose(fSource);
             fclose(fDump);

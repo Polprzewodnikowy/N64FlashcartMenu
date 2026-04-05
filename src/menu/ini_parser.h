@@ -60,8 +60,8 @@ ini_t* ini_create(void);
  * Parses INI-formatted text from a buffer without filesystem I/O.
  * Useful for extracting metadata from ZIP archives or embedded data.
  * 
- * @param buffer INI content (must be null-terminated)
- * @param size Size of buffer (excluding null terminator)
+ * `@param` buffer INI content (need not be null-terminated)
+ * `@param` size Size of buffer in bytes
  * @return Parsed INI structure, or NULL on error
  */
 ini_t* ini_parse_buffer(const char *buffer, size_t size);
@@ -198,4 +198,4 @@ bool ini_is_empty(ini_t *ini);
 bool ini_save(ini_t *ini, const char *path);
 
 
-#endif // INI_PARSER_H__
+#endif // INI_PARSER_H_

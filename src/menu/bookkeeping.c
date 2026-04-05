@@ -100,7 +100,9 @@ void bookkeeping_save (bookkeeping_t *history) {
     bookkeeping_ini_save_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
     bookkeeping_ini_save_list(history->favorite_items, FAVORITES_COUNT, bookkeeping_ini, "favorite");
 
-    ini_save(bookkeeping_ini, history_path);
+    if (!ini_save(bookkeeping_ini, history_path)) {
+        debugf("[BOOKKEEPING] Failed to save history to %s\n", history_path);
+    }
     ini_free(bookkeeping_ini);    
 }
 

@@ -114,7 +114,9 @@ void settings_save (settings_t *settings) {
     // ini_set_bool(ini, "menu", "show_browser_rom_tags", settings->show_browser_rom_tags);
     // ini_set_bool(ini, "menu_beta_flag", "rumble_enabled", settings->rumble_enabled);
 
-    ini_save(ini, settings_path);
+    if (!ini_save(ini, settings_path)) {
+        debugf("[SETTINGS] Failed to save settings to %s\n", settings_path);
+    }
 
     ini_free(ini);
 }

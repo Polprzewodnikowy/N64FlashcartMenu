@@ -353,6 +353,15 @@ static void dump_single_note(int _port, int16_t selected_index) {
         }
     }
 
+    if (ferror(fSource)) {
+        fclose(fSource);
+        fclose(fDump);
+        remove(filename_note);
+        snprintf(failure_message_note, sizeof(failure_message_note), "Read error while dumping note from controller %d!", controller_selected + 1);
+        error_message_displayed = true;
+        return;
+    }
+
     fclose(fSource);
     fclose(fDump);
     process_complete_note_dump = true;

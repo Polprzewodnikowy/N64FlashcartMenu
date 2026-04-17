@@ -11,6 +11,7 @@ This file contains focused, actionable knowledge to help an AI assistant become 
 - Primary areas of change:
   - Menu logic and UI: `src/menu/`
   - Flashcart drivers: `src/flashcart/`
+  - Ensure compatibility and functionality with real hardware using only a Jumper Pak accounting for memory stack and heap pressure and inform the user if features are unavailable, though allow availablilty of features that may require the use of Expansion Pak if the system supports it.
 - Non-goals:
   - No PC-side UI, installer, or runtime configuration system.
   - No external scripting, plugins, or dynamic content loading at runtime.

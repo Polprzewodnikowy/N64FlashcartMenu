@@ -26,11 +26,12 @@
 	- Disk Drive, disk info view.
 	- CPak manager, Added menu option to for notes restore.
 	- Replace mini.c INI lib with custom implementation.
+	- Browser highlight colour for better display on CRT.
 
 - **Other**
 	- Updated libDragon {preview} SDK.
 	- Updated miniz lib.
-	- Updated minimp3
+	- Updated minimp3.
 	- Add docfx devcontainer.
 	- Remove rolling prerelease (all releases to main should be tagged).
 	- Added AI instructions to repo.

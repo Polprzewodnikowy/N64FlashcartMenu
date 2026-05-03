@@ -141,9 +141,10 @@ static void menu_init (boot_params_t *boot_params) {
  * @param menu Pointer to the menu structure.
  */
 static void menu_deinit (menu_t *menu) {
-    hdmi_send_game_id(menu->boot_params);
-
     ui_components_background_free();
+    rspq_wait();  // Execute deferred callbacks (e.g., display list freeing) before closing RSPQ
+
+    hdmi_send_game_id(menu->boot_params);
 
     path_free(menu->load.disk_slots.primary.disk_path);
     path_free(menu->load.rom_path);
@@ -157,9 +158,9 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 
     sound_deinit();
-
-    rdpq_close();
+    
     rspq_close();
+    rdpq_close();
     rtc_close();
     timer_close();
     joypad_close();

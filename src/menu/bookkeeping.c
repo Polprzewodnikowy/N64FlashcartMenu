@@ -59,6 +59,10 @@ void bookkeeping_load (bookkeeping_t *history) {
     }
 
     ini_t *bookkeeping_ini = ini_try_load(history_path);
+    if (bookkeeping_ini == NULL) {
+        debugf("[BOOKKEEPING] Failed to load INI from %s\n", history_path);
+        return;
+    }
     bookkeeping_ini_load_list(history->history_items, HISTORY_COUNT, bookkeeping_ini, "history");
     bookkeeping_ini_load_list(history->favorite_items, FAVORITES_COUNT, bookkeeping_ini, "favorite");
 

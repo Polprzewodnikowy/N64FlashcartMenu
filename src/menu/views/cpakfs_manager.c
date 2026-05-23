@@ -4,9 +4,9 @@
 #include "views.h"
 #include "../sound.h"
 #include "../fonts.h"
-#include <fatfs/ff.h>
 #include <errno.h>
 #include <dir.h>
+#include "utils/fs.h"
 #include "utils/cpakfs_utils.h"
 
 #define MAX_STRING_LENGTH 62
@@ -59,9 +59,7 @@ static bool start_single_note_delete;
 static bool start_format_controller_pak;
 
 static char * CPAK_PATH = "sd:/cpak_saves";
-static char * CPAK_PATH_NO_PRE = "/cpak_saves";
 static char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
-static char * CPAK_NOTES_PATH_NO_PRE = "/cpak_saves/notes";
 
 static void reset_vars(){
     has_mem = false;
@@ -82,18 +80,6 @@ static void reset_vars(){
     process_complete_format = false;
     process_complete_delete = false;
     error_message_displayed = false;
-}
-
-static void create_directory(const char *dirpath) {
-    FRESULT res = f_mkdir(dirpath);
-    
-    if (res == FR_OK) {
-        //debugf("Directory created: %s\n", dirpath);
-    } else if (res == FR_EXIST) {
-        //debugf("Directory already exists: %s\n", dirpath);
-    } else {
-        //debugf("Failed to create directory: %s (Error Code: %d)\n", dirpath, res);
-    }
 }
 
 static void get_rtc_time(char* formatted_time) {
@@ -356,18 +342,6 @@ static void dump_single_note(int _port, int16_t selected_index) {
     fclose(fDump);
     process_complete_note_dump = true;
 
-}
-
-static bool file_exists(const char *filename)
-{
-    FILE *fp = fopen(filename, "r");
-    bool is_exist = false;
-    if (fp != NULL)
-    {
-        is_exist = true;
-        fclose(fp);
-    }
-    return is_exist;
 }
 
 static void delete_single_note(int _port, unsigned short selected_index) {
@@ -653,7 +627,7 @@ static void draw (menu_t *menu, surface_t *d) {
             style = STL_GREEN;
             snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
         } else if (has_mem && corrupted_pak) {
-            snprintf(has_mem_text, sizeof(has_mem_text), "%s %s", has_mem_text, " (is NOT valid. Corrupted)");
+            snprintf(has_mem_text, sizeof(has_mem_text), "Controller Pak detected (Corrupted)");
             style = STL_ORANGE;
             snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), " ");
         }
@@ -1047,8 +1021,8 @@ void view_controller_pakfs_init (menu_t *menu) {
 
     use_rtc = menu->current_time >= 0 ? true : false;
 
-    create_directory(CPAK_PATH_NO_PRE);
-    create_directory(CPAK_NOTES_PATH_NO_PRE);
+    directory_create(CPAK_PATH);
+    directory_create(CPAK_NOTES_PATH);
 
     ui_components_context_menu_init(&options_context_menu);
 }

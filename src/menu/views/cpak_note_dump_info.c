@@ -4,7 +4,6 @@
 #include "views.h"
 #include "../sound.h"
 #include "../fonts.h"
-#include <fatfs/ff.h>
 #include "utils/cpakfs_utils.h"
 
 static char cpak_note_path[255];

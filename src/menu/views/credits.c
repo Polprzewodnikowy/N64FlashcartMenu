@@ -9,11 +9,21 @@
 #define BUILD_TIMESTAMP "Unknown"
 #endif
 
+static sys_version_t sdk_version = {0};
+static bool show_oss_lib_info_message = false;
 
 static void process (menu_t *menu) {
     if (menu->actions.back) {
+        show_oss_lib_info_message = false;
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER; 
+    } else if (menu->actions.lz_context) {
+        if (show_oss_lib_info_message) {
+            show_oss_lib_info_message = false;
+        } else {
+            show_oss_lib_info_message = true;
+        }
+        sound_play_effect(SFX_SETTING);
     }
 }
 
@@ -35,26 +45,37 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "\n"
         "\n"
-        "Menu version: %s\n"
-        "Build timestamp: %s\n"
+        "Menu version: \t%s\n"
+        "Build timestamp:  %s\n"
+        "libdragon SDK: \t%s%s (%s, %.7s)\n"
         "\n"
-        "Github - Website:\n"
-        " https://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
+        "Get the latest menu version:\n"
+        "\thttps://github.com/Polprzewodnikowy/N64FlashcartMenu\n"
+        "\n"
         "Authors:\n"
-        " Robin Jones / NetworkFusion\n"
-        " Mateusz Faderewski / Polprzewodnikowy\n"
-        "Contributors:\n"
-        " Thank you to ALL project contributors,\n"
-        " no matter how small the commit.\n"
-        "OSS software used:\n"
-        " libdragon (UNLICENSE License)\n"
-        " libspng (BSD 2-Clause License)\n"
-        " mini.c (BSD 2-Clause License)\n"
-        " minimp3 (CC0 1.0 Universal)\n"
-        " miniz (MIT License)",
+        "\tRobin Jones / NetworkFusion\n"
+        "\tMateusz Faderewski / Polprzewodnikowy\n"
+        "\tand contributors:\n"
+        "\tThank you to ALL project contributors,\n"
+        "\tno matter how small the commit.\n"
+        "\n\nThis menu is licensed under the AGPL-3.0 License.\n",
         MENU_VERSION,
-        BUILD_TIMESTAMP
+        BUILD_TIMESTAMP,
+        sdk_version.branch, sdk_version.dirty ? "*" : "",
+        sdk_version.commit_date,
+        sdk_version.hash
     );
+
+    if (show_oss_lib_info_message) {
+        ui_components_messagebox_draw(
+            "OSS library software used:\n\n"
+            "\tlibdragon (UNLICENSE License)\n"
+            "\tlibspng (BSD 2-Clause License)\n"
+            "\tminimp3 (CC0 1.0 Universal)\n"
+            "\tminiz (MIT License)"
+        );
+    }
+
 
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
@@ -63,12 +84,19 @@ static void draw (menu_t *menu, surface_t *d) {
         "B: Exit"
     );
 
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
+        ALIGN_RIGHT, VALIGN_TOP,
+        "\n"
+        "L|Z: OSS Libraries used\n"
+    );
+
     rdpq_detach_show();
 }
 
 
 void view_credits_init (menu_t *menu) {
-    // Nothing to initialize (yet)
+    sys_get_version(&sdk_version);
 }
 
 void view_credits_display (menu_t *menu, surface_t *display) {

@@ -1,5 +1,4 @@
-[Return to README](README.md)
-## N64FlashcartMenu User Guide
+## N64FlashcartMenu - User Guide
 
 ### General
 - [Initial Setup of an SD Card](./10_getting_started_sd.md)
@@ -27,11 +26,12 @@
 - [MP3 Player](./41_mp3_player.md)
 - [Advanced Customization](./61_advanced_customization.md)
 - [N64 Hardware Modifications Compatibility](./62_hardware_mods.md)
+- [Update the menu](./80_update_the_menu.md)
 - [FAQ](./81_faq.md)
 
 #### Experimental Features (Subject to change)
 - [Experimental Features](./65_experimental.md)
 
 ### Developers
-- [Developer Guide](./99_developer_guide.md)
-- [Contributing](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
+- [Menu Developer Guide](./99_developer_guide.md)
+- [Contributing](../CONTRIBUTING.md)

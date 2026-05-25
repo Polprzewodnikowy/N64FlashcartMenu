@@ -1,4 +1,3 @@
-[Return to the index](./00_index.md)
 ## Date-Time (RTC) Settings
 
 ![RTC information](./images/rtc-information.png "RTC Information")  

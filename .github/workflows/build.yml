@@ -16,12 +16,12 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -30,8 +30,9 @@ jobs:
       - name: Build N64FlashcartMenu ROM
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
-          cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-devcontainer
+          imageName: ghcr.io/polprzewodnikowy/n64flashcartmenu-flashcart-devcontainer
+          cacheFrom: ghcr.io/polprzewodnikowy/n64flashcartmenu-flashcart-devcontainer
+          configFile: .devcontainer/flashcart/devcontainer.json
           push: ${{ github.repository_owner == 'Polprzewodnikowy' && 'filter' || 'never' }}
           refFilterForPush: refs/heads/main
           runCmd: |
@@ -40,7 +41,7 @@ jobs:
           FLAGS: -DNDEBUG
 
       - name: Upload artifact (Standard ROM)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: N64FlashcartMenu
           path: |
@@ -48,37 +49,39 @@ jobs:
             ./build/N64FlashcartMenu.elf
 
       - name: Upload artifact (64drive version)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: 64drive
           path: ./output/menu.bin
 
       - name: Upload artifact (ED64 version)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ED64
           path: ./output/OS64.v64
 
       - name: Upload artifact (ED64P version)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ED64P
           path: ./output/OS64P.v64
 
       - name: Upload artifact (SC64 version)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: SC64
           path: ./output/sc64menu.n64
 
-      - name: Upload rolling release
-        uses: softprops/action-gh-release@v2
+    # tag releases to main as draft releases
+      - name: Upload draft release
+        uses: softprops/action-gh-release@v3
         if: github.ref == 'refs/heads/main'
         with:
-          name: Rolling release
+          draft: true
+          # tag_name: 'V0.X.${{ github.event.release.tag_name }}'
           body_path: ${{ github.workspace }}/CHANGELOG.md
-          tag_name: 'rolling_release'
-          make_latest: true
+          make_latest: false
+          prerelease: false
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin
@@ -87,40 +90,19 @@ jobs:
             ./output/sc64menu.n64
         continue-on-error: true
 
-      - name: Upload dev rolling release
-        uses: softprops/action-gh-release@v2
+      - name: Upload rolling alpha-release
+        uses: softprops/action-gh-release@v3
         if: github.ref == 'refs/heads/develop'
         with:
-          name: 'Rolling pre-release'
-          body: Experimental pre-release built from latest commit on `develop` branch. Check the commit history for more details.
+          name: 'Rolling alpha-release'
+          body: Experimental alpha-release built from latest commit on `develop` branch. Check the commit history for more details.
           target_commitish: develop
           tag_name: 'rolling_pre-release'
           prerelease: true
           files: |
             ./output/N64FlashcartMenu.n64
             ./output/menu.bin
-            # ./output/OS64.v64
-            # ./output/OS64P.v64
+            ./output/OS64.v64
+            ./output/OS64P.v64
             ./output/sc64menu.n64
         continue-on-error: true
-
-  generate-docs:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Run Doxygen
-        uses: mattnotmitt/doxygen-action@v1
-        with:
-          doxyfile-path: './Doxyfile'
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./output/docs
-          cname: menu.summercart64.dev

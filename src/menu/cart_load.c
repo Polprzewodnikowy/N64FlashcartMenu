@@ -11,9 +11,6 @@
 #include "utils/fs.h"
 #include "utils/utils.h"
 
-#ifndef SAVES_SUBDIRECTORY
-#define SAVES_SUBDIRECTORY      "saves"
-#endif
 #ifndef DDIPL_LOCATION
 #define DDIPL_LOCATION          "/menu/64ddipl"
 #endif
@@ -41,7 +38,7 @@ static bool is_64dd_connected (void) {
 static bool create_saves_subdirectory (path_t *path) {
     path_t *save_folder_path = path_clone(path);
     path_pop(save_folder_path);
-    path_push(save_folder_path, SAVES_SUBDIRECTORY);
+    path_push(save_folder_path, SAVE_DIRECTORY_NAME);
     bool error = directory_create(path_get(save_folder_path));
     path_free(save_folder_path);
     return error;
@@ -117,7 +114,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
@@ -151,7 +148,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
  * @param progress Progress callback function.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
+cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_callback_t progress) {
     if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
         return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
     }
@@ -167,12 +164,12 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
     path_t *path = path_init(menu->storage_prefix, DDIPL_LOCATION);
     flashcart_disk_parameters_t disk_parameters;
 
-    disk_parameters.development_drive = (menu->load.disk_info.region == DISK_REGION_DEVELOPMENT);
-    disk_parameters.disk_type = menu->load.disk_info.disk_type;
-    memcpy(disk_parameters.bad_system_area_lbas, menu->load.disk_info.bad_system_area_lbas, sizeof(disk_parameters.bad_system_area_lbas));
-    memcpy(disk_parameters.defect_tracks, menu->load.disk_info.defect_tracks, sizeof(disk_parameters.defect_tracks));
+    disk_parameters.development_drive = (menu->load.disk_slots.primary.disk_info.region == DISK_REGION_DEVELOPMENT);
+    disk_parameters.disk_type = menu->load.disk_slots.primary.disk_info.disk_type;
+    memcpy(disk_parameters.bad_system_area_lbas, menu->load.disk_slots.primary.disk_info.bad_system_area_lbas, sizeof(disk_parameters.bad_system_area_lbas));
+    memcpy(disk_parameters.defect_tracks, menu->load.disk_slots.primary.disk_info.defect_tracks, sizeof(disk_parameters.defect_tracks));
 
-    switch (menu->load.disk_info.region) {
+    switch (menu->load.disk_slots.primary.disk_info.region) {
         case DISK_REGION_DEVELOPMENT:
             path_push(path, "NDXJ0.n64");
             break;
@@ -197,7 +194,10 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_path), &disk_parameters);
+    // TODO: Support multi-disk 64DD games and implement rules for disk swapping.
+    // e.g. menu->flashcart_err = flashcart_load_64dd_disks(&menu->load.disk_slots.primary.disk_path, &disk_parameters, menu->load.disk_slot[], swap_disk_count);
+
+    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }
@@ -223,9 +223,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
             path_push(path, "neon64bu.rom");
-             // Tested against https://themanbehindcurtain.blogspot.com/2017/12/small-neon64-hdmi-audio-fix.html
-             // Save states in newer versions might require a different save type.
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
+             // Tested against Neon 64 v1.2, v0.3 and v2
+            save_type = FLASHCART_SAVE_TYPE_SRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
             path_push(path, "sodium64.z64");
@@ -287,7 +286,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);

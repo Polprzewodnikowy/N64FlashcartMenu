@@ -37,13 +37,6 @@
 
 static menu_t *menu;
 
-/** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
- *  with hardware mods that don't really understand the VI output.
- **/
-static tv_type_t tv_type;
-extern int __boot_tvtype;
-/* -- */
-
 static bool interlaced = true;
 
 /**
@@ -93,14 +86,6 @@ static void menu_init (boot_params_t *boot_params) {
     menu->load.load_history_id = -1;
     menu->load.load_favorite_id = -1;
     path_pop(path);
-  
-    if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output
-        tv_type = get_tv_type();
-        if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
-            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-            __boot_tvtype = (int)TV_NTSC;
-        }
-    }
 
     // Force interlacing off in VI settings for TVs and other devices that struggle with interlaced video input.
     interlaced = !menu->settings.force_progressive_scan;
@@ -109,10 +94,22 @@ static void menu_init (boot_params_t *boot_params) {
         .width = 640,
         .height = 480,
         .interlaced = interlaced ? INTERLACE_HALF : INTERLACE_OFF,
-        .pal60 = menu->settings.pal60_enabled, // this may be overridden by the PAL60 compatibility mode.
     };
 
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, interlaced ? FILTERS_DISABLED : FILTERS_RESAMPLE);
+    
+    if (menu->settings.pal60_enabled) { // it is not given that hardware VI mods understand the output
+        tv_type_t tv_type = get_tv_type();
+        if (tv_type == TV_PAL) {
+            // Set VI timing so it will use 60Hz signal.
+            vi_set_timing_preset(&VI_TIMING_PAL60);
+
+            // FIXME: timeout and restore to PAL 50Hz if not shown, 
+            // this should be added as a button confirm, or reset combo, rather than re-setting via manual edit of the INI?.
+            //vi_set_timing_preset(&VI_TIMING_PAL);
+        }
+    }
+    
     display_set_fps_limit(FPS_LIMIT);
 
     path_push(path, MENU_CUSTOM_FONT_FILE);
@@ -144,11 +141,12 @@ static void menu_init (boot_params_t *boot_params) {
  * @param menu Pointer to the menu structure.
  */
 static void menu_deinit (menu_t *menu) {
+    ui_components_background_free();
+    rspq_wait();  // Execute deferred callbacks (e.g., display list freeing) before closing RSPQ
+
     hdmi_send_game_id(menu->boot_params);
 
-    ui_components_background_free();
-
-    path_free(menu->load.disk_path);
+    path_free(menu->load.disk_slots.primary.disk_path);
     path_free(menu->load.rom_path);
     for (int i = 0; i < menu->browser.entries; i++) {
         free(menu->browser.list[i].name);
@@ -160,9 +158,10 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 
     sound_deinit();
-
-    rdpq_close();
+    
+    rspq_wait();  // Execute deferred callbacks before closing RSPQ
     rspq_close();
+    rdpq_close();
     rtc_close();
     timer_close();
     joypad_close();
@@ -190,6 +189,9 @@ static view_t menu_views[] = {
     { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
     { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
     { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
+    { MENU_MODE_CONTROLLER_PAKFS, view_controller_pakfs_init, view_controller_pakfs_display },
+    { MENU_MODE_CONTROLLER_PAK_DUMP_INFO, view_controller_pak_dump_info_init, view_controller_pak_dump_info_display },
+    { MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO, view_controller_pak_note_dump_info_init, view_controller_pak_note_dump_info_display },
     { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
@@ -199,7 +201,8 @@ static view_t menu_views[] = {
     { MENU_MODE_FAULT, view_fault_init, view_fault_display },
     { MENU_MODE_FAVORITE, view_favorite_init, view_favorite_display },
     { MENU_MODE_HISTORY, view_history_init, view_history_display },
-    { MENU_MODE_DATEL_CODE_EDITOR, view_datel_code_editor_init, view_datel_code_editor_display }
+    { MENU_MODE_DATEL_CODE_EDITOR, view_datel_code_editor_init, view_datel_code_editor_display },
+    { MENU_MODE_EXTRACT_FILE, view_extract_file_init, view_extract_file_display }
 };
 
 /**

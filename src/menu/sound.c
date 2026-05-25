@@ -25,10 +25,9 @@ static bool sfx_enabled = false;
  */
 static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
-        if (sound_initialized) {
-            mixer_close();
-            audio_close();
-        }
+        
+        sound_deinit();
+
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
 
@@ -38,6 +37,10 @@ static void sound_reconfigure (int frequency) {
         // Initialize MP3 player mixer
         mp3player_mixer_init();
         sound_initialized = true;
+
+        if (sfx_enabled) {
+            sound_init_sfx();
+        }
     }
 }
 
@@ -59,6 +62,9 @@ void sound_init_mp3_playback (void) {
  * @brief Initialize the sound effects.
  */
 void sound_init_sfx (void) {
+    // Ensure SFX channel can play standard 44.1 kHz effects even if the
+    // global mixer/sample rate was reconfigured to a lower value for MP3.
+    mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
     mixer_ch_set_vol(SOUND_SFX_CHANNEL, 0.5f, 0.5f);
     wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
     wav64_open(&sfx_exit, "rom:/back.wav64");

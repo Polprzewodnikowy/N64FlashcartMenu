@@ -8,7 +8,7 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
-MENU_VERSION ?= "Rolling release"
+MENU_VERSION ?= "Preview release"
 BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
 include $(N64_INST)/include/n64.mk
@@ -18,7 +18,7 @@ N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
 
-N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -flto=auto $(FLAGS)
+N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
 
 SRCS = \
 	main.c \
@@ -35,11 +35,11 @@ SRCS = \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
 	libs/libspng/spng/spng.c \
-	libs/mini.c/src/mini.c \
 	libs/miniz/miniz_tdef.c \
 	libs/miniz/miniz_tinfl.c \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
+	menu/ini_parser.c \
 	menu/actions.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
@@ -59,6 +59,7 @@ SRCS = \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
 	menu/ui_components/context_menu.c \
+	menu/ui_components/file_info.c \
 	menu/ui_components/file_list.c \
 	menu/ui_components/tabs.c \
 	menu/usb_comm.c \
@@ -66,6 +67,7 @@ SRCS = \
 	menu/views/credits.c \
 	menu/views/datel_code_editor.c \
 	menu/views/error.c \
+	menu/views/extract_file.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
 	menu/views/history_favorites.c \
@@ -81,6 +83,10 @@ SRCS = \
 	menu/views/settings_editor.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
+	menu/views/cpakfs_manager.c \
+	menu/views/cpak_dump_info.c \
+	menu/views/cpak_note_dump_info.c \
+	utils/cpakfs_utils.c \
 	utils/fs.c
 
 FONTS = \
@@ -89,6 +95,7 @@ FONTS = \
 SOUNDS = \
 	cursorsound.wav \
 	back.wav \
+	bgm.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
@@ -103,9 +110,9 @@ FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
-$(MINIZ_OBJS): N64_CFLAGS+=-DMINIZ_NO_TIME -Wno-unused-function -fcompare-debug-second
-$(SPNG_OBJS): N64_CFLAGS+=-isystem $(SOURCE_DIR)/libs/miniz -DSPNG_USE_MINIZ -fcompare-debug-second
-$(FILESYSTEM_DIR)/Firple-Bold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --charset charset.txt --ellipsis 2026,1
+$(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
+$(SPNG_OBJS): N64_CFLAGS+=-DSPNG_USE_MINIZ -fcompare-debug-second
+$(FILESYSTEM_DIR)/Firple-Bold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --charset $(ASSETS_DIR)/fonts/charset.txt --ellipsis 2026,1
 $(FILESYSTEM_DIR)/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
@@ -189,11 +196,19 @@ else
 endif
 .PHONY: run-debug
 
+run-debug-reboot: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+ifeq ($(OS),Windows_NT)
+	./localdeploy.bat /dr
+else
+	./remotedeploy.sh -dr
+endif
+.PHONY: run-debug-reboot
+
 run-debug-upload: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 ifeq ($(OS),Windows_NT)
-	./localdeploy.bat /du
+	./localdeploy.bat /dur
 else
-	./remotedeploy.sh -du
+	./remotedeploy.sh -dur
 endif
 .PHONY: run-debug-upload
 

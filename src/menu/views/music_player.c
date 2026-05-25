@@ -21,16 +21,16 @@ static void format_elapsed_duration (char *buffer, float elapsed, float duration
     strcpy(buffer, "");
 
     if (duration >= 3600) {
-        sprintf(buffer + strlen(buffer), "%02d:", (int) (elapsed) / 3600);
+        sprintf(buffer + strlen(buffer), "%02ld:", (uint32_t) (elapsed) / 3600);
     }
-    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (elapsed) % 3600) / 60, (int) (elapsed) % 60);
+    sprintf(buffer + strlen(buffer), "%02ld:%02ld", ((uint32_t) (elapsed) % 3600) / 60, (uint32_t) (elapsed) % 60);
 
     strcat(buffer, " / ");
 
     if (duration >= 3600) {
-        sprintf(buffer + strlen(buffer), "%02d:", (int) (duration) / 3600);
+        sprintf(buffer + strlen(buffer), "%02ld:", (uint32_t) (duration) / 3600);
     }
-    sprintf(buffer + strlen(buffer), "%02d:%02d", ((int) (duration) % 3600) / 60, (int) (duration) % 60);
+    sprintf(buffer + strlen(buffer), "%02ld:%02ld", ((uint32_t) (duration) % 3600) / 60, (uint32_t) (duration) % 60);
 }
 
 
@@ -108,8 +108,14 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_LEFT, VALIGN_TOP,
         "A: %s\n"
-        "B: Exit | Left / Right: Rewind / Fast forward",
+        "B: Exit\n",
         mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
+    );
+
+    ui_components_actions_bar_text_draw(
+        STL_DEFAULT,
+        ALIGN_CENTER, VALIGN_TOP,
+        "◀ Rewind | Fast forward ▶\n"
     );
 
     rdpq_detach_show();

@@ -5,7 +5,7 @@
 #include "rom_info.h"
 
 
-static const char *patch_rom_bps_extensions[] = { "aps", NULL };
+static const char *patch_rom_bps_extensions[] = { "bps", NULL };
 static const char *patch_rom_ips_extensions[] = { "ips", NULL };
 static const char *patch_rom_aps_extensions[] = { "aps", NULL };
 static const char *patch_rom_ups_extensions[] = { "ups", NULL };

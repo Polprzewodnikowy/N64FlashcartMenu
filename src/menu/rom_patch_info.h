@@ -62,6 +62,6 @@ typedef struct {
 } rom_patch_info_t;
 
 //rom_patch_load_err_t rom_patch_info_load (path_t *path, rom_patch_info_t *rom_patch_info);
-rom_patch_load_err_t rom_patch_info_load_file (char *path);
+rom_patch_load_err_t rom_patch_info_load(path_t *path);
 
 #endif

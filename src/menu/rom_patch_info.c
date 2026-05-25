@@ -70,10 +70,12 @@ rom_patch_load_err_t apply_patch_type_ips(FILE *f)
     // https://web.archive.org/web/20170624071240/http://www.smwiki.net:80/wiki/IPS_file_format
 
     char header_magic[5];
-    fread(header_magic, 5, 1, f);
+    if (fread(header_magic, 1, sizeof(header_magic), f) != sizeof(header_magic)) {
+        return PATCH_ERR_INVALID;
+    }
 
     // Check the header is valid.
-    if (strcmp(header_magic, PATCH_IPS_MAGIC) != 0) {
+    if (memcmp(header_magic, PATCH_IPS_MAGIC, sizeof(header_magic)) != 0) {
         return PATCH_ERR_INVALID;
     }
 
@@ -128,7 +130,6 @@ rom_patch_load_err_t apply_patch_type_ips(FILE *f)
 rom_patch_load_err_t apply_patch_type_aps(FILE *f)
 {
     // https://github.com/btimofeev/UniPatcher/wiki/APS-(N64)
-
     return PATCH_ERR_UNSUPPORTED;
 }
 
@@ -172,6 +173,7 @@ rom_patch_load_err_t rom_patch_info_load (path_t *path)
     } else if (file_has_extensions(path_get(path), patch_rom_xdelta_extensions)) {
         patch_ext_type = PATCH_TYPE_XDELTA;
     } else {
+        fclose(f);
         return PATCH_ERR_UNSUPPORTED;
     }
 
@@ -193,6 +195,7 @@ rom_patch_load_err_t rom_patch_info_load (path_t *path)
             err = apply_patch_type_xdelta(f);
             break;
         default:
+            fclose(f);
             return PATCH_ERR_UNSUPPORTED;
     }
 

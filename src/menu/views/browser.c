@@ -554,7 +554,7 @@ static void process (menu_t *menu) {
                 menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_CHEAT.
                 break;
             case ENTRY_TYPE_ROM_PATCH:
-                menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_PATCH.
+                menu->next_mode = MENU_MODE_LOAD_ROM_PATCH;
                 break;
             case ENTRY_TYPE_TEXT:
                 menu->next_mode = MENU_MODE_TEXT_VIEWER;

@@ -140,10 +140,10 @@ void view_load_rom_patch_init (menu_t *menu) {
 
     menu->load.rom_patch_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    // rom_patch_load_err_t err = patch_info_load(path_get(menu->load.rom_patch_path), &menu->load.patch_info);
-    // if (err != PATCH_OK) {
-    //     menu_show_error(menu, convert_error_message(err));
-    // }
+    rom_patch_load_err_t err = rom_patch_info_load(menu->load.rom_patch_path);
+    if (err != PATCH_OK) {
+        menu_show_error(menu, convert_error_message(err));
+    }
 }
 
 void view_load_rom_patch_display (menu_t *menu, surface_t *display) {

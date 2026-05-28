@@ -37,6 +37,7 @@ typedef struct {
     uint8_t cic_seed; /**< CIC seed */
     bool detect_cic_seed; /**< Flag to detect CIC seed */
     uint32_t *cheat_list; /**< Pointer to the cheat list */
+    bool igr_enabled; /**< In-Game Reset enabled */
 } boot_params_t;
 
 /**

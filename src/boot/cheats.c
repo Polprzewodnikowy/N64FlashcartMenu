@@ -7,6 +7,7 @@
 #include <libdragon.h>
 #include "boot_io.h"
 #include "cheats.h"
+#include "igr.h"
 #include "vr4300_asm.h"
 
 #define HIT_INVALIDATE_I ((4 << 2) | 0)
@@ -206,8 +207,8 @@ static void cheats_update_cache (volatile void *start, volatile void *end) {
  * @param cheat_list Pointer to the cheat list.
  * @return true if successful, false otherwise.
  */
-bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
-    if (!cheat_list) {
+bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list, bool igr_enabled) {
+    if (!cheat_list && !igr_enabled) {
         return false;
     }
 
@@ -221,7 +222,7 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
         return false;
     }
 
-    io32_t *final_engine_address = cheats_get_engine_address(cheat_list);
+    io32_t *final_engine_address = cheat_list ? cheats_get_engine_address(cheat_list) : (io32_t *)(DEFAULT_ENGINE_ADDRESS);
 
     // Original watch exception handler code written by Jay Oster 'Parasyte'
     // https://github.com/parasyte/alt64/blob/master/utils.c#L1024-L1054
@@ -271,10 +272,11 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
 
     cheat_entry_t cheat;
 
-    while (cheats_get_next(&cheat_list, &cheat)) {
-        cheat_t *c = &cheat.main;
+    if (cheat_list) {
+        while (cheats_get_next(&cheat_list, &cheat)) {
+            cheat_t *c = &cheat.main;
 
-        switch (c->type) {
+            switch (c->type) {
             case SPECIAL_WRITE_BYTE_ON_BOOT:
             case SPECIAL_WRITE_SHORT_ON_BOOT: {
                 *patcher_p++ = I_LUI(REG_K0, A_BASE(c->address));
@@ -358,8 +360,13 @@ bool cheats_install (cic_type_t cic_type, uint32_t *cheat_list) {
 
                     continue;
                 }
+                }
             }
         }
+    }
+
+    if (igr_enabled) {
+        igr_append_payload(&engine_p);
     }
 
     *engine_p++ = I_J(RELOCATED_EXCEPTION_HANDLER_ADDRESS);

@@ -3,6 +3,7 @@
 #include "utils/fs.h"
 #include "../sound.h"
 #include "views.h"
+#include <libcart/cart.h>
 
 
 static const char *emu_nes_rom_extensions[] = { "nes", NULL };
@@ -108,6 +109,7 @@ static void load (menu_t *menu) {
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
     menu->boot_params->cheat_list = NULL;
+    menu->boot_params->igr_enabled = (cart_type == CART_SC) && is_memory_expanded() && menu->settings.igr_enabled;
 }
 
 

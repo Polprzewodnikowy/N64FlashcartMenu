@@ -75,6 +75,9 @@ typedef struct {
     bool rom_fast_reboot_enabled;
 #endif
 
+    /** @brief Enable In-Game Reset (IGR) for all ROMs */
+    bool igr_enabled;
+
 } settings_t;
 
 

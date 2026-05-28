@@ -5,7 +5,7 @@
 
 
 int main (void) {
-    boot_params_t boot_params;
+    boot_params_t boot_params = {0};
 
     menu_run(&boot_params);
 

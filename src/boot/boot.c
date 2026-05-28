@@ -127,7 +127,7 @@ void boot (boot_params_t *params) {
         cpu_io_write(&ipl3_dst[i], io_read((uint32_t) (&ipl3_src[i])));
     }
 
-    bool cheats_installed = cheats_install(cic_type, params->cheat_list);
+    bool cheats_installed = cheats_install(cic_type, params->cheat_list, params->igr_enabled);
 
     register uint32_t skip_rdram_reset asm ("a0");
     register uint32_t boot_device asm ("s3");

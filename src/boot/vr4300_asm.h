@@ -407,6 +407,7 @@ typedef enum {
 #define I_ORI(rt, rs, immediate) __ASM_I_INST(OP_ORI, rs, rt, immediate)
 #define I_SB(rt, offset, base) __ASM_I_INST(OP_SB, base, rt, offset)
 #define I_SH(rt, offset, base) __ASM_I_INST(OP_SH, base, rt, offset)
+#define I_SLL(rd, rt, sa) __ASM_R_INST(OP_SPECIAL, 0, rt, rd, sa, FUNCT_SSL)
 #define I_SRL(rd, rt, sa) __ASM_R_INST(OP_SPECIAL, 0, rt, rd, sa, FUNCT_SRL)
 #define I_SW(rt, offset, base) __ASM_I_INST(OP_SW, base, rt, offset)
 

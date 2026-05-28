@@ -6,6 +6,7 @@
 #include "boot/boot.h"
 #include "utils/fs.h"
 #include "views.h"
+#include <libcart/cart.h>
 #include <string.h>
 
 static bool show_extra_info_message = false;
@@ -659,6 +660,8 @@ static void load (menu_t *menu) {
         debugf("Cheats disabled or Expansion Pak not present\n");
         menu->boot_params->cheat_list = NULL;
     }
+
+    menu->boot_params->igr_enabled = (cart_type == CART_SC) && is_memory_expanded() && menu->settings.igr_enabled;
 }
 
 static void deinit (void) {

@@ -34,6 +34,7 @@ static settings_t init = {
     .show_browser_file_extensions = true,
     .show_browser_rom_tags = true,
     .rumble_enabled = false,
+    .igr_enabled = false,
 };
 
 
@@ -80,6 +81,7 @@ void settings_load (settings_t *settings) {
     settings->show_browser_file_extensions = ini_get_bool(ini, "menu", "show_browser_file_extensions", init.show_browser_file_extensions);
     settings->show_browser_rom_tags = ini_get_bool(ini, "menu", "show_browser_rom_tags", init.show_browser_rom_tags);
     settings->rumble_enabled = ini_get_bool(ini, "menu_beta_flag", "rumble_enabled", init.rumble_enabled);
+    settings->igr_enabled = ini_get_bool(ini, "menu", "igr_enabled", init.igr_enabled);
 
     ini_free(ini);
 }
@@ -113,6 +115,7 @@ void settings_save (settings_t *settings) {
     // ini_set_bool(ini, "menu", "show_browser_file_extensions", settings->show_browser_file_extensions);
     // ini_set_bool(ini, "menu", "show_browser_rom_tags", settings->show_browser_rom_tags);
     // ini_set_bool(ini, "menu_beta_flag", "rumble_enabled", settings->rumble_enabled);
+    ini_set_bool(ini, "menu", "igr_enabled", settings->igr_enabled);
 
     if (!ini_save(ini, settings_path)) {
         debugf("[SETTINGS] Failed to save settings to %s\n", settings_path);

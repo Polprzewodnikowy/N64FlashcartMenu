@@ -11,15 +11,16 @@
 #include "cic.h"
 
 /**
- * @brief Installs cheats based on the CIC type.
+ * @brief Installs cheats and/or IGR payload based on the CIC type.
  *
- * This function installs the cheats provided in the cheat list based on the
- * specified CIC type.
+ * This function installs the cheats provided in the cheat list and/or the
+ * In-Game Reset (IGR) payload based on the specified CIC type.
  *
  * @param cic_type The type of CIC (Copy Protection Chip) used.
- * @param cheat_list A pointer to an array of cheats to be installed.
- * @return true if the cheats were successfully installed, false otherwise.
+ * @param cheat_list A pointer to an array of cheats to be installed (may be NULL).
+ * @param igr_enabled Whether to install the IGR payload.
+ * @return true if the cheats and/or IGR were successfully installed, false otherwise.
  */
-bool cheats_install(cic_type_t cic_type, uint32_t *cheat_list);
+bool cheats_install(cic_type_t cic_type, uint32_t *cheat_list, bool igr_enabled);
 
 #endif // CHEATS_H__

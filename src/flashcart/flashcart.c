@@ -13,7 +13,7 @@
 #include "utils/utils.h"
 #include "flashcart.h"
 #include "flashcart_utils.h"
-#include "ed64/ed64_vseries.h"
+#include "ed64/ed64.h"
 #include "ed64/ed64_xseries.h"
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
@@ -169,7 +169,7 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             break;
 
         case CART_ED:   // Series V EverDrive-64 or clone
-            flashcart = ed64_vseries_get_flashcart();
+            flashcart = ed64_get_flashcart();
             break;
 
         case CART_SC:   // SummerCart64

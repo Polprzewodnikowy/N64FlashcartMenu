@@ -17,6 +17,8 @@
  */
 
 flashcart_t *ed64_vseries_get_flashcart (void);
+void ed64_vseries_post_init (void);
+const char *ed64_vseries_get_hardware_variant (void);
 
 /** @} */ /* ED64_Vseries */
 

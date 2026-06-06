@@ -8,8 +8,13 @@
 
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- Adds Background music.
+	- Adds ability to use infinite scroll within the file browser.
+	- ROM override submenu now remembers current custom settings.
+	
 
 - **Bug Fixes**
+	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
 
 - **Documentation**
 	- Minor fixes.

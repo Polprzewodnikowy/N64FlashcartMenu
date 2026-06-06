@@ -9,7 +9,7 @@ static void load_default_font (char *custom_font_path) {
 
     if (custom_font_path != NULL && strlen(custom_font_path) > 0) {
         // Only check file_exists if custom_font_path is a valid filesystem path (not rom:/)
-        if (strstr(custom_font_path, "rom:/") == NULL && file_exists(custom_font_path)) {
+        if (strncmp(custom_font_path, "rom:/", 5) != 0 && file_exists(custom_font_path)) {
             font_path = custom_font_path;
         }
     }

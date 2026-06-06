@@ -453,35 +453,40 @@ static int get_rom_cic_override_current_selection (menu_t *menu) {
     if (!menu->load.rom_info.boot_override.cic) {
         return 0;
     }
-    return find_menu_item_index_by_arg(&set_cic_type_context_menu,
-                                        (void *) (menu->load.rom_info.boot_override.cic_type));
+    return find_menu_item_index_by_arg(
+        &set_cic_type_context_menu,
+        (void *) (menu->load.rom_info.boot_override.cic_type));
 }
 
 static int get_rom_save_override_current_selection (menu_t *menu) {
     if (!menu->load.rom_info.boot_override.save) {
         return 0;
     }
-    return find_menu_item_index_by_arg(&set_save_type_context_menu,
-                                        (void *) (menu->load.rom_info.boot_override.save_type));
+    return find_menu_item_index_by_arg(
+        &set_save_type_context_menu,
+        (void *) (menu->load.rom_info.boot_override.save_type));
 }
 
 static int get_rom_tv_override_current_selection (menu_t *menu) {
     if (!menu->load.rom_info.boot_override.tv) {
         return 0;
     }
-    return find_menu_item_index_by_arg(&set_tv_type_context_menu,
-                                        (void *) (menu->load.rom_info.boot_override.tv_type));
+    return find_menu_item_index_by_arg(
+        &set_tv_type_context_menu,
+        (void *) (menu->load.rom_info.boot_override.tv_type));
 }
 
 static int get_rom_cheat_override_current_selection (menu_t *menu) {
-    return find_menu_item_index_by_arg(&set_cheat_options_menu,
-                                        (void *) (menu->load.rom_info.settings.cheats_enabled ? true : false));
+    return find_menu_item_index_by_arg(
+        &set_cheat_options_menu,
+        (void *) (menu->load.rom_info.settings.cheats_enabled ? true : false));
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 static int get_rom_patch_override_current_selection (menu_t *menu) {
-    return find_menu_item_index_by_arg(&set_patcher_options_menu,
-                                        (void *) (menu->load.rom_info.settings.patches_enabled ? true : false));
+    return find_menu_item_index_by_arg(
+        &set_patcher_options_menu,
+        (void *) (menu->load.rom_info.settings.patches_enabled ? true : false));
 }
 #endif
 

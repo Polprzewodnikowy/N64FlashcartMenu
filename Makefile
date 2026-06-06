@@ -90,13 +90,15 @@ SRCS = \
 FONTS = \
 	Firple-Bold.ttf
 
-SOUNDS = \
+SOUNDS_WAV = \
 	cursorsound.wav \
 	back.wav \
 	bgm.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
+
+SOUNDS_XM ?=
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -105,7 +107,8 @@ DEPS = $(OBJS:.o=.d)
 
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS_WAV:%.wav=%.wav64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS_XM:%.xm=%.xm64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
@@ -120,7 +123,11 @@ $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/fonts/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
-	@echo "    [AUDIO] $@"
+	@echo "    [AUDIO WAV] $@"
+	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+
+$(FILESYSTEM_DIR)/%.xm64: $(ASSETS_DIR)/sounds/%.xm
+	@echo "    [AUDIO XM] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png

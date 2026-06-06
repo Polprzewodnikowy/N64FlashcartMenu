@@ -625,7 +625,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (has_mem && !corrupted_pak) {
             style = STL_GREEN;
-            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
+            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/%d free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used, cpakfs_stats.pages.total);
         } else if (has_mem && corrupted_pak) {
             snprintf(has_mem_text, sizeof(has_mem_text), "Controller Pak detected (Corrupted)");
             style = STL_ORANGE;

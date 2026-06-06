@@ -161,7 +161,6 @@ static bool ed64_vseries_has_feature (flashcart_features_t feature) {
         // case FLASHCART_FEATURE_RTC: return is_model_v3 ? true : false;
         // case FLASHCART_FEATURE_USB: return is_model_v3 ? true : false;
         // case FLASHCART_FEATURE_AUTO_CIC: return is_model_v3 ? true : false;
-        default: return false;
         case FLASHCART_FEATURE_SAVE_WRITEBACK:
             return true;
         default:

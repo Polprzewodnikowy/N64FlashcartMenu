@@ -249,68 +249,13 @@ static inline const char *format_boolean_type (bool bool_value) {
     return bool_value ? "On" : "Off";
 }
 
-static int get_rom_cic_override_current_selection (menu_t *menu) {
-    if (!menu->load.rom_info.boot_override.cic) {
-        return 0;
-    }
-
-    switch (menu->load.rom_info.boot_override.cic_type) {
-        case ROM_CIC_TYPE_6101: return 1;
-        case ROM_CIC_TYPE_7102: return 2;
-        case ROM_CIC_TYPE_x102: return 3;
-        case ROM_CIC_TYPE_x103: return 4;
-        case ROM_CIC_TYPE_x105: return 5;
-        case ROM_CIC_TYPE_x106: return 6;
-        case ROM_CIC_TYPE_5101: return 7;
-        case ROM_CIC_TYPE_5167: return 8;
-        case ROM_CIC_TYPE_8301: return 9;
-        case ROM_CIC_TYPE_8302: return 10;
-        case ROM_CIC_TYPE_8303: return 11;
-        case ROM_CIC_TYPE_8401: return 12;
-        case ROM_CIC_TYPE_8501: return 13;
-        default: return 0;
-    }
-}
-
-static int get_rom_save_override_current_selection (menu_t *menu) {
-    if (!menu->load.rom_info.boot_override.save) {
-        return 0;
-    }
-
-    switch (menu->load.rom_info.boot_override.save_type) {
-        case SAVE_TYPE_NONE: return 1;
-        case SAVE_TYPE_EEPROM_4KBIT: return 2;
-        case SAVE_TYPE_EEPROM_16KBIT: return 3;
-        case SAVE_TYPE_SRAM_256KBIT: return 4;
-        case SAVE_TYPE_SRAM_BANKED: return 5;
-        case SAVE_TYPE_SRAM_1MBIT: return 6;
-        case SAVE_TYPE_FLASHRAM_1MBIT: return 7;
-        case SAVE_TYPE_FLASHRAM_PKST2: return 8;
-        default: return 0;
-    }
-}
-
-static int get_rom_tv_override_current_selection (menu_t *menu) {
-    if (!menu->load.rom_info.boot_override.tv) {
-        return 0;
-    }
-
-    switch (menu->load.rom_info.boot_override.tv_type) {
-        case ROM_TV_TYPE_PAL: return 1;
-        case ROM_TV_TYPE_NTSC: return 2;
-        case ROM_TV_TYPE_MPAL: return 3;
-        default: return 0;
-    }
-}
-
-static int get_rom_cheat_override_current_selection (menu_t *menu) {
-    return menu->load.rom_info.settings.cheats_enabled ? 0 : 1;
-}
-
+// Forward declarations for default selection helpers (defined after context menu structs)
+static int get_rom_cic_override_current_selection (menu_t *menu);
+static int get_rom_save_override_current_selection (menu_t *menu);
+static int get_rom_tv_override_current_selection (menu_t *menu);
+static int get_rom_cheat_override_current_selection (menu_t *menu);
 #ifdef FEATURE_PATCHER_GUI_ENABLED
-static int get_rom_patch_override_current_selection (menu_t *menu) {
-    return menu->load.rom_info.settings.patches_enabled ? 0 : 1;
-}
+static int get_rom_patch_override_current_selection (menu_t *menu);
 #endif
 
 static void set_cic_type (menu_t *menu, void *arg) {
@@ -491,6 +436,54 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
+
+// Generic helper: search context menu for item matching a target argument value.
+// Returns the index of the first matching item, or 0 if not found (default to first).
+static int find_menu_item_index_by_arg (const component_context_menu_t *menu, void *target_arg) {
+    for (int i = 0; menu->list[i].text != NULL; i++) {
+        if (menu->list[i].arg == target_arg) {
+            return i;
+        }
+    }
+    return 0; // Not found; default to first item
+}
+
+// Default selection helpers: find the menu item matching the current override value
+static int get_rom_cic_override_current_selection (menu_t *menu) {
+    if (!menu->load.rom_info.boot_override.cic) {
+        return 0;
+    }
+    return find_menu_item_index_by_arg(&set_cic_type_context_menu,
+                                        (void *) (menu->load.rom_info.boot_override.cic_type));
+}
+
+static int get_rom_save_override_current_selection (menu_t *menu) {
+    if (!menu->load.rom_info.boot_override.save) {
+        return 0;
+    }
+    return find_menu_item_index_by_arg(&set_save_type_context_menu,
+                                        (void *) (menu->load.rom_info.boot_override.save_type));
+}
+
+static int get_rom_tv_override_current_selection (menu_t *menu) {
+    if (!menu->load.rom_info.boot_override.tv) {
+        return 0;
+    }
+    return find_menu_item_index_by_arg(&set_tv_type_context_menu,
+                                        (void *) (menu->load.rom_info.boot_override.tv_type));
+}
+
+static int get_rom_cheat_override_current_selection (menu_t *menu) {
+    return find_menu_item_index_by_arg(&set_cheat_options_menu,
+                                        (void *) (menu->load.rom_info.settings.cheats_enabled ? true : false));
+}
+
+#ifdef FEATURE_PATCHER_GUI_ENABLED
+static int get_rom_patch_override_current_selection (menu_t *menu) {
+    return find_menu_item_index_by_arg(&set_patcher_options_menu,
+                                        (void *) (menu->load.rom_info.settings.patches_enabled ? true : false));
+}
+#endif
 
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {

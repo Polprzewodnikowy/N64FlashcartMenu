@@ -401,8 +401,8 @@ static component_context_menu_t set_tv_type_context_menu = {
 static component_context_menu_t set_cheat_options_menu = {
     .get_default_selection = get_rom_cheat_override_current_selection,
     .list = {
-    { .text = "Enable", .action = set_cheat_option, .arg = (void *) (true)},
-    { .text = "Disable", .action = set_cheat_option, .arg = (void *) (false)},
+    { .text = "Enabled", .action = set_cheat_option, .arg = (void *) (true)},
+    { .text = "Disabled", .action = set_cheat_option, .arg = (void *) (false)},
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
@@ -410,8 +410,8 @@ static component_context_menu_t set_cheat_options_menu = {
 static component_context_menu_t set_patcher_options_menu = {
     .get_default_selection = get_rom_patch_override_current_selection,
     .list = {
-    { .text = "Enable", .action = set_patcher_option, .arg = (void *) (true)},
-    { .text = "Disable", .action = set_patcher_option, .arg = (void *) (false)},
+    { .text = "Enabled", .action = set_patcher_option, .arg = (void *) (true)},
+    { .text = "Disabled", .action = set_patcher_option, .arg = (void *) (false)},
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif

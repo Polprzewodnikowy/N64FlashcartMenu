@@ -49,7 +49,7 @@ static flashcart_firmware_version_t ed64_vseries_get_firmware_version (void) {
     return version_info;
 }
 
-static flashcart_err_t ed64_apply_save_type (flashcart_save_type_t save_type) {
+static flashcart_err_t ed64_vseries_apply_save_type (flashcart_save_type_t save_type) {
     ed64_vseries_save_type_t type;
 
     switch (save_type) {
@@ -100,7 +100,7 @@ static flashcart_err_t ed64_writeback_save (void) {
     }
 
     ed64_vseries_ll_set_sdcard_timing();
-    if (ed64_apply_save_type(current_state.save_type) != FLASHCART_OK) {
+    if (ed64_vseries_apply_save_type(current_state.save_type) != FLASHCART_OK) {
         return FLASHCART_ERR_LOAD;
     }
     wait_ms(250);
@@ -310,7 +310,7 @@ static flashcart_err_t ed64_vseries_load_save (char *save_path) {
 
 static flashcart_err_t ed64_vseries_set_save_type (flashcart_save_type_t save_type) {
     current_state.save_type = save_type;
-    return ed64_apply_save_type(save_type);
+    return ed64_vseries_apply_save_type(save_type);
 }
 
 static flashcart_t flashcart_ed64_vseries = {

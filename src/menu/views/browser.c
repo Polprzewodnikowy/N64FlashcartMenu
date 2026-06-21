@@ -503,14 +503,26 @@ static void process (menu_t *menu) {
     if (menu->browser.entries > 1) {
         if (menu->actions.go_up) {
             menu->browser.selected -= scroll_speed;
-            if (menu->browser.selected < 0) {
-                menu->browser.selected = 0;
+            if (menu->settings.wrap_file_list_scrolling) {
+                // Wrap around to end if we go past the beginning
+                menu->browser.selected = (menu->browser.selected % menu->browser.entries + menu->browser.entries) % menu->browser.entries;
+            } else {
+                // Clamp to beginning
+                if (menu->browser.selected < 0) {
+                    menu->browser.selected = 0;
+                }
             }
             sound_play_effect(SFX_CURSOR);
         } else if (menu->actions.go_down) {
             menu->browser.selected += scroll_speed;
-            if (menu->browser.selected >= menu->browser.entries) {
-                menu->browser.selected = menu->browser.entries - 1;
+            if (menu->settings.wrap_file_list_scrolling) {
+                // Wrap around to beginning if we go past the end
+                menu->browser.selected = menu->browser.selected % menu->browser.entries;
+            } else {
+                // Clamp to end
+                if (menu->browser.selected >= menu->browser.entries) {
+                    menu->browser.selected = menu->browser.entries - 1;
+                }
             }
             sound_play_effect(SFX_CURSOR);
         }

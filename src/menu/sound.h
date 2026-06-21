@@ -9,8 +9,9 @@
 
 #include <stdbool.h>
 
-#define SOUND_SFX_CHANNEL           (0) /**< Channel for sound effects */
-#define SOUND_MP3_PLAYER_CHANNEL    (2) /**< Channel for MP3 player sound */
+#define SOUND_SFX_CHANNEL           (0) /**< First Channel of sound effects 0-7 (8 in total) */
+#define SOUND_BGM_CHANNEL           (8) /**< First Channel for background music 8-9 (2 in total [stereo]) */
+#define SOUND_MP3_PLAYER_CHANNEL    (10) /**< First Channel for MP3 player sound 10-15 (6 in total [surround sound possible]) */
 
 
 /**
@@ -57,6 +58,22 @@ void sound_init_sfx(void);
  * @param enable True to enable sound effects, false to disable.
  */
 void sound_use_sfx(bool enable);
+
+/**
+ * @brief Initialize the background music system.
+ * 
+ * This function initializes the background music system, setting up
+ * necessary resources and configurations for playing background music.
+ */
+void sound_init_bgm(void);
+
+
+/**
+ * @brief Enable or disable background music.
+ * 
+ * @param enable True to enable background music, false to disable.
+ */
+void sound_use_bgm(bool enable);
 
 /**
  * @brief Play a specified sound effect.

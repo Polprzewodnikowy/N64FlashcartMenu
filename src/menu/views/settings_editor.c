@@ -208,15 +208,7 @@ static void change_selected_row (int selected) {
 static void toggle_selected_setting (menu_t *menu) {
     switch (selected_tab) {
         case SETTINGS_TAB_VIDEO:
-            switch (get_tv_type()) {
-                case TV_NTSC:
-                case TV_MPAL:
-                    set_force_progressive_scan_type(menu, (void *)(uintptr_t)(!menu->settings.force_progressive_scan));
-                    break;
-                default:
-                    set_pal60_type(menu, (void *)(uintptr_t)(!menu->settings.pal60_enabled));
-                break;
-            }
+            get_tv_type() == TV_PAL ? set_pal60_type(menu, (void *)(uintptr_t)(!menu->settings.pal60_enabled)) : set_force_progressive_scan_type(menu, (void *)(uintptr_t)(!menu->settings.force_progressive_scan));
         break;
         
         case SETTINGS_TAB_SOUND:
@@ -274,17 +266,8 @@ static void toggle_selected_setting (menu_t *menu) {
 
 static bool get_setting_row_text (menu_t *menu, int row, char *buffer, size_t buffer_size) {
     switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO: {
-                switch (get_tv_type()) {
-                    case TV_NTSC:
-                    case TV_MPAL:
-                        snprintf(buffer, buffer_size, "Progressive Scan: %s", format_switch(menu->settings.force_progressive_scan));
-                        break;
-                    default:
-                        snprintf(buffer, buffer_size, "PAL60 Mode: %s", format_switch(menu->settings.pal60_enabled));
-                    break;
-                }
-            }
+        case SETTINGS_TAB_VIDEO: 
+            get_tv_type() == TV_PAL ? snprintf(buffer, buffer_size, "PAL60 Mode: %s", format_switch(menu->settings.pal60_enabled)) : snprintf(buffer, buffer_size, "Progressive Scan: %s", format_switch(menu->settings.force_progressive_scan));
         break;
         case SETTINGS_TAB_SOUND:
             switch (row) {

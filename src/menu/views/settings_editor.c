@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../sound.h"
 #include "../settings.h"
 #include "../ui_components/constants.h"
@@ -515,8 +516,10 @@ static void draw (menu_t *menu, surface_t *d) {
     if (rendered_row_count > 0) {
         rdpq_paragraph_t *layout;
         rdpq_paragraph_t *settings_list_layout = malloc(sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * total_length));
-        memset(settings_list_layout, 0, sizeof(rdpq_paragraph_t));
-        settings_list_layout->capacity = total_length;
+        if (settings_list_layout != NULL) {
+            memset(settings_list_layout, 0, sizeof(rdpq_paragraph_t));
+            settings_list_layout->capacity = total_length;
+        }
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {

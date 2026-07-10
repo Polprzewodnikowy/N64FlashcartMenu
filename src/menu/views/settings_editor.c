@@ -607,7 +607,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
     );
 
-    if (selected_tab == SETTINGS_TAB_VIDEO) {
+    if (selected_tab == SETTINGS_TAB_VIDEO && get_tv_type() == TV_PAL) {
         ui_components_main_text_draw(
             STL_RED,
             ALIGN_LEFT, VALIGN_BOTTOM,

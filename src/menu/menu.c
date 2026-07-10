@@ -106,10 +106,6 @@ static void menu_init (boot_params_t *boot_params) {
         if (tv_type == TV_PAL) {
             // Set VI timing so it will use 60Hz signal.
             vi_set_timing_preset(&VI_TIMING_PAL60);
-
-            // FIXME: timeout and restore to PAL 50Hz if not shown, 
-            // this should be added as a button confirm, or reset combo, rather than re-setting via manual edit of the INI?.
-            //vi_set_timing_preset(&VI_TIMING_PAL);
         }
     }
     

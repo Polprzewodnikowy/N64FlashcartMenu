@@ -12,6 +12,15 @@ typedef enum {
     BOOKKEEPING_TAB_CONTEXT_NONE
 } bookkeeping_tab_context_t;
 
+/**
+ * @brief Common tab labels used for the main menu.
+ */
+static const char *tabs[] = {
+    "Files",
+    "History",
+    "Favorites",
+    NULL
+};
 
 static bookkeeping_tab_context_t tab_context = BOOKKEEPING_TAB_CONTEXT_NONE;
 static int selected_item = -1;
@@ -160,9 +169,9 @@ static void draw(menu_t *menu, surface_t *display) {
     ui_components_background_draw();
 
     if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
-        ui_components_tabs_common_draw(2);
+        ui_components_tabs_common_draw(tabs, 2);
     } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
-        ui_components_tabs_common_draw(1);
+        ui_components_tabs_common_draw(tabs, 1);
     }
 
     ui_components_layout_draw_tabbed();

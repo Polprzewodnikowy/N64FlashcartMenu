@@ -42,6 +42,16 @@ static const char *hidden_root_paths[] = {
     NULL,
 };
 
+/**
+ * @brief Common tab labels used for the main menu.
+ */
+static const char *tabs[] = {
+    "Files",
+    "History",
+    "Favorites",
+    NULL
+};
+
 struct substr { const char *str; size_t len; };
 #define substr(str) ((struct substr){ str, sizeof(str) - 1 })
 
@@ -605,7 +615,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_background_draw();
 
-    ui_components_tabs_common_draw(0);
+    ui_components_tabs_common_draw(tabs, 0);
 
     ui_components_layout_draw_tabbed();
 

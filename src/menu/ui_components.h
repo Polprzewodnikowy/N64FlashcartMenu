@@ -312,11 +312,12 @@ void ui_components_boxart_draw(component_boxart_t *b);
 void ui_components_tabs_draw(const char **text, int count, int selected, float width);
 
 /**
- * @brief Draw the common part of the tabs component.
- * 
- * @param selected Index of the selected tab.
+ * @brief Draw the common tabs used for the main menu.
+ *
+ * @param tabs Array of tab labels.
+ * @param selected Index of the currently selected tab.
  */
-void ui_components_tabs_common_draw(int selected);
+void ui_components_tabs_common_draw(const char **tabs, int selected);
 
 /**
  * @brief Draw a value editor component.

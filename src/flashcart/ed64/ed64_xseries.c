@@ -20,7 +20,7 @@ typedef enum {
 } ed64_xseries_device_variant_t;
 
 /* ED64 save location base address  */
-#define SRAM_ADDRESS (0xA8000000)
+//#define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 

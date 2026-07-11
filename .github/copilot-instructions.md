@@ -214,7 +214,8 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - Verify each reported finding against current code before editing.
 - Fix only findings that are still valid; skip invalid ones and state why.
 - Prefer the narrowest safe change at the call site over cross-file refactors.
-- Do not introduce shared helpers, new modules, or new constants for one-off warnings unless repeated usage already exists.
+- Do not introduce shared helpers, new modules, or unnecessary shared constants for one-off warnings unless repeated usage already exists.
+- Local constants are allowed when they encode validation, security, or out-of-bounds safety limits (including one-off scan-limit values).
 - Keep behavior identical unless the bug itself requires behavior change.
 - After edits, validate touched files and summarize exactly which findings were fixed.
 

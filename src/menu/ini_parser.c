@@ -58,16 +58,47 @@ struct ini_s {
     int            section_capacity; /**< Allocated capacity of sections array */
 };
 
+static bool bounded_streq(const char *lhs, const char *rhs, size_t max_len) {
+    if (!lhs || !rhs) return false;
+
+    size_t lhs_len = strnlen(lhs, max_len);
+    size_t rhs_len = strnlen(rhs, max_len);
+    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
+        return false;
+    }
+
+    return strncmp(lhs, rhs, lhs_len) == 0;
+}
+
+static bool bounded_strcaseeq(const char *lhs, const char *rhs, size_t max_len) {
+    if (!lhs || !rhs) return false;
+
+    size_t lhs_len = strnlen(lhs, max_len);
+    size_t rhs_len = strnlen(rhs, max_len);
+    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
+        return false;
+    }
+
+    return strncasecmp(lhs, rhs, lhs_len) == 0;
+}
+
 
 /**
  * @brief Find or create a section
  */
 static ini_section_t* find_or_create_section(ini_t *ini, const char *section_name) {
     if (!ini || !section_name) return NULL;
+
+    size_t section_name_len = strnlen(section_name, INI_MAX_NAME_LENGTH);
+    if (section_name_len == INI_MAX_NAME_LENGTH) {
+        debugf("[INI] unterminated section name\n");
+        return NULL;
+    }
     
     // Try to find existing section
     for (int i = 0; i < ini->section_count; i++) {
-        if (strcmp(ini->sections[i].name, section_name) == 0) {
+        const char *existing_name = ini->sections[i].name;
+        if (existing_name && (strncmp(existing_name, section_name, section_name_len + 1) == 0)) {
             return &ini->sections[i];
         }
     }
@@ -112,9 +143,16 @@ static ini_section_t* find_or_create_section(ini_t *ini, const char *section_nam
  */
 static ini_pair_t* find_pair(ini_section_t *section, const char *key) {
     if (!section || !key) return NULL;
+
+    size_t key_len = strnlen(key, INI_MAX_NAME_LENGTH);
+    if (key_len == INI_MAX_NAME_LENGTH) {
+        debugf("[INI] unterminated key\n");
+        return NULL;
+    }
     
     for (int i = 0; i < section->pair_count; i++) {
-        if (strcmp(section->pairs[i].key, key) == 0) {
+        const char *existing_key = section->pairs[i].key;
+        if (existing_key && (strncmp(existing_key, key, key_len + 1) == 0)) {
             return &section->pairs[i];
         }
     }
@@ -430,7 +468,7 @@ const char* ini_get_string(ini_t *ini, const char *section, const char *key, con
     if (!ini || !section || !key) return default_value;
     
     for (int i = 0; i < ini->section_count; i++) {
-        if (strcmp(ini->sections[i].name, section) == 0) {
+        if (bounded_streq(ini->sections[i].name, section, INI_MAX_NAME_LENGTH)) {
             ini_pair_t *pair = find_pair(&ini->sections[i], key);
             if (pair && pair->value != NULL) {
                 return pair->value;
@@ -463,13 +501,17 @@ bool ini_get_bool(ini_t *ini, const char *section, const char *key, bool default
     if (!str_value) return default_value;
     
     // Check for common boolean representations
-    if (strcasecmp(str_value, "true") == 0 || strcasecmp(str_value, "yes") == 0 || 
-        strcasecmp(str_value, "on") == 0 || strcmp(str_value, "1") == 0) {
+    if (bounded_strcaseeq(str_value, "true", INI_MAX_VALUE_LENGTH) ||
+        bounded_strcaseeq(str_value, "yes", INI_MAX_VALUE_LENGTH) ||
+        bounded_strcaseeq(str_value, "on", INI_MAX_VALUE_LENGTH) ||
+        bounded_streq(str_value, "1", INI_MAX_VALUE_LENGTH)) {
         return true;
     }
     
-    if (strcasecmp(str_value, "false") == 0 || strcasecmp(str_value, "no") == 0 || 
-        strcasecmp(str_value, "off") == 0 || strcmp(str_value, "0") == 0) {
+    if (bounded_strcaseeq(str_value, "false", INI_MAX_VALUE_LENGTH) ||
+        bounded_strcaseeq(str_value, "no", INI_MAX_VALUE_LENGTH) ||
+        bounded_strcaseeq(str_value, "off", INI_MAX_VALUE_LENGTH) ||
+        bounded_streq(str_value, "0", INI_MAX_VALUE_LENGTH)) {
         return false;
     }
     
@@ -525,7 +567,7 @@ void ini_delete_key(ini_t *ini, const char *section, const char *key) {
     if (!ini || !section || !key) return;
     
     for (int i = 0; i < ini->section_count; i++) {
-        if (strcmp(ini->sections[i].name, section) == 0) {
+        if (bounded_streq(ini->sections[i].name, section, INI_MAX_NAME_LENGTH)) {
             ini_section_t *sec = &ini->sections[i];
             ini_pair_t *pair = find_pair(sec, key);
             if (pair) {

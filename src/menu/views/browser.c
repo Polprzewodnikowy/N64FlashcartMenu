@@ -3,6 +3,7 @@
 #include <miniz_zip.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <time.h>
 
@@ -11,6 +12,9 @@
 #include "utils/fs.h"
 #include "views.h"
 #include "../sound.h"
+
+#define BROWSER_MAX_PATH_SCAN_LENGTH 1024
+#define BROWSER_MAX_NAME_SCAN_LENGTH 256
 
 static const char *archive_extensions[] = { "zip", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
@@ -57,6 +61,44 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
+static bool bounded_streq(const char *lhs, const char *rhs, size_t max_len) {
+    if (!lhs || !rhs) return false;
+
+    size_t lhs_len = strnlen(lhs, max_len);
+    size_t rhs_len = strnlen(rhs, max_len);
+    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
+        return false;
+    }
+
+    return strncmp(lhs, rhs, lhs_len) == 0;
+}
+
+static int bounded_strcasecmp_cmp(const char *lhs, const char *rhs, size_t max_len) {
+    if (!lhs && !rhs) return 0;
+    if (!lhs) return -1;
+    if (!rhs) return 1;
+
+    size_t lhs_len = strnlen(lhs, max_len);
+    size_t rhs_len = strnlen(rhs, max_len);
+    size_t cmp_len = lhs_len < rhs_len ? lhs_len : rhs_len;
+
+    int cmp = strncasecmp(lhs, rhs, cmp_len);
+    if (cmp != 0) {
+        return cmp;
+    }
+
+    if ((lhs_len == max_len) || (rhs_len == max_len)) {
+        if (lhs_len == rhs_len) return 0;
+        return lhs_len < rhs_len ? -1 : 1;
+    }
+
+    if (lhs_len == rhs_len) {
+        return 0;
+    }
+
+    return lhs_len < rhs_len ? -1 : 1;
+}
+
 // static bool file_is_fat_hidden (const char *full_path) {
 //     struct stat st;
     
@@ -72,13 +114,16 @@ static bool path_is_hidden (path_t *path) {
 
     // Check for hidden files based on full path
     for (size_t i = 0; hidden_root_paths[i] != NULL; i++) {
-        if (strcmp(stripped_path, hidden_root_paths[i]) == 0) {
+        if (bounded_streq(stripped_path, hidden_root_paths[i], BROWSER_MAX_PATH_SCAN_LENGTH)) {
             return true;
         }
     }
 
     char *basename = file_basename(stripped_path);
-    size_t basename_len = strlen(basename);
+    size_t basename_len = strnlen(basename, BROWSER_MAX_NAME_SCAN_LENGTH);
+    if (basename_len == BROWSER_MAX_NAME_SCAN_LENGTH) {
+        return false;
+    }
 
     // Check for hidden files based on filename
     for (size_t i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
@@ -159,7 +204,7 @@ static int compare_entry (const void *pa, const void *pb) {
         }
     }
 
-    return strcasecmp((const char *) (a->name), (const char *) (b->name));
+    return bounded_strcasecmp_cmp((const char *) (a->name), (const char *) (b->name), BROWSER_MAX_NAME_SCAN_LENGTH);
 }
 
 static void browser_list_free (menu_t *menu) {
@@ -248,7 +293,7 @@ static bool load_directory (menu_t *menu) {
         if (!menu->settings.show_saves_folder) {
             path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
-            if (strcmp(info.d_name, SAVE_DIRECTORY_NAME) == 0) {
+            if (bounded_streq(info.d_name, SAVE_DIRECTORY_NAME, BROWSER_MAX_NAME_SCAN_LENGTH)) {
                 hide = true;
             }
             path_pop(path);
@@ -380,7 +425,7 @@ static bool pop_directory (menu_t *menu) {
     }
 
     for (uint16_t i = 0; i < menu->browser.entries; i++) {
-        if (strcmp(menu->browser.list[i].name, path_last_get(previous_directory)) == 0) {
+        if (bounded_streq(menu->browser.list[i].name, path_last_get(previous_directory), BROWSER_MAX_NAME_SCAN_LENGTH)) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
             break;
@@ -406,7 +451,7 @@ static bool select_file (menu_t *menu, path_t *file) {
     }
 
     for (uint16_t i = 0; i < menu->browser.entries; i++) {
-        if (strcmp(menu->browser.list[i].name, path_last_get(file)) == 0) {
+        if (bounded_streq(menu->browser.list[i].name, path_last_get(file), BROWSER_MAX_NAME_SCAN_LENGTH)) {
             menu->browser.selected = i;
             menu->browser.entry = &menu->browser.list[menu->browser.selected];
             break;

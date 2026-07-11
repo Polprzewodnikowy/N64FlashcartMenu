@@ -5,6 +5,21 @@
 #include "views.h"
 #include "../bookkeeping.h"
 #include <string.h>
+#include <strings.h>
+
+#define DISK_MAX_NAME_SCAN_LENGTH 256
+
+static bool bounded_streq(const char *lhs, const char *rhs, size_t max_len) {
+    if (!lhs || !rhs) return false;
+
+    size_t lhs_len = strnlen(lhs, max_len);
+    size_t rhs_len = strnlen(rhs, max_len);
+    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
+        return false;
+    }
+
+    return strncmp(lhs, rhs, lhs_len) == 0;
+}
 
 #define DISK_SLOTS_MAX 3 // Maximum number of disk slots supported (excluding the primary disk)
 
@@ -104,14 +119,16 @@ static void scan_for_swap_disks(menu_t *menu) {
         }
 
         // Check for .ndd extension
-        size_t name_len = strlen(info.d_name);
-        if (name_len < 4 || strcasecmp(info.d_name + name_len - 4, ".ndd") != 0) {
+        size_t name_len = strnlen(info.d_name, DISK_MAX_NAME_SCAN_LENGTH);
+        if (name_len == DISK_MAX_NAME_SCAN_LENGTH ||
+            name_len < 4 ||
+            strncasecmp(info.d_name + name_len - 4, ".ndd", 4) != 0) {
             result = dir_findnext(path_get(dir_path), &info);
             continue;
         }
 
         // Skip if this is the primary disk
-        if (strcmp(info.d_name, path_last_get(menu->load.disk_slots.primary.disk_path)) == 0) {
+        if (bounded_streq(info.d_name, path_last_get(menu->load.disk_slots.primary.disk_path), DISK_MAX_NAME_SCAN_LENGTH)) {
             result = dir_findnext(path_get(dir_path), &info);
             continue;
         }

@@ -210,6 +210,14 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - If behavior is unclear, request clarification instead of guessing.
 - Document any errors encountered and steps taken to work around them.
 
+### Static Analysis Fix Policy
+- Verify each reported finding against current code before editing.
+- Fix only findings that are still valid; skip invalid ones and state why.
+- Prefer the narrowest safe change at the call site over cross-file refactors.
+- Do not introduce shared helpers, new modules, or new constants for one-off warnings unless repeated usage already exists.
+- Keep behavior identical unless the bug itself requires behavior change.
+- After edits, validate touched files and summarize exactly which findings were fixed.
+
 ---
 
 ## Where to look for documentation and help

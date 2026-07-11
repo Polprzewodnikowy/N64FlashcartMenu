@@ -155,14 +155,25 @@ bool file_fill(char *path, uint8_t value) {
  * @return true if the file has one of the specified extensions, false otherwise.
  */
 bool file_has_extensions(char *path, const char *extensions[]) {
+    if ((path == NULL) || (extensions == NULL)) {
+        return false;
+    }
+
     char *ext = strrchr(path, '.');
 
     if (ext == NULL) {
         return false;
     }
 
+    size_t ext_len = strnlen(ext + 1, 16);
+    if ((ext_len == 0) || (ext_len == 16)) {
+        return false;
+    }
+
     while (*extensions != NULL) {
-        if (strcasecmp(ext + 1, *extensions) == 0) {
+        size_t candidate_len = strnlen(*extensions, 16);
+        if ((candidate_len == ext_len) && (candidate_len != 16) &&
+            (strncasecmp(ext + 1, *extensions, ext_len) == 0)) {
             return true;
         }
         extensions++;
@@ -201,18 +212,23 @@ bool directory_create(char *path) {
     }
 
     char *directory = strdup(path);
+    if (directory == NULL) {
+        return true;
+    }
+
     char *separator = strip_fs_prefix(directory);
 
-    if (separator != directory) {
+    if ((separator != directory) && (*separator == '/')) {
         separator++;
     }
 
-    do {
-        separator = strchr(separator, '/');
-
-        if (separator != NULL) {
-            *separator++ = '\0';
+    for (;;) {
+        while ((*separator != '\0') && (*separator != '/')) {
+            separator++;
         }
+
+        char terminator = *separator;
+        *separator = '\0';
 
         if (directory[0] != '\0') {
             if (mkdir(directory, 0777) && (errno != EEXIST)) {
@@ -221,10 +237,12 @@ bool directory_create(char *path) {
             }
         }
 
-        if (separator != NULL) {
-            *(separator - 1) = '/';
+        if (terminator == '\0') {
+            break;
         }
-    } while (separator != NULL);
+
+        *separator++ = terminator;
+    }
 
     free(directory);
 

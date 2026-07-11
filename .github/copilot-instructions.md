@@ -218,6 +218,16 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - Keep behavior identical unless the bug itself requires behavior change.
 - After edits, validate touched files and summarize exactly which findings were fixed.
 
+### Minimal Change Policy (Strict)
+- Be laser focused on the exact user request; do not broaden scope.
+- Do not refactor unless the user explicitly asks for refactoring.
+- Do not add helpers, abstractions, wrappers, utility modules, or shared layers unless explicitly requested.
+- Do not rename symbols, move code, or reorganize files unless explicitly requested.
+- Do not make opportunistic cleanups while fixing an issue.
+- Keep diffs as small as possible and localized to the reported issue.
+- Preserve existing behavior and public interfaces unless the requested fix requires a behavior change.
+- If a broader cleanup seems beneficial, stop and ask first instead of doing it implicitly.
+
 ---
 
 ## Where to look for documentation and help

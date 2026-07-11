@@ -10,7 +10,7 @@
 static bool show_message_reset_settings = false;
 static bool show_pal60_confirm_message = false;
 static bool pal60_confirm_waiting_for_input = false;
-static uint64_t pal60_confirm_started_at = 0;
+static int pal60_confirm_started_at = 0;
 
 static const char *tabs[] = {
     "Menu",
@@ -336,7 +336,7 @@ static void process (menu_t *menu) {
             return;
         }
 
-        if ((get_ticks() - pal60_confirm_started_at) >= (10 * TICKS_PER_SECOND)) {
+        if ((get_ticks() - pal60_confirm_started_at) >= (5 * TICKS_PER_SECOND)) {
             vi_set_timing_preset(&VI_TIMING_PAL);
             menu->settings.pal60_enabled = false;
             settings_save(&menu->settings);
@@ -609,7 +609,7 @@ static void draw (menu_t *menu, surface_t *d) {
     } else if (show_pal60_confirm_message) {
         ui_components_messagebox_draw(
             "PAL60 Mode\n\n"
-            "PAL60 will be reverted after 10 seconds.\n"
+            "PAL60 will be reverted after 5 seconds.\n"
             "A: Use PAL60, B: Return to PAL50"
         );
     }

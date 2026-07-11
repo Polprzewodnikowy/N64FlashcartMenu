@@ -14,8 +14,9 @@
 #include "views.h"
 #include "../sound.h"
 
-#define BROWSER_MAX_PATH_SCAN_LENGTH 1024
-#define BROWSER_MAX_NAME_SCAN_LENGTH 256
+#define BROWSER_MAX_PATH_SCAN_LENGTH FS_MAX_PATH_SCAN_LENGTH
+#define BROWSER_MAX_NAME_SCAN_LENGTH FS_MAX_NAME_SCAN_LENGTH
+
 
 static const char *archive_extensions[] = { "zip", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
@@ -61,27 +62,6 @@ static const struct substr hidden_prefixes[] = {
     substr("._"), // macOS "AppleDouble" metadata files
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
-
-static int bounded_strcasecmp_cmp(const char *lhs, const char *rhs, size_t max_len) {
-    if (!lhs && !rhs) return 0;
-    if (!lhs) return -1;
-    if (!rhs) return 1;
-
-    size_t lhs_len = strnlen(lhs, max_len);
-    size_t rhs_len = strnlen(rhs, max_len);
-    size_t cmp_len = lhs_len < rhs_len ? lhs_len : rhs_len;
-
-    int cmp = strncasecmp(lhs, rhs, cmp_len);
-    if (cmp != 0) {
-        return cmp;
-    }
-
-    if (lhs_len == rhs_len) {
-        return 0;
-    }
-
-    return lhs_len < rhs_len ? -1 : 1;
-}
 
 // static bool file_is_fat_hidden (const char *full_path) {
 //     struct stat st;

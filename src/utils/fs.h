@@ -12,6 +12,20 @@
 #define FS_SECTOR_SIZE      (512)
 
 /**
+ * @def FS_MAX_PATH_SCAN_LENGTH
+ * @brief Maximum number of characters to scan when validating a path string.
+ */
+#define FS_MAX_PATH_SCAN_LENGTH (1024)
+
+/**
+ * @def FS_MAX_NAME_SCAN_LENGTH
+ * @brief Maximum number of characters to scan when validating a filename.
+ *
+ * Matches the size of @c dir_t::d_name as defined by libdragon.
+ */
+#define FS_MAX_NAME_SCAN_LENGTH (256)
+
+/**
  * @file fs.h
  * @brief File system utility functions for file and directory operations.
  * @ingroup utils

@@ -5,10 +5,11 @@
 #include "views.h"
 #include "../bookkeeping.h"
 #include "utils/bounded_string.h"
+#include "utils/fs.h"
 #include <string.h>
 #include <strings.h>
 
-#define DISK_MAX_NAME_SCAN_LENGTH 256
+#define DISK_MAX_NAME_SCAN_LENGTH FS_MAX_NAME_SCAN_LENGTH
 
 #define DISK_SLOTS_MAX 3 // Maximum number of disk slots supported (excluding the primary disk)
 

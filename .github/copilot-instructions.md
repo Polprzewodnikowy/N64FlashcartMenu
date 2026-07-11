@@ -219,7 +219,7 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - After edits, validate touched files and summarize exactly which findings were fixed.
 
 ### Minimal Change Policy (Strict)
-- Be laser focused on the exact user request; do not broaden scope.
+- Be laser-focused on the exact user request; do not broaden scope.
 - Do not refactor unless the user explicitly asks for refactoring.
 - Do not add helpers, abstractions, wrappers, utility modules, or shared layers unless explicitly requested.
 - Do not rename symbols, move code, or reorganize files unless explicitly requested.

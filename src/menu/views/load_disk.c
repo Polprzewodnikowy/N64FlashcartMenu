@@ -4,22 +4,11 @@
 #include "../sound.h"
 #include "views.h"
 #include "../bookkeeping.h"
+#include "utils/bounded_string.h"
 #include <string.h>
 #include <strings.h>
 
 #define DISK_MAX_NAME_SCAN_LENGTH 256
-
-static bool bounded_streq(const char *lhs, const char *rhs, size_t max_len) {
-    if (!lhs || !rhs) return false;
-
-    size_t lhs_len = strnlen(lhs, max_len);
-    size_t rhs_len = strnlen(rhs, max_len);
-    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
-        return false;
-    }
-
-    return strncmp(lhs, rhs, lhs_len) == 0;
-}
 
 #define DISK_SLOTS_MAX 3 // Maximum number of disk slots supported (excluding the primary disk)
 

@@ -9,6 +9,7 @@
 
 #include "../cart_load.h"
 #include "../fonts.h"
+#include "utils/bounded_string.h"
 #include "utils/fs.h"
 #include "views.h"
 #include "../sound.h"
@@ -61,18 +62,6 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
-static bool bounded_streq(const char *lhs, const char *rhs, size_t max_len) {
-    if (!lhs || !rhs) return false;
-
-    size_t lhs_len = strnlen(lhs, max_len);
-    size_t rhs_len = strnlen(rhs, max_len);
-    if ((lhs_len == max_len) || (rhs_len == max_len) || (lhs_len != rhs_len)) {
-        return false;
-    }
-
-    return strncmp(lhs, rhs, lhs_len) == 0;
-}
-
 static int bounded_strcasecmp_cmp(const char *lhs, const char *rhs, size_t max_len) {
     if (!lhs && !rhs) return 0;
     if (!lhs) return -1;
@@ -85,11 +74,6 @@ static int bounded_strcasecmp_cmp(const char *lhs, const char *rhs, size_t max_l
     int cmp = strncasecmp(lhs, rhs, cmp_len);
     if (cmp != 0) {
         return cmp;
-    }
-
-    if ((lhs_len == max_len) || (rhs_len == max_len)) {
-        if (lhs_len == rhs_len) return 0;
-        return lhs_len < rhs_len ? -1 : 1;
     }
 
     if (lhs_len == rhs_len) {

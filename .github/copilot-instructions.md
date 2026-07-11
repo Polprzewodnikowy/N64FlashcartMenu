@@ -11,11 +11,36 @@ This file contains focused, actionable knowledge to help an AI assistant become 
 - Primary areas of change:
   - Menu logic and UI: `src/menu/`
   - Flashcart drivers: `src/flashcart/`
-  - Ensure compatibility and functionality with real hardware using only a Jumper Pak accounting for memory stack and heap pressure and inform the user if features are unavailable, though allow availablilty of features that may require the use of Expansion Pak if the system supports it.
+  - Ensure compatibility and functionality with real hardware using only a Jumper Pak accounting for memory stack and heap pressure and inform the user if features are unavailable, though allow availability of features that may require the use of Expansion Pak if the system supports it.
 - Non-goals:
   - No PC-side UI, installer, or runtime configuration system.
   - No external scripting, plugins, or dynamic content loading at runtime.
   - All behavior is compiled into the ROM.
+
+---
+
+## AI Efficiency Rules (Minimize Credits)
+- Keep analysis and responses concise unless the user explicitly requests detail.
+- Read only the files you need. Avoid broad scans of `libdragon/` and `build/` unless required.
+- Prefer targeted searches (`rg` with file globs) over whole-repo reads.
+- Do not run full clean rebuilds by default.
+  - First choice for code-only edits: build only once with `make -j2` in the devcontainer.
+  - Rebuild libdragon/toolchain only when toolchain files or submodules changed.
+- On Windows hosts, do not use local `make`; use the devcontainer/docker workflow.
+- Validate the smallest scope first:
+  - Check compile status for touched files.
+  - Run full `make all` only when requested or when packaging/output behavior changed.
+- Prefer minimal diffs over refactors. Keep function signatures and behavior stable unless asked.
+- Reuse existing helpers/patterns instead of introducing new abstractions.
+- Batch related edits in a single patch when safe.
+- If uncertainty is high, ask one focused question before making large changes.
+
+### Recommended Devcontainer Build Flow
+1. Ensure image exists: `docker build --progress=plain -t n64flashcartmenu-sc64deployer -f .devcontainer/flashcart/Dockerfile.sc64deployer .`
+2. Build project (normal case):
+   `docker run --rm -v "${PWD}:/workspaces/N64FlashcartMenu" -w /workspaces/N64FlashcartMenu n64flashcartmenu-sc64deployer bash -lc "cd ./libdragon && make install tools-install -j && cd .. && make -j2"`
+3. Use full bootstrap only when needed (submodule/toolchain issues):
+   `docker run --rm -v "${PWD}:/workspaces/N64FlashcartMenu" -w /workspaces/N64FlashcartMenu n64flashcartmenu-sc64deployer bash -lc "git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j && cd .. && make all -j2"`
 
 ---
 

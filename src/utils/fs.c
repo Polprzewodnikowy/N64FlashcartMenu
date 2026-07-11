@@ -15,7 +15,7 @@
 #include "utils.h"
 
 #define FS_MAX_PATH_SCAN_LENGTH 1024
-#define FS_MAX_EXTENSION_LENGTH 64
+#define FS_MAX_EXTENSION_LENGTH 16
 
 /**
  * @brief Strip the file system prefix from a path.

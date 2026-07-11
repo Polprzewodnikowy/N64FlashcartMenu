@@ -160,8 +160,10 @@ bool file_has_extensions(char *path, const char *extensions[]) {
         return false;
     }
 
-    size_t path_len = strnlen(path, 1025);
-    if (path_len == 1025) {
+    // Use max+1 so the sentinel result is unambiguous:
+    // return value == (max+1) means unterminated/too-long input.
+    size_t path_len = strnlen(path, FS_MAX_PATH_SCAN_LENGTH + 1);
+    if (path_len == FS_MAX_PATH_SCAN_LENGTH + 1) {
         return false;
     }
 
@@ -177,14 +179,14 @@ bool file_has_extensions(char *path, const char *extensions[]) {
         return false;
     }
 
-    size_t ext_len = strnlen(ext + 1, 16);
-    if ((ext_len == 0) || (ext_len == 16)) {
+    size_t ext_len = strnlen(ext + 1, FS_MAX_EXTENSION_LENGTH);
+    if ((ext_len == 0) || (ext_len == FS_MAX_EXTENSION_LENGTH)) {
         return false;
     }
 
     while (*extensions != NULL) {
-        size_t candidate_len = strnlen(*extensions, 16);
-        if ((candidate_len == ext_len) && (candidate_len != 16) &&
+        size_t candidate_len = strnlen(*extensions, FS_MAX_EXTENSION_LENGTH);
+        if ((candidate_len == ext_len) && (candidate_len != FS_MAX_EXTENSION_LENGTH) &&
             (strncasecmp(ext + 1, *extensions, ext_len) == 0)) {
             return true;
         }

@@ -165,7 +165,13 @@ bool file_has_extensions(char *path, const char *extensions[]) {
         return false;
     }
 
-    char *ext = strrchr(path, '.');
+    char *ext = NULL;
+    for (size_t i = path_len; i > 0; i--) {
+        if (path[i - 1] == '.') {
+            ext = &path[i - 1];
+            break;
+        }
+    }
 
     if (ext == NULL) {
         return false;

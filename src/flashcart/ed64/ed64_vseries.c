@@ -35,7 +35,6 @@ typedef enum {
     ED64_V3_0 = 330,
 } ed64_vseries_device_variant_t;
 
-
 static ed64_pseudo_writeback_t current_state;
 
 static flashcart_firmware_version_t ed64_vseries_get_firmware_version (void) {

@@ -228,6 +228,24 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - Preserve existing behavior and public interfaces unless the requested fix requires a behavior change.
 - If a broader cleanup seems beneficial, stop and ask first instead of doing it implicitly.
 
+### Anti-Slop Enforcement (Required)
+- Before editing, restate the single concrete defect/request in one sentence and edit only code needed for that defect.
+- If a change touches more than one file, justify each touched file in the summary.
+- Do not introduce project-wide patterns from a local warning unless explicitly requested.
+- Do not convert local functions to shared utilities during bug fixes unless explicitly requested.
+- Do not replace simple standard-library calls with larger custom logic unless required to fix a proven bug.
+- Prefer the smallest valid guard/check over structural rewrites.
+- When static analysis reports include uncertain file/line metadata, verify with current source before editing.
+- If uncertainty remains, ask a focused question instead of making speculative broad changes.
+
+### Forbidden By Default
+- No helper extraction.
+- No abstraction layers.
+- No symbol renames.
+- No file moves/reorg.
+- No style-only rewrites.
+- No scope creep.
+
 ---
 
 ## Where to look for documentation and help

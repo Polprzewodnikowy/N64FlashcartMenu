@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 
 #include "fs.h"
@@ -156,6 +157,11 @@ bool file_fill(char *path, uint8_t value) {
  */
 bool file_has_extensions(char *path, const char *extensions[]) {
     if ((path == NULL) || (extensions == NULL)) {
+        return false;
+    }
+
+    size_t path_len = strnlen(path, 1025);
+    if (path_len == 1025) {
         return false;
     }
 

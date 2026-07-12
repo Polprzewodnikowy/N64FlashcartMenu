@@ -65,6 +65,13 @@ typedef enum {
 } cart_load_emu_type_t;
 
 /**
+ * @brief Check if the 64DD is connected.
+ * 
+ * @return true if the 64DD is connected, false otherwise.
+ */
+bool is_64dd_connected (void);
+
+/**
  * @brief Convert a cart load error code to a human-readable error message.
  * 
  * @param err The cart load error code.

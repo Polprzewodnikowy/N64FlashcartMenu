@@ -247,12 +247,12 @@ void ui_components_background_replace_image(surface_t *image) {
 }
 
 /**
- * @brief Draw the background image or clear the screen if not available.
+ * @brief Draw the background image.
  */
 void ui_components_background_draw(void) {
     if (background && background->image_display_list) {
         rspq_block_run(background->image_display_list);
     } else {
-        rdpq_clear(BACKGROUND_EMPTY_COLOR);
+        ui_components_sprite_draw(SPRITE_BACKGROUND_DEFAULT, 0, 0);
     }
 }

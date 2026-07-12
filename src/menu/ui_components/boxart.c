@@ -167,9 +167,8 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
     // TODO: return default image.
 
     path_free(path);
-    free(b);
 
-    return NULL;
+    return b;
 }
 
 /**
@@ -213,12 +212,6 @@ void ui_components_boxart_draw(component_boxart_t *b) {
             rdpq_tex_blit(b->image, box_x, box_y, NULL);
         rdpq_mode_pop();
     } else {
-        ui_components_box_draw(
-            BOXART_X,
-            BOXART_Y,
-            BOXART_X + BOXART_WIDTH,
-            BOXART_Y + BOXART_HEIGHT,
-            BOXART_LOADING_COLOR
-        );
+        ui_components_sprite_draw(SPRITE_BOXART_DEFAULT, box_x, box_y);
     }
 }

@@ -11,42 +11,6 @@
 #include "constants.h"
 
 /**
- * @brief Icon string for directory entries in the file list.
- */
-static const char *directory_icon = "[DIR] ";
-// static const char *archive_icon = "[Zip] ";
-// static const char *rom_icon = "[Rom] ";
-// static const char *disk_icon = "[Disk] ";
-// static const char *music_icon = "[Mp3] ";
-// static const char *text_icon = "[Txt] ";
-// static const char *image_icon = "[Png] ";
-// static const char *save_icon = "[Save] ";
-// static const char *other_icon = "[?] ";
-
-/**
- * @brief Format the file size into a human-readable string.
- *
- * @param buffer Buffer to store the formatted string.
- * @param size Size of the file in bytes.
- * @return Number of characters written to the buffer.
- */
-static int format_file_size(char *buffer, int64_t size) {
-    if (size < 0) {
-        return sprintf(buffer, "unknown");
-    } else if (size == 0) {
-        return sprintf(buffer, "empty");
-    } else if (size < 8 * 1024) {
-        return sprintf(buffer, "%lld B", size);
-    } else if (size < 4 * 1024 * 1024) {
-        return sprintf(buffer, "%lld kB", size / 1024);
-    } else if (size < 1 * 1024 * 1024 * 1024) {
-        return sprintf(buffer, "%lld MB", size / 1024 / 1024);
-    } else {
-        return sprintf(buffer, "%lld GB", size / 1024 / 1024 / 1024);
-    }
-}
-
-/**
  * @brief Draw the file list UI component.
  *
  * @param list Pointer to the list of file entries.
@@ -176,17 +140,35 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             NULL
         );
 
-        char file_size[16];
-
         for (int i = starting_position; i < entries; i++) {
             entry_t *entry = &list[i];
 
-            if (entry->type != ENTRY_TYPE_DIR) {
-                // TODO: add option to use font icons instead of file sizes.
-                rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
+            if (entry->type == ENTRY_TYPE_DIR) {
+                ui_components_sprite_draw(SPRITE_FOLDER, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_ARCHIVE) {
+                ui_components_sprite_draw(SPRITE_COMPRESSED, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_ROM) {
+                ui_components_sprite_draw(SPRITE_N64ROM, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_DISK) {
+                ui_components_sprite_draw(SPRITE_DDISK, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_MUSIC) {
+                ui_components_sprite_draw(SPRITE_MUSIC, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_TEXT) {
+                ui_components_sprite_draw(SPRITE_TEXT, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_IMAGE) {
+                ui_components_sprite_draw(SPRITE_IMAGE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
+            }
+            else if (entry->type == ENTRY_TYPE_SAVE) {
+                ui_components_sprite_draw(SPRITE_SAVE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
             }
             else {
-                rdpq_paragraph_builder_span(directory_icon, 5);
+                ui_components_sprite_draw(SPRITE_FILE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
             }
 
             if ((i + 1) == (starting_position + LIST_ENTRIES)) {

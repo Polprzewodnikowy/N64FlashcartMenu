@@ -146,10 +146,6 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
-// static void set_use_default_settings (menu_t *menu, void *arg) {
-//     // FIXME: add implementation
-//     menu->browser.reload = true;
-// }
 #endif
 
 static void set_selected_row_for_current_tab (int row) {

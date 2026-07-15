@@ -164,8 +164,6 @@ component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const 
         }
     }
 #endif
-    // TODO: return default image.
-
     path_free(path);
 
     return b;

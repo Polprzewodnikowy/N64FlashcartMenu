@@ -255,7 +255,7 @@ static void toggle_selected_setting (menu_t *menu) {
                 case 9:
                     set_rumble_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.rumble_enabled));
                     break;
-#endif
+                #endif
             }
         break;
     }

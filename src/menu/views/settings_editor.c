@@ -595,6 +595,12 @@ static void draw (menu_t *menu, surface_t *d) {
             ALIGN_LEFT, VALIGN_BOTTOM,
             "* NOTE: This setting may cause the display to go dark. If that happens, wait 10 seconds or press B or manually edit the menu/config.ini on the SD card.\n"
         );
+    } else {
+        ui_components_main_text_draw(
+            STL_RED,
+            ALIGN_LEFT, VALIGN_BOTTOM,
+            "* NOTE: Reboot console to apply changes.\n"
+        );
     }
 
     if (show_message_reset_settings) {

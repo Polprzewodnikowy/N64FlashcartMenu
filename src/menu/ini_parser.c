@@ -384,6 +384,11 @@ void ini_free(ini_t *ini) {
 ini_t* ini_parse_buffer(const char *buffer, size_t size) {
     if (!buffer || size == 0) return ini_create();
 
+    // Prevent wraparound in size + 1 for temporary null-terminated workspace.
+    if (size == SIZE_MAX) {
+        return NULL;
+    }
+
     // Parse buffer copies are temporary workspaces; scratch reduces heap interleaving.
     char *content = scratch_malloc(size + 1);
     bool used_scratch = true;

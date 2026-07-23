@@ -214,14 +214,15 @@ static bool load_archive (menu_t *menu) {
     }
 
     menu->browser.archive = true;
-    menu->browser.entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
-    if (browser_list_reserve(menu, menu->browser.entries)) {
+    int32_t zip_entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
+    menu->browser.entries = 0;
+    if (browser_list_reserve(menu, zip_entries)) {
         browser_list_free(menu);
         return true;
     }
 
-    for (int32_t i = 0; i < menu->browser.entries; i++) {
-        entry_t *entry = &menu->browser.list[i];
+    for (int32_t i = 0; i < zip_entries; i++) {
+        entry_t *entry = &menu->browser.list[menu->browser.entries];
 
         mz_zip_archive_file_stat info;
         if (!mz_zip_reader_file_stat(&menu->browser.zip, i, &info)) {
@@ -238,6 +239,7 @@ static bool load_archive (menu_t *menu) {
         entry->type = ENTRY_TYPE_ARCHIVED;
         entry->size = info.m_uncomp_size;
         entry->index = i;
+        menu->browser.entries++;
     }
 
     if (menu->browser.entries > 0) {

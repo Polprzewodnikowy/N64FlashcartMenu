@@ -21,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -74,7 +74,7 @@ jobs:
 
     # tag releases to main as draft releases
       - name: Upload draft release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref == 'refs/heads/main'
         with:
           draft: true
@@ -91,7 +91,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload rolling alpha-release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: github.ref == 'refs/heads/develop'
         with:
           name: 'Rolling alpha-release'

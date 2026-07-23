@@ -13,10 +13,11 @@
 #define NUM_BUFFERS         (4)
 #define NUM_CHANNELS        (16)
 
-static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
+static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting, bgm;
 
 static bool sound_initialized = false;
 static bool sfx_enabled = false;
+static bool bgm_enabled = false;
 
 /**
  * @brief Reconfigure the sound system with the specified frequency.
@@ -34,12 +35,19 @@ static void sound_reconfigure (int frequency) {
         // Attempt to initialize wav64 compression level 1
         wav64_init_compression(1);
 
+        // Ensure SFX channel can play standard 44.1 kHz effects even if the
+        // global mixer/sample rate was reconfigured to a lower value for MP3.
+        mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
+
         // Initialize MP3 player mixer
         mp3player_mixer_init();
         sound_initialized = true;
 
         if (sfx_enabled) {
             sound_init_sfx();
+        }
+        if (bgm_enabled) {
+            sound_init_bgm();
         }
     }
 }
@@ -62,9 +70,6 @@ void sound_init_mp3_playback (void) {
  * @brief Initialize the sound effects.
  */
 void sound_init_sfx (void) {
-    // Ensure SFX channel can play standard 44.1 kHz effects even if the
-    // global mixer/sample rate was reconfigured to a lower value for MP3.
-    mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
     mixer_ch_set_vol(SOUND_SFX_CHANNEL, 0.5f, 0.5f);
     wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
     wav64_open(&sfx_exit, "rom:/back.wav64");
@@ -75,12 +80,35 @@ void sound_init_sfx (void) {
 }
 
 /**
+ * @brief Initialize the background music.
+ */
+void sound_init_bgm (void) {
+    wav64_open(&bgm, "rom:/bgm.wav64");
+    wav64_set_loop(&bgm, true);
+    mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
+}
+
+/**
  * @brief Enable or disable sound effects.
  * 
  * @param state True to enable, false to disable.
  */
 void sound_use_sfx(bool state) {
     sfx_enabled = state;
+}
+
+/**
+ * @brief Enable or disable background music.
+ * 
+ * @param state True to enable, false to disable.
+ */
+void sound_use_bgm(bool state) {
+    bgm_enabled = state;
+    if (bgm_enabled) {
+        wav64_play(&bgm, SOUND_BGM_CHANNEL);
+    } else {
+        mixer_ch_stop(SOUND_BGM_CHANNEL);
+    }
 }
 
 /**
@@ -123,6 +151,9 @@ void sound_deinit (void) {
             wav64_close(&sfx_setting);
             wav64_close(&sfx_enter);
             wav64_close(&sfx_error);
+        }
+        if (bgm_enabled) {
+            wav64_close(&bgm);
         }
         mixer_close();
         audio_close();

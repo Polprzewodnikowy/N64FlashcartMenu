@@ -219,6 +219,11 @@ void ui_components_background_draw(void);
 void ui_components_file_list_draw(entry_t *list, int entries, int selected);
 
 /**
+ * @brief Free file list component cached resources.
+ */
+void ui_components_file_list_free(void);
+
+/**
  * @brief Context menu structure.
  */
 typedef struct component_context_menu {

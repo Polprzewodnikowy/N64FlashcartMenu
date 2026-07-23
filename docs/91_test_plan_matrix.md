@@ -44,7 +44,7 @@ Before starting a full test cycle, document the current baseline status to track
 
 ## Test Matrix
 
-| Console Region | Jumper Pak (4MB) | Jumper Pak + Exp.Pak (8MB) | Notes |
+| Console Region | Jumper Pak (4MB) | Exp.Pak (8MB) | Notes |
 |---|---|---|---|
 | **NTSC (US)** | ✓ Primary | ✓ Secondary | Baseline testing region |
 | **NTSC (JP)** | ✓ Primary | ✓ Secondary | Asian market variant |

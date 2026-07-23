@@ -23,7 +23,7 @@
  * 
  * @return true if the 64DD is connected, false otherwise.
  */
-static bool is_64dd_connected (void) {
+bool is_64dd_connected (void) {
     bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
     bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
     return (is_64dd_io_present || is_64dd_ipl_present);

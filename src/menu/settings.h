@@ -49,6 +49,9 @@ typedef struct {
     /** @brief Show rom tags in browser */  
     bool show_browser_rom_tags;
 
+    /** @brief Wrap file list scrolling (infinite/circular navigation) */
+    bool wrap_file_list_scrolling;
+
     /** @brief Enable Background music */
     bool bgm_enabled;
 

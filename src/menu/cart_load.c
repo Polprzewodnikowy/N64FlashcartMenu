@@ -194,10 +194,31 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
 
     path_free(path);
 
-    // TODO: Support multi-disk 64DD games and implement rules for disk swapping.
-    // e.g. menu->flashcart_err = flashcart_load_64dd_disks(&menu->load.disk_slots.primary.disk_path, &disk_parameters, menu->load.disk_slot[], swap_disk_count);
+    char *swap_disk_paths[3] = { NULL };
+    int swap_disk_count = 0;
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    for (unsigned int i = 0; i < (sizeof(menu->load.disk_slots.swap_slot) / sizeof(menu->load.disk_slots.swap_slot[0])); i++) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+            swap_disk_paths[swap_disk_count++] = path_get(menu->load.disk_slots.swap_slot[i].disk_path);
+        }
+    }
+
+    if (swap_disk_count > 0) {
+        menu->flashcart_err = flashcart_load_64dd_disks(
+            path_get(menu->load.disk_slots.primary.disk_path),
+            &disk_parameters,
+            swap_disk_paths,
+            swap_disk_count
+        );
+
+        // Maintain compatibility with flashcarts that only implement single-disk loading.
+        if (menu->flashcart_err == FLASHCART_ERR_FUNCTION_NOT_SUPPORTED) {
+            menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+        }
+    } else {
+        menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    }
+
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }

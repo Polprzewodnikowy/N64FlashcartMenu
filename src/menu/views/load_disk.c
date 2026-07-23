@@ -12,6 +12,99 @@ static component_boxart_t *boxart;
 static char *disk_filename;
 static uint16_t swap_disk_count = 0;
 
+typedef struct {
+    const char *primary;
+    const char *allowed[5];
+    uint8_t allowed_count;
+} disk_swap_rule_t;
+
+static const disk_swap_rule_t DISK_SWAP_RULES[] = {
+    { "DMPJ", { "DMPJ", "DMTJ", "DMGJ", "DMBJ", "EFZJ" }, 5 },
+    { "DMTJ", { "DMPJ", "DMTJ", "DMGJ", "DMBJ", "EFZJ" }, 5 },
+    { "DMGJ", { "DMPJ", "DMTJ", "DMGJ", "DMBJ", "EFZJ" }, 5 },
+    { "DMBJ", { "DMPJ", "DMTJ", "DMGJ", "DMBJ", "EFZJ" }, 5 },
+    { "DKKJ", { "DKKJ", "DKDJ" }, 2 },
+    { "DKDJ", { "DKKJ", "DKDJ" }, 2 },
+    { "DSCJ", { "DMPJ" }, 1 },
+};
+
+static void disk_id_to_text (const char id[4], char out[5]) {
+    memcpy(out, id, 4);
+    out[4] = '\0';
+}
+
+static bool disk_swap_id_allowed (const char primary_id[4], const char swap_id[4]) {
+    char primary[5];
+    char swap[5];
+
+    disk_id_to_text(primary_id, primary);
+    disk_id_to_text(swap_id, swap);
+
+    for (unsigned int i = 0; i < sizeof(DISK_SWAP_RULES) / sizeof(DISK_SWAP_RULES[0]); i++) {
+        if (strcmp(DISK_SWAP_RULES[i].primary, primary) != 0) {
+            continue;
+        }
+
+        for (uint8_t j = 0; j < DISK_SWAP_RULES[i].allowed_count; j++) {
+            if (strcmp(DISK_SWAP_RULES[i].allowed[j], swap) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Default conservative fallback: only allow same disk ID when no explicit rule exists.
+    return (memcmp(primary_id, swap_id, 4) == 0);
+}
+
+static bool is_swap_disk_compatible (menu_t *menu, disk_info_t *candidate_info) {
+    disk_info_t *primary_info = &menu->load.disk_slots.primary.disk_info;
+
+    if (candidate_info->region != primary_info->region) {
+        return false;
+    }
+
+    return disk_swap_id_allowed(primary_info->id, candidate_info->id);
+}
+
+static void insert_swap_disk_slot_sorted (menu_t *menu, path_t *candidate_path, disk_info_t *candidate_info) {
+    const char *candidate_name = path_last_get(candidate_path);
+    uint16_t insert_pos = swap_disk_count;
+
+    for (uint16_t i = 0; i < swap_disk_count; i++) {
+        const char *existing_name = path_last_get(menu->load.disk_slots.swap_slot[i].disk_path);
+        if (strcasecmp(candidate_name, existing_name) < 0) {
+            insert_pos = i;
+            break;
+        }
+    }
+
+    if (swap_disk_count < DISK_SLOTS_MAX) {
+        for (uint16_t i = swap_disk_count; i > insert_pos; i--) {
+            menu->load.disk_slots.swap_slot[i] = menu->load.disk_slots.swap_slot[i - 1];
+        }
+
+        menu->load.disk_slots.swap_slot[insert_pos].disk_path = candidate_path;
+        menu->load.disk_slots.swap_slot[insert_pos].disk_info = *candidate_info;
+        swap_disk_count++;
+        return;
+    }
+
+    if (insert_pos >= DISK_SLOTS_MAX) {
+        path_free(candidate_path);
+        return;
+    }
+
+    path_free(menu->load.disk_slots.swap_slot[DISK_SLOTS_MAX - 1].disk_path);
+
+    for (uint16_t i = DISK_SLOTS_MAX - 1; i > insert_pos; i--) {
+        menu->load.disk_slots.swap_slot[i] = menu->load.disk_slots.swap_slot[i - 1];
+    }
+
+    menu->load.disk_slots.swap_slot[insert_pos].disk_path = candidate_path;
+    menu->load.disk_slots.swap_slot[insert_pos].disk_info = *candidate_info;
+}
+
 static char *convert_disk_error_message (disk_err_t err) {
     switch (err) {
         case DISK_ERR_IO: return "I/O error during loading 64DD disk information";
@@ -92,11 +185,6 @@ static void scan_for_swap_disks(menu_t *menu) {
     result = dir_findfirst(path_get(dir_path), &info);
 
     while (result == 0) {
-        // Skip if we've reached maximum swap disk count
-        if (swap_disk_count >= DISK_SLOTS_MAX) {
-            break;
-        }
-
         // Skip directories
         if (info.d_type == DT_DIR) {
             result = dir_findnext(path_get(dir_path), &info);
@@ -118,17 +206,13 @@ static void scan_for_swap_disks(menu_t *menu) {
 
         // Construct full path for this potential swap disk
         path_t *candidate_path = path_clone_push(dir_path, info.d_name);
+        disk_info_t candidate_info;
 
         // Try to load disk info to validate it's a proper disk
-        disk_err_t err = disk_info_load(
-            candidate_path,
-            &menu->load.disk_slots.swap_slot[swap_disk_count].disk_info
-        );
+        disk_err_t err = disk_info_load(candidate_path, &candidate_info);
 
-        if (err == DISK_OK) {
-            // Valid disk found - add to swap slots
-            menu->load.disk_slots.swap_slot[swap_disk_count].disk_path = candidate_path;
-            swap_disk_count++;
+        if ((err == DISK_OK) && is_swap_disk_compatible(menu, &candidate_info)) {
+            insert_swap_disk_slot_sorted(menu, candidate_path, &candidate_info);
         } else {
             // Invalid disk - free the path
             path_free(candidate_path);

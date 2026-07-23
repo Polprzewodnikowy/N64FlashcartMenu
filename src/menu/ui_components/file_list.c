@@ -23,6 +23,39 @@ static const char *directory_icon = "[DIR] ";
 // static const char *save_icon = "[Save] ";
 // static const char *other_icon = "[?] ";
 
+static rdpq_paragraph_t *file_list_layout_buffer;
+static size_t file_list_layout_capacity;
+
+static rdpq_paragraph_t *file_list_layout_get(size_t required_capacity) {
+    if (required_capacity == 0) {
+        required_capacity = 1;
+    }
+
+    if (required_capacity <= file_list_layout_capacity) {
+        memset(file_list_layout_buffer, 0, sizeof(rdpq_paragraph_t));
+        file_list_layout_buffer->capacity = required_capacity;
+        return file_list_layout_buffer;
+    }
+
+    size_t new_capacity = file_list_layout_capacity > 0 ? file_list_layout_capacity : 64;
+    while (new_capacity < required_capacity) {
+        new_capacity += new_capacity / 2;
+    }
+
+    size_t bytes = sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * new_capacity);
+    rdpq_paragraph_t *grown = realloc(file_list_layout_buffer, bytes);
+    if (!grown) {
+        return NULL;
+    }
+
+    file_list_layout_buffer = grown;
+    file_list_layout_capacity = new_capacity;
+
+    memset(file_list_layout_buffer, 0, sizeof(rdpq_paragraph_t));
+    file_list_layout_buffer->capacity = required_capacity;
+    return file_list_layout_buffer;
+}
+
 /**
  * @brief Format the file size into a human-readable string.
  *
@@ -92,9 +125,17 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             }
         }
 
-        file_list_layout = malloc(sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * total_length));
-        memset(file_list_layout, 0, sizeof(rdpq_paragraph_t));
-        file_list_layout->capacity = total_length;
+        file_list_layout = file_list_layout_get(total_length);
+        if (!file_list_layout) {
+            ui_components_main_text_draw(
+                STL_DEFAULT,
+                ALIGN_LEFT, VALIGN_TOP,
+                "\n"
+                "^%02X** out of memory **",
+                STL_GRAY
+            );
+            return;
+        }
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {

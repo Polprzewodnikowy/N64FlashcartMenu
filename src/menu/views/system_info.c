@@ -1,5 +1,6 @@
 #include <time.h>
 
+#include "../cart_load.h"
 #include "../sound.h"
 #include "views.h"
 
@@ -65,7 +66,7 @@ static void draw (menu_t *menu, surface_t *d) {
         (joypad[1]) ? "" : "not ", format_accessory(1),
         (joypad[2]) ? "" : "not ", format_accessory(2),
         (joypad[3]) ? "" : "not ", format_accessory(3),
-        "Unknown" // Fixme: Implement disk drive detection
+        is_64dd_connected() ? "Yes" : "No"
     );
 
     ui_components_actions_bar_text_draw(

@@ -64,10 +64,17 @@ struct ini_s {
  */
 static ini_section_t* find_or_create_section(ini_t *ini, const char *section_name) {
     if (!ini || !section_name) return NULL;
+
+    size_t section_name_len = strnlen(section_name, INI_MAX_NAME_LENGTH);
+    if (section_name_len == INI_MAX_NAME_LENGTH) {
+        debugf("[INI] unterminated section name\n");
+        return NULL;
+    }
     
     // Try to find existing section
     for (int i = 0; i < ini->section_count; i++) {
-        if (strcmp(ini->sections[i].name, section_name) == 0) {
+        const char *existing_name = ini->sections[i].name;
+        if (existing_name && (strncmp(existing_name, section_name, section_name_len + 1) == 0)) {
             return &ini->sections[i];
         }
     }
@@ -112,9 +119,16 @@ static ini_section_t* find_or_create_section(ini_t *ini, const char *section_nam
  */
 static ini_pair_t* find_pair(ini_section_t *section, const char *key) {
     if (!section || !key) return NULL;
+
+    size_t key_len = strnlen(key, INI_MAX_NAME_LENGTH);
+    if (key_len == INI_MAX_NAME_LENGTH) {
+        debugf("[INI] unterminated key\n");
+        return NULL;
+    }
     
     for (int i = 0; i < section->pair_count; i++) {
-        if (strcmp(section->pairs[i].key, key) == 0) {
+        const char *existing_key = section->pairs[i].key;
+        if (existing_key && (strncmp(existing_key, key, key_len + 1) == 0)) {
             return &section->pairs[i];
         }
     }

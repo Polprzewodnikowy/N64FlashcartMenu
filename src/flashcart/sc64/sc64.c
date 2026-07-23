@@ -744,6 +744,16 @@ static flashcart_err_t sc64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
     return FLASHCART_OK;
 }
 
+static flashcart_err_t sc64_get_button_state (bool *pressed) {
+    uint32_t value;
+
+    if (sc64_ll_get_config(CFG_ID_BUTTON_STATE, &value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    *pressed = (value != 0);
+    return FLASHCART_OK;
+}
 
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
@@ -756,6 +766,7 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_ipl = sc64_load_64dd_ipl,
     .load_64dd_disk = sc64_load_64dd_disk,
     .load_64dd_disks = sc64_load_64dd_disks,
+    .get_button_state = sc64_get_button_state,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,
     .set_next_boot_mode = sc64_set_bootmode,

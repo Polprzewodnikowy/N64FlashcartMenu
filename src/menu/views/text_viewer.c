@@ -19,6 +19,7 @@
 typedef struct {
     FILE *f; /**< File pointer */
     char *contents; /**< File contents */
+    bool contents_from_scratch; /**< Whether contents uses scratch allocator */
     size_t length; /**< File length */
     int lines; /**< Number of lines */
     int current_line; /**< Current line */
@@ -121,7 +122,11 @@ static void deinit (void) {
             fclose(text->f);
         }
         if (text->contents) {
-            free(text->contents);
+            if (text->contents_from_scratch) {
+                scratch_free(text->contents);
+            } else {
+                free(text->contents);
+            }
         }
         free(text);
         text = NULL;
@@ -164,7 +169,13 @@ void view_text_viewer_init (menu_t *menu) {
         return menu_show_error(menu, "Text file is too big to be displayed");
     }
 
-    if ((text->contents = malloc((text->length + 1) * sizeof(char))) == NULL) {
+    text->contents = scratch_malloc((text->length + 1) * sizeof(char));
+    text->contents_from_scratch = true;
+    if (!text->contents) {
+        text->contents_from_scratch = false;
+        text->contents = malloc((text->length + 1) * sizeof(char));
+    }
+    if (!text->contents) {
         deinit();
         return menu_show_error(menu, "Couldn't allocate memory for the text file contents");
     }

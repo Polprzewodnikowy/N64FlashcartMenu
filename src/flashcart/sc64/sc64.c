@@ -326,6 +326,24 @@ static flashcart_err_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
+static flashcart_err_t sc64_set_config_checked (sc64_cfg_id_t id, uint32_t value) {
+    uint32_t current_value;
+
+    if (sc64_ll_set_config(id, value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    if (sc64_ll_get_config(id, &current_value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    if (current_value != value) {
+        return FLASHCART_ERR_INT;
+    }
+
+    return FLASHCART_OK;
+}
+
 /**
  * @brief Check if the SummerCart64 has a specific feature.
  * 
@@ -603,8 +621,9 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
-            return FLASHCART_ERR_INT;
+        flashcart_err_t config_err = sc64_set_config_checked(config[i].id, config[i].value);
+        if (config_err != FLASHCART_OK) {
+            return config_err;
         }
     }
 
@@ -661,8 +680,9 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
-            return FLASHCART_ERR_INT;
+        flashcart_err_t config_err = sc64_set_config_checked(config[i].id, config[i].value);
+        if (config_err != FLASHCART_OK) {
+            return config_err;
         }
     }
 

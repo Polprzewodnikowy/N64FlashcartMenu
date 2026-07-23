@@ -118,13 +118,15 @@ typedef enum {
     BUTTON_MODE_DD_DISK_SWAP /**< Disk Drive disk swap button mode */
 } sc64_button_mode_t;
 
+#define SC64_DISK_MAPPING_MAX_DISKS 4
+
 /** @brief The SC64 Disk Mapping Structure. */
 typedef struct {
     int count; /**< Number of disks */
     struct {
         uint32_t thb_table; /**< THB table */
         uint32_t sector_table; /**< Sector table */
-    } disks[4]; /**< Array of disks */
+    } disks[SC64_DISK_MAPPING_MAX_DISKS]; /**< Array of disks */
 } sc64_disk_mapping_t;
 
 /**

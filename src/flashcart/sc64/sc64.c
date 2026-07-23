@@ -745,7 +745,7 @@ static flashcart_err_t sc64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
 }
 
 static uint8_t sc64_get_max_64dd_swap_disks (void) {
-    return (uint8_t) ((sizeof(((sc64_disk_mapping_t *) 0)->disks) / sizeof(((sc64_disk_mapping_t *) 0)->disks[0])) - 1);
+    return (uint8_t) (SC64_DISK_MAPPING_MAX_DISKS - 1);
 }
 
 

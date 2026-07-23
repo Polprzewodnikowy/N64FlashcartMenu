@@ -151,6 +151,7 @@ static void menu_init (boot_params_t *boot_params) {
  */
 static void menu_deinit (menu_t *menu) {
     ui_components_background_free();
+    ui_components_file_list_free();
     rspq_wait();  // Execute deferred callbacks (e.g., display list freeing) before closing RSPQ
 
     hdmi_send_game_id(menu->boot_params);

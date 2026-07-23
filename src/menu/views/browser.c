@@ -175,9 +175,34 @@ static void browser_list_free (menu_t *menu) {
     free(menu->browser.list);
 
     menu->browser.list = NULL;
+    menu->browser.list_capacity = 0;
     menu->browser.entries = 0;
     menu->browser.entry = NULL;
     menu->browser.selected = -1;
+}
+
+static bool browser_list_reserve(menu_t *menu, int32_t required) {
+    if (required <= menu->browser.list_capacity) {
+        return false;
+    }
+
+    int32_t new_capacity = menu->browser.list_capacity > 0 ? menu->browser.list_capacity : 32;
+    while (new_capacity < required) {
+        int32_t growth = new_capacity / 2;
+        if (growth <= 0 || new_capacity > INT32_MAX - growth) {
+            return true;
+        }
+        new_capacity += growth;
+    }
+
+    entry_t *grown = realloc(menu->browser.list, new_capacity * sizeof(entry_t));
+    if (!grown) {
+        return true;
+    }
+
+    menu->browser.list = grown;
+    menu->browser.list_capacity = new_capacity;
+    return false;
 }
 
 static bool load_archive (menu_t *menu) {
@@ -189,15 +214,15 @@ static bool load_archive (menu_t *menu) {
     }
 
     menu->browser.archive = true;
-    menu->browser.entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
-    menu->browser.list = malloc(menu->browser.entries * sizeof(entry_t));
-    if (!menu->browser.list) {
+    int32_t zip_entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
+    menu->browser.entries = 0;
+    if (browser_list_reserve(menu, zip_entries)) {
         browser_list_free(menu);
         return true;
     }
 
-    for (int32_t i = 0; i < menu->browser.entries; i++) {
-        entry_t *entry = &menu->browser.list[i];
+    for (int32_t i = 0; i < zip_entries; i++) {
+        entry_t *entry = &menu->browser.list[menu->browser.entries];
 
         mz_zip_archive_file_stat info;
         if (!mz_zip_reader_file_stat(&menu->browser.zip, i, &info)) {
@@ -214,6 +239,7 @@ static bool load_archive (menu_t *menu) {
         entry->type = ENTRY_TYPE_ARCHIVED;
         entry->size = info.m_uncomp_size;
         entry->index = i;
+        menu->browser.entries++;
     }
 
     if (menu->browser.entries > 0) {
@@ -273,9 +299,13 @@ static bool load_directory (menu_t *menu) {
         }
 
         if (!hide) {
-            menu->browser.list = realloc(menu->browser.list, (menu->browser.entries + 1) * sizeof(entry_t));
+            if (browser_list_reserve(menu, menu->browser.entries + 1)) {
+                path_free(path);
+                browser_list_free(menu);
+                return true;
+            }
 
-            entry_t *entry = &menu->browser.list[menu->browser.entries++];
+            entry_t *entry = &menu->browser.list[menu->browser.entries];
 
             entry->name = strdup(info.d_name);
             if (!entry->name) {
@@ -313,7 +343,8 @@ static bool load_directory (menu_t *menu) {
             }
 
             entry->size = info.d_size;
-            entry->index = menu->browser.entries - 1;
+            entry->index = menu->browser.entries;
+            menu->browser.entries++;
         }
 
         result = dir_findnext(path_get(path), &info);

@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "../ui_components.h"
 #include "../fonts.h"
@@ -40,25 +41,32 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
     } else {
         rdpq_paragraph_t *file_list_layout;
         rdpq_paragraph_t *layout;
+        int visible_entries = entries - starting_position;
+        if (visible_entries > LIST_ENTRIES) {
+            visible_entries = LIST_ENTRIES;
+        }
 
         size_t name_lengths[LIST_ENTRIES];
         size_t total_length = 1;
 
-        for (int i = 0; i < LIST_ENTRIES; i++) {
+        for (int i = 0; i < visible_entries; i++) {
             int entry_index = starting_position + i;
-
-            if (entry_index >= entries) {
-                name_lengths[i] = 0;
-            } else {
-                size_t length = strlen(list[entry_index].name);
-                name_lengths[i] = length;
-                total_length += length;
-            }
+            size_t length = strlen(list[entry_index].name);
+            name_lengths[i] = length;
+            total_length += length;
         }
 
-        file_list_layout = malloc(sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * total_length));
-        memset(file_list_layout, 0, sizeof(rdpq_paragraph_t));
-        file_list_layout->capacity = total_length;
+        file_list_layout = file_list_layout_get(total_length);
+        if (!file_list_layout) {
+            ui_components_main_text_draw(
+                STL_DEFAULT,
+                ALIGN_LEFT, VALIGN_TOP,
+                "\n"
+                "^%02X** out of memory **",
+                STL_GRAY
+            );
+            return;
+        }
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
@@ -71,7 +79,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             file_list_layout
         );
 
-        for (int i = 0; i < LIST_ENTRIES; i++) {
+        for (int i = 0; i < visible_entries; i++) {
             int entry_index = starting_position + i;
 
             entry_t *entry = &list[entry_index];
@@ -100,7 +108,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
 
             rdpq_paragraph_builder_span(entry->name, name_lengths[i]);
 
-            if ((entry_index + 1) >= entries) {
+            if ((i + 1) >= visible_entries) {
                 break;
             }
 
@@ -125,8 +133,6 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             VISIBLE_AREA_X0 + TEXT_MARGIN_HORIZONTAL,
             VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
-
-        rdpq_paragraph_free(layout);
 
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
@@ -171,7 +177,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
                 ui_components_sprite_draw(SPRITE_FILE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 16, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + ((i - starting_position) * highlight_height));
             }
 
-            if ((i + 1) == (starting_position + LIST_ENTRIES)) {
+            if ((i + 1) >= visible_entries) {
                 break;
             }
 

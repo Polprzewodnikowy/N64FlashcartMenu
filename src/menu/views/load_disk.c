@@ -6,7 +6,7 @@
 #include "../bookkeeping.h"
 #include <string.h>
 
-#define DISK_SLOTS_MAX DISK_SWAP_SLOTS_MAX // Maximum number of swap slots supported by menu state.
+#define DISK_SLOTS_CAPACITY DISK_SWAP_SLOTS_CAPACITY // Maximum number of swap slots storable in menu state.
 
 static component_boxart_t *boxart;
 static char *disk_filename;
@@ -67,7 +67,7 @@ static bool is_swap_disk_compatible (menu_t *menu, disk_info_t *candidate_info) 
     return disk_swap_id_allowed(primary_info->id, candidate_info->id);
 }
 
-static void insert_swap_disk_slot_sorted (menu_t *menu, path_t *candidate_path, disk_info_t *candidate_info) {
+static void insert_swap_disk_slot_sorted (menu_t *menu, path_t *candidate_path, disk_info_t *candidate_info, uint16_t max_swap_slots) {
     const char *candidate_name = path_last_get(candidate_path);
     uint16_t insert_pos = swap_disk_count;
 
@@ -79,7 +79,7 @@ static void insert_swap_disk_slot_sorted (menu_t *menu, path_t *candidate_path, 
         }
     }
 
-    if (swap_disk_count < DISK_SLOTS_MAX) {
+    if (swap_disk_count < max_swap_slots) {
         for (uint16_t i = swap_disk_count; i > insert_pos; i--) {
             menu->load.disk_slots.swap_slot[i] = menu->load.disk_slots.swap_slot[i - 1];
         }
@@ -90,14 +90,14 @@ static void insert_swap_disk_slot_sorted (menu_t *menu, path_t *candidate_path, 
         return;
     }
 
-    if (insert_pos >= DISK_SLOTS_MAX) {
+    if (insert_pos >= max_swap_slots) {
         path_free(candidate_path);
         return;
     }
 
-    path_free(menu->load.disk_slots.swap_slot[DISK_SLOTS_MAX - 1].disk_path);
+    path_free(menu->load.disk_slots.swap_slot[max_swap_slots - 1].disk_path);
 
-    for (uint16_t i = DISK_SLOTS_MAX - 1; i > insert_pos; i--) {
+    for (uint16_t i = max_swap_slots - 1; i > insert_pos; i--) {
         menu->load.disk_slots.swap_slot[i] = menu->load.disk_slots.swap_slot[i - 1];
     }
 
@@ -165,16 +165,25 @@ static void process (menu_t *menu) {
 static void scan_for_swap_disks(menu_t *menu) {
     uint16_t result;
     dir_t info;
+    uint16_t max_swap_slots = flashcart_get_max_64dd_swap_disks();
+
+    if (max_swap_slots > DISK_SLOTS_CAPACITY) {
+        max_swap_slots = DISK_SLOTS_CAPACITY;
+    }
 
     // Reset swap disk count
     swap_disk_count = 0;
 
     // Free any existing swap disk paths
-    for (uint16_t i = 0; i < DISK_SLOTS_MAX; i++) {
+    for (uint16_t i = 0; i < DISK_SLOTS_CAPACITY; i++) {
         if (menu->load.disk_slots.swap_slot[i].disk_path) {
             path_free(menu->load.disk_slots.swap_slot[i].disk_path);
             menu->load.disk_slots.swap_slot[i].disk_path = NULL;
         }
+    }
+
+    if (max_swap_slots == 0) {
+        return;
     }
 
     // Get directory path from primary disk
@@ -212,7 +221,7 @@ static void scan_for_swap_disks(menu_t *menu) {
         disk_err_t err = disk_info_load(candidate_path, &candidate_info);
 
         if ((err == DISK_OK) && is_swap_disk_compatible(menu, &candidate_info)) {
-            insert_swap_disk_slot_sorted(menu, candidate_path, &candidate_info);
+            insert_swap_disk_slot_sorted(menu, candidate_path, &candidate_info, max_swap_slots);
         } else {
             // Invalid disk - free the path
             path_free(candidate_path);

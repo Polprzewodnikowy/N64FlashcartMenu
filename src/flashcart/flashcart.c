@@ -106,6 +106,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
+    .get_max_64dd_swap_disks = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,
@@ -372,6 +373,19 @@ flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_param
 
     return flashcart->load_64dd_disks(disk_path, disk_parameters, swap_disk_paths, swap_disk_count);
 
+}
+
+/**
+ * @brief Get maximum number of 64DD swap disks supported by the active flashcart.
+ *
+ * @return uint8_t Maximum number of swap disks.
+ */
+uint8_t flashcart_get_max_64dd_swap_disks (void) {
+    if (!flashcart->get_max_64dd_swap_disks) {
+        return 0;
+    }
+
+    return flashcart->get_max_64dd_swap_disks();
 }
 
 /**

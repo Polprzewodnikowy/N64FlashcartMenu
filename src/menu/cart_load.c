@@ -194,11 +194,16 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
 
     path_free(path);
 
-    char *swap_disk_paths[DISK_SWAP_SLOTS_MAX] = { NULL };
+    char *swap_disk_paths[DISK_SWAP_SLOTS_CAPACITY] = { NULL };
     int swap_disk_count = 0;
+    uint8_t max_swap_slots = flashcart_get_max_64dd_swap_disks();
+
+    if (max_swap_slots > DISK_SWAP_SLOTS_CAPACITY) {
+        max_swap_slots = DISK_SWAP_SLOTS_CAPACITY;
+    }
 
     for (unsigned int i = 0; i < (sizeof(menu->load.disk_slots.swap_slot) / sizeof(menu->load.disk_slots.swap_slot[0])); i++) {
-        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path && (swap_disk_count < max_swap_slots)) {
             swap_disk_paths[swap_disk_count++] = path_get(menu->load.disk_slots.swap_slot[i].disk_path);
         }
     }

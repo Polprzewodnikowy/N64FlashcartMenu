@@ -96,6 +96,8 @@ typedef struct {
     flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
     /** @brief The flashcart disks load function */
     flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
+    /** @brief Maximum number of additional 64DD swap disks supported. */
+    uint8_t (*get_max_64dd_swap_disks) (void);
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
@@ -199,6 +201,13 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
  * @return flashcart_err_t Error code.
  */
 flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
+
+/**
+ * @brief Get maximum number of 64DD swap disks supported by the active flashcart.
+ *
+ * @return uint8_t Maximum number of swap disks that can be mapped in addition to primary disk.
+ */
+uint8_t flashcart_get_max_64dd_swap_disks (void);
 
 /**
 * @brief Set the next boot mode for the flashcart.

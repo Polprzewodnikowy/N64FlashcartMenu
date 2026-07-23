@@ -1,11 +1,11 @@
 /**
- * @file ed64_state.h
+ * @file ed64_pseudo_state.h
  * @brief Persistent EverDrive save-writeback state
  * @ingroup flashcart
  */
 
-#ifndef FLASHCART_ED64_PSEUSO_STATE_H__
-#define FLASHCART_ED64_PSEUSO_STATE_H__
+#ifndef FLASHCART_ED64_PSEUDO_STATE_H__
+#define FLASHCART_ED64_PSEUDO_STATE_H__
 
 #include <stdbool.h>
 

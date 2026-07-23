@@ -210,6 +210,43 @@ Do not invoke libdragon tools directly unless debugging the build system. Prefer
 - If behavior is unclear, request clarification instead of guessing.
 - Document any errors encountered and steps taken to work around them.
 
+### Static Analysis Fix Policy
+- Verify each reported finding against current code before editing.
+- Fix only findings that are still valid; skip invalid ones and state why.
+- Prefer the narrowest safe change at the call site over cross-file refactors.
+- Do not introduce shared helpers, new modules, or unnecessary shared constants for one-off warnings unless repeated usage already exists.
+- Local constants are allowed when they encode validation, security, or out-of-bounds safety limits (including one-off scan-limit values).
+- Keep behavior identical unless the bug itself requires behavior change.
+- After edits, validate touched files and summarize exactly which findings were fixed.
+
+### Minimal Change Policy (Strict)
+- Be laser-focused on the exact user request; do not broaden scope.
+- Do not refactor unless the user explicitly asks for refactoring.
+- Do not add helpers, abstractions, wrappers, utility modules, or shared layers unless explicitly requested.
+- Do not rename symbols, move code, or reorganize files unless explicitly requested.
+- Do not make opportunistic cleanups while fixing an issue.
+- Keep diffs as small as possible and localized to the reported issue.
+- Preserve existing behavior and public interfaces unless the requested fix requires a behavior change.
+- If a broader cleanup seems beneficial, stop and ask first instead of doing it implicitly.
+
+### Anti-Slop Enforcement (Required)
+- Before editing, restate the single concrete defect/request in one sentence and edit only code needed for that defect.
+- If a change touches more than one file, justify each touched file in the summary.
+- Do not introduce project-wide patterns from a local warning unless explicitly requested.
+- Do not convert local functions to shared utilities during bug fixes unless explicitly requested.
+- Do not replace simple standard-library calls with larger custom logic unless required to fix a proven bug.
+- Prefer the smallest valid guard/check over structural rewrites.
+- When static analysis reports include uncertain file/line metadata, verify with current source before editing.
+- If uncertainty remains, ask a focused question instead of making speculative broad changes.
+
+### Forbidden By Default
+- No helper extraction.
+- No abstraction layers.
+- No symbol renames.
+- No file moves/reorg.
+- No style-only rewrites.
+- No scope creep.
+
 ---
 
 ## Where to look for documentation and help

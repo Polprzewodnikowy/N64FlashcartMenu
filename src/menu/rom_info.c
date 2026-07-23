@@ -835,16 +835,25 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     // Extract to memory
     size_t uncomp_size = file_stat.m_uncomp_size;
     debugf("[META] load_metadata_from_zip_file: compressed=%llu, uncompressed=%zu\n", (unsigned long long)file_stat.m_comp_size, uncomp_size);
-    char *metadata_content = malloc(uncomp_size + 1);
+    char *metadata_content = scratch_malloc(uncomp_size + 1);
+    bool used_scratch = true;
     if (!metadata_content) {
-        debugf("[META] load_metadata_from_zip_file: malloc failed for %zu bytes\n", uncomp_size + 1);
+        used_scratch = false;
+        metadata_content = malloc(uncomp_size + 1);
+    }
+    if (!metadata_content) {
+        debugf("[META] load_metadata_from_zip_file: allocation failed for %zu bytes\n", uncomp_size + 1);
         mz_zip_reader_end(&zip);
         return false;
     }
     
     if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
         debugf("[META] load_metadata_from_zip_file: mz_zip_reader_extract_to_mem failed\n");
-        free(metadata_content);
+        if (used_scratch) {
+            scratch_free(metadata_content);
+        } else {
+            free(metadata_content);
+        }
         mz_zip_reader_end(&zip);
         return false;
     }
@@ -855,7 +864,11 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     
     // Parse from buffer using ini parser (no disk I/O)
     ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
-    free(metadata_content);
+    if (used_scratch) {
+        scratch_free(metadata_content);
+    } else {
+        free(metadata_content);
+    }
     
     bool success = false;
     if (meta_ini) {
@@ -952,9 +965,14 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     size_t uncomp_size = file_stat.m_uncomp_size;
     debugf("[META] load_rom_meta_from_embedded_zip: size=%zu (compressed=%llu)\n", uncomp_size, (unsigned long long)file_stat.m_comp_size);
-    char *metadata_content = malloc(uncomp_size + 1);
+    char *metadata_content = scratch_malloc(uncomp_size + 1);
+    bool used_scratch = true;
     if (!metadata_content) {
-        debugf("[META] load_rom_meta_from_embedded_zip: malloc failed\n");
+        used_scratch = false;
+        metadata_content = malloc(uncomp_size + 1);
+    }
+    if (!metadata_content) {
+        debugf("[META] load_rom_meta_from_embedded_zip: allocation failed\n");
         mz_zip_reader_end(&zip);
         fclose(rom_file);
         return false;
@@ -962,7 +980,11 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
         debugf("[META] load_rom_meta_from_embedded_zip: mz_zip_reader_extract_to_mem failed\n");
-        free(metadata_content);
+        if (used_scratch) {
+            scratch_free(metadata_content);
+        } else {
+            free(metadata_content);
+        }
         mz_zip_reader_end(&zip);
         fclose(rom_file);
         return false;
@@ -975,7 +997,11 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     // Parse from buffer using ini parser (no disk I/O needed)
     ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
-    free(metadata_content);
+    if (used_scratch) {
+        scratch_free(metadata_content);
+    } else {
+        free(metadata_content);
+    }
     
     bool success = false;
     if (meta_ini) {

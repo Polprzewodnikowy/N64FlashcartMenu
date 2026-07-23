@@ -217,8 +217,6 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL
         );
 
-        rdpq_paragraph_free(layout);
-
         rdpq_paragraph_builder_begin(
             &(rdpq_textparms_t) {
                 .width = VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - (TEXT_MARGIN_HORIZONTAL * 2),

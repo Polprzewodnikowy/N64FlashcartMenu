@@ -305,7 +305,7 @@ static bool load_directory (menu_t *menu) {
                 return true;
             }
 
-            entry_t *entry = &menu->browser.list[menu->browser.entries++];
+            entry_t *entry = &menu->browser.list[menu->browser.entries];
 
             entry->name = strdup(info.d_name);
             if (!entry->name) {
@@ -343,7 +343,8 @@ static bool load_directory (menu_t *menu) {
             }
 
             entry->size = info.d_size;
-            entry->index = menu->browser.entries - 1;
+            entry->index = menu->browser.entries;
+            menu->browser.entries++;
         }
 
         result = dir_findnext(path_get(path), &info);

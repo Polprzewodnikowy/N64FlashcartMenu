@@ -12,6 +12,7 @@
 typedef struct {
     FILE *f; /**< File pointer */
     char *contents; /**< File contents */
+    bool contents_from_scratch; /**< Whether contents uses scratch allocator */
     size_t length; /**< File length */
 } cheat_file_t;
 
@@ -121,7 +122,11 @@ static void deinit_cheat_file (void) {
             fclose(cheat_file_text->f);
         }
         if (cheat_file_text->contents) {
-            free(cheat_file_text->contents);
+            if (cheat_file_text->contents_from_scratch) {
+                scratch_free(cheat_file_text->contents);
+            } else {
+                free(cheat_file_text->contents);
+            }
         }
         free(cheat_file_text);
         cheat_file_text = NULL;
@@ -157,7 +162,13 @@ cheat_file_load_err_t open_cheat_file(char *path) {
         return CHEAT_FILE_LOAD_ERR_FILE_TOO_BIG;
     }
 
-    if ((cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char))) == NULL) {
+    cheat_file_text->contents = scratch_malloc((cheat_file_text->length + 1) * sizeof(char));
+    cheat_file_text->contents_from_scratch = true;
+    if (!cheat_file_text->contents) {
+        cheat_file_text->contents_from_scratch = false;
+        cheat_file_text->contents = malloc((cheat_file_text->length + 1) * sizeof(char));
+    }
+    if (!cheat_file_text->contents) {
         deinit_cheat_file();
         return CHEAT_FILE_LOAD_ERR_FILE_CONTENTS_ALLOC_FAIL;
     }

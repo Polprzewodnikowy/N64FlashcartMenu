@@ -194,7 +194,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
 
     path_free(path);
 
-    char *swap_disk_paths[3] = { NULL };
+    char *swap_disk_paths[DISK_SWAP_SLOTS_MAX] = { NULL };
     int swap_disk_count = 0;
 
     for (unsigned int i = 0; i < (sizeof(menu->load.disk_slots.swap_slot) / sizeof(menu->load.disk_slots.swap_slot[0])); i++) {

@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "../ui_components.h"
 #include "../fonts.h"
@@ -39,7 +40,15 @@ static rdpq_paragraph_t *file_list_layout_get(size_t required_capacity) {
 
     size_t new_capacity = file_list_layout_capacity > 0 ? file_list_layout_capacity : 64;
     while (new_capacity < required_capacity) {
+        size_t prev = new_capacity;
         new_capacity += new_capacity / 2;
+        if (new_capacity <= prev) {
+            return NULL;
+        }
+    }
+
+    if (new_capacity > (SIZE_MAX - sizeof(rdpq_paragraph_t)) / sizeof(rdpq_paragraph_char_t)) {
+        return NULL;
     }
 
     size_t bytes = sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * new_capacity);
@@ -54,6 +63,12 @@ static rdpq_paragraph_t *file_list_layout_get(size_t required_capacity) {
     memset(file_list_layout_buffer, 0, sizeof(rdpq_paragraph_t));
     file_list_layout_buffer->capacity = required_capacity;
     return file_list_layout_buffer;
+}
+
+void ui_components_file_list_free(void) {
+    free(file_list_layout_buffer);
+    file_list_layout_buffer = NULL;
+    file_list_layout_capacity = 0;
 }
 
 /**
@@ -109,20 +124,19 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
     } else {
         rdpq_paragraph_t *file_list_layout;
         rdpq_paragraph_t *layout;
+        int visible_entries = entries - starting_position;
+        if (visible_entries > LIST_ENTRIES) {
+            visible_entries = LIST_ENTRIES;
+        }
 
         size_t name_lengths[LIST_ENTRIES];
         size_t total_length = 1;
 
-        for (int i = 0; i < LIST_ENTRIES; i++) {
+        for (int i = 0; i < visible_entries; i++) {
             int entry_index = starting_position + i;
-
-            if (entry_index >= entries) {
-                name_lengths[i] = 0;
-            } else {
-                size_t length = strlen(list[entry_index].name);
-                name_lengths[i] = length;
-                total_length += length;
-            }
+            size_t length = strlen(list[entry_index].name);
+            name_lengths[i] = length;
+            total_length += length;
         }
 
         file_list_layout = file_list_layout_get(total_length);
@@ -148,7 +162,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             file_list_layout
         );
 
-        for (int i = 0; i < LIST_ENTRIES; i++) {
+        for (int i = 0; i < visible_entries; i++) {
             int entry_index = starting_position + i;
 
             entry_t *entry = &list[entry_index];
@@ -177,7 +191,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
 
             rdpq_paragraph_builder_span(entry->name, name_lengths[i]);
 
-            if ((entry_index + 1) >= entries) {
+            if ((i + 1) >= visible_entries) {
                 break;
             }
 
@@ -219,8 +233,8 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
 
         char file_size[16];
 
-        for (int i = starting_position; i < entries; i++) {
-            entry_t *entry = &list[i];
+        for (int i = 0; i < visible_entries; i++) {
+            entry_t *entry = &list[starting_position + i];
 
             if (entry->type != ENTRY_TYPE_DIR) {
                 // TODO: add option to use font icons instead of file sizes.
@@ -230,7 +244,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
                 rdpq_paragraph_builder_span(directory_icon, 5);
             }
 
-            if ((i + 1) == (starting_position + LIST_ENTRIES)) {
+            if ((i + 1) >= visible_entries) {
                 break;
             }
 

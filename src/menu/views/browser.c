@@ -188,7 +188,11 @@ static bool browser_list_reserve(menu_t *menu, int32_t required) {
 
     int32_t new_capacity = menu->browser.list_capacity > 0 ? menu->browser.list_capacity : 32;
     while (new_capacity < required) {
-        new_capacity += new_capacity / 2;
+        int32_t growth = new_capacity / 2;
+        if (growth <= 0 || new_capacity > INT32_MAX - growth) {
+            return true;
+        }
+        new_capacity += growth;
     }
 
     entry_t *grown = realloc(menu->browser.list, new_capacity * sizeof(entry_t));

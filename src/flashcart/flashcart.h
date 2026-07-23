@@ -95,7 +95,7 @@ typedef struct {
     /** @brief The flashcart disk load function */
     flashcart_err_t (*load_64dd_disk) (char *disk_path, flashcart_disk_parameters_t *disk_parameters);
     /** @brief The flashcart disks load function */
-    flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
+    flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count);
     /** @brief Maximum number of additional 64DD swap disks supported. */
     uint8_t (*get_max_64dd_swap_disks) (void);
     /** @brief The flashcart set save type function */
@@ -197,10 +197,11 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
  * @param disk_path Path to the primary disk file.
  * @param disk_parameters Pointer to the disk parameters.
  * @param swap_disk_paths Array of paths to swap disk files.
+ * @param swap_disk_parameters Array of disk parameters for each swap disk.
  * @param swap_disk_count Number of swap disks.
  * @return flashcart_err_t Error code.
  */
-flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
+flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count);
 
 /**
  * @brief Get maximum number of 64DD swap disks supported by the active flashcart.

@@ -611,7 +611,7 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
+static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count) {
     sc64_disk_mapping_t mapping;
     uint32_t mapping_offset = DISK_MAPPING_ROM_OFFSET;
     sc64_drive_type_t drive_type = (disk_parameters->development_drive ? DRIVE_TYPE_DEVELOPMENT : DRIVE_TYPE_RETAIL);
@@ -632,8 +632,7 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
             break;
         }
         if (swap_disk_paths[i] != NULL) {
-            // Use same disk parameters for swap disks (same physical disk type)
-            disk_load_thb_table(disk_parameters, &mapping.disks[mapping.count].thb_table, &mapping_offset);
+            disk_load_thb_table(&swap_disk_parameters[i], &mapping.disks[mapping.count].thb_table, &mapping_offset);
 
             if (disk_load_sector_table(swap_disk_paths[i], &mapping.disks[mapping.count].sector_table, &mapping_offset)) {
                 return FLASHCART_ERR_LOAD;

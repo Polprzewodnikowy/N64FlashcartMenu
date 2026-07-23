@@ -11,6 +11,53 @@
 #include "../fonts.h"
 #include "constants.h"
 
+static rdpq_paragraph_t *file_list_layout_buffer;
+static size_t file_list_layout_capacity;
+
+static rdpq_paragraph_t *file_list_layout_get(size_t required_capacity) {
+    if (required_capacity == 0) {
+        required_capacity = 1;
+    }
+
+    if (required_capacity <= file_list_layout_capacity) {
+        memset(file_list_layout_buffer, 0, sizeof(rdpq_paragraph_t));
+        file_list_layout_buffer->capacity = required_capacity;
+        return file_list_layout_buffer;
+    }
+
+    size_t new_capacity = file_list_layout_capacity > 0 ? file_list_layout_capacity : 64;
+    while (new_capacity < required_capacity) {
+        size_t prev = new_capacity;
+        new_capacity += new_capacity / 2;
+        if (new_capacity <= prev) {
+            return NULL;
+        }
+    }
+
+    if (new_capacity > (SIZE_MAX - sizeof(rdpq_paragraph_t)) / sizeof(rdpq_paragraph_char_t)) {
+        return NULL;
+    }
+
+    size_t bytes = sizeof(rdpq_paragraph_t) + (sizeof(rdpq_paragraph_char_t) * new_capacity);
+    rdpq_paragraph_t *grown = realloc(file_list_layout_buffer, bytes);
+    if (!grown) {
+        return NULL;
+    }
+
+    file_list_layout_buffer = grown;
+    file_list_layout_capacity = new_capacity;
+
+    memset(file_list_layout_buffer, 0, sizeof(rdpq_paragraph_t));
+    file_list_layout_buffer->capacity = required_capacity;
+    return file_list_layout_buffer;
+}
+
+void ui_components_file_list_free(void) {
+    free(file_list_layout_buffer);
+    file_list_layout_buffer = NULL;
+    file_list_layout_capacity = 0;
+}
+
 /**
  * @brief Draw the file list UI component.
  *

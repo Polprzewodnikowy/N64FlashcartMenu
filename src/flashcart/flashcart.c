@@ -107,6 +107,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
     .get_max_64dd_swap_disks = NULL,
+    .get_button_state = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,
@@ -386,6 +387,33 @@ uint8_t flashcart_get_max_64dd_swap_disks (void) {
     }
 
     return flashcart->get_max_64dd_swap_disks();
+}
+
+/**
+ * @brief Check whether hardware button state query is supported.
+ *
+ * @return bool True if supported.
+ */
+bool flashcart_has_button_state (void) {
+    return (flashcart->get_button_state != NULL);
+}
+
+/**
+ * @brief Get realtime hardware button state.
+ *
+ * @param pressed Output pointer for button state.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_button_state (bool *pressed) {
+    if (pressed == NULL) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    if (!flashcart->get_button_state) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    return flashcart->get_button_state(pressed);
 }
 
 /**

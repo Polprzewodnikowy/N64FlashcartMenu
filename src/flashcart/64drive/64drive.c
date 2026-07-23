@@ -377,6 +377,7 @@ static flashcart_t flashcart_d64 = {
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
     .get_max_64dd_swap_disks = d64_get_max_64dd_swap_disks,
+    .get_button_state = NULL,
     .set_save_type = d64_set_save_type,
     .set_save_writeback = d64_set_save_writeback,
     .set_next_boot_mode = d64_set_bootmode,

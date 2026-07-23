@@ -98,6 +98,8 @@ typedef struct {
     flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count);
     /** @brief Maximum number of additional 64DD swap disks supported. */
     uint8_t (*get_max_64dd_swap_disks) (void);
+    /** @brief Query hardware button state if supported by flashcart. */
+    flashcart_err_t (*get_button_state) (bool *pressed);
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
@@ -209,6 +211,21 @@ flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_param
  * @return uint8_t Maximum number of swap disks that can be mapped in addition to primary disk.
  */
 uint8_t flashcart_get_max_64dd_swap_disks (void);
+
+/**
+ * @brief Check whether hardware button state can be queried on active flashcart.
+ *
+ * @return bool True if button-state query is supported.
+ */
+bool flashcart_has_button_state (void);
+
+/**
+ * @brief Get realtime hardware button state from active flashcart.
+ *
+ * @param pressed Output pointer receiving true when button is currently pressed.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_button_state (bool *pressed);
 
 /**
 * @brief Set the next boot mode for the flashcart.

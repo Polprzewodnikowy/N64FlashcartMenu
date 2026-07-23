@@ -42,3 +42,4 @@ How to use:
 Notes:
 - The menu auto-scans sibling `.ndd` files and only maps disks that are region/ID compatible.
 - The number of mapped swap disks is limited by flashcart capability.
+- Disk swapping is currently expected to work only on NTSC consoles.

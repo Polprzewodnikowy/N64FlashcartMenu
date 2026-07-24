@@ -376,6 +376,7 @@ flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_param
 
 }
 
+/**
  * @brief Check whether hardware button state query is supported.
  *
  * @return bool True if supported.

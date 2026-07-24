@@ -58,6 +58,177 @@ struct ini_s {
     int            section_capacity; /**< Allocated capacity of sections array */
 };
 
+static ini_section_t* find_or_create_section(ini_t *ini, const char *section_name);
+static ini_pair_t* find_pair(ini_section_t *section, const char *key);
+static ini_pair_t* find_or_create_pair(ini_section_t *section, const char *key);
+
+/**
+ * @brief Parse an INI document from a mutable, null-terminated buffer.
+ */
+static ini_t* ini_parse_mutable_content(char *content, size_t size) {
+    if (!content || size == 0) return ini_create();
+
+    ini_t *ini = ini_create();
+    if (!ini) return NULL;
+
+    // Parse sections and key=value pairs
+    const char *pos = content;
+    ini_section_t *section = NULL;
+    bool allow_global_keys = true;
+
+    while (*pos) {
+        // Skip whitespace and newlines
+        while (*pos && (*pos == ' ' || *pos == '\t' || *pos == '\n' || *pos == '\r')) {
+            pos++;
+        }
+
+        if (!*pos) break;
+
+        // Skip comment lines
+        if (*pos == ';' || *pos == '#') {
+            while (*pos && *pos != '\n') pos++;
+            continue;
+        }
+
+        // Find end of current line for bounded searches
+        const char *line_end = pos;
+        while (*line_end && *line_end != '\n' && *line_end != '\r') {
+            line_end++;
+        }
+
+        // Check for section header
+        if (*pos == '[') {
+            allow_global_keys = false;
+            const char *section_start = pos + 1;
+            ptrdiff_t section_avail = line_end - section_start;
+            const char *section_end = (section_avail > 0)
+                ? (const char *)memchr(section_start, ']', (size_t)section_avail)
+                : NULL;
+            if (section_end && section_end > section_start) {
+                size_t section_name_len = section_end - section_start;
+                if (section_name_len >= INI_MAX_NAME_LENGTH) {
+                    section_name_len = INI_MAX_NAME_LENGTH - 1;
+                }
+                char section_name[INI_MAX_NAME_LENGTH];
+                strncpy(section_name, section_start, section_name_len);
+                section_name[section_name_len] = '\0';
+
+                section = find_or_create_section(ini, section_name);
+                pos = section_end + 1;
+                continue;
+            }
+            // Malformed section line — skip to next line
+            pos = (*line_end) ? line_end + 1 : line_end;
+            continue;
+        }
+
+        // Parse key=value pair
+        const char *key_start = pos;
+        ptrdiff_t key_avail = line_end - key_start;
+        const char *eq_pos = (key_avail > 0)
+            ? (const char *)memchr(key_start, '=', (size_t)key_avail)
+            : NULL;
+        if (eq_pos && eq_pos > key_start) {
+            // Route pre-section keys to a "" sentinel.
+            // find_or_create_section returns the existing sentinel if already present.
+            ini_section_t *target_section = section
+                ? section
+                : (allow_global_keys ? find_or_create_section(ini, "") : NULL);
+            if (!target_section) {
+                pos = (*line_end) ? line_end + 1 : line_end;
+                continue;
+            }
+            size_t key_len = eq_pos - key_start;
+
+            // Trim trailing whitespace from key
+            while (key_len > 0 && (key_start[key_len - 1] == ' ' || key_start[key_len - 1] == '\t')) {
+                key_len--;
+            }
+
+            if (key_len >= INI_MAX_NAME_LENGTH) {
+                key_len = INI_MAX_NAME_LENGTH - 1;
+            }
+
+            char key[INI_MAX_NAME_LENGTH];
+            strncpy(key, key_start, key_len);
+            key[key_len] = '\0';
+
+            // Get value – handle quoted and unquoted forms
+            const char *value_start = eq_pos + 1;
+            while (*value_start && (*value_start == ' ' || *value_start == '\t')) {
+                value_start++;
+            }
+            char parsed_value[INI_MAX_VALUE_LENGTH];
+            size_t parsed_len = 0;
+            const char *new_pos;
+
+            if (*value_start == '"' || *value_start == '\'') {
+                // Quoted value: scan until matching closing quote,
+                // honouring \\ and \" / \' escape sequences.
+                char quote = *value_start;
+                const char *vp = value_start + 1;
+                while (*vp && *vp != quote && *vp != '\n' && *vp != '\r') {
+                    if (*vp == '\\' && *(vp + 1) != '\0') {
+                        char next = *(vp + 1);
+                        if (next == quote || next == '\\') {
+                            if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
+                                parsed_value[parsed_len++] = next;
+                            }
+                            vp += 2;
+                            continue;
+                        }
+                    }
+                    if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
+                        parsed_value[parsed_len++] = *vp;
+                    }
+                    vp++;
+                }
+                parsed_value[parsed_len] = '\0';
+                // Advance past closing quote when present
+                new_pos = (*vp == quote) ? vp + 1 : vp;
+            } else {
+                // Unquoted value: stop at comment character or end-of-line
+                const char *value_end = value_start;
+                while (*value_end && *value_end != '\n' && *value_end != '\r' &&
+                       *value_end != ';' && *value_end != '#') {
+                    value_end++;
+                }
+                // Trim trailing whitespace
+                while (value_end > value_start &&
+                       (*(value_end - 1) == ' ' || *(value_end - 1) == '\t')) {
+                    value_end--;
+                }
+                parsed_len = (size_t)(value_end - value_start);
+                if (parsed_len >= INI_MAX_VALUE_LENGTH) {
+                    parsed_len = INI_MAX_VALUE_LENGTH - 1;
+                }
+                strncpy(parsed_value, value_start, parsed_len);
+                parsed_value[parsed_len] = '\0';
+                new_pos = value_end;
+            }
+
+            ini_pair_t *pair = find_or_create_pair(target_section, key);
+            if (pair) {
+                char *new_value = strdup(parsed_value);
+                if (new_value) {
+                    free(pair->value);
+                    pair->value = new_value;
+                } else {
+                    debugf("[INI] failed to allocate pair value\n");
+                }
+            }
+
+            pos = new_pos;
+            continue;
+        }
+
+        // Skip to next line
+        while (*pos && *pos != '\n') pos++;
+    }
+
+    return ini;
+}
+
 
 /**
  * @brief Find or create a section
@@ -212,176 +383,34 @@ void ini_free(ini_t *ini) {
 
 ini_t* ini_parse_buffer(const char *buffer, size_t size) {
     if (!buffer || size == 0) return ini_create();
-    
-    ini_t *ini = ini_create();
-    if (!ini) return NULL;
-    
-    // Make a null-terminated copy
-    char *content = malloc(size + 1);
-    if (!content) {
-        ini_free(ini);
+
+    // Prevent wraparound in size + 1 for temporary null-terminated workspace.
+    if (size == SIZE_MAX) {
         return NULL;
     }
-    
+
+    // Parse buffer copies are temporary workspaces; scratch reduces heap interleaving.
+    char *content = scratch_malloc(size + 1);
+    bool used_scratch = true;
+    if (!content) {
+        used_scratch = false;
+        content = malloc(size + 1);
+    }
+    if (!content) {
+        return NULL;
+    }
+
     memcpy(content, buffer, size);
     content[size] = '\0';
-    
-    // Parse sections and key=value pairs
-    const char *pos = content;
-    ini_section_t *section = NULL;
-    bool allow_global_keys = true;
-    
-    while (*pos) {
-        // Skip whitespace and newlines
-        while (*pos && (*pos == ' ' || *pos == '\t' || *pos == '\n' || *pos == '\r')) {
-            pos++;
-        }
-        
-        if (!*pos) break;
-        
-        // Skip comment lines
-        if (*pos == ';' || *pos == '#') {
-            while (*pos && *pos != '\n') pos++;
-            continue;
-        }
 
-        // Find end of current line for bounded searches
-        const char *line_end = pos;
-        while (*line_end && *line_end != '\n' && *line_end != '\r') {
-            line_end++;
-        }
+    ini_t *ini = ini_parse_mutable_content(content, size);
 
-        // Check for section header
-        if (*pos == '[') {
-            allow_global_keys = false;
-            const char *section_start = pos + 1;
-            ptrdiff_t section_avail = line_end - section_start;
-            const char *section_end = (section_avail > 0)
-                ? (const char *)memchr(section_start, ']', (size_t)section_avail)
-                : NULL;
-            if (section_end && section_end > section_start) {
-                size_t section_name_len = section_end - section_start;
-                if (section_name_len >= INI_MAX_NAME_LENGTH) {
-                    section_name_len = INI_MAX_NAME_LENGTH - 1;
-                }
-                char section_name[INI_MAX_NAME_LENGTH];
-                strncpy(section_name, section_start, section_name_len);
-                section_name[section_name_len] = '\0';
-                
-                section = find_or_create_section(ini, section_name);
-                pos = section_end + 1;
-                continue;
-            }
-            // Malformed section line — skip to next line
-            pos = (*line_end) ? line_end + 1 : line_end;
-            continue;
-        }
-        
-        // Parse key=value pair
-        const char *key_start = pos;
-        ptrdiff_t key_avail = line_end - key_start;
-        const char *eq_pos = (key_avail > 0)
-            ? (const char *)memchr(key_start, '=', (size_t)key_avail)
-            : NULL;
-        if (eq_pos && eq_pos > key_start) {
-            // Route pre-section keys to a "" sentinel.
-            // find_or_create_section returns the existing sentinel if already present.
-            ini_section_t *target_section = section
-                ? section
-                : (allow_global_keys ? find_or_create_section(ini, "") : NULL);
-            if (!target_section) {
-                pos = (*line_end) ? line_end + 1 : line_end;
-                continue;
-            }
-            size_t key_len = eq_pos - key_start;
-            
-            // Trim trailing whitespace from key
-            while (key_len > 0 && (key_start[key_len - 1] == ' ' || key_start[key_len - 1] == '\t')) {
-                key_len--;
-            }
-            
-            if (key_len >= INI_MAX_NAME_LENGTH) {
-                key_len = INI_MAX_NAME_LENGTH - 1;
-            }
-            
-            char key[INI_MAX_NAME_LENGTH];
-            strncpy(key, key_start, key_len);
-            key[key_len] = '\0';
-            
-            // Get value – handle quoted and unquoted forms
-            const char *value_start = eq_pos + 1;
-            while (*value_start && (*value_start == ' ' || *value_start == '\t')) {
-                value_start++;
-            }
-            char parsed_value[INI_MAX_VALUE_LENGTH];
-            size_t parsed_len = 0;
-            const char *new_pos;
-
-            if (*value_start == '"' || *value_start == '\'') {
-                // Quoted value: scan until matching closing quote,
-                // honouring \\ and \" / \' escape sequences.
-                char quote = *value_start;
-                const char *vp = value_start + 1;
-                while (*vp && *vp != quote && *vp != '\n' && *vp != '\r') {
-                    if (*vp == '\\' && *(vp + 1) != '\0') {
-                        char next = *(vp + 1);
-                        if (next == quote || next == '\\') {
-                            if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
-                                parsed_value[parsed_len++] = next;
-                            }
-                            vp += 2;
-                            continue;
-                        }
-                    }
-                    if (parsed_len < INI_MAX_VALUE_LENGTH - 1) {
-                        parsed_value[parsed_len++] = *vp;
-                    }
-                    vp++;
-                }
-                parsed_value[parsed_len] = '\0';
-                // Advance past closing quote when present
-                new_pos = (*vp == quote) ? vp + 1 : vp;
-            } else {
-                // Unquoted value: stop at comment character or end-of-line
-                const char *value_end = value_start;
-                while (*value_end && *value_end != '\n' && *value_end != '\r' &&
-                       *value_end != ';' && *value_end != '#') {
-                    value_end++;
-                }
-                // Trim trailing whitespace
-                while (value_end > value_start &&
-                       (*(value_end - 1) == ' ' || *(value_end - 1) == '\t')) {
-                    value_end--;
-                }
-                parsed_len = (size_t)(value_end - value_start);
-                if (parsed_len >= INI_MAX_VALUE_LENGTH) {
-                    parsed_len = INI_MAX_VALUE_LENGTH - 1;
-                }
-                strncpy(parsed_value, value_start, parsed_len);
-                parsed_value[parsed_len] = '\0';
-                new_pos = value_end;
-            }
-            
-            ini_pair_t *pair = find_or_create_pair(target_section, key);
-            if (pair) {
-                char *new_value = strdup(parsed_value);
-                if (new_value) {
-                    free(pair->value);
-                    pair->value = new_value;
-                } else {
-                    debugf("[INI] failed to allocate pair value\n");
-                }
-            }
-
-            pos = new_pos;
-            continue;
-        }
-        
-        // Skip to next line
-        while (*pos && *pos != '\n') pos++;
+    if (used_scratch) {
+        scratch_free(content);
+    } else {
+        free(content);
     }
-    
-    free(content);
+
     return ini;
 }
 
@@ -426,8 +455,9 @@ ini_t* ini_load(const char *path) {
         return NULL;
     }
 
-    // Parse buffer
-    ini_t *ini = ini_parse_buffer(buffer, read_size);
+    // Parse buffer in-place to avoid a second temporary copy.
+    buffer[read_size] = '\0';
+    ini_t *ini = ini_parse_mutable_content(buffer, read_size);
     free(buffer);
     
     return ini;

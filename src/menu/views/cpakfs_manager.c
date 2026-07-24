@@ -252,7 +252,12 @@ static void dump_complete_cpak(int port) {
         return;
     }
 
-    uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
+    uint8_t *bankbuf = scratch_malloc(MEMPAK_BANK_SIZE);
+    bool used_scratch = true;
+    if (!bankbuf) {
+        used_scratch = false;
+        bankbuf = malloc(MEMPAK_BANK_SIZE);
+    }
     if (!bankbuf) {
         snprintf(failure_message_note, sizeof(failure_message_note), "Memory allocation failed!");
         error_message_displayed = true;
@@ -265,7 +270,11 @@ static void dump_complete_cpak(int port) {
         if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
@@ -274,13 +283,21 @@ static void dump_complete_cpak(int port) {
         if (wr != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to write data to file: %s", complete_filename);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
     }
 
-    free(bankbuf);
+    if (used_scratch) {
+        scratch_free(bankbuf);
+    } else {
+        free(bankbuf);
+    }
     fclose(fp);
     process_complete_full_dump = true;
 }

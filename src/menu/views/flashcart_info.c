@@ -170,10 +170,8 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_messagebox_draw(
             "FLASHCART DIAGNOSTICS\n"
             "\n"
-            "Button:\n"
-            "  Realtime: %s\n"
-            "\n"
             "Diagnostics:\n"
+            "  Button Realtime: %s\n"
             "  Voltage / Temp: %s\n"
             "\n"
             "Press L|Z to return.\n",

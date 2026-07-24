@@ -326,24 +326,6 @@ static flashcart_err_t sc64_deinit (void) {
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_set_config_checked (sc64_cfg_id_t id, uint32_t value) {
-    uint32_t current_value;
-
-    if (sc64_ll_set_config(id, value) != SC64_OK) {
-        return FLASHCART_ERR_INT;
-    }
-
-    if (sc64_ll_get_config(id, &current_value) != SC64_OK) {
-        return FLASHCART_ERR_INT;
-    }
-
-    if (current_value != value) {
-        return FLASHCART_ERR_INT;
-    }
-
-    return FLASHCART_OK;
-}
-
 /**
  * @brief Check if the SummerCart64 has a specific feature.
  * 
@@ -621,16 +603,15 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        flashcart_err_t config_err = sc64_set_config_checked(config[i].id, config[i].value);
-        if (config_err != FLASHCART_OK) {
-            return config_err;
+        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
+            return FLASHCART_ERR_INT;
         }
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count) {
+static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
     sc64_disk_mapping_t mapping;
     uint32_t mapping_offset = DISK_MAPPING_ROM_OFFSET;
     sc64_drive_type_t drive_type = (disk_parameters->development_drive ? DRIVE_TYPE_DEVELOPMENT : DRIVE_TYPE_RETAIL);
@@ -651,7 +632,8 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
             break;
         }
         if (swap_disk_paths[i] != NULL) {
-            disk_load_thb_table(&swap_disk_parameters[i], &mapping.disks[mapping.count].thb_table, &mapping_offset);
+            // Use same disk parameters for swap disks (same physical disk type)
+            disk_load_thb_table(disk_parameters, &mapping.disks[mapping.count].thb_table, &mapping_offset);
 
             if (disk_load_sector_table(swap_disk_paths[i], &mapping.disks[mapping.count].sector_table, &mapping_offset)) {
                 return FLASHCART_ERR_LOAD;
@@ -680,9 +662,8 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        flashcart_err_t config_err = sc64_set_config_checked(config[i].id, config[i].value);
-        if (config_err != FLASHCART_OK) {
-            return config_err;
+        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
+            return FLASHCART_ERR_INT;
         }
     }
 
@@ -787,11 +768,6 @@ static flashcart_err_t sc64_get_voltage_temperature (uint16_t *voltage_mv, int16
     return FLASHCART_OK;
 }
 
-static uint8_t sc64_get_max_64dd_swap_disks (void) {
-    return (uint8_t) (SC64_DISK_MAPPING_MAX_DISKS - 1);
-}
-
-
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
@@ -803,7 +779,6 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_ipl = sc64_load_64dd_ipl,
     .load_64dd_disk = sc64_load_64dd_disk,
     .load_64dd_disks = sc64_load_64dd_disks,
-    .get_max_64dd_swap_disks = sc64_get_max_64dd_swap_disks,
     .get_button_state = sc64_get_button_state,
     .get_voltage_temperature = sc64_get_voltage_temperature,
     .set_save_type = sc64_set_save_type,

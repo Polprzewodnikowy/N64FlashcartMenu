@@ -106,7 +106,6 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
-    .get_max_64dd_swap_disks = NULL,
     .get_button_state = NULL,
     .get_voltage_temperature = NULL,
     .set_save_type = dummy_set_save_type,
@@ -364,30 +363,17 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
  * @param swap_disk_count Number of swap disks.
  * @return flashcart_err_t Error code.
  */
-flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count) {
+flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
     if (!flashcart->load_64dd_disks) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
     }
 
-    if ((disk_path == NULL) || (disk_parameters == NULL) || (swap_disk_count > 0 && (swap_disk_paths == NULL || swap_disk_parameters == NULL))) {
+    if ((disk_path == NULL) || (disk_parameters == NULL) || (swap_disk_count > 0 && swap_disk_paths == NULL)) {
         return FLASHCART_ERR_ARGS;
     }
 
-    return flashcart->load_64dd_disks(disk_path, disk_parameters, swap_disk_paths, swap_disk_parameters, swap_disk_count);
+    return flashcart->load_64dd_disks(disk_path, disk_parameters, swap_disk_paths, swap_disk_count);
 
-}
-
-/**
- * @brief Get maximum number of 64DD swap disks supported by the active flashcart.
- *
- * @return uint8_t Maximum number of swap disks.
- */
-uint8_t flashcart_get_max_64dd_swap_disks (void) {
-    if (!flashcart->get_max_64dd_swap_disks) {
-        return 0;
-    }
-
-    return flashcart->get_max_64dd_swap_disks();
 }
 
 /**

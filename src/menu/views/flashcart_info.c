@@ -133,7 +133,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Save Writeback:   %s.\n"
         "  Auto F/W Updates: %s.\n"
         "  Fast ROM Reboots: %s.\n"
-        "  Button Realtime:  %s.\n"
+        "  Button:           %s.\n"
         "  Diagnostics:      %s.\n"
         "\n\n",
         format_cart_type(),
@@ -162,26 +162,22 @@ static void draw (menu_t *menu, surface_t *d) {
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "\n"
-            "L|Z: Extra Info"
+            "L|Z: Diagnostics"
         );
     }
 
     if (show_extra_info_message && has_extra_info) {
         ui_components_messagebox_draw(
-            "FLASHCART EXTRA INFO\n"
+            "FLASHCART DIAGNOSTICS\n"
             "\n"
             "Button:\n"
-            "  Supported: %s\n"
-            "  Realtime:  %s\n"
+            "  Realtime: %s\n"
             "\n"
             "Diagnostics:\n"
-            "  Supported: %s\n"
             "  Voltage / Temp: %s\n"
             "\n"
             "Press L|Z to return.\n",
-            format_boolean_type(has_button_support),
             format_button_state(),
-            format_boolean_type(has_diagnostics_support),
             format_voltage_temperature()
         );
     }

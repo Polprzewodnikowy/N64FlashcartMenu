@@ -98,6 +98,8 @@ typedef struct {
     flashcart_err_t (*load_64dd_disks) (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count);
     /** @brief Query hardware button state if supported by flashcart. */
     flashcart_err_t (*get_button_state) (bool *pressed);
+    /** @brief Query realtime voltage/temperature diagnostic data if supported. */
+    flashcart_err_t (*get_voltage_temperature) (uint16_t *voltage_mv, int16_t *temperature_deci_c);
     /** @brief The flashcart set save type function */
     flashcart_err_t (*set_save_type) (flashcart_save_type_t save_type);
     /** @brief The flashcart set save writeback function */
@@ -216,6 +218,22 @@ bool flashcart_has_button_state (void);
  * @return flashcart_err_t Result code.
  */
 flashcart_err_t flashcart_get_button_state (bool *pressed);
+
+/**
+ * @brief Check whether realtime voltage/temperature diagnostics are supported.
+ *
+ * @return bool True when voltage/temperature query is supported.
+ */
+bool flashcart_has_voltage_temperature (void);
+
+/**
+ * @brief Get realtime voltage and temperature diagnostics.
+ *
+ * @param voltage_mv Output voltage in millivolts.
+ * @param temperature_deci_c Output temperature in deci-degrees Celsius.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_voltage_temperature (uint16_t *voltage_mv, int16_t *temperature_deci_c);
 
 /**
 * @brief Set the next boot mode for the flashcart.

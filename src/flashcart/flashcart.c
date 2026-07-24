@@ -107,6 +107,7 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
     .get_button_state = NULL,
+    .get_voltage_temperature = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,
@@ -399,6 +400,34 @@ flashcart_err_t flashcart_get_button_state (bool *pressed) {
     }
 
     return flashcart->get_button_state(pressed);
+}
+
+/**
+ * @brief Check whether voltage/temperature diagnostics are supported.
+ *
+ * @return bool True if supported.
+ */
+bool flashcart_has_voltage_temperature (void) {
+    return (flashcart->get_voltage_temperature != NULL);
+}
+
+/**
+ * @brief Get realtime voltage and temperature diagnostics.
+ *
+ * @param voltage_mv Output voltage in millivolts.
+ * @param temperature_deci_c Output temperature in deci-degrees Celsius.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_voltage_temperature (uint16_t *voltage_mv, int16_t *temperature_deci_c) {
+    if ((voltage_mv == NULL) || (temperature_deci_c == NULL)) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    if (!flashcart->get_voltage_temperature) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    return flashcart->get_voltage_temperature(voltage_mv, temperature_deci_c);
 }
 
 /**

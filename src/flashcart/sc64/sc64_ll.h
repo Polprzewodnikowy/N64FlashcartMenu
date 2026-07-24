@@ -118,6 +118,11 @@ typedef enum {
     BUTTON_MODE_DD_DISK_SWAP /**< Disk Drive disk swap button mode */
 } sc64_button_mode_t;
 
+/** @brief The SC64 Diagnostic ID Enumeration. */
+typedef enum {
+    DIAGNOSTIC_ID_VOLTAGE_TEMPERATURE = 0, /**< Combined voltage and temperature reading */
+} sc64_diagnostic_id_t;
+
 #define SC64_DISK_MAPPING_MAX_DISKS 4
 
 /** @brief The SC64 Disk Mapping Structure. */
@@ -208,6 +213,15 @@ sc64_error_t sc64_ll_flash_get_erase_block_size(size_t *erase_block_size);
  * @return sc64_error_t Error code.
  */
 sc64_error_t sc64_ll_flash_erase_block(void *address);
+
+/**
+ * @brief Get diagnostic value from the SC64.
+ *
+ * @param id Diagnostic ID.
+ * @param value Pointer to store returned diagnostic value.
+ * @return sc64_error_t Error code.
+ */
+sc64_error_t sc64_ll_get_diagnostic(sc64_diagnostic_id_t id, uint32_t *value);
 
 /** @} */ /* sc64 */
 

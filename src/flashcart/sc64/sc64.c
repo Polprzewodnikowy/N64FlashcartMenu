@@ -774,6 +774,19 @@ static flashcart_err_t sc64_get_button_state (bool *pressed) {
     return FLASHCART_OK;
 }
 
+static flashcart_err_t sc64_get_voltage_temperature (uint16_t *voltage_mv, int16_t *temperature_deci_c) {
+    uint32_t value;
+
+    if (sc64_ll_get_diagnostic(DIAGNOSTIC_ID_VOLTAGE_TEMPERATURE, &value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    *voltage_mv = (uint16_t) ((value >> 16) & 0xFFFF);
+    *temperature_deci_c = (int16_t) (value & 0xFFFF);
+
+    return FLASHCART_OK;
+}
+
 static uint8_t sc64_get_max_64dd_swap_disks (void) {
     return (uint8_t) (SC64_DISK_MAPPING_MAX_DISKS - 1);
 }
@@ -792,6 +805,7 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_disks = sc64_load_64dd_disks,
     .get_max_64dd_swap_disks = sc64_get_max_64dd_swap_disks,
     .get_button_state = sc64_get_button_state,
+    .get_voltage_temperature = sc64_get_voltage_temperature,
     .set_save_type = sc64_set_save_type,
     .set_save_writeback = sc64_set_save_writeback,
     .set_next_boot_mode = sc64_set_bootmode,

@@ -83,16 +83,24 @@ static const char *format_voltage_temperature (void) {
 }
 
 static void process (menu_t *menu) {
+    bool has_button_support = flashcart_has_button_state();
+    bool has_diagnostics_support = flashcart_has_voltage_temperature();
+    bool has_extra_info = has_button_support || has_diagnostics_support;
+
     if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
-    } else if (menu->actions.lz_context) {
+    } else if (menu->actions.lz_context && has_extra_info) {
         show_extra_info_message = !show_extra_info_message;
         sound_play_effect(SFX_SETTING);
     }
 }
 
 static void draw (menu_t *menu, surface_t *d) {
+    bool has_button_support = flashcart_has_button_state();
+    bool has_diagnostics_support = flashcart_has_voltage_temperature();
+    bool has_extra_info = has_button_support || has_diagnostics_support;
+
     rdpq_attach(d, NULL);
 
     ui_components_background_draw();
@@ -125,6 +133,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "  Save Writeback:   %s.\n"
         "  Auto F/W Updates: %s.\n"
         "  Fast ROM Reboots: %s.\n"
+        "  Button Realtime:  %s.\n"
+        "  Diagnostics:      %s.\n"
         "\n\n",
         format_cart_type(),
         format_cart_version(),
@@ -135,7 +145,9 @@ static void draw (menu_t *menu, surface_t *d) {
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_AUTO_REGION)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_SAVE_WRITEBACK)),
         format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU)),
-        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST))
+        format_boolean_type(flashcart_has_feature(FLASHCART_FEATURE_ROM_REBOOT_FAST)),
+        format_boolean_type(has_button_support),
+        format_boolean_type(has_diagnostics_support)
     );
 
     ui_components_actions_bar_text_draw(
@@ -145,14 +157,16 @@ static void draw (menu_t *menu, surface_t *d) {
         "B: Back"
     );
 
-    ui_components_actions_bar_text_draw(
-        STL_DEFAULT,
-        ALIGN_RIGHT, VALIGN_TOP,
-        "\n"
-        "L|Z: Extra Info"
-    );
+    if (has_extra_info) {
+        ui_components_actions_bar_text_draw(
+            STL_DEFAULT,
+            ALIGN_RIGHT, VALIGN_TOP,
+            "\n"
+            "L|Z: Extra Info"
+        );
+    }
 
-    if (show_extra_info_message) {
+    if (show_extra_info_message && has_extra_info) {
         ui_components_messagebox_draw(
             "FLASHCART EXTRA INFO\n"
             "\n"
@@ -165,9 +179,9 @@ static void draw (menu_t *menu, surface_t *d) {
             "  Voltage / Temp: %s\n"
             "\n"
             "Press L|Z to return.\n",
-            format_boolean_type(flashcart_has_button_state()),
+            format_boolean_type(has_button_support),
             format_button_state(),
-            format_boolean_type(flashcart_has_voltage_temperature()),
+            format_boolean_type(has_diagnostics_support),
             format_voltage_temperature()
         );
     }

@@ -655,6 +655,7 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
         uint32_t value;
     } config[] = {
         { CFG_ID_DD_MODE, DD_MODE_FULL },
+        { CFG_ID_TV_TYPE, TV_TYPE_PASSTHROUGH }, // Use passthrough TV type for 64DD disks to ensure proper display, even on PAL consoles.
         { CFG_ID_DD_SD_ENABLE, true }, // Use the SD card, rather than USB.
         { CFG_ID_DD_DRIVE_TYPE, drive_type },
         { CFG_ID_DD_DISK_STATE, DISK_STATE_INSERTED },

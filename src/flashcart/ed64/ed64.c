@@ -1,0 +1,370 @@
+/**
+ * @file ed64.c
+ * @brief EverDrive-64 V-series (V1/V2/V2.5/V3) support for N64FlashcartMenu
+ *
+ * V1/V2/V2.5 carts require pressing RESET after in-game saves so the menu can
+ * flush volatile cart save memory to SD. V3 carts use battery-backed save RAM
+ * and sync to SD whenever the menu boots (same as official OS 3.06+).
+ */
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <fatfs/ff.h>
+#include <libdragon.h>
+
+#include "utils/fs.h"
+#include "utils/utils.h"
+
+#include "../flashcart_utils.h"
+#include "ed64.h"
+#include "ed64_ll.h"
+#include "ed64_state.h"
+
+#define ED64_STATE_FILE         "sd:/menu/ed64_state.ini"
+#define ED64_SDRAM_SIZE         MiB(64)
+
+static ed64_pseudo_writeback_t current_state;
+
+static flashcart_firmware_version_t ed64_get_firmware_version (void) {
+    uint16_t ver = ed64_ll_get_hw_version();
+    flashcart_firmware_version_t version_info = {
+        .major = (ver >> 8) & 0xFF,
+        .minor = (ver >> 4) & 0x0F,
+        .revision = ver & 0x0F,
+    };
+    return version_info;
+}
+
+const char *ed64_get_hardware_variant (void) {
+    switch (ed64_ll_get_hw_model()) {
+        case ED64_HW_V1:   return "V1";
+        case ED64_HW_V2:   return "V2";
+        case ED64_HW_V2_5: return "V2.5";
+        case ED64_HW_V3:   return "V3";
+        default:           return "Unknown";
+    }
+}
+
+static bool ed64_should_writeback_save (void) {
+    if (!current_state.last_save_path || !current_state.last_save_path[0]) {
+        return false;
+    }
+
+    if (ed64_ll_has_battery_backed_save()) {
+        /* V3+: battery RAM holds the last in-game save until menu syncs to SD. */
+        return true;
+    }
+
+    /* V1/V2/V2.5: match the original save-fix PR — use the pending flag only.
+     * Do not gate on sys_reset_type(); EverDrive V2 often does not report
+     * RESET_WARM when returning to the menu, which silently skipped writeback. */
+    return current_state.is_expecting_save_writeback;
+}
+
+static flashcart_err_t ed64_apply_save_type (flashcart_save_type_t save_type) {
+    ed64_save_type_t type;
+
+    switch (save_type) {
+        case FLASHCART_SAVE_TYPE_NONE:
+            type = SAVE_TYPE_NONE;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_4KBIT:
+            type = SAVE_TYPE_EEPROM_4K;
+            break;
+        case FLASHCART_SAVE_TYPE_EEPROM_16KBIT:
+            type = SAVE_TYPE_EEPROM_16K;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM_256KBIT:
+            type = SAVE_TYPE_SRAM;
+            break;
+        case FLASHCART_SAVE_TYPE_SRAM_BANKED:
+        case FLASHCART_SAVE_TYPE_SRAM_1MBIT:
+            type = SAVE_TYPE_SRAM_128K;
+            break;
+        case FLASHCART_SAVE_TYPE_FLASHRAM_PKST2:
+        case FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT:
+            type = SAVE_TYPE_FLASHRAM;
+            break;
+        default:
+            return FLASHCART_ERR_ARGS;
+    }
+
+    ed64_ll_set_save_type(type);
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t ed64_fail_writeback (void) {
+    /* Avoid permanent boot loops when writeback cannot complete. */
+    current_state.is_expecting_save_writeback = false;
+    ed64_state_save(&current_state);
+    return FLASHCART_ERR_LOAD;
+}
+
+static flashcart_err_t ed64_writeback_save (void) {
+    FIL fil;
+    UINT bw;
+    uint8_t cartsave_data[KiB(128)];
+
+    if (!current_state.last_save_path || !file_exists(current_state.last_save_path)) {
+        current_state.is_expecting_save_writeback = false;
+        current_state.is_fram_save_type = false;
+        current_state.save_type = FLASHCART_SAVE_TYPE_NONE;
+        ed64_state_save(&current_state);
+        return FLASHCART_OK;
+    }
+
+    int save_size = (int) file_get_size(current_state.last_save_path);
+    if (save_size <= 0 || save_size > (int) sizeof(cartsave_data)) {
+        return ed64_fail_writeback();
+    }
+
+    ed64_ll_set_sdcard_timing();
+    if (ed64_apply_save_type(current_state.save_type) != FLASHCART_OK) {
+        return ed64_fail_writeback();
+    }
+    wait_ms(250);
+
+    if (current_state.is_fram_save_type) {
+        ed64_ll_get_fram(cartsave_data, save_size);
+        current_state.is_fram_save_type = false;
+    } else if (save_size > (int) KiB(2)) {
+        ed64_ll_get_sram(cartsave_data, save_size);
+    } else {
+        ed64_ll_get_eeprom(cartsave_data, save_size);
+    }
+
+    if (f_open(&fil, strip_fs_prefix(current_state.last_save_path), FA_CREATE_ALWAYS | FA_WRITE) != FR_OK) {
+        return ed64_fail_writeback();
+    }
+
+    if (f_write(&fil, cartsave_data, save_size, &bw) != FR_OK || bw != (UINT) save_size) {
+        f_close(&fil);
+        return ed64_fail_writeback();
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return ed64_fail_writeback();
+    }
+
+    current_state.is_expecting_save_writeback = false;
+    ed64_state_save(&current_state);
+
+    ed64_ll_set_sdcard_timing();
+
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t ed64_init (void) {
+    directory_create("sd:/menu");
+    ed64_ll_detect_hardware();
+
+    ed64_state_init(ED64_STATE_FILE);
+    ed64_state_load(&current_state);
+
+    if (ed64_should_writeback_save()) {
+        flashcart_err_t err = ed64_writeback_save();
+        if (err != FLASHCART_OK) {
+            return err;
+        }
+    }
+
+    return FLASHCART_OK;
+}
+
+void ed64_post_init (void) {
+    ed64_ll_refresh_sd_speed();
+}
+
+static flashcart_err_t ed64_deinit (void) {
+    ed64_state_save(&current_state);
+    ed64_state_free(&current_state);
+    return FLASHCART_OK;
+}
+
+static bool ed64_has_feature (flashcart_features_t feature) {
+    ed64_hw_model_t model = ed64_ll_get_hw_model();
+
+    switch (feature) {
+        case FLASHCART_FEATURE_RTC:
+            return model == ED64_HW_V3;
+        case FLASHCART_FEATURE_USB:
+            return model == ED64_HW_V3;
+        case FLASHCART_FEATURE_AUTO_CIC:
+            return model == ED64_HW_V2_5 || model == ED64_HW_V3;
+        case FLASHCART_FEATURE_AUTO_REGION:
+            return model == ED64_HW_V2_5 || model == ED64_HW_V3;
+        case FLASHCART_FEATURE_SAVE_WRITEBACK:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static flashcart_err_t ed64_load_rom (char *rom_path, flashcart_progress_callback_t *progress) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_fs_prefix(rom_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    fatfs_fix_file_size(&fil);
+
+    size_t rom_size = f_size(&fil);
+    if (rom_size > ED64_SDRAM_SIZE) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    size_t chunk_size = KiB(128);
+    for (size_t offset = 0; offset < rom_size; offset += chunk_size) {
+        size_t block_size = MIN(rom_size - offset, chunk_size);
+        if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
+            f_close(&fil);
+            return FLASHCART_ERR_LOAD;
+        }
+        if (progress) {
+            progress(f_tell(&fil) / (float) f_size(&fil));
+        }
+    }
+
+    if (f_tell(&fil) != rom_size) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    /* EverDrive V-series maps the full 64 MiB SDRAM window; pad unused tail. */
+    for (size_t offset = rom_size; offset < ED64_SDRAM_SIZE; offset += chunk_size) {
+        size_t block_size = MIN(ED64_SDRAM_SIZE - offset, chunk_size);
+        memset((void *) (ROM_ADDRESS + offset), 0, block_size);
+    }
+
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t ed64_load_file (char *file_path, uint32_t rom_offset, uint32_t file_offset) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_fs_prefix(file_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    fatfs_fix_file_size(&fil);
+
+    size_t file_size = f_size(&fil) - file_offset;
+    if (file_size > (ED64_SDRAM_SIZE - rom_offset)) {
+        f_close(&fil);
+        return FLASHCART_ERR_ARGS;
+    }
+
+    if (f_lseek(&fil, file_offset) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_read(&fil, (void *) (ROM_ADDRESS + rom_offset), file_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+    if (br != file_size) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t ed64_load_save (char *save_path) {
+    FIL fil;
+    UINT br;
+
+    if (f_open(&fil, strip_fs_prefix(save_path), FA_READ) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    size_t save_size = f_size(&fil);
+    if (save_size > KiB(128)) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+
+    uint8_t cartsave_data[KiB(128)];
+    if (f_read(&fil, cartsave_data, save_size, &br) != FR_OK) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+    if (br != save_size) {
+        f_close(&fil);
+        return FLASHCART_ERR_LOAD;
+    }
+    if (f_close(&fil) != FR_OK) {
+        return FLASHCART_ERR_LOAD;
+    }
+
+    current_state.is_fram_save_type = false;
+
+    ed64_save_type_t type = ed64_ll_get_save_type();
+    switch (type) {
+        case SAVE_TYPE_EEPROM_4K:
+        case SAVE_TYPE_EEPROM_16K:
+            ed64_ll_set_eeprom(cartsave_data, save_size);
+            break;
+        case SAVE_TYPE_SRAM:
+        case SAVE_TYPE_SRAM_128K:
+            ed64_ll_set_sram(cartsave_data, save_size);
+            break;
+        case SAVE_TYPE_FLASHRAM:
+            ed64_ll_set_fram(cartsave_data, save_size);
+            current_state.is_fram_save_type = true;
+            break;
+        default:
+            break;
+    }
+
+    if (current_state.last_save_path) {
+        free(current_state.last_save_path);
+    }
+    current_state.last_save_path = strdup(save_path);
+    current_state.is_expecting_save_writeback = true;
+    ed64_state_save(&current_state);
+
+    return FLASHCART_OK;
+}
+
+static flashcart_err_t ed64_set_save_type (flashcart_save_type_t save_type) {
+    current_state.save_type = save_type;
+    return ed64_apply_save_type(save_type);
+}
+
+static flashcart_t flashcart_ed64 = {
+    .init = ed64_init,
+    .deinit = ed64_deinit,
+    .has_feature = ed64_has_feature,
+    .get_firmware_version = ed64_get_firmware_version,
+    .load_rom = ed64_load_rom,
+    .load_file = ed64_load_file,
+    .load_save = ed64_load_save,
+    .load_64dd_ipl = NULL,
+    .load_64dd_disk = NULL,
+    .load_64dd_disks = NULL,
+    .set_save_type = ed64_set_save_type,
+    .set_save_writeback = NULL,
+    .set_next_boot_mode = NULL,
+};
+
+flashcart_t *ed64_get_flashcart (void) {
+    return &flashcart_ed64;
+}

@@ -198,6 +198,16 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     return FLASHCART_OK;
 }
 
+void flashcart_post_init (void) {
+    if (cart_type == CART_ED) {
+        ed64_vseries_post_init();
+    }
+}
+
+void flashcart_refresh_sd_speed (void) {
+    flashcart_post_init();
+}
+
 /**
  * @brief Deinitialize the flashcart.
  * 
@@ -228,6 +238,13 @@ bool flashcart_has_feature (flashcart_features_t feature) {
  */
 flashcart_firmware_version_t flashcart_get_firmware_version (void) {
     return flashcart->get_firmware_version();
+}
+
+const char *flashcart_get_hardware_variant (void) {
+    if (cart_type == CART_ED) {
+        return ed64_vseries_get_hardware_variant();
+    }
+    return NULL;
 }
 
 /**

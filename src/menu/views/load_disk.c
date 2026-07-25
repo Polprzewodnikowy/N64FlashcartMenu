@@ -420,6 +420,11 @@ void view_load_disk_init (menu_t *menu) {
         menu->load.disk_slots.primary.disk_path = NULL;
     }
 
+    if (!is_memory_expanded()) {
+        menu_show_error(menu, cart_load_convert_error_message(CART_LOAD_ERR_EXP_PAK_NOT_FOUND));
+        return;
+    }
+
     menu->load_pending.disk_file = false;
 
     if(menu->load.load_history_id != -1 || menu->load.load_favorite_id != -1) {

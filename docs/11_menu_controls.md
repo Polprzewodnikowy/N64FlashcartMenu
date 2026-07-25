@@ -31,15 +31,4 @@ To load an expansion disk (such as F-Zero X), first browse to the N64 ROM and lo
 > Before pressing the `L` or `Z` button, press the `R` button and add the combination (ROM + Expansion disk) to your favorites.
 
 #### Disk swapping
-Disk swapping is available on supported flashcarts (currently SummerCart64).
-
-How to use:
-1. Browse to a 64DD disk image and open its disk information screen.
-2. Press `A` to load and run the primary disk.
-3. Keep compatible swap disks in the same folder as the primary disk.
-4. During gameplay, use the flashcart disk swap control when prompted by the game.
-
-Notes:
-- The menu auto-scans sibling `.ndd` files and only maps disks that are region/ID compatible.
-- The number of mapped swap disks is limited by flashcart capability.
-- Disk swapping is currently expected to work only on NTSC consoles.
+This feature is not currently available in N64FlashcartMenu.

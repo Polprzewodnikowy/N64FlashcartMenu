@@ -149,10 +149,6 @@ static flashcart_err_t ed64_vseries_set_save_type (flashcart_save_type_t save_ty
     return FLASHCART_OK;
 }
 
-static uint8_t ed64_vseries_get_max_64dd_swap_disks (void) {
-    return 0;
-}
-
 static flashcart_t flashcart_ed64_vseries = {
     .init = ed64_vseries_init,
     .deinit = ed64_vseries_deinit,
@@ -164,7 +160,6 @@ static flashcart_t flashcart_ed64_vseries = {
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
-    .get_max_64dd_swap_disks = ed64_vseries_get_max_64dd_swap_disks,
     .get_button_state = NULL,
     .get_voltage_temperature = NULL,
     .set_save_type = ed64_vseries_set_save_type,

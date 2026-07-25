@@ -194,51 +194,19 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
 
     path_free(path);
 
-    char *swap_disk_paths[DISK_SWAP_SLOTS_CAPACITY] = { NULL };
-    flashcart_disk_parameters_t swap_disk_parameters[DISK_SWAP_SLOTS_CAPACITY];
     int swap_disk_count = 0;
-    uint8_t max_swap_slots = flashcart_get_max_64dd_swap_disks();
-
-    if (max_swap_slots > DISK_SWAP_SLOTS_CAPACITY) {
-        max_swap_slots = DISK_SWAP_SLOTS_CAPACITY;
-    }
-
-    for (unsigned int i = 0; i < (sizeof(menu->load.disk_slots.swap_slot) / sizeof(menu->load.disk_slots.swap_slot[0])); i++) {
-        if (menu->load.disk_slots.swap_slot[i].disk_path && (swap_disk_count < max_swap_slots)) {
+    char *swap_disk_paths[3];
+    for (int i = 0; i < 3; i++) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
             swap_disk_paths[swap_disk_count++] = path_get(menu->load.disk_slots.swap_slot[i].disk_path);
-            swap_disk_parameters[swap_disk_count - 1].development_drive = (menu->load.disk_slots.swap_slot[i].disk_info.region == DISK_REGION_DEVELOPMENT);
-            swap_disk_parameters[swap_disk_count - 1].disk_type = menu->load.disk_slots.swap_slot[i].disk_info.disk_type;
-            memcpy(
-                swap_disk_parameters[swap_disk_count - 1].bad_system_area_lbas,
-                menu->load.disk_slots.swap_slot[i].disk_info.bad_system_area_lbas,
-                sizeof(swap_disk_parameters[swap_disk_count - 1].bad_system_area_lbas)
-            );
-            memcpy(
-                swap_disk_parameters[swap_disk_count - 1].defect_tracks,
-                menu->load.disk_slots.swap_slot[i].disk_info.defect_tracks,
-                sizeof(swap_disk_parameters[swap_disk_count - 1].defect_tracks)
-            );
         }
     }
 
     if (swap_disk_count > 0) {
-        menu->flashcart_err = flashcart_load_64dd_disks(
-            path_get(menu->load.disk_slots.primary.disk_path),
-            &disk_parameters,
-            swap_disk_paths,
-            swap_disk_parameters,
-            swap_disk_count
-        );
-
-        // Keep disk boot working even if swap setup fails or is unsupported.
-        if (menu->flashcart_err != FLASHCART_OK) {
-            debugf("64DD swap setup failed (%s), falling back to single-disk mode\n", flashcart_convert_error_message(menu->flashcart_err));
-            menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
-        }
+        menu->flashcart_err = flashcart_load_64dd_disks(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters, swap_disk_paths, swap_disk_count);
     } else {
         menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
     }
-
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }

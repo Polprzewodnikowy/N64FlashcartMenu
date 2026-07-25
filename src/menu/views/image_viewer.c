@@ -131,8 +131,8 @@ void view_image_viewer_init (menu_t *menu) {
     image_set_as_background = false;
     image = NULL;
     int max_dim = image_budget_max_dimension();
-    int max_w = (max_dim > 640) ? 640 : max_dim;
-    int max_h = (max_dim > 480) ? 480 : max_dim;
+    int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;
+    int max_h = (max_dim > display_get_height()) ? display_get_height() : max_dim;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 

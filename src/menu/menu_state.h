@@ -20,8 +20,6 @@
 #include "settings.h"
 #include "bookkeeping.h"
 
-#define DISK_SWAP_SLOTS_CAPACITY 3
-
 
 /** @brief Menu mode enumeration */
 typedef enum {
@@ -86,7 +84,7 @@ typedef struct {
 /** @brief Disk slot structure for multi-disk 64DD games. */
 typedef struct {
     disk_slot_entry_t primary; // Primary disk slot
-    disk_slot_entry_t swap_slot[DISK_SWAP_SLOTS_CAPACITY]; // Swap slot storage capacity
+    disk_slot_entry_t swap_slot[3]; // 3 swap slots
 } disk_slot_t;
 
 /** @brief Menu Structure */

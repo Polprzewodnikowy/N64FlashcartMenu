@@ -80,24 +80,6 @@ static const uint8_t vzone_to_pzone[DISK_TYPES][DISK_ZONES] = {
 
 static const uint8_t rom_zones[DISK_TYPES] = { 5, 7, 9, 11, 13, 15, 16 };
 
-static flashcart_err_t sc64_set_config_checked (sc64_cfg_id_t id, uint32_t expected_value) {
-    uint32_t actual_value;
-
-    if (sc64_ll_set_config(id, expected_value) != SC64_OK) {
-        return FLASHCART_ERR_INT;
-    }
-
-    if (sc64_ll_get_config(id, &actual_value) != SC64_OK) {
-        return FLASHCART_ERR_INT;
-    }
-
-    if (actual_value != expected_value) {
-        return FLASHCART_ERR_INT;
-    }
-
-    return FLASHCART_OK;
-}
-
 /**
  * @brief Load data to flash memory.
  * 
@@ -614,7 +596,6 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
         uint32_t value;
     } config[] = {
         { CFG_ID_DD_MODE, DD_MODE_FULL },
-        { CFG_ID_TV_TYPE, TV_TYPE_NTSC },
         { CFG_ID_DD_SD_ENABLE, true }, // Use the SD card, rather than USB.
         { CFG_ID_DD_DRIVE_TYPE, drive_type },
         { CFG_ID_DD_DISK_STATE, DISK_STATE_INSERTED },
@@ -622,16 +603,15 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        flashcart_err_t err = sc64_set_config_checked(config[i].id, config[i].value);
-        if (err != FLASHCART_OK) {
-            return err;
+        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
+            return FLASHCART_ERR_INT;
         }
     }
 
     return FLASHCART_OK;
 }
 
-static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, flashcart_disk_parameters_t *swap_disk_parameters, int swap_disk_count) {
+static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
     sc64_disk_mapping_t mapping;
     uint32_t mapping_offset = DISK_MAPPING_ROM_OFFSET;
     sc64_drive_type_t drive_type = (disk_parameters->development_drive ? DRIVE_TYPE_DEVELOPMENT : DRIVE_TYPE_RETAIL);
@@ -648,11 +628,12 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
 
     // Load swap disks from passed parameters
     for (int i = 0; i < swap_disk_count; i++) {
-        if (mapping.count >= SC64_DISK_MAPPING_MAX_DISKS) {
+        if (mapping.count >= 4) {
             break;
         }
         if (swap_disk_paths[i] != NULL) {
-            disk_load_thb_table(&swap_disk_parameters[i], &mapping.disks[mapping.count].thb_table, &mapping_offset);
+            // Use same disk parameters for swap disks (same physical disk type)
+            disk_load_thb_table(disk_parameters, &mapping.disks[mapping.count].thb_table, &mapping_offset);
 
             if (disk_load_sector_table(swap_disk_paths[i], &mapping.disks[mapping.count].sector_table, &mapping_offset)) {
                 return FLASHCART_ERR_LOAD;
@@ -674,7 +655,6 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
         uint32_t value;
     } config[] = {
         { CFG_ID_DD_MODE, DD_MODE_FULL },
-        { CFG_ID_TV_TYPE, TV_TYPE_NTSC },
         { CFG_ID_DD_SD_ENABLE, true }, // Use the SD card, rather than USB.
         { CFG_ID_DD_DRIVE_TYPE, drive_type },
         { CFG_ID_DD_DISK_STATE, DISK_STATE_INSERTED },
@@ -682,9 +662,8 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        flashcart_err_t err = sc64_set_config_checked(config[i].id, config[i].value);
-        if (err != FLASHCART_OK) {
-            return err;
+        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
+            return FLASHCART_ERR_INT;
         }
     }
 
@@ -789,10 +768,6 @@ static flashcart_err_t sc64_get_voltage_temperature (uint16_t *voltage_mv, int16
     return FLASHCART_OK;
 }
 
-static uint8_t sc64_get_max_64dd_swap_disks (void) {
-    return (uint8_t) (SC64_DISK_MAPPING_MAX_DISKS - 1);
-}
-
 static flashcart_t flashcart_sc64 = {
     .init = sc64_init,
     .deinit = sc64_deinit,
@@ -804,7 +779,6 @@ static flashcart_t flashcart_sc64 = {
     .load_64dd_ipl = sc64_load_64dd_ipl,
     .load_64dd_disk = sc64_load_64dd_disk,
     .load_64dd_disks = sc64_load_64dd_disks,
-    .get_max_64dd_swap_disks = sc64_get_max_64dd_swap_disks,
     .get_button_state = sc64_get_button_state,
     .get_voltage_temperature = sc64_get_voltage_temperature,
     .set_save_type = sc64_set_save_type,

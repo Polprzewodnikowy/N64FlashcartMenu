@@ -131,7 +131,7 @@ typedef struct {
     struct {
         uint32_t thb_table; /**< THB table */
         uint32_t sector_table; /**< Sector table */
-    } disks[SC64_DISK_MAPPING_MAX_DISKS]; /**< Array of disks */
+    } disks[4]; /**< Array of disks */
 } sc64_disk_mapping_t;
 
 /**

@@ -1,7 +1,6 @@
 #include <errno.h>
 #include <miniz.h>
 #include <miniz_zip.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -9,6 +8,7 @@
 
 #include "../cart_load.h"
 #include "../fonts.h"
+#include "../zip_entry_count.h"
 #include "utils/fs.h"
 #include "views.h"
 #include "../sound.h"
@@ -28,8 +28,6 @@ static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
 #define ARCHIVE_MAX_ENTRIES_JUMPER_PAK 512
 // Fixed cap keeps memory use predictable on 4MB systems when scanning huge folders.
 #define DIRECTORY_MAX_ENTRIES_JUMPER_PAK 1024
-#define ZIP_EOCD_MIN_SIZE 22u
-#define ZIP_EOCD_MAX_SEARCH (ZIP_EOCD_MIN_SIZE + 0xFFFFu)
 
 static bool archive_entry_limit_exceeded = false;
 static bool archive_entry_precheck_failed = false;
@@ -214,97 +212,6 @@ static bool browser_list_reserve(menu_t *menu, int32_t required) {
     menu->browser.list = grown;
     menu->browser.list_capacity = new_capacity;
     return false;
-}
-
-static uint16_t read_le16(const uint8_t *p) {
-    return (uint16_t)p[0] | ((uint16_t)p[1] << 8);
-}
-
-static uint32_t read_le32(const uint8_t *p) {
-    return (uint32_t)p[0] | ((uint32_t)p[1] << 8) | ((uint32_t)p[2] << 16) | ((uint32_t)p[3] << 24);
-}
-
-static uint64_t read_le64(const uint8_t *p) {
-    return (uint64_t)read_le32(p) | ((uint64_t)read_le32(p + 4) << 32);
-}
-
-static bool zip_try_read_entry_count(const char *zip_path, uint64_t *entry_count) {
-    FILE *f = fopen(zip_path, "rb");
-    if (!f) {
-        return false;
-    }
-
-    if (fseek(f, 0, SEEK_END) != 0) {
-        fclose(f);
-        return false;
-    }
-
-    long file_size_signed = ftell(f);
-    if (file_size_signed < (long)ZIP_EOCD_MIN_SIZE) {
-        fclose(f);
-        return false;
-    }
-
-    size_t file_size = (size_t)file_size_signed;
-    size_t tail_size = file_size < ZIP_EOCD_MAX_SEARCH ? file_size : ZIP_EOCD_MAX_SEARCH;
-    size_t tail_offset = file_size - tail_size;
-
-    if (fseek(f, (long)tail_offset, SEEK_SET) != 0) {
-        fclose(f);
-        return false;
-    }
-
-    uint8_t *tail = malloc(tail_size);
-    if (!tail) {
-        fclose(f);
-        return false;
-    }
-
-    bool ok = false;
-    if (fread(tail, 1, tail_size, f) != tail_size) {
-        free(tail);
-        fclose(f);
-        return false;
-    }
-
-    long eocd_pos = -1;
-    for (long i = (long)tail_size - (long)ZIP_EOCD_MIN_SIZE; i >= 0; i--) {
-        if (read_le32(&tail[i]) == 0x06054B50u) {
-            eocd_pos = i;
-            break;
-        }
-    }
-
-    if (eocd_pos < 0) {
-        free(tail);
-        fclose(f);
-        return false;
-    }
-
-    uint16_t entries16 = read_le16(&tail[eocd_pos + 10]);
-    uint16_t entries_total16 = read_le16(&tail[eocd_pos + 12]);
-    if (entries16 != 0xFFFFu && entries_total16 != 0xFFFFu) {
-        *entry_count = entries_total16;
-        ok = true;
-    } else {
-        // Zip64: try locator just before EOCD and then read Zip64 EOCD record.
-        if (eocd_pos >= 20 && read_le32(&tail[eocd_pos - 20]) == 0x07064B50u) {
-            uint64_t zip64_eocd_offset = read_le64(&tail[eocd_pos - 12]);
-            if (fseek(f, (long)zip64_eocd_offset, SEEK_SET) == 0) {
-                uint8_t zip64_eocd[56];
-                if (fread(zip64_eocd, 1, sizeof(zip64_eocd), f) == sizeof(zip64_eocd)) {
-                    if (read_le32(&zip64_eocd[0]) == 0x06064B50u) {
-                        *entry_count = read_le64(&zip64_eocd[32]);
-                        ok = true;
-                    }
-                }
-            }
-        }
-    }
-
-    free(tail);
-    fclose(f);
-    return ok;
 }
 
 static bool load_archive (menu_t *menu) {

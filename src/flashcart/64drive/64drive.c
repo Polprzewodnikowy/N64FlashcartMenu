@@ -359,6 +359,10 @@ static flashcart_err_t d64_set_bootmode (flashcart_reboot_mode_t boot_mode) {
     return FLASHCART_OK;
 }
 
+static uint8_t d64_get_max_64dd_swap_disks (void) {
+    return 0;
+}
+
 
 /** @brief Flashcart structure for 64drive. */
 static flashcart_t flashcart_d64 = {
@@ -372,6 +376,7 @@ static flashcart_t flashcart_d64 = {
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
+    .get_max_64dd_swap_disks = d64_get_max_64dd_swap_disks,
     .get_button_state = NULL,
     .get_voltage_temperature = NULL,
     .set_save_type = d64_set_save_type,

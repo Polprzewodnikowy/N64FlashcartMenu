@@ -84,6 +84,12 @@ static bool path_is_hidden (path_t *path, int *fat_hidden_stat_budget) {
     char *basename = file_basename(stripped_path);
     size_t basename_len = strlen(basename);
 
+    // Treat dotfiles as hidden (for example, .datel, .gitignore, .env).
+    // Keep "."/".." visible if a backend ever reports them.
+    if ((basename_len > 1) && (basename[0] == '.')) {
+        return true;
+    }
+
     // Check for hidden files based on filename
     for (size_t i = 0; i < HIDDEN_BASENAMES_COUNT; i++) {
         if (basename_len == hidden_basenames[i].len &&
@@ -273,31 +279,39 @@ static bool load_directory (menu_t *menu) {
     while (result == 0) {
         bool hide = false;
 
-        if (!menu->settings.show_protected_entries) {
-            path_push(path, info.d_name);
-            hide = path_is_hidden(path, &fat_hidden_stat_budget);
-            path_pop(path);
-        }
-
         if (!menu->settings.show_saves_folder) {
+            path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
             if (strcmp(info.d_name, SAVE_DIRECTORY_NAME) == 0) {
                 hide = true;
             }
+            path_pop(path);
         }
 
         if (!menu->settings.show_save_files) {
+            path_push(path, info.d_name);
             // Skip save files if they are hidden (this is case sensitive)
             if (file_has_extensions(info.d_name, save_extensions)) {
                 hide = true;
             }
+            path_pop(path);
         }
 
         if (!menu->settings.show_cheat_files) {
+            path_push(path, info.d_name);
             // Skip cheat files if they are hidden (this is case sensitive)
             if (file_has_extensions(info.d_name, cheat_extensions)) {
                 hide = true;
             }
+            path_pop(path);
+        }
+
+        // Run the expensive hidden-attribute checks only for entries that are
+        // still candidates after cheap name/extension-based filters.
+        if (!hide && !menu->settings.show_protected_entries) {
+            path_push(path, info.d_name);
+            hide = path_is_hidden(path, &fat_hidden_stat_budget);
+            path_pop(path);
         }
 
         if (!hide) {

@@ -450,7 +450,7 @@ static void draw (menu_t *menu, surface_t *display) {
 
 void view_datel_code_editor_init (menu_t *menu) {
     if (!is_memory_expanded()) {
-        menu_show_error(menu, "Datel Cheats require Expansion Pak");
+        menu_show_error(menu, "Datel Cheats require an Expansion Pak");
         menu->next_mode = MENU_MODE_LOAD_ROM;
         return;
     }

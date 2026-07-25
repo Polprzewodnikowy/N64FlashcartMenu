@@ -302,7 +302,7 @@ static void set_cheat_option(menu_t *menu, void *arg) {
     if (!is_memory_expanded()) {
         // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
-        menu_show_error(menu, "Datel Cheats require Expansion Pak");
+        menu_show_error(menu, "Datel Cheats require an Expansion Pak");
         menu->browser.reload = true;
     }
     else {
@@ -317,7 +317,7 @@ static void open_datel_code_editor (menu_t *menu, void *arg) {
 
     if (!is_memory_expanded()) {
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
-        menu_show_error(menu, "Datel Cheats require Expansion Pak");
+        menu_show_error(menu, "Datel Cheats require an Expansion Pak");
         menu->browser.reload = true;
         return;
     }

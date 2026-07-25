@@ -592,7 +592,7 @@ static void process (menu_t *menu) {
                     menu_show_error(
                         menu,
                         archive_entry_limit_exceeded
-                            ? "Archive is too large for Jumper Pak\nTry a smaller archive or use Expansion Pak"
+                            ? "Archive is too large for Jumper Pak\nUse a smaller archive or an Expansion Pak"
                             : "Couldn't open file archive"
                     );
                 }
@@ -606,7 +606,7 @@ static void process (menu_t *menu) {
                     menu_show_error(
                         menu,
                         directory_entry_limit_exceeded
-                            ? "Directory is too large for Jumper Pak\nTry enabling Expansion Pak"
+                            ? "Directory is too large for Jumper Pak\nUse an Expansion Pak"
                             : "Couldn't open next directory"
                     );
                 }
@@ -649,7 +649,7 @@ static void process (menu_t *menu) {
             menu_show_error(
                 menu,
                 directory_entry_limit_exceeded
-                    ? "Directory is too large for Jumper Pak\nTry enabling Expansion Pak"
+                    ? "Directory is too large for Jumper Pak\nUse an Expansion Pak"
                     : "Couldn't open last directory"
             );
         }
@@ -748,7 +748,7 @@ void view_browser_init (menu_t *menu) {
             menu_show_error(
                 menu,
                 directory_entry_limit_exceeded
-                    ? "Initial directory is too large for Jumper Pak\nTry enabling Expansion Pak"
+                    ? "Initial directory is too large for Jumper Pak\nUse an Expansion Pak"
                     : "Error while opening initial directory"
             );
         } else {
@@ -762,7 +762,7 @@ void view_browser_init (menu_t *menu) {
             menu_show_error(
                 menu,
                 directory_entry_limit_exceeded
-                    ? "Target directory is too large for Jumper Pak\nTry enabling Expansion Pak"
+                    ? "Target directory is too large for Jumper Pak\nUse an Expansion Pak"
                     : "Error while navigating to file"
             );
         }
@@ -776,7 +776,7 @@ void view_browser_init (menu_t *menu) {
             menu_show_error(
                 menu,
                 directory_entry_limit_exceeded
-                    ? "Current directory is too large for Jumper Pak\nTry enabling Expansion Pak"
+                    ? "Current directory is too large for Jumper Pak\nUse an Expansion Pak"
                     : "Error while reloading current directory"
             );
             menu->browser.valid = false;

@@ -26,6 +26,8 @@ static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
 
 #define ARCHIVE_MAX_ENTRIES_JUMPER_PAK 512
 
+static bool archive_entry_limit_exceeded = false;
+
 static const char *hidden_root_paths[] = {
     "/menu.bin",
     "/menu",
@@ -209,6 +211,7 @@ static bool browser_list_reserve(menu_t *menu, int32_t required) {
 
 static bool load_archive (menu_t *menu) {
     browser_list_free(menu);
+    archive_entry_limit_exceeded = false;
 
     mz_zip_zero_struct(&menu->browser.zip);
     if (!mz_zip_reader_init_file(&menu->browser.zip, path_get(menu->browser.directory), 0)) {
@@ -219,6 +222,7 @@ static bool load_archive (menu_t *menu) {
     int32_t zip_entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
 
     if (!is_memory_expanded() && zip_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
+        archive_entry_limit_exceeded = true;
         browser_list_free(menu);
         return true;
     }
@@ -577,9 +581,9 @@ static void process (menu_t *menu) {
                     menu->browser.valid = false;
                     menu_show_error(
                         menu,
-                        is_memory_expanded()
-                            ? "Couldn't open file archive"
-                            : "Couldn't open file archive\nTry a smaller archive or use Expansion Pak"
+                        archive_entry_limit_exceeded
+                            ? "Archive is too large for Jumper Pak\nTry a smaller archive or use Expansion Pak"
+                            : "Couldn't open file archive"
                     );
                 }
                 break;

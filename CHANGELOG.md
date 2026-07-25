@@ -7,7 +7,7 @@
 ## Release Notes 2026-Vnext
 
 - **New Features**
-	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)); includes adaptive scan limits to avoid large-directory slowdowns.
 	- Adds Background music.
 	- Adds ability to use infinite scroll within the file browser.
 	- ROM override submenu now remembers current custom settings.

@@ -57,17 +57,21 @@ static const struct substr hidden_prefixes[] = {
 };
 #define HIDDEN_PREFIXES_COUNT (sizeof(hidden_prefixes) / sizeof(hidden_prefixes[0]))
 
-// static bool file_is_fat_hidden (const char *full_path) {
-//     struct stat st;
-    
-//     if (stat(full_path, &st) == 0) {
-//         return FAT_ATTR_IS_HID(&st);
-//     }
-    
-//     return false;
-// }
+// `stat()` per entry is expensive on large directories. Keep a bounded budget so
+// FAT hidden-attribute filtering is available without regressing browse speed.
+#define FAT_HIDDEN_STAT_BUDGET_PER_SCAN 256
 
-static bool path_is_hidden (path_t *path) {
+static bool file_is_fat_hidden (const char *full_path) {
+    struct stat st;
+
+    if (stat(full_path, &st) == 0) {
+        return FAT_ATTR_IS_HID(&st);
+    }
+
+    return false;
+}
+
+static bool path_is_hidden (path_t *path, int *fat_hidden_stat_budget) {
     char *stripped_path = strip_fs_prefix(path_get(path));
 
     // Check for hidden files based on full path
@@ -96,9 +100,12 @@ static bool path_is_hidden (path_t *path) {
         }
     }
 
-    // if (file_is_fat_hidden(path_get(path))) {
-    //     return true;
-    // }
+    if (fat_hidden_stat_budget && *fat_hidden_stat_budget > 0) {
+        (*fat_hidden_stat_budget)--;
+        if (file_is_fat_hidden(path_get(path))) {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -259,6 +266,7 @@ static bool load_directory (menu_t *menu) {
     browser_list_free(menu);
 
     path_t *path = path_clone(menu->browser.directory);
+    int fat_hidden_stat_budget = FAT_HIDDEN_STAT_BUDGET_PER_SCAN;
 
     result = dir_findfirst(path_get(path), &info);
 
@@ -267,7 +275,7 @@ static bool load_directory (menu_t *menu) {
 
         if (!menu->settings.show_protected_entries) {
             path_push(path, info.d_name);
-            hide = path_is_hidden(path);
+            hide = path_is_hidden(path, &fat_hidden_stat_budget);
             path_pop(path);
         }
 

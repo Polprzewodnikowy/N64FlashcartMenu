@@ -197,13 +197,7 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
     char *swap_disk_paths[DISK_SWAP_SLOTS_CAPACITY] = { NULL };
     flashcart_disk_parameters_t swap_disk_parameters[DISK_SWAP_SLOTS_CAPACITY];
     int swap_disk_count = 0;
-    bool allow_runtime_swap = (get_tv_type() != TV_PAL);
-    uint8_t max_swap_slots = allow_runtime_swap ? flashcart_get_max_64dd_swap_disks() : 0;
-
-    if (!allow_runtime_swap) {
-        // On PAL consoles, runtime DD swap toggling can lead to unstable behavior.
-        debugf("64DD swap mapping disabled on PAL console\n");
-    }
+    uint8_t max_swap_slots = flashcart_get_max_64dd_swap_disks();
 
     if (max_swap_slots > DISK_SWAP_SLOTS_CAPACITY) {
         max_swap_slots = DISK_SWAP_SLOTS_CAPACITY;
@@ -236,8 +230,9 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
             swap_disk_count
         );
 
-        // Maintain compatibility with flashcarts that only implement single-disk loading.
-        if (menu->flashcart_err == FLASHCART_ERR_FUNCTION_NOT_SUPPORTED) {
+        // Keep disk boot working even if swap setup fails or is unsupported.
+        if (menu->flashcart_err != FLASHCART_OK) {
+            debugf("64DD swap setup failed (%s), falling back to single-disk mode\n", flashcart_convert_error_message(menu->flashcart_err));
             menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
         }
     } else {

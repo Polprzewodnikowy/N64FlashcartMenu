@@ -80,6 +80,24 @@ static const uint8_t vzone_to_pzone[DISK_TYPES][DISK_ZONES] = {
 
 static const uint8_t rom_zones[DISK_TYPES] = { 5, 7, 9, 11, 13, 15, 16 };
 
+static flashcart_err_t sc64_set_config_checked (sc64_cfg_id_t id, uint32_t expected_value) {
+    uint32_t actual_value;
+
+    if (sc64_ll_set_config(id, expected_value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    if (sc64_ll_get_config(id, &actual_value) != SC64_OK) {
+        return FLASHCART_ERR_INT;
+    }
+
+    if (actual_value != expected_value) {
+        return FLASHCART_ERR_INT;
+    }
+
+    return FLASHCART_OK;
+}
+
 /**
  * @brief Load data to flash memory.
  * 
@@ -604,8 +622,9 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
-            return FLASHCART_ERR_INT;
+        flashcart_err_t err = sc64_set_config_checked(config[i].id, config[i].value);
+        if (err != FLASHCART_OK) {
+            return err;
         }
     }
 
@@ -663,8 +682,9 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
-        if (sc64_ll_set_config(config[i].id, config[i].value) != SC64_OK) {
-            return FLASHCART_ERR_INT;
+        flashcart_err_t err = sc64_set_config_checked(config[i].id, config[i].value);
+        if (err != FLASHCART_OK) {
+            return err;
         }
     }
 

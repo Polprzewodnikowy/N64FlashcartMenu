@@ -50,6 +50,7 @@ SRCS = \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
+	menu/id3_parser.c \
 	menu/menu.c \
 	menu/mp3_player.c \
 	menu/path.c \

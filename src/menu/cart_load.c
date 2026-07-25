@@ -197,7 +197,13 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
     char *swap_disk_paths[DISK_SWAP_SLOTS_CAPACITY] = { NULL };
     flashcart_disk_parameters_t swap_disk_parameters[DISK_SWAP_SLOTS_CAPACITY];
     int swap_disk_count = 0;
-    uint8_t max_swap_slots = flashcart_get_max_64dd_swap_disks();
+    bool allow_runtime_swap = (get_tv_type() != TV_PAL);
+    uint8_t max_swap_slots = allow_runtime_swap ? flashcart_get_max_64dd_swap_disks() : 0;
+
+    if (!allow_runtime_swap) {
+        // On PAL consoles, runtime DD swap toggling can lead to unstable behavior.
+        debugf("64DD swap mapping disabled on PAL console\n");
+    }
 
     if (max_swap_slots > DISK_SWAP_SLOTS_CAPACITY) {
         max_swap_slots = DISK_SWAP_SLOTS_CAPACITY;

@@ -276,13 +276,14 @@ static void draw (menu_t *menu, surface_t *d) {
             "\tUnique ID:\t%.4s\n"
             "\tVersion:\t\t%hhu\n"
             "\tDisk type:\t%d\n"
-            "\tSwap disks:\t%d found\n",
+            "\tSwap disks:\t%d found%s\n",
 
             format_disk_region(menu->load.disk_slots.primary.disk_info.region),
             menu->load.disk_slots.primary.disk_info.id,
             menu->load.disk_slots.primary.disk_info.version,
             menu->load.disk_slots.primary.disk_info.disk_type,
-            swap_disk_count
+            swap_disk_count,
+            (get_tv_type() == TV_PAL) ? " (disabled on PAL)" : ""
         );
 
         // Display swap disk info if available

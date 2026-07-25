@@ -383,7 +383,7 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                     );
                 }
                 if (boxart == NULL) {
-                    menu_show_error(menu, "Not enough memory to swap boxart image");
+                    menu_show_error(menu, "Could not swap boxart image");
                 }
                 break;
             }
@@ -453,11 +453,6 @@ static component_context_menu_t set_patcher_options_menu = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 #endif
-
-static void set_menu_next_mode (menu_t *menu, void *arg) {
-    menu_mode_t next_mode = (menu_mode_t) (arg);
-    menu->next_mode = next_mode;
-}
 
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
@@ -829,6 +824,10 @@ void view_load_rom_init (menu_t *menu) {
 
     if (!is_memory_expanded()) {
         menu->load.rom_info.settings.cheats_enabled = false;
+    }
+
+    if (menu->load.rom_info.meta.size_limit_exceeded) {
+        menu_show_error(menu, "ROM metadata was skipped\nmetadata.ini exceeds size limit");
     }
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED

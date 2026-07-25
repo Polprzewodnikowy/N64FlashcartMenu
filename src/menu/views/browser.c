@@ -25,6 +25,7 @@ static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
 
 #define ARCHIVE_MAX_ENTRIES_JUMPER_PAK 512
+// Fixed cap keeps memory use predictable on 4MB systems when scanning huge folders.
 #define DIRECTORY_MAX_ENTRIES_JUMPER_PAK 1024
 
 static bool archive_entry_limit_exceeded = false;

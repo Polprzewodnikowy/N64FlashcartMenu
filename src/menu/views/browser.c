@@ -312,17 +312,15 @@ static bool load_archive (menu_t *menu) {
     archive_entry_limit_exceeded = false;
     archive_entry_precheck_failed = false;
 
-    if (!is_memory_expanded()) {
-        uint64_t prechecked_entries = 0;
-        if (!zip_try_read_entry_count(path_get(menu->browser.directory), &prechecked_entries)) {
-            archive_entry_precheck_failed = true;
-            return true;
-        }
+    uint64_t prechecked_entries = 0;
+    if (!zip_try_read_entry_count(path_get(menu->browser.directory), &prechecked_entries)) {
+        archive_entry_precheck_failed = true;
+        return true;
+    }
 
-        if (prechecked_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
-            archive_entry_limit_exceeded = true;
-            return true;
-        }
+    if (!is_memory_expanded() && prechecked_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
+        archive_entry_limit_exceeded = true;
+        return true;
     }
 
     mz_zip_zero_struct(&menu->browser.zip);
@@ -704,7 +702,7 @@ static void process (menu_t *menu) {
                         archive_entry_limit_exceeded
                             ? "Archive is too large for Jumper Pak\nUse a smaller archive or an Expansion Pak"
                             : archive_entry_precheck_failed
-                                ? "Could not inspect archive safely\nUse an Expansion Pak or another archive"
+                                ? "Could not inspect archive safely\nTry another archive"
                             : "Couldn't open file archive"
                     );
                 }

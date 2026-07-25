@@ -24,6 +24,8 @@ static const char *save_extensions[] = { "sav", "eep", "sra", "srm", "fla", NULL
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
 
+#define ARCHIVE_MAX_ENTRIES_JUMPER_PAK 512
+
 static const char *hidden_root_paths[] = {
     "/menu.bin",
     "/menu",
@@ -215,13 +217,20 @@ static bool load_archive (menu_t *menu) {
 
     menu->browser.archive = true;
     int32_t zip_entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
-    menu->browser.entries = 0;
-    if (browser_list_reserve(menu, zip_entries)) {
+
+    if (!is_memory_expanded() && zip_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
         browser_list_free(menu);
         return true;
     }
 
+    menu->browser.entries = 0;
+
     for (int32_t i = 0; i < zip_entries; i++) {
+        if (browser_list_reserve(menu, menu->browser.entries + 1)) {
+            browser_list_free(menu);
+            return true;
+        }
+
         entry_t *entry = &menu->browser.list[menu->browser.entries];
 
         mz_zip_archive_file_stat info;
@@ -566,7 +575,12 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_ARCHIVE:
                 if (push_directory(menu, menu->browser.entry->name, true)) {
                     menu->browser.valid = false;
-                    menu_show_error(menu, "Couldn't open file archive");
+                    menu_show_error(
+                        menu,
+                        is_memory_expanded()
+                            ? "Couldn't open file archive"
+                            : "Couldn't open file archive\nTry a smaller archive or use Expansion Pak"
+                    );
                 }
                 break;
             case ENTRY_TYPE_ARCHIVED:

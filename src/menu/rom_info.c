@@ -27,6 +27,7 @@
 #define PI_CONFIG_64DD_IPL      (0x80270740)
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
+#define ROM_METADATA_INI_MAX_SIZE (64u * 1024u)
 
 
 /** @brief ROM File Information Structure. */
@@ -770,6 +771,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
     rom_info->meta.short_description = strdup("");
+    rom_info->meta.size_limit_exceeded = false;
 
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
@@ -836,6 +838,15 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     // Extract to memory
     if (file_stat.m_uncomp_size > (uint64_t)(SIZE_MAX - 1)) {
         debugf("[META] load_metadata_from_zip_file: metadata.ini too large (%llu)\n", (unsigned long long)file_stat.m_uncomp_size);
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+
+    if (file_stat.m_uncomp_size > ROM_METADATA_INI_MAX_SIZE) {
+        debugf("[META] load_metadata_from_zip_file: metadata.ini exceeds cap (%llu > %u)\n",
+            (unsigned long long)file_stat.m_uncomp_size,
+            ROM_METADATA_INI_MAX_SIZE);
+        rom_info->meta.size_limit_exceeded = true;
         mz_zip_reader_end(&zip);
         return false;
     }
@@ -972,6 +983,16 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     if (file_stat.m_uncomp_size > (uint64_t)(SIZE_MAX - 1)) {
         debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini too large (%llu)\n", (unsigned long long)file_stat.m_uncomp_size);
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+
+    if (file_stat.m_uncomp_size > ROM_METADATA_INI_MAX_SIZE) {
+        debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini exceeds cap (%llu > %u)\n",
+            (unsigned long long)file_stat.m_uncomp_size,
+            ROM_METADATA_INI_MAX_SIZE);
+        rom_info->meta.size_limit_exceeded = true;
         mz_zip_reader_end(&zip);
         fclose(rom_file);
         return false;

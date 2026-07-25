@@ -8,6 +8,7 @@
 
 #include "../cart_load.h"
 #include "../fonts.h"
+#include "../zip_entry_count.h"
 #include "utils/fs.h"
 #include "views.h"
 #include "../sound.h"
@@ -23,6 +24,14 @@ static const char *patch_extensions[] = { "bps", "ips", "aps", "ups", "xdelta", 
 static const char *save_extensions[] = { "sav", "eep", "sra", "srm", "fla", NULL };
 static const char *text_extensions[] = { "txt", "ini", "yml", "yaml", NULL };
 static const char *rom_meta_extensions[] = { "meta", "metadata", NULL };
+
+#define ARCHIVE_MAX_ENTRIES_JUMPER_PAK 512
+// Fixed cap keeps memory use predictable on 4MB systems when scanning huge folders.
+#define DIRECTORY_MAX_ENTRIES_JUMPER_PAK 1024
+
+static bool archive_entry_limit_exceeded = false;
+static bool archive_entry_precheck_failed = false;
+static bool directory_entry_limit_exceeded = false;
 
 static const char *hidden_root_paths[] = {
     "/menu.bin",
@@ -207,6 +216,19 @@ static bool browser_list_reserve(menu_t *menu, int32_t required) {
 
 static bool load_archive (menu_t *menu) {
     browser_list_free(menu);
+    archive_entry_limit_exceeded = false;
+    archive_entry_precheck_failed = false;
+
+    uint64_t prechecked_entries = 0;
+    if (!zip_try_read_entry_count(path_get(menu->browser.directory), &prechecked_entries)) {
+        archive_entry_precheck_failed = true;
+        return true;
+    }
+
+    if (!is_memory_expanded() && prechecked_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
+        archive_entry_limit_exceeded = true;
+        return true;
+    }
 
     mz_zip_zero_struct(&menu->browser.zip);
     if (!mz_zip_reader_init_file(&menu->browser.zip, path_get(menu->browser.directory), 0)) {
@@ -215,13 +237,21 @@ static bool load_archive (menu_t *menu) {
 
     menu->browser.archive = true;
     int32_t zip_entries = (int32_t)mz_zip_reader_get_num_files(&menu->browser.zip);
-    menu->browser.entries = 0;
-    if (browser_list_reserve(menu, zip_entries)) {
+
+    if (!is_memory_expanded() && zip_entries > ARCHIVE_MAX_ENTRIES_JUMPER_PAK) {
+        archive_entry_limit_exceeded = true;
         browser_list_free(menu);
         return true;
     }
 
+    menu->browser.entries = 0;
+
     for (int32_t i = 0; i < zip_entries; i++) {
+        if (browser_list_reserve(menu, menu->browser.entries + 1)) {
+            browser_list_free(menu);
+            return true;
+        }
+
         entry_t *entry = &menu->browser.list[menu->browser.entries];
 
         mz_zip_archive_file_stat info;
@@ -257,6 +287,7 @@ static bool load_directory (menu_t *menu) {
     dir_t info;
 
     browser_list_free(menu);
+    directory_entry_limit_exceeded = false;
 
     path_t *path = path_clone(menu->browser.directory);
 
@@ -299,6 +330,13 @@ static bool load_directory (menu_t *menu) {
         }
 
         if (!hide) {
+            if (!is_memory_expanded() && menu->browser.entries >= DIRECTORY_MAX_ENTRIES_JUMPER_PAK) {
+                path_free(path);
+                browser_list_free(menu);
+                directory_entry_limit_exceeded = true;
+                return true;
+            }
+
             if (browser_list_reserve(menu, menu->browser.entries + 1)) {
                 path_free(path);
                 browser_list_free(menu);
@@ -566,7 +604,14 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_ARCHIVE:
                 if (push_directory(menu, menu->browser.entry->name, true)) {
                     menu->browser.valid = false;
-                    menu_show_error(menu, "Couldn't open file archive");
+                    menu_show_error(
+                        menu,
+                        archive_entry_limit_exceeded
+                            ? "Archive is too large for Jumper Pak\nUse a smaller archive or an Expansion Pak"
+                            : archive_entry_precheck_failed
+                                ? "Could not inspect archive safely\nTry another archive"
+                            : "Couldn't open file archive"
+                    );
                 }
                 break;
             case ENTRY_TYPE_ARCHIVED:
@@ -575,7 +620,12 @@ static void process (menu_t *menu) {
             case ENTRY_TYPE_DIR:
                 if (push_directory(menu, menu->browser.entry->name, false)) {
                     menu->browser.valid = false;
-                    menu_show_error(menu, "Couldn't open next directory");
+                    menu_show_error(
+                        menu,
+                        directory_entry_limit_exceeded
+                            ? "Directory is too large for Jumper Pak\nUse an Expansion Pak"
+                            : "Couldn't open next directory"
+                    );
                 }
                 break;
             case ENTRY_TYPE_DISK:
@@ -613,7 +663,12 @@ static void process (menu_t *menu) {
     } else if (menu->actions.back && !path_is_root(menu->browser.directory)) {
         if (pop_directory(menu)) {
             menu->browser.valid = false;
-            menu_show_error(menu, "Couldn't open last directory");
+            menu_show_error(
+                menu,
+                directory_entry_limit_exceeded
+                    ? "Directory is too large for Jumper Pak\nUse an Expansion Pak"
+                    : "Couldn't open last directory"
+            );
         }
         sound_play_effect(SFX_EXIT);
     } else if (menu->actions.options && menu->browser.entry) {
@@ -707,7 +762,12 @@ void view_browser_init (menu_t *menu) {
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");
-            menu_show_error(menu, "Error while opening initial directory");
+            menu_show_error(
+                menu,
+                directory_entry_limit_exceeded
+                    ? "Initial directory is too large for Jumper Pak\nUse an Expansion Pak"
+                    : "Error while opening initial directory"
+            );
         } else {
             menu->browser.valid = true;
         }
@@ -716,7 +776,12 @@ void view_browser_init (menu_t *menu) {
     if (menu->browser.select_file) {
         if (select_file(menu, menu->browser.select_file)) {
             menu->browser.valid = false;
-            menu_show_error(menu, "Error while navigating to file");
+            menu_show_error(
+                menu,
+                directory_entry_limit_exceeded
+                    ? "Target directory is too large for Jumper Pak\nUse an Expansion Pak"
+                    : "Error while navigating to file"
+            );
         }
         path_free(menu->browser.select_file);
         menu->browser.select_file = NULL;
@@ -725,7 +790,12 @@ void view_browser_init (menu_t *menu) {
     if (menu->browser.reload) {
         menu->browser.reload = false;
         if (reload_directory(menu)) {
-            menu_show_error(menu, "Error while reloading current directory");
+            menu_show_error(
+                menu,
+                directory_entry_limit_exceeded
+                    ? "Current directory is too large for Jumper Pak\nUse an Expansion Pak"
+                    : "Error while reloading current directory"
+            );
             menu->browser.valid = false;
         }
     }

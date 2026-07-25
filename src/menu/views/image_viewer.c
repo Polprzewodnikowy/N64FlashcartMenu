@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <math.h>
+#include <libdragon.h>
 #include "../sound.h"
 
 #include "../png_decoder.h"
@@ -20,6 +22,16 @@ static char *convert_error_message (png_err_t err) {
         case PNG_ERR_BAD_FILE: return "Invalid PNG file";
         default: return "Unknown PNG decoder error";
     }
+}
+
+/** Max image dimension that fits in 80% of free heap (2 bytes/pixel). */
+static int image_budget_max_dimension (void) {
+    heap_stats_t heap;
+    sys_get_heap_stats(&heap);
+    size_t budget = (size_t)((heap.total - heap.used) * 0.8f);
+    int dim = (int)sqrtf((float)(budget / 2));
+    if (dim < 16) dim = 16;
+    return dim;
 }
 
 static void image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
@@ -64,13 +76,23 @@ static void draw (menu_t *menu, surface_t *d) {
     } else {
         rdpq_attach_clear(d, NULL);
 
-        uint16_t x = (d->width / 2) - (image->width / 2);
-        uint16_t y = (d->height / 2) - (image->height / 2);
+        /* Scale image to fit screen, preserving aspect ratio */
+        float scale_x = (float)d->width / image->width;
+        float scale_y = (float)d->height / image->height;
+        float scale = (scale_x < scale_y) ? scale_x : scale_y;
+        int disp_w = (int)(image->width * scale);
+        int disp_h = (int)(image->height * scale);
+        int x = (d->width - disp_w) / 2;
+        int y = (d->height - disp_h) / 2;
 
-        rdpq_mode_push();
-            rdpq_set_mode_copy(false);
-            rdpq_tex_blit(image, x, y, NULL);
-        rdpq_mode_pop();
+        rdpq_set_mode_standard();
+        rdpq_mode_filter(FILTER_BILINEAR);
+        rdpq_mode_combiner(RDPQ_COMBINER_TEX);
+        rdpq_tex_blit(image, x, y, &(rdpq_blitparms_t) {
+            .scale_x = scale,
+            .scale_y = scale,
+            .filtering = true,
+        });
 
         if (show_message) {
             ui_components_messagebox_draw(
@@ -99,6 +121,7 @@ static void deinit (menu_t *menu) {
             free(image);
         }
     }
+    image = NULL;
 }
 
 
@@ -107,11 +130,15 @@ void view_image_viewer_init (menu_t *menu) {
     image_loading = true;
     image_set_as_background = false;
     image = NULL;
+    int max_dim = image_budget_max_dimension();
+    int max_w = (max_dim > 640) ? 640 : max_dim;
+    int max_h = (max_dim > 480) ? 480 : max_dim;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 
-    png_err_t err = png_decoder_start(path_get(path), 640, 480, image_callback, menu);
+    png_err_t err = png_decoder_start(path_get(path), max_w, max_h, image_callback, menu);
     if (err != PNG_OK) {
+        image_loading = false;
         menu_show_error(menu, convert_error_message(err));
     }
 

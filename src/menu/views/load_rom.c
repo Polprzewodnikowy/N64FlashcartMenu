@@ -302,6 +302,7 @@ static void set_cheat_option(menu_t *menu, void *arg) {
     if (!is_memory_expanded()) {
         // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu_show_error(menu, "Datel Cheats require Expansion Pak");
         menu->browser.reload = true;
     }
     else {
@@ -309,6 +310,19 @@ static void set_cheat_option(menu_t *menu, void *arg) {
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
         menu->browser.reload = true;
     }
+}
+
+static void open_datel_code_editor (menu_t *menu, void *arg) {
+    (void)arg;
+
+    if (!is_memory_expanded()) {
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu_show_error(menu, "Datel Cheats require Expansion Pak");
+        menu->browser.reload = true;
+        return;
+    }
+
+    menu->next_mode = MENU_MODE_DATEL_CODE_EDITOR;
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
@@ -429,7 +443,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
     { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_DATEL_CODE_EDITOR) },
+    { .text = "Datel Code Editor", .action = open_datel_code_editor },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
     { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
@@ -788,6 +802,11 @@ void view_load_rom_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
+
+    if (!is_memory_expanded()) {
+        menu->load.rom_info.settings.cheats_enabled = false;
+    }
+
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif

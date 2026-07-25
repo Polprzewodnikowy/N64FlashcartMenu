@@ -59,7 +59,7 @@ static const struct substr hidden_prefixes[] = {
 
 // `stat()` per entry is expensive on large directories. Keep a bounded budget so
 // FAT hidden-attribute filtering is available without regressing browse speed.
-#define FAT_HIDDEN_STAT_BUDGET_PER_SCAN 24
+#define FAT_HIDDEN_STAT_BUDGET_PER_SCAN 512
 
 static bool file_is_fat_hidden (const char *full_path) {
     struct stat st;

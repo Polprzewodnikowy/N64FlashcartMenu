@@ -59,7 +59,7 @@ static const struct substr hidden_prefixes[] = {
 
 // `stat()` per entry is expensive on large directories. Keep a bounded budget so
 // FAT hidden-attribute filtering is available without regressing browse speed.
-#define FAT_HIDDEN_STAT_BUDGET_PER_SCAN 256
+#define FAT_HIDDEN_STAT_BUDGET_PER_SCAN 24
 
 static bool file_is_fat_hidden (const char *full_path) {
     struct stat st;
@@ -280,30 +280,24 @@ static bool load_directory (menu_t *menu) {
         }
 
         if (!menu->settings.show_saves_folder) {
-            path_push(path, info.d_name);
             // Skip the "saves" directory if it is hidden (this is case sensitive)
             if (strcmp(info.d_name, SAVE_DIRECTORY_NAME) == 0) {
                 hide = true;
             }
-            path_pop(path);
         }
 
         if (!menu->settings.show_save_files) {
-            path_push(path, info.d_name);
             // Skip save files if they are hidden (this is case sensitive)
             if (file_has_extensions(info.d_name, save_extensions)) {
                 hide = true;
             }
-            path_pop(path);
         }
 
         if (!menu->settings.show_cheat_files) {
-            path_push(path, info.d_name);
             // Skip cheat files if they are hidden (this is case sensitive)
             if (file_has_extensions(info.d_name, cheat_extensions)) {
                 hide = true;
             }
-            path_pop(path);
         }
 
         if (!hide) {

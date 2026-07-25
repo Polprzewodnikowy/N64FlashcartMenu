@@ -11,17 +11,26 @@
 	- Adds Background music.
 	- Adds ability to use infinite scroll within the file browser.
 	- ROM override submenu now remembers current custom settings.
+	- Added extra info to the flashcart information screen to show Button state and voltage on supported carts.
+	- Experimental DD swap support.
+	- Added console region to the system information screen.
 	
 
 - **Bug Fixes**
 	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
 
+
 - **Documentation**
+	- Improved DD section with latest information.
 	- Minor fixes.
 
 - **Refactor**
+	- Optimzed PNG image handler to more likely work on memory constrained consoles (without an Expansion Pak).
+	- Improved memory usage and OOB fixes across the whole codebase.
 
 - **Other**
+	- Added UTF converter for later consumption.
+	- Added ED64 pseudo state for later consumption.
 	
 
 ### Breaking changes

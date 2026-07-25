@@ -49,6 +49,22 @@ typedef void png_callback_t (png_err_t err, surface_t *decoded_image, void *call
 png_err_t png_decoder_start (char *path, int max_width, int max_height, png_callback_t *callback, void *callback_data);
 
 /**
+ * @brief Start decoding a PNG from an in-memory buffer.
+ *
+ * Same as png_decoder_start but reads from a heap buffer instead of a file.
+ * The decoder takes ownership of @p buf and frees it when done.
+ *
+ * @param buf            Heap-allocated PNG data (ownership transferred).
+ * @param buf_size       Size of the buffer in bytes.
+ * @param max_width      Maximum width of the decoded image.
+ * @param max_height     Maximum height of the decoded image.
+ * @param callback       Callback function to be called when decoding is complete.
+ * @param callback_data  User-defined data to be passed to the callback function.
+ * @return png_err_t Error code.
+ */
+png_err_t png_decoder_start_mem (void *buf, size_t buf_size, int max_width, int max_height, png_callback_t *callback, void *callback_data);
+
+/**
  * @brief Abort the PNG decoding process.
  * 
  * This function aborts the ongoing PNG decoding process.

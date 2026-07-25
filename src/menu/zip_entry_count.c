@@ -13,6 +13,7 @@
 enum {
     ZIP_EOCD_ENTRIES_THIS_DISK_OFF = 10,
     ZIP_EOCD_ENTRIES_TOTAL_OFF = 12,
+    ZIP_EOCD_COMMENT_LEN_OFF = 20,
     ZIP64_LOCATOR_SIZE = 20,
     ZIP64_LOCATOR_EOCD_OFFSET_OFF = 8,
     ZIP64_EOCD_MIN_READ_SIZE = 56,
@@ -29,6 +30,16 @@ static uint32_t read_le32(const uint8_t *p) {
 
 static uint64_t read_le64(const uint8_t *p) {
     return (uint64_t)read_le32(p) | ((uint64_t)read_le32(p + 4) << 32);
+}
+
+static bool zip_eocd_ends_at_eof(const uint8_t *tail, size_t tail_size, size_t eocd_pos) {
+    if (eocd_pos + ZIP_EOCD_MIN_SIZE > tail_size) {
+        return false;
+    }
+
+    uint16_t comment_len = read_le16(&tail[eocd_pos + ZIP_EOCD_COMMENT_LEN_OFF]);
+    size_t eocd_end = eocd_pos + ZIP_EOCD_MIN_SIZE + (size_t)comment_len;
+    return eocd_end == tail_size;
 }
 
 bool zip_try_read_entry_count(const char *zip_path, uint64_t *entry_count) {
@@ -76,7 +87,7 @@ bool zip_try_read_entry_count(const char *zip_path, uint64_t *entry_count) {
 
     long eocd_pos = -1;
     for (long i = (long)tail_size - (long)ZIP_EOCD_MIN_SIZE; i >= 0; i--) {
-        if (read_le32(&tail[i]) == ZIP_EOCD_SIG) {
+        if (read_le32(&tail[i]) == ZIP_EOCD_SIG && zip_eocd_ends_at_eof(tail, tail_size, (size_t)i)) {
             eocd_pos = i;
             break;
         }

@@ -596,10 +596,10 @@ static flashcart_err_t sc64_load_64dd_disk (char *disk_path, flashcart_disk_para
         uint32_t value;
     } config[] = {
         { CFG_ID_DD_MODE, DD_MODE_FULL },
-        { CFG_ID_DD_SD_ENABLE, true },
+        { CFG_ID_DD_SD_ENABLE, true }, // Use the SD card, rather than USB.
         { CFG_ID_DD_DRIVE_TYPE, drive_type },
         { CFG_ID_DD_DISK_STATE, DISK_STATE_INSERTED },
-        { CFG_ID_BUTTON_MODE, BUTTON_MODE_NONE },
+        { CFG_ID_BUTTON_MODE, BUTTON_MODE_NONE }, // No disk swapping when only one disk is used.
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {
@@ -655,10 +655,11 @@ static flashcart_err_t sc64_load_64dd_disks (char *disk_path, flashcart_disk_par
         uint32_t value;
     } config[] = {
         { CFG_ID_DD_MODE, DD_MODE_FULL },
-        { CFG_ID_DD_SD_ENABLE, true },
+        { CFG_ID_TV_TYPE, TV_TYPE_PASSTHROUGH }, // Use passthrough TV type for 64DD disks to ensure proper display, even on PAL consoles.
+        { CFG_ID_DD_SD_ENABLE, true }, // Use the SD card, rather than USB.
         { CFG_ID_DD_DRIVE_TYPE, drive_type },
         { CFG_ID_DD_DISK_STATE, DISK_STATE_INSERTED },
-        { CFG_ID_BUTTON_MODE, BUTTON_MODE_DD_DISK_SWAP },
+        { CFG_ID_BUTTON_MODE, BUTTON_MODE_DD_DISK_SWAP }, // Button mode for disk swapping when multiple disks are used.
     };
 
     for (unsigned int i = 0; i < sizeof(config) / sizeof(config[0]); i++) {

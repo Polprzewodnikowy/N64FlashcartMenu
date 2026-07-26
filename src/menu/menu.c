@@ -46,7 +46,7 @@ static bool interlaced = true;
  * 
  * @param boot_params Pointer to the boot parameters structure.
  */
-static void menu_init (boot_params_t *boot_params) {    
+static void menu_init (boot_params_t *boot_params) {
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 

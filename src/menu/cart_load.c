@@ -194,10 +194,19 @@ cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_c
 
     path_free(path);
 
-    // TODO: Support multi-disk 64DD games and implement rules for disk swapping.
-    // e.g. menu->flashcart_err = flashcart_load_64dd_disks(&menu->load.disk_slots.primary.disk_path, &disk_parameters, menu->load.disk_slot[], swap_disk_count);
+    int swap_disk_count = 0;
+    char *swap_disk_paths[3];
+    for (int i = 0; i < 3; i++) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+            swap_disk_paths[swap_disk_count++] = path_get(menu->load.disk_slots.swap_slot[i].disk_path);
+        }
+    }
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    if (swap_disk_count > 0) {
+        menu->flashcart_err = flashcart_load_64dd_disks(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters, swap_disk_paths, swap_disk_count);
+    } else {
+        menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    }
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }

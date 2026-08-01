@@ -101,7 +101,8 @@ static int *music_indices = NULL;
 static int music_count = 0;
 
 /* Directory scan state for async cover art search */
-static const char *cover_image_extensions[] = { "png", "jpg", "jpeg", NULL };
+static const char *cover_image_extensions[] = { "png", NULL };
+// static const char *cover_image_extensions[] = { "png", "jpg", "jpeg", NULL };
 static const char *preferred_cover_names[] = { "cover", "folder", "front", "album", "art", NULL };
 static path_t *cover_dir = NULL;
 static dir_t cover_dir_entry;
@@ -111,7 +112,7 @@ static void try_next_cover_source(void);
 
 /** Cancel any in-progress cover art decode. */
 static void abort_cover_decode (void) {
-    if (cover_state == COVER_LOADING_JPEG) jpeg_decoder_abort();
+    //if (cover_state == COVER_LOADING_JPEG) jpeg_decoder_abort();
     if (cover_state == COVER_LOADING_PNG) png_decoder_abort();
     cover_state = COVER_IDLE;
 }
@@ -306,7 +307,7 @@ static bool try_cover_path (const char *path, int max_size) {
     if (!buf) return false;
 
     if (is_jpeg) {
-        cover_state = COVER_LOADING_JPEG;
+        // cover_state = COVER_LOADING_JPEG;
         // jpeg_err_t err = jpeg_decoder_start_mem(buf, buf_size, max_size, max_size,
         //                                         cover_art_cb, NULL);
         // if (err != JPEG_OK) {
@@ -995,9 +996,10 @@ static void draw (menu_t *menu, surface_t *d) {
         rdpq_mode_pop();
     } else if (cover_art_expected && art_size > 0 && cover_state != COVER_IDLE) {
         /* Show decode progress centered in art area */
-        float progress = (cover_state == COVER_LOADING_JPEG)
-                       ? jpeg_decoder_get_progress()
-                       : png_decoder_get_progress();
+        // float progress = (cover_state == COVER_LOADING_JPEG)
+        //                ? jpeg_decoder_get_progress()
+        //                : png_decoder_get_progress();
+        float progress = png_decoder_get_progress();
         char buf[16];
         snprintf(buf, sizeof(buf), "%d%%", (int)(progress * 100));
         rdpq_text_printn(

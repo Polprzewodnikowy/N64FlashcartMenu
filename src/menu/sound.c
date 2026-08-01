@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 #include <libdragon.h>
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "sound.h"
 
 #define DEFAULT_FREQUENCY   (44100)

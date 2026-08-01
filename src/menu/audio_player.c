@@ -1,5 +1,5 @@
 /**
- * @file mp3_player.c
+ * @file audio_player.c
  * @brief Audio player with MP3 and FLAC support
  * @ingroup ui_components
  *
@@ -13,7 +13,7 @@
 
 #include <libdragon.h>
 
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "id3_parser.h"
 #include "sound.h"
 #include "utils/fs.h"

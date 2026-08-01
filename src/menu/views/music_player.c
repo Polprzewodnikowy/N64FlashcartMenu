@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 
 //#include "../jpeg_decoder.h"
-#include "../mp3_player.h"
+#include "../audio_player.h"
 #include "../png_decoder.h"
 #include "../sound.h"
 #include "../path.h"

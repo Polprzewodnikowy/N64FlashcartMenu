@@ -1,11 +1,11 @@
 /**
- * @file mp3_player.h
+ * @file audio_player.h
  * @brief Audio Player (MP3/FLAC)
  * @ingroup menu 
  */
 
-#ifndef MP3_PLAYER_H__
-#define MP3_PLAYER_H__
+#ifndef AUDIO_PLAYER_H__
+#define AUDIO_PLAYER_H__
 
 #include <stdbool.h>
 
@@ -199,4 +199,4 @@ const id3_metadata_t *mp3player_get_metadata(void);
  */
 uint8_t *mp3player_take_cover_art(size_t *size_out);
 
-#endif /* MP3_PLAYER_H__ */
+#endif /* AUDIO_PLAYER_H__ */

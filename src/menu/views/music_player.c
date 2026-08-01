@@ -397,7 +397,7 @@ static void scan_directory_for_cover (path_t *dir) {
 static void find_cover_art_source (path_t *directory, char *out_path, size_t out_size) {
     out_path[0] = '\0';
 
-    const id3_metadata_t *meta = mp3player_get_metadata();
+    const id3_metadata_t *meta = audioplayer_get_metadata();
 
     if (meta->has_cover_art) {
         if (meta->cover_art_data) {
@@ -493,14 +493,14 @@ static void load_cover_art (path_t *directory) {
     strncpy(cover_art_source, new_source, sizeof(cover_art_source) - 1);
     cover_art_source[sizeof(cover_art_source) - 1] = '\0';
 
-    const id3_metadata_t *meta = mp3player_get_metadata();
+    const id3_metadata_t *meta = audioplayer_get_metadata();
 
     /* Try embedded cover art first (decode directly from memory buffer).
      * The decoder takes ownership of the buffer and frees it when done. */
     if (meta->has_cover_art && meta->cover_art_data) {
         int max_size = cover_art_budget_size();
         size_t buf_size;
-        uint8_t *buf = mp3player_take_cover_art(&buf_size);
+        uint8_t *buf = audioplayer_take_cover_art(&buf_size);
 
         if (buf) {
             bool started = false;
@@ -543,7 +543,7 @@ static void sanitize_rdpq_text (char *dst, const char *src, size_t dst_size) {
     dst[j] = '\0';
 }
 
-static char *convert_error_message (mp3player_err_t err) {
+static char *convert_error_message (audioplayer_err_t err) {
     switch (err) {
         case AUDIOPLAYER_ERR_OUT_OF_MEM: return "Audio player failed due to insufficient memory";
         case AUDIOPLAYER_ERR_IO: return "I/O error during audio playback";
@@ -613,12 +613,12 @@ static bool try_play_index (menu_t *menu, int idx) {
     if (e->type != ENTRY_TYPE_MUSIC) return false;
 
     path_t *path = path_clone_push(menu->browser.directory, e->name);
-    mp3player_err_t err = mp3player_load(path_get(path));
+    audioplayer_err_t err = audioplayer_load(path_get(path));
     path_free(path);
     if (err != AUDIOPLAYER_OK) return false;
 
-    sound_init_mp3_playback();
-    err = mp3player_play();
+    sound_init_audioplayer_playback();
+    err = audioplayer_play();
     if (err != AUDIOPLAYER_OK) return false;
 
     menu->browser.selected = idx;
@@ -689,19 +689,19 @@ static bool try_skip_track (menu_t *menu, int direction) {
 }
 
 static void process (menu_t *menu) {
-    mp3player_err_t err;
+    audioplayer_err_t err;
 
     /* Allow one seek per frame to prevent cascading I/O stalls */
     seek_busy = false;
 
-    err = mp3player_process();
+    err = audioplayer_process();
     if (err != AUDIOPLAYER_OK) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
 
     /* Auto-advance to next track when current finishes */
-    if (mp3player_is_finished() && !advance_failed) {
+    if (audioplayer_is_finished() && !advance_failed) {
         if (!try_skip_track(menu, 1)) {
             advance_failed = true;
         }
@@ -711,7 +711,7 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.enter) {
-        err = mp3player_toggle();
+        err = audioplayer_toggle();
         if (err != AUDIOPLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
@@ -735,7 +735,7 @@ static void process (menu_t *menu) {
         try_skip_track(menu, menu->actions.go_up ? -1 : 1);
     } else if ((menu->actions.go_left || menu->actions.go_right) && !seek_busy) {
         int seconds = menu->actions.go_fast ? SEEK_SECONDS_FAST : SEEK_SECONDS;
-        err = mp3player_seek(menu->actions.go_left ? (-seconds) : seconds);
+        err = audioplayer_seek(menu->actions.go_left ? (-seconds) : seconds);
         if (err != AUDIOPLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
@@ -750,9 +750,9 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_layout_draw();
 
-    ui_components_seekbar_draw(mp3player_get_progress());
+    ui_components_seekbar_draw(audioplayer_get_progress());
 
-    const id3_metadata_t *meta = mp3player_get_metadata();
+    const id3_metadata_t *meta = audioplayer_get_metadata();
 
     const char *display_title = (meta->has_metadata && meta->title[0])
         ? meta->title : menu->browser.entry->name;
@@ -869,18 +869,18 @@ static void draw (menu_t *menu, surface_t *d) {
     /* Hz / kbps / format line below the ticker, gray and centered */
     {
         char tech_str[64];
-        int native_rate = mp3player_get_native_samplerate();
-        int playback_rate = mp3player_get_samplerate();
+        int native_rate = audioplayer_get_native_samplerate();
+        int playback_rate = audioplayer_get_samplerate();
         const char *ext = strrchr(menu->browser.entry->name, '.');
         const char *fmt = (ext && strcasecmp(ext, ".flac") == 0) ? "FLAC" : "MP3";
         if (native_rate > playback_rate) {
             snprintf(tech_str, sizeof(tech_str), "%dHz (%dHz) \xC2\xB7 %.0fkbps \xC2\xB7 %s",
                      playback_rate, native_rate,
-                     (double)(mp3player_get_bitrate() / 1000), fmt);
+                     (double)(audioplayer_get_bitrate() / 1000), fmt);
         } else {
             snprintf(tech_str, sizeof(tech_str), "%dHz \xC2\xB7 %.0fkbps \xC2\xB7 %s",
                      playback_rate,
-                     (double)(mp3player_get_bitrate() / 1000), fmt);
+                     (double)(audioplayer_get_bitrate() / 1000), fmt);
         }
         int tech_y = ticker_y + HEADER_LINE_SPACING;
         rdpq_text_printn(
@@ -1068,8 +1068,8 @@ static void draw (menu_t *menu, surface_t *d) {
     /* Draw elapsed and duration times on the seekbar */
     char elapsed_str[16];
     char duration_str[16];
-    float duration = mp3player_get_duration();
-    format_time(elapsed_str, sizeof(elapsed_str), duration * mp3player_get_progress());
+    float duration = audioplayer_get_duration();
+    format_time(elapsed_str, sizeof(elapsed_str), duration * audioplayer_get_progress());
     format_time(duration_str, sizeof(duration_str), duration);
 
     int time_y = SEEKBAR_Y + 18;
@@ -1097,7 +1097,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ALIGN_LEFT, VALIGN_TOP,
         "A: %s\n"
         "B: Exit\n",
-        mp3player_is_playing() ? "Pause" : mp3player_is_finished() ? "Play again" : "Play"
+        audioplayer_is_playing() ? "Pause" : audioplayer_is_finished() ? "Play again" : "Play"
     );
 
     ui_components_actions_bar_text_draw(
@@ -1143,7 +1143,7 @@ static void deinit (void) {
     queue_cache_count = 0;
 
     sound_init_default();
-    mp3player_deinit();
+    audioplayer_deinit();
 }
 
 
@@ -1151,8 +1151,8 @@ static void deinit (void) {
 /* Progress weights per loading step. Caps at 95% so the bar
  * never sits at 100% waiting for async cover art decode. */
 static const float loading_progress[] = {
-    0.00f,  /* step 0: mp3player_init */
-    0.10f,  /* step 1: mp3player_load */
+    0.00f,  /* step 0: audioplayer_init */
+    0.10f,  /* step 1: audioplayer_load */
     0.20f,  /* step 2: sound reconfigure */
     0.40f,  /* step 3: build music index */
     0.60f,  /* step 4: cover art load */
@@ -1178,10 +1178,10 @@ static void draw_loading_screen (surface_t *d) {
 static bool loading_tick (menu_t *menu) {
     switch (loading_step) {
         case 0: {
-            mp3player_err_t err = mp3player_init();
+            audioplayer_err_t err = audioplayer_init();
             if (err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(err));
-                mp3player_deinit();
+                audioplayer_deinit();
                 return false;
             }
             loading_step++;
@@ -1189,11 +1189,11 @@ static bool loading_tick (menu_t *menu) {
         }
         case 1: {
             path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
-            mp3player_err_t err = mp3player_load(path_get(path));
+            audioplayer_err_t err = audioplayer_load(path_get(path));
             path_free(path);
             if (err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(err));
-                mp3player_deinit();
+                audioplayer_deinit();
                 return false;
             }
             loading_step++;
@@ -1202,7 +1202,7 @@ static bool loading_tick (menu_t *menu) {
         case 2: {
             /* Reconfigure audio to the track's sample rate early, so the
              * hardware has settled well before playback starts. */
-            sound_init_mp3_playback();
+            sound_init_audioplayer_playback();
             loading_step++;
             return false;
         }
@@ -1224,7 +1224,7 @@ static bool loading_tick (menu_t *menu) {
             return false;
         }
         default: {
-            mp3player_mute(false);
+            audioplayer_mute(false);
             return true;
         }
     }
@@ -1257,7 +1257,7 @@ void view_music_player_display (menu_t *menu, surface_t *display) {
         draw_loading_screen(display);
 
         if (done) {
-            mp3player_err_t play_err = mp3player_play();
+            audioplayer_err_t play_err = audioplayer_play();
             if (play_err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(play_err));
             }

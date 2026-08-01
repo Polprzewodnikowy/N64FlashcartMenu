@@ -22,30 +22,30 @@ typedef enum {
     AUDIOPLAYER_ERR_IO,           /**< Input/Output error */
     AUDIOPLAYER_ERR_NO_FILE,      /**< No file found error */
     AUDIOPLAYER_ERR_INVALID_FILE, /**< Invalid file error */
-} mp3player_err_t;
+} audioplayer_err_t;
 
 /**
  * @brief Initialize the audio player mixer.
  *
  * This function initializes the mixer for the audio player.
  */
-void mp3player_mixer_init(void);
+void audioplayer_mixer_init(void);
 
 /**
  * @brief Initialize the audio player.
  *
  * This function initializes the audio player and prepares it for playback.
  * 
- * @return mp3player_err_t Error code indicating the result of the initialization.
+ * @return audioplayer_err_t Error code indicating the result of the initialization.
  */
-mp3player_err_t mp3player_init(void);
+audioplayer_err_t audioplayer_init(void);
 
 /**
  * @brief Deinitialize the audio player.
  *
  * This function deinitializes the audio player and releases any resources.
  */
-void mp3player_deinit(void);
+void audioplayer_deinit(void);
 
 /**
  * @brief Load an audio file.
@@ -53,25 +53,25 @@ void mp3player_deinit(void);
  * This function loads an audio file from the specified path.
  *
  * @param path Path to the audio file.
- * @return mp3player_err_t Error code indicating the result of the load operation.
+ * @return audioplayer_err_t Error code indicating the result of the load operation.
  */
-mp3player_err_t mp3player_load(char *path);
+audioplayer_err_t audioplayer_load(char *path);
 
 /**
  * @brief Unload the current audio file.
  *
  * This function unloads the currently loaded audio file.
  */
-void mp3player_unload(void);
+void audioplayer_unload(void);
 
 /**
  * @brief Process the audio player.
  *
  * This function processes the audio player, handling playback and other operations.
  * 
- * @return mp3player_err_t Error code indicating the result of the process operation.
+ * @return audioplayer_err_t Error code indicating the result of the process operation.
  */
-mp3player_err_t mp3player_process(void);
+audioplayer_err_t audioplayer_process(void);
 
 /**
  * @brief Check if the audio player is playing.
@@ -80,7 +80,7 @@ mp3player_err_t mp3player_process(void);
  *
  * @return true if the audio player is playing, false otherwise.
  */
-bool mp3player_is_playing(void);
+bool audioplayer_is_playing(void);
 
 /**
  * @brief Check if the audio player has finished playing.
@@ -89,32 +89,32 @@ bool mp3player_is_playing(void);
  *
  * @return true if the audio player has finished playing, false otherwise.
  */
-bool mp3player_is_finished(void);
+bool audioplayer_is_finished(void);
 
 /**
  * @brief Start playback of the audio file.
  *
  * This function starts playback of the currently loaded audio file.
  * 
- * @return mp3player_err_t Error code indicating the result of the play operation.
+ * @return audioplayer_err_t Error code indicating the result of the play operation.
  */
-mp3player_err_t mp3player_play(void);
+audioplayer_err_t audioplayer_play(void);
 
 /**
  * @brief Stop playback of the audio file.
  *
  * This function stops playback of the currently loaded audio file.
  */
-void mp3player_stop(void);
+void audioplayer_stop(void);
 
 /**
  * @brief Toggle playback of the audio file.
  *
  * This function toggles playback of the currently loaded audio file.
  * 
- * @return mp3player_err_t Error code indicating the result of the toggle operation.
+ * @return audioplayer_err_t Error code indicating the result of the toggle operation.
  */
-mp3player_err_t mp3player_toggle(void);
+audioplayer_err_t audioplayer_toggle(void);
 
 /**
  * @brief Mute or unmute the audio player.
@@ -123,7 +123,7 @@ mp3player_err_t mp3player_toggle(void);
  * 
  * @param mute true to mute, false to unmute.
  */
-void mp3player_mute(bool mute);
+void audioplayer_mute(bool mute);
 
 /**
  * @brief Seek to a specific position in the audio file.
@@ -131,9 +131,9 @@ void mp3player_mute(bool mute);
  * This function seeks to a specific position in the currently loaded audio file.
  * 
  * @param seconds Number of seconds to seek.
- * @return mp3player_err_t Error code indicating the result of the seek operation.
+ * @return audioplayer_err_t Error code indicating the result of the seek operation.
  */
-mp3player_err_t mp3player_seek(int seconds);
+audioplayer_err_t audioplayer_seek(int seconds);
 
 /**
  * @brief Get the duration of the audio file.
@@ -142,7 +142,7 @@ mp3player_err_t mp3player_seek(int seconds);
  *
  * @return float Duration of the audio file in seconds.
  */
-float mp3player_get_duration(void);
+float audioplayer_get_duration(void);
 
 /**
  * @brief Get the bitrate of the audio file.
@@ -151,7 +151,7 @@ float mp3player_get_duration(void);
  *
  * @return float Bitrate of the audio file in kbps.
  */
-float mp3player_get_bitrate(void);
+float audioplayer_get_bitrate(void);
 
 /**
  * @brief Get the sample rate of the audio file.
@@ -160,7 +160,7 @@ float mp3player_get_bitrate(void);
  *
  * @return int Sample rate of the audio file in Hz.
  */
-int mp3player_get_samplerate(void);
+int audioplayer_get_samplerate(void);
 
 /**
  * @brief Get the native sample rate before downsampling.
@@ -170,7 +170,7 @@ int mp3player_get_samplerate(void);
  *
  * @return int Native sample rate in Hz.
  */
-int mp3player_get_native_samplerate(void);
+int audioplayer_get_native_samplerate(void);
 
 /**
  * @brief Get the current playback progress.
@@ -179,14 +179,14 @@ int mp3player_get_native_samplerate(void);
  * 
  * @return float Current playback progress as a percentage (0.0 to 100.0).
  */
-float mp3player_get_progress(void);
+float audioplayer_get_progress(void);
 
 /**
  * @brief Get metadata extracted from ID3 tags.
  *
  * @return const id3_metadata_t* Pointer to metadata (valid while file is loaded).
  */
-const id3_metadata_t *mp3player_get_metadata(void);
+const id3_metadata_t *audioplayer_get_metadata(void);
 
 /**
  * @brief Take ownership of the embedded cover art buffer.
@@ -197,6 +197,6 @@ const id3_metadata_t *mp3player_get_metadata(void);
  * @param size_out  Receives the buffer size (may be NULL).
  * @return Heap buffer, or NULL if no art. Caller must free.
  */
-uint8_t *mp3player_take_cover_art(size_t *size_out);
+uint8_t *audioplayer_take_cover_art(size_t *size_out);
 
 #endif /* AUDIO_PLAYER_H__ */

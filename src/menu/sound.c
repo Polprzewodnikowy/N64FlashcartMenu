@@ -39,8 +39,8 @@ static void sound_reconfigure (int frequency) {
         // global mixer/sample rate was reconfigured to a lower value for MP3.
         mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
 
-        // Initialize MP3 player mixer
-        mp3player_mixer_init();
+        // Initialize MP3/audioplayer mixer
+        audioplayer_mixer_init();
         sound_initialized = true;
 
         if (sfx_enabled) {
@@ -62,8 +62,8 @@ void sound_init_default (void) {
 /**
  * @brief Initialize the sound system for MP3 playback.
  */
-void sound_init_mp3_playback (void) {
-    sound_reconfigure(mp3player_get_samplerate());
+void sound_init_audioplayer_playback (void) {
+    sound_reconfigure(audioplayer_get_samplerate());
 }
 
 /**

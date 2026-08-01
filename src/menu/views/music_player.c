@@ -545,10 +545,10 @@ static void sanitize_rdpq_text (char *dst, const char *src, size_t dst_size) {
 
 static char *convert_error_message (mp3player_err_t err) {
     switch (err) {
-        case MP3PLAYER_ERR_OUT_OF_MEM: return "Audio player failed due to insufficient memory";
-        case MP3PLAYER_ERR_IO: return "I/O error during audio playback";
-        case MP3PLAYER_ERR_NO_FILE: return "No audio file is loaded";
-        case MP3PLAYER_ERR_INVALID_FILE: return "Invalid audio file";
+        case AUDIOPLAYER_ERR_OUT_OF_MEM: return "Audio player failed due to insufficient memory";
+        case AUDIOPLAYER_ERR_IO: return "I/O error during audio playback";
+        case AUDIOPLAYER_ERR_NO_FILE: return "No audio file is loaded";
+        case AUDIOPLAYER_ERR_INVALID_FILE: return "Invalid audio file";
         default: return "Unknown audio player error";
     }
 }
@@ -615,11 +615,11 @@ static bool try_play_index (menu_t *menu, int idx) {
     path_t *path = path_clone_push(menu->browser.directory, e->name);
     mp3player_err_t err = mp3player_load(path_get(path));
     path_free(path);
-    if (err != MP3PLAYER_OK) return false;
+    if (err != AUDIOPLAYER_OK) return false;
 
     sound_init_mp3_playback();
     err = mp3player_play();
-    if (err != MP3PLAYER_OK) return false;
+    if (err != AUDIOPLAYER_OK) return false;
 
     menu->browser.selected = idx;
     menu->browser.entry = e;
@@ -695,7 +695,7 @@ static void process (menu_t *menu) {
     seek_busy = false;
 
     err = mp3player_process();
-    if (err != MP3PLAYER_OK) {
+    if (err != AUDIOPLAYER_OK) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
@@ -712,7 +712,7 @@ static void process (menu_t *menu) {
         menu->next_mode = MENU_MODE_BROWSER;
     } else if (menu->actions.enter) {
         err = mp3player_toggle();
-        if (err != MP3PLAYER_OK) {
+        if (err != AUDIOPLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
         sound_play_effect(SFX_ENTER);
@@ -736,7 +736,7 @@ static void process (menu_t *menu) {
     } else if ((menu->actions.go_left || menu->actions.go_right) && !seek_busy) {
         int seconds = menu->actions.go_fast ? SEEK_SECONDS_FAST : SEEK_SECONDS;
         err = mp3player_seek(menu->actions.go_left ? (-seconds) : seconds);
-        if (err != MP3PLAYER_OK) {
+        if (err != AUDIOPLAYER_OK) {
             menu_show_error(menu, convert_error_message(err));
         }
         seek_busy = true;
@@ -1179,7 +1179,7 @@ static bool loading_tick (menu_t *menu) {
     switch (loading_step) {
         case 0: {
             mp3player_err_t err = mp3player_init();
-            if (err != MP3PLAYER_OK) {
+            if (err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(err));
                 mp3player_deinit();
                 return false;
@@ -1191,7 +1191,7 @@ static bool loading_tick (menu_t *menu) {
             path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
             mp3player_err_t err = mp3player_load(path_get(path));
             path_free(path);
-            if (err != MP3PLAYER_OK) {
+            if (err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(err));
                 mp3player_deinit();
                 return false;
@@ -1258,7 +1258,7 @@ void view_music_player_display (menu_t *menu, surface_t *display) {
 
         if (done) {
             mp3player_err_t play_err = mp3player_play();
-            if (play_err != MP3PLAYER_OK) {
+            if (play_err != AUDIOPLAYER_OK) {
                 menu_show_error(menu, convert_error_message(play_err));
             }
             player_state = PLAYER_READY;

@@ -272,7 +272,7 @@ static mp3player_err_t track_load_mp3 (audio_track_t *t, int id3_flags) {
         if (ferror(t->f)) {
             fclose(t->f);
             t->f = NULL;
-            return MP3PLAYER_ERR_IO;
+            return AUDIOPLAYER_ERR_IO;
         }
 
         size_t id3v2_skip = mp3dec_skip_id3v2((const uint8_t *)(t->buffer_ptr), t->buffer_left);
@@ -280,7 +280,7 @@ static mp3player_err_t track_load_mp3 (audio_track_t *t, int id3_flags) {
             if (fseek(t->f, (-t->buffer_left) + id3v2_skip, SEEK_CUR)) {
                 fclose(t->f);
                 t->f = NULL;
-                return MP3PLAYER_ERR_IO;
+                return AUDIOPLAYER_ERR_IO;
             }
             mp3_reset_decoder(t);
             continue;
@@ -299,7 +299,7 @@ static mp3player_err_t track_load_mp3 (audio_track_t *t, int id3_flags) {
             t->samplerate = t->info.hz;
             mp3_calculate_duration(t, samples);
 
-            return MP3PLAYER_OK;
+            return AUDIOPLAYER_OK;
         }
 
         t->buffer_ptr += t->info.frame_bytes;
@@ -308,7 +308,7 @@ static mp3player_err_t track_load_mp3 (audio_track_t *t, int id3_flags) {
 
     fclose(t->f);
     t->f = NULL;
-    return MP3PLAYER_ERR_INVALID_FILE;
+    return AUDIOPLAYER_ERR_INVALID_FILE;
 }
 
 static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
@@ -319,7 +319,7 @@ static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
     if (fread(magic, 1, 4, t->f) != 4 || memcmp(magic, "fLaC", 4) != 0) {
         fclose(t->f);
         t->f = NULL;
-        return MP3PLAYER_ERR_INVALID_FILE;
+        return AUDIOPLAYER_ERR_INVALID_FILE;
     }
     fseek(t->f, 0, SEEK_SET);
 
@@ -329,7 +329,7 @@ static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
     if (!t->flac_io) {
         fclose(t->f);
         t->f = NULL;
-        return MP3PLAYER_ERR_OUT_OF_MEM;
+        return AUDIOPLAYER_ERR_OUT_OF_MEM;
     }
     t->flac_io->f = t->f;
     t->flac_io->meta = &t->metadata;
@@ -343,7 +343,7 @@ static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
         t->flac_io = NULL;
         fclose(t->f);
         t->f = NULL;
-        return MP3PLAYER_ERR_INVALID_FILE;
+        return AUDIOPLAYER_ERR_INVALID_FILE;
     }
 
     /* Reject unsupported channel counts */
@@ -354,7 +354,7 @@ static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
         t->flac_io = NULL;
         fclose(t->f);
         t->f = NULL;
-        return MP3PLAYER_ERR_INVALID_FILE;
+        return AUDIOPLAYER_ERR_INVALID_FILE;
     }
 
     /* Downsample to 48kHz max. Higher rates demand more decoded samples
@@ -378,7 +378,7 @@ static mp3player_err_t track_load_flac (audio_track_t *t, int id3_flags) {
 
     t->metadata.has_metadata = (t->metadata.title[0] || t->metadata.artist[0] || t->metadata.album[0]);
 
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 static mp3player_err_t track_load (audio_track_t *t, char *path, int id3_flags) {
@@ -388,7 +388,7 @@ static mp3player_err_t track_load (audio_track_t *t, char *path, int id3_flags) 
     t->format = detect_format(path);
 
     if ((t->f = fopen(path, "rb")) == NULL) {
-        return MP3PLAYER_ERR_IO;
+        return AUDIOPLAYER_ERR_IO;
     }
 
     /* FLAC benefits from buffered I/O since dr_flac does many small reads
@@ -406,7 +406,7 @@ static mp3player_err_t track_load (audio_track_t *t, char *path, int id3_flags) 
     if (fstat(fileno(t->f), &st)) {
         fclose(t->f);
         t->f = NULL;
-        return MP3PLAYER_ERR_IO;
+        return AUDIOPLAYER_ERR_IO;
     }
     t->file_size = st.st_size;
 
@@ -553,7 +553,7 @@ void mp3player_mixer_init (void) {
 
 mp3player_err_t mp3player_init (void) {
     p = calloc(1, sizeof(mp3player_t));
-    if (p == NULL) return MP3PLAYER_ERR_OUT_OF_MEM;
+    if (p == NULL) return AUDIOPLAYER_ERR_OUT_OF_MEM;
 
     p->wave = (waveform_t) {
         .name = "mp3player",
@@ -566,7 +566,7 @@ mp3player_err_t mp3player_init (void) {
         .ctx = p,
     };
 
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 void mp3player_deinit (void) {
@@ -583,12 +583,12 @@ mp3player_err_t mp3player_load (char *path) {
     }
 
     mp3player_err_t err = track_load(&p->current, path, ID3_FLAG_EXTRACT_ART);
-    if (err != MP3PLAYER_OK) return err;
+    if (err != AUDIOPLAYER_OK) return err;
 
     p->wave.channels = p->current.channels;
     p->wave.frequency = p->current.samplerate;
 
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 void mp3player_unload (void) {
@@ -597,18 +597,18 @@ void mp3player_unload (void) {
 }
 
 mp3player_err_t mp3player_process (void) {
-    if (!p || !p->current.loaded) return MP3PLAYER_OK;
+    if (!p || !p->current.loaded) return AUDIOPLAYER_OK;
 
     if (p->current.format == AUDIO_FORMAT_MP3 && p->current.f && ferror(p->current.f)) {
         mp3player_unload();
-        return MP3PLAYER_ERR_IO;
+        return AUDIOPLAYER_ERR_IO;
     }
 
     if (mp3player_is_finished()) {
         mp3player_stop();
     }
 
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 bool mp3player_is_playing (void) {
@@ -621,7 +621,7 @@ bool mp3player_is_finished (void) {
 }
 
 mp3player_err_t mp3player_play (void) {
-    if (!p->current.loaded) return MP3PLAYER_ERR_NO_FILE;
+    if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (!mp3player_is_playing()) {
         if (track_is_finished(&p->current)) {
@@ -631,14 +631,14 @@ mp3player_err_t mp3player_play (void) {
                 p->current.current_pcm_frame = 0;
             } else {
                 if (fseek(p->current.f, p->current.data_start, SEEK_SET)) {
-                    return MP3PLAYER_ERR_IO;
+                    return AUDIOPLAYER_ERR_IO;
                 }
                 mp3_reset_decoder(&p->current);
             }
         }
         mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
     }
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 void mp3player_stop (void) {
@@ -653,7 +653,7 @@ mp3player_err_t mp3player_toggle (void) {
     } else {
         return mp3player_play();
     }
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 void mp3player_mute (bool mute) {
@@ -662,7 +662,7 @@ void mp3player_mute (bool mute) {
 }
 
 mp3player_err_t mp3player_seek (int seconds) {
-    if (!p->current.loaded) return MP3PLAYER_ERR_NO_FILE;
+    if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (p->current.format == AUDIO_FORMAT_FLAC) {
         /* Stop the mixer during FLAC seek to prevent wave_read and seek
@@ -678,11 +678,11 @@ mp3player_err_t mp3player_seek (int seconds) {
         }
         if (!drflac_seek_to_pcm_frame(p->current.flac, (drflac_uint64)target)) {
             if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-            return MP3PLAYER_ERR_IO;
+            return AUDIOPLAYER_ERR_IO;
         }
         p->current.current_pcm_frame = (drflac_uint64)target;
         if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-        return MP3PLAYER_OK;
+        return AUDIOPLAYER_OK;
     }
 
     /* MP3 seek — stop the mixer to prevent wave_read from using the
@@ -693,7 +693,7 @@ mp3player_err_t mp3player_seek (int seconds) {
     long bytes_to_move = (long)((p->current.bitrate * seconds) / 8);
     if (bytes_to_move == 0) {
         if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-        return MP3PLAYER_OK;
+        return AUDIOPLAYER_OK;
     }
 
     long position = (ftell(p->current.f) - p->current.buffer_left + bytes_to_move);
@@ -706,7 +706,7 @@ mp3player_err_t mp3player_seek (int seconds) {
 
     if (fseek(p->current.f, position, SEEK_SET)) {
         if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-        return MP3PLAYER_ERR_IO;
+        return AUDIOPLAYER_ERR_IO;
     }
 
     mp3_reset_decoder(&p->current);
@@ -715,13 +715,13 @@ mp3player_err_t mp3player_seek (int seconds) {
 
     if (ferror(p->current.f)) {
         if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-        return MP3PLAYER_ERR_IO;
+        return AUDIOPLAYER_ERR_IO;
     }
 
     p->current.seek_predecode_frames = (position == p->current.data_start) ? 0 : SEEK_PREDECODE_FRAMES;
 
     if (was_playing) mixer_ch_play(SOUND_MP3_PLAYER_CHANNEL, &p->wave);
-    return MP3PLAYER_OK;
+    return AUDIOPLAYER_OK;
 }
 
 float mp3player_get_duration (void) {

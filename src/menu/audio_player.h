@@ -17,11 +17,11 @@
  * Enumeration for different types of errors that can occur in the audio player.
  */
 typedef enum {
-    MP3PLAYER_OK,               /**< No error */
-    MP3PLAYER_ERR_OUT_OF_MEM,   /**< Out of memory error */
-    MP3PLAYER_ERR_IO,           /**< Input/Output error */
-    MP3PLAYER_ERR_NO_FILE,      /**< No file found error */
-    MP3PLAYER_ERR_INVALID_FILE, /**< Invalid file error */
+    AUDIOPLAYER_OK,               /**< No error */
+    AUDIOPLAYER_ERR_OUT_OF_MEM,   /**< Out of memory error */
+    AUDIOPLAYER_ERR_IO,           /**< Input/Output error */
+    AUDIOPLAYER_ERR_NO_FILE,      /**< No file found error */
+    AUDIOPLAYER_ERR_INVALID_FILE, /**< Invalid file error */
 } mp3player_err_t;
 
 /**

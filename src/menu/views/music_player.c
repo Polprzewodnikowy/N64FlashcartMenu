@@ -182,10 +182,10 @@ static const char *queue_entry_name (menu_t *menu, int queue_idx, char *buf, siz
         c->loaded = true;
     }
 
-    /* Build display string: "3. Title" or "Title" or filename */
+    /* Build display string: "03. Title" or "Title" or filename */
     if (c->title[0]) {
         if (c->track_number > 0) {
-            snprintf(buf, buf_size, "%d. %s", c->track_number, c->title);
+            snprintf(buf, buf_size, "%02d. %s", c->track_number, c->title);
         } else {
             snprintf(buf, buf_size, "%s", c->title);
         }

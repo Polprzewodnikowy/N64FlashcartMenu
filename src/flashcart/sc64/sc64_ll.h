@@ -81,7 +81,8 @@ typedef enum {
     SAVE_TYPE_SRAM_256KBIT, /**< SRAM 256Kbit */
     SAVE_TYPE_FLASHRAM_1MBIT, /**< FlashRAM 1Mbit */
     SAVE_TYPE_SRAM_BANKED, /**< SRAM Banked */
-    SAVE_TYPE_SRAM_1MBIT /**< SRAM 1Mbit */
+    SAVE_TYPE_SRAM_1MBIT, /**< SRAM 1Mbit */
+    SAVE_TYPE_FLASHRAM_FAKE /**< FlashRAM 1Mbit Non Compliant */
 } sc64_save_type_t;
 
 /** @brief The SC64 CIC Seed Enumeration. */

@@ -167,10 +167,10 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 
     sound_deinit();
-    
-    rspq_wait();  // Execute deferred callbacks before closing RSPQ
-    rspq_close();
+
+    rspq_wait();
     rdpq_close();
+    rspq_close();
     rtc_close();
     timer_close();
     joypad_close();

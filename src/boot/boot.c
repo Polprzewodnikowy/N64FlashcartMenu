@@ -93,6 +93,12 @@ void boot (boot_params_t *params) {
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
 
+    // Clear DPC status flags and reset command buffer to known-empty state at address 0
+    cpu_io_write(&DPC->SR, DPC_SR_CLR_XBUS_DMEM_DMA | DPC_SR_CLR_FREEZE | DPC_SR_CLR_FLUSH);
+    while (cpu_io_read(&DPC->SR) & (DPC_SR_PIPE_BUSY | DPC_SR_CMD_BUSY | DPC_SR_DMA_BUSY | DPC_SR_TMEM_BUSY));
+    cpu_io_write(&DPC->START, 0);
+    cpu_io_write(&DPC->END, 0);
+
     while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 
     uint32_t *reboot_src = &reboot_start;
@@ -115,10 +121,6 @@ void boot (boot_params_t *params) {
     cpu_io_write(&PI->DOM[0].PWD, pi_config >> 8);
     cpu_io_write(&PI->DOM[0].PGS, pi_config >> 16);
     cpu_io_write(&PI->DOM[0].RLS, pi_config >> 20);
-
-    if (cpu_io_read(&DPC->SR) & DPC_SR_XBUS_DMEM_DMA) {
-        while (cpu_io_read(&DPC->SR) & DPC_SR_PIPE_BUSY);
-    }
 
     io32_t *ipl3_src = base;
     io32_t *ipl3_dst = SP_MEM->DMEM;

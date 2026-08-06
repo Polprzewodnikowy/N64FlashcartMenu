@@ -6,7 +6,6 @@
 #include "boot/boot.h"
 #include "utils/fs.h"
 #include "views.h"
-#include "../ui_components/constants.h"
 #include <string.h>
 
 static bool show_extra_info_message = false;
@@ -563,7 +562,7 @@ static void process (menu_t *menu) {
 static void draw (menu_t *menu, surface_t *d) {
     rdpq_attach(d, NULL);
 
-    rdpq_clear(BACKGROUND_EMPTY_COLOR);
+    ui_components_background_draw();
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (menu->load_pending.rom_file && menu->settings.loading_progress_bar_enabled) {
         ui_components_loader_draw(0.0f, NULL);
@@ -699,7 +698,7 @@ static void draw_progress (float progress) {
     if (d) {
         rdpq_attach(d, NULL);
 
-        rdpq_clear(BACKGROUND_EMPTY_COLOR);
+        ui_components_background_draw();
 
         ui_components_loader_draw(progress, "Loading ROM...");  
 

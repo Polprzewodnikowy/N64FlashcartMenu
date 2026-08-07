@@ -93,12 +93,6 @@ void boot (boot_params_t *params) {
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
 
-    // Clear DPC status flags and reset command buffer to known-empty state at address 0
-    cpu_io_write(&DPC->SR, DPC_SR_CLR_XBUS_DMEM_DMA | DPC_SR_CLR_FREEZE | DPC_SR_CLR_FLUSH);
-    while (cpu_io_read(&DPC->SR) & (DPC_SR_PIPE_BUSY | DPC_SR_CMD_BUSY | DPC_SR_DMA_BUSY | DPC_SR_TMEM_BUSY));
-    cpu_io_write(&DPC->START, 0);
-    cpu_io_write(&DPC->END, 0);
-
     while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 
     uint32_t *reboot_src = &reboot_start;

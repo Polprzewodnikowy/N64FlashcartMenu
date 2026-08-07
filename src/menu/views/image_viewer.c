@@ -131,6 +131,14 @@ void view_image_viewer_init (menu_t *menu) {
     image_set_as_background = false;
     image = NULL;
     int max_dim = image_budget_max_dimension();
+    // The existing background will be freed when this image replaces it,
+    // so its memory is available headroom for the decode budget
+    surface_t *current_bg = ui_components_background_get_image();
+    if (current_bg) {
+        size_t bg_bytes = current_bg->height * current_bg->stride;
+        int bg_dim = (int)sqrtf((float)(bg_bytes * 0.8f / 2));
+        max_dim += bg_dim;
+    }
     int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;
     int max_h = (max_dim > display_get_height()) ? display_get_height() : max_dim;
 

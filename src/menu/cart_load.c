@@ -102,33 +102,36 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
  */
 cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress) {
     path_t *path = path_clone(menu->load.rom_path);
+    path_t *save_path = path_clone(menu->load.rom_path);
 
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
     flashcart_save_type_t save_type = convert_save_type(rom_info_get_save_type(&menu->load.rom_info));
+
+    path_ext_replace(save_path, "sav");
+    if (menu->settings.use_saves_folder) {
+        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(save_path)) {
+            path_free(save_path);
+            path_free(path);
+            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
+        }
+        path_push_subdir(save_path, SAVE_DIRECTORY_NAME);
+    }
+
+    if (save_progress && save_type != FLASHCART_SAVE_TYPE_NONE && !file_exists(path_get(save_path))) {
+        save_progress(1.0f);
+    }
+
+    menu->flashcart_err = flashcart_load_save(path_get(save_path), save_type);
+    path_free(save_path);
+    if (menu->flashcart_err != FLASHCART_OK) {
+        path_free(path);
+        return CART_LOAD_ERR_SAVE_LOAD_FAIL;
+    }
 
     menu->flashcart_err = flashcart_load_rom(path_get(path), byte_swap, progress);
     if (menu->flashcart_err != FLASHCART_OK) {
         path_free(path);
         return CART_LOAD_ERR_ROM_LOAD_FAIL;
-    }
-
-    path_ext_replace(path, "sav");
-    if (menu->settings.use_saves_folder) {
-        if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(path)) {
-            path_free(path);
-            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
-        }
-        path_push_subdir(path, SAVE_DIRECTORY_NAME);
-    }
-
-    if (save_progress && save_type != FLASHCART_SAVE_TYPE_NONE && !file_exists(path_get(path))) {
-        save_progress(1.0f);
-    }
-
-    menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
-    if (menu->flashcart_err != FLASHCART_OK) {
-        path_free(path);
-        return CART_LOAD_ERR_SAVE_LOAD_FAIL;
     }
 
 #ifndef FEATURE_AUTOLOAD_ROM_ENABLED

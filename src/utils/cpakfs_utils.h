@@ -141,7 +141,11 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
                                     int (*exists_fullpath)(const char *fullpath));
 
 /**
- * @brief Replace FAT-invalid characters in a filename with underscores.
+ * @brief Percent-encode FAT-invalid characters in a cpakfs note name for use in an SD card filename.
+ *
+ * Each character in the set \\ / : * ? " < > | and % is replaced with its
+ * %XX hex escape so the result is safe to use as a FAT/exFAT filename component.
+ * % itself is encoded as %25 to keep the encoding unambiguous for decoding.
  *
  * @param dst  Output buffer.
  * @param src  Source string (e.g. raw cpakfs note name).

@@ -399,6 +399,7 @@ int file_exists_full(const char *full_mounted_path) {
 }
 
 void cpakfs_sanitize_fat_filename(char *dst, const char *src, size_t dst_sz) {
+    if (dst_sz == 0) return;
     static const char invalid[] = "\\/:*?\"<>|%"; /* % encoded so decode is unambiguous */
     char *d = dst;
     const char *end = dst + dst_sz - 1;
@@ -417,6 +418,7 @@ void cpakfs_sanitize_fat_filename(char *dst, const char *src, size_t dst_sz) {
 }
 
 void cpakfs_decode_fat_filename(char *dst, const char *src, size_t dst_sz) {
+    if (dst_sz == 0) return;
     char *d = dst;
     const char *end = dst + dst_sz - 1;
     for (const char *s = src; *s && d < end; s++) {

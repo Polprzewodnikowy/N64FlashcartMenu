@@ -27,6 +27,10 @@ static bool restore_controller_pak_note(int controller) {
 
     extract_title_from_absolute_path(cpak_note_path, title, sizeof title);
 
+    /* Always decode: the old code could not create backups for notes with FAT-invalid chars
+     * so any usable legacy backup contains only FAT-safe chars and no %XX sequences.
+     * A legacy note name that literally contains %XX (e.g. "save%2A") would be decoded
+     * incorrectly; that is an accepted limitation without a separate metadata store. */
     char decoded_title[256];
     cpakfs_decode_fat_filename(decoded_title, title, sizeof(decoded_title));
 

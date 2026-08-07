@@ -15,7 +15,10 @@ Features:
 
 > [!NOTE]
 > Note backup filenames may contain `%XX` sequences (e.g. `%2A` for `*`) when the original note name includes characters that are invalid in FAT filenames.
-> This encoding is reversible — notes restore to the Controller Pak with their original name intact.
+> These sequences are always decoded on restore so the note is written back to the Controller Pak with its original name.
+>
+> **Known limitation**: a pre-existing backup whose note name literally contained a `%XX` string (e.g. a note named `save%2A`) would be decoded incorrectly on restore.
+> The previous code could not back up notes containing FAT-invalid characters at all, so this situation is unlikely to arise in practice.
 
 
 ### Controller Pak Manager

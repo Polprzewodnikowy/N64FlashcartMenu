@@ -125,6 +125,7 @@ typedef struct {
         mz_zip_archive zip;
         path_t *directory;
         entry_t *list;
+        int32_t list_capacity;
         int32_t entries;
         entry_t *entry;
         int32_t selected;

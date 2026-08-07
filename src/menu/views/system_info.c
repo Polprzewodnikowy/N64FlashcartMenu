@@ -21,6 +21,14 @@ static const char *format_accessory (int joypad) {
     }
 }
 
+static const char *format_console_region (void) {
+    switch (get_tv_type()) {
+        case TV_NTSC: return "NTSC";
+        case TV_PAL: return "PAL";
+        case TV_MPAL: return "MPAL";
+        default: return "Unknown";
+    }
+}
 
 static void process (menu_t *menu) {
     JOYPAD_PORT_FOREACH (port) {
@@ -54,6 +62,8 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "Expansion PAK is %sinserted\n"
         "\n"
+        "Console region: %s\n"
+        "\n"
         "Joypad 1 is %sconnected %s\n"
         "Joypad 2 is %sconnected %s\n"
         "Joypad 3 is %sconnected %s\n"
@@ -62,6 +72,7 @@ static void draw (menu_t *menu, surface_t *d) {
         "\n"
         "Physical Disk Drive attached: %s\n",
         is_memory_expanded() ? "" : "not ",
+        format_console_region(),
         (joypad[0]) ? "" : "not ", format_accessory(0),
         (joypad[1]) ? "" : "not ", format_accessory(1),
         (joypad[2]) ? "" : "not ", format_accessory(2),

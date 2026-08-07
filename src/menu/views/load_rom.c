@@ -725,7 +725,21 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(progress, "Loading ROM...");  
+        ui_components_loader_draw(progress, "Loading ROM...");
+
+        rdpq_detach_show();
+    }
+}
+
+static void draw_creating_save (float progress) {
+    surface_t *d = display_get();
+
+    if (d) {
+        rdpq_attach(d, NULL);
+
+        ui_components_background_draw();
+
+        ui_components_loader_draw(progress, "Creating initial save file...");
 
         rdpq_detach_show();
     }
@@ -736,12 +750,12 @@ static void load (menu_t *menu) {
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
-        err = cart_load_n64_rom_and_save(menu, NULL);
+        err = cart_load_n64_rom_and_save(menu, NULL, NULL);
     } else  {
-        err = cart_load_n64_rom_and_save(menu, draw_progress);
+        err = cart_load_n64_rom_and_save(menu, draw_progress, draw_creating_save);
     }
 #else
-    err = cart_load_n64_rom_and_save(menu, draw_progress);
+    err = cart_load_n64_rom_and_save(menu, draw_progress, draw_creating_save);
 #endif
 
     if (err != CART_LOAD_OK) {

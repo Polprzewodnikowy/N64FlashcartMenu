@@ -27,6 +27,13 @@ static bool restore_controller_pak_note(int controller) {
 
     extract_title_from_absolute_path(cpak_note_path, title, sizeof title);
 
+    /* Always decode: the old code could not create backups for notes with FAT-invalid chars
+     * so any usable legacy backup contains only FAT-safe chars and no %XX sequences.
+     * A legacy note name that literally contains %XX (e.g. "save%2A") would be decoded
+     * incorrectly; that is an accepted limitation without a separate metadata store. */
+    char decoded_title[256];
+    cpakfs_decode_fat_filename(decoded_title, title, sizeof(decoded_title));
+
     unmount_all_cpakfs();
 
     //mounting the CPAK:
@@ -71,7 +78,7 @@ static bool restore_controller_pak_note(int controller) {
     }
 
 
-    snprintf(filename_note, sizeof(filename_note), "%s%s", CPAK_MOUNT_ARRAY[controller], title);
+    snprintf(filename_note, sizeof(filename_note), "%s%s", CPAK_MOUNT_ARRAY[controller], decoded_title);
     
     //debugf("Dest. filename: %s\n", filename_note);
 
@@ -79,10 +86,8 @@ static bool restore_controller_pak_note(int controller) {
     if (file_exists_full(filename_note)) {
         char unique_full[256];
 
-        // Strip the prefix from filename_note to get just the CPAK full name:
-        // (title already has no prefix, so pass 'title' directly)
         if (pick_unique_fullname_with_mount(CPAK_MOUNT_ARRAY[controller],
-                                            title, /* NO prefix */
+                                            decoded_title,
                                             unique_full, sizeof unique_full,
                                             file_exists_full) == 0)
         {

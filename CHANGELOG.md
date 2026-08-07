@@ -15,6 +15,8 @@
 	- Experimental DD swap support.
 	- Added console region to the system information screen.
 	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
+	- Add Emulator ROM override INI
+	- Add progress of save file creation on ROM load.
 	
 
 - **Bug Fixes**
@@ -23,6 +25,8 @@
 
 - **Documentation**
 	- Improved DD section with latest information.
+	- Improved MP3 player information.
+	- Improved Emulator information with ROM overrides.
 	- Minor fixes.
 
 - **Refactor**

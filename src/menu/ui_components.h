@@ -198,6 +198,11 @@ void ui_components_background_init(char *cache_location);
 void ui_components_background_free(void);
 
 /**
+ * @brief Free and delete the cached background image.
+ */
+void ui_components_background_clear(void);
+
+/**
  * @brief Replace the background image.
  * 
  * @param image New background image.

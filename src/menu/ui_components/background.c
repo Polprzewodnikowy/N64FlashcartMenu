@@ -220,6 +220,26 @@ void ui_components_background_free(void) {
     }
 }
 
+void ui_components_background_clear(void) {
+    if (!background) {
+        return;
+    }
+    if (background->cache_location) {
+        remove(background->cache_location);
+    }
+    // Free image and display list but keep the struct and cache_location so
+    // a new background can be set without rebooting
+    if (background->image) {
+        surface_free(background->image);
+        free(background->image);
+        background->image = NULL;
+    }
+    if (background->image_display_list) {
+        rdpq_call_deferred(display_list_free, background->image_display_list);
+        background->image_display_list = NULL;
+    }
+}
+
 /**
  * @brief Replace the background image and update cache/display list.
  *

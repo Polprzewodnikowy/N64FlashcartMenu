@@ -25,23 +25,6 @@ static char *convert_error_message (png_err_t err) {
 }
 
 /** Max image dimension that fits in 80% of free heap (2 bytes/pixel). */
-/** Max image dimension that fits in 80% of free heap (2 bytes/pixel),
- *  plus any memory that would be freed by replacing the current background. */
-static int image_budget_max_dimension (void) {
-    heap_stats_t heap;
-    sys_get_heap_stats(&heap);
-    size_t free_bytes = heap.total - heap.used;
-    // Background memory will be freed when the new image replaces it, so add it back
-    surface_t *bg = ui_components_background_get_image();
-    if (bg) {
-        free_bytes += bg->height * bg->stride;
-    }
-    size_t budget = (size_t)(free_bytes * 0.8f);
-    int dim = (int)sqrtf((float)(budget / 2));
-    if (dim < 16) dim = 16;
-    return dim;
-}
-
 static void image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
     menu_t *menu = (menu_t *) (callback_data);
 
@@ -138,17 +121,9 @@ void view_image_viewer_init (menu_t *menu) {
     image_loading = true;
     image_set_as_background = false;
     image = NULL;
-    int max_dim = image_budget_max_dimension();
-    // The existing background will be freed when this image replaces it,
-    // so its memory is available headroom for the decode budget
-    surface_t *current_bg = ui_components_background_get_image();
-    if (current_bg) {
-        size_t bg_bytes = current_bg->height * current_bg->stride;
-        int bg_dim = (int)sqrtf((float)(bg_bytes * 0.8f / 2));
-        max_dim += bg_dim;
-    }
-    int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;
-    int max_h = (max_dim > display_get_height()) ? display_get_height() : max_dim;
+    // A 640x480 RGBA16 image is at most 600 KB and always fits; skip heap budget for image viewer
+    int max_w = display_get_width();
+    int max_h = display_get_height();
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 

@@ -4,9 +4,9 @@
 #include "views.h"
 #include "../sound.h"
 #include "../fonts.h"
-#include <fatfs/ff.h>
 #include <errno.h>
 #include <dir.h>
+#include "utils/fs.h"
 #include "utils/cpakfs_utils.h"
 
 #define MAX_STRING_LENGTH 62
@@ -59,9 +59,7 @@ static bool start_single_note_delete;
 static bool start_format_controller_pak;
 
 static char * CPAK_PATH = "sd:/cpak_saves";
-static char * CPAK_PATH_NO_PRE = "/cpak_saves";
 static char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
-static char * CPAK_NOTES_PATH_NO_PRE = "/cpak_saves/notes";
 
 static void reset_vars(){
     has_mem = false;
@@ -82,18 +80,6 @@ static void reset_vars(){
     process_complete_format = false;
     process_complete_delete = false;
     error_message_displayed = false;
-}
-
-static void create_directory(const char *dirpath) {
-    FRESULT res = f_mkdir(dirpath);
-    
-    if (res == FR_OK) {
-        //debugf("Directory created: %s\n", dirpath);
-    } else if (res == FR_EXIST) {
-        //debugf("Directory already exists: %s\n", dirpath);
-    } else {
-        //debugf("Failed to create directory: %s (Error Code: %d)\n", dirpath, res);
-    }
 }
 
 static void get_rtc_time(char* formatted_time) {
@@ -216,7 +202,7 @@ static void write_note_name_info_list(int16_t controller, int index, char* entry
     if (size < 0) {
         snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), " ");
     } else {
-        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), "(%-3.3d)", size);
+        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), "%-3.3d", size);
     }
     snprintf(controller_pak_name_notes[index], MAX_STRING_LENGTH, "%s", entry_name);
     parse_cpakfs_fullname(entry_name, &cpakfs_path_strings[index]);
@@ -266,7 +252,12 @@ static void dump_complete_cpak(int port) {
         return;
     }
 
-    uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
+    uint8_t *bankbuf = scratch_malloc(MEMPAK_BANK_SIZE);
+    bool used_scratch = true;
+    if (!bankbuf) {
+        used_scratch = false;
+        bankbuf = malloc(MEMPAK_BANK_SIZE);
+    }
     if (!bankbuf) {
         snprintf(failure_message_note, sizeof(failure_message_note), "Memory allocation failed!");
         error_message_displayed = true;
@@ -279,7 +270,11 @@ static void dump_complete_cpak(int port) {
         if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
@@ -288,13 +283,21 @@ static void dump_complete_cpak(int port) {
         if (wr != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to write data to file: %s", complete_filename);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
     }
 
-    free(bankbuf);
+    if (used_scratch) {
+        scratch_free(bankbuf);
+    } else {
+        free(bankbuf);
+    }
     fclose(fp);
     process_complete_full_dump = true;
 }
@@ -356,18 +359,6 @@ static void dump_single_note(int _port, int16_t selected_index) {
     fclose(fDump);
     process_complete_note_dump = true;
 
-}
-
-static bool file_exists(const char *filename)
-{
-    FILE *fp = fopen(filename, "r");
-    bool is_exist = false;
-    if (fp != NULL)
-    {
-        is_exist = true;
-        fclose(fp);
-    }
-    return is_exist;
 }
 
 static void delete_single_note(int _port, unsigned short selected_index) {
@@ -651,7 +642,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (has_mem && !corrupted_pak) {
             style = STL_GREEN;
-            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
+            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/%d free blocks available", cpakfs_stats.pages.total - cpakfs_stats.pages.used, cpakfs_stats.pages.total);
         } else if (has_mem && corrupted_pak) {
             snprintf(has_mem_text, sizeof(has_mem_text), "Controller Pak detected (Corrupted)");
             style = STL_ORANGE;
@@ -696,7 +687,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "            Name           Code    Ext.    Size [blocks]\n"
+            "            Name           Code    Ext.    Blocks used\n"
         );
 
         ui_components_main_text_draw(style,
@@ -948,13 +939,13 @@ static void draw (menu_t *menu, surface_t *d) {
     } else if (show_complete_write_confirm_message) {
         ui_components_messagebox_draw(
             "To write a complete backup, browse to a file"
-            " with the extension \".mpk\" or \".pak\".\n\n"
+            " with the extension \".mpk\" or \".pak\" in the menu filebrowser.\n\n"
             "B: Back"
         );   
     } else if (show_single_note_write_info_message) {
         ui_components_messagebox_draw(
             "To write a single note, browse to a file"
-            " with the extension \".mpkn\" or \".paknote\".\n\n"
+            " with the extension \".mpkn\" or \".paknote\" in the menu filebrowser.\n\n"
             "B: Back"
         );   
     }
@@ -1047,8 +1038,8 @@ void view_controller_pakfs_init (menu_t *menu) {
 
     use_rtc = menu->current_time >= 0 ? true : false;
 
-    create_directory(CPAK_PATH_NO_PRE);
-    create_directory(CPAK_NOTES_PATH_NO_PRE);
+    directory_create(CPAK_PATH);
+    directory_create(CPAK_NOTES_PATH);
 
     ui_components_context_menu_init(&options_context_menu);
 }

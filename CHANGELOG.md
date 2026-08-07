@@ -8,13 +8,62 @@
 
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- Adds Background music.
+	- Adds ability to use infinite scroll within the file browser.
+	- ROM override submenu now remembers current custom settings.
+	- Added extra info to the flashcart information screen to show Button state and voltage on supported carts.
+	- Experimental DD swap support.
+	- Added console region to the system information screen.
+	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
+	
+
+- **Bug Fixes**
+	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
+
+
+- **Documentation**
+	- Improved DD section with latest information.
+	- Minor fixes.
+
+- **Refactor**
+	- Optimzed PNG image handler to work on memory constrained consoles (without an Expansion Pak).
+	- Improved memory usage and OOB fixes across the whole codebase.
+
+- **Other**
+	- Added UTF converter for later consumption.
+	- Added ED64 pseudo state for later consumption.
+	
+
+### Breaking changes
+- (as of 2026-03-15) libdragon SDK (and this menu) now requires MI repeat mode support, (supported by latest Ares and Gopher64, A3D also works though needs the latest FW). 
+
+### Notes
+- Progress has been made towards disk swapping, but it is still WiP.
+
+### Current known Issues
+- Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu fails to load RTYI demo 2. Workaround by not setting a background image.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+
+### Deprecation notices
+- None.
+
+## Release Notes 2026-05-23 - Tagged 0.3.2
+
+- **New Features**
 	- Adds settings to hide cheat and save file types in the browser.
 	- Adds ability to display embedded homebrew ROM metadata in ROM info.
-	- Adds ability to display Commercial game metadate using ROM DB.
+	- Adds ability to display Commercial game metadata using ROM DB.
+	- Menu settings now know what setting is currently applied.
 
 - **Bug Fixes**
 	- Neon64 1Mbit SRAM.
 	- Potential buffer overflows.
+	- Fixed an issue where large ROMs failed to load in certain circumstances.
+	- Fixed a lockup when selecting a game in history when the ROM no longer exists.
 
 - **Documentation**
 	- Minor fixes.
@@ -48,8 +97,9 @@
 ### Current known Issues
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
-- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
-- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu fails to load RTYI demo 2. Workaround by not setting a background image.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
 
 
 ### Deprecation notices

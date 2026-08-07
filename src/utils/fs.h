@@ -12,6 +12,18 @@
 #define FS_SECTOR_SIZE      (512)
 
 /**
+ * @def FS_MAX_PATH_SCAN_LENGTH
+ * @brief Maximum path length scanned for defensive string validation.
+ */
+#define FS_MAX_PATH_SCAN_LENGTH (1024)
+
+/**
+ * @def FS_MAX_EXTENSION_LENGTH
+ * @brief Maximum extension length scanned for defensive string validation.
+ */
+#define FS_MAX_EXTENSION_LENGTH (16)
+
+/**
  * @file fs.h
  * @brief File system utility functions for file and directory operations.
  * @ingroup utils

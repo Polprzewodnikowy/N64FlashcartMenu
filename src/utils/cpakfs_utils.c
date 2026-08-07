@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <libdragon.h>
-#include <fatfs/ff.h>
 #include <errno.h>
 #include <dir.h>
 #include "cpakfs_utils.h"

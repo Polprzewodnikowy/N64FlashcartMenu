@@ -15,3 +15,7 @@
 	path = src/libs/miniz
 	url = https://github.com/richgel999/miniz.git
 	ignore = dirty
+[submodule "src/libs/dr_libs"]
+	path = src/libs/dr_libs
+	url = https://github.com/mackron/dr_libs.git
+	ignore = dirty

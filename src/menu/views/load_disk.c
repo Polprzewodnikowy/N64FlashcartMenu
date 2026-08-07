@@ -260,7 +260,7 @@ static void load (menu_t *menu) {
     cart_load_err_t err;
 
     if (menu->load.rom_path && menu->load.combined_disk_rom) {
-        err = cart_load_n64_rom_and_save(menu, draw_progress);
+        err = cart_load_n64_rom_and_save(menu, draw_progress, NULL);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
             return;

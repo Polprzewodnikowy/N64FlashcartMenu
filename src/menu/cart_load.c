@@ -100,7 +100,7 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
  * @param progress Progress callback function.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
+cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress) {
     path_t *path = path_clone(menu->load.rom_path);
 
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
@@ -119,6 +119,10 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
         path_push_subdir(path, SAVE_DIRECTORY_NAME);
+    }
+
+    if (save_progress && save_type != FLASHCART_SAVE_TYPE_NONE && !file_exists(path_get(path))) {
+        save_progress(1.0f);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);

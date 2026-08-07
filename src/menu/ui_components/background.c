@@ -280,3 +280,29 @@ void ui_components_background_draw(void) {
 surface_t *ui_components_background_get_image(void) {
     return background ? background->image : NULL;
 }
+
+void ui_components_background_reload(void) {
+    if (!background || !background->cache_location) {
+        return;
+    }
+    if (!background->image) {
+        load_from_cache(background);
+        prepare_background(background);
+    }
+}
+
+void ui_components_background_image_free_only(void) {
+    if (!background) {
+        return;
+    }
+    // Free image and display list, keep struct+cache_location so it can be reloaded
+    if (background->image) {
+        surface_free(background->image);
+        free(background->image);
+        background->image = NULL;
+    }
+    if (background->image_display_list) {
+        rdpq_call_deferred(display_list_free, background->image_display_list);
+        background->image_display_list = NULL;
+    }
+}

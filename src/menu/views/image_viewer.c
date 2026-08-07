@@ -110,6 +110,8 @@ static void deinit (menu_t *menu) {
         } else {
             surface_free(image);
             free(image);
+            // Restore the background that was freed at init to give the decoder more memory
+            ui_components_background_reload();
         }
     }
     image = NULL;
@@ -121,7 +123,9 @@ void view_image_viewer_init (menu_t *menu) {
     image_loading = true;
     image_set_as_background = false;
     image = NULL;
-    // A 640x480 RGBA16 image is at most 600 KB and always fits; skip heap budget for image viewer
+    // Free the background image temporarily so the PNG decoder has its full memory budget;
+    // ui_components_background_reload() restores it if the user does not set a new background
+    ui_components_background_image_free_only();
     int max_w = display_get_width();
     int max_h = display_get_height();
 

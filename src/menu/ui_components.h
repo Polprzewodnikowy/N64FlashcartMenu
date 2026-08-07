@@ -220,6 +220,16 @@ void ui_components_background_draw(void);
 surface_t *ui_components_background_get_image(void);
 
 /**
+ * @brief Reload the background image from cache (call after temporarily freeing).
+ */
+void ui_components_background_reload(void);
+
+/**
+ * @brief Free only the in-memory image and display list, keeping the cache intact.
+ */
+void ui_components_background_image_free_only(void);
+
+/**
  * @brief Draw the file list component.
  * 
  * @param list List of entries.

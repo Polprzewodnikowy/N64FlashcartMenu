@@ -164,22 +164,6 @@ typedef struct {
 #define DPC_SR_CLR_CMD_CTR          (1 << 8)
 #define DPC_SR_CLR_CLOCK_CTR        (1 << 9)
 
-typedef struct {
-    io32_t MODE;
-    io32_t VERSION;
-    io32_t INTR;
-    io32_t INTR_MASK;
-} mi_regs_t;
-
-#define MI_BASE                     (0x04300000UL)
-#define MI                          ((mi_regs_t *) MI_BASE)
-#define MI_MASK_CLR_SP              (1 << 0)
-#define MI_MASK_CLR_SI              (1 << 2)
-#define MI_MASK_CLR_AI              (1 << 4)
-#define MI_MASK_CLR_VI              (1 << 6)
-#define MI_MASK_CLR_PI              (1 << 8)
-#define MI_MASK_CLR_DP              (1 << 10)
-
 /**
  * @brief Video Interface Registers Structure.
  * 

@@ -150,12 +150,6 @@ void boot (boot_params_t *params) {
             : (params->tv_type == BOOT_TV_TYPE_MPAL) ? 4
             : 0;
 
-    // Disable all RCP interrupt sources; stale pending interrupts can crash games on startup
-    cpu_io_write(&MI->INTR_MASK,
-        MI_MASK_CLR_SP | MI_MASK_CLR_SI | MI_MASK_CLR_AI |
-        MI_MASK_CLR_VI | MI_MASK_CLR_PI | MI_MASK_CLR_DP
-    );
-
     asm volatile (
         "li $t3, %[c0_status] \n"
         "mtc0 $t3, $12 \n"

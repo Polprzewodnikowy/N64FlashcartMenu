@@ -37,12 +37,12 @@ typedef enum {
 void sound_init_default(void);
 
 /**
- * @brief Initialize the MP3 playback system.
+ * @brief Initialize the Audioplayer playback system.
  * 
- * This function initializes the MP3 playback system, preparing it
- * for playing MP3 files.
+ * This function initializes the audioplayer playback system, preparing it
+ * for playing audio files.
  */
-void sound_init_mp3_playback(void);
+void sound_init_audioplayer_playback(void);
 
 /**
  * @brief Initialize the sound effects system.

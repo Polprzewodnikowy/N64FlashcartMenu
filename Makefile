@@ -44,19 +44,22 @@ SRCS = \
 	libs/miniz/miniz.c \
 	menu/ini_parser.c \
 	menu/actions.c \
+	menu/audio_player.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
 	menu/datel_codes.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
+	menu/id3_parser.c \
+	menu/jpeg_decoder.c \
 	menu/menu.c \
-	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
@@ -88,7 +91,8 @@ SRCS = \
 	menu/views/cpak_dump_info.c \
 	menu/views/cpak_note_dump_info.c \
 	utils/cpakfs_utils.c \
-	utils/fs.c
+	utils/fs.c \
+	utils/utf_converter.c \
 
 FONTS = \
 	Firple-Bold.ttf

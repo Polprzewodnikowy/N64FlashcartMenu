@@ -18,7 +18,7 @@
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
@@ -46,7 +46,7 @@ static bool interlaced = true;
  * 
  * @param boot_params Pointer to the boot parameters structure.
  */
-static void menu_init (boot_params_t *boot_params) {    
+static void menu_init (boot_params_t *boot_params) {
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 
@@ -168,9 +168,9 @@ static void menu_deinit (menu_t *menu) {
 
     sound_deinit();
     
-    rspq_wait();  // Execute deferred callbacks before closing RSPQ
-    rspq_close();
+    rspq_wait();
     rdpq_close();
+    rspq_close();
     rtc_close();
     timer_close();
     joypad_close();

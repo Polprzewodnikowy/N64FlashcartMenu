@@ -128,6 +128,12 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 // }
 #endif
 
+static void remove_background_image (menu_t *menu, void *arg) {
+    (void)arg;
+    (void)menu;
+    ui_components_background_clear();
+}
+
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static int get_loading_progress_bar_enabled_current_selection (menu_t *menu) {
     return menu->settings.loading_progress_bar_enabled ? 0 : 1;
@@ -323,6 +329,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Rumble Feedback", .submenu = &set_rumble_enabled_type_context_menu },
     // { .text = "Restore Defaults", .action = set_use_default_settings },
 #endif
+    { .text = "Remove Background", .action = remove_background_image },
 
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};

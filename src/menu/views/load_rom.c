@@ -302,6 +302,7 @@ static void set_cheat_option(menu_t *menu, void *arg) {
     if (!is_memory_expanded()) {
         // If the Expansion pak is not installed, we cannot use cheats, and force it to off (just incase).
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu_show_error(menu, "Datel Cheats require an Expansion Pak");
         menu->browser.reload = true;
     }
     else {
@@ -309,6 +310,19 @@ static void set_cheat_option(menu_t *menu, void *arg) {
         rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, enabled);
         menu->browser.reload = true;
     }
+}
+
+static void open_datel_code_editor (menu_t *menu, void *arg) {
+    (void)arg;
+
+    if (!is_memory_expanded()) {
+        rom_config_setting_set_cheats(menu->load.rom_path, &menu->load.rom_info, false);
+        menu_show_error(menu, "Datel Cheats require an Expansion Pak");
+        menu->browser.reload = true;
+        return;
+    }
+
+    menu->next_mode = MENU_MODE_DATEL_CODE_EDITOR;
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
@@ -325,6 +339,8 @@ static void add_favorite (menu_t *menu, void *arg) {
 
 static void iterate_metadata_image(menu_t *menu, int direction) {
     scan_metadata_images(menu);
+    bool low_memory_mode = !is_memory_expanded();
+    int16_t previous_metadata_image_index = current_metadata_image_index;
 
     // Transverse to next/previous available image based on direction (1 = next, -1 = previous)
     int16_t start_metadata_image_index = current_metadata_image_index;
@@ -333,6 +349,12 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
     // Find next available image from our cached list
     while (new_metadata_image_index != start_metadata_image_index) {
         if (metadata_image_available[new_metadata_image_index]) {
+            if (low_memory_mode && boxart != NULL) {
+                // On Jumper Pak, avoid holding old and new boxart textures at once.
+                ui_components_boxart_free(boxart);
+                boxart = NULL;
+            }
+
             // ui_components_boxart_init returns NULL if PNG decoder is busy
             component_boxart_t *new_boxart = ui_components_boxart_init(
                 menu->storage_prefix,
@@ -343,10 +365,26 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
 
             if (new_boxart != NULL) {
                 // Only free old boxart after successful new allocation
-                ui_components_boxart_free(boxart);
+                if (!low_memory_mode) {
+                    ui_components_boxart_free(boxart);
+                }
                 boxart = new_boxart;
                 current_metadata_image_index = new_metadata_image_index;
                 sound_play_effect(SFX_SETTING);
+                break;
+            } else if (low_memory_mode) {
+                // Best effort restore of previous image after a failed low-memory swap.
+                if (metadata_image_available[previous_metadata_image_index]) {
+                    boxart = ui_components_boxart_init(
+                        menu->storage_prefix,
+                        menu->load.rom_info.game_code,
+                        menu->load.rom_info.title,
+                        metadata_image_filename_cache[previous_metadata_image_index]
+                    );
+                }
+                if (boxart == NULL) {
+                    menu_show_error(menu, "Could not swap boxart image");
+                }
                 break;
             }
         }
@@ -416,11 +454,6 @@ static component_context_menu_t set_patcher_options_menu = {
 }};
 #endif
 
-static void set_menu_next_mode (menu_t *menu, void *arg) {
-    menu_mode_t next_mode = (menu_mode_t) (arg);
-    menu->next_mode = next_mode;
-}
-
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
@@ -429,7 +462,7 @@ static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set ROM to autoload", .action = set_autoload_type },
 #endif
     { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
-    { .text = "Datel Code Editor", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_DATEL_CODE_EDITOR) },
+    { .text = "Datel Code Editor", .action = open_datel_code_editor },
 #ifdef FEATURE_PATCHER_GUI_ENABLED
     { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
@@ -667,7 +700,21 @@ static void draw_progress (float progress) {
 
         ui_components_background_draw();
 
-        ui_components_loader_draw(progress, "Loading ROM...");  
+        ui_components_loader_draw(progress, "Loading ROM...");
+
+        rdpq_detach_show();
+    }
+}
+
+static void draw_creating_save (float progress) {
+    surface_t *d = display_get();
+
+    if (d) {
+        rdpq_attach(d, NULL);
+
+        ui_components_background_draw();
+
+        ui_components_loader_draw(progress, "Creating initial save file...");
 
         rdpq_detach_show();
     }
@@ -678,12 +725,12 @@ static void load (menu_t *menu) {
     cart_load_err_t err;
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.loading_progress_bar_enabled) {
-        err = cart_load_n64_rom_and_save(menu, NULL);
+        err = cart_load_n64_rom_and_save(menu, NULL, NULL);
     } else  {
-        err = cart_load_n64_rom_and_save(menu, draw_progress);
+        err = cart_load_n64_rom_and_save(menu, draw_progress, draw_creating_save);
     }
 #else
-    err = cart_load_n64_rom_and_save(menu, draw_progress);
+    err = cart_load_n64_rom_and_save(menu, draw_progress, draw_creating_save);
 #endif
 
     if (err != CART_LOAD_OK) {
@@ -788,6 +835,15 @@ void view_load_rom_init (menu_t *menu) {
         menu_show_error(menu, convert_error_message(err));
         return;
     }
+
+    if (!is_memory_expanded()) {
+        menu->load.rom_info.settings.cheats_enabled = false;
+    }
+
+    if (menu->load.rom_info.meta.size_limit_exceeded) {
+        menu_show_error(menu, "ROM metadata was skipped\nmetadata.ini exceeds size limit");
+    }
+
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     if (!menu->settings.rom_autoload_enabled) {
 #endif

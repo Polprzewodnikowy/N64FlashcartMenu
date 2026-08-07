@@ -30,30 +30,36 @@ SRCS = \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
 	flashcart/ed64/ed64_vseries.c \
+	flashcart/ed64/ed64_vseries_ll.c \
 	flashcart/ed64/ed64_xseries.c \
+	flashcart/ed64/ed64_xseries_ll.c \
+	flashcart/ed64/ed64_pseudo_state.c \
 	flashcart/flashcart.c \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
 	libs/libspng/spng/spng.c \
-	libs/mini.c/src/mini.c \
 	libs/miniz/miniz_tdef.c \
 	libs/miniz/miniz_tinfl.c \
 	libs/miniz/miniz_zip.c \
 	libs/miniz/miniz.c \
+	menu/ini_parser.c \
 	menu/actions.c \
+	menu/audio_player.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
 	menu/datel_codes.c \
 	menu/disk_info.c \
 	menu/fonts.c \
 	menu/hdmi.c \
+	menu/id3_parser.c \
+	menu/jpeg_decoder.c \
 	menu/menu.c \
-	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
 	menu/ui_components/common.c \
@@ -85,18 +91,21 @@ SRCS = \
 	menu/views/cpak_dump_info.c \
 	menu/views/cpak_note_dump_info.c \
 	utils/cpakfs_utils.c \
-	utils/fs.c
+	utils/fs.c \
+	utils/utf_converter.c \
 
 FONTS = \
 	Firple-Bold.ttf
 
-SOUNDS = \
+SOUNDS_WAV = \
 	cursorsound.wav \
 	back.wav \
 	bgm.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
+
+SOUNDS_XM ?=
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -105,7 +114,8 @@ DEPS = $(OBJS:.o=.d)
 
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(FONTS:%.ttf=%.font64))) \
-	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS:%.wav=%.wav64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS_WAV:%.wav=%.wav64))) \
+	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(SOUNDS_XM:%.xm=%.xm64))) \
 	$(addprefix $(FILESYSTEM_DIR)/, $(notdir $(IMAGES:%.png=%.sprite)))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
@@ -120,7 +130,11 @@ $(FILESYSTEM_DIR)/%.font64: $(ASSETS_DIR)/fonts/%.ttf
 	@$(N64_MKFONT) $(MKFONT_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.wav64: $(ASSETS_DIR)/sounds/%.wav
-	@echo "    [AUDIO] $@"
+	@echo "    [AUDIO WAV] $@"
+	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
+
+$(FILESYSTEM_DIR)/%.xm64: $(ASSETS_DIR)/sounds/%.xm
+	@echo "    [AUDIO XM] $@"
 	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o $(FILESYSTEM_DIR) "$<"
 
 $(FILESYSTEM_DIR)/%.sprite: $(ASSETS_DIR)/images/%.png

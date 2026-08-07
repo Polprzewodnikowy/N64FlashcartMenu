@@ -36,4 +36,4 @@ The File Browser allows you to navigate and manage files on your N64 flashcart. 
 5. **Extract files**:
    - Press the `A` Button on a ZIP file to open the archive.
    - Navigate to the file you want to extract.
-   - Press the `A` button to open the file info and press `A` again to extract the file.
+   - Press the `A` Button to open the file info and press `A` again to extract the file.

@@ -20,7 +20,7 @@ typedef enum {
 } ed64_xseries_device_variant_t;
 
 /* ED64 save location base address  */
-#define SRAM_ADDRESS (0xA8000000)
+//#define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
@@ -164,6 +164,8 @@ static flashcart_t flashcart_ed64_xseries = {
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
     .load_64dd_disks = NULL,
+    .get_button_state = NULL,
+    .get_voltage_temperature = NULL,
     .set_save_type = ed64_xseries_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,

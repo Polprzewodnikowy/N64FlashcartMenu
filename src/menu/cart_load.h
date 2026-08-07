@@ -67,6 +67,13 @@ typedef enum {
 } cart_load_emu_type_t;
 
 /**
+ * @brief Check if the 64DD is connected.
+ * 
+ * @return true if the 64DD is connected, false otherwise.
+ */
+bool is_64dd_connected (void);
+
+/**
  * @brief Convert a cart load error code to a human-readable error message.
  * 
  * @param err The cart load error code.
@@ -78,10 +85,11 @@ char *cart_load_convert_error_message(cart_load_err_t err);
  * @brief Load an N64 ROM and its save data.
  * 
  * @param menu Pointer to the menu structure.
- * @param progress Callback function for progress updates.
+ * @param progress Callback function for ROM load progress updates.
+ * @param save_progress Callback invoked once when a new save file is being created, or NULL.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress);
+cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress);
 
 /**
  * @brief Load the 64DD IPL (BIOS) and disk.

@@ -16,9 +16,9 @@
                 "git.ignoredRepositories": [
                     "libdragon",
                     "src/libs/libspng",
-                    "src/libs/mini.c",
                     "src/libs/minimp3",
-                    "src/libs/miniz"
+                    "src/libs/miniz",
+                    "src/libs/dr_libs"
                 ]
             }
         }

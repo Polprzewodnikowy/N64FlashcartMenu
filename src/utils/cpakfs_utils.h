@@ -140,4 +140,22 @@ int pick_unique_fullname_with_mount(const char *mount_prefix,
                                     char *out_fullpath, size_t outsz,
                                     int (*exists_fullpath)(const char *fullpath));
 
+/**
+ * @brief Replace FAT-invalid characters in a filename with underscores.
+ *
+ * @param dst  Output buffer.
+ * @param src  Source string (e.g. raw cpakfs note name).
+ * @param dst_sz Size of dst including null terminator.
+ */
+void cpakfs_sanitize_fat_filename(char *dst, const char *src, size_t dst_sz);
+
+/**
+ * @brief Decode percent-encoded characters in a cpakfs filename back to their original values.
+ *
+ * @param dst  Output buffer.
+ * @param src  Percent-encoded source string.
+ * @param dst_sz Size of dst including null terminator.
+ */
+void cpakfs_decode_fat_filename(char *dst, const char *src, size_t dst_sz);
+
 #endif // CPAKFS_UTILS__H__

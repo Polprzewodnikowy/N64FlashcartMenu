@@ -7,6 +7,7 @@
 #include <string.h>
 #include <libdragon.h>
 #include "cart_load.h"
+#include "ini_parser.h"
 #include "path.h"
 #include "utils/fs.h"
 #include "utils/utils.h"
@@ -16,6 +17,9 @@
 #endif
 #ifndef EMU_LOCATION
 #define EMU_LOCATION            "/menu/emulators"
+#endif
+#ifndef EMU_CONFIG
+#define EMU_CONFIG              "/menu/emulators.ini"
 #endif
 
 /**
@@ -229,34 +233,65 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     uint32_t emulated_rom_offset = 0x200000;
     uint32_t emulated_file_offset = 0;
 
+    const char *emu_section = NULL;
+    const char *default_rom_filename = NULL;
+
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
-            path_push(path, "neon64bu.rom");
+            emu_section = "nes";
+            default_rom_filename = "neon64bu.rom";
              // Tested against Neon 64 v1.2, v0.3 and v2
             save_type = FLASHCART_SAVE_TYPE_SRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
-            path_push(path, "sodium64.z64");
+            emu_section = "snes";
+            default_rom_filename = "sodium64.z64";
             save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
-            path_push(path, "gb.v64");
+            emu_section = "gb";
+            default_rom_filename = "gb.v64";
             // TODO: Saves might be less problematic by using the FAKE type.
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
-            path_push(path, "gbc.v64");
+            emu_section = "gbc";
+            default_rom_filename = "gbc.v64";
             // TODO: Saves might be less problematic by using the FAKE type.
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
-            path_push(path, "smsPlus64.z64");
+            emu_section = "sega8bit";
+            default_rom_filename = "smsPlus64.z64";
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
         case CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF:
-            path_push(path, "Press-F.z64");
+            emu_section = "channelf";
+            default_rom_filename = "Press-F.z64";
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
+    }
+
+    // Apply per-emulator overrides from sd:/menu/emulators.ini if present
+    if (emu_section) {
+        path_t *cfg_path = path_init(menu->storage_prefix, EMU_CONFIG);
+        ini_t *cfg = ini_load(path_get(cfg_path));
+        path_free(cfg_path);
+        if (cfg) {
+            const char *rom_override = ini_get_string(cfg, emu_section, "rom", default_rom_filename);
+            char rom_filename_buf[256];
+            strncpy(rom_filename_buf, rom_override, sizeof(rom_filename_buf) - 1);
+            rom_filename_buf[sizeof(rom_filename_buf) - 1] = '\0';
+            path_push(path, rom_filename_buf);
+            save_type = (flashcart_save_type_t) ini_get_int(cfg, emu_section, "save_type", (int) save_type);
+            emulated_rom_offset = (uint32_t) ini_get_int(cfg, emu_section, "rom_offset", (int) emulated_rom_offset);
+            ini_free(cfg);
+        } else {
+            char default_buf[256];
+            strncpy(default_buf, default_rom_filename, sizeof(default_buf) - 1);
+            default_buf[sizeof(default_buf) - 1] = '\0';
+            path_push(path, default_buf);
+        }
     }
 
     if (!file_exists(path_get(path))) {

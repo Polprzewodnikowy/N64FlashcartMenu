@@ -24,16 +24,6 @@ static char *convert_error_message (png_err_t err) {
     }
 }
 
-/** Max image dimension that fits in 80% of free heap (2 bytes/pixel). */
-static int image_budget_max_dimension (void) {
-    heap_stats_t heap;
-    sys_get_heap_stats(&heap);
-    size_t budget = (size_t)((heap.total - heap.used) * 0.8f);
-    int dim = (int)sqrtf((float)(budget / 2));
-    if (dim < 16) dim = 16;
-    return dim;
-}
-
 static void image_callback (png_err_t err, surface_t *decoded_image, void *callback_data) {
     menu_t *menu = (menu_t *) (callback_data);
 
@@ -119,6 +109,8 @@ static void deinit (menu_t *menu) {
         } else {
             surface_free(image);
             free(image);
+            // Restore the background that was freed at init to give the decoder more memory
+            ui_components_background_reload();
         }
     }
     image = NULL;
@@ -130,9 +122,11 @@ void view_image_viewer_init (menu_t *menu) {
     image_loading = true;
     image_set_as_background = false;
     image = NULL;
-    int max_dim = image_budget_max_dimension();
-    int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;
-    int max_h = (max_dim > display_get_height()) ? display_get_height() : max_dim;
+    // Free the background image temporarily so the PNG decoder has its full memory budget;
+    // ui_components_background_reload() restores it if the user does not set a new background
+    ui_components_background_image_free_only();
+    int max_w = display_get_width();
+    int max_h = display_get_height();
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 

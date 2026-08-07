@@ -162,6 +162,7 @@ typedef struct {
     struct {
         bool cheats_enabled;        /**< Cheats enabled */
         bool patches_enabled;       /**< Patches enabled */
+        bool clear_rdram_enabled;   /**< Zero RDRAM before boot (workaround for ROMs with incomplete BSS init) */
     } settings;                     /**< The ROM settings */
 
     struct {
@@ -265,6 +266,16 @@ rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv
  * @return rom_err_t Error code
  */
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
+
+/**
+ * @brief Set whether RDRAM should be zeroed before booting this ROM.
+ *
+ * @param path Pointer to the path structure
+ * @param rom_info Pointer to the ROM information structure
+ * @param enabled True to clear RDRAM before boot, false to skip
+ * @return rom_err_t Error code
+ */
+rom_err_t rom_config_setting_set_clear_rdram (path_t *path, rom_info_t *rom_info, bool enabled);
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 /**

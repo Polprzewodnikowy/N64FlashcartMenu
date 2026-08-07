@@ -37,10 +37,10 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
-    # Zero all RDRAM while it is still active (before RI is reset below).
-    # Skip when cheats are installed — their patches are already in RDRAM.
+    # Zero RDRAM while it is still active (before RI is reset below).
+    # Only when requested (clear_rdram flag in $s1) and cheats are not installed.
 .set noreorder
-    bnez $a0, clear_rdram_done
+    beqz $s1, clear_rdram_done
     nop
     li $t0, 0xA0000000
     li $t1, 0x00400000

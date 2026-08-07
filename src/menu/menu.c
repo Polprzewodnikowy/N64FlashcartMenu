@@ -18,7 +18,7 @@
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"

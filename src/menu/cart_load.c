@@ -283,8 +283,18 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             strncpy(rom_filename_buf, rom_override, sizeof(rom_filename_buf) - 1);
             rom_filename_buf[sizeof(rom_filename_buf) - 1] = '\0';
             path_push(path, rom_filename_buf);
-            save_type = (flashcart_save_type_t) ini_get_int(cfg, emu_section, "save_type", (int) save_type);
-            emulated_rom_offset = (uint32_t) ini_get_int(cfg, emu_section, "rom_offset", (int) emulated_rom_offset);
+            int save_type_override = ini_get_int(cfg, emu_section, "save_type", (int) save_type);
+            if (save_type_override >= FLASHCART_SAVE_TYPE_NONE && save_type_override < __FLASHCART_SAVE_TYPE_END) {
+                save_type = (flashcart_save_type_t) save_type_override;
+            }
+            const char *rom_offset_str = ini_get_string(cfg, emu_section, "rom_offset", NULL);
+            if (rom_offset_str) {
+                char *end = NULL;
+                unsigned long parsed = strtoul(rom_offset_str, &end, 0);
+                if (end != rom_offset_str && *end == '\0') {
+                    emulated_rom_offset = (uint32_t) parsed;
+                }
+            }
             ini_free(cfg);
         } else {
             char default_buf[256];

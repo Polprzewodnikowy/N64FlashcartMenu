@@ -9,12 +9,13 @@ The N64FlashcartMenu has a Controller Pak Manager accessed from the `Start` butt
 > [!CAUTION]
 > Mileage may vary when hot swapping paks without exiting and re-entering the screen (and may contain incorrect content), and/or re-powering the console.
 
-> [!CAUTION]
-> Games that use certain characters in their notes are incompatible with FAT filenames and will be unable to save correctly, to work around this, please backup a whole pak instead.
-
 Features:
 - Full pak backup and restore (saved to `SD:/cpak_saves/`).
 - Partial pak ('note') backup and restore (saved to `SD:/cpak_saves/notes/`).
+
+> [!NOTE]
+> Note backup filenames may contain `%XX` sequences (e.g. `%2A` for `*`) when the original note name includes characters that are invalid in FAT filenames.
+> This encoding is reversible — notes restore to the Controller Pak with their original name intact.
 
 
 ### Controller Pak Manager

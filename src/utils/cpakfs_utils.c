@@ -397,3 +397,44 @@ int file_exists_full(const char *full_mounted_path) {
     if (f) { fclose(f); return 1; }
     return 0;
 }
+
+void cpakfs_sanitize_fat_filename(char *dst, const char *src, size_t dst_sz) {
+    static const char invalid[] = "\\/:*?\"<>|%"; /* % encoded so decode is unambiguous */
+    char *d = dst;
+    const char *end = dst + dst_sz - 1;
+    for (const unsigned char *s = (const unsigned char *)src; *s && d < end; s++) {
+        unsigned char c = *s;
+        if (c < 32 || strchr(invalid, c)) {
+            if (d + 3 > end) break;
+            *d++ = '%';
+            *d++ = "0123456789ABCDEF"[c >> 4];
+            *d++ = "0123456789ABCDEF"[c & 0xF];
+        } else {
+            *d++ = (char)c;
+        }
+    }
+    *d = '\0';
+}
+
+void cpakfs_decode_fat_filename(char *dst, const char *src, size_t dst_sz) {
+    char *d = dst;
+    const char *end = dst + dst_sz - 1;
+    for (const char *s = src; *s && d < end; s++) {
+        if (s[0] == '%' && s[1] && s[2]) {
+            // decode one hex pair
+            int hi = (s[1] >= '0' && s[1] <= '9') ? s[1] - '0' :
+                     (s[1] >= 'A' && s[1] <= 'F') ? s[1] - 'A' + 10 :
+                     (s[1] >= 'a' && s[1] <= 'f') ? s[1] - 'a' + 10 : -1;
+            int lo = (s[2] >= '0' && s[2] <= '9') ? s[2] - '0' :
+                     (s[2] >= 'A' && s[2] <= 'F') ? s[2] - 'A' + 10 :
+                     (s[2] >= 'a' && s[2] <= 'f') ? s[2] - 'a' + 10 : -1;
+            if (hi >= 0 && lo >= 0) {
+                *d++ = (char)((hi << 4) | lo);
+                s += 2;
+                continue;
+            }
+        }
+        *d++ = *s;
+    }
+    *d = '\0';
+}

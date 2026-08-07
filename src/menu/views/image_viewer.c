@@ -25,10 +25,18 @@ static char *convert_error_message (png_err_t err) {
 }
 
 /** Max image dimension that fits in 80% of free heap (2 bytes/pixel). */
+/** Max image dimension that fits in 80% of free heap (2 bytes/pixel),
+ *  plus any memory that would be freed by replacing the current background. */
 static int image_budget_max_dimension (void) {
     heap_stats_t heap;
     sys_get_heap_stats(&heap);
-    size_t budget = (size_t)((heap.total - heap.used) * 0.8f);
+    size_t free_bytes = heap.total - heap.used;
+    // Background memory will be freed when the new image replaces it, so add it back
+    surface_t *bg = ui_components_background_get_image();
+    if (bg) {
+        free_bytes += bg->height * bg->stride;
+    }
+    size_t budget = (size_t)(free_bytes * 0.8f);
     int dim = (int)sqrtf((float)(budget / 2));
     if (dim < 16) dim = 16;
     return dim;

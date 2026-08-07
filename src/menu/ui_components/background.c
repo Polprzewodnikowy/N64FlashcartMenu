@@ -256,3 +256,7 @@ void ui_components_background_draw(void) {
         rdpq_clear(BACKGROUND_EMPTY_COLOR);
     }
 }
+
+surface_t *ui_components_background_get_image(void) {
+    return background ? background->image : NULL;
+}

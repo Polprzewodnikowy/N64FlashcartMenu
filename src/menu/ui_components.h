@@ -210,6 +210,11 @@ void ui_components_background_replace_image(surface_t *image);
 void ui_components_background_draw(void);
 
 /**
+ * @brief Return the current background image surface, or NULL if none is set.
+ */
+surface_t *ui_components_background_get_image(void);
+
+/**
  * @brief Draw the file list component.
  * 
  * @param list List of entries.

@@ -492,7 +492,7 @@ int ini_get_int(ini_t *ini, const char *section, const char *key, int default_va
     
     char *end = NULL;
     errno = 0;
-    long parsed = strtol(str_value, &end, 10);
+    long parsed = strtol(str_value, &end, 0);
     if (errno == ERANGE || end == str_value || *end != '\0' ||
         parsed < INT_MIN || parsed > INT_MAX) {
         return default_value;

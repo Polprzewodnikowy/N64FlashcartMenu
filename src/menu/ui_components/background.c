@@ -6,7 +6,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "../ui_components.h"
 #include "constants.h"
@@ -205,12 +204,6 @@ void ui_components_background_init(char *cache_location) {
 void ui_components_background_free(void) {
     if (background) {
         if (background->image) {
-            // Zero RDRAM before freeing; stale pixel data can corrupt game BSS if not overwritten by IPL3
-            if (background->image->buffer) {
-                size_t size = background->image->height * background->image->stride;
-                memset(background->image->buffer, 0, size);
-                data_cache_hit_writeback_invalidate(background->image->buffer, size);
-            }
             surface_free(background->image);
             free(background->image);
             background->image = NULL;

@@ -116,6 +116,10 @@ void boot (boot_params_t *params) {
     cpu_io_write(&PI->DOM[0].PGS, pi_config >> 16);
     cpu_io_write(&PI->DOM[0].RLS, pi_config >> 20);
 
+    if (cpu_io_read(&DPC->SR) & DPC_SR_XBUS_DMEM_DMA) {
+        while (cpu_io_read(&DPC->SR) & DPC_SR_PIPE_BUSY);
+    }
+
     io32_t *ipl3_src = base;
     io32_t *ipl3_dst = SP_MEM->DMEM;
 

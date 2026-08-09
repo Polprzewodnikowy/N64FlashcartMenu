@@ -315,6 +315,7 @@ static bool try_cover_path (const char *path, int max_size) {
         //     free(buf);
         //     return false;
         // }
+        // return true;
         free(buf);
         return false;
     } else {

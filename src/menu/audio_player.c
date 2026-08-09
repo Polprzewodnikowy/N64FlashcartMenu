@@ -583,6 +583,7 @@ void audioplayer_deinit (void) {
 }
 
 audioplayer_err_t audioplayer_load (char *path) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (p->current.loaded) {
         audioplayer_stop();
         track_unload(&p->current);
@@ -598,6 +599,7 @@ audioplayer_err_t audioplayer_load (char *path) {
 }
 
 void audioplayer_unload (void) {
+    if (!p) return;
     audioplayer_stop();
     track_unload(&p->current);
 }
@@ -622,11 +624,12 @@ bool audioplayer_is_playing (void) {
 }
 
 bool audioplayer_is_finished (void) {
-    if (!p->current.loaded) return false;
+    if (!p || !p->current.loaded) return false;
     return track_is_finished(&p->current);
 }
 
 audioplayer_err_t audioplayer_play (void) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (!audioplayer_is_playing()) {
@@ -654,6 +657,7 @@ void audioplayer_stop (void) {
 }
 
 audioplayer_err_t audioplayer_toggle (void) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (audioplayer_is_playing()) {
         audioplayer_stop();
     } else {
@@ -668,6 +672,7 @@ void audioplayer_mute (bool mute) {
 }
 
 audioplayer_err_t audioplayer_seek (int seconds) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (p->current.format == AUDIO_FORMAT_FLAC) {
@@ -731,22 +736,22 @@ audioplayer_err_t audioplayer_seek (int seconds) {
 }
 
 float audioplayer_get_duration (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
     return p->current.duration;
 }
 
 float audioplayer_get_bitrate (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
     return p->current.bitrate;
 }
 
 int audioplayer_get_samplerate (void) {
-    if (!p->current.loaded) return 0;
+    if (!p || !p->current.loaded) return 0;
     return p->current.samplerate;
 }
 
 int audioplayer_get_native_samplerate (void) {
-    if (!p->current.loaded) return 0;
+    if (!p || !p->current.loaded) return 0;
     if (p->current.format == AUDIO_FORMAT_FLAC && p->current.native_rate > 0) {
         return p->current.native_rate;
     }
@@ -754,7 +759,7 @@ int audioplayer_get_native_samplerate (void) {
 }
 
 float audioplayer_get_progress (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
 
     float progress;
 

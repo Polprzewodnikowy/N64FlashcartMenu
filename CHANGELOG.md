@@ -17,10 +17,12 @@
 	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
 	- Add Emulator ROM override INI
 	- Add progress of save file creation on ROM load.
+	- Add ability to override emulator configurations through INI file.
 	
 
 - **Bug Fixes**
 	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
+	- CPak notes backup and restore with invalid FAT characters.
 
 
 - **Documentation**

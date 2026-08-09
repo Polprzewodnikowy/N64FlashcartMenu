@@ -6,7 +6,7 @@
 
 #include <stdbool.h>
 #include <libdragon.h>
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "sound.h"
 
 #define DEFAULT_FREQUENCY   (44100)
@@ -39,8 +39,8 @@ static void sound_reconfigure (int frequency) {
         // global mixer/sample rate was reconfigured to a lower value for MP3.
         mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
 
-        // Initialize MP3 player mixer
-        mp3player_mixer_init();
+        // Initialize MP3/audioplayer mixer
+        audioplayer_mixer_init();
         sound_initialized = true;
 
         if (sfx_enabled) {
@@ -48,6 +48,7 @@ static void sound_reconfigure (int frequency) {
         }
         if (bgm_enabled) {
             sound_init_bgm();
+            wav64_play(&bgm, SOUND_BGM_CHANNEL);
         }
     }
 }
@@ -62,8 +63,14 @@ void sound_init_default (void) {
 /**
  * @brief Initialize the sound system for MP3 playback.
  */
-void sound_init_mp3_playback (void) {
-    sound_reconfigure(mp3player_get_samplerate());
+void sound_init_audioplayer_playback (void) {
+    // Temporarily disable BGM so it won't be restarted during audio reconfiguration.
+    // BGM will be re-enabled when sound_init_default() is called on exit.
+    bool bgm_was_enabled = bgm_enabled;
+    bgm_enabled = false;
+    mixer_ch_stop(SOUND_BGM_CHANNEL);
+    sound_reconfigure(audioplayer_get_samplerate());
+    bgm_enabled = bgm_was_enabled;
 }
 
 /**

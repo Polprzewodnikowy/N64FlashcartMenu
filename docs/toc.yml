@@ -18,7 +18,7 @@
   href: 17_64dd.md
 - name: Emulators
   href: 18_emulators.md
-- name: Game Art Images
+- name: Game Art and ROM metadata
   href: 19_gamepak_boxart.md
 - name: Autoloading N64 ROMs
   href: 22_autoload_roms.md
@@ -36,7 +36,7 @@
   href: 36_flashcart_information.md
 - name: N64 Information
   href: 37_n64_information.md
-- name: MP3 Player
+- name: Music Player
   href: 41_mp3_player.md
 - name: Advanced Customization
   href: 61_advanced_customization.md

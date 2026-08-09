@@ -318,7 +318,9 @@ static void dump_single_note(int _port, int16_t selected_index) {
         return;
     }
 
-    snprintf(filename_note, sizeof(filename_note), "%s/%s_%s%s", CPAK_NOTES_PATH, controller_pak_name_notes[selected_index], string_datetime_cpak, CPAK_NOTE_EXTENSION);
+    char sanitized_note_name[MAX_STRING_LENGTH];
+    cpakfs_sanitize_fat_filename(sanitized_note_name, controller_pak_name_notes[selected_index], sizeof(sanitized_note_name));
+    snprintf(filename_note, sizeof(filename_note), "%s/%s_%s%s", CPAK_NOTES_PATH, sanitized_note_name, string_datetime_cpak, CPAK_NOTE_EXTENSION);
 
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {

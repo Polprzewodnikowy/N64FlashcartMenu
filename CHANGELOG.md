@@ -14,18 +14,25 @@
 	- Added extra info to the flashcart information screen to show Button state and voltage on supported carts.
 	- Experimental DD swap support.
 	- Added console region to the system information screen.
+	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
+	- Add Emulator ROM override INI
+	- Add progress of save file creation on ROM load.
+	- Add ability to override emulator configurations through INI file.
 	
 
 - **Bug Fixes**
 	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
+	- CPak notes backup and restore with invalid FAT characters.
 
 
 - **Documentation**
 	- Improved DD section with latest information.
+	- Improved MP3 player information.
+	- Improved Emulator information with ROM overrides.
 	- Minor fixes.
 
 - **Refactor**
-	- Optimzed PNG image handler to more likely work on memory constrained consoles (without an Expansion Pak).
+	- Optimzed PNG image handler to work on memory constrained consoles (without an Expansion Pak).
 	- Improved memory usage and OOB fixes across the whole codebase.
 
 - **Other**
@@ -34,7 +41,6 @@
 	
 
 ### Breaking changes
-- (as of 2026-03-15) libdragon SDK (and this menu) now requires MI repeat mode support, (supported by latest Ares and Gopher64, A3D also works though needs the latest FW). 
 
 ### Notes
 - Progress has been made towards disk swapping, but it is still WiP.
@@ -43,8 +49,8 @@
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
 - Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
-- A user has reported that the menu fails to load RTYI demo 2. Workaround by not setting a background image.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
+- Background music does not play again after playing music.
 
 
 ### Deprecation notices

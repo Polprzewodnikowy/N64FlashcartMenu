@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,12 +31,11 @@ static int selected_menu_row = 0;
 static int selected_video_row = 0;
 static int selected_sound_row = 0;
 
-static const char *format_switch (bool state) {
-    switch (state) {
-        case true: return "On";
-        case false: return "Off";
-    }
-}
+static int *selected_row_ptrs[] = {
+    &selected_menu_row,
+    &selected_video_row,
+    &selected_sound_row,
+};
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_loading_progress_bar_enabled_type (menu_t *menu, void *arg) {
@@ -148,178 +148,196 @@ static void set_rumble_enabled_type (menu_t *menu, void *arg) {
 
 #endif
 
-static void set_selected_row_for_current_tab (int row) {
-    int row_count;
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            row_count = 1;
-            break;
-        case SETTINGS_TAB_SOUND:
-            row_count = 2;
-            break;
-        case SETTINGS_TAB_MENU:
-        default: {
-            row_count = 7;
-#ifdef BETA_SETTINGS
-            row_count += 3;
+static void remove_background_image (menu_t *menu, void *arg) {
+    (void)arg;
+    (void)menu;
+    ui_components_background_clear();
+}
+
+/* ------------------------------------------------------------------ */
+/* Table-driven settings: each entry describes how to display its     */
+/* current value and how to advance/cycle to the next value.          */
+/* This supports boolean toggles (On/Off) as well as multi-value      */
+/* options (e.g. language selection) by providing custom handlers.    */
+/* ------------------------------------------------------------------ */
+
+typedef void (*setting_toggle_fn)(menu_t *menu, void *arg);
+
+typedef struct setting_entry setting_entry_t;
+
+/* Returns the current value as a string, or NULL for action rows. */
+typedef const char *(*setting_get_value_fn)(menu_t *menu, const setting_entry_t *entry);
+/* Advances/cycles the setting to its next value. */
+typedef void (*setting_cycle_fn)(menu_t *menu, const setting_entry_t *entry);
+
+struct setting_entry {
+    settings_tab_context_t tab;
+    const char *label;
+    bool is_action;     /* action row: no value shown, cycle runs a one-shot action */
+    bool is_video;      /* video row with dynamic PAL60/Progressive label */
+    setting_get_value_fn get_value;
+    setting_cycle_fn cycle;
+    size_t offset;      /* offsetof into settings_t for a bool field (bool handlers) */
+    setting_toggle_fn setter; /* setter called with the new bool value (bool handlers) */
+};
+
+/* --- Generic boolean handlers (On/Off) --- */
+static const char *bool_get_value (menu_t *menu, const setting_entry_t *entry) {
+    bool *field = (bool *)((char *)&menu->settings + entry->offset);
+    return *field ? "On" : "Off";
+}
+
+static void bool_cycle (menu_t *menu, const setting_entry_t *entry) {
+    bool *field = (bool *)((char *)&menu->settings + entry->offset);
+    entry->setter(menu, (void *)(uintptr_t)(!(*field)));
+}
+
+/* --- Video row (PAL60 / Progressive Scan depending on tv_type) --- */
+static const char *video_get_value (menu_t *menu, const setting_entry_t *entry) {
+    (void)entry;
+    if (get_tv_type() == TV_PAL) {
+        return menu->settings.pal60_enabled ? "On" : "Off";
+    }
+    return menu->settings.force_progressive_scan ? "On" : "Off";
+}
+
+static void video_cycle (menu_t *menu, const setting_entry_t *entry) {
+    (void)entry;
+    if (get_tv_type() == TV_PAL) {
+        set_pal60_type(menu, (void *)(uintptr_t)(!menu->settings.pal60_enabled));
+    } else {
+        set_force_progressive_scan_type(menu, (void *)(uintptr_t)(!menu->settings.force_progressive_scan));
+    }
+}
+
+/* --- Action row (one-shot, e.g. Remove Background Image) --- */
+static const char *action_get_value (menu_t *menu, const setting_entry_t *entry) {
+    (void)menu;
+    (void)entry;
+    return NULL;
+}
+
+static void action_cycle (menu_t *menu, const setting_entry_t *entry) {
+    (void)entry;
+    remove_background_image(menu, NULL);
+}
+
+/* ------------------------------------------------------------------ */
+/* Example of a multi-value setting (e.g. language). To add it you    */
+/* would define handlers like these and add a row to the table.       */
+/* ------------------------------------------------------------------ */
+#if 0
+/* Assuming settings_t has: int language; */
+static const char *language_names[] = { "English", "Español", "Deutsch", NULL };
+static const int language_count = 3;
+
+static const char *language_get_value (menu_t *menu, const setting_entry_t *entry) {
+    (void)entry;
+    int lang = menu->settings.language;
+    if (lang < 0 || lang >= language_count) {
+        lang = 0;
+    }
+    return language_names[lang];
+}
+
+static void language_cycle (menu_t *menu, const setting_entry_t *entry) {
+    (void)entry;
+    menu->settings.language = (menu->settings.language + 1) % language_count;
+    settings_save(&menu->settings);
+}
 #endif
-            break;
+
+static const setting_entry_t settings_table[] = {
+    /* Menu tab */
+    { SETTINGS_TAB_MENU, "Show Hidden Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_protected_entries), set_protected_entries_type },
+    { SETTINGS_TAB_MENU, "Use Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, use_saves_folder), set_use_saves_folder_type },
+    { SETTINGS_TAB_MENU, "Show Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_saves_folder), set_show_saves_folder_type },
+    { SETTINGS_TAB_MENU, "Show Save Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_save_files), set_show_save_files_type },
+    { SETTINGS_TAB_MENU, "Show Cheat Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_cheat_files), set_show_cheat_files_type },
+    { SETTINGS_TAB_MENU, "Wrap File List", false, false, bool_get_value, bool_cycle, offsetof(settings_t, wrap_file_list_scrolling), set_wrap_file_list_scrolling_type },
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+    { SETTINGS_TAB_MENU, "ROM Loading Bar", false, false, bool_get_value, bool_cycle, offsetof(settings_t, loading_progress_bar_enabled), set_loading_progress_bar_enabled_type },
+#else
+    { SETTINGS_TAB_MENU, "Fast Reboot ROM", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rom_fast_reboot_enabled), set_use_rom_fast_reboot_enabled_type },
+#endif
+#ifdef BETA_SETTINGS
+    { SETTINGS_TAB_MENU, "Hide ROM Extensions", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_file_extensions), set_show_browser_file_extensions_type },
+    { SETTINGS_TAB_MENU, "Hide ROM Tags", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_rom_tags), set_show_browser_rom_tags_type },
+    { SETTINGS_TAB_MENU, "Rumble Feedback", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rumble_enabled), set_rumble_enabled_type },
+#endif
+    { SETTINGS_TAB_MENU, "Remove Background Image", true, false, action_get_value, action_cycle, 0, NULL },
+    /* Example multi-value (language). Uncomment when settings_t gains a language field:
+    { SETTINGS_TAB_MENU, "Language", false, false, language_get_value, language_cycle, 0, NULL },
+    */
+
+    /* Video tab */
+    { SETTINGS_TAB_VIDEO, NULL, false, true, video_get_value, video_cycle, 0, NULL },
+
+    /* Sound tab */
+    { SETTINGS_TAB_SOUND, "Sound Effects", false, false, bool_get_value, bool_cycle, offsetof(settings_t, soundfx_enabled), set_soundfx_enabled_type },
+    { SETTINGS_TAB_SOUND, "Background Music", false, false, bool_get_value, bool_cycle, offsetof(settings_t, bgm_enabled), set_bgm_enabled_type },
+};
+
+static int tab_row_count (settings_tab_context_t tab) {
+    int count = 0;
+    for (size_t i = 0; i < (sizeof(settings_table) / sizeof(settings_table[0])); i++) {
+        if (settings_table[i].tab == tab) {
+            count++;
         }
     }
-    
+    return count;
+}
+
+static const setting_entry_t *find_entry (settings_tab_context_t tab, int row) {
+    int current_row = 0;
+    for (size_t i = 0; i < (sizeof(settings_table) / sizeof(settings_table[0])); i++) {
+        if (settings_table[i].tab != tab) {
+            continue;
+        }
+        if (current_row == row) {
+            return &settings_table[i];
+        }
+        current_row++;
+    }
+    return NULL;
+}
+
+static void set_selected_row_for_current_tab (int row) {
+    int row_count = tab_row_count(selected_tab);
     if (row_count > 0) {
         row = (row % row_count + row_count) % row_count;
     }
-    
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            selected_video_row = row;
-            break;
-        case SETTINGS_TAB_SOUND:
-            selected_sound_row = row;
-            break;
-        case SETTINGS_TAB_MENU:
-        default:
-            selected_menu_row = row;
-            break;
-    }
+    *selected_row_ptrs[selected_tab] = row;
 }
 
 static void change_selected_row (int selected) {
-    int current_row;
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            current_row = selected_video_row;
-            break;
-        case SETTINGS_TAB_SOUND:
-            current_row = selected_sound_row;
-            break;
-        case SETTINGS_TAB_MENU:
-        default:
-            current_row = selected_menu_row;
-            break;
-    }
-    set_selected_row_for_current_tab(current_row + selected);
+    set_selected_row_for_current_tab(*selected_row_ptrs[selected_tab] + selected);
 }
 
 static void toggle_selected_setting (menu_t *menu) {
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            get_tv_type() == TV_PAL ? set_pal60_type(menu, (void *)(uintptr_t)(!menu->settings.pal60_enabled)) : set_force_progressive_scan_type(menu, (void *)(uintptr_t)(!menu->settings.force_progressive_scan));
-        break;
-        
-        case SETTINGS_TAB_SOUND:
-            switch (selected_sound_row) {
-                case 0:
-                    set_soundfx_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.soundfx_enabled));
-                break;
-                case 1:
-                    set_bgm_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.bgm_enabled));
-                break;
-            }
-        break;
-        case SETTINGS_TAB_MENU:
-            switch (selected_menu_row) {
-                case 0:
-                    set_protected_entries_type(menu, (void *)(uintptr_t)(!menu->settings.show_protected_entries));
-                    break;
-                case 1:
-                    set_use_saves_folder_type(menu, (void *)(uintptr_t)(!menu->settings.use_saves_folder));
-                    break;
-                case 2:
-                    set_show_saves_folder_type(menu, (void *)(uintptr_t)(!menu->settings.show_saves_folder));
-                    break;
-                case 3:
-                    set_show_save_files_type(menu, (void *)(uintptr_t)(!menu->settings.show_save_files));
-                    break;
-                case 4:
-                    set_show_cheat_files_type(menu, (void *)(uintptr_t)(!menu->settings.show_cheat_files));
-                    break;
-                case 5:
-                    set_wrap_file_list_scrolling_type(menu, (void *)(uintptr_t)(!menu->settings.wrap_file_list_scrolling));
-                    break;
-                case 6:
-                #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-                    set_loading_progress_bar_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.loading_progress_bar_enabled));
-                #else
-                    set_use_rom_fast_reboot_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.rom_fast_reboot_enabled));
-                #endif
-                    break;
-                #ifdef BETA_SETTINGS
-                case 7:
-                    set_show_browser_file_extensions_type(menu, (void *)(uintptr_t)(!menu->settings.show_browser_file_extensions));
-                    break;
-                case 8:
-                    set_show_browser_rom_tags_type(menu, (void *)(uintptr_t)(!menu->settings.show_browser_rom_tags));
-                    break;
-                case 9:
-                    set_rumble_enabled_type(menu, (void *)(uintptr_t)(!menu->settings.rumble_enabled));
-                    break;
-                #endif
-            }
-        break;
+    int row = *selected_row_ptrs[selected_tab];
+    const setting_entry_t *entry = find_entry(selected_tab, row);
+    if (entry != NULL) {
+        entry->cycle(menu, entry);
     }
 }
 
 static bool get_setting_row_text (menu_t *menu, int row, char *buffer, size_t buffer_size) {
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO: 
-            get_tv_type() == TV_PAL ? snprintf(buffer, buffer_size, "PAL60 Mode: %s", format_switch(menu->settings.pal60_enabled)) : snprintf(buffer, buffer_size, "Progressive Scan: %s", format_switch(menu->settings.force_progressive_scan));
-        break;
-        case SETTINGS_TAB_SOUND:
-            switch (row) {
-                case 0:
-                    snprintf(buffer, buffer_size, "Sound Effects: %s", format_switch(menu->settings.soundfx_enabled));
-                    break;
-                case 1:
-                    snprintf(buffer, buffer_size, "Background Music: %s", format_switch(menu->settings.bgm_enabled));
-                    break;
-                default:
-                    break;
-            }
-        break;
-        case SETTINGS_TAB_MENU:
-            switch (row) {
-                case 0:
-                    snprintf(buffer, buffer_size, "Show Hidden Files: %s", format_switch(menu->settings.show_protected_entries));
-                break;
-                case 1:
-                    snprintf(buffer, buffer_size, "Use Saves Folder: %s", format_switch(menu->settings.use_saves_folder));
-                break;
-                case 2:
-                    snprintf(buffer, buffer_size, "Show Saves Folder: %s", format_switch(menu->settings.show_saves_folder));
-                break;
-                case 3:
-                    snprintf(buffer, buffer_size, "Show Save Files: %s", format_switch(menu->settings.show_save_files));
-                break;
-                case 4:
-                    snprintf(buffer, buffer_size, "Show Cheat Files: %s", format_switch(menu->settings.show_cheat_files));
-                break;
-                case 5:
-                    snprintf(buffer, buffer_size, "Wrap File List: %s", format_switch(menu->settings.wrap_file_list_scrolling));
-                break;
-                case 6:
-#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-                    snprintf(buffer, buffer_size, "ROM Loading Bar: %s", format_switch(menu->settings.loading_progress_bar_enabled));
-#else
-                    snprintf(buffer, buffer_size, "Fast Reboot ROM: %s", format_switch(menu->settings.rom_fast_reboot_enabled));
-#endif
-                break;
-#ifdef BETA_SETTINGS
-                case 7:
-                    snprintf(buffer, buffer_size, "Hide ROM Extensions: %s", format_switch(menu->settings.show_browser_file_extensions));
-                break;
-                case 8:
-                    snprintf(buffer, buffer_size, "Hide ROM Tags: %s", format_switch(menu->settings.show_browser_rom_tags));
-                break;
-                case 9:
-                    snprintf(buffer, buffer_size, "Rumble Feedback: %s", format_switch(menu->settings.rumble_enabled));
-                break;
-#endif
-                default:
-                break;
-            }
-        break;
+    const setting_entry_t *entry = find_entry(selected_tab, row);
+    if (entry == NULL) {
+        return false;
+    }
+
+    const char *label = entry->label;
+    if (entry->is_video) {
+        label = (get_tv_type() == TV_PAL) ? "PAL60 Mode" : "Progressive Scan";
+    }
+
+    const char *value = entry->get_value(menu, entry);
+    if (value != NULL) {
+        snprintf(buffer, buffer_size, "%s: %s", label, value);
+    } else {
+        snprintf(buffer, buffer_size, "%s", label);
     }
 
     return true;
@@ -418,95 +436,50 @@ static void draw (menu_t *menu, surface_t *d) {
         menu->settings.default_directory
     );
 
-    switch (selected_tab) {
-        case SETTINGS_TAB_MENU:
-            ui_components_main_text_draw(
+    if (selected_tab == SETTINGS_TAB_MENU) {
+        ui_components_main_text_draw(
+            STL_DEFAULT,
+            ALIGN_LEFT, VALIGN_TOP,
+            "\n"
+            "\n"
+            "\n"
+            "Default Directory : %s\n"
+            "\n"
+            "To change the following menu settings, press 'A':\n"
+            "\n",
+            menu->settings.default_directory
+        );
+    } else {
+        ui_components_main_text_draw(
                 STL_DEFAULT,
                 ALIGN_LEFT, VALIGN_TOP,
                 "\n"
                 "\n"
                 "\n"
-                "Default Directory : %s\n"
                 "\n"
                 "To change the following menu settings, press 'A':\n"
                 "\n",
                 menu->settings.default_directory
             );
-        break;
-        default:
-            ui_components_main_text_draw(
-                    STL_DEFAULT,
-                    ALIGN_LEFT, VALIGN_TOP,
-                    "\n"
-                    "\n"
-                    "\n"
-                    "\n"
-                    "To change the following menu settings, press 'A':\n"
-                    "\n",
-                    menu->settings.default_directory
-                );
-        break;
     }
 
-    int selected_row;
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            selected_row = selected_video_row;
-            break;
-        case SETTINGS_TAB_SOUND:
-            selected_row = selected_sound_row;
-            break;
-        case SETTINGS_TAB_MENU:
-        default:
-            selected_row = selected_menu_row;
-            break;
-    }
-    
+    int selected_row = *selected_row_ptrs[selected_tab];
+
     size_t total_length = 1;
     char row_text[96];
     char *row_texts[16] = {0};
     int rendered_row_count = 0;
 
-    switch (selected_tab) {
-        case SETTINGS_TAB_VIDEO:
-            if (get_setting_row_text(menu, 0, row_text, sizeof(row_text))) {
-                row_texts[rendered_row_count] = strdup(row_text);
-                if (row_texts[rendered_row_count] != NULL) {
-                    total_length += strlen(row_texts[rendered_row_count]);
-                }
-                rendered_row_count++;
-            }
-            break;
-        case SETTINGS_TAB_SOUND:
-            for (int i = 0; i < 2; i++) {
-                if (!get_setting_row_text(menu, i, row_text, sizeof(row_text))) {
-                    continue;
-                }
-                row_texts[rendered_row_count] = strdup(row_text);
-                if (row_texts[rendered_row_count] != NULL) {
-                    total_length += strlen(row_texts[rendered_row_count]);
-                }
-                rendered_row_count++;
-            }
-            break;
-        case SETTINGS_TAB_MENU:
-        default: {
-            int menu_row_limit = 7;
-#ifdef BETA_SETTINGS
-            menu_row_limit += 3;
-#endif
-            for (int i = 0; i < menu_row_limit; i++) {
-                if (!get_setting_row_text(menu, i, row_text, sizeof(row_text))) {
-                    continue;
-                }
-                row_texts[rendered_row_count] = strdup(row_text);
-                if (row_texts[rendered_row_count] != NULL) {
-                    total_length += strlen(row_texts[rendered_row_count]);
-                }
-                rendered_row_count++;
-            }
-            break;
+    int row_count = tab_row_count(selected_tab);
+    for (int i = 0; i < row_count; i++) {
+        if (!get_setting_row_text(menu, i, row_text, sizeof(row_text))) {
+            continue;
         }
+        row_texts[rendered_row_count] = strdup(row_text);
+        if (row_texts[rendered_row_count] != NULL) {
+            total_length += strlen(row_texts[rendered_row_count]);
+        }
+        rendered_row_count++;
     }
 
     if (rendered_row_count > 0) {

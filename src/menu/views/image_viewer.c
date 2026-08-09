@@ -112,6 +112,9 @@ static void deinit (menu_t *menu) {
             // Restore the background that was freed at init to give the decoder more memory
             ui_components_background_reload();
         }
+    } else {
+        // Decode failed or was aborted — still restore the background
+        ui_components_background_reload();
     }
     image = NULL;
 }

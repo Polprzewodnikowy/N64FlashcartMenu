@@ -236,12 +236,14 @@ void ui_components_background_clear(void) {
     }
     // Free image and display list but keep the struct and cache_location so
     // a new background can be set without rebooting
+    rspq_wait();
     if (background->image) {
-        rdpq_call_deferred(surface_image_free, background->image);
+        surface_free(background->image);
+        free(background->image);
         background->image = NULL;
     }
     if (background->image_display_list) {
-        rdpq_call_deferred(display_list_free, background->image_display_list);
+        rspq_block_free(background->image_display_list);
         background->image_display_list = NULL;
     }
 }
@@ -301,12 +303,14 @@ void ui_components_background_image_free_only(void) {
         return;
     }
     // Free image and display list, keep struct+cache_location so it can be reloaded
+    rspq_wait();
     if (background->image) {
-        rdpq_call_deferred(surface_image_free, background->image);
+        surface_free(background->image);
+        free(background->image);
         background->image = NULL;
     }
     if (background->image_display_list) {
-        rdpq_call_deferred(display_list_free, background->image_display_list);
+        rspq_block_free(background->image_display_list);
         background->image_display_list = NULL;
     }
 }

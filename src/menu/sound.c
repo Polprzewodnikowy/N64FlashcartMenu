@@ -48,6 +48,7 @@ static void sound_reconfigure (int frequency) {
         }
         if (bgm_enabled) {
             sound_init_bgm();
+            wav64_play(&bgm, SOUND_BGM_CHANNEL);
         }
     }
 }

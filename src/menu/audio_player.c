@@ -97,7 +97,12 @@ static size_t drflac_read_cb (void *userdata, void *buf, size_t bytes) {
 
 static drflac_bool32 drflac_seek_cb (void *userdata, int offset, drflac_seek_origin origin) {
     flac_io_t *io = (flac_io_t *)userdata;
-    int whence = (origin == DRFLAC_SEEK_SET) ? SEEK_SET : SEEK_CUR;
+    int whence;
+    switch (origin) {
+        case DRFLAC_SEEK_SET: whence = SEEK_SET; break;
+        case DRFLAC_SEEK_END: whence = SEEK_END; break;
+        default:              whence = SEEK_CUR; break;
+    }
     return fseek(io->f, offset, whence) == 0;
 }
 
@@ -442,13 +447,13 @@ static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int 
     audio_track_t *t = &p->current;
 
     if (!t->loaded) {
-        write_silence(sbuf, wlen, 2);
+        write_silence(sbuf, wlen, p->wave.channels);
         return;
     }
 
     if (t->format == AUDIO_FORMAT_FLAC) {
         if (!t->flac) {
-            write_silence(sbuf, wlen, 2);
+            write_silence(sbuf, wlen, p->wave.channels);
             return;
         }
 
@@ -507,7 +512,7 @@ static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int 
 
     /* MP3 decode path */
     if (!t->f) {
-        write_silence(sbuf, wlen, 2);
+        write_silence(sbuf, wlen, p->wave.channels);
         return;
     }
 

@@ -64,7 +64,13 @@ void sound_init_default (void) {
  * @brief Initialize the sound system for MP3 playback.
  */
 void sound_init_audioplayer_playback (void) {
+    // Temporarily disable BGM so it won't be restarted during audio reconfiguration.
+    // BGM will be re-enabled when sound_init_default() is called on exit.
+    bool bgm_was_enabled = bgm_enabled;
+    bgm_enabled = false;
+    mixer_ch_stop(SOUND_BGM_CHANNEL);
     sound_reconfigure(audioplayer_get_samplerate());
+    bgm_enabled = bgm_was_enabled;
 }
 
 /**

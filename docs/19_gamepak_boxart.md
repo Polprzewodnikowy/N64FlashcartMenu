@@ -8,7 +8,7 @@ To use N64 game art images and ROM metadata, place your files within the `sd:/me
 > As a starting point, here is a link to the latest, menu metadata: [Metadata link](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases), just extract the zip to the `sd:/menu/metadata/` folder.
 
 ### Advanced
-Homebrew metadata and images are shown when included from the `sd:/menu/metadata/homebrew/` folder and is matched against the ROM file name (without the ROM extension).
+Homebrew ROMs that conform to the [Homebrew ROM Header](https://n64brew.dev/wiki/ROM_Header) are shown when included from the `sd:/menu/metadata/homebrew/` folder and are matched against the ROM file name without its extension as described below.
 
 #### Supported file names
 - `boxart_front.png` (DEFAULT)

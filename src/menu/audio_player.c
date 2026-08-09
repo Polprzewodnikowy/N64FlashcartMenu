@@ -562,6 +562,13 @@ audioplayer_err_t audioplayer_init (void) {
         .frequency = 44100,
         .len = WAVEFORM_MAX_LEN - 1,
         .loop_len = WAVEFORM_MAX_LEN - 1,
+        // The decoder appends whole codec frames at a time (up to 1152
+        // samples for MP3/FLAC). Declare that granularity so the samplebuffer
+        // sizes its mirrored tail (margin) to cover a single frame append
+        // that wraps around the ring. Without this, appending a full frame
+        // near the ring end trips the assertion in samplebuffer_append:
+        // "append of %x units wraps and does not fit the margin".
+        .append_units = MINIMP3_MAX_SAMPLES_PER_FRAME / 2,
         .read = mp3player_wave_read,
         .ctx = p,
     };

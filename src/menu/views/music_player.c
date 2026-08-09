@@ -312,14 +312,18 @@ static bool try_cover_path (const char *path, int max_size) {
         //                                         cover_art_cb, NULL);
         // if (err != JPEG_OK) {
         //     cover_state = COVER_IDLE;
-            return false;
+        //     free(buf);
+        //     return false;
         // }
+        free(buf);
+        return false;
     } else {
         cover_state = COVER_LOADING_PNG;
         png_err_t err = png_decoder_start_mem(buf, buf_size, max_size, max_size,
                                               cover_art_png_cb, NULL);
         if (err != PNG_OK) {
             cover_state = COVER_IDLE;
+            free(buf);
             return false;
         }
     }
@@ -516,6 +520,7 @@ static void load_cover_art (path_t *directory) {
 
             if (started) return;
             cover_state = COVER_IDLE;
+            free(buf);
         }
     }
 

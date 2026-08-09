@@ -303,7 +303,7 @@ static bool parse_id3v2(const uint8_t *buf, size_t buf_size, id3_metadata_t *met
         }
 
         pos += frame_hdr_size;
-        if (frame_size == 0 || pos + frame_size > tag_size) break;
+        if (frame_size == 0 || pos > tag_size || frame_size > tag_size - pos) break;
 
         const uint8_t *data = &buf[pos];
         size_t data_len = frame_size;

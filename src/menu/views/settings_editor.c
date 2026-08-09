@@ -177,8 +177,10 @@ struct setting_entry {
     bool is_video;      /* video row with dynamic PAL60/Progressive label */
     setting_get_value_fn get_value;
     setting_cycle_fn cycle;
-    size_t offset;      /* offsetof into settings_t for a bool field (bool handlers) */
+    size_t offset;      /* offsetof into settings_t for a bool field (bool handlers)
+                           or an int field (multi-value handlers) */
     setting_toggle_fn setter; /* setter called with the new bool value (bool handlers) */
+    const char *const *values; /* NULL-terminated display names for multi-value options */
 };
 
 /* --- Generic boolean handlers (On/Off) --- */
@@ -222,60 +224,32 @@ static void action_cycle (menu_t *menu, const setting_entry_t *entry) {
     remove_background_image(menu, NULL);
 }
 
-/* ------------------------------------------------------------------ */
-/* Example of a multi-value setting (e.g. language). To add it you    */
-/* would define handlers like these and add a row to the table.       */
-/* ------------------------------------------------------------------ */
-#if 0
-/* Assuming settings_t has: int language; */
-static const char *language_names[] = { "English", "Español", "Deutsch", NULL };
-static const int language_count = 3;
-
-static const char *language_get_value (menu_t *menu, const setting_entry_t *entry) {
-    (void)entry;
-    int lang = menu->settings.language;
-    if (lang < 0 || lang >= language_count) {
-        lang = 0;
-    }
-    return language_names[lang];
-}
-
-static void language_cycle (menu_t *menu, const setting_entry_t *entry) {
-    (void)entry;
-    menu->settings.language = (menu->settings.language + 1) % language_count;
-    settings_save(&menu->settings);
-}
-#endif
-
 static const setting_entry_t settings_table[] = {
     /* Menu tab */
-    { SETTINGS_TAB_MENU, "Show Hidden Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_protected_entries), set_protected_entries_type },
-    { SETTINGS_TAB_MENU, "Use Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, use_saves_folder), set_use_saves_folder_type },
-    { SETTINGS_TAB_MENU, "Show Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_saves_folder), set_show_saves_folder_type },
-    { SETTINGS_TAB_MENU, "Show Save Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_save_files), set_show_save_files_type },
-    { SETTINGS_TAB_MENU, "Show Cheat Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_cheat_files), set_show_cheat_files_type },
-    { SETTINGS_TAB_MENU, "Wrap File List", false, false, bool_get_value, bool_cycle, offsetof(settings_t, wrap_file_list_scrolling), set_wrap_file_list_scrolling_type },
+    { SETTINGS_TAB_MENU, "Show Hidden Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_protected_entries), set_protected_entries_type, NULL },
+    { SETTINGS_TAB_MENU, "Use Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, use_saves_folder), set_use_saves_folder_type, NULL },
+    { SETTINGS_TAB_MENU, "Show Saves Folder", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_saves_folder), set_show_saves_folder_type, NULL },
+    { SETTINGS_TAB_MENU, "Show Save Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_save_files), set_show_save_files_type, NULL },
+    { SETTINGS_TAB_MENU, "Show Cheat Files", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_cheat_files), set_show_cheat_files_type, NULL },
+    { SETTINGS_TAB_MENU, "Wrap File List", false, false, bool_get_value, bool_cycle, offsetof(settings_t, wrap_file_list_scrolling), set_wrap_file_list_scrolling_type, NULL },
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    { SETTINGS_TAB_MENU, "ROM Loading Bar", false, false, bool_get_value, bool_cycle, offsetof(settings_t, loading_progress_bar_enabled), set_loading_progress_bar_enabled_type },
+    { SETTINGS_TAB_MENU, "ROM Loading Bar", false, false, bool_get_value, bool_cycle, offsetof(settings_t, loading_progress_bar_enabled), set_loading_progress_bar_enabled_type, NULL },
 #else
-    { SETTINGS_TAB_MENU, "Fast Reboot ROM", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rom_fast_reboot_enabled), set_use_rom_fast_reboot_enabled_type },
+    { SETTINGS_TAB_MENU, "Fast Reboot ROM", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rom_fast_reboot_enabled), set_use_rom_fast_reboot_enabled_type, NULL },
 #endif
 #ifdef BETA_SETTINGS
-    { SETTINGS_TAB_MENU, "Hide ROM Extensions", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_file_extensions), set_show_browser_file_extensions_type },
-    { SETTINGS_TAB_MENU, "Hide ROM Tags", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_rom_tags), set_show_browser_rom_tags_type },
-    { SETTINGS_TAB_MENU, "Rumble Feedback", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rumble_enabled), set_rumble_enabled_type },
+    { SETTINGS_TAB_MENU, "Hide ROM Extensions", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_file_extensions), set_show_browser_file_extensions_type, NULL },
+    { SETTINGS_TAB_MENU, "Hide ROM Tags", false, false, bool_get_value, bool_cycle, offsetof(settings_t, show_browser_rom_tags), set_show_browser_rom_tags_type, NULL },
+    { SETTINGS_TAB_MENU, "Rumble Feedback", false, false, bool_get_value, bool_cycle, offsetof(settings_t, rumble_enabled), set_rumble_enabled_type, NULL },
 #endif
-    { SETTINGS_TAB_MENU, "Remove Background Image", true, false, action_get_value, action_cycle, 0, NULL },
-    /* Example multi-value (language). Uncomment when settings_t gains a language field:
-    { SETTINGS_TAB_MENU, "Language", false, false, language_get_value, language_cycle, 0, NULL },
-    */
+    { SETTINGS_TAB_MENU, "Remove Background Image", true, false, action_get_value, action_cycle, 0, NULL, NULL },
 
     /* Video tab */
-    { SETTINGS_TAB_VIDEO, NULL, false, true, video_get_value, video_cycle, 0, NULL },
+    { SETTINGS_TAB_VIDEO, NULL, false, true, video_get_value, video_cycle, 0, NULL, NULL },
 
     /* Sound tab */
-    { SETTINGS_TAB_SOUND, "Sound Effects", false, false, bool_get_value, bool_cycle, offsetof(settings_t, soundfx_enabled), set_soundfx_enabled_type },
-    { SETTINGS_TAB_SOUND, "Background Music", false, false, bool_get_value, bool_cycle, offsetof(settings_t, bgm_enabled), set_bgm_enabled_type },
+    { SETTINGS_TAB_SOUND, "Sound Effects", false, false, bool_get_value, bool_cycle, offsetof(settings_t, soundfx_enabled), set_soundfx_enabled_type, NULL },
+    { SETTINGS_TAB_SOUND, "Background Music", false, false, bool_get_value, bool_cycle, offsetof(settings_t, bgm_enabled), set_bgm_enabled_type, NULL },
 };
 
 static int tab_row_count (settings_tab_context_t tab) {

@@ -1,5 +1,8 @@
 ## Background Images
 
+> [!NOTE]
+> On systems that use a jumper pak, the maximium image size that can be loaded is severely reduced.
+
 ### How to add a background image
 First copy an image in `.PNG` format with a size of `640x480` to anywhere on the SD card. Then when the N64FlashcartMenu is loaded on the N64, browse to the image and then press the `A` Button to preview it on the screen. Press the `A` Button again to open up the confirmation message, which will ask if you want to set a new background image.
 <!-- Could use a sample screenshot here -->

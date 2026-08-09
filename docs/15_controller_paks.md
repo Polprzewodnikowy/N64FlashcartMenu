@@ -1,9 +1,6 @@
 ## Controller Paks
 This feature still relies on a controller PAK being "plugged in" to a physical controller (port). The N64 hardware **CANNOT** emulate it from a flashcart.
 
-> [!WARNING]
-> **THIS FEATURE IS EXPERIMENTAL**
-
 The N64FlashcartMenu has a Controller Pak Manager accessed from the `Start` button within the main file browser.
 
 > [!CAUTION]

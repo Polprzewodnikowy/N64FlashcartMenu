@@ -10,7 +10,8 @@ See: [Cheats (Gameshark, etc.)](./13_datel_cheats.md)
 To show certain (metadata) information on the N64 ROM information screen, add a `.meta` file in the same directory as the game ROM file with the same ROM filename (but excluding the ROM extension i.e. [`.z64`, `.v64`, `.n64`] )
 Although the filename is `.meta`, its content is based on an `ini` file.
 
-The aim is to add full support for [https://n64brew.dev/wiki/ROM_Metadata](https://n64brew.dev/wiki/ROM_Metadata)
+> [!TIP]
+> As a starting point, here is a link to the latest, menu metadata: [Metadata link](https://github.com/n64-tools/n64-flashcart-menu-metadata/releases), which requires regular and independent updates.
 
 > [!TIP]
 > A rom called `my N64 game rom.z64` will load Rom information metadata from `my N64 game rom.meta`.

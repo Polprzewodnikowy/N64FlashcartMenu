@@ -177,7 +177,7 @@ int audioplayer_get_native_samplerate(void);
  *
  * This function gets the current playback progress of the audio file.
  * 
- * @return float Current playback progress as a percentage (0.0 to 100.0).
+ * @return float Current playback progress as a normalized fraction (0.0 to 1.0).
  */
 float audioplayer_get_progress(void);
 

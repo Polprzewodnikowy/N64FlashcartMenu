@@ -562,6 +562,7 @@ audioplayer_err_t audioplayer_init (void) {
         .frequency = 44100,
         .len = WAVEFORM_MAX_LEN - 1,
         .loop_len = WAVEFORM_MAX_LEN - 1,
+        .append_units = MINIMP3_MAX_SAMPLES_PER_FRAME / 2,
         .read = mp3player_wave_read,
         .ctx = p,
     };

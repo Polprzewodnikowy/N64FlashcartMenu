@@ -44,6 +44,7 @@ SRCS = \
 	libs/miniz/miniz.c \
 	menu/ini_parser.c \
 	menu/actions.c \
+	menu/audio_player.c \
 	menu/bookkeeping.c \
 	menu/cart_load.c \
 	menu/datel_codes.c \
@@ -51,8 +52,8 @@ SRCS = \
 	menu/fonts.c \
 	menu/hdmi.c \
 	menu/id3_parser.c \
+	menu/jpeg_decoder.c \
 	menu/menu.c \
-	menu/mp3_player.c \
 	menu/path.c \
 	menu/png_decoder.c \
 	menu/rom_info.c \

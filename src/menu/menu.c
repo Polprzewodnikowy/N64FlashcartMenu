@@ -18,7 +18,7 @@
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
@@ -163,10 +163,10 @@ static void menu_deinit (menu_t *menu) {
     display_close();
 
     sound_deinit();
-    
-    rspq_wait();  // Execute deferred callbacks before closing RSPQ
-    rspq_close();
+
+    rspq_wait();
     rdpq_close();
+    rspq_close();
     rtc_close();
     timer_close();
     joypad_close();

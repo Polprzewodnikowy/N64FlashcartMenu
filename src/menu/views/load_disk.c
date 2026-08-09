@@ -260,7 +260,7 @@ static void load (menu_t *menu) {
     cart_load_err_t err;
 
     if (menu->load.rom_path && menu->load.combined_disk_rom) {
-        err = cart_load_n64_rom_and_save(menu, draw_progress);
+        err = cart_load_n64_rom_and_save(menu, draw_progress, NULL);
         if (err != CART_LOAD_OK) {
             menu_show_error(menu, cart_load_convert_error_message(err));
             return;
@@ -286,11 +286,13 @@ static void load (menu_t *menu) {
             default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
         }
         menu->boot_params->cheat_list = NULL;
+        menu->boot_params->clear_rdram = false;
     } else {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_64DD;
         menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
         menu->boot_params->detect_cic_seed = true;
         menu->boot_params->cheat_list = NULL;
+        menu->boot_params->clear_rdram = false;
     }
 }
 

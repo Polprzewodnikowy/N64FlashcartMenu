@@ -21,7 +21,7 @@
 	
 
 - **Bug Fixes**
-	- CPak manager: Large Controller CPaks's with more than 123 pages are now shown properly.
+	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
 	- CPak notes backup and restore with invalid FAT characters.
 
 
@@ -32,7 +32,7 @@
 	- Minor fixes.
 
 - **Refactor**
-	- Optimzed PNG image handler to work on memory constrained consoles (without an Expansion Pak).
+	- Optimized PNG handler to work on memory-constrained consoles (without an Expansion Pak).
 	- Improved memory usage and OOB fixes across the whole codebase.
 
 - **Other**

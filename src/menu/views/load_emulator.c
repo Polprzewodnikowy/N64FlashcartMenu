@@ -111,6 +111,7 @@ static void load (menu_t *menu) {
     menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH;
     menu->boot_params->detect_cic_seed = true;
     menu->boot_params->cheat_list = NULL;
+    menu->boot_params->clear_rdram = false;
 }
 
 

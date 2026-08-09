@@ -333,6 +333,12 @@ static void set_patcher_option(menu_t *menu, void *arg) {
 }
 #endif
 
+static void set_clear_rdram_option(menu_t *menu, void *arg) {
+    bool enabled = (bool)arg;
+    rom_config_setting_set_clear_rdram(menu->load.rom_path, &menu->load.rom_info, enabled);
+    menu->browser.reload = true;
+}
+
 static void add_favorite (menu_t *menu, void *arg) {
     bookkeeping_favorite_add(&menu->bookkeeping, menu->load.rom_path, NULL, BOOKKEEPING_TYPE_ROM);
 }
@@ -454,6 +460,16 @@ static component_context_menu_t set_patcher_options_menu = {
 }};
 #endif
 
+static int get_rom_clear_rdram_current_selection (menu_t *menu);
+
+static component_context_menu_t set_clear_rdram_options_menu = {
+    .get_default_selection = get_rom_clear_rdram_current_selection,
+    .list = {
+    { .text = "Enabled", .action = set_clear_rdram_option, .arg = (void *) (true)},
+    { .text = "Disabled", .action = set_clear_rdram_option, .arg = (void *) (false)},
+    COMPONENT_CONTEXT_MENU_LIST_END,
+}};
+
 static component_context_menu_t options_context_menu = { .list = {
     { .text = "Set CIC Type", .submenu = &set_cic_type_context_menu },
     { .text = "Set Save Type", .submenu = &set_save_type_context_menu },
@@ -466,6 +482,7 @@ static component_context_menu_t options_context_menu = { .list = {
 #ifdef FEATURE_PATCHER_GUI_ENABLED
     { .text = "Use Patches", .submenu = &set_patcher_options_menu },
 #endif
+    { .text = "Clear RDRAM on boot", .submenu = &set_clear_rdram_options_menu },
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
@@ -522,6 +539,12 @@ static int get_rom_patch_override_current_selection (menu_t *menu) {
         (void *) (menu->load.rom_info.settings.patches_enabled ? true : false));
 }
 #endif
+
+static int get_rom_clear_rdram_current_selection (menu_t *menu) {
+    return find_menu_item_index_by_arg(
+        &set_clear_rdram_options_menu,
+        (void *) (menu->load.rom_info.settings.clear_rdram_enabled ? true : false));
+}
 
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
@@ -600,6 +623,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "Datel Cheats:\t\t%s\n"
             "Patches:\t\t\t%s\n"
+            "Clear RDRAM:\t\t%s\n"
             ,
             
             format_rom_save_type(rom_info_get_save_type(&menu->load.rom_info), menu->load.rom_info.features.controller_pak),
@@ -608,7 +632,8 @@ static void draw (menu_t *menu, surface_t *d) {
             format_rom_pak_feature_info(menu->load.rom_info.features.rumble_pak),
             format_rom_pak_feature_info(menu->load.rom_info.features.transfer_pak),
             format_boolean_type(menu->load.rom_info.settings.cheats_enabled),
-            format_boolean_type(menu->load.rom_info.settings.patches_enabled)
+            format_boolean_type(menu->load.rom_info.settings.patches_enabled),
+            format_boolean_type(menu->load.rom_info.settings.clear_rdram_enabled)
         );
 
         ui_components_actions_bar_text_draw(
@@ -778,6 +803,8 @@ static void load (menu_t *menu) {
         debugf("Cheats disabled or Expansion Pak not present\n");
         menu->boot_params->cheat_list = NULL;
     }
+
+    menu->boot_params->clear_rdram = menu->load.rom_info.settings.clear_rdram_enabled;
 }
 
 static void deinit (void) {

@@ -41,7 +41,6 @@
 	
 
 ### Breaking changes
-- (as of 2026-03-15) libdragon SDK (and this menu) now requires MI repeat mode support, (supported by latest Ares and Gopher64, A3D also works though needs the latest FW). 
 
 ### Notes
 - Progress has been made towards disk swapping, but it is still WiP.
@@ -50,8 +49,8 @@
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
 - Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
-- A user has reported that the menu fails to load RTYI demo 2. Workaround by not setting a background image.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
+- Background music does not play again after playing music.
 
 
 ### Deprecation notices

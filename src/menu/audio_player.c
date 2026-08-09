@@ -218,7 +218,7 @@ static void mp3_calculate_duration (audio_track_t *t, int samples) {
 
     long data_size = (t->file_size - t->data_start);
     if (mp3dec_check_vbrtag((const uint8_t *)(t->buffer_ptr), t->info.frame_bytes, &frames, &delay, &padding) > 0) {
-        if (t->info.hz > 0) {
+        if (t->info.hz > 0 && frames > 0 && samples > 0) {
             t->duration = (frames * samples) / (float)(t->info.hz);
             t->bitrate = (data_size * 8) / t->duration;
         }

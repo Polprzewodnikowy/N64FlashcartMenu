@@ -22,7 +22,7 @@
 
 - **Bug Fixes**
 	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
-	- CPak notes backup and restore with invalid FAT characters.
+	- CPak notes backup and restore now works with invalid FAT characters.
 
 
 - **Documentation**
@@ -50,7 +50,6 @@
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
 - Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
-- Background music does not play again after playing music.
 
 
 ### Deprecation notices

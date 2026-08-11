@@ -161,6 +161,11 @@ static const match_t database[] = {
     MATCH_ID_REGION("NWTJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                 // Wetrix
     MATCH_ID("NWT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Wetrix
 
+    // Aleck64 conversions
+    MATCH_ID("ZSE", SAVE_TYPE_NONE, FEAT_EXP_PAK_REQUIRED),                                                     // Super Real Mahjong VS (Aleck64 conversion)
+    MATCH_ID("ZSA", SAVE_TYPE_NONE, FEAT_EXP_PAK_REQUIRED),                                                     // Vivid Dolls (Aleck64 conversion)
+
+
     // EEPROM 4K
     MATCH_ID("CLB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                    // Mario Party (NTSC)
     MATCH_ID("NAB", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // Air Boarder 64
@@ -775,6 +780,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
 
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
+    rom_info->settings.clear_rdram_enabled = false;
 }
 
 /**
@@ -1173,6 +1179,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         // general
         rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "", "cheats_enabled", false);
         rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "", "patches_enabled", false);
+        rom_info->settings.clear_rdram_enabled = ini_get_bool(rom_config_ini, "", "clear_rdram_enabled", false);
         
         // overrides
         rom_info->boot_override.cic_type = ini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
@@ -1311,6 +1318,11 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
     return save_rom_config_setting_to_file(path, "", "cheats_enabled", enabled, false);
+}
+
+rom_err_t rom_config_setting_set_clear_rdram (path_t *path, rom_info_t *rom_info, bool enabled) {
+    rom_info->settings.clear_rdram_enabled = enabled;
+    return save_rom_config_setting_to_file(path, "", "clear_rdram_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED

@@ -18,7 +18,7 @@
   href: 17_64dd.md
 - name: Emulators
   href: 18_emulators.md
-- name: Game Art Images
+- name: Game Art and ROM metadata
   href: 19_gamepak_boxart.md
 - name: Autoloading N64 ROMs
   href: 22_autoload_roms.md

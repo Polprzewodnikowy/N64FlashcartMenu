@@ -37,6 +37,29 @@ reboot_entry:
 
     li $sp, STACK_ADDRESS
 
+    # Zero RDRAM while it is still active (before RI is reset below).
+    # Only when requested (clear_rdram flag in $s1) and cheats are not installed.
+.set noreorder
+    beqz $s1, clear_rdram_done
+    nop
+    li $t0, 0xA0000000
+    li $t1, 0x00400000
+    addu $t1, $t0, $t1
+clear_rdram_loop:
+    sw $zero, 0($t0)
+    sw $zero, 4($t0)
+    sw $zero, 8($t0)
+    sw $zero, 12($t0)
+    sw $zero, 16($t0)
+    sw $zero, 20($t0)
+    sw $zero, 24($t0)
+    sw $zero, 28($t0)
+    addiu $t0, $t0, 32
+    bne $t0, $t1, clear_rdram_loop
+    nop
+clear_rdram_done:
+.set reorder
+
     bnez $a0, reset_rdram_skip  # Skip when cheats are enabled
     bnez $s5, reset_rdram_skip  # Skip when reset type is set to NMI
 

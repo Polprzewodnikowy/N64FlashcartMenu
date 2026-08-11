@@ -253,6 +253,47 @@
 #define LIST_SCROLLBAR_Y                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS)
 
 /**
+ * @def SETTINGS_RAIL_X0
+ * @brief X coordinate of the settings category rail.
+ */
+#define SETTINGS_RAIL_X0                (VISIBLE_AREA_X0 + 4)
+/**
+ * @def SETTINGS_RAIL_X1
+ * @brief X coordinate of the divider between the category rail and the pane.
+ */
+#define SETTINGS_RAIL_X1                (VISIBLE_AREA_X0 + 136)
+/**
+ * @def SETTINGS_PANE_X0
+ * @brief X coordinate of the left edge of the settings pane.
+ */
+#define SETTINGS_PANE_X0                (SETTINGS_RAIL_X1 + 8)
+/**
+ * @def SETTINGS_PANE_X1
+ * @brief X coordinate of the right edge of the settings pane.
+ */
+#define SETTINGS_PANE_X1                (VISIBLE_AREA_X1 - 4)
+/**
+ * @def SETTINGS_PANE_Y0
+ * @brief Y coordinate of the top edge of the settings pane.
+ */
+#define SETTINGS_PANE_Y0                (VISIBLE_AREA_Y0 + TAB_HEIGHT + BORDER_THICKNESS + 8)
+/**
+ * @def SETTINGS_PANE_Y1
+ * @brief Y coordinate of the bottom edge of the settings pane.
+ */
+#define SETTINGS_PANE_Y1                (LAYOUT_ACTIONS_SEPARATOR_Y - 6)
+/**
+ * @def SETTINGS_ROW_HEIGHT
+ * @brief Height of a single label/value row in a settings pane (pixels).
+ */
+#define SETTINGS_ROW_HEIGHT             (28)
+/**
+ * @def SETTINGS_ROWS
+ * @brief Maximum number of label/value rows visible in a settings pane.
+ */
+#define SETTINGS_ROWS                   ((SETTINGS_PANE_Y1 - SETTINGS_PANE_Y0) / SETTINGS_ROW_HEIGHT)
+
+/**
  * @def LIST_ENTRIES
  * @brief Maximum number of file list entries.
  */

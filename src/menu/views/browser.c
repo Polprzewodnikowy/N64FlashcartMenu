@@ -541,29 +541,15 @@ static component_context_menu_t archive_context_menu = {
     }
 };
 
-static void set_menu_next_mode (menu_t *menu, void *arg) {
-    menu_mode_t next_mode = (menu_mode_t) (arg);
-    menu->next_mode = next_mode;
+/**
+ * @brief Whether the selected entry can be booted directly with Start.
+ */
+static bool entry_is_launchable (menu_t *menu) {
+    return menu->browser.entry && (menu->browser.entry->type == ENTRY_TYPE_ROM);
 }
-
-static component_context_menu_t settings_context_menu = {
-    .list = {
-        { .text = "Controller Pak manager", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CONTROLLER_PAKFS) },
-        { .text = "Menu settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
-        { .text = "Time (RTC) settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
-        { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
-        { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
-        { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
-        COMPONENT_CONTEXT_MENU_LIST_END,
-    }
-};
 
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, menu->browser.archive ? &archive_context_menu : &entry_context_menu)) {
-        return;
-    }
-
-    if (ui_components_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -671,17 +657,19 @@ static void process (menu_t *menu) {
             );
         }
         sound_play_effect(SFX_EXIT);
-    } else if (menu->actions.options && menu->browser.entry) {
+    } else if (menu->actions.context && menu->browser.entry) {
         ui_components_context_menu_show(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.settings) {
-        ui_components_context_menu_show(&settings_context_menu);
-        sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right) {
+    } else if (menu->actions.settings && entry_is_launchable(menu)) {
+        /* Skip the ROM information screen and boot straight away. */
+        menu->load_pending.rom_file = true;
+        menu->next_mode = MENU_MODE_LOAD_ROM;
+        sound_play_effect(SFX_ENTER);
+    } else if (menu->actions.tab_right) {
         menu->next_mode = MENU_MODE_HISTORY;
         sound_play_effect(SFX_CURSOR);
-    } else if (menu->actions.go_left) {
-        menu->next_mode = MENU_MODE_FAVORITE;
+    } else if (menu->actions.tab_left) {
+        menu->next_mode = MENU_MODE_SETTINGS;
         sound_play_effect(SFX_CURSOR);
     }
 }
@@ -724,8 +712,9 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
-        "^%02XR:  Options^00",
+        "^%02XStart: Launch^00\n"
+        "^%02XZ: Options^00",
+        entry_is_launchable(menu) ? STL_DEFAULT : STL_GRAY,
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
@@ -733,7 +722,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            "C-▼▲ Fast Scroll | L / R: Tabs\n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -741,14 +730,12 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            "C-▼▲ Fast Scroll | L / R: Tabs\n"
             "\n"
         );
     }
 
     ui_components_context_menu_draw(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
-
-    ui_components_context_menu_draw(&settings_context_menu);
 
     rdpq_detach_show();
 }
@@ -758,7 +745,6 @@ void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         ui_components_context_menu_init(&entry_context_menu);
         ui_components_context_menu_init(&archive_context_menu);
-        ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");

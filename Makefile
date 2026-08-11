@@ -85,6 +85,7 @@ SRCS = \
 	menu/views/startup.c \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
+	menu/views/settings_tab.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
 	menu/views/cpakfs_manager.c \

@@ -52,15 +52,19 @@ png_err_t png_decoder_start (char *path, int max_width, int max_height, png_call
  * @brief Start decoding a PNG from an in-memory buffer.
  *
  * Same as png_decoder_start but reads from a heap buffer instead of a file.
- * The decoder takes ownership of @p buf and frees it when done.
+ * Ownership of @p buf transfers to the decoder only when PNG_OK is returned;
+ * on PNG_ERR_BUSY or PNG_ERR_OUT_OF_MEM the caller retains ownership and must
+ * free the buffer.
  *
- * @param buf            Heap-allocated PNG data (ownership transferred).
+ * @param buf            Heap-allocated PNG data; ownership transferred on PNG_OK.
  * @param buf_size       Size of the buffer in bytes.
  * @param max_width      Maximum width of the decoded image.
  * @param max_height     Maximum height of the decoded image.
- * @param callback       Callback function to be called when decoding is complete.
- * @param callback_data  User-defined data to be passed to the callback function.
- * @return png_err_t Error code.
+ * @param callback       Callback invoked when decoding completes or fails.
+ * @param callback_data  User-defined data passed to the callback.
+ * @return PNG_OK on success (buf ownership transferred), PNG_ERR_BUSY if a
+ *         decode is already in progress, or PNG_ERR_OUT_OF_MEM on allocation
+ *         failure (caller must free buf in both error cases).
  */
 png_err_t png_decoder_start_mem (void *buf, size_t buf_size, int max_width, int max_height, png_callback_t *callback, void *callback_data);
 

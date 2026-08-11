@@ -52,3 +52,6 @@ Forcing the region may allow the ROM work on your display, however:
    - Speed issues
    - Audio/visual desynchronization
    - Other unexpected/unwanted behaviors
+
+#### RDRAM Clear
+Certain ROM's such as RTYI demo do not correctly clear RAM on initialization. This may allow individual ROMs to boot as expected, but is not required for any commmercially released ROM.

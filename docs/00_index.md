@@ -10,7 +10,7 @@
 - [Background Images](./16_background_images.md)
 - [64DD](./17_64dd.md)
 - [Emulators](./18_emulators.md)
-- [Game Art Images](./19_gamepak_boxart.md)
+- [Game Art and Metadata](./19_gamepak_boxart.md)
 - [Autoloading N64 ROMs](./22_autoload_roms.md)
 - [Sounds](./40_sound.md)
 
@@ -23,7 +23,7 @@
 - [N64 Information](./37_n64_information.md)
 
 ### Other
-- [MP3 Player](./41_mp3_player.md)
+- [Music Player](./41_mp3_player.md)
 - [Advanced Customization](./61_advanced_customization.md)
 - [N64 Hardware Modifications Compatibility](./62_hardware_mods.md)
 - [Update the menu](./80_update_the_menu.md)

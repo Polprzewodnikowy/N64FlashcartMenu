@@ -3,7 +3,7 @@
 #include <math.h>
 #include <sys/stat.h>
 
-//#include "../jpeg_decoder.h"
+#include "../jpeg_decoder.h"
 #include "../audio_player.h"
 #include "../png_decoder.h"
 #include "../sound.h"
@@ -112,7 +112,7 @@ static void try_next_cover_source(void);
 
 /** Cancel any in-progress cover art decode. */
 static void abort_cover_decode (void) {
-    //if (cover_state == COVER_LOADING_JPEG) jpeg_decoder_abort();
+    if (cover_state == COVER_LOADING_JPEG) jpeg_decoder_abort();
     if (cover_state == COVER_LOADING_PNG) png_decoder_abort();
     cover_state = COVER_IDLE;
 }
@@ -246,19 +246,19 @@ static bool png_dimensions_ok (const char *path, int max_dim) {
     return (w <= max_dim && h <= max_dim);
 }
 
-// static void cover_art_cb (jpeg_err_t err, surface_t *image, void *data) {
-//     cover_state = COVER_IDLE;
-//     if (err == JPEG_OK && image) {
-//         if (cover_image) {
-//             surface_free(cover_image);
-//             free(cover_image);
-//         }
-//         cover_image = image;
-//         cover_cache_blit_params();
-//     } else {
-//         try_next_cover_source();
-//     }
-// }
+static void cover_art_cb (jpeg_err_t err, surface_t *image, void *data) {
+    cover_state = COVER_IDLE;
+    if (err == JPEG_OK && image) {
+        if (cover_image) {
+            surface_free(cover_image);
+            free(cover_image);
+        }
+        cover_image = image;
+        cover_cache_blit_params();
+    } else {
+        try_next_cover_source();
+    }
+}
 
 static void cover_art_png_cb (png_err_t err, surface_t *image, void *data) {
     cover_state = COVER_IDLE;
@@ -307,19 +307,21 @@ static bool try_cover_path (const char *path, int max_size) {
     if (!buf) return false;
 
     if (is_jpeg) {
-        // cover_state = COVER_LOADING_JPEG;
-        // jpeg_err_t err = jpeg_decoder_start_mem(buf, buf_size, max_size, max_size,
-        //                                         cover_art_cb, NULL);
-        // if (err != JPEG_OK) {
-        //     cover_state = COVER_IDLE;
+        cover_state = COVER_LOADING_JPEG;
+        jpeg_err_t err = jpeg_decoder_start_mem(buf, buf_size, max_size, max_size,
+                                               cover_art_cb, NULL);
+        if (err != JPEG_OK) {
+            cover_state = COVER_IDLE;
+            free(buf);
             return false;
-        // }
+        }
     } else {
         cover_state = COVER_LOADING_PNG;
         png_err_t err = png_decoder_start_mem(buf, buf_size, max_size, max_size,
                                               cover_art_png_cb, NULL);
         if (err != PNG_OK) {
             cover_state = COVER_IDLE;
+            free(buf);
             return false;
         }
     }
@@ -508,14 +510,15 @@ static void load_cover_art (path_t *directory) {
                 cover_state = COVER_LOADING_PNG;
                 started = (png_decoder_start_mem(buf, buf_size, max_size, max_size,
                                                  cover_art_png_cb, NULL) == PNG_OK);
-            } // else {
-            //     cover_state = COVER_LOADING_JPEG;
-            //     started = (jpeg_decoder_start_mem(buf, buf_size, max_size, max_size,
-            //                                       cover_art_cb, NULL) == JPEG_OK);
-            // }
+            } else {
+                cover_state = COVER_LOADING_JPEG;
+                started = (jpeg_decoder_start_mem(buf, buf_size, max_size, max_size,
+                                                  cover_art_cb, NULL) == JPEG_OK);
+            }
 
             if (started) return;
             cover_state = COVER_IDLE;
+            free(buf);
         }
     }
 
@@ -999,7 +1002,9 @@ static void draw (menu_t *menu, surface_t *d) {
         // float progress = (cover_state == COVER_LOADING_JPEG)
         //                ? jpeg_decoder_get_progress()
         //                : png_decoder_get_progress();
-        float progress = png_decoder_get_progress();
+        float progress = (cover_state == COVER_LOADING_JPEG)
+                       ? jpeg_decoder_get_progress()
+                       : png_decoder_get_progress();
         char buf[16];
         snprintf(buf, sizeof(buf), "%d%%", (int)(progress * 100));
         rdpq_text_printn(

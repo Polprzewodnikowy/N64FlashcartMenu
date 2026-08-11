@@ -4,7 +4,7 @@ N64FlashcartMenu supports multiple emulators that are compatible with the N64. A
 > [!TIP]
 > All emulators supported DO NOT require additional ROM processing or adjustment steps as may be suggested in their readme and original ROMs can be used out of the box.
 
-Emulators should be added to the `/menu/emulators` directory on the SD card. N64FlashcartMenu currently supports the following emulators and associated ROM file names:
+Emulators should be added to the `sd:/menu/emulators/` directory on the SD card. N64FlashcartMenu currently supports the following emulators and associated ROM file names:
 
 | System | Emulator | ROM extensions | Emulator filename |
 |--------|----------|----------------|-------------------|
@@ -20,7 +20,7 @@ Emulators should be added to the `/menu/emulators` directory on the SD card. N64
 
 ## Per-emulator overrides
 
-You can override the emulator ROM filename, save type, and ROM load address without modifying the menu by creating `/menu/emulators.ini` on the SD card.  The file is optional — when absent, all built-in defaults apply.
+You can override the emulator ROM filename, save type, and ROM load address without modifying the menu by creating `sd:/menu/emulators.ini` on the SD card.  The file is optional — when absent, all built-in defaults apply.
 
 Each section corresponds to an emulator system.  Only keys you wish to override need to be present.
 

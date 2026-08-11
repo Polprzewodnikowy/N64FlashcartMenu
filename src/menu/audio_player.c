@@ -97,7 +97,12 @@ static size_t drflac_read_cb (void *userdata, void *buf, size_t bytes) {
 
 static drflac_bool32 drflac_seek_cb (void *userdata, int offset, drflac_seek_origin origin) {
     flac_io_t *io = (flac_io_t *)userdata;
-    int whence = (origin == DRFLAC_SEEK_SET) ? SEEK_SET : SEEK_CUR;
+    int whence;
+    switch (origin) {
+        case DRFLAC_SEEK_SET: whence = SEEK_SET; break;
+        case DRFLAC_SEEK_END: whence = SEEK_END; break;
+        default:              whence = SEEK_CUR; break;
+    }
     return fseek(io->f, offset, whence) == 0;
 }
 
@@ -213,7 +218,7 @@ static void mp3_calculate_duration (audio_track_t *t, int samples) {
 
     long data_size = (t->file_size - t->data_start);
     if (mp3dec_check_vbrtag((const uint8_t *)(t->buffer_ptr), t->info.frame_bytes, &frames, &delay, &padding) > 0) {
-        if (t->info.hz > 0) {
+        if (t->info.hz > 0 && frames > 0 && samples > 0) {
             t->duration = (frames * samples) / (float)(t->info.hz);
             t->bitrate = (data_size * 8) / t->duration;
         }
@@ -442,13 +447,13 @@ static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int 
     audio_track_t *t = &p->current;
 
     if (!t->loaded) {
-        write_silence(sbuf, wlen, 2);
+        write_silence(sbuf, wlen, p->wave.channels);
         return;
     }
 
     if (t->format == AUDIO_FORMAT_FLAC) {
         if (!t->flac) {
-            write_silence(sbuf, wlen, 2);
+            write_silence(sbuf, wlen, p->wave.channels);
             return;
         }
 
@@ -507,7 +512,7 @@ static void mp3player_wave_read (void *ctx, samplebuffer_t *sbuf, int wpos, int 
 
     /* MP3 decode path */
     if (!t->f) {
-        write_silence(sbuf, wlen, 2);
+        write_silence(sbuf, wlen, p->wave.channels);
         return;
     }
 
@@ -562,6 +567,7 @@ audioplayer_err_t audioplayer_init (void) {
         .frequency = 44100,
         .len = WAVEFORM_MAX_LEN - 1,
         .loop_len = WAVEFORM_MAX_LEN - 1,
+        .append_units = MINIMP3_MAX_SAMPLES_PER_FRAME / 2,
         .read = mp3player_wave_read,
         .ctx = p,
     };
@@ -577,6 +583,7 @@ void audioplayer_deinit (void) {
 }
 
 audioplayer_err_t audioplayer_load (char *path) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (p->current.loaded) {
         audioplayer_stop();
         track_unload(&p->current);
@@ -592,6 +599,7 @@ audioplayer_err_t audioplayer_load (char *path) {
 }
 
 void audioplayer_unload (void) {
+    if (!p) return;
     audioplayer_stop();
     track_unload(&p->current);
 }
@@ -616,11 +624,12 @@ bool audioplayer_is_playing (void) {
 }
 
 bool audioplayer_is_finished (void) {
-    if (!p->current.loaded) return false;
+    if (!p || !p->current.loaded) return false;
     return track_is_finished(&p->current);
 }
 
 audioplayer_err_t audioplayer_play (void) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (!audioplayer_is_playing()) {
@@ -648,6 +657,7 @@ void audioplayer_stop (void) {
 }
 
 audioplayer_err_t audioplayer_toggle (void) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (audioplayer_is_playing()) {
         audioplayer_stop();
     } else {
@@ -662,6 +672,7 @@ void audioplayer_mute (bool mute) {
 }
 
 audioplayer_err_t audioplayer_seek (int seconds) {
+    if (!p) return AUDIOPLAYER_ERR_OUT_OF_MEM;
     if (!p->current.loaded) return AUDIOPLAYER_ERR_NO_FILE;
 
     if (p->current.format == AUDIO_FORMAT_FLAC) {
@@ -725,22 +736,22 @@ audioplayer_err_t audioplayer_seek (int seconds) {
 }
 
 float audioplayer_get_duration (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
     return p->current.duration;
 }
 
 float audioplayer_get_bitrate (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
     return p->current.bitrate;
 }
 
 int audioplayer_get_samplerate (void) {
-    if (!p->current.loaded) return 0;
+    if (!p || !p->current.loaded) return 0;
     return p->current.samplerate;
 }
 
 int audioplayer_get_native_samplerate (void) {
-    if (!p->current.loaded) return 0;
+    if (!p || !p->current.loaded) return 0;
     if (p->current.format == AUDIO_FORMAT_FLAC && p->current.native_rate > 0) {
         return p->current.native_rate;
     }
@@ -748,7 +759,7 @@ int audioplayer_get_native_samplerate (void) {
 }
 
 float audioplayer_get_progress (void) {
-    if (!p->current.loaded) return 0.0f;
+    if (!p || !p->current.loaded) return 0.0f;
 
     float progress;
 

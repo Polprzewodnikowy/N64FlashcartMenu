@@ -161,6 +161,8 @@ static const match_t database[] = {
     MATCH_ID_REGION("NWTJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                 // Wetrix
     MATCH_ID("NWT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Wetrix
 
+    MATCH_ID("ZSE", SAVE_TYPE_NONE, FEAT_EXP_PAK_REQUIRED),                                                     // Super Real Mahjong VS (Aleck64 conversion)
+
     // EEPROM 4K
     MATCH_ID("CLB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                    // Mario Party (NTSC)
     MATCH_ID("NAB", SAVE_TYPE_EEPROM_4KBIT, FEAT_CPAK | FEAT_RPAK),                                             // Air Boarder 64

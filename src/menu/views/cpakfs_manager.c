@@ -67,6 +67,8 @@ static bool start_format_controller_pak;
 static char * CPAK_PATH = "sd:/cpak_saves";
 static char * CPAK_NOTES_PATH = "sd:/cpak_saves/notes";
 
+static int note_count (void);
+
 static void reset_vars(){
     has_mem = false;
     corrupted_pak = false;
@@ -100,12 +102,12 @@ static void get_rtc_time(char* formatted_time) {
 
 static void free_controller_pak_name_notes() {
     for (int i = 0; i < MAX_NUM_NOTES; ++i) {
-        snprintf(controller_pak_name_notes[i], sizeof(controller_pak_name_notes[i]), " ");
-        snprintf(controller_pak_name_notes_bank_size[i], sizeof(controller_pak_name_notes_bank_size[i]), " ");
-        snprintf(cpakfs_path_strings[i].gamecode, sizeof(cpakfs_path_strings[i].gamecode), " ");
-        snprintf(cpakfs_path_strings[i].pubcode, sizeof(cpakfs_path_strings[i].pubcode), " ");
-        snprintf(cpakfs_path_strings[i].filename, sizeof(cpakfs_path_strings[i].filename), " ");
-        snprintf(cpakfs_path_strings[i].ext, sizeof(cpakfs_path_strings[i].ext), " ");
+        controller_pak_name_notes[i][0] = '\0';
+        controller_pak_name_notes_bank_size[i][0] = '\0';
+        cpakfs_path_strings[i].gamecode[0] = '\0';
+        cpakfs_path_strings[i].pubcode[0] = '\0';
+        cpakfs_path_strings[i].filename[0] = '\0';
+        cpakfs_path_strings[i].ext[0] = '\0';
     }
 }
 
@@ -448,7 +450,7 @@ static void process (menu_t *menu) {
                 sound_play_effect(SFX_SETTING);
                 controller_selected = ((controller_selected + 1) + 4) % 4;
                 reset_vars();
-            } else if (menu->actions.settings && use_rtc && has_mem) {
+            } else if (menu->actions.settings && has_mem) {
                 sound_play_effect(SFX_SETTING);
                 ui_components_context_menu_show(&options_context_menu);
             }
@@ -463,6 +465,7 @@ static void process (menu_t *menu) {
             // Pressing A : dump the Controller Pak
             if (menu->actions.enter && 
                 use_rtc && 
+                cpakfs_stats.pages.used > 0 &&
                 !show_complete_dump_confirm_message && 
                 !show_complete_write_confirm_message &&
                 !show_single_note_write_info_message &&
@@ -477,6 +480,7 @@ static void process (menu_t *menu) {
             // Pressing L or Z : dump a single note
             else if (menu->actions.context && 
                 use_rtc && 
+                note_count() > 0 &&
                 !show_complete_write_confirm_message &&
                 !show_single_note_write_info_message &&
                 !show_complete_dump_confirm_message &&
@@ -888,9 +892,19 @@ static void pane_overlay (menu_t *menu) {
 
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
     switch (slot) {
-        case SETTINGS_HINT_LEFT: return "A: Backup Pak\nB: Categories";
-        case SETTINGS_HINT_CENTER: return "Left / Right: Controller\nUp / Down: Notes | L / R: Tabs";
-        case SETTINGS_HINT_RIGHT: return "Z: Backup Note\nStart: Options";
+        case SETTINGS_HINT_LEFT:
+            return use_rtc && has_mem && !corrupted_pak && cpakfs_stats.pages.used > 0
+                ? "A: Backup Pak\nB: Categories"
+                : "B: Categories\n";
+        case SETTINGS_HINT_CENTER:
+            return note_count() > CPAK_PANE_NOTES
+                ? "Left / Right: Controller\nUp / Down: Notes | L / R: Tabs"
+                : "Left / Right: Controller\nL / R: Tabs";
+        case SETTINGS_HINT_RIGHT:
+            if (use_rtc && has_mem && !corrupted_pak && note_count() > 0) {
+                return "Z: Backup Note\nStart: Options";
+            }
+            return has_mem ? "\nStart: Options" : NULL;
         default: return NULL;
     }
 }

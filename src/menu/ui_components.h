@@ -30,6 +30,25 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+/** 
+ * @brief Sprites Enumeration.
+ * 
+ * Enumeration for different types of sprites used in the user interface.
+ */
+typedef enum {
+    SPRITE_BOXART_DEFAULT,        /**< Default boxart sprite */
+    SPRITE_BACKGROUND_DEFAULT,    /**< Default background sprite */
+    SPRITE_FOLDER,                  /**< Folder sprite */
+    SPRITE_COMPRESSED,              /**< Compressed file sprite */
+    SPRITE_N64ROM,                  /**< N64 ROM file sprite */
+    SPRITE_DDISK,                   /**< Disk image sprite */
+    SPRITE_MUSIC,                   /**< Music file sprite */
+    SPRITE_TEXT,                    /**< Text file sprite */
+    SPRITE_IMAGE,                   /**< Image file sprite */
+    SPRITE_SAVE,                    /**< Save file sprite */
+    SPRITE_FILE,                    /**< Generic file sprite */
+    SPRITE_LIST_END               /**< List end marker */
+} sprite_type_t;
 
 typedef struct fat_file_attributes {
     bool is_read_only;    /**< Read-only attribute */
@@ -325,6 +344,10 @@ void ui_components_boxart_free(component_boxart_t *b);
  * @param b Pointer to the box art component.
  */
 void ui_components_boxart_draw(component_boxart_t *b);
+
+void ui_components_sprites_init(void);
+
+void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 /**
  * @brief Draw the tabs component.

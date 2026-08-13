@@ -59,6 +59,7 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/sprites.c \
 	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
@@ -106,6 +107,19 @@ SOUNDS_WAV = \
 	settings.wav
 
 SOUNDS_XM ?=
+
+IMAGES = \
+	defbg.png \
+	defboxart.png \
+	compressed.png \
+	folder.png \
+	N64ROM.png \
+	ddisk.png \
+	music.png \
+	text.png \
+	image.png \
+	save.png \
+	file.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

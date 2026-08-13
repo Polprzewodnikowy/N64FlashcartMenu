@@ -13,6 +13,7 @@
 
 #include <usb.h>
 
+#include "sound.h"
 #include "usb_comm.h"
 #include "utils/utils.h"
 
@@ -91,6 +92,9 @@ static void usb_comm_send_error (const char *message) {
  * @param menu Pointer to the menu structure.
  */
 static void command_reboot (menu_t *menu) {
+    // The uploader overwrites SDRAM (including DFS) before sending this command;
+    // stop audio immediately so the mixer stops reading from overwritten ROM data.
+    sound_deinit();
     menu->next_mode = MENU_MODE_BOOT;
 
     menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;

@@ -248,6 +248,10 @@ sc64_error_t sc64_ll_get_diagnostic (sc64_diagnostic_id_t id, uint32_t *value) {
     };
 
     sc64_error_t error = sc64_ll_execute_cmd(&cmd);
+    if (error != SC64_OK) {
+        return error;
+    }
+
     *value = cmd.rsp[1];
-    return error;
+    return SC64_OK;
 }

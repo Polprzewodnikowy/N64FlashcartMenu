@@ -232,7 +232,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
                 case ENTRY_TYPE_DIR: 
                     ui_components_sprite_draw(SPRITE_FOLDER, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 551, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + (i * highlight_height)); 
                 break;
-                case ENTRY_TYPE_ARCHIVED: 
+                case ENTRY_TYPE_ARCHIVE: 
                     ui_components_sprite_draw(SPRITE_COMPRESSED, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 551, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + (i * highlight_height));
                 break;
                 case ENTRY_TYPE_ROM: 

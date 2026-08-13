@@ -7,6 +7,7 @@ To use commercial N64 game art images and ROM metadata, place your files within 
 > [!WARNING]
 > Older menu versions may not show boxart anymore. Game boxart is now stored in `sd:/menu/metadata/`, rather than the previous `sd:/menu/boxart/` folder, and now includes ROM metadata. Please update your folder name and structure/content to ensure compatibility.
 
+
 ### Advanced
 Homebrew ROMs that conform to the [Homebrew ROM Header](https://n64brew.dev/wiki/ROM_Header) are shown when included from the `sd:/menu/metadata/homebrew/` folder and are matched against the ROM file name without its extension as described below.
 

@@ -44,6 +44,8 @@ SD:\
 │   ├── metadata\
 │   │    ├── N\G\E\E\boxart_front.png
 │   │    ├── N\G\E\E\boxart_back.png
+│   │    ├── N\G\E\E\metadata.ini
+│   │    ├── N\G\E\description.txt
 │   │    └── homebrew\myromname\boxart_front.png
 │   │
 │   ├── 64ddipl\

@@ -58,7 +58,7 @@ SRCS = \
 	menu/png_decoder.c \
 	menu/rom_info.c \
 	menu/settings.c \
-	menu/sound.c \W
+	menu/sound.c \
 	menu/sprites.c \
 	menu/zip_entry_count.c \
 	menu/ui_components/background.c \

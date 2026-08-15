@@ -9,7 +9,7 @@
     "mounts": [
         "source=n64flashcartmenu-docbuilder-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": "dotnet tool update -g docfx && git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j",
+    "postCreateCommand": "dotnet tool update -g docfx && git submodule update --init && cd ./libdragon && ./build.sh",
     "customizations": {
         "vscode": {
             "settings": {

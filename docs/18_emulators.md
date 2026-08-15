@@ -44,6 +44,9 @@ rom = smsPlus64.z64
 
 [channelf]
 rom = Press-F.z64
+
+[zxspectrum]
+rom = zx-spectrum.z64
 ```
 
 ### `save_type` values

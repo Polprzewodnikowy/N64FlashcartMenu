@@ -16,7 +16,7 @@
 static const char *archive_extensions[] = { "zip", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 static const char *disk_extensions[] = { "ndd", NULL };
-static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", NULL };
+static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", "rzx", NULL };
 static const char *image_extensions[] = { "png", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };

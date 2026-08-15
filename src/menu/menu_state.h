@@ -113,7 +113,9 @@ typedef struct {
         bool back;
         bool options;
         bool settings;
-        bool lz_context;
+        bool context;
+        bool tab_left;
+        bool tab_right;
     } actions;
 
     struct {

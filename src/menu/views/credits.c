@@ -17,7 +17,7 @@ static void process (menu_t *menu) {
         show_oss_lib_info_message = false;
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER; 
-    } else if (menu->actions.lz_context) {
+    } else if (menu->actions.context) {
         if (show_oss_lib_info_message) {
             show_oss_lib_info_message = false;
         } else {
@@ -89,7 +89,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "\n"
-        "L|Z: OSS Libraries used\n"
+        "Z: OSS Libraries used\n"
     );
 
     rdpq_detach_show();

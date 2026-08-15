@@ -149,6 +149,9 @@ static void menu_init (boot_params_t *boot_params) {
  * @param menu Pointer to the menu structure.
  */
 static void menu_deinit (menu_t *menu) {
+
+    sound_deinit();
+    
     ui_components_background_free();
     ui_components_file_list_free();
     rspq_wait();  // Execute deferred callbacks (e.g., display list freeing) before closing RSPQ
@@ -166,8 +169,6 @@ static void menu_deinit (menu_t *menu) {
 
     display_close();
 
-    sound_deinit();
-    
     rspq_wait();
     rdpq_close();
     rspq_close();

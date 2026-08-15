@@ -255,14 +255,19 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
         case CART_LOAD_EMU_TYPE_GAMEBOY:
             emu_section = "gb";
             default_rom_filename = "gb.v64";
-            // TODO: Saves might be less problematic by using the FAKE type.
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
+            // Banked SRAM, not FLASHRAM: gb64 supports both (SVID SaveTypeSRAM3X), but as
+            // FLASHRAM it reaches the save through osFlashInit's chip-id detection and the
+            // flash command protocol, and on an SC64 in a ModRetro M64 those reads returned
+            // nothing -- a correctly formatted save booted as if absent, and an in-game save
+            // reported success and was gone on relaunch. Banked SRAM is a plain PI DMA, the
+            // same access other cores' saves already use, and works on the same hardware.
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
             emu_section = "gbc";
             default_rom_filename = "gbc.v64";
-            // TODO: Saves might be less problematic by using the FAKE type.
-            save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
+            // Same as GAMEBOY above.
+            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
             emu_section = "sega8bit";

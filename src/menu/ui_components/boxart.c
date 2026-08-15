@@ -235,7 +235,7 @@ void ui_components_boxart_draw(component_boxart_t *b) {
     int box_y = BOXART_Y;
     if (b && b->image && b->image->width <= BOXART_WIDTH_MAX && b->image->height <= BOXART_HEIGHT_MAX) {
         rdpq_mode_push();
-            rdpq_set_mode_copy(false);
+            rdpq_set_mode_copy(true);
             if (b->image->height == BOXART_HEIGHT_MAX) {
                 box_x = BOXART_X_JP;
                 box_y = BOXART_Y_JP;
@@ -245,13 +245,5 @@ void ui_components_boxart_draw(component_boxart_t *b) {
             }
             rdpq_tex_blit(b->image, box_x, box_y, NULL);
         rdpq_mode_pop();
-    } else {
-        ui_components_box_draw(
-            BOXART_X,
-            BOXART_Y,
-            BOXART_X + BOXART_WIDTH,
-            BOXART_Y + BOXART_HEIGHT,
-            BOXART_LOADING_COLOR
-        );
     }
 }

@@ -13,6 +13,7 @@ static bool show_extra_info_message = false;
 static bool show_advanced_info_message = false;
 static bool show_expansion_pak_warning = false;
 static component_boxart_t *boxart;
+static component_boxart_t *pending_boxart;
 static char *rom_filename = NULL;
 
 static int16_t current_metadata_image_index = 0;
@@ -428,11 +429,12 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
             }
 
             if (new_boxart != NULL) {
-                // Only free old boxart after successful new allocation
                 if (!low_memory_mode) {
-                    ui_components_boxart_free(boxart);
+                    // Keep the current art visible until the new PNG has decoded.
+                    pending_boxart = new_boxart;
+                } else {
+                    boxart = new_boxart;
                 }
-                boxart = new_boxart;
                 current_metadata_image_index = new_metadata_image_index;
                 sound_play_effect(SFX_SETTING);
                 break;
@@ -923,6 +925,8 @@ static void load (menu_t *menu) {
 }
 
 static void deinit (void) {
+    ui_components_boxart_free(pending_boxart);
+    pending_boxart = NULL;
     ui_components_boxart_free(boxart);
     boxart = NULL;
     ui_components_background_reload();
@@ -1026,6 +1030,17 @@ void view_load_rom_init (menu_t *menu) {
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
+
+    if (pending_boxart && !pending_boxart->loading) {
+        if (pending_boxart->image) {
+            ui_components_boxart_free(boxart);
+            boxart = pending_boxart;
+            pending_boxart = NULL;
+        } else {
+            ui_components_boxart_free(pending_boxart);
+            pending_boxart = NULL;
+        }
+    }
 
     if (!is_memory_expanded() && boxart != NULL && !boxart->loading && boxart->image == NULL) {
         ui_components_background_reload();

@@ -14,8 +14,8 @@ Emulators should be added to the `sd:/menu/emulators/` directory on the SD card.
 | **Game Boy Color** | [gb64](https://lambertjamesd.github.io/gb64/romwrapper/romwrapper.html) by *lambertjamesd* ("Download Emulator" button) | `.gbc` | `gbc.v64` |
 | **SMS / Game Gear / SG-1000** | [smsPlus64](https://github.com/fhoedemakers/smsplus64/releases) by *fhoedemakers* | `.sms` `.gg` `.sg` | `smsPlus64.z64` |
 | **Fairchild Channel F** | [Press-F-Ultra](https://github.com/celerizer/Press-F-Ultra/releases) by *celerizer* | `.chf` | `Press-F.z64` |
-| **ZX Spectrum** | *TBD* | `.rzx` | *TBD* |
-| **Microsoft MSX** | *TBD* | `.mx1` `.mx2` | *TBD* |
+| **ZX Spectrum** | *TBD* | `.rzx` | `zx-spectrum.z64` |
+| **Microsoft MSX** | *TBD* | `.mx1` `.mx2` | `msx.z64` |
 | **Developer** | *Developer* | `.emu` | `dev_emu.z64` |
 
 > [!WARNING]

@@ -1,6 +1,6 @@
 /**
  * @file ed64_vseries.h
- * @brief ED64 Vseries flashcart support
+ * @brief ED64 V series flashcart support
  * @ingroup flashcart 
  */
 

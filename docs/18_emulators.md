@@ -61,5 +61,3 @@ rom = zx-spectrum.z64
 | 5 | SRAM 1Mbit |
 | 6 | FlashRAM 1Mbit |
 | 7 | FlashRAM PKST2 |
-
-If you are an emulator developer and are interested in adding your emulator, take a look at this [template pull request](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pull/178).

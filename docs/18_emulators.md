@@ -25,7 +25,7 @@ Emulators should be added to the `sd:/menu/emulators/` directory on the SD card.
 
 You can override the emulator ROM filename, save type, and ROM load address without modifying the menu by creating `sd:/menu/emulators.ini` on the SD card.  The file is optional — when absent, all built-in defaults apply.
 
-Each section corresponds to an emulator system.  Only keys you wish to override need to be present.
+Each section corresponds to an emulator system.  Only keys you wish to override need to be present. Only add the required override and keys required.
 
 ```ini
 [nes]
@@ -56,8 +56,8 @@ rom = ULTRAMSX.V64
 rom_offset = 0x2DF48
 
 [dev]
-rom        = myemutype.z64  ; emulator filename inside /menu/emulators/ , uses the global `.emu` detection for ROMs
-save_type  = 0              ; flashcart_save_type_t integer (see table below)
+rom = myemutype.z64         ; emulator filename inside /menu/emulators/ , still uses the global `.emu` type for ROMs
+save_type = 0               ; flashcart_save_type_t integer (see table below)
 rom_offset = 0x200000       ; Example ROM load address in RDRAM (decimal or 0x hex)
 ```
 

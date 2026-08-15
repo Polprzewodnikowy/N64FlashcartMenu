@@ -31,6 +31,8 @@ static void image_callback (png_err_t err, surface_t *decoded_image, void *callb
     image = decoded_image;
 
     if (err != PNG_OK) {
+        // Restore background before handing off to error view — deinit may not run
+        ui_components_background_reload();
         menu_show_error(menu, convert_error_message(err));
     }
 }
@@ -112,6 +114,9 @@ static void deinit (menu_t *menu) {
             // Restore the background that was freed at init to give the decoder more memory
             ui_components_background_reload();
         }
+    } else {
+        // Decode failed or was aborted — still restore the background
+        ui_components_background_reload();
     }
     image = NULL;
 }
@@ -133,6 +138,7 @@ void view_image_viewer_init (menu_t *menu) {
     png_err_t err = png_decoder_start(path_get(path), max_w, max_h, image_callback, menu);
     if (err != PNG_OK) {
         image_loading = false;
+        ui_components_background_reload();
         menu_show_error(menu, convert_error_message(err));
     }
 

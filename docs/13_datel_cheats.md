@@ -35,7 +35,7 @@ When within the ROM info screen, Press `R` and load the `Datel Code Editor`. Adj
 ![MM Datel Code Editor](./images/datel-code-editor-NZSE.png "MM Datel Code Editor")  
 
 > [!WARNING]
-> Any changes made in the code editor are totally volatile (i.e. not saved when returning to the current screen). Press `L|Z` to save them.
+> Any changes made in the code editor are totally volatile (i.e. not saved when returning to the current screen). Press `Z` to save them.
 
 
 #### Datel Cheat Files

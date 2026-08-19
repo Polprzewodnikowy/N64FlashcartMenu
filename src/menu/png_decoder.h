@@ -56,7 +56,9 @@ png_err_t png_decoder_start (char *path, int max_width, int max_height, png_call
  * on PNG_ERR_BUSY or PNG_ERR_OUT_OF_MEM the caller retains ownership and must
  * free the buffer.
  *
- * @param buf            Heap-allocated PNG data; ownership transferred on PNG_OK.
+ * @param buf Input buffer. Ownership transfers to the decoder only when
+ *            PNG_OK is returned. On PNG_ERR_BUSY or PNG_ERR_OUT_OF_MEM,
+ *            the caller retains ownership and responsibility for buf.
  * @param buf_size       Size of the buffer in bytes.
  * @param max_width      Maximum width of the decoded image.
  * @param max_height     Maximum height of the decoded image.

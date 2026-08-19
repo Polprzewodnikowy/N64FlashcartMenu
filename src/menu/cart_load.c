@@ -282,6 +282,21 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             default_rom_filename = "Press-F.z64";
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
+        case CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM:
+            emu_section = "zxspectrum";
+            default_rom_filename = "zx-spectrum.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+        case CART_LOAD_EMU_TYPE_MICROSOFT_MSX:
+            emu_section = "msx";
+            default_rom_filename = "msx.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+        case CART_LOAD_EMU_TYPE_DEV:
+            emu_section = "dev";
+            default_rom_filename = "dev_emu.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
     }
 
     // Apply per-emulator overrides from sd:/menu/emulators.ini if present

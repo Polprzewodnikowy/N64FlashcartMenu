@@ -11,6 +11,10 @@ static const char *emu_gameboy_rom_extensions[] = { "gb", NULL };
 static const char *emu_gameboy_color_rom_extensions[] = { "gbc", NULL };
 static const char *emu_sega_8bit_rom_extensions[] = { "sms", "gg", "sg", NULL };
 static const char *emu_fairchild_channelf_rom_extensions[] = { "chf", NULL };
+static const char *emu_sinclair_zxspectrum_rom_extensions[] = { "rzx", NULL };
+static const char *emu_microsoft_msx_rom_extensions[] = { "mx1", "mx2", NULL};
+static const char *emu_dev_rom_extensions[] = { "emu", NULL};
+
 
 static cart_load_emu_type_t emu_type;
 
@@ -28,6 +32,12 @@ static char *format_emulator_name (cart_load_emu_type_t emulator_info) {
             return "SEGA 8bit system";
         case CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF:
             return "Fairchild Channel F";
+        case CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM:
+            return "Sinclair ZX Spectrum";
+        case CART_LOAD_EMU_TYPE_MICROSOFT_MSX:
+            return "Microsoft MSX";
+        case CART_LOAD_EMU_TYPE_DEV:
+            return "Development Emulator";
         default:
             return "Unknown";
     }
@@ -129,6 +139,12 @@ void view_load_emulator_init (menu_t *menu) {
         emu_type = CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT;
     } else if (file_has_extensions(path_get(path), emu_fairchild_channelf_rom_extensions)) {
         emu_type = CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF;
+    } else if (file_has_extensions(path_get(path), emu_sinclair_zxspectrum_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM;
+    } else if (file_has_extensions(path_get(path), emu_microsoft_msx_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_MICROSOFT_MSX;
+    } else if (file_has_extensions(path_get(path), emu_dev_rom_extensions)) {
+        emu_type = CART_LOAD_EMU_TYPE_DEV;
     } else {
         menu_show_error(menu, "Unsupported ROM");
     }

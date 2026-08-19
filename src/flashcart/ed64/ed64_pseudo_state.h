@@ -1,6 +1,6 @@
 /**
  * @file ed64_pseudo_state.h
- * @brief Persistent EverDrive save-writeback state
+ * @brief Persistent EverDrive save-writeback state for carts that don't support save-writeback (reset-button flow on V-series).
  * @ingroup flashcart
  */
 

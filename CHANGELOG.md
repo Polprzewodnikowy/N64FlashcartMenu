@@ -15,15 +15,15 @@
 	- Experimental DD swap support.
 	- Added console region to the system information screen.
 	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
-	- Add Emulator ROM override INI
+	- Add Emulator ROM override INI and extra emulator extension file type matches.
 	- Add progress of save file creation on ROM load.
 	- Add ability to override emulator configurations through INI file.
+	- Add option to clear RDRAM on a per ROM basis (required for RTYI demo).
 	
 
 - **Bug Fixes**
 	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
 	- CPak notes backup and restore now works with invalid FAT characters.
-
 
 - **Documentation**
 	- Improved DD section with latest information.
@@ -36,7 +36,6 @@
 	- Improved memory usage and OOB fixes across the whole codebase.
 
 - **Other**
-	- Added UTF converter for later consumption.
 	- Added ED64 pseudo state for later consumption.
 	
 

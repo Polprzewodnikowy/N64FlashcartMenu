@@ -25,7 +25,6 @@
 	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
 	- CPak notes backup and restore now works with invalid FAT characters.
 
-
 - **Documentation**
 	- Improved DD section with latest information.
 	- Improved MP3 player information.

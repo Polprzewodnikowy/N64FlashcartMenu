@@ -18,6 +18,7 @@
 	- Add Emulator ROM override INI and extra emulator extension file type matches.
 	- Add progress of save file creation on ROM load.
 	- Add ability to override emulator configurations through INI file.
+	- Add option to clear RDRAM on a per ROM basis (required for RTYI demo).
 	
 
 - **Bug Fixes**
@@ -36,7 +37,6 @@
 	- Improved memory usage and OOB fixes across the whole codebase.
 
 - **Other**
-	- Added UTF converter for later consumption.
 	- Added ED64 pseudo state for later consumption.
 	
 

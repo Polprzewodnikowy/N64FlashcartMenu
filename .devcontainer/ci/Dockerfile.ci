@@ -17,7 +17,7 @@ RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-c
     dpkg -i gcc-toolchain-mips64-x86_64.deb && \
     rm gcc-toolchain-mips64-x86_64.deb
 
-# Environment Config
+# # Environment Config
 # RUN git config --global --add safe.directory "*" && \
 #     SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
 #     echo "$SNIPPET" >> "/root/.bashrc"

@@ -3,12 +3,12 @@
     "build": {
         "dockerfile": "Dockerfile.sc64deployer"
     },
-    "features": {
-		"ghcr.io/devcontainers/features/git:1": {
-            "version": "latest",
-            "ppa": "false"
-        }
-    },
+    // "features": {
+	// 	"ghcr.io/devcontainers/features/git:1": {
+    //         "version": "latest",
+    //         "ppa": "false"
+    //     }
+    // },
 	//"capAdd": ["SYS_PTRACE"],
 	//"securityOpt": ["seccomp=unconfined"],
     "mounts": [
@@ -32,10 +32,10 @@
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
-    "postCreateCommand": "git submodule update --init && cd ./libdragon && ./build.sh --no-examples",
+    "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && ./build.sh --no-examples",
 	// Connect as the non-root "vscode" user created in the Dockerfile. VS Code
 	// aligns its UID/GID with your local user (updateRemoteUserUID) so files
 	// created in the bind-mounted workspace aren't left owned by root.
-	"remoteUser": "vscode",
-	"updateRemoteUserUID": true
+	"remoteUser": "root",
+    "updateRemoteUserUID": true
 }

@@ -26,8 +26,9 @@ RUN wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC6
 
 
 # Environment Config
-RUN git config --global --add safe.directory "*" && \
-    SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+RUN git config --global --add safe.directory "*"
+
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
     echo "$SNIPPET" >> "/root/.bashrc"
 
 # Avoid warnings by switching to noninteractive

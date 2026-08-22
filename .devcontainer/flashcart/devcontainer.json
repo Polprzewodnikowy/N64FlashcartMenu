@@ -17,7 +17,8 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "ms-vscode.cpptools"
             ],
             "settings": {
                 "git.ignoredRepositories": [
@@ -33,9 +34,10 @@
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
     "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && ./build.sh --no-examples",
-	// Connect as the non-root "vscode" user created in the Dockerfile. VS Code
+	"remoteUser": "root"
+    // Connect as the non-root "vscode" user created in the Dockerfile. VS Code
 	// aligns its UID/GID with your local user (updateRemoteUserUID) so files
 	// created in the bind-mounted workspace aren't left owned by root.
-	"remoteUser": "root",
-    "updateRemoteUserUID": true
+	// "remoteUser": "vscode",
+    // "updateRemoteUserUID": true
 }

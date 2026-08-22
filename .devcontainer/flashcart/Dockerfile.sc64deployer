@@ -24,6 +24,12 @@ RUN wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC6
     tar -xf sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -C /usr/local/bin && \
     rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz
 
+
+# Environment Config
+RUN git config --global --add safe.directory "*" && \
+    SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+    echo "$SNIPPET" >> "/root/.bashrc"
+
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -40,12 +46,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod o+x /root \
     && chown -R $USER_UID:$USER_GID /usr/local/bin /opt/libdragon
 
-# Environment Config
-RUN git config --global --add safe.directory "*" && \
-    SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
-    echo "$SNIPPET" >> "/home/$USERNAME/.bashrc"
-
 ENV DEBIAN_FRONTEND=dialog
 
-USER $USERNAME
-WORKDIR /home/$USERNAME/workspaces/N64FlashcartMenu
+# USER $USERNAME
+# WORKDIR /home/$USERNAME

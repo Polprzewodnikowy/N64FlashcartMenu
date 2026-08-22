@@ -1,0 +1,23 @@
+{
+    "name": "N64FlashcartMenu-ci",
+    "build": {
+        "dockerfile": "Dockerfile.ci"
+    },
+    "mounts": [
+        "source=n64flashcartmenu-flashcart-bashhistory,target=/commandhistory,type=volume"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "git.ignoredRepositories": [
+                    "libdragon",
+                    "src/libs/libspng",
+                    "src/libs/minimp3",
+                    "src/libs/miniz",
+                    "src/libs/dr_libs"
+                ]
+            }
+        }
+    },
+    "postCreateCommand": "git submodule update --init && cd ./libdragon && ./build.sh --no-examples"
+}

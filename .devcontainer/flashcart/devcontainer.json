@@ -3,10 +3,17 @@
     "build": {
         "dockerfile": "Dockerfile.sc64deployer"
     },
+    "features": {
+		"ghcr.io/devcontainers/features/git:1": {
+            "version": "latest",
+            "ppa": "false"
+        }
+    },
+	//"capAdd": ["SYS_PTRACE"],
+	//"securityOpt": ["seccomp=unconfined"],
     "mounts": [
         "source=n64flashcartmenu-flashcart-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": "git submodule update --init && cd ./libdragon && ./build.sh --no-examples",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -22,5 +29,10 @@
                 ]
             }
         }
-    }
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+    "postCreateCommand": "git submodule update --init && cd ./libdragon && ./build.sh --no-examples",
+	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
 }

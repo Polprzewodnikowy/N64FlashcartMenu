@@ -667,6 +667,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "\n"
                 "Title: %.20s\n"
                 "Age Rating: %s\n"
+                "Players: %u\n"
                 "Release Date: %s\n"
                 "Author: %s\n"
                 "Website: %s\n"
@@ -679,6 +680,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Press L|Z to return.\n",
                 menu->load.rom_info.title,
                 format_age_rating(menu->load.rom_info.meta.age_rating),
+                menu->load.rom_info.meta.num_players,
                 menu->load.rom_info.meta.release_date,
                 menu->load.rom_info.meta.author,
                 menu->load.rom_info.meta.website,

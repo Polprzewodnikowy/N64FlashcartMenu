@@ -775,6 +775,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.osi_license = strdup("Not specified");
     rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
+    rom_info->meta.num_players = 0;
     rom_info->meta.short_description = strdup("");
     rom_info->meta.size_limit_exceeded = false;
 
@@ -903,6 +904,7 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -1053,6 +1055,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -1121,6 +1124,7 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(rom_meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
         ini_free(rom_meta_ini);
         if (ok) {

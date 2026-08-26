@@ -310,7 +310,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             if (rom_offset_str) {
                 char *end = NULL;
                 unsigned long parsed = strtoul(rom_offset_str, &end, 0);
-                if (end != rom_offset_str && *end == '\0') {
+                // Reject offsets that would make (MiB(64) - rom_offset) wrap in the flashcart loaders.
+                if (end != rom_offset_str && *end == '\0' && parsed < MiB(64)) {
                     emulated_rom_offset = (uint32_t) parsed;
                 }
             }

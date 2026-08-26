@@ -6,17 +6,20 @@
 
 #include <stdbool.h>
 #include <libdragon.h>
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "sound.h"
 
 #define DEFAULT_FREQUENCY   (44100)
 #define NUM_BUFFERS         (4)
 #define NUM_CHANNELS        (16)
 
-static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting;
+static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting, bgm;
 
 static bool sound_initialized = false;
 static bool sfx_enabled = false;
+static bool bgm_enabled = false;
+static bool sfx_opened = false;
+static bool bgm_opened = false;
 
 /**
  * @brief Reconfigure the sound system with the specified frequency.
@@ -25,19 +28,30 @@ static bool sfx_enabled = false;
  */
 static void sound_reconfigure (int frequency) {
     if ((frequency > 0) && (audio_get_frequency() != frequency)) {
-        if (sound_initialized) {
-            mixer_close();
-            audio_close();
-        }
+        
+        sound_deinit();
+
         audio_init(frequency, NUM_BUFFERS);
         mixer_init(NUM_CHANNELS);
 
         // Attempt to initialize wav64 compression level 1
         wav64_init_compression(1);
 
-        // Initialize MP3 player mixer
-        mp3player_mixer_init();
+        // Ensure SFX channel can play standard 44.1 kHz effects even if the
+        // global mixer/sample rate was reconfigured to a lower value for MP3.
+        mixer_ch_set_limits(SOUND_SFX_CHANNEL, 16, DEFAULT_FREQUENCY, 0);
+
+        // Initialize MP3/audioplayer mixer
+        audioplayer_mixer_init();
         sound_initialized = true;
+
+        if (sfx_enabled) {
+            sound_init_sfx();
+        }
+        if (bgm_enabled) {
+            sound_init_bgm();
+            wav64_play(&bgm, SOUND_BGM_CHANNEL);
+        }
     }
 }
 
@@ -51,8 +65,14 @@ void sound_init_default (void) {
 /**
  * @brief Initialize the sound system for MP3 playback.
  */
-void sound_init_mp3_playback (void) {
-    sound_reconfigure(mp3player_get_samplerate());
+void sound_init_audioplayer_playback (void) {
+    // Temporarily disable BGM so it won't be restarted during audio reconfiguration.
+    // BGM will be re-enabled when sound_init_default() is called on exit.
+    bool bgm_was_enabled = bgm_enabled;
+    bgm_enabled = false;
+    mixer_ch_stop(SOUND_BGM_CHANNEL);
+    sound_reconfigure(audioplayer_get_samplerate());
+    bgm_enabled = bgm_was_enabled;
 }
 
 /**
@@ -66,6 +86,17 @@ void sound_init_sfx (void) {
     wav64_open(&sfx_enter, "rom:/enter.wav64");
     wav64_open(&sfx_error, "rom:/error.wav64");
     sfx_enabled = true;
+    sfx_opened = true;
+}
+
+/**
+ * @brief Initialize the background music.
+ */
+void sound_init_bgm (void) {
+    wav64_open(&bgm, "rom:/bgm.wav64");
+    wav64_set_loop(&bgm, true);
+    mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
+    bgm_opened = true;
 }
 
 /**
@@ -75,6 +106,20 @@ void sound_init_sfx (void) {
  */
 void sound_use_sfx(bool state) {
     sfx_enabled = state;
+}
+
+/**
+ * @brief Enable or disable background music.
+ * 
+ * @param state True to enable, false to disable.
+ */
+void sound_use_bgm(bool state) {
+    bgm_enabled = state;
+    if (bgm_enabled) {
+        wav64_play(&bgm, SOUND_BGM_CHANNEL);
+    } else {
+        mixer_ch_stop(SOUND_BGM_CHANNEL);
+    }
 }
 
 /**
@@ -111,12 +156,17 @@ void sound_play_effect(sound_effect_t sfx) {
  */
 void sound_deinit (void) {
     if (sound_initialized) {
-        if (sfx_enabled) {
+        if (sfx_opened) {
             wav64_close(&sfx_cursor);
             wav64_close(&sfx_exit);
             wav64_close(&sfx_setting);
             wav64_close(&sfx_enter);
             wav64_close(&sfx_error);
+            sfx_opened = false;
+        }
+        if (bgm_opened) {
+            wav64_close(&bgm);
+            bgm_opened = false;
         }
         mixer_close();
         audio_close();

@@ -30,21 +30,42 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+
+typedef struct fat_file_attributes {
+    bool is_read_only;    /**< Read-only attribute */
+    bool is_hidden;       /**< Hidden attribute */
+    bool is_system;       /**< System attribute */
+    bool is_archive;      /**< Archive attribute */
+} fat_file_attributes_t;
+
+
+typedef struct zip_file_attributes {
+    
+    bool writeable;                             /**< File is writeable */
+    bool encrypted;                             /**< File is encrypted */
+    uint64_t compressed_size;                   /**< File size in bytes while compressed */
+    uint32_t crc32;                             /**< Checksum for compressed files */
+} zip_file_attributes_t;
+
+
+typedef struct pak_file_attributes {
+    bool is_controller_pak_dump;                /**< file is a controller pak dump */
+    bool is_controller_pak_dump_note;           /**< file is a controller pak dump note */
+} pak_file_attributes_t;
+
+
 /** 
  * @brief File information Structure.
  * 
  * Structure with file information displayed used in the user interface.
  */
 typedef struct {
-    bool directory;                     /**< Directory rather than a file */
-    bool writeable;                     /**< File is writeable */
-    bool encrypted;                     /**< File is encrypted */
-    time_t mtime;                       /**< Last modification time */
-    uint64_t size;                      /**< File size in bytes */
-    uint64_t compressed;                /**< File size in bytes while compressed */
-    uint32_t crc32;                     /**< Checksum for compressed files */
-    bool is_controller_pak_dump;        /**< file is a controller pak dump */
-    bool is_controller_pak_dump_note;   /**< file is a controller pak dump note */
+    bool directory;                             /**< Directory rather than a file */
+    time_t mtime;                               /**< Last modification time */
+    uint64_t size;                              /**< File size in bytes */
+    fat_file_attributes_t fat_file_attributes;  /**< FAT file attributes */
+    zip_file_attributes_t zip_file_attributes;  /**< ZIP file attributes */
+    pak_file_attributes_t pak_file_attributes;  /**< Additional attributes for pak files */
 } file_info_t;
 
 /**
@@ -177,6 +198,11 @@ void ui_components_background_init(char *cache_location);
 void ui_components_background_free(void);
 
 /**
+ * @brief Free and delete the cached background image.
+ */
+void ui_components_background_clear(void);
+
+/**
  * @brief Replace the background image.
  * 
  * @param image New background image.
@@ -189,6 +215,21 @@ void ui_components_background_replace_image(surface_t *image);
 void ui_components_background_draw(void);
 
 /**
+ * @brief Return the current background image surface, or NULL if none is set.
+ */
+surface_t *ui_components_background_get_image(void);
+
+/**
+ * @brief Reload the background image from cache (call after temporarily freeing).
+ */
+void ui_components_background_reload(void);
+
+/**
+ * @brief Free only the in-memory image and display list, keeping the cache intact.
+ */
+void ui_components_background_image_free_only(void);
+
+/**
  * @brief Draw the file list component.
  * 
  * @param list List of entries.
@@ -196,6 +237,11 @@ void ui_components_background_draw(void);
  * @param selected Index of the selected entry.
  */
 void ui_components_file_list_draw(entry_t *list, int entries, int selected);
+
+/**
+ * @brief Free file list component cached resources.
+ */
+void ui_components_file_list_free(void);
 
 /**
  * @brief Context menu structure.
@@ -206,6 +252,7 @@ typedef struct component_context_menu {
     bool hide_pending; /**< Flag to indicate if hiding is pending */
     struct component_context_menu *parent; /**< Pointer to the parent context menu */
     struct component_context_menu *submenu; /**< Pointer to the submenu */
+    int (*get_default_selection)(menu_t *menu); /**< Optional function to get the default selected row */
     struct {
         const char *text; /**< Text of the menu item */
         void (*action)(menu_t *menu, void *arg); /**< Action function for the menu item */

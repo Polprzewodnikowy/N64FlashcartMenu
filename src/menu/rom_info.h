@@ -111,29 +111,18 @@ typedef enum {
     EXPANSION_PAK_FAULTY,           /**< Faulty with 8MB of memory */
 } rom_expansion_pak_t;
 
-/** @brief ROM ESRB age rating enumeration  */
-typedef enum {
-    ROM_ESRB_AGE_RATING_NONE = 0,                /**< No age rating defined */
-    ROM_ESRB_AGE_RATING_EVERYONE = 1,            /**< Everyone */
-    ROM_ESRB_AGE_RATING_EVERYONE_10_PLUS = 2,    /**< Everyone 10+ */
-    ROM_ESRB_AGE_RATING_TEEN = 3,                /**< Teen */
-    ROM_ESRB_AGE_RATING_MATURE = 4,              /**< Mature */
-    ROM_ESRB_AGE_RATING_ADULT = 5,               /**< Adults Only */
-}
-rom_esrb_age_rating_t;
-
 /** @brief ROM Information Structure. */
 typedef struct {
     rom_endianness_t endianness;    /**< The file endian */
     float clock_rate;               /**< The clock rate defined in the ROM's header */
-    uint32_t boot_address;          /**< The boot address defined in the ROM's header */
+    int32_t boot_address;          /**< The boot address defined in the ROM's header */
 
     struct {
         uint8_t version;            /**< The SDK version defined in the ROM's header */
         char revision;              /**< The SDK revision defined in the ROM's header */
     } libultra;
 
-    uint64_t check_code;            /**< The check code defined in the ROM's header */
+    int64_t check_code;            /**< The check code defined in the ROM's header */
     char title[20];                 /**< The title defined in the ROM's header */
 
     union {
@@ -173,11 +162,20 @@ typedef struct {
     struct {
         bool cheats_enabled;        /**< Cheats enabled */
         bool patches_enabled;       /**< Patches enabled */
+        bool clear_rdram_enabled;   /**< Zero RDRAM before boot (workaround for ROMs with incomplete BSS init) */
     } settings;                     /**< The ROM settings */
 
     struct {
-        rom_esrb_age_rating_t esrb_age_rating; /**< The game age rating */
-    } metadata;                     /**< The ROM metadata */
+        char *name;                 /**< The game release name */
+        char *author;               /**< The game author or developer */
+        char *release_date;         /**< The game release date */
+        char *osi_license;          /**< The game OSI license type */
+        char *website;              /**< The game official website URL */
+        uint32_t age_rating;        /**< The minimum game age rating */
+        uint32_t num_players;       /**< The number of players supported */
+        char *short_description;    /**< The short game description */
+        bool size_limit_exceeded;   /**< Metadata was skipped because metadata.ini exceeded size cap */
+    } meta;                         /**< The ROM metadata */
 } rom_info_t;
 
 /**
@@ -243,6 +241,14 @@ rom_err_t rom_config_override_save_type(path_t *path, rom_info_t *rom_info, rom_
 rom_tv_type_t rom_info_get_tv_type(rom_info_t *rom_info);
 
 /**
+ * `@brief` Free dynamically allocated metadata fields in ROM information structure.
+ * 
+ * `@param` rom_info Pointer to the ROM information structure
+ * `@note` Only frees the meta struct fields, not the rom_info_t itself
+ */
+void rom_info_free_meta(rom_info_t *rom_info);
+
+/**
  * @brief Override the TV type for the ROM.
  * 
  * @param path Pointer to the path structure
@@ -261,6 +267,16 @@ rom_err_t rom_config_override_tv_type(path_t *path, rom_info_t *rom_info, rom_tv
  * @return rom_err_t Error code
  */
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled);
+
+/**
+ * @brief Set whether RDRAM should be zeroed before booting this ROM.
+ *
+ * @param path Pointer to the path structure
+ * @param rom_info Pointer to the ROM information structure
+ * @param enabled True to clear RDRAM before boot, false to skip
+ * @return rom_err_t Error code
+ */
+rom_err_t rom_config_setting_set_clear_rdram (path_t *path, rom_info_t *rom_info, bool enabled);
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED
 /**

@@ -12,6 +12,10 @@
 #include "menu_state.h"
 #include "rom_info.h"
 
+#ifndef SAVE_DIRECTORY_NAME
+#define SAVE_DIRECTORY_NAME "saves"
+#endif
+
 /** @brief Cart load state enumeration. */
 typedef enum {
     /** @brief Returned no error. */
@@ -58,7 +62,20 @@ typedef enum {
     CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT,
     /** @brief The ROM is designed for a Fairchild Channel F system. */
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
+    /** @brief The ROM is designed for a Sinclair ZX Spectrum system. */
+    CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM,
+    /** @brief The ROM is designed for a Microsoft MSX system. */
+    CART_LOAD_EMU_TYPE_MICROSOFT_MSX,
+    /** @brief The ROM is designed for a development emulator. */
+    CART_LOAD_EMU_TYPE_DEV,
 } cart_load_emu_type_t;
+
+/**
+ * @brief Check if the 64DD is connected.
+ * 
+ * @return true if the 64DD is connected, false otherwise.
+ */
+bool is_64dd_connected (void);
 
 /**
  * @brief Convert a cart load error code to a human-readable error message.
@@ -72,10 +89,11 @@ char *cart_load_convert_error_message(cart_load_err_t err);
  * @brief Load an N64 ROM and its save data.
  * 
  * @param menu Pointer to the menu structure.
- * @param progress Callback function for progress updates.
+ * @param progress Callback function for ROM load progress updates.
+ * @param save_progress Callback invoked once when a new save file is being created, or NULL.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress);
+cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress);
 
 /**
  * @brief Load the 64DD IPL (BIOS) and disk.
@@ -84,7 +102,7 @@ cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_call
  * @param progress Callback function for progress updates.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_64dd_ipl_and_disk(menu_t *menu, flashcart_progress_callback_t progress);
+cart_load_err_t cart_load_64dd_ipl_and_disks(menu_t *menu, flashcart_progress_callback_t progress);
 
 /**
  * @brief Load an emulator and its ROM.

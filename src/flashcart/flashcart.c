@@ -105,6 +105,9 @@ static flashcart_t *flashcart = &((flashcart_t) {
     .load_save = dummy_load_save,
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
+    .load_64dd_disks = NULL,
+    .get_button_state = NULL,
+    .get_voltage_temperature = NULL,
     .set_save_type = dummy_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,
@@ -351,6 +354,89 @@ flashcart_err_t flashcart_load_64dd_disk (char *disk_path, flashcart_disk_parame
     return flashcart->load_64dd_disk(disk_path, disk_parameters);
 }
 
+/**
+ * @brief Load 64DD disks into the flashcart.
+ *
+ * @param disk_path Path to the primary disk file.
+ * @param disk_parameters Pointer to the disk parameters.
+ * @param swap_disk_paths Array of paths to swap disk files.
+ * @param swap_disk_count Number of swap disks.
+ * @return flashcart_err_t Error code.
+ */
+flashcart_err_t flashcart_load_64dd_disks (char *disk_path, flashcart_disk_parameters_t *disk_parameters, char **swap_disk_paths, int swap_disk_count) {
+    if (!flashcart->load_64dd_disks) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    if ((disk_path == NULL) || (disk_parameters == NULL) || (swap_disk_count > 0 && swap_disk_paths == NULL)) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    return flashcart->load_64dd_disks(disk_path, disk_parameters, swap_disk_paths, swap_disk_count);
+
+}
+
+/**
+ * @brief Check whether hardware button state query is supported.
+ *
+ * @return bool True if supported.
+ */
+bool flashcart_has_button_state (void) {
+    return (flashcart->get_button_state != NULL);
+}
+
+/**
+ * @brief Get realtime hardware button state.
+ *
+ * @param pressed Output pointer for button state.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_button_state (bool *pressed) {
+    if (pressed == NULL) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    if (!flashcart->get_button_state) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    return flashcart->get_button_state(pressed);
+}
+
+/**
+ * @brief Check whether voltage/temperature diagnostics are supported.
+ *
+ * @return bool True if supported.
+ */
+bool flashcart_has_voltage_temperature (void) {
+    return (flashcart->get_voltage_temperature != NULL);
+}
+
+/**
+ * @brief Get realtime voltage and temperature diagnostics.
+ *
+ * @param voltage_mv Output voltage in millivolts.
+ * @param temperature_deci_c Output temperature in deci-degrees Celsius.
+ * @return flashcart_err_t Result code.
+ */
+flashcart_err_t flashcart_get_voltage_temperature (uint16_t *voltage_mv, int16_t *temperature_deci_c) {
+    if ((voltage_mv == NULL) || (temperature_deci_c == NULL)) {
+        return FLASHCART_ERR_ARGS;
+    }
+
+    if (!flashcart->get_voltage_temperature) {
+        return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;
+    }
+
+    return flashcart->get_voltage_temperature(voltage_mv, temperature_deci_c);
+}
+
+/**
+ * @brief Set the next boot mode for the flashcart.
+ * 
+ * @param boot_mode The boot mode to set.
+ * @return flashcart_err_t Error code.
+ */
 flashcart_err_t flashcart_set_next_boot_mode (flashcart_reboot_mode_t boot_mode) {
     if (!flashcart->set_next_boot_mode) {
         return FLASHCART_ERR_FUNCTION_NOT_SUPPORTED;

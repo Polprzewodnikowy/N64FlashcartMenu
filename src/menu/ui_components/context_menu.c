@@ -74,7 +74,12 @@ bool ui_components_context_menu_process(menu_t *menu, component_context_menu_t *
         if (cm->list[cm->row_selected].submenu) {
             cm->submenu = cm->list[cm->row_selected].submenu;
             ui_components_context_menu_init(cm->submenu);
-            cm->submenu->row_selected = 0;
+            // Use custom default selection if available, otherwise default to 0
+            if (cm->submenu->get_default_selection) {
+                cm->submenu->row_selected = cm->submenu->get_default_selection(menu);
+            } else {
+                cm->submenu->row_selected = 0;
+            }
             cm->submenu->parent = cm;
         } else if (cm->list[cm->row_selected].action) {
             cm->list[cm->row_selected].action(menu, cm->list[cm->row_selected].arg);

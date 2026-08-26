@@ -4,7 +4,7 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/Polprzewodnikowy/N64FlashcartMenu.svg)](http://isitmaintained.com/project/Polprzewodnikowy/N64FlashcartMenu "Percentage of issues still open")
 [![#yourfirstpr](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](https://github.com/Polprzewodnikowy/N64FlashcartMenu/blob/main/CONTRIBUTING.md)
 
-# N64 Flashcart Menu
+# N64FlashcartMenu
 An open source menu for N64 flashcarts that aims to support as many as possible.  
 This menu is not affiliated with any particular flashcart and does not necessarily expose all possible firmware features.
 
@@ -78,26 +78,6 @@ Download the latest `sc64menu.n64` file from the [releases](https://github.com/P
 * Download the latest `menu.bin` file from the [releases](https://github.com/Polprzewodnikowy/N64FlashcartMenu/releases/) page, then put it in the root directory of your SD card.
 
 
-### EverDrive-64 - WIP - UNTESTED AND UNSUPPORTED - USE AT OWN RISK
-Currently not supported, but work is in progress (See [PRs](https://github.com/Polprzewodnikowy/N64FlashcartMenu/pulls)).
-> [!CAUTION]
-> The menu may be able to load ROMs but cannot guarantee save functionality. Existing saves may be corrupted.
-
-#### EverDrive-64 (V series)
-The aim is to reach feature parity with [ED64-UnofficialOS](https://github.com/n64-tools/ED64-UnofficialOS-binaries) / [ED64-OfficialOS](https://krikzz.com/pub/support/everdrive-64/v2x-v3x/os-bin/).
-
-* Download the `OS64.v64` ROM from the latest [action run - assets] and place it in the `/ED64` folder.
-
-#### EverDrive-64 (X series)
-The aim is to reach feature parity with [OS](https://krikzz.com/pub/support/everdrive-64/x-series/OS/) for now.
-
-* Download the `OS64.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64` folder.
-
-#### ED64P (clones)
-The aim is to reach feature parity with [Altra64](https://github.com/networkfusion/altra64)
-
-* Download the `OS64P.v64` ROM from the latest [PR action run - assets] and place it in the `/ED64P` folder.
-
 # Contributors
 The features in this project were made possible by the [contributors](https://github.com/Polprzewodnikowy/N64FlashcartMenu/graphs/contributors).
 
@@ -111,15 +91,18 @@ Other license options may be available upon request with permissions of the orig
 ## Libraries
 * [libdragon](https://github.com/DragonMinded/libdragon/tree/preview) - [UNLICENSE License](https://github.com/DragonMinded/libdragon/blob/preview/LICENSE.md)
 * [libspng](https://github.com/randy408/libspng) - [BSD 2-Clause License](https://github.com/randy408/libspng/blob/master/LICENSE)
-* [mini.c](https://github.com/univrsal/mini.c) - [BSD 2-Clause License](https://github.com/univrsal/mini.c?tab=BSD-2-Clause-1-ov-file#readme)
 * [minimp3](https://github.com/lieff/minimp3) - [CC0 1.0 Universal](https://github.com/lieff/minimp3/blob/master/LICENSE)
 * [miniz](https://github.com/richgel999/miniz) - [MIT License](https://github.com/richgel999/miniz/blob/master/LICENSE)
+* [dr_flac](https://github.com/mackron/dr_libs) - [MIT License](https://github.com/mackron/dr_libs/blob/master/LICENSE)
 
 ## Sounds
 See [License](https://pixabay.com/en/service/license-summary/) for the following sounds:
 * [Cursor sound](https://pixabay.com/en/sound-effects/click-buttons-ui-menu-sounds-effects-button-7-203601/) by Skyscraper_seven (Free to use)
 * [Actions (Enter, Back) sound](https://pixabay.com/en/sound-effects/menu-button-user-interface-pack-190041/) by Liecio (Free to use)
 * [Error sound](https://pixabay.com/en/sound-effects/error-call-to-attention-129258/) by Universfield (Free to use)
+
+See [License](https://creativecommons.org/licenses/by/4.0/) for the following sounds:
+* [Background Music](https://www.playonloop.com/2017-music-loops/flying-dreams/) POL-flying-dreams-short
 
 ## Emulators
 * [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - [ISC License](https://github.com/hcs64/neon64v2/blob/master/LICENSE.txt)

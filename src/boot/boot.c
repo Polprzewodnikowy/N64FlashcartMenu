@@ -63,9 +63,6 @@ void boot (boot_params_t *params) {
         }
     }
 
-    C0_WRITE_STATUS(C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR);
-    C1_WRITE_FCR31(0);
-
     while (!(cpu_io_read(&SP->SR) & SP_SR_HALT));
 
     cpu_io_write(&SP->SR,
@@ -132,6 +129,7 @@ void boot (boot_params_t *params) {
 
     bool cheats_installed = cheats_install(cic_type, params->cheat_list);
 
+    register uint32_t clear_rdram asm ("s1");
     register uint32_t skip_rdram_reset asm ("a0");
     register uint32_t boot_device asm ("s3");
     register uint32_t tv_type asm ("s4");
@@ -139,6 +137,7 @@ void boot (boot_params_t *params) {
     register uint32_t cic_seed asm ("s6");
     register uint32_t version asm ("s7");
 
+    clear_rdram = params->clear_rdram && !cheats_installed;
     skip_rdram_reset = cheats_installed;
     boot_device = (params->device_type & 0x01);
     tv_type = (params->tv_type & 0x03);
@@ -150,8 +149,13 @@ void boot (boot_params_t *params) {
             : 0;
 
     asm volatile (
+        "li $t3, %[c0_status] \n"
+        "mtc0 $t3, $12 \n"
+        "ctc1 $zero, $f31 \n"
         "la $t3, reboot \n"
         "jr $t3 \n" ::
+        [c0_status] "i" (C0_STATUS_CU1 | C0_STATUS_CU0 | C0_STATUS_FR),
+        [clear_rdram] "r" (clear_rdram),
         [skip_rdram_reset] "r" (skip_rdram_reset),
         [boot_device] "r" (boot_device),
         [tv_type] "r" (tv_type),

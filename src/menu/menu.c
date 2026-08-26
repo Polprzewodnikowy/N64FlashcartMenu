@@ -14,10 +14,11 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
+#include "background_music.h"
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
-#include "mp3_player.h"
+#include "audio_player.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
@@ -28,6 +29,7 @@
 #define MENU_DIRECTORY              "/menu"
 #define MENU_SETTINGS_FILE          "config.ini"
 #define MENU_CUSTOM_FONT_FILE       "custom.font64"
+#define MENU_CUSTOM_BGM_FILE        "custom.wav64"
 #define MENU_ROM_LOAD_HISTORY_FILE  "history.ini"
 
 #define MENU_CACHE_DIRECTORY        "cache"
@@ -37,13 +39,6 @@
 
 static menu_t *menu;
 
-/** FIXME: These are used for overriding libdragon's global variables for TV type to allow PAL60 compatibility
- *  with hardware mods that don't really understand the VI output.
- **/
-static tv_type_t tv_type;
-extern int __boot_tvtype;
-/* -- */
-
 static bool interlaced = true;
 
 /**
@@ -51,7 +46,7 @@ static bool interlaced = true;
  * 
  * @param boot_params Pointer to the boot parameters structure.
  */
-static void menu_init (boot_params_t *boot_params) {    
+static void menu_init (boot_params_t *boot_params) {
     menu = calloc(1, sizeof(menu_t));
     assert(menu != NULL);
 
@@ -75,6 +70,7 @@ static void menu_init (boot_params_t *boot_params) {
     actions_init();
     sound_init_default();
     sound_init_sfx();
+    sound_init_bgm();
 
     hdmi_clear_game_id();
 
@@ -93,14 +89,6 @@ static void menu_init (boot_params_t *boot_params) {
     menu->load.load_history_id = -1;
     menu->load.load_favorite_id = -1;
     path_pop(path);
-  
-    if (menu->settings.pal60_compatibility_mode) { // hardware VI mods that dont really understand the output
-        tv_type = get_tv_type();
-        if (tv_type == TV_PAL && menu->settings.pal60_enabled) {
-            // HACK: Set TV type to NTSC, so PAL console would output 60 Hz signal instead.
-            __boot_tvtype = (int)TV_NTSC;
-        }
-    }
 
     // Force interlacing off in VI settings for TVs and other devices that struggle with interlaced video input.
     interlaced = !menu->settings.force_progressive_scan;
@@ -109,15 +97,31 @@ static void menu_init (boot_params_t *boot_params) {
         .width = 640,
         .height = 480,
         .interlaced = interlaced ? INTERLACE_HALF : INTERLACE_OFF,
-        .pal60 = menu->settings.pal60_enabled, // this may be overridden by the PAL60 compatibility mode.
     };
 
     display_init(resolution, DEPTH_16_BPP, 2, GAMMA_NONE, interlaced ? FILTERS_DISABLED : FILTERS_RESAMPLE);
+    
+    if (menu->settings.pal60_enabled) { // it is not given that hardware VI mods understand the output
+        tv_type_t tv_type = get_tv_type();
+        if (tv_type == TV_PAL) {
+            // Set VI timing so it will use 60Hz signal.
+            vi_set_timing_preset(&VI_TIMING_PAL60);
+
+            // FIXME: timeout and restore to PAL 50Hz if not shown, 
+            // this should be added as a button confirm, or reset combo, rather than re-setting via manual edit of the INI?.
+            //vi_set_timing_preset(&VI_TIMING_PAL);
+        }
+    }
+    
     display_set_fps_limit(FPS_LIMIT);
 
     path_push(path, MENU_CUSTOM_FONT_FILE);
     fonts_init(path_get(path));
     path_pop(path);
+
+    // path_push(path, MENU_CUSTOM_BGM_FILE);
+    // bgm_init(path_get(path));
+    // path_pop(path);
 
     path_push(path, MENU_CACHE_DIRECTORY);
     directory_create(path_get(path));
@@ -128,6 +132,7 @@ static void menu_init (boot_params_t *boot_params) {
     path_free(path);
 
     sound_use_sfx(menu->settings.soundfx_enabled);
+    sound_use_bgm(menu->settings.bgm_enabled);
 
     menu->browser.directory = path_init(menu->storage_prefix, menu->settings.default_directory);
     if (!directory_exists(path_get(menu->browser.directory))) {
@@ -144,9 +149,14 @@ static void menu_init (boot_params_t *boot_params) {
  * @param menu Pointer to the menu structure.
  */
 static void menu_deinit (menu_t *menu) {
-    hdmi_send_game_id(menu->boot_params);
 
+    sound_deinit();
+    
     ui_components_background_free();
+    ui_components_file_list_free();
+    rspq_wait();  // Execute deferred callbacks (e.g., display list freeing) before closing RSPQ
+
+    hdmi_send_game_id(menu->boot_params);
 
     path_free(menu->load.disk_slots.primary.disk_path);
     path_free(menu->load.rom_path);
@@ -159,8 +169,7 @@ static void menu_deinit (menu_t *menu) {
 
     display_close();
 
-    sound_deinit();
-
+    rspq_wait();
     rdpq_close();
     rspq_close();
     rtc_close();

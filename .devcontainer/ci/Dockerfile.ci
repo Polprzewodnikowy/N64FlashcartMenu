@@ -1,0 +1,44 @@
+FROM debian:trixie-slim
+
+# Non-root user. VS Code automatically adjusts this user's UID/GID to match
+# the local user on Linux hosts (updateRemoteUserUID), so files created
+# inside the bind-mounted workspace keep correct ownership on the host.
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Minimal image: install only what's needed for building and the project's toolchain
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y build-essential git python3 wget
+
+# Install libdragon toolchain (packaged .deb)
+RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \
+    dpkg -i gcc-toolchain-mips64-x86_64.deb && \
+    rm gcc-toolchain-mips64-x86_64.deb
+
+# # Environment Config
+# RUN git config --global --add safe.directory "*" && \
+#     SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+#     echo "$SNIPPET" >> "/root/.bashrc"
+
+# Avoid warnings by switching to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Create the non-root user and open up read/execute access to the toolchains
+# and repositories that were downloaded/cloned as root above.
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m -s /bin/bash $USERNAME \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends sudo \
+    && echo "$USERNAME ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && chmod o+x /root \
+    && chown -R $USER_UID:$USER_GID /usr/local/bin
+
+ENV DEBIAN_FRONTEND=dialog
+
+USER $USERNAME
+WORKDIR /home/$USERNAME

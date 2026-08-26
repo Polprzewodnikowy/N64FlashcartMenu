@@ -1,40 +1,183 @@
-# Rolling release
-built from latest commit on main branch.  
-**Note**: the attached source code files may be out of date.
+# Release Notes
 
 - For the SummerCart64, use the `sc64menu.n64` file in the root of your SD card.
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-## Release Notes 2026-{next}
+## Release Notes 202x-vNext
 
 - **New Features**
-	- TBD.
+	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
 
 - **Bug Fixes**
-	- TBD.
 
 - **Documentation**
-	- TBD.
 
 - **Refactor**
-	- TBD.
+
+- **Other**
+
+### Breaking changes
+- None.
+
+### Notes
+- None.
+
+### Current known Issues
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+### Deprecation notices
+- None.
+
+## Release Notes 2026-08-26 - Tagged 0.3.3
+
+- **New Features**
+	- Adds Background music.
+	- Adds ability to use infinite scroll within the file browser.
+	- ROM override submenu now remembers current custom settings.
+	- Added extra info to the flashcart information screen to show Button state and voltage on supported carts.
+	- Experimental DD swap support.
+	- Added console region to the system information screen.
+	- Audio (MP3) player now supports FLAC and ID3 metadata (thanks [zelifcam](https://github.com/zelifcam)).
+	- Add Emulator ROM override INI and extra emulator extension file type matches.
+	- Add progress of save file creation on ROM load.
+	- Add ability to override emulator configurations through INI file.
+	- Add option to clear RDRAM on a per ROM basis (required for RTYI demo).
+	- Add ROM additional metadata (Maximum number of simultaneous players that the game supports).
+	- Add warning before loading a ROM requiring an Expansion Pak that isn't present for supported ROMs.
+	
+- **Bug Fixes**
+	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
+	- CPak notes backup and restore now works with invalid FAT characters.
+	- Move CA and KR ROM tv types to NTSC.
+
+- **Documentation**
+	- Improved DD section with latest information.
+	- Improved MP3 player information.
+	- Improved Emulator information with ROM overrides.
+	- Minor fixes.
+
+- **Refactor**
+	- Optimized PNG handler to work on memory-constrained consoles (without an Expansion Pak).
+	- Improved memory usage and OOB fixes across the whole codebase.
+
+- **Other**
+	- Added ED64 pseudo state for later consumption.
+	
+
+### Breaking changes
+- None.
+
+### Notes
+- Progress has been made towards disk swapping, but it is still WiP.
+- RTYI Demo requires the new "Clear RDRAM on boot" ROM override to work.
+
+### Current known Issues
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+### Deprecation notices
+- None.
+
+
+## Release Notes 2026-05-23 - Tagged 0.3.2
+
+- **New Features**
+	- Adds settings to hide cheat and save file types in the browser.
+	- Adds ability to display embedded homebrew ROM metadata in ROM info.
+	- Adds ability to display Commercial game metadata using ROM DB.
+	- Menu settings now know what setting is currently applied.
+
+- **Bug Fixes**
+	- Neon64 1Mbit SRAM.
+	- Potential buffer overflows.
+	- Fixed an issue where large ROMs failed to load in certain circumstances.
+	- Fixed a lockup when selecting a game in history when the ROM no longer exists.
+
+- **Documentation**
+	- Minor fixes.
+
+- **Refactor**
+	- PAL60 (using new libdragon support).
+	- ROM view, Age ratings and other metadata now align and support homebrew metadata standard.
+	- Menu credits.
+	- Disk Drive, disk info view.
+	- CPak manager, Added menu option to for notes restore.
+	- Replace mini.c INI lib with custom implementation.
+	- Browser highlight colour for better display on CRT.
+
+- **Other**
+	- Updated libDragon {preview} SDK.
+	- Updated miniz lib.
+	- Updated minimp3.
+	- Add docfx devcontainer.
+	- Remove rolling prerelease (all releases to main should be tagged).
+	- Added AI instructions to repo.
+	- Added an extra build option (run-debug-reboot) that aids debugging remotely without the need for uploading files to the SD card.
+	
+
+### Breaking changes
+- (as of 2026-03-15) libdragon SDK (and this menu) now requires MI repeat mode support, (supported by latest Ares and Gopher64, A3D also works though needs the latest FW). 
+
+### Notes
+- (as of 2026-03-01) libdragon {preview} SDK now compiles ROMs that use EEPROM to conform with OG wait timings by default.
+- Progress has been made towards disk swapping, but it is still WiP.
+
+### Current known Issues
+- Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu fails to load RTYI demo 2. Workaround by not setting a background image.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+
+### Deprecation notices
+- None.
+
+
+## Release Notes 2025-12-04 - Tagged 0.3.1
+
+- **New Features**
+	- Settings contexts now preset to the saved option.
+	- Added latest Viewpoint64 final proto ROM to database.
+	- Added Rumble PAK and Transfer PAK features to ROM info screen.
+
+- **Bug Fixes**
+	- Fixed MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+	- Fixed game_code_path size that caused crash when loading homebrew boxart.
+	- Fixed boot process which could lead to blank screens or crashes.
+	- Fixed a potential issue that could happen when a RTC was not detected.
+
+
+- **Documentation**
+	- Moved ED64 documentation to [98_flashcart_wip.md](./docs/98_flashcart_wip.md)
+	- Other minor fixes.
+
+- **Refactor**
+	- Output 4MB files as MB, rather than kB.
+	- Improved icons for direction.
+	- Controller Pak now selects notes using up/down rather than left/right.
 
 - **Other**
 	- Updated libDragon SDK.
+	- Updated docker container to Trixy
 
 ### Breaking changes
-- TBD.
+- None.
 
 
 ### Current known Issues
 - Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
-- MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
 
 
 ### Deprecation notices
-- TBD.
+- None.
 
 
 ## Release Notes 2025-11-15 - Tagged 0.3.0
@@ -84,6 +227,8 @@ built from latest commit on main branch.
 * Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 * Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is implemented.
 * MP3 Player crashes menu if the MP3 file's sample rate is less than 44100 hz and menu SFX are enabled.
+- Some users have reported crashes in Zelda OOT (anti piracy checks). Menu V0.2.0 works as expected.
+- A user has reported that the menu crashes with a CPU exception. Menu V0.2.0 works as expected.
 
 
 ### Deprecation notices

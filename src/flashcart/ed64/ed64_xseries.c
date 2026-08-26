@@ -20,7 +20,7 @@ typedef enum {
 } ed64_xseries_device_variant_t;
 
 /* ED64 save location base address  */
-#define SRAM_ADDRESS (0xA8000000)
+//#define SRAM_ADDRESS (0xA8000000)
 /* ED64 ROM location base address  */
 #define ROM_ADDRESS  (0xB0000000)
 
@@ -80,10 +80,10 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
         return FLASHCART_ERR_LOAD;
     }
 
-    size_t sdram_size = MiB(64);
+    size_t sdram_size = rom_size; // (MiB(64) - KiB(128));
 
     size_t chunk_size = KiB(128);
-    for (int offset = 0; offset < sdram_size; offset += chunk_size) {
+    for (unsigned int offset = 0; offset < sdram_size; offset += chunk_size) {
         size_t block_size = MIN(sdram_size - offset, chunk_size);
         if (f_read(&fil, (void *) (ROM_ADDRESS + offset), block_size, &br) != FR_OK) {
             f_close(&fil);
@@ -93,7 +93,7 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
             progress(f_tell(&fil) / (float) (f_size(&fil)));
         }
     }
-    if (f_tell(&fil) != rom_size) {
+    if (f_tell(&fil) != sdram_size) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }
@@ -163,6 +163,9 @@ static flashcart_t flashcart_ed64_xseries = {
     .load_save = ed64_xseries_load_save,
     .load_64dd_ipl = NULL,
     .load_64dd_disk = NULL,
+    .load_64dd_disks = NULL,
+    .get_button_state = NULL,
+    .get_voltage_temperature = NULL,
     .set_save_type = ed64_xseries_set_save_type,
     .set_save_writeback = NULL,
     .set_next_boot_mode = NULL,

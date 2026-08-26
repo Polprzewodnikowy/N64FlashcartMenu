@@ -7,18 +7,19 @@
 #include <string.h>
 #include <libdragon.h>
 #include "cart_load.h"
+#include "ini_parser.h"
 #include "path.h"
 #include "utils/fs.h"
 #include "utils/utils.h"
 
-#ifndef SAVES_SUBDIRECTORY
-#define SAVES_SUBDIRECTORY      "saves"
-#endif
 #ifndef DDIPL_LOCATION
 #define DDIPL_LOCATION          "/menu/64ddipl"
 #endif
 #ifndef EMU_LOCATION
 #define EMU_LOCATION            "/menu/emulators"
+#endif
+#ifndef EMU_CONFIG
+#define EMU_CONFIG              "/menu/emulators.ini"
 #endif
 
 /**
@@ -26,7 +27,7 @@
  * 
  * @return true if the 64DD is connected, false otherwise.
  */
-static bool is_64dd_connected (void) {
+bool is_64dd_connected (void) {
     bool is_64dd_io_present = ((io_read(0x05000540) & 0x0000FFFF) == 0x0000);
     bool is_64dd_ipl_present = (io_read(0x06001010) == 0x2129FFF8);
     return (is_64dd_io_present || is_64dd_ipl_present);
@@ -41,7 +42,7 @@ static bool is_64dd_connected (void) {
 static bool create_saves_subdirectory (path_t *path) {
     path_t *save_folder_path = path_clone(path);
     path_pop(save_folder_path);
-    path_push(save_folder_path, SAVES_SUBDIRECTORY);
+    path_push(save_folder_path, SAVE_DIRECTORY_NAME);
     bool error = directory_create(path_get(save_folder_path));
     path_free(save_folder_path);
     return error;
@@ -99,7 +100,7 @@ char *cart_load_convert_error_message (cart_load_err_t err) {
  * @param progress Progress callback function.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress) {
+cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress) {
     path_t *path = path_clone(menu->load.rom_path);
 
     bool byte_swap = (menu->load.rom_info.endianness == ENDIANNESS_BYTE_SWAP);
@@ -117,7 +118,11 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
+    }
+
+    if (save_progress && save_type != FLASHCART_SAVE_TYPE_NONE && !file_exists(path_get(path))) {
+        save_progress(1.0f);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);
@@ -151,7 +156,7 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
  * @param progress Progress callback function.
  * @return cart_load_err_t Error code.
  */
-cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_callback_t progress) {
+cart_load_err_t cart_load_64dd_ipl_and_disks (menu_t *menu, flashcart_progress_callback_t progress) {
     if (!flashcart_has_feature(FLASHCART_FEATURE_64DD)) {
         return CART_LOAD_ERR_FUNCTION_NOT_SUPPORTED;
     }
@@ -197,7 +202,19 @@ cart_load_err_t cart_load_64dd_ipl_and_disk (menu_t *menu, flashcart_progress_ca
 
     path_free(path);
 
-    menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    int swap_disk_count = 0;
+    char *swap_disk_paths[3];
+    for (int i = 0; i < 3; i++) {
+        if (menu->load.disk_slots.swap_slot[i].disk_path) {
+            swap_disk_paths[swap_disk_count++] = path_get(menu->load.disk_slots.swap_slot[i].disk_path);
+        }
+    }
+
+    if (swap_disk_count > 0) {
+        menu->flashcart_err = flashcart_load_64dd_disks(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters, swap_disk_paths, swap_disk_count);
+    } else {
+        menu->flashcart_err = flashcart_load_64dd_disk(path_get(menu->load.disk_slots.primary.disk_path), &disk_parameters);
+    }
     if (menu->flashcart_err != FLASHCART_OK) {
         return CART_LOAD_ERR_64DD_DISK_LOAD_FAIL;
     }
@@ -220,35 +237,90 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     uint32_t emulated_rom_offset = 0x200000;
     uint32_t emulated_file_offset = 0;
 
+    const char *emu_section = NULL;
+    const char *default_rom_filename = NULL;
+
     switch (emu_type) {
         case CART_LOAD_EMU_TYPE_NES:
-            path_push(path, "neon64bu.rom");
-             // Tested against https://themanbehindcurtain.blogspot.com/2017/12/small-neon64-hdmi-audio-fix.html
-             // Save states in newer versions might require a different save type.
-            save_type = FLASHCART_SAVE_TYPE_SRAM_BANKED;
+            emu_section = "nes";
+            default_rom_filename = "neon64bu.rom";
+            // Tested against Neon 64 v1.2, v0.3 and v2
+            save_type = FLASHCART_SAVE_TYPE_SRAM_1MBIT;
             break;
         case CART_LOAD_EMU_TYPE_SNES:
-            path_push(path, "sodium64.z64");
+            emu_section = "snes";
+            default_rom_filename = "sodium64.z64";
             save_type = FLASHCART_SAVE_TYPE_SRAM_256KBIT;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY:
-            path_push(path, "gb.v64");
+            emu_section = "gb";
+            default_rom_filename = "gb.v64";
             // TODO: Saves might be less problematic by using the FAKE type.
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_GAMEBOY_COLOR:
-            path_push(path, "gbc.v64");
+            emu_section = "gbc";
+            default_rom_filename = "gbc.v64";
             // TODO: Saves might be less problematic by using the FAKE type.
             save_type = FLASHCART_SAVE_TYPE_FLASHRAM_1MBIT; //FLASHCART_SAVE_TYPE_FLASHRAM_FAKE;
             break;
         case CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT:
-            path_push(path, "smsPlus64.z64");
+            emu_section = "sega8bit";
+            default_rom_filename = "smsPlus64.z64";
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
         case CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF:
-            path_push(path, "Press-F.z64");
+            emu_section = "channelf";
+            default_rom_filename = "Press-F.z64";
             save_type = FLASHCART_SAVE_TYPE_NONE;
             break;
+        case CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM:
+            emu_section = "zxspectrum";
+            default_rom_filename = "zx-spectrum.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+        case CART_LOAD_EMU_TYPE_MICROSOFT_MSX:
+            emu_section = "msx";
+            default_rom_filename = "msx.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+        case CART_LOAD_EMU_TYPE_DEV:
+            emu_section = "dev";
+            default_rom_filename = "dev_emu.z64";
+            save_type = FLASHCART_SAVE_TYPE_NONE;
+            break;
+    }
+
+    // Apply per-emulator overrides from sd:/menu/emulators.ini if present
+    if (emu_section) {
+        path_t *cfg_path = path_init(menu->storage_prefix, EMU_CONFIG);
+        ini_t *cfg = ini_load(path_get(cfg_path));
+        path_free(cfg_path);
+        if (cfg) {
+            const char *rom_override = ini_get_string(cfg, emu_section, "rom", default_rom_filename);
+            char rom_filename_buf[256];
+            strncpy(rom_filename_buf, rom_override, sizeof(rom_filename_buf) - 1);
+            rom_filename_buf[sizeof(rom_filename_buf) - 1] = '\0';
+            path_push(path, rom_filename_buf);
+            int save_type_override = ini_get_int(cfg, emu_section, "save_type", (int) save_type);
+            if (save_type_override >= FLASHCART_SAVE_TYPE_NONE && save_type_override < __FLASHCART_SAVE_TYPE_END) {
+                save_type = (flashcart_save_type_t) save_type_override;
+            }
+            const char *rom_offset_str = ini_get_string(cfg, emu_section, "rom_offset", NULL);
+            if (rom_offset_str) {
+                char *end = NULL;
+                unsigned long parsed = strtoul(rom_offset_str, &end, 0);
+                if (end != rom_offset_str && *end == '\0') {
+                    emulated_rom_offset = (uint32_t) parsed;
+                }
+            }
+            ini_free(cfg);
+        } else {
+            char default_buf[256];
+            strncpy(default_buf, default_rom_filename, sizeof(default_buf) - 1);
+            default_buf[sizeof(default_buf) - 1] = '\0';
+            path_push(path, default_buf);
+        }
     }
 
     if (!file_exists(path_get(path))) {
@@ -287,7 +359,7 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
         }
-        path_push_subdir(path, SAVES_SUBDIRECTORY);
+        path_push_subdir(path, SAVE_DIRECTORY_NAME);
     }
 
     menu->flashcart_err = flashcart_load_save(path_get(path), save_type);

@@ -9,8 +9,6 @@
 #include "jpeg_decoder.h"
 
 jpeg_err_t jpeg_decoder_start_mem (void *buf, size_t buf_size, int max_width, int max_height, jpeg_callback_t *callback, void *callback_data) {
-    free(buf);
-    if (callback) callback(JPEG_ERR_INT, NULL, callback_data);
     return JPEG_ERR_INT;
 }
 

@@ -202,7 +202,7 @@ static void write_note_name_info_list(int16_t controller, int index, char* entry
     if (size < 0) {
         snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), " ");
     } else {
-        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), "(%-3.3d)", size);
+        snprintf(controller_pak_name_notes_bank_size[index], sizeof(controller_pak_name_notes_bank_size[index]), "%-3.3d", size);
     }
     snprintf(controller_pak_name_notes[index], MAX_STRING_LENGTH, "%s", entry_name);
     parse_cpakfs_fullname(entry_name, &cpakfs_path_strings[index]);
@@ -252,7 +252,12 @@ static void dump_complete_cpak(int port) {
         return;
     }
 
-    uint8_t *bankbuf = malloc(MEMPAK_BANK_SIZE);
+    uint8_t *bankbuf = scratch_malloc(MEMPAK_BANK_SIZE);
+    bool used_scratch = true;
+    if (!bankbuf) {
+        used_scratch = false;
+        bankbuf = malloc(MEMPAK_BANK_SIZE);
+    }
     if (!bankbuf) {
         snprintf(failure_message_note, sizeof(failure_message_note), "Memory allocation failed!");
         error_message_displayed = true;
@@ -265,7 +270,11 @@ static void dump_complete_cpak(int port) {
         if (rd < 0 || rd != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to read Controller Pak bank %d (err=%d)", b, (rd < 0) ? errno : -1);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
@@ -274,13 +283,21 @@ static void dump_complete_cpak(int port) {
         if (wr != MEMPAK_BANK_SIZE) {
             snprintf(failure_message_note, sizeof(failure_message_note), "Failed to write data to file: %s", complete_filename);
             error_message_displayed = true;
-            free(bankbuf);
+            if (used_scratch) {
+                scratch_free(bankbuf);
+            } else {
+                free(bankbuf);
+            }
             fclose(fp);
             return;
         }
     }
 
-    free(bankbuf);
+    if (used_scratch) {
+        scratch_free(bankbuf);
+    } else {
+        free(bankbuf);
+    }
     fclose(fp);
     process_complete_full_dump = true;
 }
@@ -301,7 +318,9 @@ static void dump_single_note(int _port, int16_t selected_index) {
         return;
     }
 
-    snprintf(filename_note, sizeof(filename_note), "%s/%s_%s%s", CPAK_NOTES_PATH, controller_pak_name_notes[selected_index], string_datetime_cpak, CPAK_NOTE_EXTENSION);
+    char sanitized_note_name[MAX_STRING_LENGTH];
+    cpakfs_sanitize_fat_filename(sanitized_note_name, controller_pak_name_notes[selected_index], sizeof(sanitized_note_name));
+    snprintf(filename_note, sizeof(filename_note), "%s/%s_%s%s", CPAK_NOTES_PATH, sanitized_note_name, string_datetime_cpak, CPAK_NOTE_EXTENSION);
 
     fDump = fopen(filename_note, "wb");
     if (fDump == NULL) {
@@ -625,7 +644,7 @@ static void draw (menu_t *menu, surface_t *d) {
 
         if (has_mem && !corrupted_pak) {
             style = STL_GREEN;
-            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/123 free blocks", cpakfs_stats.pages.total - cpakfs_stats.pages.used);
+            snprintf(free_space_cpak_text, sizeof(free_space_cpak_text), "%d/%d free blocks available", cpakfs_stats.pages.total - cpakfs_stats.pages.used, cpakfs_stats.pages.total);
         } else if (has_mem && corrupted_pak) {
             snprintf(has_mem_text, sizeof(has_mem_text), "Controller Pak detected (Corrupted)");
             style = STL_ORANGE;
@@ -670,7 +689,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            "            Name           Code    Ext.    Size [blocks]\n"
+            "            Name           Code    Ext.    Blocks used\n"
         );
 
         ui_components_main_text_draw(style,
@@ -922,13 +941,13 @@ static void draw (menu_t *menu, surface_t *d) {
     } else if (show_complete_write_confirm_message) {
         ui_components_messagebox_draw(
             "To write a complete backup, browse to a file"
-            " with the extension \".mpk\" or \".pak\".\n\n"
+            " with the extension \".mpk\" or \".pak\" in the menu filebrowser.\n\n"
             "B: Back"
         );   
     } else if (show_single_note_write_info_message) {
         ui_components_messagebox_draw(
             "To write a single note, browse to a file"
-            " with the extension \".mpkn\" or \".paknote\".\n\n"
+            " with the extension \".mpkn\" or \".paknote\" in the menu filebrowser.\n\n"
             "B: Back"
         );   
     }

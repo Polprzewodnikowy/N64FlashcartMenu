@@ -198,6 +198,11 @@ void ui_components_background_init(char *cache_location);
 void ui_components_background_free(void);
 
 /**
+ * @brief Free and delete the cached background image.
+ */
+void ui_components_background_clear(void);
+
+/**
  * @brief Replace the background image.
  * 
  * @param image New background image.
@@ -210,6 +215,21 @@ void ui_components_background_replace_image(surface_t *image);
 void ui_components_background_draw(void);
 
 /**
+ * @brief Return the current background image surface, or NULL if none is set.
+ */
+surface_t *ui_components_background_get_image(void);
+
+/**
+ * @brief Reload the background image from cache (call after temporarily freeing).
+ */
+void ui_components_background_reload(void);
+
+/**
+ * @brief Free only the in-memory image and display list, keeping the cache intact.
+ */
+void ui_components_background_image_free_only(void);
+
+/**
  * @brief Draw the file list component.
  * 
  * @param list List of entries.
@@ -217,6 +237,11 @@ void ui_components_background_draw(void);
  * @param selected Index of the selected entry.
  */
 void ui_components_file_list_draw(entry_t *list, int entries, int selected);
+
+/**
+ * @brief Free file list component cached resources.
+ */
+void ui_components_file_list_free(void);
 
 /**
  * @brief Context menu structure.

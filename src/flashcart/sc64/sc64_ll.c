@@ -35,6 +35,7 @@ typedef enum {
     CMD_ID_WRITEBACK_SD_INFO    = 'W',
     CMD_ID_FLASH_WAIT_BUSY      = 'p',
     CMD_ID_FLASH_ERASE_BLOCK    = 'P',
+    CMD_ID_DIAGNOSTIC_GET       = '%',
 } sc64_cmd_id_t;
 
 /** @brief SummerCart64 Commands Structure. */
@@ -231,4 +232,26 @@ sc64_error_t sc64_ll_flash_erase_block (void *address) {
         .arg = { (uint32_t) (address) }
     };
     return sc64_ll_execute_cmd(&cmd);
+}
+
+/**
+ * @brief Get diagnostic value from the SummerCart64.
+ *
+ * @param id Diagnostic ID.
+ * @param value Pointer to store diagnostic value.
+ * @return sc64_error_t Error code.
+ */
+sc64_error_t sc64_ll_get_diagnostic (sc64_diagnostic_id_t id, uint32_t *value) {
+    sc64_cmd_t cmd = {
+        .id = CMD_ID_DIAGNOSTIC_GET,
+        .arg = { id }
+    };
+
+    sc64_error_t error = sc64_ll_execute_cmd(&cmd);
+    if (error != SC64_OK) {
+        return error;
+    }
+
+    *value = cmd.rsp[1];
+    return SC64_OK;
 }

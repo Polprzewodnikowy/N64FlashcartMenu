@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 
 #include "fs.h"
@@ -155,14 +156,38 @@ bool file_fill(char *path, uint8_t value) {
  * @return true if the file has one of the specified extensions, false otherwise.
  */
 bool file_has_extensions(char *path, const char *extensions[]) {
-    char *ext = strrchr(path, '.');
+    if ((path == NULL) || (extensions == NULL)) {
+        return false;
+    }
+
+    // Use max+1 so the sentinel result is unambiguous:
+    // return value == (max+1) means unterminated/too-long input.
+    size_t path_len = strnlen(path, FS_MAX_PATH_SCAN_LENGTH + 1);
+    if (path_len == FS_MAX_PATH_SCAN_LENGTH + 1) {
+        return false;
+    }
+
+    char *ext = NULL;
+    for (size_t i = path_len; i > 0; i--) {
+        if (path[i - 1] == '.') {
+            ext = &path[i - 1];
+            break;
+        }
+    }
 
     if (ext == NULL) {
         return false;
     }
 
+    size_t ext_len = strnlen(ext + 1, FS_MAX_EXTENSION_LENGTH);
+    if ((ext_len == 0) || (ext_len == FS_MAX_EXTENSION_LENGTH)) {
+        return false;
+    }
+
     while (*extensions != NULL) {
-        if (strcasecmp(ext + 1, *extensions) == 0) {
+        size_t candidate_len = strnlen(*extensions, FS_MAX_EXTENSION_LENGTH);
+        if ((candidate_len == ext_len) && (candidate_len != FS_MAX_EXTENSION_LENGTH) &&
+            (strncasecmp(ext + 1, *extensions, ext_len) == 0)) {
             return true;
         }
         extensions++;
@@ -201,18 +226,23 @@ bool directory_create(char *path) {
     }
 
     char *directory = strdup(path);
+    if (directory == NULL) {
+        return true;
+    }
+
     char *separator = strip_fs_prefix(directory);
 
-    if (separator != directory) {
+    if ((separator != directory) && (*separator == '/')) {
         separator++;
     }
 
-    do {
-        separator = strchr(separator, '/');
-
-        if (separator != NULL) {
-            *separator++ = '\0';
+    for (;;) {
+        while ((*separator != '\0') && (*separator != '/')) {
+            separator++;
         }
+
+        char terminator = *separator;
+        *separator = '\0';
 
         if (directory[0] != '\0') {
             if (mkdir(directory, 0777) && (errno != EEXIST)) {
@@ -221,10 +251,12 @@ bool directory_create(char *path) {
             }
         }
 
-        if (separator != NULL) {
-            *(separator - 1) = '/';
+        if (terminator == '\0') {
+            break;
         }
-    } while (separator != NULL);
+
+        *separator++ = terminator;
+    }
 
     free(directory);
 

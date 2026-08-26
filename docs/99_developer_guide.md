@@ -11,6 +11,38 @@ Expected pre-requsites:
 ### A quick start video tutorial on how to set up your environment
 [![Docker Devcontainer quick start guide](http://img.youtube.com/vi/h05ufOsRgZU/0.jpg)](http://www.youtube.com/watch?v=h05ufOsRgZU "Docker Devcontainer quick start guide").
 
+#### libdragon and VSCode Intellisense
+Add this file to improve development
+`.vscode/c_cpp_properties.json` template:
+
+```
+{
+    "configurations": [
+        {
+            "name": "N64",
+
+            "compilerPath": "${env:N64_INST}/bin/mips64-elf-gcc",
+
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:N64_INST}/mips64-elf/include"
+            ],
+            "browse": {
+                "path": [
+                    "/workspaces/N64FlashcartMenu/libdragon/src"
+                ]
+            },
+            "defines": [
+                "N64"
+            ],
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17"
+        }
+    ],
+    "version": 4
+}
+```
+
 ### How to debug
 Within the code, use the `debugf` command, and then deploy using a debug build e.g. `make run-debug`.
 

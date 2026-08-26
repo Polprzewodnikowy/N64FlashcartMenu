@@ -6,6 +6,7 @@
 
 
 #include <errno.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <libdragon.h>
@@ -26,6 +27,7 @@
 #define PI_CONFIG_64DD_IPL      (0x80270740)
 
 #define CLOCK_RATE_DEFAULT      (0x0000000F)
+#define ROM_METADATA_INI_MAX_SIZE (64u * 1024u)
 
 
 /** @brief ROM File Information Structure. */
@@ -158,6 +160,11 @@ static const match_t database[] = {
 
     MATCH_ID_REGION("NWTJ", SAVE_TYPE_EEPROM_4KBIT, FEAT_NONE),                                                 // Wetrix
     MATCH_ID("NWT", SAVE_TYPE_NONE, FEAT_CPAK),                                                                 // Wetrix
+
+    // Aleck64 conversions
+    MATCH_ID("ZSE", SAVE_TYPE_NONE, FEAT_EXP_PAK_REQUIRED),                                                     // Super Real Mahjong VS (Aleck64 conversion)
+    MATCH_ID("ZSA", SAVE_TYPE_NONE, FEAT_EXP_PAK_REQUIRED),                                                     // Vivid Dolls (Aleck64 conversion)
+
 
     // EEPROM 4K
     MATCH_ID("CLB", SAVE_TYPE_EEPROM_4KBIT, FEAT_RPAK | FEAT_64DD_ENHANCED),                                    // Mario Party (NTSC)
@@ -682,19 +689,21 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
         // check the market type from the ROM destination_code and return best guess!
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
+            case MARKET_CANADIAN:
+            case MARKET_KOREAN:
             case MARKET_JAPANESE:
             case MARKET_JAPANESE_MULTI:
             case MARKET_GATEWAY64_NTSC:
                 return ROM_TV_TYPE_NTSC;
             case MARKET_BRAZILIAN:
                 return ROM_TV_TYPE_MPAL;
-            case MARKET_GERMAN:
-            case MARKET_FRENCH:
-            case MARKET_DUTCH:
-            case MARKET_ITALIAN:
-            case MARKET_SPANISH:
             case MARKET_AUSTRALIAN:
+            case MARKET_DUTCH:
+            case MARKET_FRENCH:
+            case MARKET_GERMAN:
+            case MARKET_ITALIAN:
             case MARKET_SCANDINAVIAN:
+            case MARKET_SPANISH:
             case MARKET_GATEWAY64_PAL:
             case MARKET_EUROPEAN_BASIC:
             // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
@@ -703,9 +712,7 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
             case MARKET_OTHER_Y:
                 return ROM_TV_TYPE_PAL;
             // FIXME: We cannot be sure on these markets, so just return the default for the moment!
-            case MARKET_CHINESE:
-            case MARKET_CANADIAN:
-            case MARKET_KOREAN:
+            case MARKET_CHINESE: // (China is a PAL region, but the N64 ROM patch may be NTSC, so we cannot be sure!)
             case MARKET_OTHER_Z:
             default:
                 return ROM_TV_TYPE_UNKNOWN;
@@ -768,10 +775,13 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.osi_license = strdup("Not specified");
     rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
+    rom_info->meta.num_players = 1;
     rom_info->meta.short_description = strdup("");
+    rom_info->meta.size_limit_exceeded = false;
 
     rom_info->settings.cheats_enabled = false;
     rom_info->settings.patches_enabled = false;
+    rom_info->settings.clear_rdram_enabled = false;
 }
 
 /**
@@ -833,18 +843,42 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     }
     
     // Extract to memory
-    size_t uncomp_size = file_stat.m_uncomp_size;
+    if (file_stat.m_uncomp_size > (uint64_t)(SIZE_MAX - 1)) {
+        debugf("[META] load_metadata_from_zip_file: metadata.ini too large (%llu)\n", (unsigned long long)file_stat.m_uncomp_size);
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+
+    if (file_stat.m_uncomp_size > ROM_METADATA_INI_MAX_SIZE) {
+        debugf("[META] load_metadata_from_zip_file: metadata.ini exceeds cap (%llu > %u)\n",
+            (unsigned long long)file_stat.m_uncomp_size,
+            ROM_METADATA_INI_MAX_SIZE);
+        rom_info->meta.size_limit_exceeded = true;
+        mz_zip_reader_end(&zip);
+        return false;
+    }
+
+    size_t uncomp_size = (size_t)file_stat.m_uncomp_size;
     debugf("[META] load_metadata_from_zip_file: compressed=%llu, uncompressed=%zu\n", (unsigned long long)file_stat.m_comp_size, uncomp_size);
-    char *metadata_content = malloc(uncomp_size + 1);
+    char *metadata_content = scratch_malloc(uncomp_size + 1);
+    bool used_scratch = true;
     if (!metadata_content) {
-        debugf("[META] load_metadata_from_zip_file: malloc failed for %zu bytes\n", uncomp_size + 1);
+        used_scratch = false;
+        metadata_content = malloc(uncomp_size + 1);
+    }
+    if (!metadata_content) {
+        debugf("[META] load_metadata_from_zip_file: allocation failed for %zu bytes\n", uncomp_size + 1);
         mz_zip_reader_end(&zip);
         return false;
     }
     
     if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
         debugf("[META] load_metadata_from_zip_file: mz_zip_reader_extract_to_mem failed\n");
-        free(metadata_content);
+        if (used_scratch) {
+            scratch_free(metadata_content);
+        } else {
+            free(metadata_content);
+        }
         mz_zip_reader_end(&zip);
         return false;
     }
@@ -855,7 +889,11 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     
     // Parse from buffer using ini parser (no disk I/O)
     ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
-    free(metadata_content);
+    if (used_scratch) {
+        scratch_free(metadata_content);
+    } else {
+        free(metadata_content);
+    }
     
     bool success = false;
     if (meta_ini) {
@@ -866,6 +904,7 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -950,11 +989,33 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         return false;
     }
     
-    size_t uncomp_size = file_stat.m_uncomp_size;
+    if (file_stat.m_uncomp_size > (uint64_t)(SIZE_MAX - 1)) {
+        debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini too large (%llu)\n", (unsigned long long)file_stat.m_uncomp_size);
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+
+    if (file_stat.m_uncomp_size > ROM_METADATA_INI_MAX_SIZE) {
+        debugf("[META] load_rom_meta_from_embedded_zip: metadata.ini exceeds cap (%llu > %u)\n",
+            (unsigned long long)file_stat.m_uncomp_size,
+            ROM_METADATA_INI_MAX_SIZE);
+        rom_info->meta.size_limit_exceeded = true;
+        mz_zip_reader_end(&zip);
+        fclose(rom_file);
+        return false;
+    }
+
+    size_t uncomp_size = (size_t)file_stat.m_uncomp_size;
     debugf("[META] load_rom_meta_from_embedded_zip: size=%zu (compressed=%llu)\n", uncomp_size, (unsigned long long)file_stat.m_comp_size);
-    char *metadata_content = malloc(uncomp_size + 1);
+    char *metadata_content = scratch_malloc(uncomp_size + 1);
+    bool used_scratch = true;
     if (!metadata_content) {
-        debugf("[META] load_rom_meta_from_embedded_zip: malloc failed\n");
+        used_scratch = false;
+        metadata_content = malloc(uncomp_size + 1);
+    }
+    if (!metadata_content) {
+        debugf("[META] load_rom_meta_from_embedded_zip: allocation failed\n");
         mz_zip_reader_end(&zip);
         fclose(rom_file);
         return false;
@@ -962,7 +1023,11 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     if (!mz_zip_reader_extract_to_mem(&zip, file_index, metadata_content, uncomp_size, 0)) {
         debugf("[META] load_rom_meta_from_embedded_zip: mz_zip_reader_extract_to_mem failed\n");
-        free(metadata_content);
+        if (used_scratch) {
+            scratch_free(metadata_content);
+        } else {
+            free(metadata_content);
+        }
         mz_zip_reader_end(&zip);
         fclose(rom_file);
         return false;
@@ -975,7 +1040,11 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     
     // Parse from buffer using ini parser (no disk I/O needed)
     ini_t *meta_ini = ini_parse_buffer(metadata_content, uncomp_size);
-    free(metadata_content);
+    if (used_scratch) {
+        scratch_free(metadata_content);
+    } else {
+        free(metadata_content);
+    }
     
     bool success = false;
     if (meta_ini) {
@@ -986,6 +1055,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -1054,6 +1124,7 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(rom_meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
         ini_free(rom_meta_ini);
         if (ok) {
@@ -1112,6 +1183,7 @@ static void load_rom_config_from_file (path_t *path, rom_info_t *rom_info) {
         // general
         rom_info->settings.cheats_enabled = ini_get_bool(rom_config_ini, "", "cheats_enabled", false);
         rom_info->settings.patches_enabled = ini_get_bool(rom_config_ini, "", "patches_enabled", false);
+        rom_info->settings.clear_rdram_enabled = ini_get_bool(rom_config_ini, "", "clear_rdram_enabled", false);
         
         // overrides
         rom_info->boot_override.cic_type = ini_get_int(rom_config_ini, "custom_boot", "cic_type", ROM_CIC_TYPE_AUTOMATIC);
@@ -1250,6 +1322,11 @@ rom_err_t rom_config_override_tv_type (path_t *path, rom_info_t *rom_info, rom_t
 rom_err_t rom_config_setting_set_cheats (path_t *path, rom_info_t *rom_info, bool enabled) {
     rom_info->settings.cheats_enabled = enabled;
     return save_rom_config_setting_to_file(path, "", "cheats_enabled", enabled, false);
+}
+
+rom_err_t rom_config_setting_set_clear_rdram (path_t *path, rom_info_t *rom_info, bool enabled) {
+    rom_info->settings.clear_rdram_enabled = enabled;
+    return save_rom_config_setting_to_file(path, "", "clear_rdram_enabled", enabled, false);
 }
 
 #ifdef FEATURE_PATCHER_GUI_ENABLED

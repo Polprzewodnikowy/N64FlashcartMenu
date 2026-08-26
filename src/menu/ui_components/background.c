@@ -184,6 +184,12 @@ static void display_list_free(void *arg) {
     rspq_block_free((rspq_block_t *) (arg));
 }
 
+static void surface_image_free(void *arg) {
+    surface_t *image = (surface_t *)(arg);
+    surface_free(image);
+    free(image);
+}
+
 /**
  * @brief Initialize the background component and load from cache.
  *
@@ -203,13 +209,14 @@ void ui_components_background_init(char *cache_location) {
  */
 void ui_components_background_free(void) {
     if (background) {
+        rspq_wait();
         if (background->image) {
             surface_free(background->image);
             free(background->image);
             background->image = NULL;
         }
         if (background->image_display_list) {
-            rdpq_call_deferred(display_list_free, background->image_display_list);
+            rspq_block_free(background->image_display_list);
             background->image_display_list = NULL;
         }
         if (background->cache_location) {
@@ -217,6 +224,27 @@ void ui_components_background_free(void) {
         }
         free(background);
         background = NULL;
+    }
+}
+
+void ui_components_background_clear(void) {
+    if (!background) {
+        return;
+    }
+    if (background->cache_location) {
+        remove(background->cache_location);
+    }
+    // Free image and display list but keep the struct and cache_location so
+    // a new background can be set without rebooting
+    rspq_wait();
+    if (background->image) {
+        surface_free(background->image);
+        free(background->image);
+        background->image = NULL;
+    }
+    if (background->image_display_list) {
+        rspq_block_free(background->image_display_list);
+        background->image_display_list = NULL;
     }
 }
 
@@ -231,8 +259,7 @@ void ui_components_background_replace_image(surface_t *image) {
     }
 
     if (background->image) {
-        surface_free(background->image);
-        free(background->image);
+        rdpq_call_deferred(surface_image_free, background->image);
         background->image = NULL;
     }
 
@@ -254,5 +281,36 @@ void ui_components_background_draw(void) {
         rspq_block_run(background->image_display_list);
     } else {
         rdpq_clear(BACKGROUND_EMPTY_COLOR);
+    }
+}
+
+surface_t *ui_components_background_get_image(void) {
+    return background ? background->image : NULL;
+}
+
+void ui_components_background_reload(void) {
+    if (!background || !background->cache_location) {
+        return;
+    }
+    if (!background->image) {
+        load_from_cache(background);
+        prepare_background(background);
+    }
+}
+
+void ui_components_background_image_free_only(void) {
+    if (!background) {
+        return;
+    }
+    // Free image and display list, keep struct+cache_location so it can be reloaded
+    rspq_wait();
+    if (background->image) {
+        surface_free(background->image);
+        free(background->image);
+        background->image = NULL;
+    }
+    if (background->image_display_list) {
+        rspq_block_free(background->image_display_list);
+        background->image_display_list = NULL;
     }
 }

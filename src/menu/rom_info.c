@@ -775,7 +775,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.osi_license = strdup("Not specified");
     rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
-    rom_info->meta.num_players = 0;
+    rom_info->meta.num_players = 1;
     rom_info->meta.short_description = strdup("");
     rom_info->meta.size_limit_exceeded = false;
 

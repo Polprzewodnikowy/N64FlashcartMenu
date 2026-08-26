@@ -221,8 +221,10 @@ void png_decoder_poll (void) {
     struct spng_row_info row_info;
 
     if ((err = spng_get_row_info(decoder->ctx, &row_info)) != SPNG_OK) {
-        decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
+        png_callback_t *callback = decoder->callback;
+        void *callback_data = decoder->callback_data;
         png_decoder_deinit(true);
+        callback(PNG_ERR_BAD_FILE, NULL, callback_data);
         return;
     }
 
@@ -253,7 +255,9 @@ void png_decoder_poll (void) {
         decoder->callback(PNG_OK, decoder->image, decoder->callback_data);
         png_decoder_deinit(false);
     } else if (err != SPNG_OK) {
-        decoder->callback(PNG_ERR_BAD_FILE, NULL, decoder->callback_data);
+        png_callback_t *callback = decoder->callback;
+        void *callback_data = decoder->callback_data;
         png_decoder_deinit(true);
+        callback(PNG_ERR_BAD_FILE, NULL, callback_data);
     }
 }

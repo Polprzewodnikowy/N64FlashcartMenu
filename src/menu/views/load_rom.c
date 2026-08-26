@@ -10,6 +10,7 @@
 
 static bool show_extra_info_message = false;
 static bool show_advanced_info_message = false;
+static bool show_expansion_pak_warning = false;
 static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
@@ -546,13 +547,33 @@ static int get_rom_clear_rdram_current_selection (menu_t *menu) {
         (void *) (menu->load.rom_info.settings.clear_rdram_enabled ? true : false));
 }
 
+static bool rom_requires_missing_expansion_pak (menu_t *menu) {
+    return (menu->load.rom_info.features.expansion_pak == EXPANSION_PAK_REQUIRED) && !is_memory_expanded();
+}
+
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, &options_context_menu)) {
         return;
     }
 
+    if (show_expansion_pak_warning) {
+        if (menu->actions.enter) {
+            show_expansion_pak_warning = false;
+            menu->load_pending.rom_file = true;
+        } else if (menu->actions.back) {
+            show_expansion_pak_warning = false;
+            sound_play_effect(SFX_EXIT);
+        }
+        return;
+    }
+
     if (menu->actions.enter) {
-        menu->load_pending.rom_file = true;
+        if (rom_requires_missing_expansion_pak(menu)) {
+            show_expansion_pak_warning = true;
+            sound_play_effect(SFX_ERROR);
+        } else {
+            menu->load_pending.rom_file = true;
+        }
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
@@ -667,6 +688,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "\n"
                 "Title: %.20s\n"
                 "Age Rating: %s\n"
+                "Players: %u\n"
                 "Release Date: %s\n"
                 "Author: %s\n"
                 "Website: %s\n"
@@ -679,6 +701,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Press Z to return.\n",
                 menu->load.rom_info.title,
                 format_age_rating(menu->load.rom_info.meta.age_rating),
+                menu->load.rom_info.meta.num_players,
                 menu->load.rom_info.meta.release_date,
                 menu->load.rom_info.meta.author,
                 menu->load.rom_info.meta.website,
@@ -706,6 +729,15 @@ static void draw (menu_t *menu, surface_t *d) {
                 menu->load.rom_info.clock_rate,
                 menu->load.rom_info.check_code,
                 format_rom_endianness(menu->load.rom_info.endianness)
+            );
+        }
+
+        if (show_expansion_pak_warning) {
+            ui_components_messagebox_draw(
+                "This ROM requires an Expansion Pak\n"
+                "which was not detected.\n\n"
+                "It may not run correctly without one.\n\n"
+                "A: Continue anyway, B: Cancel\n"
             );
         }
 
@@ -848,6 +880,7 @@ void view_load_rom_init (menu_t *menu) {
     if (show_advanced_info_message) {
         show_advanced_info_message = false;
     }
+    show_expansion_pak_warning = false;
 
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);

@@ -689,19 +689,21 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
         // check the market type from the ROM destination_code and return best guess!
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
+            case MARKET_CANADIAN:
+            case MARKET_KOREAN:
             case MARKET_JAPANESE:
             case MARKET_JAPANESE_MULTI:
             case MARKET_GATEWAY64_NTSC:
                 return ROM_TV_TYPE_NTSC;
             case MARKET_BRAZILIAN:
                 return ROM_TV_TYPE_MPAL;
-            case MARKET_GERMAN:
-            case MARKET_FRENCH:
-            case MARKET_DUTCH:
-            case MARKET_ITALIAN:
-            case MARKET_SPANISH:
             case MARKET_AUSTRALIAN:
+            case MARKET_DUTCH:
+            case MARKET_FRENCH:
+            case MARKET_GERMAN:
+            case MARKET_ITALIAN:
             case MARKET_SCANDINAVIAN:
+            case MARKET_SPANISH:
             case MARKET_GATEWAY64_PAL:
             case MARKET_EUROPEAN_BASIC:
             // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
@@ -710,9 +712,7 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
             case MARKET_OTHER_Y:
                 return ROM_TV_TYPE_PAL;
             // FIXME: We cannot be sure on these markets, so just return the default for the moment!
-            case MARKET_CHINESE:
-            case MARKET_CANADIAN:
-            case MARKET_KOREAN:
+            case MARKET_CHINESE: // (China is a PAL region, but the N64 ROM patch may be NTSC, so we cannot be sure!)
             case MARKET_OTHER_Z:
             default:
                 return ROM_TV_TYPE_UNKNOWN;

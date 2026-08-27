@@ -690,8 +690,6 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
         // see: https://github.com/ares-emulator/ares/blob/b80f67d38312648d197762121c3a27b02c0887db/mia/medium/nintendo-64.cpp#L241
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
-            case MARKET_CANADIAN:
-            case MARKET_KOREAN:
             case MARKET_JAPANESE:
             case MARKET_JAPANESE_MULTI:
             case MARKET_GATEWAY64_NTSC:

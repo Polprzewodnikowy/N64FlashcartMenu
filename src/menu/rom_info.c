@@ -690,6 +690,8 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
         // see: https://github.com/ares-emulator/ares/blob/b80f67d38312648d197762121c3a27b02c0887db/mia/medium/nintendo-64.cpp#L241
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
+            case MARKET_CANADIAN:
+            case MARKET_KOREAN:
             case MARKET_JAPANESE:
             case MARKET_JAPANESE_MULTI:
             case MARKET_GATEWAY64_NTSC:
@@ -699,19 +701,22 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
                 return ROM_TV_TYPE_NTSC;
             case MARKET_BRAZILIAN:
                 return ROM_TV_TYPE_MPAL;
-            case MARKET_GERMAN:
-            case MARKET_FRENCH:
-            case MARKET_DUTCH:
-            case MARKET_ITALIAN:
-            case MARKET_SPANISH:
             case MARKET_AUSTRALIAN:
+            case MARKET_DUTCH:
+            case MARKET_FRENCH:
+            case MARKET_GERMAN:
+            case MARKET_ITALIAN:
             case MARKET_SCANDINAVIAN:
+            case MARKET_SPANISH:
             case MARKET_GATEWAY64_PAL:
             case MARKET_EUROPEAN_BASIC:
             // FIXME: There might be some interesting errors with OTHER_X and OTHER_Y (e.g. TGR Asia).
             // But they are mainly PAL regions.
             case MARKET_OTHER_X:
             case MARKET_OTHER_Y:
+                return ROM_TV_TYPE_PAL;
+            // FIXME: We cannot be sure on these markets, so just return the default for the moment!
+            case MARKET_CHINESE: // (China is a PAL region, but the N64 ROM patch may be NTSC, so we cannot be sure!)
             case MARKET_OTHER_Z:
                 return ROM_TV_TYPE_PAL;        
             default:
@@ -775,6 +780,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     rom_info->meta.osi_license = strdup("Not specified");
     rom_info->meta.website = strdup("Not specified");
     rom_info->meta.age_rating = 0;
+    rom_info->meta.num_players = 1;
     rom_info->meta.short_description = strdup("");
     rom_info->meta.size_limit_exceeded = false;
 
@@ -903,6 +909,7 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -1053,6 +1060,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ini_free(meta_ini);
         success = ok;
@@ -1121,6 +1129,7 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         ok &= replace_owned_string(&rom_info->meta.osi_license,       ini_get_string(rom_meta_ini, "meta", "osi-license",  "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.website,           ini_get_string(rom_meta_ini, "meta", "website",      "Not specified"));
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
+        rom_info->meta.num_players = ini_get_int(rom_meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
         ini_free(rom_meta_ini);
         if (ok) {

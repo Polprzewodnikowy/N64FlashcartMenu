@@ -18,6 +18,8 @@ static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting, bgm;
 static bool sound_initialized = false;
 static bool sfx_enabled = false;
 static bool bgm_enabled = false;
+static bool sfx_opened = false;
+static bool bgm_opened = false;
 
 /**
  * @brief Reconfigure the sound system with the specified frequency.
@@ -84,6 +86,7 @@ void sound_init_sfx (void) {
     wav64_open(&sfx_enter, "rom:/enter.wav64");
     wav64_open(&sfx_error, "rom:/error.wav64");
     sfx_enabled = true;
+    sfx_opened = true;
 }
 
 /**
@@ -93,6 +96,7 @@ void sound_init_bgm (void) {
     wav64_open(&bgm, "rom:/bgm.wav64");
     wav64_set_loop(&bgm, true);
     mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
+    bgm_opened = true;
 }
 
 /**
@@ -152,15 +156,17 @@ void sound_play_effect(sound_effect_t sfx) {
  */
 void sound_deinit (void) {
     if (sound_initialized) {
-        if (sfx_enabled) {
+        if (sfx_opened) {
             wav64_close(&sfx_cursor);
             wav64_close(&sfx_exit);
             wav64_close(&sfx_setting);
             wav64_close(&sfx_enter);
             wav64_close(&sfx_error);
+            sfx_opened = false;
         }
-        if (bgm_enabled) {
+        if (bgm_opened) {
             wav64_close(&bgm);
+            bgm_opened = false;
         }
         mixer_close();
         audio_close();

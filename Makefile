@@ -109,12 +109,10 @@ SOUNDS_WAV = \
 SOUNDS_XM ?=
 
 IMAGES = \
-	defbg.png \
-	defboxart.png \
 	compressed.png \
 	folder.png \
-	N64ROM.png \
-	ddisk.png \
+	n64cart.png \
+	n64disk.png \
 	music.png \
 	text.png \
 	image.png \

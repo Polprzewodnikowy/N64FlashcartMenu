@@ -9,12 +9,10 @@ typedef struct {
 } sprite_entry_t;
 
 static sprite_entry_t sprite_entries[SPRITE_LIST_END] = {
-    [SPRITE_BOXART_DEFAULT]    = { "rom:/defboxart.sprite" },
-    [SPRITE_BACKGROUND_DEFAULT] = { "rom:/defbg.sprite" },
     [SPRITE_FOLDER]            = { "rom:/folder.sprite" },
     [SPRITE_COMPRESSED]        = { "rom:/compressed.sprite" },
-    [SPRITE_N64ROM]            = { "rom:/N64ROM.sprite" },
-    [SPRITE_DDISK]             = { "rom:/ddisk.sprite" },
+    [SPRITE_N64ROM]            = { "rom:/n64cart.sprite" },
+    [SPRITE_DDISK]             = { "rom:/n64disk.sprite" },
     [SPRITE_MUSIC]             = { "rom:/music.sprite" },
     [SPRITE_TEXT]              = { "rom:/text.sprite" },
     [SPRITE_IMAGE]             = { "rom:/image.sprite" },

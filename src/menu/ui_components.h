@@ -36,15 +36,15 @@ typedef enum {
  * Enumeration for different types of sprites used in the user interface.
  */
 typedef enum {
-    FILETYPE_SPRITE_FOLDER,                  /**< Folder sprite */
-    FILETYPE_SPRITE_COMPRESSED,              /**< Compressed file sprite */
-    FILETYPE_SPRITE_N64ROM,                  /**< N64 ROM file sprite */
-    FILETYPE_SPRITE_DDISK,                   /**< Disk image sprite */
-    FILETYPE_SPRITE_MUSIC,                   /**< Music file sprite */
-    FILETYPE_SPRITE_TEXT,                    /**< Text file sprite */
-    FILETYPE_SPRITE_IMAGE,                   /**< Image file sprite */
-    FILETYPE_SPRITE_SAVE,                    /**< Save file sprite */
-    FILETYPE_SPRITE_FILE,                    /**< Generic file sprite */
+    SPRITE_FILETYPE_FOLDER,                  /**< Folder sprite */
+    SPRITE_FILETYPE_COMPRESSED,              /**< Compressed file sprite */
+    SPRITE_FILETYPE_N64ROM,                  /**< N64 ROM file sprite */
+    SPRITE_FILETYPE_DDISK,                   /**< Disk image sprite */
+    SPRITE_FILETYPE_MUSIC,                   /**< Music file sprite */
+    SPRITE_FILETYPE_TEXT,                    /**< Text file sprite */
+    SPRITE_FILETYPE_IMAGE,                   /**< Image file sprite */
+    SPRITE_FILETYPE_SAVE,                    /**< Save file sprite */
+    SPRITE_FILETYPE_FILE,                    /**< Generic file sprite */
     SPRITE_LIST_END                          /**< List end marker */
 } sprite_type_t;
 

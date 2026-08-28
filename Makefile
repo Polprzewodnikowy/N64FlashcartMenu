@@ -110,15 +110,15 @@ SOUNDS_WAV = \
 SOUNDS_XM ?=
 
 IMAGES = \
-	compressed.png \
-	folder.png \
-	n64cart.png \
-	n64disk.png \
-	music.png \
-	text.png \
-	image.png \
-	save.png \
-	file.png
+	filetype_compressed.png \
+	filetype_folder.png \
+	filetype_n64cart.png \
+	filetype_n64disk.png \
+	filetype_music.png \
+	filetype_text.png \
+	filetype_image.png \
+	filetype_save.png \
+	filetype_file.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

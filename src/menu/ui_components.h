@@ -31,21 +31,21 @@ typedef enum {
 } file_image_type_t;
 
 /** 
- * @brief Sprites Enumeration.
+ * @brief Sprites enumeration.
  * 
  * Enumeration for different types of sprites used in the user interface.
  */
 typedef enum {
-    SPRITE_FOLDER,                  /**< Folder sprite */
-    SPRITE_COMPRESSED,              /**< Compressed file sprite */
-    SPRITE_N64ROM,                  /**< N64 ROM file sprite */
-    SPRITE_DDISK,                   /**< Disk image sprite */
-    SPRITE_MUSIC,                   /**< Music file sprite */
-    SPRITE_TEXT,                    /**< Text file sprite */
-    SPRITE_IMAGE,                   /**< Image file sprite */
-    SPRITE_SAVE,                    /**< Save file sprite */
-    SPRITE_FILE,                    /**< Generic file sprite */
-    SPRITE_LIST_END               /**< List end marker */
+    FILETYPE_SPRITE_FOLDER,                  /**< Folder sprite */
+    FILETYPE_SPRITE_COMPRESSED,              /**< Compressed file sprite */
+    FILETYPE_SPRITE_N64ROM,                  /**< N64 ROM file sprite */
+    FILETYPE_SPRITE_DDISK,                   /**< Disk image sprite */
+    FILETYPE_SPRITE_MUSIC,                   /**< Music file sprite */
+    FILETYPE_SPRITE_TEXT,                    /**< Text file sprite */
+    FILETYPE_SPRITE_IMAGE,                   /**< Image file sprite */
+    FILETYPE_SPRITE_SAVE,                    /**< Save file sprite */
+    FILETYPE_SPRITE_FILE,                    /**< Generic file sprite */
+    SPRITE_LIST_END                          /**< List end marker */
 } sprite_type_t;
 
 typedef struct fat_file_attributes {

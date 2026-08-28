@@ -60,6 +60,7 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/sprites.c \
 	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
@@ -107,6 +108,17 @@ SOUNDS_WAV = \
 	settings.wav
 
 SOUNDS_XM ?=
+
+IMAGES = \
+	filetype_compressed.png \
+	filetype_folder.png \
+	filetype_n64cart.png \
+	filetype_n64disk.png \
+	filetype_music.png \
+	filetype_text.png \
+	filetype_image.png \
+	filetype_save.png \
+	filetype_unknown.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

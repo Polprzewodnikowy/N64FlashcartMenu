@@ -39,7 +39,7 @@ typedef enum {
     SPRITE_FILETYPE_FOLDER,                  /**< Folder sprite */
     SPRITE_FILETYPE_COMPRESSED,              /**< Compressed file sprite */
     SPRITE_FILETYPE_N64ROM,                  /**< N64 ROM file sprite */
-    SPRITE_FILETYPE_DDISK,                   /**< Disk image sprite */
+    SPRITE_FILETYPE_N64DISK,                   /**< Disk image sprite */
     SPRITE_FILETYPE_MUSIC,                   /**< Music file sprite */
     SPRITE_FILETYPE_TEXT,                    /**< Text file sprite */
     SPRITE_FILETYPE_IMAGE,                   /**< Image file sprite */

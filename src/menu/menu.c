@@ -71,6 +71,7 @@ static void menu_init (boot_params_t *boot_params) {
     sound_init_default();
     sound_init_sfx();
     sound_init_bgm();
+    ui_components_sprites_init();
 
     hdmi_clear_game_id();
 

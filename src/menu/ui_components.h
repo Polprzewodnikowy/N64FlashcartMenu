@@ -30,6 +30,23 @@ typedef enum {
     IMAGE_TYPE_END         /**< List end marker */
 } file_image_type_t;
 
+/** 
+ * @brief Sprites enumeration.
+ * 
+ * Enumeration for different types of sprites used in the user interface.
+ */
+typedef enum {
+    SPRITE_FILETYPE_FOLDER,                  /**< Folder sprite */
+    SPRITE_FILETYPE_COMPRESSED,              /**< Compressed file sprite */
+    SPRITE_FILETYPE_N64ROM,                  /**< N64 ROM file sprite */
+    SPRITE_FILETYPE_N64DISK,                 /**< Disk image sprite */
+    SPRITE_FILETYPE_MUSIC,                   /**< Music file sprite */
+    SPRITE_FILETYPE_TEXT,                    /**< Text file sprite */
+    SPRITE_FILETYPE_IMAGE,                   /**< Image file sprite */
+    SPRITE_FILETYPE_SAVE,                    /**< Save file sprite */
+    SPRITE_FILETYPE_UNKNOWN,                 /**< Generic file sprite */
+    SPRITE_LIST_END                          /**< List end marker */
+} sprite_type_t;
 
 typedef struct fat_file_attributes {
     bool is_read_only;    /**< Read-only attribute */
@@ -325,6 +342,20 @@ void ui_components_boxart_free(component_boxart_t *b);
  * @param b Pointer to the box art component.
  */
 void ui_components_boxart_draw(component_boxart_t *b);
+
+/**
+ * @brief Initialize the sprites component.
+ */
+void ui_components_sprites_init(void);
+
+/**
+ * @brief Draw a sprite component.
+ * 
+ * @param sprite Type of the sprite to draw.
+ * @param pos_x X-coordinate position to draw the sprite.
+ * @param pos_y Y-coordinate position to draw the sprite.
+ */
+void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 /**
  * @brief Draw the tabs component.

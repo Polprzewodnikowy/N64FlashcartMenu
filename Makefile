@@ -118,7 +118,7 @@ IMAGES = \
 	filetype_text.png \
 	filetype_image.png \
 	filetype_save.png \
-	filetype_file.png
+	filetype_unknown.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))

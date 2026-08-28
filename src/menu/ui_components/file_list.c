@@ -254,7 +254,7 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
                     ui_components_sprite_draw(SPRITE_FILETYPE_SAVE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 551, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + (i * highlight_height));
                 break;
                 default: 
-                    ui_components_sprite_draw(SPRITE_FILETYPE_FILE, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 551, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + (i * highlight_height));
+                    ui_components_sprite_draw(SPRITE_FILETYPE_UNKNOWN, VISIBLE_AREA_X0 + VISIBLE_AREA_WIDTH - LIST_SCROLLBAR_WIDTH - TEXT_MARGIN_HORIZONTAL - 551, VISIBLE_AREA_Y0 + TEXT_MARGIN_VERTICAL + TAB_HEIGHT + TEXT_OFFSET_VERTICAL + (i * highlight_height));
                 break;
             }
 

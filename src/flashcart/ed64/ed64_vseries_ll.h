@@ -1,6 +1,6 @@
 /**
  * @file ed64_vseries_ll.h
- * @brief ed64v flashcart low level access
+ * @brief ED64 V series flashcart low level access
  * @ingroup flashcart
  */
 

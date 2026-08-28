@@ -7,8 +7,6 @@ ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-ARG SC64_DEPLOYER_VERSION=v2.20.2
-
 # Minimal image: install only what's needed for building and the project's toolchain
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -19,17 +17,10 @@ RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-c
     dpkg -i gcc-toolchain-mips64-x86_64.deb && \
     rm gcc-toolchain-mips64-x86_64.deb
 
-# Install SummerCart64 deployer
-RUN wget https://github.com/Polprzewodnikowy/SummerCart64/releases/download/$SC64_DEPLOYER_VERSION/sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz && \
-    tar -xf sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz -C /usr/local/bin && \
-    rm sc64-deployer-linux-$SC64_DEPLOYER_VERSION.tar.gz
-
-
-# Environment Config
-RUN git config --global --add safe.directory "*"
-
-RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
-    echo "$SNIPPET" >> "/root/.bashrc"
+# # Environment Config
+# RUN git config --global --add safe.directory "*" && \
+#     SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" && \
+#     echo "$SNIPPET" >> "/root/.bashrc"
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -45,9 +36,9 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     && chmod o+x /root \
-    && chown -R $USER_UID:$USER_GID /usr/local/bin /opt/libdragon
+    && chown -R $USER_UID:$USER_GID /usr/local/bin
 
 ENV DEBIAN_FRONTEND=dialog
 
-# USER $USERNAME
-# WORKDIR /home/$USERNAME
+USER $USERNAME
+WORKDIR /home/$USERNAME

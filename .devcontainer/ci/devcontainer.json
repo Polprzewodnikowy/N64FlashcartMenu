@@ -1,0 +1,31 @@
+{
+    "name": "N64FlashcartMenu-ci",
+    "build": {
+        "dockerfile": "Dockerfile.ci"
+    },
+    "mounts": [
+        "source=n64flashcartmenu-flashcart-bashhistory,target=/commandhistory,type=volume"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "git.ignoredRepositories": [
+                    "libdragon",
+                    "src/libs/libspng",
+                    "src/libs/minimp3",
+                    "src/libs/miniz",
+                    "src/libs/dr_libs"
+                ]
+            }
+        }
+    },
+    "postCreateCommand": {
+        "Initialize libdragon submodule": "git submodule update --init && cd ./libdragon && ./build.sh --no-examples",
+        "Fix volume permissions": "sudo chown -R $(whoami): /commandhistory"
+    },
+	// Connect as the non-root "vscode" user created in the Dockerfile. VS Code
+	// aligns its UID/GID with your local user (updateRemoteUserUID) so files
+	// created in the bind-mounted workspace aren't left owned by root.
+	"remoteUser": "vscode",
+	"updateRemoteUserUID": true
+}

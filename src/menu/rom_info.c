@@ -1057,6 +1057,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
         rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
+        ok &= replace_owned_string(&rom_info->meta.long_description_fn, ini_get_string(meta_ini, "meta", "long-desc-fn", ""));
         ini_free(meta_ini);
         success = ok;
         if (ok) {
@@ -1126,6 +1127,7 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         rom_info->meta.age_rating = ini_get_int(rom_meta_ini, "meta", "age-rating", 0);
         rom_info->meta.num_players = ini_get_int(rom_meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
+        ok &= replace_owned_string(&rom_info->meta.long_description_fn, ini_get_string(rom_meta_ini, "meta", "long-desc-fn", ""));
         ini_free(rom_meta_ini);
         if (ok) {
             debugf("[META] Loaded from INI file: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);
@@ -1165,6 +1167,10 @@ void rom_info_free_meta(rom_info_t *rom_info) {
     if (rom_info->meta.short_description) {
         free(rom_info->meta.short_description);
         rom_info->meta.short_description = NULL;
+    }
+    if (rom_info->meta.long_description_fn) {
+        free(rom_info->meta.long_description_fn);
+        rom_info->meta.long_description_fn = NULL;
     }
 }
 

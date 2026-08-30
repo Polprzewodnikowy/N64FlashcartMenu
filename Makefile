@@ -8,6 +8,9 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
+# uncomment the following line to support preview API's in libDragon.
+# LIBDRAGON_PREVIEW = 2
+
 MENU_VERSION ?= "Preview release"
 BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
@@ -168,6 +171,7 @@ disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
 .PHONY: disassembly
 
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
+$(PROJECT_NAME).z64: N64_ROM_METADATA=metadata/metadata.ini
 $(PROJECT_NAME).z64: $(BUILD_DIR)/$(PROJECT_NAME).dfs
 
 $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))

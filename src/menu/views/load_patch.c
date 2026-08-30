@@ -1,6 +1,7 @@
 #include "../cart_load.h"
 #include "../rom_patch_info.h"
 #include "boot/boot.h"
+#include "../sound.h"
 #include "views.h"
 
 
@@ -20,13 +21,14 @@ static char *convert_error_message (rom_patch_load_err_t err) {
 
 
 static void process (menu_t *menu) {
-    if (menu->actions.enter) {
-        load_pending = true;
-        load_rom = false;
-    } else if (menu->actions.options && menu->load.rom_path) {
+    if (menu->actions.enter && menu->load.rom_path) {
         load_pending = true;
         load_rom = true;
+    } else if (menu->actions.enter && !menu->load.rom_path) {
+        sound_play_effect(SFX_ERROR);
+        menu_show_error(menu, "No ROM loaded for patching.");
     } else if (menu->actions.back) {
+        sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
     }
 }
@@ -56,9 +58,11 @@ static void draw (menu_t *menu, surface_t *d) {
             "\n"
             "\n"
             "\n"
-            " %s%s",
-            menu->load.rom_path ? "ROM: " : "",
-            menu->load.rom_path ? path_last_get(menu->load.rom_path) : ""
+            "\n"
+            "\n"
+            " %s %s",
+            menu->load.rom_path ? "ROM:" : "No ROM loaded for patching.",
+            menu->load.rom_path ? path_last_get(menu->load.rom_path) : "Go back and select a ROM to patch."
         );
 
         ui_components_actions_bar_text_draw(
@@ -68,13 +72,6 @@ static void draw (menu_t *menu, surface_t *d) {
             "B: Exit"
         );
 
-        if (menu->load.rom_path) {
-            ui_components_actions_bar_text_draw(
-                STL_DEFAULT,
-                ALIGN_RIGHT, VALIGN_TOP,
-                "R: Load with ROM"
-            );
-        }
     }
 
     rdpq_detach_show();
@@ -105,7 +102,8 @@ static void load (menu_t *menu) {
         }
     }
 
-    // err = cart_load_rom_and_patch(menu, draw_progress);
+    // Apply the patch to the ROM in SDRAM
+    // err = cart_loaded_rom_apply_patch(menu, draw_progress);
     // if (err != CART_LOAD_OK) {
     //     menu_show_error(menu, cart_load_convert_error_message(err));
     //     return;

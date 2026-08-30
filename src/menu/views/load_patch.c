@@ -1,8 +1,9 @@
+#include "boot/boot.h"
+#include "views.h"
 #include "../cart_load.h"
 #include "../rom_patch_info.h"
-#include "boot/boot.h"
 #include "../sound.h"
-#include "views.h"
+
 
 
 static bool load_pending;
@@ -91,15 +92,28 @@ static void draw_progress (float progress) {
     }
 }
 
-static void load (menu_t *menu) {
-    cart_load_err_t err;
+static void draw_creating_save (float progress) {
+    surface_t *d = display_get();
 
-    if (menu->load.rom_path && load_rom) {
-        err = cart_load_n64_rom_and_save(menu, draw_progress, NULL);
-        if (err != CART_LOAD_OK) {
-            menu_show_error(menu, cart_load_convert_error_message(err));
-            return;
-        }
+    if (d) {
+        rdpq_attach(d, NULL);
+
+        ui_components_background_draw();
+
+        ui_components_loader_draw(progress, "Creating initial save file...");
+
+        rdpq_detach_show();
+    }
+}
+
+static void load (menu_t *menu) {
+    debugf("Load ROM: load function called\n");
+    cart_load_err_t err;
+    err = cart_load_n64_rom_and_save(menu, draw_progress, draw_creating_save);
+
+    if (err != CART_LOAD_OK) {
+        menu_show_error(menu, cart_load_convert_error_message(err));
+        return;
     }
 
     // Apply the patch to the ROM in SDRAM
@@ -111,20 +125,18 @@ static void load (menu_t *menu) {
 
     menu->next_mode = MENU_MODE_BOOT;
 
-    if (load_rom) {
-        menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-        menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
-        switch (rom_info_get_tv_type(&menu->load.rom_info)) {
-            case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
-            case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
-            case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
-            default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
-        }
-    } else {
-        menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
-        menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
-        menu->boot_params->detect_cic_seed = true;
+    menu->boot_params->device_type = BOOT_DEVICE_TYPE_ROM;
+    menu->boot_params->detect_cic_seed = rom_info_get_cic_seed(&menu->load.rom_info, &menu->boot_params->cic_seed);
+    switch (rom_info_get_tv_type(&menu->load.rom_info)) {
+        case ROM_TV_TYPE_PAL: menu->boot_params->tv_type = BOOT_TV_TYPE_PAL; break;
+        case ROM_TV_TYPE_NTSC: menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC; break;
+        case ROM_TV_TYPE_MPAL: menu->boot_params->tv_type = BOOT_TV_TYPE_MPAL; break;
+        default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
     }
+
+    menu->boot_params->cheat_list = NULL;
+    menu->boot_params->clear_rdram = menu->load.rom_info.settings.clear_rdram_enabled;
+
 }
 
 

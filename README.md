@@ -42,12 +42,10 @@ The current state of support is:
 * Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
 * Real Time Clock support.
-* Music playback (MP3).
-* Menu sound effects.
+* Music playback (MP3 and FLAC) with id3 support.
+* Menu background music and sound effects.
 * N64 ROM fast reboot option (on reset).
 * ROM history and favorites.  
-
-Experimental (beta):
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).

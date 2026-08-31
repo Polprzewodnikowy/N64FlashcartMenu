@@ -64,8 +64,11 @@ void sound_use_sfx(bool enable);
  * 
  * This function initializes the background music system, setting up
  * necessary resources and configurations for playing background music.
+ * It can load custom music files from the specified path.
+ * 
+ * @param custom_bgm_path Path to the custom bgm file.
  */
-void sound_init_bgm(void);
+void sound_init_bgm(char *custom_bgm_path);
 
 
 /**

@@ -6,6 +6,7 @@
 
 #include <stdbool.h>
 #include <libdragon.h>
+#include "utils/fs.h"
 #include "audio_player.h"
 #include "sound.h"
 
@@ -49,7 +50,7 @@ static void sound_reconfigure (int frequency) {
             sound_init_sfx();
         }
         if (bgm_enabled) {
-            sound_init_bgm();
+            sound_init_bgm(NULL); // FIXME: This will open the default BGM file regardless of the custom BGM path. Consider storing the custom path and reusing it here.
             wav64_play(&bgm, SOUND_BGM_CHANNEL);
         }
     }
@@ -92,8 +93,12 @@ void sound_init_sfx (void) {
 /**
  * @brief Initialize the background music.
  */
-void sound_init_bgm (void) {
-    wav64_open(&bgm, "rom:/bgm.wav64");
+void sound_init_bgm (char *custom_bgm_path) {
+    if (file_exists(custom_bgm_path)) {
+        wav64_open(&bgm, custom_bgm_path);
+    } else {
+        wav64_open(&bgm, "rom:/bgm.wav64");
+    }
     wav64_set_loop(&bgm, true);
     mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
     bgm_opened = true;

@@ -119,7 +119,8 @@ static void menu_init (boot_params_t *boot_params) {
     path_pop(path);
 
     path_push(path, MENU_CUSTOM_BGM_FILE);
-    sound_init_bgm(path_get(path));
+    sound_set_bgm_path(path_get(path));
+    sound_init_bgm();
     path_pop(path);
 
     path_push(path, MENU_CACHE_DIRECTORY);

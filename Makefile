@@ -106,6 +106,7 @@ SOUNDS_WAV = \
 	cursorsound.wav \
 	back.wav \
 	bgm.wav \
+	bgm_alt.wav \
 	enter.wav \
 	error.wav \
 	settings.wav

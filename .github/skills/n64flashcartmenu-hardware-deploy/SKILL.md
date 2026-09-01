@@ -98,8 +98,4 @@ docker exec <container> bash -c "sc64deployer --remote host.docker.internal:9064
 
 If this fails with `Couldn't init the SD card: SD card is locked by the N64 side`, the console is currently powered on and has the SD card mounted — **ask the user to power off the console**, then retry. `sc64deployer reset` alone is not sufficient; the console must actually be off.
 
-## Known code gotchas (src/menu)
-
-- `sound.c`/`sound.h`: BGM/SFX subsystem. Avoid NULL-sentinel-argument APIs (e.g. `sound_init_bgm(char*)` meaning "new path" vs "reuse last path" depending on NULL) — split into a setter (`sound_set_bgm_path`) + no-arg action (`sound_init_bgm(void)`) instead.
-- `views/music_player.c` `deinit()`: must call `audioplayer_deinit()` (closes the SD file handle of the currently playing track) **before** `sound_init_default()` (which may reopen a custom SD-based BGM file) — two SD files open at once corrupts the second `wav64_t`, tripping the `wave->channels == 1 || wave->channels == 2` assertion in `mixer_ch_play`.
-- `cart_load.c`: any numeric value parsed from a user-editable `.ini` file (e.g. `rom_offset`) must be bounds-checked before use in pointer/size arithmetic like `MiB(64) - rom_offset`, which silently underflows on an out-of-range input.
+For general code-review pitfalls (input validation, resource lifecycle, etc.), see `.github/copilot-instructions.md`.

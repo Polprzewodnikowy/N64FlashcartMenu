@@ -4,10 +4,36 @@
 - For the 64Drive, use the `menu.bin` file in the root of your SD card.
 - For the ares emulator, use the `N64FlashcartMenu.n64` file.
 
-## Release Notes 2026-Vnext
+## Release Notes 202x-vNext
 
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+
+- **Bug Fixes**
+
+- **Documentation**
+
+- **Refactor**
+
+- **Other**
+
+### Breaking changes
+- None.
+
+### Notes
+- None.
+
+### Current known Issues
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+### Deprecation notices
+- None.
+
+## Release Notes 2026-08-26 - Tagged 0.3.3
+
+- **New Features**
 	- Adds Background music.
 	- Adds ability to use infinite scroll within the file browser.
 	- ROM override submenu now remembers current custom settings.
@@ -19,11 +45,13 @@
 	- Add progress of save file creation on ROM load.
 	- Add ability to override emulator configurations through INI file.
 	- Add option to clear RDRAM on a per ROM basis (required for RTYI demo).
+	- Add ROM additional metadata (Maximum number of simultaneous players that the game supports).
+	- Add warning before loading a ROM requiring an Expansion Pak that isn't present for supported ROMs.
 	
-
 - **Bug Fixes**
 	- CPak manager: Large Controller Paks with more than 123 pages are now shown properly.
 	- CPak notes backup and restore now works with invalid FAT characters.
+	- Move CA and KR ROM tv types to NTSC.
 
 - **Documentation**
 	- Improved DD section with latest information.
@@ -40,19 +68,20 @@
 	
 
 ### Breaking changes
+- None.
 
 ### Notes
 - Progress has been made towards disk swapping, but it is still WiP.
+- RTYI Demo requires the new "Clear RDRAM on boot" ROM override to work.
 
 ### Current known Issues
-- Menu sound FX may not work properly when a 64 Disk Drive is also attached (work around: turn sound FX off).
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
 - Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
 
-
 ### Deprecation notices
 - None.
+
 
 ## Release Notes 2026-05-23 - Tagged 0.3.2
 

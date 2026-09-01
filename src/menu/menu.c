@@ -71,6 +71,7 @@ static void menu_init (boot_params_t *boot_params) {
     sound_init_default();
     sound_init_sfx();
     sound_init_bgm();
+    ui_components_sprites_init();
 
     hdmi_clear_game_id();
 
@@ -253,6 +254,7 @@ void menu_run (boot_params_t *boot_params) {
             }
 
             if (menu->mode == MENU_MODE_BOOT) {
+                // exit loop to deinit menu and boot the game
                 break;
             }
 
@@ -275,9 +277,13 @@ void menu_run (boot_params_t *boot_params) {
         usb_comm_poll(menu);
     }
 
-    menu_deinit(menu);
-
     while (exception_reset_time() > 0) {
         // Do nothing if reset button was pressed
+        // but this could be used to display a message or perform other actions while waiting for reset, 
+        // like fade out the screen or show a countdown timer.
     }
+
+    menu_deinit(menu);
+
+    // This should now return to main.c which now boots the game.
 }

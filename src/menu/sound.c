@@ -104,7 +104,9 @@ void sound_set_bgm_path (const char *custom_bgm_path) {
     bgm_path[0] = '\0';
     bgm_path_valid = false;
 
-    if (custom_bgm_path != NULL && file_exists((char *) custom_bgm_path)) {
+    if (custom_bgm_path != NULL
+        && strlen(custom_bgm_path) < sizeof(bgm_path)
+        && file_exists((char *) custom_bgm_path)) {
         strncpy(bgm_path, custom_bgm_path, sizeof(bgm_path) - 1);
         bgm_path[sizeof(bgm_path) - 1] = '\0';
         bgm_path_valid = true;

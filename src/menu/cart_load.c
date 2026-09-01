@@ -149,6 +149,24 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     return CART_LOAD_OK;
 }
 
+cart_load_err_t cart_loaded_rom_apply_patch(menu_t *menu, flashcart_progress_callback_t progress) {
+    //path_t *path = path_clone(menu->load.rom_patch_path);
+
+    if (!is_memory_expanded()) {
+        return CART_LOAD_ERR_EXP_PAK_NOT_FOUND;
+    }
+    // FIXME: Implement patching functionality
+    // menu->flashcart_err = flashcart_load_rom_patch(path_get(path), progress);
+    // if (menu->flashcart_err != FLASHCART_OK) {
+    //     path_free(path);
+    //     return CART_LOAD_ERR_ROM_LOAD_FAIL;
+    // }
+
+    //path_free(path);
+
+    return CART_LOAD_OK;
+}
+
 /**
  * @brief Load the 64DD IPL and disk.
  * 

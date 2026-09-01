@@ -1335,13 +1335,6 @@ rom_err_t rom_config_setting_set_clear_rdram (path_t *path, rom_info_t *rom_info
     return save_rom_config_setting_to_file(path, "", "clear_rdram_enabled", enabled, false);
 }
 
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-rom_err_t rom_config_setting_set_patches (path_t *path, rom_info_t *rom_info, bool enabled) {
-    rom_info->settings.patches_enabled = enabled;
-    return save_rom_config_setting_to_file(path, "", "patches_enabled", enabled, false);
-}
-#endif
-
 rom_err_t rom_config_load (path_t *path, rom_info_t *rom_info) {
     FILE *f;
     rom_header_t rom_header;

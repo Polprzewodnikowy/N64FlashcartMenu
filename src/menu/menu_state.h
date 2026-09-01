@@ -14,6 +14,7 @@
 
 #include "boot/boot.h"
 #include "disk_info.h"
+#include "rom_patch_info.h"
 #include "flashcart/flashcart.h"
 #include "path.h"
 #include "rom_info.h"
@@ -41,6 +42,7 @@ typedef enum {
     MENU_MODE_LOAD_ROM,
     MENU_MODE_LOAD_DISK,
     MENU_MODE_LOAD_EMULATOR,
+    MENU_MODE_LOAD_ROM_PATCH,
     MENU_MODE_ERROR,
     MENU_MODE_FAULT,
     MENU_MODE_BOOT,
@@ -133,6 +135,8 @@ typedef struct {
     struct {
         path_t *rom_path;
         rom_info_t rom_info;
+        path_t *rom_patch_path;
+        rom_patch_info_t rom_patch_info;
         disk_slot_t disk_slots;
         int32_t load_history_id;
         int32_t load_favorite_id;

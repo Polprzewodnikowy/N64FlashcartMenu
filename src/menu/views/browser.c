@@ -647,7 +647,7 @@ static void process (menu_t *menu) {
                 menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_CHEAT.
                 break;
             case ENTRY_TYPE_ROM_PATCH:
-                menu->next_mode = MENU_MODE_FILE_INFO; // FIXME: Implement MENU_MODE_LOAD_ROM_PATCH.
+                menu->next_mode = MENU_MODE_LOAD_ROM_PATCH;
                 break;
             case ENTRY_TYPE_TEXT:
                 menu->next_mode = MENU_MODE_TEXT_VIEWER;
@@ -703,6 +703,7 @@ static void draw (menu_t *menu, surface_t *d) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
             case ENTRY_TYPE_ROM: action = "A: Load"; break;
+            case ENTRY_TYPE_ROM_PATCH: action = "A: Load"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;

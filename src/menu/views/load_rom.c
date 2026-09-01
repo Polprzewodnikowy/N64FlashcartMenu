@@ -255,9 +255,6 @@ static int get_rom_cic_override_current_selection (menu_t *menu);
 static int get_rom_save_override_current_selection (menu_t *menu);
 static int get_rom_tv_override_current_selection (menu_t *menu);
 static int get_rom_cheat_override_current_selection (menu_t *menu);
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-static int get_rom_patch_override_current_selection (menu_t *menu);
-#endif
 
 static void set_cic_type (menu_t *menu, void *arg) {
     rom_cic_type_t cic_type = (rom_cic_type_t) (arg);
@@ -325,14 +322,6 @@ static void open_datel_code_editor (menu_t *menu, void *arg) {
 
     menu->next_mode = MENU_MODE_DATEL_CODE_EDITOR;
 }
-
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-static void set_patcher_option(menu_t *menu, void *arg) {
-    bool enabled = (bool)arg;
-    rom_config_setting_set_patches(menu->load.rom_path, &menu->load.rom_info, enabled);
-    menu->browser.reload = true;
-}
-#endif
 
 static void set_clear_rdram_option(menu_t *menu, void *arg) {
     bool enabled = (bool)arg;
@@ -451,16 +440,6 @@ static component_context_menu_t set_cheat_options_menu = {
     COMPONENT_CONTEXT_MENU_LIST_END,
 }};
 
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-static component_context_menu_t set_patcher_options_menu = {
-    .get_default_selection = get_rom_patch_override_current_selection,
-    .list = {
-    { .text = "Enabled", .action = set_patcher_option, .arg = (void *) (true)},
-    { .text = "Disabled", .action = set_patcher_option, .arg = (void *) (false)},
-    COMPONENT_CONTEXT_MENU_LIST_END,
-}};
-#endif
-
 static int get_rom_clear_rdram_current_selection (menu_t *menu);
 
 static component_context_menu_t set_clear_rdram_options_menu = {
@@ -480,9 +459,6 @@ static component_context_menu_t options_context_menu = { .list = {
 #endif
     { .text = "Use Cheats", .submenu = &set_cheat_options_menu },
     { .text = "Datel Code Editor", .action = open_datel_code_editor },
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-    { .text = "Use Patches", .submenu = &set_patcher_options_menu },
-#endif
     { .text = "Clear RDRAM on boot", .submenu = &set_clear_rdram_options_menu },
     { .text = "Add to favorites", .action = add_favorite },
     COMPONENT_CONTEXT_MENU_LIST_END,
@@ -532,14 +508,6 @@ static int get_rom_cheat_override_current_selection (menu_t *menu) {
         &set_cheat_options_menu,
         (void *) (menu->load.rom_info.settings.cheats_enabled ? true : false));
 }
-
-#ifdef FEATURE_PATCHER_GUI_ENABLED
-static int get_rom_patch_override_current_selection (menu_t *menu) {
-    return find_menu_item_index_by_arg(
-        &set_patcher_options_menu,
-        (void *) (menu->load.rom_info.settings.patches_enabled ? true : false));
-}
-#endif
 
 static int get_rom_clear_rdram_current_selection (menu_t *menu) {
     return find_menu_item_index_by_arg(

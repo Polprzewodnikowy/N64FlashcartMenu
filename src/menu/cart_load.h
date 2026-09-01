@@ -98,6 +98,15 @@ char *cart_load_convert_error_message(cart_load_err_t err);
 cart_load_err_t cart_load_n64_rom_and_save(menu_t *menu, flashcart_progress_callback_t progress, flashcart_progress_callback_t save_progress);
 
 /**
+ * @brief Apply a patch to the currently loaded ROM in SDRAM.
+ * 
+ * @param menu Pointer to the menu structure.
+ * @param progress Callback function for progress updates.
+ * @return cart_load_err_t Error code.
+ */
+cart_load_err_t cart_loaded_rom_apply_patch(menu_t *menu, flashcart_progress_callback_t progress);
+
+/**
  * @brief Load the 64DD IPL (BIOS) and disk.
  * 
  * @param menu Pointer to the menu structure.

@@ -53,8 +53,10 @@ static void scan_metadata_images(menu_t *menu) {
             metadata_image_embedded[metadata_image_count] = true;
             metadata_image_available[metadata_image_count++] = true;
         }
-        metadata_images_scanned = true;
-        return;
+        if (metadata_image_count > 0) {
+            metadata_images_scanned = true;
+            return;
+        }
     }
 
     path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
@@ -1011,6 +1013,10 @@ void view_load_rom_init (menu_t *menu) {
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
+
+    if (!is_memory_expanded() && boxart != NULL && !boxart->loading && boxart->image == NULL) {
+        ui_components_background_reload();
+    }
 
     draw(menu, display);
 

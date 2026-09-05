@@ -173,7 +173,10 @@ png_err_t png_decoder_start_mem (void *buf, size_t buf_size, int max_width, int 
     if (decoder != NULL) return PNG_ERR_BUSY;
 
     decoder = calloc(1, sizeof(png_decoder_t));
-    if (decoder == NULL) return PNG_ERR_OUT_OF_MEM;
+    if (decoder == NULL) {
+        free(buf);
+        return PNG_ERR_OUT_OF_MEM;
+    }
 
     decoder->callback = callback;
     decoder->callback_data = callback_data;

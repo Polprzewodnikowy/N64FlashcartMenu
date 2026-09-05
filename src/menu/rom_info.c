@@ -911,6 +911,11 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
         }
+        for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
+            free(rom_info->meta.screenshots[i]);
+            rom_info->meta.screenshots[i] = NULL;
+        }
+        rom_info->meta.screenshot_count = 0;
         const char *screenshots = ini_get_string(meta_ini, "meta", "screenshots", "");
         char *list = strdup(screenshots);
         if (list != NULL) {
@@ -1087,6 +1092,11 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
         }
+        for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
+            free(rom_info->meta.screenshots[i]);
+            rom_info->meta.screenshots[i] = NULL;
+        }
+        rom_info->meta.screenshot_count = 0;
         const char *screenshots = ini_get_string(meta_ini, "meta", "screenshots", "");
         char *list = strdup(screenshots);
         if (list != NULL) {
@@ -1180,6 +1190,11 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(rom_meta_ini, "boxart", boxart_keys[i], ""));
         }
+        for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
+            free(rom_info->meta.screenshots[i]);
+            rom_info->meta.screenshots[i] = NULL;
+        }
+        rom_info->meta.screenshot_count = 0;
         const char *screenshots = ini_get_string(rom_meta_ini, "meta", "screenshots", "");
         char *list = strdup(screenshots);
         if (list != NULL) {

@@ -30,14 +30,12 @@ static void png_decoder_callback(png_err_t err, surface_t *decoded_image, void *
     component_boxart_t *b = (component_boxart_t *)(callback_data);
     b->loading = false;
     b->image = decoded_image;
-    ui_components_background_reload();
 }
 
 static void jpeg_decoder_callback(jpeg_err_t err, surface_t *decoded_image, void *callback_data) {
     component_boxart_t *b = (component_boxart_t *)(callback_data);
     b->loading = false;
     b->image = (err == JPEG_OK) ? decoded_image : NULL;
-    ui_components_background_reload();
 }
 
 component_boxart_t *ui_components_boxart_init_mem(const char *filename, void *data, size_t size,
@@ -55,7 +53,6 @@ component_boxart_t *ui_components_boxart_init_mem(const char *filename, void *da
     if (is_jpeg) {
         jpeg_err = jpeg_decoder_start_mem(data, size, max_width, max_height, jpeg_decoder_callback, b);
         if (jpeg_err == JPEG_OK) return b;
-        if (jpeg_err == JPEG_ERR_BUSY) free(data);
     } else {
         png_err = png_decoder_start_mem(data, size, max_width, max_height, png_decoder_callback, b);
         if (png_err == PNG_OK) return b;

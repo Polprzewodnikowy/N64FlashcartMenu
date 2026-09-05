@@ -9,7 +9,7 @@
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
 	- JPEG image decoding.
-	- Custom background music support.
+	- Added Custom background music support.
 	- File browser filetype images.
 	- Menu now dogfoods embedded metadata.
 	- Menu now shows embedded metadata box/game/screenshot images in the boxart view.
@@ -22,6 +22,7 @@
 - **Refactor**
 
 - **Other**
+	- Change the default BGM to a different (more subtle) tune. The original is still included in the ROM image.
 
 ### Breaking changes
 - None.

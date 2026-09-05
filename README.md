@@ -42,12 +42,10 @@ The current state of support is:
 * Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
 * Real Time Clock support.
-* Music playback (MP3).
-* Menu sound effects.
+* Music playback (MP3 and FLAC) with id3 support.
+* Menu background music and sound effects.
 * N64 ROM fast reboot option (on reset).
 * ROM history and favorites.  
-
-Experimental (beta):
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).
@@ -103,6 +101,8 @@ See [License](https://pixabay.com/en/service/license-summary/) for the following
 
 See [License](https://creativecommons.org/licenses/by/4.0/) for the following sounds:
 * [Background Music](https://www.playonloop.com/2017-music-loops/flying-dreams/) POL-flying-dreams-short
+* [Background Music alternative](https://www.playonloop.com/2011-music-loops/warm-waves/) POL-warm-waves-short
+
 
 ## Emulators
 * [neon64v2](https://github.com/hcs64/neon64v2) by *hcs64* - [ISC License](https://github.com/hcs64/neon64v2/blob/master/LICENSE.txt)

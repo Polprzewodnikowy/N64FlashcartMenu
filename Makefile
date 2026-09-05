@@ -8,6 +8,9 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
+# uncomment the following line to support preview API's in libDragon.
+# LIBDRAGON_PREVIEW = 2
+
 MENU_VERSION ?= "Preview release"
 BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
@@ -60,6 +63,7 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/sprites.c \
 	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
@@ -102,11 +106,23 @@ SOUNDS_WAV = \
 	cursorsound.wav \
 	back.wav \
 	bgm.wav \
+	bgm_alt.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
 
 SOUNDS_XM ?=
+
+IMAGES = \
+	filetype_compressed.png \
+	filetype_folder.png \
+	filetype_n64cart.png \
+	filetype_n64disk.png \
+	filetype_music.png \
+	filetype_text.png \
+	filetype_image.png \
+	filetype_save.png \
+	filetype_unknown.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -154,6 +170,7 @@ disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
 .PHONY: disassembly
 
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
+$(PROJECT_NAME).z64: N64_ROM_METADATA=metadata/metadata.ini
 $(PROJECT_NAME).z64: $(BUILD_DIR)/$(PROJECT_NAME).dfs
 
 $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))

@@ -71,9 +71,10 @@ static void draw (menu_t *menu, surface_t *d) {
             "OSS library software used:\n\n"
             "\tlibdragon (UNLICENSE License)\n"
             "\tlibspng (BSD 2-Clause License)\n"
+            "\tlibjpeg-turbo (BSD 3-Clause License)\n"
             "\tminimp3 (CC0 1.0 Universal)\n"
-            "\tminiz (MIT License)\n"
             "\tdr_flac (MIT License)\n"
+            "\tminiz (MIT License)\n"
         );
     }
 

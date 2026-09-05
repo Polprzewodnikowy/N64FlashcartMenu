@@ -180,6 +180,7 @@ typedef struct {
         char *long_description_fn;  /**< The long game description file name */
         char *metadata_zip_path;    /**< ZIP containing metadata images, if any */
         char *boxart[6];            /**< Spec-defined boxart filenames: front, back, top, bottom, left, right */
+        char *cartart[2];           /**< Spec-defined boxart filenames: front, back */
         char *screenshots[ROM_METADATA_MAX_SCREENSHOTS]; /**< Spec-defined screenshot filenames */
         uint8_t screenshot_count;   /**< Number of screenshot filenames */
         bool size_limit_exceeded;   /**< Metadata was skipped because metadata.ini exceeded size cap */

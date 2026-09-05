@@ -911,6 +911,10 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
         }
+        static const char *cartart_keys[] = { "front", "back" };
+        for (size_t i = 0; i < 2; i++) {
+            ok &= replace_owned_string(&rom_info->meta.cartart[i], ini_get_string(meta_ini, "cartart", cartart_keys[i], ""));
+        }
         for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
             free(rom_info->meta.screenshots[i]);
             rom_info->meta.screenshots[i] = NULL;
@@ -1092,6 +1096,10 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
         }
+        static const char *cartart_keys[] = { "front", "back" };
+        for (size_t i = 0; i < 2; i++) {
+            ok &= replace_owned_string(&rom_info->meta.cartart[i], ini_get_string(meta_ini, "cartart", cartart_keys[i], ""));
+        }
         for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
             free(rom_info->meta.screenshots[i]);
             rom_info->meta.screenshots[i] = NULL;
@@ -1189,6 +1197,10 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         static const char *boxart_keys[] = { "front", "back", "top", "bottom", "left", "right" };
         for (size_t i = 0; i < 6; i++) {
             ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(rom_meta_ini, "boxart", boxart_keys[i], ""));
+        }
+        static const char *cartart_keys[] = { "front", "back" };
+        for (size_t i = 0; i < 2; i++) {
+            ok &= replace_owned_string(&rom_info->meta.cartart[i], ini_get_string(rom_meta_ini, "cartart", cartart_keys[i], ""));
         }
         for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
             free(rom_info->meta.screenshots[i]);
@@ -1293,6 +1305,10 @@ void rom_info_free_meta(rom_info_t *rom_info) {
     for (size_t i = 0; i < 6; i++) {
         free(rom_info->meta.boxart[i]);
         rom_info->meta.boxart[i] = NULL;
+    }
+    for (size_t i = 0; i < 2; i++) {
+        free(rom_info->meta.cartart[i]);
+        rom_info->meta.cartart[i] = NULL;
     }
     for (size_t i = 0; i < rom_info->meta.screenshot_count; i++) {
         free(rom_info->meta.screenshots[i]);

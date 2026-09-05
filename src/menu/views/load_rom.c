@@ -48,6 +48,13 @@ static void scan_metadata_images(menu_t *menu) {
                 metadata_image_available[metadata_image_count++] = true;
             }
         }
+        for (uint16_t i = 0; i < 2 && metadata_image_count < METADATA_IMAGE_CACHE_MAX; i++) {
+            if (menu->load.rom_info.meta.cartart[i] && menu->load.rom_info.meta.cartart[i][0]) {
+                metadata_image_names[metadata_image_count] = menu->load.rom_info.meta.cartart[i];
+                metadata_image_embedded[metadata_image_count] = true;
+                metadata_image_available[metadata_image_count++] = true;
+            }
+        }
         for (uint16_t i = 0; i < menu->load.rom_info.meta.screenshot_count && metadata_image_count < METADATA_IMAGE_CACHE_MAX; i++) {
             metadata_image_names[metadata_image_count] = menu->load.rom_info.meta.screenshots[i];
             metadata_image_embedded[metadata_image_count] = true;

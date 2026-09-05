@@ -329,6 +329,10 @@ typedef struct {
  */
 component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const char *game_code, const char *rom_title, file_image_type_t current_image_view);
 
+/** Initialize boxart from an image buffer owned by the decoder. */
+component_boxart_t *ui_components_boxart_init_mem(const char *filename, void *data, size_t size,
+                                                  int max_width, int max_height);
+
 /**
  * @brief Free the box art component resources.
  * 

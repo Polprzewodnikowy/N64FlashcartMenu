@@ -180,7 +180,7 @@ static jpeg_err_t jpeg_decoder_begin (jpeg_callback_t *callback, void *callback_
     if (decoder == NULL) return JPEG_ERR_OUT_OF_MEM;
     decoder->callback = callback;
     decoder->callback_data = callback_data;
-    jpeg_std_error(&decoder->jerr.pub);
+    decoder->cinfo.err = jpeg_std_error(&decoder->jerr.pub);
     decoder->jerr.pub.error_exit = jpeg_error_exit_ex;
     return JPEG_OK;
 }

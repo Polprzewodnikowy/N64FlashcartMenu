@@ -394,6 +394,9 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
             if (metadata_image_embedded[new_metadata_image_index]) {
                 uint8_t *data = NULL;
                 size_t size = 0;
+                if (!is_memory_expanded()) {
+                    ui_components_background_image_free_only();
+                }
                 if (rom_info_extract_metadata_image(
                         &menu->load.rom_info,
                         metadata_image_names[new_metadata_image_index],
@@ -402,6 +405,9 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                         metadata_image_names[new_metadata_image_index], data, size,
                         BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
                     );
+                }
+                if (new_boxart == NULL) {
+                    ui_components_background_reload();
                 }
             } else {
                 new_boxart = ui_components_boxart_init(
@@ -427,6 +433,9 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                     if (metadata_image_embedded[previous_metadata_image_index]) {
                         uint8_t *data = NULL;
                         size_t size = 0;
+                        if (!is_memory_expanded()) {
+                            ui_components_background_image_free_only();
+                        }
                         if (rom_info_extract_metadata_image(
                                 &menu->load.rom_info,
                                 metadata_image_names[previous_metadata_image_index],
@@ -435,6 +444,9 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                                 metadata_image_names[previous_metadata_image_index], data, size,
                                 BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
                             );
+                        }
+                        if (boxart == NULL) {
+                            ui_components_background_reload();
                         }
                     } else {
                         boxart = ui_components_boxart_init(
@@ -898,6 +910,7 @@ static void load (menu_t *menu) {
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
+    ui_components_background_reload();
     current_metadata_image_index = 0;
     metadata_images_scanned = false;
     metadata_image_count = 0;
@@ -971,10 +984,17 @@ void view_load_rom_init (menu_t *menu) {
         if (metadata_image_count > 0 && metadata_image_available[0] && metadata_image_embedded[0]) {
             uint8_t *data = NULL;
             size_t size = 0;
+            if (!is_memory_expanded()) {
+                ui_components_background_image_free_only();
+            }
             if (rom_info_extract_metadata_image(&menu->load.rom_info, metadata_image_names[0], &data, &size)) {
                 boxart = ui_components_boxart_init_mem(
-                    metadata_image_names[0], data, size, BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
+                    metadata_image_names[0], data, size,
+                    BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
                 );
+            }
+            if (boxart == NULL) {
+                ui_components_background_reload();
             }
         } else {
             boxart = ui_components_boxart_init(

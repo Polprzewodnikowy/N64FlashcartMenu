@@ -30,12 +30,14 @@ static void png_decoder_callback(png_err_t err, surface_t *decoded_image, void *
     component_boxart_t *b = (component_boxart_t *)(callback_data);
     b->loading = false;
     b->image = decoded_image;
+    ui_components_background_reload();
 }
 
 static void jpeg_decoder_callback(jpeg_err_t err, surface_t *decoded_image, void *callback_data) {
     component_boxart_t *b = (component_boxart_t *)(callback_data);
     b->loading = false;
     b->image = (err == JPEG_OK) ? decoded_image : NULL;
+    ui_components_background_reload();
 }
 
 component_boxart_t *ui_components_boxart_init_mem(const char *filename, void *data, size_t size,

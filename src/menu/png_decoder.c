@@ -252,8 +252,12 @@ void png_decoder_poll (void) {
     }
 
     if (err == SPNG_EOI) {
-        decoder->callback(PNG_OK, decoder->image, decoder->callback_data);
+        png_callback_t *callback = decoder->callback;
+        void *callback_data = decoder->callback_data;
+        surface_t *image = decoder->image;
+        decoder->image = NULL;
         png_decoder_deinit(false);
+        callback(PNG_OK, image, callback_data);
     } else if (err != SPNG_OK) {
         png_callback_t *callback = decoder->callback;
         void *callback_data = decoder->callback_data;

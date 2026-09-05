@@ -15,7 +15,9 @@
 /* No SIMD on VR4300 (MIPS III, no MSA/DSPr2/MMI) */
 /* #undef WITH_SIMD */
 
+#ifndef BITS_IN_JSAMPLE
 #define BITS_IN_JSAMPLE  8
+#endif
 
 #define HAVE_LOCALE_H  1
 #define HAVE_STDDEF_H  1

@@ -101,8 +101,7 @@ static int *music_indices = NULL;
 static int music_count = 0;
 
 /* Directory scan state for async cover art search */
-static const char *cover_image_extensions[] = { "png", NULL };
-// static const char *cover_image_extensions[] = { "png", "jpg", "jpeg", NULL };
+static const char *cover_image_extensions[] = { "png", "jpg", "jpeg", NULL };
 static const char *preferred_cover_names[] = { "cover", "folder", "front", "album", "art", NULL };
 static path_t *cover_dir = NULL;
 static dir_t cover_dir_entry;

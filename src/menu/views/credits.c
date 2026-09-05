@@ -89,7 +89,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "\n"
-        "L|Z: OSS Libraries used\n"
+        "Z: OSS Libraries used\n"
     );
 
     rdpq_detach_show();

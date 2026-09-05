@@ -874,7 +874,7 @@ static void draw (menu_t *menu, surface_t *d) {
         );
         ui_components_actions_bar_text_draw(style,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Backup a Note\n"
+            "Z: Backup a Note\n"
             "R: Options\n"
         );
     } else {

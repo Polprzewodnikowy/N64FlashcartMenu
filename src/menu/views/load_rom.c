@@ -674,7 +674,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
-            "L|Z: Extra Info\n"
+            "Z: Extra Info\n"
             "R: Adv. Options\n"
         );
 
@@ -698,7 +698,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Variant: %s\n"
                 "Version: %hhu\n"
                 "CIC: %s\n\n\n"
-                "Press L|Z to return.\n",
+                "Press Z to return.\n",
                 menu->load.rom_info.title,
                 format_age_rating(menu->load.rom_info.meta.age_rating),
                 menu->load.rom_info.meta.num_players,

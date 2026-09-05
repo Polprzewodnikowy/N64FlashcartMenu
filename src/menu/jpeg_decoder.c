@@ -44,11 +44,11 @@ static void jpeg_error_exit_ex (j_common_ptr cinfo) {
     longjmp(err->setjmp_buf, 1);
 }
 
-static void jpeg_decoder_deinit (bool free_image) {
+static void jpeg_decoder_deinit (bool free_image, bool destroy_cinfo) {
     if (decoder == NULL) return;
 
     free(decoder->row_buf);
-    if (decoder->started) {
+    if (decoder->started && destroy_cinfo) {
         jpeg_abort_decompress(&decoder->cinfo);
         jpeg_destroy_decompress(&decoder->cinfo);
     }
@@ -64,12 +64,12 @@ static void jpeg_decoder_deinit (bool free_image) {
 
 static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
     if (max_width < 1 || max_height < 1) {
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, true);
         return JPEG_ERR_INT;
     }
 
     if (setjmp(decoder->jerr.setjmp_buf)) {
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, false);
         return JPEG_ERR_BAD_FILE;
     }
 
@@ -131,7 +131,7 @@ static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
     }
 
     if (!fits) {
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, true);
         return JPEG_ERR_OUT_OF_MEM;
     }
 
@@ -155,18 +155,18 @@ static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
 
     decoder->image = calloc(1, sizeof(surface_t));
     if (decoder->image == NULL) {
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, true);
         return JPEG_ERR_OUT_OF_MEM;
     }
     *decoder->image = surface_alloc(FMT_RGBA16, decoder->dst_w, decoder->dst_h);
     if (decoder->image->buffer == NULL) {
-        jpeg_decoder_deinit(true);
+        jpeg_decoder_deinit(true, true);
         return JPEG_ERR_OUT_OF_MEM;
     }
 
     decoder->row_buf = malloc((size_t) decoder->src_w * decoder->comps);
     if (decoder->row_buf == NULL) {
-        jpeg_decoder_deinit(true);
+        jpeg_decoder_deinit(true, true);
         return JPEG_ERR_OUT_OF_MEM;
     }
     decoder->scan_y = 0;
@@ -192,7 +192,7 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
 
     decoder->f = fopen(path, "rb");
     if (decoder->f == NULL) {
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, true);
         return JPEG_ERR_NO_FILE;
     }
     return jpeg_decoder_setup(max_width, max_height);
@@ -201,16 +201,17 @@ jpeg_err_t jpeg_decoder_start (char *path, int max_width, int max_height,
 jpeg_err_t jpeg_decoder_start_mem (void *buf, size_t buf_size, int max_width,
                                    int max_height, jpeg_callback_t *callback,
                                    void *callback_data) {
+    if (buf == NULL || buf_size == 0) {
+        free(buf);
+        return JPEG_ERR_BAD_FILE;
+    }
+
     jpeg_err_t err = jpeg_decoder_begin(callback, callback_data);
     if (err != JPEG_OK) {
         free(buf);
         return err;
     }
 
-    if (buf == NULL || buf_size == 0) {
-        jpeg_decoder_deinit(false);
-        return JPEG_ERR_BAD_FILE;
-    }
     decoder->mem_buf = buf;
     decoder->mem_buf_size = buf_size;
     return jpeg_decoder_setup(max_width, max_height);
@@ -222,7 +223,7 @@ void jpeg_decoder_poll (void) {
     if (setjmp(decoder->jerr.setjmp_buf)) {
         jpeg_callback_t *callback = decoder->callback;
         void *callback_data = decoder->callback_data;
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, false);
         callback(JPEG_ERR_BAD_FILE, NULL, callback_data);
         return;
     }
@@ -252,13 +253,13 @@ void jpeg_decoder_poll (void) {
         jpeg_callback_t *callback = decoder->callback;
         void *callback_data = decoder->callback_data;
         decoder->image = NULL;
-        jpeg_decoder_deinit(false);
+        jpeg_decoder_deinit(false, true);
         callback(JPEG_OK, image, callback_data);
     }
 }
 
 void jpeg_decoder_abort (void) {
-    jpeg_decoder_deinit(true);
+    jpeg_decoder_deinit(true, true);
 }
 
 float jpeg_decoder_get_progress (void) {

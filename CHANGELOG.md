@@ -11,7 +11,8 @@
 	- JPEG image decoding.
 	- Custom background music support.
 	- File browser filetype images.
-	- Menu now uses embedded metadata.
+	- Menu now dogfoods embedded metadata.
+	- Menu now shows embedded metadata box/game/screenshot images in the boxart view.
 
 - **Bug Fixes**
 
@@ -26,7 +27,7 @@
 - None.
 
 ### Notes
-- None.
+- A new version of the SMSPlus64 emulator is available: https://github.com/fhoedemakers/smsplus64/releases/tag/v0.9
 
 ### Current known Issues
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.

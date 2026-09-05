@@ -493,7 +493,7 @@ static void process (menu_t *menu) {
             } 
 
             // Pressing L or Z : dump a single note
-            else if (menu->actions.lz_context && 
+            else if (menu->actions.context && 
                 use_rtc && 
                 !show_complete_write_confirm_message &&
                 !show_single_note_write_info_message &&

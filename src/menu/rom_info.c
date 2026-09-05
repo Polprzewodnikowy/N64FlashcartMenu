@@ -800,38 +800,6 @@ static bool replace_owned_string(char **dst, const char *src) {
     return true;
 }
 
-static void parse_metadata_images(ini_t *meta_ini, rom_info_t *rom_info) {
-    static const char *boxart_keys[] = { "front", "back", "top", "bottom", "left", "right" };
-
-    for (size_t i = 0; i < 6; i++) {
-        replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
-    }
-
-    const char *screenshots = ini_get_string(meta_ini, "meta", "screenshots", "");
-    char *list = strdup(screenshots);
-    if (list == NULL) return;
-
-    char *save = NULL;
-    for (char *filename = strtok_r(list, ",", &save);
-         filename != NULL && rom_info->meta.screenshot_count < ROM_METADATA_MAX_SCREENSHOTS;
-         filename = strtok_r(NULL, ",", &save)) {
-        while (*filename == ' ' || *filename == '\t') filename++;
-        char *end = filename + strlen(filename);
-        while (end > filename && (end[-1] == ' ' || end[-1] == '\t')) *--end = '\0';
-        if (*filename != '\0') {
-            rom_info->meta.screenshots[rom_info->meta.screenshot_count] = strdup(filename);
-            if (rom_info->meta.screenshots[rom_info->meta.screenshot_count] != NULL) {
-                rom_info->meta.screenshot_count++;
-            }
-        }
-    }
-    free(list);
-}
-
-static void set_metadata_zip_path(const char *path, rom_info_t *rom_info) {
-    replace_owned_string(&rom_info->meta.metadata_zip_path, path);
-}
-
 /**
  * @brief Try to load metadata from a ZIP file path (e.g., .meta file)
  * 
@@ -930,7 +898,7 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
     bool success = false;
     if (meta_ini) {
         bool ok = true;
-        set_metadata_zip_path(zip_path, rom_info);
+        ok &= replace_owned_string(&rom_info->meta.metadata_zip_path, zip_path);
         ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
         ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
@@ -939,7 +907,29 @@ static bool load_metadata_from_zip_file (const char *zip_path, rom_info_t *rom_i
         rom_info->meta.age_rating = ini_get_int(meta_ini, "meta", "age-rating", 0);
         rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
-        parse_metadata_images(meta_ini, rom_info);
+        static const char *boxart_keys[] = { "front", "back", "top", "bottom", "left", "right" };
+        for (size_t i = 0; i < 6; i++) {
+            ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
+        }
+        const char *screenshots = ini_get_string(meta_ini, "meta", "screenshots", "");
+        char *list = strdup(screenshots);
+        if (list != NULL) {
+            char *save = NULL;
+            for (char *filename = strtok_r(list, ",", &save);
+                 filename != NULL && rom_info->meta.screenshot_count < ROM_METADATA_MAX_SCREENSHOTS;
+                 filename = strtok_r(NULL, ",", &save)) {
+                while (*filename == ' ' || *filename == '\t') filename++;
+                char *end = filename + strlen(filename);
+                while (end > filename && (end[-1] == ' ' || end[-1] == '\t')) *--end = '\0';
+                if (*filename != '\0') {
+                    rom_info->meta.screenshots[rom_info->meta.screenshot_count] = strdup(filename);
+                    if (rom_info->meta.screenshots[rom_info->meta.screenshot_count] != NULL) {
+                        rom_info->meta.screenshot_count++;
+                    }
+                }
+            }
+            free(list);
+        }
         ini_free(meta_ini);
         success = ok;
         if (ok) {
@@ -1083,7 +1073,7 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
     bool success = false;
     if (meta_ini) {
         bool ok = true;
-        set_metadata_zip_path(rom_path, rom_info);
+        ok &= replace_owned_string(&rom_info->meta.metadata_zip_path, rom_path);
         ok &= replace_owned_string(&rom_info->meta.name,              ini_get_string(meta_ini, "meta", "name",         ""));
         ok &= replace_owned_string(&rom_info->meta.author,            ini_get_string(meta_ini, "meta", "author",       "Not specified"));
         ok &= replace_owned_string(&rom_info->meta.release_date,      ini_get_string(meta_ini, "meta", "release-date", "Not specified"));
@@ -1093,7 +1083,29 @@ static bool load_rom_meta_from_embedded_zip (const char *rom_path, rom_header_t 
         rom_info->meta.num_players = ini_get_int(meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(meta_ini, "meta", "short-desc",   ""));
         ok &= replace_owned_string(&rom_info->meta.long_description_fn, ini_get_string(meta_ini, "meta", "long-desc-fn", ""));
-        parse_metadata_images(meta_ini, rom_info);
+        static const char *boxart_keys[] = { "front", "back", "top", "bottom", "left", "right" };
+        for (size_t i = 0; i < 6; i++) {
+            ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(meta_ini, "boxart", boxart_keys[i], ""));
+        }
+        const char *screenshots = ini_get_string(meta_ini, "meta", "screenshots", "");
+        char *list = strdup(screenshots);
+        if (list != NULL) {
+            char *save = NULL;
+            for (char *filename = strtok_r(list, ",", &save);
+                 filename != NULL && rom_info->meta.screenshot_count < ROM_METADATA_MAX_SCREENSHOTS;
+                 filename = strtok_r(NULL, ",", &save)) {
+                while (*filename == ' ' || *filename == '\t') filename++;
+                char *end = filename + strlen(filename);
+                while (end > filename && (end[-1] == ' ' || end[-1] == '\t')) *--end = '\0';
+                if (*filename != '\0') {
+                    rom_info->meta.screenshots[rom_info->meta.screenshot_count] = strdup(filename);
+                    if (rom_info->meta.screenshots[rom_info->meta.screenshot_count] != NULL) {
+                        rom_info->meta.screenshot_count++;
+                    }
+                }
+            }
+            free(list);
+        }
         ini_free(meta_ini);
         success = ok;
         if (ok) {
@@ -1164,7 +1176,29 @@ static void load_rom_meta_from_file (path_t *path, rom_info_t *rom_info) {
         rom_info->meta.num_players = ini_get_int(rom_meta_ini, "meta", "num-players", 1);
         ok &= replace_owned_string(&rom_info->meta.short_description, ini_get_string(rom_meta_ini, "meta", "short-desc",   ""));
         ok &= replace_owned_string(&rom_info->meta.long_description_fn, ini_get_string(rom_meta_ini, "meta", "long-desc-fn", ""));
-        parse_metadata_images(rom_meta_ini, rom_info);
+        static const char *boxart_keys[] = { "front", "back", "top", "bottom", "left", "right" };
+        for (size_t i = 0; i < 6; i++) {
+            ok &= replace_owned_string(&rom_info->meta.boxart[i], ini_get_string(rom_meta_ini, "boxart", boxart_keys[i], ""));
+        }
+        const char *screenshots = ini_get_string(rom_meta_ini, "meta", "screenshots", "");
+        char *list = strdup(screenshots);
+        if (list != NULL) {
+            char *save = NULL;
+            for (char *filename = strtok_r(list, ",", &save);
+                 filename != NULL && rom_info->meta.screenshot_count < ROM_METADATA_MAX_SCREENSHOTS;
+                 filename = strtok_r(NULL, ",", &save)) {
+                while (*filename == ' ' || *filename == '\t') filename++;
+                char *end = filename + strlen(filename);
+                while (end > filename && (end[-1] == ' ' || end[-1] == '\t')) *--end = '\0';
+                if (*filename != '\0') {
+                    rom_info->meta.screenshots[rom_info->meta.screenshot_count] = strdup(filename);
+                    if (rom_info->meta.screenshots[rom_info->meta.screenshot_count] != NULL) {
+                        rom_info->meta.screenshot_count++;
+                    }
+                }
+            }
+            free(list);
+        }
         ini_free(rom_meta_ini);
         if (ok) {
             debugf("[META] Loaded from INI file: name='%s', author='%s'\n", rom_info->meta.name, rom_info->meta.author);

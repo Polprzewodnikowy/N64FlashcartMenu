@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "zip_entry_count.h"
 
@@ -101,7 +102,9 @@ bool zip_try_read_entry_count(const char *zip_path, uint64_t *entry_count) {
             ok = true;
         } else if (eocd_pos >= ZIP64_LOCATOR_SIZE && read_le32(&tail[eocd_pos - ZIP64_LOCATOR_SIZE]) == ZIP64_LOCATOR_SIG) {
             uint64_t zip64_eocd_offset = read_le64(&tail[eocd_pos - ZIP64_LOCATOR_SIZE + ZIP64_LOCATOR_EOCD_OFFSET_OFF]);
-            if (fseek(f, (long)zip64_eocd_offset, SEEK_SET) == 0) {
+            if (zip64_eocd_offset <= (uint64_t)LONG_MAX &&
+                zip64_eocd_offset + ZIP64_EOCD_MIN_READ_SIZE <= (uint64_t)file_size &&
+                fseek(f, (long)zip64_eocd_offset, SEEK_SET) == 0) {
                 uint8_t zip64_eocd[ZIP64_EOCD_MIN_READ_SIZE];
                 if (fread(zip64_eocd, 1, sizeof(zip64_eocd), f) == sizeof(zip64_eocd) &&
                     read_le32(&zip64_eocd[0]) == ZIP64_EOCD_SIG) {

@@ -3,14 +3,22 @@
     "build": {
         "dockerfile": "Dockerfile.sc64deployer"
     },
+    // "features": {
+	// 	"ghcr.io/devcontainers/features/git:1": {
+    //         "version": "latest",
+    //         "ppa": "false"
+    //     }
+    // },
+	//"capAdd": ["SYS_PTRACE"],
+	//"securityOpt": ["seccomp=unconfined"],
     "mounts": [
         "source=n64flashcartmenu-flashcart-bashhistory,target=/commandhistory,type=volume"
     ],
-    "postCreateCommand": "git submodule update --init && cd ./libdragon && make clobber -j && make libdragon tools -j && make install tools-install -j",
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "ms-vscode.cpptools"
             ],
             "settings": {
                 "git.ignoredRepositories": [
@@ -22,5 +30,17 @@
                 ]
             }
         }
-    }
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+    "postCreateCommand": {
+        "Initialize libdragon submodule": "git submodule update --init && cd ./libdragon && make clobber -j && ./build.sh --no-examples",
+        "Fix volume permissions": "sudo chown -R $(whoami): /commandhistory"
+    },
+	"remoteUser": "root"
+    // Connect as the non-root "vscode" user created in the Dockerfile. VS Code
+	// aligns its UID/GID with your local user (updateRemoteUserUID) so files
+	// created in the bind-mounted workspace aren't left owned by root.
+	// "remoteUser": "vscode",
+    // "updateRemoteUserUID": true
 }

@@ -56,7 +56,7 @@ static void process (menu_t *menu) {
     if (menu->actions.enter) {
         menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = false;
-    } else if (menu->actions.lz_context && menu->load.rom_path) {
+    } else if (menu->actions.context && menu->load.rom_path) {
         menu->load_pending.disk_file = true;
         menu->load.combined_disk_rom = true;
         sound_play_effect(SFX_SETTING);
@@ -286,11 +286,13 @@ static void load (menu_t *menu) {
             default: menu->boot_params->tv_type = BOOT_TV_TYPE_PASSTHROUGH; break;
         }
         menu->boot_params->cheat_list = NULL;
+        menu->boot_params->clear_rdram = false;
     } else {
         menu->boot_params->device_type = BOOT_DEVICE_TYPE_64DD;
         menu->boot_params->tv_type = BOOT_TV_TYPE_NTSC;
         menu->boot_params->detect_cic_seed = true;
         menu->boot_params->cheat_list = NULL;
+        menu->boot_params->clear_rdram = false;
     }
 }
 

@@ -5,7 +5,9 @@
  */
 
 #include <stdbool.h>
+#include <string.h>
 #include <libdragon.h>
+#include "utils/fs.h"
 #include "audio_player.h"
 #include "sound.h"
 
@@ -18,6 +20,10 @@ static wav64_t sfx_cursor, sfx_error, sfx_enter, sfx_exit, sfx_setting, bgm;
 static bool sound_initialized = false;
 static bool sfx_enabled = false;
 static bool bgm_enabled = false;
+static bool sfx_opened = false;
+static bool bgm_opened = false;
+static char bgm_path[256] = "";
+static bool bgm_path_valid = false;
 
 /**
  * @brief Reconfigure the sound system with the specified frequency.
@@ -48,6 +54,7 @@ static void sound_reconfigure (int frequency) {
         }
         if (bgm_enabled) {
             sound_init_bgm();
+            wav64_play(&bgm, SOUND_BGM_CHANNEL);
         }
     }
 }
@@ -63,7 +70,13 @@ void sound_init_default (void) {
  * @brief Initialize the sound system for MP3 playback.
  */
 void sound_init_audioplayer_playback (void) {
+    // Temporarily disable BGM so it won't be restarted during audio reconfiguration.
+    // BGM will be re-enabled when sound_init_default() is called on exit.
+    bool bgm_was_enabled = bgm_enabled;
+    bgm_enabled = false;
+    mixer_ch_stop(SOUND_BGM_CHANNEL);
     sound_reconfigure(audioplayer_get_samplerate());
+    bgm_enabled = bgm_was_enabled;
 }
 
 /**
@@ -77,15 +90,40 @@ void sound_init_sfx (void) {
     wav64_open(&sfx_enter, "rom:/enter.wav64");
     wav64_open(&sfx_error, "rom:/error.wav64");
     sfx_enabled = true;
+    sfx_opened = true;
+}
+
+/**
+ * @brief Configure the custom background music path.
+ *
+ * Resolves and caches whether a custom BGM file exists at the given path so
+ * sound_init_bgm() can reuse it across audio reconfigurations without
+ * re-checking the SD card each time. Call this once before sound_init_bgm().
+ */
+void sound_set_bgm_path (const char *custom_bgm_path) {
+    bgm_path[0] = '\0';
+    bgm_path_valid = false;
+
+    if (custom_bgm_path != NULL
+        && strlen(custom_bgm_path) < sizeof(bgm_path)
+        && file_exists((char *) custom_bgm_path)) {
+        strncpy(bgm_path, custom_bgm_path, sizeof(bgm_path) - 1);
+        bgm_path[sizeof(bgm_path) - 1] = '\0';
+        bgm_path_valid = true;
+    }
 }
 
 /**
  * @brief Initialize the background music.
+ *
+ * Opens the custom BGM configured via sound_set_bgm_path(), or the built-in
+ * default track if none was configured or found.
  */
 void sound_init_bgm (void) {
-    wav64_open(&bgm, "rom:/bgm.wav64");
+    wav64_open(&bgm, bgm_path_valid ? bgm_path : "rom:/bgm.wav64");
     wav64_set_loop(&bgm, true);
     mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
+    bgm_opened = true;
 }
 
 /**
@@ -145,15 +183,17 @@ void sound_play_effect(sound_effect_t sfx) {
  */
 void sound_deinit (void) {
     if (sound_initialized) {
-        if (sfx_enabled) {
+        if (sfx_opened) {
             wav64_close(&sfx_cursor);
             wav64_close(&sfx_exit);
             wav64_close(&sfx_setting);
             wav64_close(&sfx_enter);
             wav64_close(&sfx_error);
+            sfx_opened = false;
         }
-        if (bgm_enabled) {
+        if (bgm_opened) {
             wav64_close(&bgm);
+            bgm_opened = false;
         }
         mixer_close();
         audio_close();

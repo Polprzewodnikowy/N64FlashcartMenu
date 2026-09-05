@@ -62,6 +62,14 @@ typedef enum {
     CART_LOAD_EMU_TYPE_SEGA_GENERIC_8BIT,
     /** @brief The ROM is designed for a Fairchild Channel F system. */
     CART_LOAD_EMU_TYPE_FAIRCHILD_CHANNELF,
+    /** @brief The ROM is designed for a Sinclair ZX Spectrum system. */
+    CART_LOAD_EMU_TYPE_SINCLAIR_ZXSPECTRUM,
+    /** @brief The ROM is designed for a Microsoft MSX system. */
+    CART_LOAD_EMU_TYPE_MICROSOFT_MSX,
+    /** @brief The ROM is designed for a SNK Neo-Geo system. */
+    CART_LOAD_EMU_TYPE_SNK_NEO_GEO,
+    /** @brief The ROM is designed for a development emulator. */
+    CART_LOAD_EMU_TYPE_DEV,
 } cart_load_emu_type_t;
 
 /**

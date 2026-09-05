@@ -220,7 +220,7 @@ static void process(menu_t *menu) {
         } else if (menu->actions.options) {
             ui_components_context_menu_show(&options_context_menu);
             sound_play_effect(SFX_SETTING);
-        } else if (menu->actions.lz_context) {
+        } else if (menu->actions.context) {
             debugf("Cheat Editor: Saving cheats to file.\n");
             show_message_save_confirm = true;
             sound_play_effect(SFX_SETTING);

@@ -283,7 +283,9 @@ static bool parse_id3v2(const uint8_t *buf, size_t buf_size, id3_metadata_t *met
     if (version >= 3 && (hdr_flags & 0x40)) {
         if (pos + 4 > tag_size) goto done;
         size_t ext_size = (version == 4) ? read_syncsafe(&buf[pos]) : read_be32(&buf[pos]);
-        pos += ext_size;
+        size_t skip = (version == 3) ? ext_size + 4 : ext_size;
+        if (skip > tag_size - pos) goto done;
+        pos += skip;
     }
 
     /* Walk frames */
@@ -303,7 +305,7 @@ static bool parse_id3v2(const uint8_t *buf, size_t buf_size, id3_metadata_t *met
         }
 
         pos += frame_hdr_size;
-        if (frame_size == 0 || pos + frame_size > tag_size) break;
+        if (frame_size == 0 || pos > tag_size || frame_size > tag_size - pos) break;
 
         const uint8_t *data = &buf[pos];
         size_t data_len = frame_size;

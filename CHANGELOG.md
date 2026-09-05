@@ -8,10 +8,15 @@
 
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- JPEG image decoding.
+	- Custom background music support.
+	- File browser filetype images.
+	- Menu now uses embedded metadata.
 
 - **Bug Fixes**
 
 - **Documentation**
+	- Improve documents with new features.
 
 - **Refactor**
 
@@ -25,7 +30,7 @@
 
 ### Current known Issues
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
-- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- Some users have reported crashes in Zelda OOT (anti-piracy checks), seems to be due to VI and PAL60. Menu V0.2.0 works as expected.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
 
 ### Deprecation notices

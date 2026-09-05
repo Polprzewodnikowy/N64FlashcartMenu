@@ -225,9 +225,9 @@ static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_
     switch (expansion_pak_info) {
         case EXPANSION_PAK_REQUIRED: return "Required";
         case EXPANSION_PAK_RECOMMENDED: return "Recommended";
-        case EXPANSION_PAK_SUGGESTED: return "Suggested";
+        case EXPANSION_PAK_SUGGESTED: return "Enhanced";
         case EXPANSION_PAK_FAULTY: return "May require ROM patch";
-        default: return "Not required";
+        default: return "Not used";
     }
 }
 

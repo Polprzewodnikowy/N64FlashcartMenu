@@ -687,9 +687,11 @@ static uint32_t fix_boot_address (rom_cic_type_t cic_type, uint32_t boot_address
 
 static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_code) {
         // check the market type from the ROM destination_code and return best guess!
+        // see: https://github.com/ares-emulator/ares/blob/b80f67d38312648d197762121c3a27b02c0887db/mia/medium/nintendo-64.cpp#L241
         switch (rom_destination_code) {
             case MARKET_NORTH_AMERICA:
             case MARKET_CANADIAN:
+            case MARKET_CHINESE:
             case MARKET_KOREAN:
             case MARKET_JAPANESE:
             case MARKET_JAPANESE_MULTI:
@@ -710,10 +712,8 @@ static rom_tv_type_t determine_tv_type (rom_destination_type_t rom_destination_c
             // But they are mainly PAL regions.
             case MARKET_OTHER_X:
             case MARKET_OTHER_Y:
-                return ROM_TV_TYPE_PAL;
-            // FIXME: We cannot be sure on these markets, so just return the default for the moment!
-            case MARKET_CHINESE: // (China is a PAL region, but the N64 ROM patch may be NTSC, so we cannot be sure!)
             case MARKET_OTHER_Z:
+                return ROM_TV_TYPE_PAL;     
             default:
                 return ROM_TV_TYPE_UNKNOWN;
         }

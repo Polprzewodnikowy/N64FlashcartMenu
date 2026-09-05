@@ -155,9 +155,9 @@ static const char *format_rom_destination_market (rom_destination_type_t market_
         case MARKET_GATEWAY64_NTSC: return "LodgeNet/Gateway (NTSC)";
         case MARKET_GATEWAY64_PAL: return "LodgeNet/Gateway (PAL)";
         case MARKET_EUROPEAN_BASIC: return "PAL (includes English)"; // Mostly EU but is used on some Australian ROMs
-        case MARKET_OTHER_X: return "Regional (non specific)"; // FIXME: AUS HSV Racing ROM's and Asia Top Gear Rally use this so not only EUR
-        case MARKET_OTHER_Y: return "European (non specific)";
-        case MARKET_OTHER_Z: return "Regional (unknown)";
+        case MARKET_OTHER_X: return "PAL (Regional)"; //AUS HSV Racing ROM's and Asia Top Gear Rally use this so it's PAL specific
+        case MARKET_OTHER_Y: return "European (Regional)"; //Used by language variations
+        case MARKET_OTHER_Z: return "PAL (Miscellaneous)";
         default: return "Unknown";
     }
 }

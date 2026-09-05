@@ -23,6 +23,7 @@
 
 - **Other**
 	- Change the default BGM to a different (more subtle) tune. The original is still included in the ROM image.
+	- Menu will now show an error if it detects a low voltage on startup.
 
 ### Breaking changes
 - None.

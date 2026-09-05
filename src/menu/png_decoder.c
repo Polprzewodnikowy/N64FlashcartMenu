@@ -173,7 +173,10 @@ png_err_t png_decoder_start_mem (void *buf, size_t buf_size, int max_width, int 
     if (decoder != NULL) return PNG_ERR_BUSY;
 
     decoder = calloc(1, sizeof(png_decoder_t));
-    if (decoder == NULL) return PNG_ERR_OUT_OF_MEM;
+    if (decoder == NULL) {
+        free(buf);
+        return PNG_ERR_OUT_OF_MEM;
+    }
 
     decoder->callback = callback;
     decoder->callback_data = callback_data;
@@ -252,8 +255,12 @@ void png_decoder_poll (void) {
     }
 
     if (err == SPNG_EOI) {
-        decoder->callback(PNG_OK, decoder->image, decoder->callback_data);
+        png_callback_t *callback = decoder->callback;
+        void *callback_data = decoder->callback_data;
+        surface_t *image = decoder->image;
+        decoder->image = NULL;
         png_decoder_deinit(false);
+        callback(PNG_OK, image, callback_data);
     } else if (err != SPNG_OK) {
         png_callback_t *callback = decoder->callback;
         void *callback_data = decoder->callback_data;

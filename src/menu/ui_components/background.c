@@ -63,7 +63,17 @@ static void load_from_cache(component_background_t *c) {
     }
 
     c->image = calloc(1, sizeof(surface_t));
+    if (c->image == NULL) {
+        fclose(f);
+        return;
+    }
     *c->image = surface_alloc(FMT_RGBA16, cache_metadata.width, cache_metadata.height);
+    if (c->image->buffer == NULL) {
+        free(c->image);
+        c->image = NULL;
+        fclose(f);
+        return;
+    }
 
     if (cache_metadata.size != (c->image->height * c->image->stride)) {
         surface_free(c->image);

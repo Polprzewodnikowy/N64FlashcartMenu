@@ -19,3 +19,6 @@
 	path = src/libs/dr_libs
 	url = https://github.com/mackron/dr_libs.git
 	ignore = dirty
+[submodule "src/libs/libjpeg-turbo"]
+	path = src/libs/libjpeg-turbo
+	url = https://github.com/libjpeg-turbo/libjpeg-turbo

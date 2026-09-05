@@ -15,7 +15,7 @@
                     "src/libs/minimp3",
                     "src/libs/miniz",
                     "src/libs/dr_libs",
-                    "src/libs/libjpeg-turbo"
+                    "src/libs/libjpeg-turbo/libjpeg-turbo-src"
                 ]
             }
         }

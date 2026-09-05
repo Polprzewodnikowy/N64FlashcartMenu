@@ -69,7 +69,7 @@ static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
     }
 
     if (setjmp(decoder->jerr.setjmp_buf)) {
-        jpeg_decoder_deinit(false, false);
+        jpeg_decoder_deinit(false, true);
         return JPEG_ERR_BAD_FILE;
     }
 
@@ -223,7 +223,7 @@ void jpeg_decoder_poll (void) {
     if (setjmp(decoder->jerr.setjmp_buf)) {
         jpeg_callback_t *callback = decoder->callback;
         void *callback_data = decoder->callback_data;
-        jpeg_decoder_deinit(false, false);
+        jpeg_decoder_deinit(false, true);
         callback(JPEG_ERR_BAD_FILE, NULL, callback_data);
         return;
     }

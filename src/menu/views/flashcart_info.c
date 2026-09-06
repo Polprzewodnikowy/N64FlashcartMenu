@@ -162,7 +162,7 @@ static void draw (menu_t *menu, surface_t *d) {
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "\n"
-            "L|Z: Diagnostics"
+            "Z: Diagnostics"
         );
     }
 
@@ -174,7 +174,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "  Button Realtime: %s\n"
             "  Voltage / Temp: %s\n"
             "\n"
-            "Press L|Z to return.\n",
+            "Press Z to return.\n",
             format_button_state(),
             format_voltage_temperature()
         );

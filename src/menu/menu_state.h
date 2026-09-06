@@ -114,6 +114,8 @@ typedef struct {
         bool options;
         bool settings;
         bool context;
+        bool tab_left;
+        bool tab_right;
     } actions;
 
     struct {

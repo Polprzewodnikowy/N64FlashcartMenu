@@ -762,7 +762,7 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
     } else if (match->data.feat & FEAT_EXP_PAK_RECOMMENDED) {
         rom_info->features.expansion_pak = EXPANSION_PAK_RECOMMENDED;
     } else if (match->data.feat & FEAT_EXP_PAK_ENHANCED) {
-        rom_info->features.expansion_pak = EXPANSION_PAK_SUGGESTED;
+        rom_info->features.expansion_pak = EXPANSION_PAK_ENHANCED;
     } else if (match->data.feat & FEAT_EXP_PAK_BROKEN) {
         rom_info->features.expansion_pak = EXPANSION_PAK_FAULTY;
     } else {

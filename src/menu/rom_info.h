@@ -110,7 +110,7 @@ typedef enum {
     EXPANSION_PAK_NONE,             /**< Happy with 4MB of memory */
     EXPANSION_PAK_REQUIRED,         /**< Requires 8MB of memory */
     EXPANSION_PAK_RECOMMENDED,      /**< Recommends 8MB of memory */
-    EXPANSION_PAK_SUGGESTED,        /**< Suggests 8MB of memory */
+    EXPANSION_PAK_ENHANCED,        /**< Suggests 8MB of memory */
     EXPANSION_PAK_FAULTY,           /**< Faulty with 8MB of memory */
 } rom_expansion_pak_t;
 

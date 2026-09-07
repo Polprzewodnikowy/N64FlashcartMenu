@@ -90,7 +90,7 @@ static void process (menu_t *menu) {
     if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
-    } else if (menu->actions.lz_context && has_extra_info) {
+    } else if (menu->actions.context && has_extra_info) {
         show_extra_info_message = !show_extra_info_message;
         sound_play_effect(SFX_SETTING);
     }

@@ -5,6 +5,7 @@
 #include "../sound.h"
 #include "boot/boot.h"
 #include "utils/fs.h"
+#include "../ui_components/constants.h"
 #include "views.h"
 #include <string.h>
 
@@ -15,7 +16,7 @@ static component_boxart_t *boxart;
 static char *rom_filename = NULL;
 
 static int16_t current_metadata_image_index = 0;
-static const file_image_type_t metadata_image_filename_cache[] = {
+static const file_image_type_t metadata_image_types[] = {
     IMAGE_BOXART_FRONT,
     IMAGE_BOXART_BACK,
     IMAGE_BOXART_LEFT,
@@ -25,13 +26,44 @@ static const file_image_type_t metadata_image_filename_cache[] = {
     IMAGE_GAMEPAK_FRONT,
     IMAGE_GAMEPAK_BACK
 };
-static const uint16_t metadata_image_filename_cache_length = sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0]);
-static bool metadata_image_available[sizeof(metadata_image_filename_cache) / sizeof(metadata_image_filename_cache[0])] = {false};
+#define METADATA_IMAGE_CACHE_MAX (14)
+static const uint16_t metadata_image_type_count = sizeof(metadata_image_types) / sizeof(metadata_image_types[0]);
+static const char *metadata_image_names[METADATA_IMAGE_CACHE_MAX];
+static bool metadata_image_embedded[METADATA_IMAGE_CACHE_MAX];
+static bool metadata_image_available[METADATA_IMAGE_CACHE_MAX];
+static uint16_t metadata_image_count;
 static bool metadata_images_scanned = false;
 
 static void scan_metadata_images(menu_t *menu) {
     if (metadata_images_scanned) {
         return;
+    }
+
+    metadata_image_count = 0;
+    if (menu->load.rom_info.meta.metadata_zip_path) {
+        for (uint16_t i = 0; i < 6 && metadata_image_count < METADATA_IMAGE_CACHE_MAX; i++) {
+            if (menu->load.rom_info.meta.boxart[i] && menu->load.rom_info.meta.boxart[i][0]) {
+                metadata_image_names[metadata_image_count] = menu->load.rom_info.meta.boxart[i];
+                metadata_image_embedded[metadata_image_count] = true;
+                metadata_image_available[metadata_image_count++] = true;
+            }
+        }
+        for (uint16_t i = 0; i < 2 && metadata_image_count < METADATA_IMAGE_CACHE_MAX; i++) {
+            if (menu->load.rom_info.meta.cartart[i] && menu->load.rom_info.meta.cartart[i][0]) {
+                metadata_image_names[metadata_image_count] = menu->load.rom_info.meta.cartart[i];
+                metadata_image_embedded[metadata_image_count] = true;
+                metadata_image_available[metadata_image_count++] = true;
+            }
+        }
+        for (uint16_t i = 0; i < menu->load.rom_info.meta.screenshot_count && metadata_image_count < METADATA_IMAGE_CACHE_MAX; i++) {
+            metadata_image_names[metadata_image_count] = menu->load.rom_info.meta.screenshots[i];
+            metadata_image_embedded[metadata_image_count] = true;
+            metadata_image_available[metadata_image_count++] = true;
+        }
+        if (metadata_image_count > 0) {
+            metadata_images_scanned = true;
+            return;
+        }
     }
 
     path_t *path = path_init(menu->storage_prefix, "menu/metadata"); // should be METADATA_BASE_DIRECTORY
@@ -63,7 +95,7 @@ static void scan_metadata_images(menu_t *menu) {
     bool dir_exists = directory_exists(path_get(path));
 
     if (dir_exists) {
-        // Filenames array matches metadata_image_filename_cache order for indexed access
+        // Filenames array matches metadata_image_types order for indexed access
         // Note: This mapping is also present in boxart.c but duplicated here
         // for efficient scanning without calling into the component layer
         char *filenames[] = {
@@ -77,14 +109,18 @@ static void scan_metadata_images(menu_t *menu) {
             "gamepak_back.png"
         };
 
-        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+        for (uint16_t i = 0; i < metadata_image_type_count; i++) {
             path_push(path, filenames[i]);
+            metadata_image_names[i] = filenames[i];
+            metadata_image_embedded[i] = false;
             metadata_image_available[i] = file_exists(path_get(path));
             path_pop(path);
         }
+        metadata_image_count = metadata_image_type_count;
     } else {
         // No directory exists, mark all images as unavailable
-        for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+        metadata_image_count = metadata_image_type_count;
+        for (uint16_t i = 0; i < metadata_image_count; i++) {
             metadata_image_available[i] = false;
         }
     }
@@ -187,11 +223,11 @@ static const char *format_rom_tv_type (rom_tv_type_t tv_type) {
 
 static const char *format_rom_expansion_pak_info (rom_expansion_pak_t expansion_pak_info) {
     switch (expansion_pak_info) {
-        case EXPANSION_PAK_REQUIRED: return "Required";
-        case EXPANSION_PAK_RECOMMENDED: return "Recommended";
-        case EXPANSION_PAK_SUGGESTED: return "Suggested";
+        case EXPANSION_PAK_REQUIRED: return "Required"; // This ROM requires the Expansion Pak to run.
+        case EXPANSION_PAK_RECOMMENDED: return "Recommended"; // This ROM will run without the Expansion Pak, but will have limited functionality.
+        case EXPANSION_PAK_ENHANCED: return "Enhanced"; // This ROM will run without the Expansion Pak, but may have reduced functionality or performance.
         case EXPANSION_PAK_FAULTY: return "May require ROM patch";
-        default: return "Not required";
+        default: return "Not required"; // This ROM will run without the Expansion Pak, and will have full functionality.
     }
 }
 
@@ -346,12 +382,13 @@ static void add_favorite (menu_t *menu, void *arg) {
 
 static void iterate_metadata_image(menu_t *menu, int direction) {
     scan_metadata_images(menu);
+    if (metadata_image_count == 0) return;
     bool low_memory_mode = !is_memory_expanded();
     int16_t previous_metadata_image_index = current_metadata_image_index;
 
     // Transverse to next/previous available image based on direction (1 = next, -1 = previous)
     int16_t start_metadata_image_index = current_metadata_image_index;
-    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
+    int16_t new_metadata_image_index = (current_metadata_image_index + direction + metadata_image_count) % metadata_image_count;
 
     // Find next available image from our cached list
     while (new_metadata_image_index != start_metadata_image_index) {
@@ -362,13 +399,33 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                 boxart = NULL;
             }
 
-            // ui_components_boxart_init returns NULL if PNG decoder is busy
-            component_boxart_t *new_boxart = ui_components_boxart_init(
-                menu->storage_prefix,
-                menu->load.rom_info.game_code,
-                menu->load.rom_info.title,
-                metadata_image_filename_cache[new_metadata_image_index]
-            );
+            component_boxart_t *new_boxart = NULL;
+            if (metadata_image_embedded[new_metadata_image_index]) {
+                uint8_t *data = NULL;
+                size_t size = 0;
+                if (!is_memory_expanded()) {
+                    ui_components_background_image_free_only();
+                }
+                if (rom_info_extract_metadata_image(
+                        &menu->load.rom_info,
+                        metadata_image_names[new_metadata_image_index],
+                        &data, &size)) {
+                    new_boxart = ui_components_boxart_init_mem(
+                        metadata_image_names[new_metadata_image_index], data, size,
+                        BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
+                    );
+                }
+                if (new_boxart == NULL) {
+                    ui_components_background_reload();
+                }
+            } else {
+                new_boxart = ui_components_boxart_init(
+                    menu->storage_prefix,
+                    menu->load.rom_info.game_code,
+                    menu->load.rom_info.title,
+                    metadata_image_types[new_metadata_image_index]
+                );
+            }
 
             if (new_boxart != NULL) {
                 // Only free old boxart after successful new allocation
@@ -382,12 +439,32 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
             } else if (low_memory_mode) {
                 // Best effort restore of previous image after a failed low-memory swap.
                 if (metadata_image_available[previous_metadata_image_index]) {
-                    boxart = ui_components_boxart_init(
-                        menu->storage_prefix,
-                        menu->load.rom_info.game_code,
-                        menu->load.rom_info.title,
-                        metadata_image_filename_cache[previous_metadata_image_index]
-                    );
+                    if (metadata_image_embedded[previous_metadata_image_index]) {
+                        uint8_t *data = NULL;
+                        size_t size = 0;
+                        if (!is_memory_expanded()) {
+                            ui_components_background_image_free_only();
+                        }
+                        if (rom_info_extract_metadata_image(
+                                &menu->load.rom_info,
+                                metadata_image_names[previous_metadata_image_index],
+                                &data, &size)) {
+                            boxart = ui_components_boxart_init_mem(
+                                metadata_image_names[previous_metadata_image_index], data, size,
+                                BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
+                            );
+                        }
+                        if (boxart == NULL) {
+                            ui_components_background_reload();
+                        }
+                    } else {
+                        boxart = ui_components_boxart_init(
+                            menu->storage_prefix,
+                            menu->load.rom_info.game_code,
+                            menu->load.rom_info.title,
+                            metadata_image_types[previous_metadata_image_index]
+                        );
+                    }
                 }
                 if (boxart == NULL) {
                     menu_show_error(menu, "Could not swap boxart image");
@@ -395,7 +472,7 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
                 break;
             }
         }
-        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_filename_cache_length) % metadata_image_filename_cache_length;
+        new_metadata_image_index = (new_metadata_image_index + direction + metadata_image_count) % metadata_image_count;
     }
 }
 
@@ -580,7 +657,7 @@ static void process (menu_t *menu) {
     } else if (menu->actions.options) {
         ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.lz_context) {
+    } else if (menu->actions.context) {
         if (show_extra_info_message) {
             show_extra_info_message = false;
         } else {
@@ -660,7 +737,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_LEFT, VALIGN_TOP,
-            "A: Load and run ROM\n"
+            "A: Launch ROM\n"
             "B: Back\n"
         );
 
@@ -842,12 +919,16 @@ static void load (menu_t *menu) {
 static void deinit (void) {
     ui_components_boxart_free(boxart);
     boxart = NULL;
+    ui_components_background_reload();
     current_metadata_image_index = 0;
     metadata_images_scanned = false;
+    metadata_image_count = 0;
 
     // Clear availability cache
-    for (uint16_t i = 0; i < metadata_image_filename_cache_length; i++) {
+    for (uint16_t i = 0; i < METADATA_IMAGE_CACHE_MAX; i++) {
         metadata_image_available[i] = false;
+        metadata_image_embedded[i] = false;
+        metadata_image_names[i] = NULL;
     }
 }
 
@@ -908,7 +989,28 @@ void view_load_rom_init (menu_t *menu) {
     if (!menu->settings.rom_autoload_enabled) {
 #endif
         current_metadata_image_index = 0;
-        boxart = ui_components_boxart_init(menu->storage_prefix, menu->load.rom_info.game_code, menu->load.rom_info.title, IMAGE_BOXART_FRONT);
+        scan_metadata_images(menu);
+        if (metadata_image_count > 0 && metadata_image_available[0] && metadata_image_embedded[0]) {
+            uint8_t *data = NULL;
+            size_t size = 0;
+            if (!is_memory_expanded()) {
+                ui_components_background_image_free_only();
+            }
+            if (rom_info_extract_metadata_image(&menu->load.rom_info, metadata_image_names[0], &data, &size)) {
+                boxart = ui_components_boxart_init_mem(
+                    metadata_image_names[0], data, size,
+                    BOXART_WIDTH_MAX, BOXART_HEIGHT_MAX
+                );
+            }
+            if (boxart == NULL) {
+                ui_components_background_reload();
+            }
+        } else {
+            boxart = ui_components_boxart_init(
+                menu->storage_prefix, menu->load.rom_info.game_code,
+                menu->load.rom_info.title, IMAGE_BOXART_FRONT
+            );
+        }
         ui_components_context_menu_init(&options_context_menu);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
@@ -918,6 +1020,10 @@ void view_load_rom_init (menu_t *menu) {
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
+
+    if (!is_memory_expanded() && boxart != NULL && !boxart->loading && boxart->image == NULL) {
+        ui_components_background_reload();
+    }
 
     draw(menu, display);
 

@@ -92,11 +92,11 @@ void boot (boot_params_t *params) {
     // which could lead to data corruption when we clear RDRAM.
     while ((cpu_io_read(&VI->CURR_LINE) & ~(VI_CURR_LINE_FIELD)) != 0);
 
-    /* Re-Initialize AI registers */
+    /* Fully re-Initialize Audio registers (all booted ROMs should do their own initialization) */
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
 
-    /* Re-Initialize VI registers */
+    /* Fully re-Initialize VI registers (all booted ROMs should do their own initialization) */
     cpu_io_write(&VI->V_INTR, 0x3FF); /*< Vertical Interrupt. */
     cpu_io_write(&VI->H_LIMITS, 0); /*< Horizontal Limits. */
     cpu_io_write(&VI->CURR_LINE, 0); /*< Current Scanline. */

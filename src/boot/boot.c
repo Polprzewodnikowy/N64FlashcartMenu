@@ -87,15 +87,19 @@ void boot (boot_params_t *params) {
 
     cpu_io_write(&PI->SR, PI_SR_CLR_INTR | PI_SR_RESET);
 
-    /* Initialize AI registers */
+    // Wait for the VI to finish its current frame before proceeding. 
+    // This ensures that the VI is not actively reading from RDRAM, 
+    // which could lead to data corruption when we clear RDRAM.
+    while ((cpu_io_read(&VI->CURR_LINE) & ~(VI_CURR_LINE_FIELD)) != 0);
+
+    /* Re-Initialize AI registers */
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
 
-    /* Initialize VI registers */
-    cpu_io_write(&VI->V_INTR, 0x3FF);
-    cpu_io_write(&VI->H_LIMITS, 0);
-    while ((cpu_io_read(&VI->CURR_LINE) & ~(VI_CURR_LINE_FIELD)) != 0);
-    cpu_io_write(&VI->CURR_LINE, 0);
+    /* Re-Initialize VI registers */
+    cpu_io_write(&VI->V_INTR, 0x3FF); /*< Vertical Interrupt. */
+    cpu_io_write(&VI->H_LIMITS, 0); /*< Horizontal Limits. */
+    cpu_io_write(&VI->CURR_LINE, 0); /*< Current Scanline. */
     cpu_io_write(&VI->MADDR, 0); /**< Memory Address. */
     cpu_io_write(&VI->H_WIDTH, 0); /**< Horizontal Width. */
     cpu_io_write(&VI->TIMING, 0); /**< Timings. */

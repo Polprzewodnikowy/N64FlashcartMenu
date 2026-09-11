@@ -69,8 +69,8 @@ Examples of the "key=values" are:
 The minimum age rating of the game.  
 
 In future, this can be used for content filtering.  
-Any number can be used and the menu will (currently) try to align it with the [ESRB](https://www.esrb.org/) rating;  
-```ini
+Any number can be used and the menu will (currently) try to align it with the [ESRB](https://www.esrb.org/) ratings:
+```
     age-rating=0    /**< No age rating defined */
     age-rating=1    /**< Everyone */
     age-rating=10   /**< Everyone 10+ */

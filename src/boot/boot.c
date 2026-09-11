@@ -104,7 +104,7 @@ void boot (boot_params_t *params) {
     cpu_io_write(&VI->H_WIDTH, 0); /**< Horizontal Width. */
     cpu_io_write(&VI->TIMING, 0); /**< Timings. */
     cpu_io_write(&VI->V_SYNC, 0); /**< Vertical Sync. */
-    cpu_io_write(&VI->H_SYNC, 0); /**< Horizontal Sync. */
+    cpu_io_write(&VI->H_SYNC, 0); /**< Horizontal Sync. (this one is particularly important for RD RAM init) */
     cpu_io_write(&VI->H_SYNC_LEAP, 0); /**< Horizontal Sync Leap. */
     cpu_io_write(&VI->V_LIMITS, 0); /**< Vertical Limits. */
     cpu_io_write(&VI->COLOR_BURST, 0); /**< Color Burst. */

@@ -69,15 +69,15 @@ Examples of the "key=values" are:
 The minimum age rating of the game.  
 
 In future, this can be used for content filtering.  
-Any number can be used and the menu will (currently) try to align it with the [ESRB](https://www.esrb.org/) ratings:
-```
-    age-rating=0    /**< No age rating defined */
-    age-rating=1    /**< Everyone */
-    age-rating=10   /**< Everyone 10+ */
-    age-rating=13   /**< Teen */
-    age-rating=17   /**< Mature */
-    age-rating=18   /**< Adults Only */
-```
+Any number can be used and the menu will try to align it with the [ESRB](https://www.esrb.org/) ratings, i.e.:
+
+* age-rating=0  :- No age rating defined
+* age-rating=1  :- Everyone
+* age-rating=10 :- Everyone 10+
+* age-rating=13 :- Teen
+* age-rating=17 :- Mature
+* age-rating=18 :- Adults Only
+
 an example for an age rating of "Everyone 10+" would be:
 ```ini
 [meta]
@@ -88,6 +88,7 @@ an example for an age rating of "Everyone 10+" would be:
 ; some suggestions on this.
 age-rating=10
 ```
+an `age-rating=11` or `age-rating=12` would also match the 10+ rating, where as `age-rating=13` would be matched as "Teen".
 
 #### ROM release date
 The release date of the game.

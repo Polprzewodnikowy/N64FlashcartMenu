@@ -22,6 +22,8 @@ static void actions_clear (menu_t *menu) {
     menu->actions.options = false;
     menu->actions.settings = false;
     menu->actions.context = false;
+    menu->actions.tab_left = false;
+    menu->actions.tab_right = false;
 }
 
 static void actions_update_direction (menu_t *menu) {
@@ -105,9 +107,12 @@ static void actions_update_buttons (menu_t *menu) {
         menu->actions.back = true;
     } else if (pressed.r) {
         menu->actions.options = true;
+        menu->actions.tab_right = true;
     } else if (pressed.start) {
         menu->actions.settings = true;
-    } else if (pressed.l || pressed.z) {
+    } else if (pressed.l) {
+        menu->actions.tab_left = true;
+    } else if (pressed.z) {
         menu->actions.context = true;
     }
 }

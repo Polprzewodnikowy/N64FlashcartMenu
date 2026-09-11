@@ -190,7 +190,7 @@ static void draw(menu_t *menu, surface_t *display) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
-        "L / R: Tabs\n"
+        "▼▲ Scroll | ◀L Tab R▶\n"
         "\n"
     );    
 

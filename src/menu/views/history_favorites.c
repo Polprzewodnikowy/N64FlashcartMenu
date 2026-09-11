@@ -191,7 +191,8 @@ static void draw(menu_t *menu, surface_t *display) {
         STL_DEFAULT,
         ALIGN_CENTER, VALIGN_TOP,
         "▼▲ Scroll | ◀L Tab R▶\n"
-        "\n"
+        "%s",
+        ctime(&menu->current_time)
     );    
 
     rdpq_detach_show();   

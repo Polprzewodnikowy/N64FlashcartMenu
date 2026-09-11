@@ -17,7 +17,7 @@ static const char *archive_extensions[] = { "zip", NULL };
 static const char *cheat_extensions[] = {"cht", "cheats", "datel", "gameshark", NULL};
 static const char *disk_extensions[] = { "ndd", NULL };
 static const char *emulator_extensions[] = { "nes", "sfc", "smc", "gb", "gbc", "sms", "gg", "sg", "chf", "rzx", "mx1", "mx2", "emu", NULL };
-static const char *image_extensions[] = { "png", NULL };
+static const char *image_extensions[] = { "png", "jpg", "jpeg", NULL };
 static const char *music_extensions[] = { "mp3", NULL };
 static const char *n64_rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 static const char *patch_extensions[] = { "bps", "ips", "aps", "ups", "xdelta", NULL };
@@ -671,16 +671,16 @@ static void process (menu_t *menu) {
             );
         }
         sound_play_effect(SFX_EXIT);
-    } else if (menu->actions.options && menu->browser.entry) {
+    } else if (menu->actions.context && menu->browser.entry) {
         ui_components_context_menu_show(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
         sound_play_effect(SFX_SETTING);
     } else if (menu->actions.settings) {
         ui_components_context_menu_show(&settings_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.go_right) {
+    } else if (menu->actions.tab_right) {
         menu->next_mode = MENU_MODE_HISTORY;
         sound_play_effect(SFX_CURSOR);
-    } else if (menu->actions.go_left) {
+    } else if (menu->actions.tab_left) {
         menu->next_mode = MENU_MODE_FAVORITE;
         sound_play_effect(SFX_CURSOR);
     }
@@ -702,7 +702,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->browser.entry) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-            case ENTRY_TYPE_ROM: action = "A: Load"; break;
+            case ENTRY_TYPE_ROM: action = "A: Launch"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;
@@ -725,7 +725,7 @@ static void draw (menu_t *menu, surface_t *d) {
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
         "^%02XStart: Settings^00\n"
-        "^%02XR:  Options^00",
+        "^%02XZ:  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 
@@ -733,7 +733,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            "C-▼▲ Fast Scroll | ◀L Tab R▶\n"
             "%s",
             ctime(&menu->current_time)
         );
@@ -741,7 +741,7 @@ static void draw (menu_t *menu, surface_t *d) {
         ui_components_actions_bar_text_draw(
             STL_DEFAULT,
             ALIGN_CENTER, VALIGN_TOP,
-            "C-▼▲ Fast Scroll | ◀ Tabs ▶ \n"
+            "C-▼▲ Fast Scroll | ◀L Tab R▶\n"
             "\n"
         );
     }

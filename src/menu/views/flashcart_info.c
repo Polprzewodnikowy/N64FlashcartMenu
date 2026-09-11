@@ -90,7 +90,7 @@ static void process (menu_t *menu) {
     if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
         menu->next_mode = MENU_MODE_BROWSER;
-    } else if (menu->actions.lz_context && has_extra_info) {
+    } else if (menu->actions.context && has_extra_info) {
         show_extra_info_message = !show_extra_info_message;
         sound_play_effect(SFX_SETTING);
     }
@@ -162,7 +162,7 @@ static void draw (menu_t *menu, surface_t *d) {
             STL_DEFAULT,
             ALIGN_RIGHT, VALIGN_TOP,
             "\n"
-            "L|Z: Diagnostics"
+            "Z: Diagnostics"
         );
     }
 
@@ -174,7 +174,7 @@ static void draw (menu_t *menu, surface_t *d) {
             "  Button Realtime: %s\n"
             "  Voltage / Temp: %s\n"
             "\n"
-            "Press L|Z to return.\n",
+            "Press Z to return.\n",
             format_button_state(),
             format_voltage_temperature()
         );

@@ -8,6 +8,9 @@ FILESYSTEM_DIR = filesystem
 BUILD_DIR = build
 OUTPUT_DIR = output
 
+# uncomment the following line to support preview API's in libDragon.
+# LIBDRAGON_PREVIEW = 2
+
 MENU_VERSION ?= "Preview release"
 BUILD_TIMESTAMP = "$(shell TZ='UTC' date "+%Y-%m-%d %H:%M:%S %:z")"
 
@@ -18,7 +21,15 @@ N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
 
+# Fast rebooting has proved to be unreliable for the moment, so it is disabled in favour of the menu autoload.
+# If you want to enable fast rebooting, comment out the following line.
+FLAGS ?= -DFEATURE_AUTOLOAD_ROM_ENABLED
+
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
+N64_CFLAGS += -isystem $(SOURCE_DIR)/libs/libjpeg-turbo -isystem $(SOURCE_DIR)/libs/libjpeg-turbo/libjpeg-turbo-src/src
+
+JPEG_DIR = $(SOURCE_DIR)/libs/libjpeg-turbo
+JPEG_LIB = $(JPEG_DIR)/build/libjpeg.a
 
 SRCS = \
 	main.c \
@@ -60,6 +71,7 @@ SRCS = \
 	menu/rom_info.c \
 	menu/settings.c \
 	menu/sound.c \
+	menu/sprites.c \
 	menu/zip_entry_count.c \
 	menu/ui_components/background.c \
 	menu/ui_components/boxart.c \
@@ -102,11 +114,23 @@ SOUNDS_WAV = \
 	cursorsound.wav \
 	back.wav \
 	bgm.wav \
+	bgm_alt.wav \
 	enter.wav \
 	error.wav \
 	settings.wav
 
 SOUNDS_XM ?=
+
+IMAGES = \
+	filetype_compressed.png \
+	filetype_folder.png \
+	filetype_n64cart.png \
+	filetype_n64disk.png \
+	filetype_music.png \
+	filetype_text.png \
+	filetype_image.png \
+	filetype_save.png \
+	filetype_unknown.png
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
@@ -147,13 +171,17 @@ $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 $(BUILD_DIR)/menu/views/credits.o: .FORCE
 $(BUILD_DIR)/menu/views/credits.o: FLAGS+=-DMENU_VERSION=\"$(MENU_VERSION)\" -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\"
 
-$(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
+$(JPEG_LIB): .FORCE
+	$(MAKE) -C $(JPEG_DIR)
+
+$(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS) $(JPEG_LIB)
 
 disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
 	@$(N64_OBJDUMP) -S $< > $(BUILD_DIR)/$(PROJECT_NAME).lst
 .PHONY: disassembly
 
 $(PROJECT_NAME).z64: N64_ROM_TITLE=$(PROJECT_NAME)
+$(PROJECT_NAME).z64: N64_ROM_METADATA=metadata/metadata.ini
 $(PROJECT_NAME).z64: $(BUILD_DIR)/$(PROJECT_NAME).dfs
 
 $(@info $(shell mkdir -p ./$(OUTPUT_DIR) &> /dev/null))
@@ -184,6 +212,7 @@ clean:
 	@rm -f ./$(FILESYSTEM)
 	@find ./$(FILESYSTEM_DIR) -type d -empty -delete
 	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
+	@$(MAKE) -C $(JPEG_DIR) clean
 .PHONY: clean
 
 format:

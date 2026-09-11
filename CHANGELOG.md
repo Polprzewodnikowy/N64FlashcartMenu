@@ -25,6 +25,7 @@
 - **Other**
 	- Change the default BGM to a different (more subtle) tune. The original is still included in the ROM image.
 	- Menu will now show an error if it detects a low voltage on startup.
+	- Fast Reboot support has been disabled in favour of ROM autoload due to too many issues being reported.
 
 ### Breaking changes
 - None.
@@ -33,7 +34,7 @@
 - A new version of the SMSPlus64 emulator is available: https://github.com/fhoedemakers/smsplus64/releases/tag/v0.9
 
 ### Current known Issues
-- Fast Rebooting ROMs or a 64DD disk once will result in a blank screen. Twice will return to menu.
+- Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
 
 ### Deprecation notices

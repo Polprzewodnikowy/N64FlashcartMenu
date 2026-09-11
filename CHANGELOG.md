@@ -8,24 +8,32 @@
 
 - **New Features**
 	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+	- JPEG image decoding.
+	- Added Custom background music support.
+	- File browser filetype images.
+	- Menu now dogfoods embedded metadata.
+	- Menu now shows embedded metadata box/game/screenshot images in the boxart view.
 
 - **Bug Fixes**
+	- Some users have reported crashes in Zelda OOT (anti-piracy checks), The boot function now resets the VI (mainly H-Sync) registers to fix the issue.
 
 - **Documentation**
+	- Improve documents with new features.
 
 - **Refactor**
 
 - **Other**
+	- Change the default BGM to a different (more subtle) tune. The original is still included in the ROM image.
+	- Menu will now show an error if it detects a low voltage on startup.
 
 ### Breaking changes
 - None.
 
 ### Notes
-- None.
+- A new version of the SMSPlus64 emulator is available: https://github.com/fhoedemakers/smsplus64/releases/tag/v0.9
 
 ### Current known Issues
-- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
-- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- Fast Rebooting ROMs or a 64DD disk once will result in a blank screen. Twice will return to menu.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
 
 ### Deprecation notices

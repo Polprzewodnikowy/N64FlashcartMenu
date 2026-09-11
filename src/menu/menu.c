@@ -18,6 +18,7 @@
 #include "menu_state.h"
 #include "menu.h"
 #include "audio_player.h"
+#include "jpeg_decoder.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
@@ -272,6 +273,7 @@ void menu_run (boot_params_t *boot_params) {
         sound_poll();
 
         png_decoder_poll();
+        jpeg_decoder_poll();
 
         usb_comm_poll(menu);
     }

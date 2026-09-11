@@ -19,7 +19,7 @@ When added, extra images will be used if available to itterate:
 - `gamepak_back.png`
 
 #### Supported image sizes
-Files must be in `PNG` format and use the following dimensions:
+Files must be in `PNG` or `JPEG` format and use the following dimensions:
 * American/European N64 boxart sprites: 158x112
 * Japanese N64 boxart sprites: 112x158
 * 64DD boxart sprites: 129x112

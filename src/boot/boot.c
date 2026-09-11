@@ -86,12 +86,30 @@ void boot (boot_params_t *params) {
     while (cpu_io_read(&SP->DMA_BUSY));
 
     cpu_io_write(&PI->SR, PI_SR_CLR_INTR | PI_SR_RESET);
+
+    // Wait for the VI to finish its current frame before proceeding. 
+    // This ensures that the VI is not actively reading from RDRAM, 
+    // which could lead to data corruption when we clear RDRAM.
     while ((cpu_io_read(&VI->CURR_LINE) & ~(VI_CURR_LINE_FIELD)) != 0);
-    cpu_io_write(&VI->V_INTR, 0x3FF);
-    cpu_io_write(&VI->H_LIMITS, 0);
-    cpu_io_write(&VI->CURR_LINE, 0);
+
+    /* Fully re-Initialize Audio registers (all booted ROMs should do their own initialization) */
     cpu_io_write(&AI->MADDR, 0);
     cpu_io_write(&AI->LEN, 0);
+
+    /* Fully re-Initialize VI registers (all booted ROMs should do their own initialization) */
+    cpu_io_write(&VI->V_INTR, 0x3FF); /*< Vertical Interrupt. */
+    cpu_io_write(&VI->H_LIMITS, 0); /*< Horizontal Limits. */
+    cpu_io_write(&VI->CURR_LINE, 0); /*< Current Scanline. */
+    cpu_io_write(&VI->MADDR, 0); /**< Memory Address. */
+    cpu_io_write(&VI->H_WIDTH, 0); /**< Horizontal Width. */
+    cpu_io_write(&VI->TIMING, 0); /**< Timings. */
+    cpu_io_write(&VI->V_SYNC, 0); /**< Vertical Sync. */
+    cpu_io_write(&VI->H_SYNC, 0); /**< Horizontal Sync. (this one is particularly important for RD RAM init) */
+    cpu_io_write(&VI->H_SYNC_LEAP, 0); /**< Horizontal Sync Leap. */
+    cpu_io_write(&VI->V_LIMITS, 0); /**< Vertical Limits. */
+    cpu_io_write(&VI->COLOR_BURST, 0); /**< Color Burst. */
+    cpu_io_write(&VI->H_SCALE, 0); /**< Horizontal Scale. */
+    cpu_io_write(&VI->V_SCALE, 0); /**< Vertical Scale. */
 
     while (cpu_io_read(&SP->SR) & SP_SR_DMA_BUSY);
 

@@ -31,6 +31,33 @@
 ### Deprecation notices
 - None.
 
+## Release Notes 2026-09-12 - Tagged 0.3.4
+
+- **New Features**
+	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+
+- **Bug Fixes**
+	- Fix potential crashes in Zelda OOT, The boot function now resets the VI (mainly H-Sync) registers to fix the issue.
+
+- **Documentation**
+
+- **Refactor**
+
+- **Other**
+
+### Breaking changes
+- None.
+
+### Notes
+- None.
+
+### Current known Issues
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+### Deprecation notices
+- None.
+
 ## Release Notes 2026-08-26 - Tagged 0.3.3
 
 - **New Features**

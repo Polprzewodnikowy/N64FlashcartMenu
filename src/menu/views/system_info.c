@@ -57,7 +57,11 @@ static void pane_draw (menu_t *menu, bool focused) {
 }
 
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
-    return (slot == SETTINGS_HINT_LEFT) ? "B: Categories\n" : NULL;
+    switch (slot) {
+        case SETTINGS_HINT_LEFT: return "B: Categories\n";
+        case SETTINGS_HINT_CENTER: return "◀L Tab R▶\n";
+        default: return NULL;
+    }
 }
 
 const settings_pane_t settings_pane_n64 = {

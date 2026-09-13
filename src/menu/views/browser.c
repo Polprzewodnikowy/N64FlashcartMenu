@@ -524,11 +524,18 @@ static void set_default_directory (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+/** @brief Open the Controller Pak pane directly from the browser's Z menu. */
+static void open_controller_pak (menu_t *menu, void *arg) {
+    (void) arg;
+    view_settings_open_pane(menu, &settings_pane_controller_pak);
+}
+
 static component_context_menu_t entry_context_menu = {
     .list = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Delete selected entry", .action = delete_entry },
         { .text = "Set current directory as default", .action = set_default_directory },
+        { .text = "Controller Pak manager", .action = open_controller_pak },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -537,6 +544,7 @@ static component_context_menu_t archive_context_menu = {
     .list = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Extract selected entry", .action = extract_entry },
+        { .text = "Controller Pak manager", .action = open_controller_pak },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };

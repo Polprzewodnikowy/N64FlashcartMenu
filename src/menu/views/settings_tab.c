@@ -25,15 +25,17 @@ static const settings_pane_t *const panes[] = {
     &settings_pane_menu,
     &settings_pane_controller_pak,
     &settings_pane_time,
+    &settings_pane_information,
     &settings_pane_flashcart,
     &settings_pane_n64,
-    &settings_pane_information,
 };
 
 #define PANE_COUNT ((int) (sizeof(panes) / sizeof(panes[0])))
 
 static int selected_pane;
 static bool pane_focused;
+/** @brief Pane to focus on the next entry, or -1 for normal category navigation. */
+static int pending_pane = -1;
 
 
 /**
@@ -135,7 +137,7 @@ static void rail_draw (void) {
  * @brief Draw one action bar hint, falling back to the rail's own hints.
  */
 static void hint_draw (menu_t *menu, settings_hint_t slot, rdpq_align_t align) {
-    static const char *const rail_hints[] = { "A: Open\n", "D-Pad: Choose\nL / R: Tabs", NULL };
+    static const char *const rail_hints[] = { "A: Open\n", "D-Pad: Choose\n◀L Tab R▶", NULL };
     const char *text = NULL;
 
     if (pane_focused && panes[selected_pane]->hint) {
@@ -169,8 +171,23 @@ static void draw (menu_t *menu, surface_t *display) {
 }
 
 
+void view_settings_open_pane (menu_t *menu, const settings_pane_t *pane) {
+    for (int i = 0; i < PANE_COUNT; i++) {
+        if (panes[i] == pane) {
+            pending_pane = i;
+            menu->next_mode = MENU_MODE_SETTINGS;
+            return;
+        }
+    }
+}
+
 void view_settings_init (menu_t *menu) {
     pane_focused = false;
+    if (pending_pane >= 0) {
+        selected_pane = pending_pane;
+        pending_pane = -1;
+        enter_pane(menu);
+    }
 }
 
 void view_settings_display (menu_t *menu, surface_t *display) {

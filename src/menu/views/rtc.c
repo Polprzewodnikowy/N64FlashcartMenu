@@ -186,11 +186,15 @@ static void pane_draw (menu_t *menu, bool focused) {
 
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
     if (menu->current_time < 0) {
-        return slot == SETTINGS_HINT_LEFT ? "B: Categories\n" : NULL;
+        switch (slot) {
+            case SETTINGS_HINT_LEFT: return "B: Categories\n";
+            case SETTINGS_HINT_CENTER: return "◀L Tab R▶\n";
+            default: return NULL;
+        }
     }
     switch (slot) {
         case SETTINGS_HINT_LEFT: return "A: Save\nB: Categories";
-        case SETTINGS_HINT_CENTER: return "D-Pad: Adjust\nL / R: Tabs";
+        case SETTINGS_HINT_CENTER: return "D-Pad: Adjust\n◀L Tab R▶";
         default: return NULL;
     }
 }

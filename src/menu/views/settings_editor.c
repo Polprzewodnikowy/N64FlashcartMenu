@@ -287,7 +287,7 @@ static bool pane_blocks_tabs (menu_t *menu) {
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
     switch (slot) {
         case SETTINGS_HINT_LEFT: return "A: Change\nB: Categories";
-        case SETTINGS_HINT_CENTER: return "D-Pad: Adjust\nL / R: Tabs";
+        case SETTINGS_HINT_CENTER: return "D-Pad: Adjust\n◀L Tab R▶";
         default: return NULL;
     }
 }

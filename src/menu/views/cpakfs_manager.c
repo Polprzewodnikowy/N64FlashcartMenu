@@ -941,8 +941,8 @@ static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
                 : "B: Categories\n";
         case SETTINGS_HINT_CENTER:
             return note_count() > CPAK_PANE_NOTES
-                ? "Left / Right: Controller\nUp / Down: Notes | L / R: Tabs"
-                : "Left / Right: Controller\nL / R: Tabs";
+                ? "Left / Right: Controller\n▼▲ Notes | ◀L Tab R▶"
+                : "Left / Right: Controller\n◀L Tab R▶";
         case SETTINGS_HINT_RIGHT:
             if (use_rtc && has_mem && !corrupted_pak && note_count() > 0) {
                 return "Z: Backup a Note\nStart: Options";

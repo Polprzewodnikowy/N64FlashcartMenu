@@ -205,7 +205,7 @@ static void pane_draw (menu_t *menu, bool focused) {
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
     switch (slot) {
         case SETTINGS_HINT_LEFT: return "B: Categories\n";
-        case SETTINGS_HINT_CENTER: return "Up / Down: Scroll\nL / R: Tabs";
+        case SETTINGS_HINT_CENTER: return "Up / Down: Scroll\n◀L Tab R▶";
         default: return NULL;
     }
 }

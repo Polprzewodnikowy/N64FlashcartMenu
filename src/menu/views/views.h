@@ -175,6 +175,17 @@ typedef struct {
 void view_settings_init(menu_t *menu);
 
 /**
+ * @brief Request a transition from another view directly into a settings pane.
+ *
+ * The settings view selects and enters the pane during its next initialization.
+ * An unregistered pane is ignored.
+ *
+ * @param menu Pointer to the menu structure.
+ * @param pane Registered settings pane to select and focus.
+ */
+void view_settings_open_pane(menu_t *menu, const settings_pane_t *pane);
+
+/**
  * @brief Display the settings view.
  *
  * @param menu Pointer to the menu structure.

@@ -168,7 +168,7 @@ static bool pane_blocks_tabs (menu_t *menu) {
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
     switch (slot) {
         case SETTINGS_HINT_LEFT: return "B: Categories\n";
-        case SETTINGS_HINT_CENTER: return "L / R: Tabs\n";
+        case SETTINGS_HINT_CENTER: return "◀L Tab R▶\n";
         case SETTINGS_HINT_RIGHT: return has_extra_info() ? "Z: Diagnostics\n" : NULL;
         default: return NULL;
     }

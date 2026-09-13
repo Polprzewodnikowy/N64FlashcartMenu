@@ -9,6 +9,8 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "../sound.h"
 #include "../settings.h"
@@ -31,6 +33,7 @@ enum {
     SETTING_CONFIRM_PAL60   = (1 << 3),  /**< Needs the PAL60 warning before applying. */
     SETTING_CONFIRM_RESET   = (1 << 4),  /**< Needs the reset confirmation before applying. */
     SETTING_CLEAR_BACKGROUND = (1 << 5), /**< Acts on press rather than toggling. */
+    SETTING_CLEAR_AUTOLOAD  = (1 << 6), /**< Disable autoload and clear its target. */
 };
 
 typedef const char *(*setting_value_fn)(menu_t *menu);
@@ -69,8 +72,22 @@ static const char *format_default_directory (menu_t *menu) {
 }
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+/** @brief Show the active ROM target; the value column truncates it with ellipses. */
 static const char *format_autoload (menu_t *menu) {
-    return format_switch(menu->settings.rom_autoload_enabled);
+    static char target[1024];
+    const char *directory = menu->settings.rom_autoload_path;
+    const char *filename = menu->settings.rom_autoload_filename;
+
+    if (!menu->settings.rom_autoload_enabled || !filename || !filename[0]) {
+        return "None";
+    }
+    if (!directory) {
+        directory = "";
+    }
+    size_t length = strlen(directory);
+    snprintf(target, sizeof(target), "%s%s%s", directory,
+             length && directory[length - 1] == '/' ? "" : "/", filename);
+    return target;
 }
 #endif
 
@@ -86,7 +103,7 @@ static const setting_descriptor_t settings[] = {
     BOOL_SETTING("PAL60 Mode", pal60_enabled, SETTING_CONFIRM_PAL60),
     BOOL_SETTING("Wrap File List", wrap_file_list_scrolling, 0),
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    { "Autoload ROM", format_autoload, NO_BOOL_OFFSET, 0 },
+    { "Autoload ROM", format_autoload, NO_BOOL_OFFSET, SETTING_CLEAR_AUTOLOAD },
     BOOL_SETTING("ROM Loading Bar", loading_progress_bar_enabled, 0),
 #else
     BOOL_SETTING("Fast Reboot ROM", rom_fast_reboot_enabled, 0),
@@ -154,6 +171,21 @@ static void setting_activate (menu_t *menu) {
         ui_components_background_clear();
         return;
     }
+
+#ifdef FEATURE_AUTOLOAD_ROM_ENABLED
+    if (setting->flags & SETTING_CLEAR_AUTOLOAD) {
+        menu->settings.rom_autoload_enabled = false;
+        /* Keep the allocated strings; an already-empty target needs no write. */
+        if (menu->settings.rom_autoload_path && menu->settings.rom_autoload_path[0]) {
+            menu->settings.rom_autoload_path[0] = '\0';
+        }
+        if (menu->settings.rom_autoload_filename && menu->settings.rom_autoload_filename[0]) {
+            menu->settings.rom_autoload_filename[0] = '\0';
+        }
+        settings_save(&menu->settings);
+        return;
+    }
+#endif
 
     /* Read only rows have nothing to toggle. */
     if (setting->bool_offset == NO_BOOL_OFFSET) {
@@ -285,6 +317,13 @@ static bool pane_blocks_tabs (menu_t *menu) {
 }
 
 static const char *pane_hint (menu_t *menu, settings_hint_t slot) {
+    if (settings[selected_row].flags & SETTING_CLEAR_AUTOLOAD) {
+        switch (slot) {
+            case SETTINGS_HINT_LEFT: return "A: Clear\nB: Categories";
+            case SETTINGS_HINT_CENTER: return "D-Pad: Choose\n◀L Tab R▶";
+            default: return NULL;
+        }
+    }
     switch (slot) {
         case SETTINGS_HINT_LEFT: return "A: Change\nB: Categories";
         case SETTINGS_HINT_CENTER: return "D-Pad: Adjust\n◀L Tab R▶";

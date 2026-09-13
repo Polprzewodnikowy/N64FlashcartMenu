@@ -686,7 +686,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->browser.entry) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-            case ENTRY_TYPE_ROM: action = "A: Launch"; break;
+            case ENTRY_TYPE_ROM: action = "A: Details"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;

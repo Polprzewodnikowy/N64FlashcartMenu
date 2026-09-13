@@ -85,7 +85,8 @@ static png_err_t png_decoder_setup (int max_width, int max_height) {
         return PNG_ERR_BAD_FILE;
     }
 
-    if (spng_decode_image(decoder->ctx, NULL, image_size, SPNG_FMT_RGBA8, SPNG_DECODE_PROGRESSIVE) != SPNG_OK) {
+    if (spng_decode_image(decoder->ctx, NULL, image_size, SPNG_FMT_RGBA8,
+                         SPNG_DECODE_PROGRESSIVE | SPNG_DECODE_TRNS) != SPNG_OK) {
         png_decoder_deinit(false);
         return PNG_ERR_BAD_FILE;
     }

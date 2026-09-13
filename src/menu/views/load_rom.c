@@ -382,6 +382,7 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static void iterate_metadata_image(menu_t *menu, int direction) {
+    if (pending_boxart) return;
     scan_metadata_images(menu);
     if (metadata_image_count == 0) return;
     bool low_memory_mode = !is_memory_expanded();
@@ -944,12 +945,15 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
+    /* Only startup autoload supplies a path and requests an immediate launch.
+     * The saved setting must not bypass path selection for manual Details. */
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (!menu->settings.rom_autoload_enabled) {
+    if (!menu->load_pending.rom_file) {
 #endif
         if (menu->load.rom_path) {
             rom_info_free_meta(&menu->load.rom_info);
             path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
         }
 
         if(menu->load.load_history_id != -1) {
@@ -960,10 +964,10 @@ void view_load_rom_init (menu_t *menu) {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
 
-        rom_filename = path_last_get(menu->load.rom_path);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
-#endif 
+#endif
+    rom_filename = path_last_get(menu->load.rom_path);
 
     if (show_extra_info_message) {
         show_extra_info_message = false;
@@ -976,6 +980,7 @@ void view_load_rom_init (menu_t *menu) {
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
+        menu->load_pending.rom_file = false;
         rom_info_free_meta(&menu->load.rom_info);
         path_free(menu->load.rom_path);
         menu->load.rom_path = NULL;
@@ -996,7 +1001,7 @@ void view_load_rom_init (menu_t *menu) {
     }
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (!menu->settings.rom_autoload_enabled) {
+    if (!menu->load_pending.rom_file) {
 #endif
         current_metadata_image_index = 0;
         scan_metadata_images(menu);

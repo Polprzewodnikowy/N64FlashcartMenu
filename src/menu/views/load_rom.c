@@ -653,7 +653,13 @@ static void process (menu_t *menu) {
         }
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
-        menu->next_mode = MENU_MODE_BROWSER;
+        if (show_advanced_info_message) {
+            show_advanced_info_message = false;
+        } else if (show_extra_info_message) {
+            show_extra_info_message = false;
+        } else {
+            menu->next_mode = MENU_MODE_BROWSER;
+        }
     } else if (menu->actions.options) {
         ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
@@ -775,7 +781,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Variant: %s\n"
                 "Version: %hhu\n"
                 "CIC: %s\n\n\n"
-                "Press Z to return.\n",
+                "Press B or Z to return.\n",
                 menu->load.rom_info.title,
                 format_age_rating(menu->load.rom_info.meta.age_rating),
                 menu->load.rom_info.meta.num_players,
@@ -800,7 +806,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Clock Rate: %.2fMHz\n"
                 "Check code: 0x%016llX\n"
                 "Endianness: %s\n\n\n"
-                "Press START to return.\n",
+                "Press B or START to return.\n",
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
                 menu->load.rom_info.clock_rate,

@@ -98,9 +98,6 @@ static void process (menu_t *menu) {
         sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.enter || menu->actions.go_right) {
         enter_pane(menu);
-    } else if (menu->actions.back) {
-        menu->next_mode = MENU_MODE_BROWSER;
-        sound_play_effect(SFX_EXIT);
     }
 }
 

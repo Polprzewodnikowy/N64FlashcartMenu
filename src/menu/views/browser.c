@@ -661,9 +661,6 @@ static void process (menu_t *menu) {
     } else if (menu->actions.context && menu->browser.entry) {
         ui_components_context_menu_show(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.settings) {
-        menu->next_mode = MENU_MODE_SETTINGS;
-        sound_play_effect(SFX_SETTING);
     } else if (menu->actions.tab_right) {
         menu->next_mode = MENU_MODE_HISTORY;
         sound_play_effect(SFX_CURSOR);
@@ -711,9 +708,8 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
+        "\n"
         "^%02XZ:  Options^00",
-        STL_DEFAULT,
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
 

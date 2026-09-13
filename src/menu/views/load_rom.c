@@ -13,6 +13,7 @@ static bool show_extra_info_message = false;
 static bool show_advanced_info_message = false;
 static bool show_expansion_pak_warning = false;
 static component_boxart_t *boxart;
+static component_boxart_t *pending_boxart;
 static char *rom_filename = NULL;
 
 static int16_t current_metadata_image_index = 0;
@@ -381,6 +382,7 @@ static void add_favorite (menu_t *menu, void *arg) {
 }
 
 static void iterate_metadata_image(menu_t *menu, int direction) {
+    if (pending_boxart) return;
     scan_metadata_images(menu);
     if (metadata_image_count == 0) return;
     bool low_memory_mode = !is_memory_expanded();
@@ -428,11 +430,12 @@ static void iterate_metadata_image(menu_t *menu, int direction) {
             }
 
             if (new_boxart != NULL) {
-                // Only free old boxart after successful new allocation
                 if (!low_memory_mode) {
-                    ui_components_boxart_free(boxart);
+                    // Keep the current art visible until the new PNG has decoded.
+                    pending_boxart = new_boxart;
+                } else {
+                    boxart = new_boxart;
                 }
-                boxart = new_boxart;
                 current_metadata_image_index = new_metadata_image_index;
                 sound_play_effect(SFX_SETTING);
                 break;
@@ -653,7 +656,13 @@ static void process (menu_t *menu) {
         }
     } else if (menu->actions.back) {
         sound_play_effect(SFX_EXIT);
-        menu->next_mode = MENU_MODE_BROWSER;
+        if (show_advanced_info_message) {
+            show_advanced_info_message = false;
+        } else if (show_extra_info_message) {
+            show_extra_info_message = false;
+        } else {
+            menu->next_mode = MENU_MODE_BROWSER;
+        }
     } else if (menu->actions.options) {
         ui_components_context_menu_show(&options_context_menu);
         sound_play_effect(SFX_SETTING);
@@ -775,7 +784,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Variant: %s\n"
                 "Version: %hhu\n"
                 "CIC: %s\n\n\n"
-                "Press Z to return.\n",
+                "Press B or Z to return.\n",
                 menu->load.rom_info.title,
                 format_age_rating(menu->load.rom_info.meta.age_rating),
                 menu->load.rom_info.meta.num_players,
@@ -800,7 +809,7 @@ static void draw (menu_t *menu, surface_t *d) {
                 "Clock Rate: %.2fMHz\n"
                 "Check code: 0x%016llX\n"
                 "Endianness: %s\n\n\n"
-                "Press START to return.\n",
+                "Press B or START to return.\n",
                 menu->load.rom_info.boot_address,
                 (menu->load.rom_info.libultra.version / 10.0f), menu->load.rom_info.libultra.revision,
                 menu->load.rom_info.clock_rate,
@@ -917,6 +926,8 @@ static void load (menu_t *menu) {
 }
 
 static void deinit (void) {
+    ui_components_boxart_free(pending_boxart);
+    pending_boxart = NULL;
     ui_components_boxart_free(boxart);
     boxart = NULL;
     ui_components_background_reload();
@@ -934,12 +945,15 @@ static void deinit (void) {
 
 
 void view_load_rom_init (menu_t *menu) {
+    /* Only startup autoload supplies a path and requests an immediate launch.
+     * The saved setting must not bypass path selection for manual Details. */
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (!menu->settings.rom_autoload_enabled) {
+    if (!menu->load_pending.rom_file) {
 #endif
         if (menu->load.rom_path) {
             rom_info_free_meta(&menu->load.rom_info);
             path_free(menu->load.rom_path);
+            menu->load.rom_path = NULL;
         }
 
         if(menu->load.load_history_id != -1) {
@@ -950,10 +964,10 @@ void view_load_rom_init (menu_t *menu) {
             menu->load.rom_path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
         }
 
-        rom_filename = path_last_get(menu->load.rom_path);
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
     }
-#endif 
+#endif
+    rom_filename = path_last_get(menu->load.rom_path);
 
     if (show_extra_info_message) {
         show_extra_info_message = false;
@@ -966,6 +980,7 @@ void view_load_rom_init (menu_t *menu) {
     debugf("Load ROM: loading ROM info from %s\n", path_get(menu->load.rom_path));
     rom_err_t err = rom_config_load(menu->load.rom_path, &menu->load.rom_info);
     if (err != ROM_OK) {
+        menu->load_pending.rom_file = false;
         rom_info_free_meta(&menu->load.rom_info);
         path_free(menu->load.rom_path);
         menu->load.rom_path = NULL;
@@ -986,7 +1001,7 @@ void view_load_rom_init (menu_t *menu) {
     }
 
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
-    if (!menu->settings.rom_autoload_enabled) {
+    if (!menu->load_pending.rom_file) {
 #endif
         current_metadata_image_index = 0;
         scan_metadata_images(menu);
@@ -1020,6 +1035,17 @@ void view_load_rom_init (menu_t *menu) {
 
 void view_load_rom_display (menu_t *menu, surface_t *display) {
     process(menu);
+
+    if (pending_boxart && !pending_boxart->loading) {
+        if (pending_boxart->image) {
+            ui_components_boxart_free(boxart);
+            boxart = pending_boxart;
+            pending_boxart = NULL;
+        } else {
+            ui_components_boxart_free(pending_boxart);
+            pending_boxart = NULL;
+        }
+    }
 
     if (!is_memory_expanded() && boxart != NULL && !boxart->loading && boxart->image == NULL) {
         ui_components_background_reload();

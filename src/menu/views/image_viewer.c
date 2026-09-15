@@ -16,14 +16,15 @@ static bool image_set_as_background;
 static bool is_jpeg;
 static surface_t *image;
 
-/** Max image dimension that fits within the available RDRAM budget. */
+/**
+ * Decode only to the visible screen size. Backgrounds are always shown
+ * within the current display, so a tighter heap-derived cap here creates
+ * permanently smaller/lower-quality cached backgrounds.
+ */
 static int image_budget_max_dimension (void) {
-    heap_stats_t heap;
-    sys_get_heap_stats(&heap);
-    size_t budget = (size_t) ((heap.total - heap.used) * 0.8f);
-    int dim = (int) sqrtf((float) (budget / 2));
-    if (dim < 16) dim = 16;
-    return dim;
+    int width = display_get_width();
+    int height = display_get_height();
+    return (width > height) ? width : height;
 }
 
 static char *convert_error_message (int err, bool jpeg) {
@@ -169,8 +170,10 @@ void view_image_viewer_init (menu_t *menu) {
     image_set_as_background = false;
     is_jpeg = file_has_extensions(menu->browser.entry->name, jpeg_extensions);
     image = NULL;
-    // Free the background image temporarily so the decoder has its full memory budget,
-    // then cap the decode size to the heap available on constrained systems.
+    // Free the background image temporarily so the decoder has the full
+    // render budget, but keep decode resolution to the actual screen size.
+    // This preserves background quality instead of permanently caching a
+    // smaller, lower-quality image when memory is tight.
     ui_components_background_image_free_only();
     int max_dim = image_budget_max_dimension();
     int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;

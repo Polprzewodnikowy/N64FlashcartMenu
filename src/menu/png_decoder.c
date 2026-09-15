@@ -110,6 +110,12 @@ static png_err_t png_decoder_setup (int max_width, int max_height) {
         decoder->dst_w = (src_w * decoder->dst_h) / src_h;
     }
 
+    // Extreme aspect ratios (e.g. 1px wide) can round a dimension down to 0
+    // here. Clamp to 1 now so the memory-budget check below sees the true
+    // minimum area, instead of a false "0 pixels always fits" result.
+    if (decoder->dst_w < 1) decoder->dst_w = 1;
+    if (decoder->dst_h < 1) decoder->dst_h = 1;
+
     // Scale down by the exact factor needed to fit the memory budget,
     // rather than halving both dimensions (which quarters the area) each step.
     // Use the contiguous top-chunk size, not aggregate free bytes: the surface
@@ -127,6 +133,20 @@ static png_err_t png_decoder_setup (int max_width, int max_height) {
         float scale = sqrtf((float) max_pixels / (float) cur_pixels);
         decoder->dst_w = (int) (decoder->dst_w * scale);
         decoder->dst_h = (int) (decoder->dst_h * scale);
+        if (decoder->dst_w < 1) decoder->dst_w = 1;
+        if (decoder->dst_h < 1) decoder->dst_h = 1;
+
+        // One dimension may have floored to 1 while the other is still too
+        // large for the budget (e.g. very narrow/tall sources). Shrink
+        // whichever dimension is still oversized so the final area fits.
+        cur_pixels = (size_t) decoder->dst_w * decoder->dst_h;
+        if (cur_pixels > max_pixels && max_pixels > 0) {
+            if (decoder->dst_w > decoder->dst_h) {
+                decoder->dst_w = (int) (max_pixels / (size_t) decoder->dst_h);
+            } else {
+                decoder->dst_h = (int) (max_pixels / (size_t) decoder->dst_w);
+            }
+        }
     }
     if (decoder->dst_w < 1) decoder->dst_w = 1;
     if (decoder->dst_h < 1) decoder->dst_h = 1;

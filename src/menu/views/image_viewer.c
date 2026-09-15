@@ -16,6 +16,15 @@ static bool image_set_as_background;
 static bool is_jpeg;
 static surface_t *image;
 
+/** Max image dimension that fits within the available RDRAM budget. */
+static int image_budget_max_dimension (void) {
+    heap_stats_t heap;
+    sys_get_heap_stats(&heap);
+    size_t budget = (size_t) ((heap.total - heap.used) * 0.8f);
+    int dim = (int) sqrtf((float) (budget / 2));
+    if (dim < 16) dim = 16;
+    return dim;
+}
 
 static char *convert_error_message (int err, bool jpeg) {
     if (jpeg) {
@@ -160,11 +169,12 @@ void view_image_viewer_init (menu_t *menu) {
     image_set_as_background = false;
     is_jpeg = file_has_extensions(menu->browser.entry->name, jpeg_extensions);
     image = NULL;
-    // Free the background image temporarily so the PNG decoder has its full memory budget;
-    // ui_components_background_reload() restores it if the user does not set a new background
+    // Free the background image temporarily so the decoder has its full memory budget,
+    // then cap the decode size to the heap available on constrained systems.
     ui_components_background_image_free_only();
-    int max_w = display_get_width();
-    int max_h = display_get_height();
+    int max_dim = image_budget_max_dimension();
+    int max_w = (max_dim > display_get_width()) ? display_get_width() : max_dim;
+    int max_h = (max_dim > display_get_height()) ? display_get_height() : max_dim;
 
     path_t *path = path_clone_push(menu->browser.directory, menu->browser.entry->name);
 

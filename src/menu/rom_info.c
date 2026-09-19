@@ -76,7 +76,7 @@ typedef enum {
     FEAT_RTC = (1 << 4), /**< Real Time Clock */
     FEAT_EXP_PAK_REQUIRED = (1 << 5), /**< Expansion Pak required */
     FEAT_EXP_PAK_RECOMMENDED = (1 << 6), /**< Expansion Pak recommended */
-    FEAT_EXP_PAK_ENHANCED = (1 << 7), /**< Expansion Pak enhanced */
+    FEAT_EXP_PAK_UNUSED = (1 << 7), /**< Expansion Pak unused */
     FEAT_EXP_PAK_BROKEN = (1 << 8), /**< Expansion Pak broken */
     FEAT_64DD_CONVERSION = (1 << 9), /**< 64DD disk to ROM conversion */
     FEAT_64DD_ENHANCED = (1 << 10) /**< Combo ROM + Disk games */
@@ -761,12 +761,12 @@ static void extract_rom_info (match_t *match, rom_header_t *rom_header, rom_info
         rom_info->features.expansion_pak = EXPANSION_PAK_REQUIRED;
     } else if (match->data.feat & FEAT_EXP_PAK_RECOMMENDED) {
         rom_info->features.expansion_pak = EXPANSION_PAK_RECOMMENDED;
-    } else if (match->data.feat & FEAT_EXP_PAK_ENHANCED) {
-        rom_info->features.expansion_pak = EXPANSION_PAK_ENHANCED;
+    } else if (match->data.feat & FEAT_EXP_PAK_UNUSED) {
+        rom_info->features.expansion_pak = EXPANSION_PAK_UNUSED;
     } else if (match->data.feat & FEAT_EXP_PAK_BROKEN) {
         rom_info->features.expansion_pak = EXPANSION_PAK_FAULTY;
     } else {
-        rom_info->features.expansion_pak = EXPANSION_PAK_NONE;
+        rom_info->features.expansion_pak = EXPANSION_PAK_UNSPECIFIED;
     }
 
     rom_info->meta.name = strdup("");

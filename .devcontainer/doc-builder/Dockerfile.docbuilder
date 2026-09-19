@@ -1,12 +1,23 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+FROM debian:trixie-slim
 
 # Minimal image: install only what's needed for building and the project's toolchain
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y build-essential doxygen git python3 wget nodejs npm
 
-# Install Playwright dependencies
-RUN apt-get install -y libnspr4 libnss3 libatk1.0-0 libatk-bridge2.0-0 libatspi2.0-0 libxdamage1 libxkbcommon0 libasound2    
+# Install dotNet tools
+RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
+    chmod +x ./dotnet-install.sh && \
+    ./dotnet-install.sh --channel LTS && \
+    rm dotnet-install.sh
+
+# Configure environment variables so the system can find dotnet
+ENV DOTNET_ROOT=/root/.dotnet
+ENV PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+
+# Install system dependencies required by Playwright/Chromium
+# Automatically install all missing system dependencies for browsers
+RUN npx playwright install-deps
 
 # Install libdragon toolchain (packaged .deb)
 RUN wget https://github.com/DragonMinded/libdragon/releases/download/toolchain-continuous-prerelease/gcc-toolchain-mips64-x86_64.deb && \

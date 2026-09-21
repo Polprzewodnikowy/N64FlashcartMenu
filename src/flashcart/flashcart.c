@@ -17,6 +17,7 @@
 #include "ed64/ed64_xseries.h"
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
+#include "ed64/ed64.h"
 
 /** @brief Save sizes for different flashcart save types. */
 static const size_t SAVE_SIZE[__FLASHCART_SAVE_TYPE_END] = {

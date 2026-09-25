@@ -324,10 +324,17 @@ static void set_tv_type (menu_t *menu, void *arg) {
 }
 #ifdef FEATURE_AUTOLOAD_ROM_ENABLED
 static void set_autoload_type (menu_t *menu, void *arg) {
-    free(menu->settings.rom_autoload_path);
-    menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(menu->browser.directory)));
+    // Save the ROM this screen shows. From the History or Favorites tab, the browser's
+    // directory and entry can be another file. The path is rebuilt from the storage
+    // prefix first: bookkeeping loads its paths with path_create(), and path_pop() on
+    // one of those would cut a ROM in the root folder back to "sd:".
+    path_t *rom = path_init(menu->storage_prefix, strip_fs_prefix(path_get(menu->load.rom_path)));
     free(menu->settings.rom_autoload_filename);
-    menu->settings.rom_autoload_filename = strdup(menu->browser.entry->name);
+    menu->settings.rom_autoload_filename = strdup(path_last_get(rom));
+    path_pop(rom);
+    free(menu->settings.rom_autoload_path);
+    menu->settings.rom_autoload_path = strdup(strip_fs_prefix(path_get(rom)));
+    path_free(rom);
     // FIXME: add a confirmation box here! (press start on reboot)
     menu->settings.rom_autoload_enabled = true;
     settings_save(&menu->settings);

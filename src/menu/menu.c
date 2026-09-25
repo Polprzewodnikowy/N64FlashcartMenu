@@ -14,11 +14,11 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
-#include "background_music.h"
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
 #include "audio_player.h"
+#include "jpeg_decoder.h"
 #include "png_decoder.h"
 #include "settings.h"
 #include "sound.h"
@@ -29,7 +29,7 @@
 #define MENU_DIRECTORY              "/menu"
 #define MENU_SETTINGS_FILE          "config.ini"
 #define MENU_CUSTOM_FONT_FILE       "custom.font64"
-#define MENU_CUSTOM_BGM_FILE        "custom.wav64"
+#define MENU_CUSTOM_BGM_FILE        "custom_bgm.wav64"
 #define MENU_ROM_LOAD_HISTORY_FILE  "history.ini"
 
 #define MENU_CACHE_DIRECTORY        "cache"
@@ -70,7 +70,7 @@ static void menu_init (boot_params_t *boot_params) {
     actions_init();
     sound_init_default();
     sound_init_sfx();
-    sound_init_bgm();
+    ui_components_sprites_init();
 
     hdmi_clear_game_id();
 
@@ -119,9 +119,10 @@ static void menu_init (boot_params_t *boot_params) {
     fonts_init(path_get(path));
     path_pop(path);
 
-    // path_push(path, MENU_CUSTOM_BGM_FILE);
-    // bgm_init(path_get(path));
-    // path_pop(path);
+    path_push(path, MENU_CUSTOM_BGM_FILE);
+    sound_set_bgm_path(path_get(path));
+    sound_init_bgm();
+    path_pop(path);
 
     path_push(path, MENU_CACHE_DIRECTORY);
     directory_create(path_get(path));
@@ -192,17 +193,13 @@ static view_t menu_views[] = {
     { MENU_MODE_STARTUP, view_startup_init, view_startup_display },
     { MENU_MODE_BROWSER, view_browser_init, view_browser_display },
     { MENU_MODE_FILE_INFO, view_file_info_init, view_file_info_display },
-    { MENU_MODE_SYSTEM_INFO, view_system_info_init, view_system_info_display },
     { MENU_MODE_IMAGE_VIEWER, view_image_viewer_init, view_image_viewer_display },
     { MENU_MODE_TEXT_VIEWER, view_text_viewer_init, view_text_viewer_display },
     { MENU_MODE_MUSIC_PLAYER, view_music_player_init, view_music_player_display },
     { MENU_MODE_CREDITS, view_credits_init, view_credits_display },
-    { MENU_MODE_SETTINGS_EDITOR, view_settings_init, view_settings_display },
-    { MENU_MODE_RTC, view_rtc_init, view_rtc_display },
-    { MENU_MODE_CONTROLLER_PAKFS, view_controller_pakfs_init, view_controller_pakfs_display },
+    { MENU_MODE_SETTINGS, view_settings_init, view_settings_display },
     { MENU_MODE_CONTROLLER_PAK_DUMP_INFO, view_controller_pak_dump_info_init, view_controller_pak_dump_info_display },
     { MENU_MODE_CONTROLLER_PAK_DUMP_NOTE_INFO, view_controller_pak_note_dump_info_init, view_controller_pak_note_dump_info_display },
-    { MENU_MODE_FLASHCART, view_flashcart_info_init, view_flashcart_info_display },
     { MENU_MODE_LOAD_ROM, view_load_rom_init, view_load_rom_display },
     { MENU_MODE_LOAD_DISK, view_load_disk_init, view_load_disk_display },
     { MENU_MODE_LOAD_EMULATOR, view_load_emulator_init, view_load_emulator_display },
@@ -253,6 +250,7 @@ void menu_run (boot_params_t *boot_params) {
             }
 
             if (menu->mode == MENU_MODE_BOOT) {
+                // exit loop to deinit menu and boot the game
                 break;
             }
 
@@ -271,13 +269,18 @@ void menu_run (boot_params_t *boot_params) {
         sound_poll();
 
         png_decoder_poll();
+        jpeg_decoder_poll();
 
         usb_comm_poll(menu);
     }
 
-    menu_deinit(menu);
-
     while (exception_reset_time() > 0) {
         // Do nothing if reset button was pressed
+        // but this could be used to display a message or perform other actions while waiting for reset, 
+        // like fade out the screen or show a countdown timer.
     }
+
+    menu_deinit(menu);
+
+    // This should now return to main.c which now boots the game.
 }

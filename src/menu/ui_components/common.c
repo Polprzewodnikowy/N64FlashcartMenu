@@ -331,8 +331,68 @@ void ui_components_actions_bar_text_draw (menu_font_type_t style, rdpq_align_t a
 }
 
 /**
+ * @brief Draw a block of text inside an explicit rectangle.
+ *
+ * @param x The x-coordinate of the top-left corner.
+ * @param y The y-coordinate of the top-left corner.
+ * @param width Width of the rectangle.
+ * @param height Height of the rectangle.
+ * @param style Font style to draw with.
+ * @param align Horizontal alignment within the rectangle.
+ * @param wrap Wrapping mode for text that exceeds the rectangle.
+ * @param text The text to draw.
+ */
+void ui_components_text_draw (int x, int y, int width, int height, menu_font_type_t style,
+                              rdpq_align_t align, rdpq_textwrap_t wrap, const char *text) {
+    rdpq_text_print(
+        &(rdpq_textparms_t) {
+            .style_id = style,
+            .width = width,
+            .height = height,
+            .align = align,
+            .valign = VALIGN_TOP,
+            .wrap = wrap,
+        },
+        FNT_DEFAULT,
+        x,
+        y,
+        text
+    );
+}
+
+/**
+ * @brief Draw a label/value row inside a settings pane.
+ *
+ * The label is left aligned and the value is right aligned, with the value
+ * column starting at a fixed fraction of the pane width.
+ *
+ * @param y The y-coordinate of the top of the row.
+ * @param label The row label.
+ * @param value The row value.
+ * @param selected Whether the row is highlighted.
+ */
+void ui_components_settings_row_draw (int y, const char *label, const char *value, bool selected) {
+    int x0 = SETTINGS_PANE_X0 + 10;
+    int x1 = SETTINGS_PANE_X1 - 10;
+    int value_x = x0 + (((x1 - x0) * 55) / 100);
+
+    if (selected) {
+        ui_components_box_draw(x0, y, x1, y + SETTINGS_ROW_HEIGHT - 2, FILE_LIST_HIGHLIGHT_COLOR);
+    }
+
+    ui_components_text_draw(
+        x0 + 8, y + 4, value_x - x0 - 16, SETTINGS_ROW_HEIGHT,
+        STL_DEFAULT, ALIGN_LEFT, WRAP_ELLIPSES, label
+    );
+    ui_components_text_draw(
+        value_x, y + 4, x1 - value_x - 8, SETTINGS_ROW_HEIGHT,
+        selected ? STL_DEFAULT : STL_GRAY, ALIGN_RIGHT, WRAP_ELLIPSES, value
+    );
+}
+
+/**
  * @brief Draw the tabs.
- * 
+ *
  * @param text Array of tab text.
  * @param count Number of tabs.
  * @param selected Index of the selected tab.

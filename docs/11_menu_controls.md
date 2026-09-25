@@ -9,18 +9,23 @@ See [File Browser operations](31_file_browser.md) for additional information.
 Press either the `C-Up` or `C-Down` buttons to scroll by pages, rather than by elements.
 
 #### Menu settings
-Press the `START` button on the browser screen to open the Settings window.  
-![Main context menu](./images/main-context-menu.png "Main context menu")  
-From here you can edit some of the N64FlashcartMenu settings, see information about either the console, the flashcart you are using or N64FlashcartMenu itself, and if your cart has Real-Time Clock (RTC) support, you can also change its date and time.
+Use `L` and `R` to switch tabs; Settings is the rightmost tab.
+Choose Menu, Controller, Time, Information, Flashcart, or N64 on the left, then
+press `A` to operate its pane. Press `B` to return to the category list.
+The Time pane lets you set the date and time when your flashcart supports a Real-Time Clock (RTC).
 
 #### File options
-Press the `R` button to open the Browser Options window. Here you can see a ROM's properties, delete it from your SD card or establish the default folder 
-where N64FlashcartMenu's browser will start in future boots.
+Press `Z` in the file browser to open the options menu. Here you can view entry
+properties, delete an entry, or set the current directory as the default folder.
+Choose "Controller Pak manager" to open the Controller pane directly.
 
 #### Additional ROM information
 <!-- Could use a sample screenshot here -->
-Press either the `L` or `Z` button on the ROM information screen to open an additional window that will show additional information about the currently 
-selected ROM file, such as its endianness, regional variant, set clock rate, and much more.
+Press `A` on a ROM in the file browser to open its details. On that screen,
+`Z` opens Extra Info and `Start` opens Advanced Info. Press `B` to close the
+frontmost information window; press `B` again after closing the windows to return
+to Files. `Z` and `Start` also toggle their respective windows.
+Use Left and Right to cycle artwork, `R` for ROM options, and `A` to launch.
 
 ### 64DD-related
 

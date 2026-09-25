@@ -94,7 +94,7 @@ static void process(menu_t *menu) {
         sound_play_effect(SFX_CURSOR);       
     } else if (menu->actions.tab_right) {
         if(tab_context == BOOKKEEPING_TAB_CONTEXT_FAVORITE) {
-            menu->next_mode = MENU_MODE_BROWSER;
+            menu->next_mode = MENU_MODE_SETTINGS;
         } else if(tab_context == BOOKKEEPING_TAB_CONTEXT_HISTORY) {
             menu->next_mode = MENU_MODE_FAVORITE;
         }

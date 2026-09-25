@@ -362,8 +362,33 @@ void ui_components_sprites_init(void);
 void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 /**
+ * @brief Draw a block of text inside an explicit rectangle.
+ *
+ * @param x The x-coordinate of the top-left corner.
+ * @param y The y-coordinate of the top-left corner.
+ * @param width Width of the rectangle.
+ * @param height Height of the rectangle.
+ * @param style Font style to draw with.
+ * @param align Horizontal alignment within the rectangle.
+ * @param wrap Wrapping mode for text that exceeds the rectangle.
+ * @param text The text to draw.
+ */
+void ui_components_text_draw(int x, int y, int width, int height, menu_font_type_t style,
+                             rdpq_align_t align, rdpq_textwrap_t wrap, const char *text);
+
+/**
+ * @brief Draw a label/value row inside a settings pane.
+ *
+ * @param y The y-coordinate of the top of the row.
+ * @param label The row label.
+ * @param value The row value.
+ * @param selected Whether the row is highlighted.
+ */
+void ui_components_settings_row_draw(int y, const char *label, const char *value, bool selected);
+
+/**
  * @brief Draw the tabs component.
- * 
+ *
  * @param text Array of tab labels.
  * @param count Number of tabs.
  * @param selected Index of the selected tab.

@@ -524,11 +524,18 @@ static void set_default_directory (menu_t *menu, void *arg) {
     settings_save(&menu->settings);
 }
 
+/** @brief Open the Controller Pak pane directly from the browser's Z menu. */
+static void open_controller_pak (menu_t *menu, void *arg) {
+    (void) arg;
+    view_settings_open_pane(menu, &settings_pane_controller_pak);
+}
+
 static component_context_menu_t entry_context_menu = {
     .list = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Delete selected entry", .action = delete_entry },
         { .text = "Set current directory as default", .action = set_default_directory },
+        { .text = "Controller Pak manager", .action = open_controller_pak },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
@@ -537,33 +544,13 @@ static component_context_menu_t archive_context_menu = {
     .list = {
         { .text = "Show entry properties", .action = show_properties },
         { .text = "Extract selected entry", .action = extract_entry },
-        COMPONENT_CONTEXT_MENU_LIST_END,
-    }
-};
-
-static void set_menu_next_mode (menu_t *menu, void *arg) {
-    menu_mode_t next_mode = (menu_mode_t) (arg);
-    menu->next_mode = next_mode;
-}
-
-static component_context_menu_t settings_context_menu = {
-    .list = {
-        { .text = "Controller Pak manager", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CONTROLLER_PAKFS) },
-        { .text = "Menu settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SETTINGS_EDITOR) },
-        { .text = "Time (RTC) settings", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_RTC) },
-        { .text = "Menu information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_CREDITS) },
-        { .text = "Flashcart information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_FLASHCART) },
-        { .text = "N64 information", .action = set_menu_next_mode, .arg = (void *) (MENU_MODE_SYSTEM_INFO) },
+        { .text = "Controller Pak manager", .action = open_controller_pak },
         COMPONENT_CONTEXT_MENU_LIST_END,
     }
 };
 
 static void process (menu_t *menu) {
     if (ui_components_context_menu_process(menu, menu->browser.archive ? &archive_context_menu : &entry_context_menu)) {
-        return;
-    }
-
-    if (ui_components_context_menu_process(menu, &settings_context_menu)) {
         return;
     }
 
@@ -674,14 +661,11 @@ static void process (menu_t *menu) {
     } else if (menu->actions.context && menu->browser.entry) {
         ui_components_context_menu_show(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
         sound_play_effect(SFX_SETTING);
-    } else if (menu->actions.settings) {
-        ui_components_context_menu_show(&settings_context_menu);
-        sound_play_effect(SFX_SETTING);
     } else if (menu->actions.tab_right) {
         menu->next_mode = MENU_MODE_HISTORY;
         sound_play_effect(SFX_CURSOR);
     } else if (menu->actions.tab_left) {
-        menu->next_mode = MENU_MODE_FAVORITE;
+        menu->next_mode = MENU_MODE_SETTINGS;
         sound_play_effect(SFX_CURSOR);
     }
 }
@@ -702,7 +686,7 @@ static void draw (menu_t *menu, surface_t *d) {
     if (menu->browser.entry) {
         switch (menu->browser.entry->type) {
             case ENTRY_TYPE_DIR: action = "A: Enter"; break;
-            case ENTRY_TYPE_ROM: action = "A: Launch"; break;
+            case ENTRY_TYPE_ROM: action = "A: Details"; break;
             case ENTRY_TYPE_DISK: action = "A: Load"; break;
             case ENTRY_TYPE_IMAGE: action = "A: Show"; break;
             case ENTRY_TYPE_TEXT: action = "A: View"; break;
@@ -724,7 +708,7 @@ static void draw (menu_t *menu, surface_t *d) {
     ui_components_actions_bar_text_draw(
         STL_DEFAULT,
         ALIGN_RIGHT, VALIGN_TOP,
-        "^%02XStart: Settings^00\n"
+        "\n"
         "^%02XZ:  Options^00",
         menu->browser.entries == 0 ? STL_GRAY : STL_DEFAULT
     );
@@ -748,8 +732,6 @@ static void draw (menu_t *menu, surface_t *d) {
 
     ui_components_context_menu_draw(menu->browser.archive ? &archive_context_menu : &entry_context_menu);
 
-    ui_components_context_menu_draw(&settings_context_menu);
-
     rdpq_detach_show();
 }
 
@@ -758,7 +740,6 @@ void view_browser_init (menu_t *menu) {
     if (!menu->browser.valid) {
         ui_components_context_menu_init(&entry_context_menu);
         ui_components_context_menu_init(&archive_context_menu);
-        ui_components_context_menu_init(&settings_context_menu);
         if (load_directory(menu)) {
             path_free(menu->browser.directory);
             menu->browser.directory = path_init(menu->storage_prefix, "");

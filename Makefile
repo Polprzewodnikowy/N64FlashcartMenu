@@ -70,6 +70,7 @@ SRCS = \
 	menu/png_decoder.c \
 	menu/rom_info.c \
 	menu/settings.c \
+	menu/theme.c \
 	menu/sound.c \
 	menu/sprites.c \
 	menu/zip_entry_count.c \
@@ -98,6 +99,7 @@ SRCS = \
 	menu/views/startup.c \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
+	menu/views/settings_theme.c \
 	menu/views/settings_tab.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \

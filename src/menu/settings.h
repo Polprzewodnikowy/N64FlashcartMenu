@@ -7,6 +7,8 @@
 #ifndef SETTINGS_H__
 #define SETTINGS_H__
 
+#include "theme.h"
+
 
 /** @brief Settings Structure */
 typedef struct {
@@ -54,6 +56,9 @@ typedef struct {
 
     /** @brief Enable Background music */
     bool bgm_enabled;
+
+    /** @brief Selected theme name; NULL when loaded from settings that predate themes. */
+    char *theme;
 
     /** @brief Enable Sound effects within the menu */
     bool soundfx_enabled;

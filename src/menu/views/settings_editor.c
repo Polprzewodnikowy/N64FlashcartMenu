@@ -169,6 +169,8 @@ static void setting_activate (menu_t *menu) {
 
     if (setting->flags & SETTING_CLEAR_BACKGROUND) {
         ui_components_background_clear();
+        theme_custom_clear_background_image();
+        settings_save(&menu->settings);
         return;
     }
 

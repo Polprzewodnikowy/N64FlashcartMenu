@@ -195,6 +195,8 @@ void view_settings_display(menu_t *menu, surface_t *display);
 
 /** @brief Menu settings pane, implemented by settings_editor.c. */
 extern const settings_pane_t settings_pane_menu;
+/** @brief Built-in theme picker and Custom palette editor. */
+extern const settings_pane_t settings_pane_theme;
 /** @brief Controller Pak pane, implemented by cpakfs_manager.c. */
 extern const settings_pane_t settings_pane_controller_pak;
 /** @brief Real time clock pane, implemented by rtc.c. */

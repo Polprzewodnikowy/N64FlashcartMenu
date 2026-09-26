@@ -19,10 +19,11 @@
 #define SETTINGS_TAB_INDEX  (3)
 
 /** @brief Height of a single entry in the category rail. */
-#define RAIL_ENTRY_HEIGHT   (46)
+#define RAIL_ENTRY_HEIGHT   (42)
 
 static const settings_pane_t *const panes[] = {
     &settings_pane_menu,
+    &settings_pane_theme,
     &settings_pane_controller_pak,
     &settings_pane_time,
     &settings_pane_information,
@@ -116,6 +117,10 @@ static void rail_draw (void) {
                 pane_focused ? TAB_ACTIVE_BACKGROUND_COLOR : FILE_LIST_HIGHLIGHT_COLOR
             );
         }
+
+        if (selected && !pane_focused)
+            ui_components_focus_draw(SETTINGS_RAIL_X0 + 4, y,
+                SETTINGS_RAIL_X1 - 4, y + RAIL_ENTRY_HEIGHT - 4);
 
         ui_components_text_draw(
             SETTINGS_RAIL_X0 + 8, y + 11, SETTINGS_RAIL_X1 - SETTINGS_RAIL_X0 - 16, SETTINGS_ROW_HEIGHT,

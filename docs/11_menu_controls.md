@@ -10,9 +10,12 @@ Press either the `C-Up` or `C-Down` buttons to scroll by pages, rather than by e
 
 #### Menu settings
 Use `L` and `R` to switch tabs; Settings is the rightmost tab.
-Choose Menu, Controller, Time, Information, Flashcart, or N64 on the left, then
+Choose Menu, Theme, Controller, Time, Information, Flashcart, or N64 on the left, then
 press `A` to operate its pane. Press `B` to return to the category list.
 The Time pane lets you set the date and time when your flashcart supports a Real-Time Clock (RTC).
+In Theme, Up/Down chooses presets, Start copies a preset into Custom, and Z
+previews the background. See [Theme controls](32_menu_settings.md#themes) for color,
+panel opacity, and hue editing.
 
 #### File options
 Press `Z` in the file browser to open the options menu. Here you can view entry

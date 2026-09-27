@@ -13,6 +13,8 @@
 	- File browser filetype images.
 	- Menu now dogfoods embedded metadata.
 	- Menu now shows embedded metadata box/game/screenshot images in the boxart view.
+	- Menu colour themes.
+
 
 - **Bug Fixes**
 	- Some users have reported crashes in Zelda OOT (anti-piracy checks), The boot function now resets the VI (mainly H-Sync) registers to fix the issue.
@@ -21,11 +23,14 @@
 	- Improve documents with new features.
 
 - **Refactor**
+	- Settings is now a tab.
+	- Expansion Pak requirements now aligns with homebrew spec.
 
 - **Other**
 	- Change the default BGM to a different (more subtle) tune. The original is still included in the ROM image.
 	- Menu will now show an error if it detects a low voltage on startup.
 	- Fast Reboot support has been disabled in favour of ROM autoload due to too many issues being reported.
+	- Added ED64 OS3.06 firmware files.
 
 ### Breaking changes
 - None.

@@ -38,18 +38,19 @@ The current state of support is:
 * Fully emulates the 64DD and loads 64DD disks (SummerCart64 only).
 * Emulator support (NES, SNES, GB, GBC, SMS, GG, CHF) ROMs.
 * N64 ROM box art image support.
-* Background image (PNG) support.
+* Background image (PNG & JPEG) support.
 * Comprehensive ROM save database (including homebrew headers).
 * Comprehensive ROM information display.
 * Real Time Clock support.
 * Music playback (MP3 and FLAC) with id3 support.
 * Menu background music and sound effects.
-* N64 ROM fast reboot option (on reset).
+* N64 ROM autoload option (on reset).
 * ROM history and favorites.  
 * ROM Datel code editor.
 * Zip archive browsing and file extraction.
 * Controller Pak backup and restore (including individual notes).
 * Game art image switching.
+* Menu themes.
 
 
 ## Aims

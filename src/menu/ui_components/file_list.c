@@ -224,9 +224,9 @@ void ui_components_file_list_draw(entry_t *list, int entries, int selected) {
             if (entry->type != ENTRY_TYPE_DIR) {
                 rdpq_paragraph_builder_span(file_size, format_file_size(file_size, entry->size));
             }
-            else {
-                rdpq_paragraph_builder_span("[DIR]", 5);
-            }
+            // else {
+            //     rdpq_paragraph_builder_span("[DIR]", 5);
+            // }
 
             switch (entry->type) {
                 case ENTRY_TYPE_DIR: 

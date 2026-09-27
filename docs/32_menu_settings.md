@@ -5,7 +5,7 @@ contains the options shown in the Menu pane of the rightmost Settings tab.
 If required, you can manually adjust the file (required for some advanced settings) on the SD card using your computer.
 
 Use `L` and `R` to switch main tabs. In Settings, use Up and Down to choose Menu,
-Controller, Time, Information, Flashcart, or N64, then press `A` to enter the pane.
+Theme, Controller, Time, Information, Flashcart, or N64, then press `A` to enter the pane.
 Press `B` to return to categories. Tab switching is blocked while a pane has a
 modal confirmation or operation open.
 
@@ -75,3 +75,30 @@ OFF: ROM saves are saved alongside the ROM file.
 ### Sound Effects
 
 The menu has default sound effects to improve the user experience. See the [sound documentation](./40_sound.md) for details. This setting is OFF by default.
+
+### Themes
+
+The Theme pane contains Simple and Hardware presets plus one editable Custom
+palette. Presets use static four-corner gradients or a solid background.
+Use Up/Down to choose a family, then A or Right to open it. Up/Down previews its
+presets; A selects one and returns to categories. B or Left returns to families
+and restores the previous theme. Press Start on a preset to copy its palette
+into Custom. Leaving the Theme pane saves the current selection and Custom palette.
+
+In Custom, choose Hue Shift and use Left/Right to adjust all colors by five
+degrees. The remaining rows edit border, panel, text, selection, and the four
+gradient corners. Press A to edit a color, Left/Right to choose R, G, or B, and
+Up/Down to change the value. Panel also offers A (alpha): 0 is transparent and
+255 is opaque. A or B finishes editing. A black-and-white outline marks the
+focused row. Z hides the menu to preview the background; B or Z restores it.
+
+To use an image, open a PNG or JPEG in Files and press A twice to confirm it as
+the background. This copies the current palette into Custom and selects the
+image background. Custom hue changes also affect the image. Menu → Remove
+Background removes the saved image and restores Custom's static gradient while
+keeping its colors.
+
+The selected theme is stored as `theme` in `[menu]`. `[custom_theme]` stores the
+preset copied into Custom (`base`), its exact RGBA `palette`, `hue_shift`, and
+whether the saved background image is enabled (`background_image`). Settings
+files from before themes existed keep showing a previously set background image.

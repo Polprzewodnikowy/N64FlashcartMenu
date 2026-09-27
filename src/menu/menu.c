@@ -14,6 +14,7 @@
 #include "boot/boot.h"
 #include "flashcart/flashcart.h"
 #include "fonts.h"
+#include "theme.h"
 #include "hdmi.h"
 #include "menu_state.h"
 #include "menu.h"
@@ -35,7 +36,7 @@
 #define MENU_CACHE_DIRECTORY        "cache"
 #define BACKGROUND_CACHE_FILE       "background.data"
 
-#define FPS_LIMIT                   (30.0f)
+#define FPS_LIMIT                   (60.0f)
 
 static menu_t *menu;
 
@@ -81,6 +82,7 @@ static void menu_init (boot_params_t *boot_params) {
     path_push(path, MENU_SETTINGS_FILE);
     settings_init(path_get(path));
     settings_load(&menu->settings);
+    theme_set_by_name(menu->settings.theme);
     path_pop(path);
 
     path_push(path, MENU_ROM_LOAD_HISTORY_FILE);
@@ -128,6 +130,12 @@ static void menu_init (boot_params_t *boot_params) {
     directory_create(path_get(path));
 
     path_push(path, BACKGROUND_CACHE_FILE);
+    if (!menu->settings.theme) {
+        // Settings predating themes always drew a saved background image; keep showing it.
+        if (file_exists(path_get(path))) theme_select_custom_image();
+        menu->settings.theme = strdup(theme_get()->name);
+        settings_save(&menu->settings);
+    }
     ui_components_background_init(path_get(path));
 
     path_free(path);

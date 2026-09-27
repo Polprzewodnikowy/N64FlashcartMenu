@@ -21,6 +21,10 @@ N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
 
+# Fast rebooting has proved to be unreliable for the moment, so it is disabled in favour of the menu autoload.
+# If you want to enable fast rebooting, comment out the following line.
+FLAGS ?= -DFEATURE_AUTOLOAD_ROM_ENABLED
+
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
 N64_CFLAGS += -isystem $(SOURCE_DIR)/libs/libjpeg-turbo -isystem $(SOURCE_DIR)/libs/libjpeg-turbo/libjpeg-turbo-src/src
 
@@ -66,6 +70,7 @@ SRCS = \
 	menu/png_decoder.c \
 	menu/rom_info.c \
 	menu/settings.c \
+	menu/theme.c \
 	menu/sound.c \
 	menu/sprites.c \
 	menu/zip_entry_count.c \
@@ -94,6 +99,8 @@ SRCS = \
 	menu/views/startup.c \
 	menu/views/system_info.c \
 	menu/views/settings_editor.c \
+	menu/views/settings_theme.c \
+	menu/views/settings_tab.c \
 	menu/views/rtc.c \
 	menu/views/flashcart_info.c \
 	menu/views/cpakfs_manager.c \

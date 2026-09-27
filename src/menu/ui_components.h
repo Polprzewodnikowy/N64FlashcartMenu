@@ -105,6 +105,8 @@ void ui_components_box_draw(int x0, int y0, int x1, int y1, color_t color);
  * @param y1 Ending y-coordinate.
  */
 void ui_components_border_draw(int x0, int y0, int x1, int y1);
+/** Palette-independent outline for the currently focused control. */
+void ui_components_focus_draw(int x0, int y0, int x1, int y1);
 
 /**
  * @brief Draw the layout component with tabs.
@@ -237,7 +239,8 @@ void ui_components_background_draw(void);
 surface_t *ui_components_background_get_image(void);
 
 /**
- * @brief Reload the background image from cache (call after temporarily freeing).
+ * @brief Reload the background image from cache (call after temporarily freeing
+ *        or changing the theme); frees it when the active theme has no image.
  */
 void ui_components_background_reload(void);
 

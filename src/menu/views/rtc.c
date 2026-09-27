@@ -161,6 +161,7 @@ static void pane_draw (menu_t *menu, bool focused) {
     for (int i = 0; i < RTC_EDIT_FIELDS; i++) {
         if (focused && (i == editing_field_type)) {
             ui_components_box_draw(x, y, x + field_width - 3, y + 58, FILE_LIST_HIGHLIGHT_COLOR);
+            ui_components_focus_draw(x, y, x + field_width - 3, y + 58);
         }
         ui_components_text_draw(x, y + 6, field_width - 3, 22, STL_GRAY,
                                 ALIGN_CENTER, WRAP_NONE, field_names[i]);

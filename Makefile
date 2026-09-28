@@ -90,6 +90,7 @@ SRCS = \
 	menu/views/extract_file.c \
 	menu/views/fault.c \
 	menu/views/file_info.c \
+	menu/views/grid.c \
 	menu/views/history_favorites.c \
 	menu/views/image_viewer.c \
 	menu/views/text_viewer.c \
@@ -143,6 +144,7 @@ DEPS = $(OBJS:.o=.d)
 
 FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/menu/fonts/, $(notdir $(FONTS:%.ttf=%.font64))) \
+	$(FILESYSTEM_DIR)/menu/fonts/digits/Firple-Bold.font64 \
 	$(addprefix $(FILESYSTEM_DIR)/menu/sounds/, $(notdir $(SOUNDS_WAV:%.wav=%.wav64))) \
 	$(addprefix $(FILESYSTEM_DIR)/menu/sounds/, $(notdir $(SOUNDS_XM:%.xm=%.xm64))) \
 	$(addprefix $(FILESYSTEM_DIR)/menu/sprites/, $(notdir $(IMAGES:%.png=%.sprite)))
@@ -151,6 +153,12 @@ $(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-DSPNG_USE_MINIZ -fcompare-debug-second
 $(FILESYSTEM_DIR)/menu/fonts/Firple-Bold.font64: MKFONT_FLAGS+=--compress 1 --outline 1 --size 15 --charset $(ASSETS_DIR)/fonts/charset.txt --ellipsis 2026,1
 $(FILESYSTEM_DIR)/menu/sounds/%.wav64: AUDIOCONV_FLAGS=--wav-compress 1
+# Large digits for Grid group counts. mkfont names its output after the source,
+# and needs the ellipsis glyph (.) even though the counts never truncate.
+$(FILESYSTEM_DIR)/menu/fonts/digits/Firple-Bold.font64: $(ASSETS_DIR)/fonts/Firple-Bold.ttf
+	@echo " [FONT] $@"
+	@mkdir -p $(dir $@)
+	@$(N64_MKFONT) --compress 1 --outline 3 --size 24 --range 2E-2E --range 30-39 -o $(dir $@) "$<"
 
 $(@info $(shell mkdir -p ./$(FILESYSTEM_DIR) &> /dev/null))
 

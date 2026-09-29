@@ -20,6 +20,7 @@ N64_ROM_SAVETYPE = none
 N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
+N64_ROM_EXPANSIONPAK = recommended
 
 # Fast rebooting has proved to be unreliable for the moment, so it is disabled in favour of the menu autoload.
 # If you want to enable fast rebooting, comment out the following line.

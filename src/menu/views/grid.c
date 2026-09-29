@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include <libdragon.h>
+#include <miniz.h>
 
 #include "../fonts.h"
 #include "../ini_parser.h"
@@ -22,12 +23,14 @@
 #include "views.h"
 
 #define GRID_CACHE_MAGIC        0x47524944U /* GRID */
-#define GRID_CACHE_VERSION      1
+#define GRID_CACHE_VERSION      2
 #define GRID_CACHE_FILE         "menu/cache/grid.index"
 #define GRID_MAX_ENTRIES        512
 #define GRID_MAX_PATH           1023
 #define GRID_NAME_LENGTH        96
 #define GRID_UNKNOWN_DATE       INT32_MAX
+#define GRID_ZIP_INI_MAX_SIZE   (64 * 1024)
+#define GRID_ZIP_ART_MAX_SIZE   (2 * 1024 * 1024)
 
 #define GRID_COLUMNS            4
 #define GRID_ROWS               3
@@ -63,6 +66,13 @@
 
 static const char *rom_extensions[] = { "z64", "n64", "v64", "rom", NULL };
 
+/* Where an entry's metadata.ini and artwork came from, matching rom_config_load's order. */
+typedef enum {
+    GRID_META_DIRECTORY,
+    GRID_META_SIDECAR,
+    GRID_META_EMBEDDED,
+} grid_meta_source_t;
+
 typedef struct {
     char *path;
     char game_code[5];
@@ -70,6 +80,8 @@ typedef struct {
     char display_name[GRID_NAME_LENGTH];
     char author[GRID_NAME_LENGTH];
     int32_t release_date_key;
+    uint8_t meta_source;
+    bool embedded_meta;
     bool seen;
     float display_width;
 } grid_entry_t;
@@ -130,6 +142,7 @@ typedef struct __attribute__((packed)) {
     char display_name[GRID_NAME_LENGTH];
     char author[GRID_NAME_LENGTH];
     int32_t release_date_key;
+    uint8_t meta_source;
 } grid_cache_entry_t;
 
 static struct {
@@ -284,6 +297,8 @@ static bool read_header_id(const char *full_path, grid_entry_t *entry) {
     entry->game_code[4] = '\0';
     memcpy(entry->title, &header[0x20], 20);
     entry->title[20] = '\0';
+    /* Same flag rom_config_load checks for a ZIP appended to the ROM. */
+    entry->embedded_meta = header[0x38] & 1;
     return true;
 }
 
@@ -332,19 +347,95 @@ static path_t *metadata_directory(const grid_entry_t *entry) {
     return path;
 }
 
+/* The ROM itself or its .meta companion, for entries whose metadata is in a ZIP. */
+static path_t *metadata_zip_path(const grid_entry_t *entry) {
+    if (entry->meta_source == GRID_META_DIRECTORY) {
+        return NULL;
+    }
+    path_t *path = path_init(grid.storage_prefix, entry->path);
+    if (entry->meta_source == GRID_META_SIDECAR) {
+        path_ext_replace(path, "meta");
+    }
+    return path;
+}
+
+/* Returns a malloc'd, NUL-terminated copy of one file in a ZIP. */
+static char *zip_read(const char *zip_path, const char *name, size_t max_size, size_t *size) {
+    if (!name[0] || name[0] == '/' || strstr(name, "..")) {
+        return NULL;
+    }
+    mz_zip_archive zip = {0};
+    if (!mz_zip_reader_init_file(&zip, zip_path, 0)) {
+        return NULL;
+    }
+    char *data = NULL;
+    mz_zip_archive_file_stat stat;
+    mz_uint index = mz_zip_reader_locate_file(&zip, name, NULL, MZ_ZIP_FLAG_CASE_SENSITIVE);
+    if (index != MZ_UINT32_MAX && mz_zip_reader_file_stat(&zip, index, &stat) &&
+        stat.m_uncomp_size > 0 && stat.m_uncomp_size <= max_size &&
+        (data = malloc((size_t)stat.m_uncomp_size + 1))) {
+        if (mz_zip_reader_extract_to_mem(&zip, index, data, (size_t)stat.m_uncomp_size, 0)) {
+            data[stat.m_uncomp_size] = '\0';
+            *size = (size_t)stat.m_uncomp_size;
+        } else {
+            free(data);
+            data = NULL;
+        }
+    }
+    mz_zip_reader_end(&zip);
+    return data;
+}
+
+static ini_t *zip_ini_load(const char *zip_path) {
+    size_t size;
+    char *data = zip_read(zip_path, "metadata.ini", GRID_ZIP_INI_MAX_SIZE, &size);
+    if (!data) {
+        return NULL;
+    }
+    ini_t *ini = ini_parse_buffer(data, size);
+    free(data);
+    return ini;
+}
+
+static ini_t *metadata_ini_load(grid_entry_t *entry) {
+    path_t *full_path = path_init(grid.storage_prefix, entry->path);
+    path_ext_replace(full_path, "meta");
+    ini_t *metadata = file_exists(path_get(full_path)) ? zip_ini_load(path_get(full_path)) : NULL;
+    path_free(full_path);
+    if (metadata) {
+        entry->meta_source = GRID_META_SIDECAR;
+        return metadata;
+    }
+
+    entry->meta_source = GRID_META_DIRECTORY;
+    path_t *path = metadata_directory(entry);
+    if (path) {
+        path_push(path, "metadata.ini");
+        metadata = ini_load(path_get(path));
+        path_free(path);
+        if (metadata) {
+            return metadata;
+        }
+    }
+
+    if (entry->embedded_meta) {
+        full_path = path_init(grid.storage_prefix, entry->path);
+        metadata = zip_ini_load(path_get(full_path));
+        path_free(full_path);
+        if (metadata) {
+            entry->meta_source = GRID_META_EMBEDDED;
+        }
+    }
+    return metadata;
+}
+
 static void load_metadata(grid_entry_t *entry) {
     entry->display_width = 0.0f;
     snprintf(entry->display_name, sizeof(entry->display_name), "%s", entry->title);
     snprintf(entry->author, sizeof(entry->author), "%s", "Unknown");
     entry->release_date_key = GRID_UNKNOWN_DATE;
 
-    path_t *path = metadata_directory(entry);
-    if (!path) {
-        return;
-    }
-    path_push(path, "metadata.ini");
-    ini_t *metadata = ini_load(path_get(path));
-    path_free(path);
+    ini_t *metadata = metadata_ini_load(entry);
     if (!metadata) {
         return;
     }
@@ -482,6 +573,7 @@ static bool cache_load(const char *scan_directory) {
         memcpy(entry->author, cached.author, sizeof(cached.author));
         entry->author[sizeof(entry->author) - 1] = '\0';
         entry->release_date_key = cached.release_date_key;
+        entry->meta_source = cached.meta_source <= GRID_META_EMBEDDED ? cached.meta_source : GRID_META_DIRECTORY;
     }
     fclose(f);
 
@@ -527,6 +619,7 @@ static bool cache_save(void) {
         grid_cache_entry_t cached = {
             .path_length = path_length,
             .release_date_key = entry->release_date_key,
+            .meta_source = entry->meta_source,
         };
         memcpy(cached.game_code, entry->game_code, 4);
         memcpy(cached.title, entry->title, 20);
@@ -945,6 +1038,18 @@ static char *art_path(const grid_entry_t *entry, grid_art_mode_t art_mode) {
     return result;
 }
 
+/* ZIP metadata names its artwork in metadata.ini rather than by fixed filenames. */
+static char *zip_art_read(const char *zip_path, grid_art_mode_t art_mode, size_t *size) {
+    ini_t *metadata = zip_ini_load(zip_path);
+    if (!metadata) {
+        return NULL;
+    }
+    const char *name = ini_get_string(metadata, art_mode == GRID_ART_GAMEPAK ? "cartart" : "boxart", "front", "");
+    char *data = zip_read(zip_path, name, GRID_ZIP_ART_MAX_SIZE, size);
+    ini_free(metadata);
+    return data;
+}
+
 static grid_view_item_t *slot_item(int slot) {
     int32_t view_index = grid.page_start + slot;
     return view_index < grid.view_count ? &grid.view[view_index] : NULL;
@@ -1032,14 +1137,31 @@ static void queue_thumbnail(void) {
             thumbnail->from_cache = true;
             continue;
         }
-        char *path = art_path(entry, grid.art_mode);
-        if (!path) {
-            thumbnail->no_art = true;
-            continue;
+        png_err_t error;
+        path_t *zip_path = metadata_zip_path(entry);
+        if (zip_path) {
+            size_t size;
+            char *data = zip_art_read(path_get(zip_path), grid.art_mode, &size);
+            path_free(zip_path);
+            if (!data) {
+                thumbnail->no_art = true;
+                continue;
+            }
+            error = png_decoder_start_mem(data, size, GRID_ART_DECODE_SIZE, GRID_ART_DECODE_SIZE,
+                thumbnail_callback, thumbnail);
+            if (error != PNG_OK) {
+                free(data);
+            }
+        } else {
+            char *path = art_path(entry, grid.art_mode);
+            if (!path) {
+                thumbnail->no_art = true;
+                continue;
+            }
+            error = png_decoder_start(path, GRID_ART_DECODE_SIZE, GRID_ART_DECODE_SIZE,
+                thumbnail_callback, thumbnail);
+            free(path);
         }
-        png_err_t error = png_decoder_start(path, GRID_ART_DECODE_SIZE, GRID_ART_DECODE_SIZE,
-            thumbnail_callback, thumbnail);
-        free(path);
         if (error == PNG_OK) {
             thumbnail->loading = true;
         } else if (error != PNG_ERR_BUSY) {

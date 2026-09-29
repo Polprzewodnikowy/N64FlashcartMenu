@@ -29,8 +29,9 @@ arrangement and view choices. If the library can't be read, Grid keeps its index
 and the Grid Cache row shows **Scan failed**.
 
 Titles, authors, release dates, and artwork come from the `menu/metadata`
-layout described in [Game Pak and box art](19_gamepak_boxart.md). Without
-metadata, Grid uses the ROM header title or filename and a placeholder.
+layout described in [Game Pak and box art](19_gamepak_boxart.md), or from a
+ROM's `.meta` companion or embedded metadata, in the same order ROM details uses.
+Without metadata, Grid uses the ROM header title or filename and a placeholder.
 
 On first opening, Grid selects the most recently played ROM.
 

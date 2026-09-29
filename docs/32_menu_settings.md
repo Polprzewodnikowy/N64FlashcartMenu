@@ -75,8 +75,15 @@ OFF: ROM saves are saved alongside the ROM file.
 ### Central Saves Folder
 
 Controls whether N64FlashcartMenu keeps every save in one central `/saves` folder at the root of the SD card. This setting is OFF by default.
-ON: saves are stored as `/saves/<ROM file name>.sav`, whichever folder the ROM is launched from. Copies of the same ROM file in different folders (for example a favourites folder and an A-Z folder) therefore share one save. When a ROM that has no central save yet still has a save in its own location (see Use Save Folders), that save is moved into the central folder the first time the ROM is launched, so existing progress carries over.
-OFF: saves are stored per folder, as described in Use Save Folders. Saves that were moved to the central folder are not moved back.
+ON: saves are stored as `/saves/<ROM file name>.sav`, whichever folder the ROM is launched from. Copies of the same ROM file in different folders (for example a favourites folder and an A-Z folder) therefore share one save.
+OFF: saves are stored per folder, as described in Use Save Folders, so each copy of a ROM keeps its own save.
+
+### Migrate Old Saves
+
+Only used when Central Saves Folder is ON. This setting is OFF by default.
+ON: when a ROM has no central save yet but still has one in its own location (see Use Save Folders), that save is moved into the central folder the first time the ROM is launched, so existing progress carries over.
+OFF: saves in the per-folder locations are left where they are, and a ROM without a central save starts a new one.
+Saves that were moved to the central folder are not moved back when either setting is turned OFF.
 
 ### Sound Effects
 

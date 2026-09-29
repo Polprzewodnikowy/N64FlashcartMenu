@@ -54,9 +54,10 @@ static bool create_saves_subdirectory (path_t *path) {
  *
  * Every save lives in /saves on the SD card, named after the ROM file ("sd:/any/directory/Game.z64" uses
  * "sd:/saves/Game.sav"), so copies of the same ROM in different directories share one save.
- * A save still stored in the ROM's own location (its "saves" subdirectory, or next to the ROM) is moved into
- * the central directory the first time, so existing progress carries over when the setting is turned on.
- * If that move fails, the existing save is used where it is rather than starting a new, empty one.
+ * With "Migrate Old Saves" on, a save still stored in the ROM's own location (its "saves" subdirectory, or next
+ * to the ROM) is moved into the central directory the first time, so existing progress carries over. If that move
+ * fails, the existing save is used where it is rather than starting a new, empty one. With it off, saves in the
+ * per-folder locations are left untouched.
  *
  * @param menu Pointer to the menu structure.
  * @param save_path The save path next to the ROM (with the "sav" extension already applied).
@@ -71,13 +72,16 @@ static path_t *central_save_path (menu_t *menu, path_t *save_path, flashcart_sav
     }
     path_push(central, path_last_get(save_path));
 
+    if (!menu->settings.migrate_saves_to_central_folder || (save_type == FLASHCART_SAVE_TYPE_NONE)) {
+        return central;
+    }
+
     path_t *local = path_clone(save_path);
     if (menu->settings.use_saves_folder) {
         path_push_subdir(local, SAVE_DIRECTORY_NAME);
     }
 
-    if ((save_type != FLASHCART_SAVE_TYPE_NONE) && !path_are_match(central, local) &&
-        !file_exists(path_get(central)) && file_exists(path_get(local))) {
+    if (!path_are_match(central, local) && !file_exists(path_get(central)) && file_exists(path_get(local))) {
         if (f_rename(strip_fs_prefix(path_get(local)), strip_fs_prefix(path_get(central))) != FR_OK) {
             path_free(central);
             return local;

@@ -36,6 +36,9 @@ typedef struct {
     /** @brief Keep every save in one central folder (/saves), shared by all copies of a ROM */
     bool use_central_saves_folder;
 
+    /** @brief Move a ROM's existing per-folder save into the central saves folder the first time the ROM is launched */
+    bool migrate_saves_to_central_folder;
+
     /** @brief Show saves folder in file browser */ 
     bool show_saves_folder;
 

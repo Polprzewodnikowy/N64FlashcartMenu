@@ -21,7 +21,7 @@ void fonts_apply_theme(void) {
 }
 
 static void load_default_font (char *custom_font_path) {
-    char *font_path = "rom:/Firple-Bold.font64";
+    char *font_path = "rom:/menu/fonts/Firple-Bold.font64";
 
     if (custom_font_path != NULL && strlen(custom_font_path) > 0) {
         // Only check file_exists if custom_font_path is a valid filesystem path (not rom:/)

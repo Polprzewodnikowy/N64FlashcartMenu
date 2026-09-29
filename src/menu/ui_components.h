@@ -105,6 +105,8 @@ void ui_components_box_draw(int x0, int y0, int x1, int y1, color_t color);
  * @param y1 Ending y-coordinate.
  */
 void ui_components_border_draw(int x0, int y0, int x1, int y1);
+/** Palette-independent outline for the currently focused control. */
+void ui_components_focus_draw(int x0, int y0, int x1, int y1);
 
 /**
  * @brief Draw the layout component with tabs.
@@ -237,7 +239,8 @@ void ui_components_background_draw(void);
 surface_t *ui_components_background_get_image(void);
 
 /**
- * @brief Reload the background image from cache (call after temporarily freeing).
+ * @brief Reload the background image from cache (call after temporarily freeing
+ *        or changing the theme); frees it when the active theme has no image.
  */
 void ui_components_background_reload(void);
 
@@ -329,6 +332,10 @@ typedef struct {
  */
 component_boxart_t *ui_components_boxart_init(const char *storage_prefix, const char *game_code, const char *rom_title, file_image_type_t current_image_view);
 
+/** Initialize boxart from an image buffer owned by the decoder. */
+component_boxart_t *ui_components_boxart_init_mem(const char *filename, void *data, size_t size,
+                                                  int max_width, int max_height);
+
 /**
  * @brief Free the box art component resources.
  * 
@@ -358,8 +365,33 @@ void ui_components_sprites_init(void);
 void ui_components_sprite_draw (sprite_type_t sprite, float pos_x, float pos_y);
 
 /**
+ * @brief Draw a block of text inside an explicit rectangle.
+ *
+ * @param x The x-coordinate of the top-left corner.
+ * @param y The y-coordinate of the top-left corner.
+ * @param width Width of the rectangle.
+ * @param height Height of the rectangle.
+ * @param style Font style to draw with.
+ * @param align Horizontal alignment within the rectangle.
+ * @param wrap Wrapping mode for text that exceeds the rectangle.
+ * @param text The text to draw.
+ */
+void ui_components_text_draw(int x, int y, int width, int height, menu_font_type_t style,
+                             rdpq_align_t align, rdpq_textwrap_t wrap, const char *text);
+
+/**
+ * @brief Draw a label/value row inside a settings pane.
+ *
+ * @param y The y-coordinate of the top of the row.
+ * @param label The row label.
+ * @param value The row value.
+ * @param selected Whether the row is highlighted.
+ */
+void ui_components_settings_row_draw(int y, const char *label, const char *value, bool selected);
+
+/**
  * @brief Draw the tabs component.
- * 
+ *
  * @param text Array of tab labels.
  * @param count Number of tabs.
  * @param selected Index of the selected tab.

@@ -80,11 +80,11 @@ void sound_init_audioplayer_playback (void) {
  */
 void sound_init_sfx (void) {
     mixer_ch_set_vol(SOUND_SFX_CHANNEL, 0.5f, 0.5f);
-    wav64_open(&sfx_cursor, "rom:/cursorsound.wav64");
-    wav64_open(&sfx_exit, "rom:/back.wav64");
-    wav64_open(&sfx_setting, "rom:/settings.wav64");
-    wav64_open(&sfx_enter, "rom:/enter.wav64");
-    wav64_open(&sfx_error, "rom:/error.wav64");
+    wav64_open(&sfx_cursor, "rom:/menu/sounds/cursorsound.wav64");
+    wav64_open(&sfx_exit, "rom:/menu/sounds/back.wav64");
+    wav64_open(&sfx_setting, "rom:/menu/sounds/settings.wav64");
+    wav64_open(&sfx_enter, "rom:/menu/sounds/enter.wav64");
+    wav64_open(&sfx_error, "rom:/menu/sounds/error.wav64");
     sfx_enabled = true;
     sfx_opened = true;
 }
@@ -93,7 +93,7 @@ void sound_init_sfx (void) {
  * @brief Initialize the background music.
  */
 void sound_init_bgm (void) {
-    wav64_open(&bgm, "rom:/bgm.wav64");
+    wav64_open(&bgm, "rom:/menu/sounds/bgm.wav64");
     wav64_set_loop(&bgm, true);
     mixer_ch_set_vol(SOUND_BGM_CHANNEL, 0.1f, 0.1f);
     bgm_opened = true;

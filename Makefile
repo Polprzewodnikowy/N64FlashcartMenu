@@ -20,6 +20,7 @@ N64_ROM_SAVETYPE = none
 N64_ROM_RTC = 1
 N64_ROM_REGIONFREE = 1
 N64_ROM_REGION = E
+N64_ROM_EXPANSIONPAK = recommended
 
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
 

@@ -97,6 +97,7 @@ static const setting_descriptor_t settings[] = {
     BOOL_SETTING("Sound Effects", soundfx_enabled, SETTING_UPDATE_SFX),
     BOOL_SETTING("Background Music", bgm_enabled, SETTING_UPDATE_BGM),
     BOOL_SETTING("Use Saves Folder", use_saves_folder, 0),
+    BOOL_SETTING("Central Saves Folder", use_central_saves_folder, 0),
     BOOL_SETTING("Show Saves Folder", show_saves_folder, SETTING_RELOAD_BROWSER),
     BOOL_SETTING("Show Save Files", show_save_files, SETTING_RELOAD_BROWSER),
     BOOL_SETTING("Show Cheat Files", show_cheat_files, SETTING_RELOAD_BROWSER),

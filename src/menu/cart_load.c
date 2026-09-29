@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <libdragon.h>
+#include <fatfs/ff.h>
 #include "cart_load.h"
 #include "ini_parser.h"
 #include "path.h"
@@ -46,6 +47,45 @@ static bool create_saves_subdirectory (path_t *path) {
     bool error = directory_create(path_get(save_folder_path));
     path_free(save_folder_path);
     return error;
+}
+
+/**
+ * @brief Get the path of a ROM's save in the central saves directory.
+ *
+ * Every save lives in /saves on the SD card, named after the ROM file ("sd:/any/directory/Game.z64" uses
+ * "sd:/saves/Game.sav"), so copies of the same ROM in different directories share one save.
+ * A save still stored in the ROM's own location (its "saves" subdirectory, or next to the ROM) is moved into
+ * the central directory the first time, so existing progress carries over when the setting is turned on.
+ * If that move fails, the existing save is used where it is rather than starting a new, empty one.
+ *
+ * @param menu Pointer to the menu structure.
+ * @param save_path The save path next to the ROM (with the "sav" extension already applied).
+ * @param save_type The save type (nothing is created or moved when the ROM has no save).
+ * @return path_t* The save path to use (to be freed by the caller), or NULL if the directory could not be created.
+ */
+static path_t *central_save_path (menu_t *menu, path_t *save_path, flashcart_save_type_t save_type) {
+    path_t *central = path_init(menu->storage_prefix, "/" SAVE_DIRECTORY_NAME);
+    if ((save_type != FLASHCART_SAVE_TYPE_NONE) && directory_create(path_get(central))) {
+        path_free(central);
+        return NULL;
+    }
+    path_push(central, path_last_get(save_path));
+
+    path_t *local = path_clone(save_path);
+    if (menu->settings.use_saves_folder) {
+        path_push_subdir(local, SAVE_DIRECTORY_NAME);
+    }
+
+    if ((save_type != FLASHCART_SAVE_TYPE_NONE) && !path_are_match(central, local) &&
+        !file_exists(path_get(central)) && file_exists(path_get(local))) {
+        if (f_rename(strip_fs_prefix(path_get(local)), strip_fs_prefix(path_get(central))) != FR_OK) {
+            path_free(central);
+            return local;
+        }
+    }
+
+    path_free(local);
+    return central;
 }
 
 /**
@@ -113,7 +153,14 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     }
 
     path_ext_replace(path, "sav");
-    if (menu->settings.use_saves_folder) {
+    if (menu->settings.use_central_saves_folder) {
+        path_t *save_path = central_save_path(menu, path, save_type);
+        path_free(path);
+        if (save_path == NULL) {
+            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
+        }
+        path = save_path;
+    } else if (menu->settings.use_saves_folder) {
         if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(path)) {
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
@@ -359,7 +406,14 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     }
 
     path_ext_replace(path, "sav");
-    if (menu->settings.use_saves_folder) {
+    if (menu->settings.use_central_saves_folder) {
+        path_t *save_path = central_save_path(menu, path, save_type);
+        path_free(path);
+        if (save_path == NULL) {
+            return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
+        }
+        path = save_path;
+    } else if (menu->settings.use_saves_folder) {
         if ((save_type != FLASHCART_SAVE_TYPE_NONE) && create_saves_subdirectory(path)) {
             path_free(path);
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;

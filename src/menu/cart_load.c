@@ -50,12 +50,12 @@ static bool create_saves_subdirectory (path_t *path) {
 }
 
 /**
- * @brief Get the path of a ROM's save in the central saves directory.
+ * @brief Get the path of a ROM's save in the global saves directory.
  *
  * Every save lives in /saves on the SD card, named after the ROM file ("sd:/any/directory/Game.z64" uses
  * "sd:/saves/Game.sav"), so copies of the same ROM in different directories share one save.
  * With "Migrate Old Saves" on, a save still stored in the ROM's own location (its "saves" subdirectory, or next
- * to the ROM) is moved into the central directory the first time, so existing progress carries over. If that move
+ * to the ROM) is moved into the global directory the first time, so existing progress carries over. If that move
  * fails, the existing save is used where it is rather than starting a new, empty one. With it off, saves in the
  * per-folder locations are left untouched.
  *
@@ -64,32 +64,33 @@ static bool create_saves_subdirectory (path_t *path) {
  * @param save_type The save type (nothing is created or moved when the ROM has no save).
  * @return path_t* The save path to use (to be freed by the caller), or NULL if the directory could not be created.
  */
-static path_t *central_save_path (menu_t *menu, path_t *save_path, flashcart_save_type_t save_type) {
-    path_t *central = path_init(menu->storage_prefix, "/" SAVE_DIRECTORY_NAME);
-    if ((save_type != FLASHCART_SAVE_TYPE_NONE) && directory_create(path_get(central))) {
-        path_free(central);
+static path_t *global_save_path (menu_t *menu, path_t *save_path, flashcart_save_type_t save_type) {
+    path_t *global_save = path_init(menu->storage_prefix, "/" SAVE_DIRECTORY_NAME);
+    if ((save_type != FLASHCART_SAVE_TYPE_NONE) && directory_create(path_get(global_save))) {
+        path_free(global_save);
         return NULL;
     }
-    path_push(central, path_last_get(save_path));
+    path_push(global_save, path_last_get(save_path));
 
-    if (!menu->settings.migrate_saves_to_central_folder || (save_type == FLASHCART_SAVE_TYPE_NONE)) {
-        return central;
+    if (!menu->settings.migrate_saves_to_global_folder || (save_type == FLASHCART_SAVE_TYPE_NONE)) {
+        return global_save;
     }
 
-    path_t *local = path_clone(save_path);
+    path_t *local_save = path_clone(save_path);
     if (menu->settings.use_saves_folder) {
-        path_push_subdir(local, SAVE_DIRECTORY_NAME);
+        path_push_subdir(local_save, SAVE_DIRECTORY_NAME);
     }
 
-    if (!path_are_match(central, local) && !file_exists(path_get(central)) && file_exists(path_get(local))) {
-        if (f_rename(strip_fs_prefix(path_get(local)), strip_fs_prefix(path_get(central))) != FR_OK) {
-            path_free(central);
-            return local;
+    if (!path_are_match(global_save, local_save) && !file_exists(path_get(global_save)) &&
+        file_exists(path_get(local_save))) {
+        if (f_rename(strip_fs_prefix(path_get(local_save)), strip_fs_prefix(path_get(global_save))) != FR_OK) {
+            path_free(global_save);
+            return local_save;
         }
     }
 
-    path_free(local);
-    return central;
+    path_free(local_save);
+    return global_save;
 }
 
 /**
@@ -157,8 +158,8 @@ cart_load_err_t cart_load_n64_rom_and_save (menu_t *menu, flashcart_progress_cal
     }
 
     path_ext_replace(path, "sav");
-    if (menu->settings.use_central_saves_folder) {
-        path_t *save_path = central_save_path(menu, path, save_type);
+    if (menu->settings.use_global_saves_folder) {
+        path_t *save_path = global_save_path(menu, path, save_type);
         path_free(path);
         if (save_path == NULL) {
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;
@@ -410,8 +411,8 @@ cart_load_err_t cart_load_emulator (menu_t *menu, cart_load_emu_type_t emu_type,
     }
 
     path_ext_replace(path, "sav");
-    if (menu->settings.use_central_saves_folder) {
-        path_t *save_path = central_save_path(menu, path, save_type);
+    if (menu->settings.use_global_saves_folder) {
+        path_t *save_path = global_save_path(menu, path, save_type);
         path_free(path);
         if (save_path == NULL) {
             return CART_LOAD_ERR_CREATE_SAVES_SUBDIR_FAIL;

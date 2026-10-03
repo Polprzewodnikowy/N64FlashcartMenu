@@ -128,6 +128,26 @@ static flashcart_err_t ed64_xseries_init (void) {
 static flashcart_err_t ed64_xseries_deinit (void) {
     ed64_bios_set_game_mode();
     ed64_pseudo_state_free(&pending_writeback);
+    // flashcart_deinit() (which calls this) is the very last flashcart hook before the
+    // menu hands off to the loaded ROM; SD card writes that happen between load_save()
+    // and here (e.g. bookkeeping history, settings) go through registers in the same bank
+    // as the save-type register and reset it as a side effect, so re-apply it one more
+    // time now that no further SD card access will happen before the game boots.
+    ed64_bios_set_save_type(current_save_type);
+
+    // TEMPORARY DIAGNOSTIC: confirm the register actually sticks this time, with no more
+    // SD card access happening before boot.
+    FIL dbg;
+    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
+        char line[128];
+        UINT bw;
+        int len = snprintf(line, sizeof(line),
+            "ed64_xseries_deinit: current_save_type = %d, ROM_CFG readback = %d\n",
+            current_save_type, ed64_bios_get_save_type());
+        f_write(&dbg, line, (UINT) (len), &bw);
+        f_close(&dbg);
+    }
+
     return FLASHCART_OK;
 }
 
@@ -285,10 +305,6 @@ static flashcart_err_t ed64_xseries_load_save (char *save_path) {
     }
 
     ed64_bios_write_save(current_save_type, buffer, save_size);
-    // ed64_bios_write_save() either never touches the save-type register (EEPROM) or
-    // leaves it reset to NONE (SRAM/FlashRAM, see ed64_bios_ll.c) - apply the game's
-    // actual save type now so it's correctly configured before it boots.
-    ed64_bios_set_save_type(current_save_type);
 
     if (pending_writeback.last_save_path) {
         free(pending_writeback.last_save_path);
@@ -298,6 +314,12 @@ static flashcart_err_t ed64_xseries_load_save (char *save_path) {
     // NOTE: reusing this generic field to persist the low-level save type across resets.
     pending_writeback.save_type = (flashcart_save_type_t) ((int) (current_save_type));
     ed64_pseudo_state_save(&pending_writeback);
+
+    // ed64_pseudo_state_save() above writes an SD card file, which goes through SDIO
+    // registers in the same bank as the save-type register and resets it as a side
+    // effect; apply the game's actual save type LAST, after all SD card access is done,
+    // so it's still correctly configured by the time the game actually boots.
+    ed64_bios_set_save_type(current_save_type);
 
     return FLASHCART_OK;
 }

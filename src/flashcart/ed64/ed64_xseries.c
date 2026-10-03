@@ -136,14 +136,17 @@ static flashcart_err_t ed64_xseries_deinit (void) {
     ed64_bios_set_save_type(current_save_type);
 
     // TEMPORARY DIAGNOSTIC: confirm the register actually sticks this time, with no more
-    // SD card access happening before boot.
+    // SD card access happening before boot. Capture the readback BEFORE opening the debug
+    // file (f_open() itself is SD card access and would otherwise clobber the very
+    // register we're trying to inspect).
+    ed64_save_type_t readback_after_set = ed64_bios_get_save_type();
     FIL dbg;
     if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
         char line[128];
         UINT bw;
         int len = snprintf(line, sizeof(line),
             "ed64_xseries_deinit: current_save_type = %d, ROM_CFG readback = %d\n",
-            current_save_type, ed64_bios_get_save_type());
+            current_save_type, readback_after_set);
         f_write(&dbg, line, (UINT) (len), &bw);
         f_close(&dbg);
     }
@@ -263,14 +266,17 @@ static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_off
 static flashcart_err_t ed64_xseries_load_save (char *save_path) {
     // TEMPORARY DIAGNOSTIC: dump the save type as actually configured by set_save_type()
     // (called before load_save() per flashcart_load_save()'s own sequencing) to a file.
+    // Capture the readback BEFORE any SD card access (f_open() itself is SD card access
+    // and would otherwise clobber the very register we're trying to inspect).
+    ed64_save_type_t readback_before_sd = ed64_bios_get_save_type();
     FIL dbg;
     if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
         char line[256];
         UINT bw;
         int len = snprintf(line, sizeof(line),
             "ed64_xseries_load_save: current_save_type = %d\n"
-            "ROM_CFG readback (actual)  = %d\n",
-            current_save_type, ed64_bios_get_save_type());
+            "ROM_CFG readback (before SD access) = %d\n",
+            current_save_type, readback_before_sd);
         f_write(&dbg, line, (UINT) (len), &bw);
         f_close(&dbg);
     }

@@ -135,22 +135,20 @@ static flashcart_err_t ed64_xseries_deinit (void) {
     // time now that no further SD card access will happen before the game boots.
     ed64_bios_set_save_type(current_save_type);
 
-    // TEMPORARY DIAGNOSTIC: confirm the register actually sticks this time, with no more
-    // SD card access happening before boot. Capture the readback BEFORE opening the debug
-    // file (f_open() itself is SD card access and would otherwise clobber the very
-    // register we're trying to inspect). Also re-read EDID (known-good at init time) at
-    // this same late point, to tell apart "this one register write doesn't stick" from
-    // "register bank access in general is broken by this point in execution".
-    ed64_save_type_t readback_after_set = ed64_bios_get_save_type();
-    ed64_cart_id_t edid_readback = ed64_bios_get_cart_id();
+    // TEMPORARY DIAGNOSTIC: exhaustively probe how ROM_CFG behaves (DMA vs plain
+    // io_write/io_read, both directions) right before boot, with no more SD card access
+    // happening before boot. Runs BEFORE opening the debug file (f_open() itself is SD
+    // card access and would otherwise interfere with the very probe being run).
+    char probe_report[320];
+    ed64_bios_debug_probe_rom_cfg(current_save_type, probe_report, sizeof(probe_report));
     FIL dbg;
     if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
-        char line[160];
+        char line[64];
         UINT bw;
         int len = snprintf(line, sizeof(line),
-            "ed64_xseries_deinit: current_save_type = %d, ROM_CFG readback = %d, EDID readback = %d\n",
-            current_save_type, readback_after_set, edid_readback);
+            "ed64_xseries_deinit: current_save_type = %d\n", current_save_type);
         f_write(&dbg, line, (UINT) (len), &bw);
+        f_write(&dbg, probe_report, (UINT) (strlen(probe_report)), &bw);
         f_close(&dbg);
     }
 
@@ -268,23 +266,19 @@ static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_off
 }
 
 static flashcart_err_t ed64_xseries_load_save (char *save_path) {
-    // TEMPORARY DIAGNOSTIC: dump the save type as actually configured by set_save_type()
-    // (called before load_save() per flashcart_load_save()'s own sequencing) to a file.
-    // Capture the readback BEFORE any SD card access (f_open() itself is SD card access
-    // and would otherwise clobber the very register we're trying to inspect). Also
-    // re-read EDID to tell apart "ROM_CFG write doesn't stick" from "register bank
-    // access in general is broken here".
-    ed64_save_type_t readback_before_sd = ed64_bios_get_save_type();
-    ed64_cart_id_t edid_readback = ed64_bios_get_cart_id();
+    // TEMPORARY DIAGNOSTIC: run the same exhaustive ROM_CFG probe here too (before any SD
+    // card access - f_open() itself is SD card access and would otherwise interfere with
+    // the very probe being run), to compare against the one taken in deinit().
+    char probe_report[320];
+    ed64_bios_debug_probe_rom_cfg(current_save_type, probe_report, sizeof(probe_report));
     FIL dbg;
     if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
-        char line[256];
+        char line[64];
         UINT bw;
         int len = snprintf(line, sizeof(line),
-            "ed64_xseries_load_save: current_save_type = %d\n"
-            "ROM_CFG readback (before SD access) = %d, EDID readback = %d\n",
-            current_save_type, readback_before_sd, edid_readback);
+            "ed64_xseries_load_save: current_save_type = %d\n", current_save_type);
         f_write(&dbg, line, (UINT) (len), &bw);
+        f_write(&dbg, probe_report, (UINT) (strlen(probe_report)), &bw);
         f_close(&dbg);
     }
 

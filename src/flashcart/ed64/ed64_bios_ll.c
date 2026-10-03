@@ -1,5 +1,6 @@
 #include <flashram.h>
 #include <libdragon.h>
+#include <stdio.h>
 
 #include "../flashcart_utils.h"
 #include "ed64_bios_ll.h"
@@ -49,6 +50,41 @@ ed64_save_type_t ed64_bios_get_save_type (void) {
     uint32_t aligned_value __attribute__((aligned(8)));
     pi_dma_read_data((void *) (ED64_BIOS_REG_ROM_CFG), &aligned_value, sizeof(aligned_value));
     return (ed64_save_type_t) (aligned_value & 0xFFFF);
+}
+
+void ed64_bios_debug_probe_rom_cfg (ed64_save_type_t restore_value, char *out, size_t out_size) {
+    uint32_t aligned_value __attribute__((aligned(8)));
+
+    uint32_t initial_io = io_read(ED64_BIOS_REG_ROM_CFG);
+    pi_dma_read_data((void *) (ED64_BIOS_REG_ROM_CFG), &aligned_value, sizeof(aligned_value));
+    uint32_t initial_dma = aligned_value;
+
+    aligned_value = 0x1234;
+    pi_dma_write_data(&aligned_value, (void *) (ED64_BIOS_REG_ROM_CFG), sizeof(aligned_value));
+    uint32_t after_dma_write__io_read = io_read(ED64_BIOS_REG_ROM_CFG);
+    pi_dma_read_data((void *) (ED64_BIOS_REG_ROM_CFG), &aligned_value, sizeof(aligned_value));
+    uint32_t after_dma_write__dma_read = aligned_value;
+
+    io_write(ED64_BIOS_REG_ROM_CFG, 0x5678);
+    uint32_t after_io_write__io_read = io_read(ED64_BIOS_REG_ROM_CFG);
+    pi_dma_read_data((void *) (ED64_BIOS_REG_ROM_CFG), &aligned_value, sizeof(aligned_value));
+    uint32_t after_io_write__dma_read = aligned_value;
+
+    uint32_t boot_cfg = io_read(ED64_BIOS_REG_BOOT_CFG);
+
+    aligned_value = (uint32_t) (restore_value);
+    pi_dma_write_data(&aligned_value, (void *) (ED64_BIOS_REG_ROM_CFG), sizeof(aligned_value));
+    io_write(ED64_BIOS_REG_ROM_CFG, (uint32_t) (restore_value));
+
+    snprintf(out, out_size,
+        "probe: initial io=%lu dma=%lu\n"
+        "after DMA write 0x1234: io_read=%lu dma_read=%lu\n"
+        "after io_write 0x5678: io_read=%lu dma_read=%lu\n"
+        "BOOT_CFG=0x%lx\n",
+        (unsigned long) (initial_io), (unsigned long) (initial_dma),
+        (unsigned long) (after_dma_write__io_read), (unsigned long) (after_dma_write__dma_read),
+        (unsigned long) (after_io_write__io_read), (unsigned long) (after_io_write__dma_read),
+        (unsigned long) (boot_cfg));
 }
 
 /* flashram_init() reconfigures PI DOM2 for its own command protocol; re-apply libdragon's

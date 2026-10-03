@@ -72,6 +72,18 @@ void ed64_bios_set_save_type (ed64_save_type_t save_type);
 ed64_save_type_t ed64_bios_get_save_type (void);
 
 /**
+ * @brief TEMPORARY DIAGNOSTIC: exhaustively probe ROM_CFG (write/read via both DMA and
+ *        plain io_write/io_read, in both orders) plus BOOT_CFG, to tell apart "the write
+ *        doesn't stick" from "the read doesn't see it" from "something else entirely".
+ *        Restores save_type to restore_value before returning.
+ * 
+ * @param restore_value Save type to leave configured once the probe is done.
+ * @param out Destination buffer for the human-readable report.
+ * @param out_size Size of out, in bytes.
+ */
+void ed64_bios_debug_probe_rom_cfg (ed64_save_type_t restore_value, char *out, size_t out_size);
+
+/**
  * @brief Read the cart save RAM/EEPROM contents into a buffer.
  * 
  * @param save_type The save type to read as.

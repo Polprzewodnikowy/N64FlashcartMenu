@@ -16,7 +16,6 @@
 #include "ed64_xseries_ll.h"
 #include "ed64_xseries.h"
 #include "ed64_pseudo_state.h"
-#include "../../boot/cic.h"
 
 #define ROM_ADDRESS                 (0xB0000000)
 #define ED64_XSERIES_MAX_SAVE_SIZE  (KiB(128))
@@ -239,24 +238,6 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
         return FLASHCART_ERR_LOAD;
     }
 
-    // TEMPORARY DIAGNOSTIC: run CIC detection on the just-loaded ROM data right now,
-    // before any save-type/GAMEMOD register work happens, to tell apart "the ROM data
-    // itself is already bad at load time" from "something afterward corrupts it". Uses
-    // the shared save-transfer scratch buffer rather than a stack-local array - IPL3_LENGTH
-    // (4032 bytes) is too large to put on the stack this deep in the call chain.
-    uint8_t *ipl3_probe = ed64_bios_save_buffer;
-    memcpy(ipl3_probe, (void *) (ROM_ADDRESS + 0x40), IPL3_LENGTH);
-    cic_type_t cic_probe = cic_detect(ipl3_probe);
-    char cic_line[64];
-    int cic_line_len = snprintf(cic_line, sizeof(cic_line),
-        "ed64_xseries_load_rom: cic_type right after load = %d\n", (int) (cic_probe));
-    FIL cic_dbg;
-    if (f_open(&cic_dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
-        UINT bw;
-        f_write(&cic_dbg, cic_line, (UINT) (cic_line_len), &bw);
-        f_close(&cic_dbg);
-    }
-
     return FLASHCART_OK;
 }
 
@@ -301,12 +282,11 @@ static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_off
 static flashcart_err_t ed64_xseries_load_save (char *save_path) {
     // TEMPORARY DIAGNOSTIC: run the same exhaustive ROM_CFG probe here too (before any SD
     // card access - f_open() itself is SD card access and would otherwise interfere with
-    // the very probe being run), to compare against the one taken in deinit(). Appends
-    // rather than truncating - load_rom() already reset the file for this session.
+    // the very probe being run), to compare against the one taken in deinit().
     char probe_report[320];
     ed64_bios_debug_probe_rom_cfg(current_save_type, probe_report, sizeof(probe_report));
     FIL dbg;
-    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
+    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
         char line[64];
         UINT bw;
         int len = snprintf(line, sizeof(line),

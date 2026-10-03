@@ -1,10 +1,24 @@
 #include <libdragon.h>
+#include <fatfs/ff.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "boot_io.h"
 #include "boot.h"
 #include "cheats.h"
 #include "cic.h"
 #include "reboot.h"
+
+// TEMPORARY DIAGNOSTIC: append a line to the SD card debug log (safe to call this late -
+// FatFS/the flashcart driver are still usable right up until the final jump below).
+static void boot_debug_log (const char *line) {
+    FIL dbg;
+    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
+        UINT bw;
+        f_write(&dbg, line, (UINT) (strlen(line)), &bw);
+        f_close(&dbg);
+    }
+}
 
 /**
  * Selects the base IO address for the configured boot device.
@@ -41,6 +55,10 @@ static cic_type_t boot_detect_cic (boot_params_t *params) {
  */
 void boot (boot_params_t *params) {
     cic_type_t cic_type = boot_detect_cic(params);
+
+    char cic_line[48];
+    snprintf(cic_line, sizeof(cic_line), "boot: detected cic_type = %d\n", (int) (cic_type));
+    boot_debug_log(cic_line);
 
     if (params->detect_cic_seed) {
         params->cic_seed = cic_get_seed(cic_type);
@@ -149,6 +167,8 @@ void boot (boot_params_t *params) {
     }
 
     bool cheats_installed = cheats_install(cic_type, params->cheat_list);
+
+    boot_debug_log("boot: about to jump to reboot/IPL3\n");
 
     register uint32_t clear_rdram asm ("s1");
     register uint32_t skip_rdram_reset asm ("a0");

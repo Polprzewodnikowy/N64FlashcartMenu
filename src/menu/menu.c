@@ -56,6 +56,8 @@ static void menu_init (boot_params_t *boot_params) {
     menu->mode = MENU_MODE_NONE;
     menu->next_mode = MENU_MODE_STARTUP;
 
+    // flashcart_init() mounts "rom:/" itself (after the per-cart PI bus setup its own
+    // cart detection does, which DragonFS reads need to be reliable).
     menu->flashcart_err = flashcart_init(&menu->storage_prefix);
     if (menu->flashcart_err != FLASHCART_OK) {
         menu->next_mode = MENU_MODE_FAULT;
@@ -66,7 +68,6 @@ static void menu_init (boot_params_t *boot_params) {
     rtc_init();
     rspq_init();
     rdpq_init();
-    dfs_init(DFS_DEFAULT_LOCATION);
 
     actions_init();
     sound_init_default();

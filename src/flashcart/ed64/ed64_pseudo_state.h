@@ -14,7 +14,6 @@
 /** @brief EverDrive pseudo save-writeback state (reset-button flow on V-series). */
 typedef struct {
     bool is_expecting_save_writeback;
-    bool is_fram_save_type;
     flashcart_save_type_t save_type;
     char *last_save_path;
 } ed64_pseudo_writeback_t;

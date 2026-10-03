@@ -41,7 +41,7 @@ SRCS = \
 	flashcart/64drive/64drive_ll.c \
 	flashcart/64drive/64drive.c \
 	flashcart/flashcart_utils.c \
-	flashcart/ed64/ed64_proseries.c \
+	flashcart/ed64/ed64_bios_ll.c \
 	flashcart/ed64/ed64_vseries.c \
 	flashcart/ed64/ed64_vseries_ll.c \
 	flashcart/ed64/ed64_xseries.c \
@@ -136,6 +136,12 @@ IMAGES = \
 	filetype_save.png \
 	filetype_unknown.png
 
+FIRMWARE = \
+	ed64_vseries_fpga_v2.rle \
+	ed64_vseries_fpga_v3.rle \
+	ed64_xseries_fpga_ice.rle \
+	ed64_xseries_fpga_main.rle
+
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o,$(basename $(SRCS))))
 MINIZ_OBJS = $(filter $(BUILD_DIR)/libs/miniz/%.o,$(OBJS))
 SPNG_OBJS = $(filter $(BUILD_DIR)/libs/libspng/%.o,$(OBJS))
@@ -145,7 +151,8 @@ FILESYSTEM = \
 	$(addprefix $(FILESYSTEM_DIR)/menu/fonts/, $(notdir $(FONTS:%.ttf=%.font64))) \
 	$(addprefix $(FILESYSTEM_DIR)/menu/sounds/, $(notdir $(SOUNDS_WAV:%.wav=%.wav64))) \
 	$(addprefix $(FILESYSTEM_DIR)/menu/sounds/, $(notdir $(SOUNDS_XM:%.xm=%.xm64))) \
-	$(addprefix $(FILESYSTEM_DIR)/menu/sprites/, $(notdir $(IMAGES:%.png=%.sprite)))
+	$(addprefix $(FILESYSTEM_DIR)/menu/sprites/, $(notdir $(IMAGES:%.png=%.sprite))) \
+	$(addprefix $(FILESYSTEM_DIR)/menu/firmware/, $(FIRMWARE))
 
 $(MINIZ_OBJS): N64_CFLAGS+=-Wno-unused-function -fcompare-debug-second
 $(SPNG_OBJS): N64_CFLAGS+=-DSPNG_USE_MINIZ -fcompare-debug-second
@@ -173,6 +180,11 @@ $(FILESYSTEM_DIR)/menu/sprites/%.sprite: $(ASSETS_DIR)/images/%.png
 	@echo " [SPRITE] $@"
 	@mkdir -p $(dir $@)
 	@$(N64_MKSPRITE) $(MKSPRITE_FLAGS) -o $(dir $@) "$<"
+
+$(FILESYSTEM_DIR)/menu/firmware/%.rle: $(ASSETS_DIR)/firmware/%.rle
+	@echo " [FIRMWARE] $@"
+	@mkdir -p $(dir $@)
+	@cp "$<" "$@"
 
 $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 

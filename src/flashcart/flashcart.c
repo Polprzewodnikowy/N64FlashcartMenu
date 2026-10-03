@@ -161,6 +161,12 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     *storage_prefix = "sd:/";
     bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
 
+    // debug_init_sdfs() above runs cart_init(), which does the per-cart PI bus setup
+    // (e.g. EverDrive's edx_init()/ed_init()) that DragonFS reads need to be reliable;
+    // mount "rom:/" only now, and before flashcart->init() below, since flashcart-specific
+    // init (e.g. EverDrive's FPGA personality loader) needs its own embedded assets.
+    dfs_init(DFS_DEFAULT_LOCATION);
+
     switch (cart_type) {
         case CART_CI:   // 64drive
             flashcart = d64_get_flashcart();

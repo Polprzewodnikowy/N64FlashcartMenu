@@ -23,6 +23,8 @@
 static ed64_save_type_t current_save_type = ED64_SAVE_TYPE_NONE;
 /** @brief Pending save-writeback state, persisted across the RESET button (see ed64_xseries_flush_pending_writeback). */
 static ed64_pseudo_writeback_t pending_writeback;
+/** @brief Whether the full (RTC/USB/save registers) personality is actually active this boot. */
+static bool fpga_configured = false;
 
 static flashcart_firmware_version_t ed64_xseries_get_firmware_version (void) {
     flashcart_firmware_version_t version_info = {
@@ -55,7 +57,7 @@ static flashcart_err_t ed64_xseries_flush_pending_writeback (void) {
         return FLASHCART_OK;
     }
 
-    static uint8_t buffer[ED64_XSERIES_MAX_SAVE_SIZE] __attribute__((aligned(8)));
+    uint8_t *buffer = ed64_bios_save_buffer;
 
     ed64_bios_read_save(save_type, buffer, (size_t) (save_size));
 
@@ -92,8 +94,12 @@ static flashcart_err_t ed64_xseries_init (void) {
     // (RTC/USB/save registers) every time, same as the official OS's edConfigureFpga()
     // does on a cold power-on. We always redo it rather than skipping it on a warm reset
     // the way the official OS does via its BOOTMOD/NCSTART boot-config bits, for simplicity.
-    if (!ed64_xseries_ll_configure_fpga("rom:/menu/firmware/ed64_xseries_fpga_ice.rle", "rom:/menu/firmware/ed64_xseries_fpga_main.rle")) {
-        return FLASHCART_ERR_INT;
+    // A missing/corrupt firmware file shouldn't brick the whole menu: fall back to running
+    // in the cart's basic cold-boot personality instead, same as the V1 handling below.
+    fpga_configured = ed64_xseries_ll_configure_fpga("rom:/menu/firmware/ed64_xseries_fpga_ice.rle", "rom:/menu/firmware/ed64_xseries_fpga_main.rle");
+    if (!fpga_configured) {
+        debugf("ed64x: FPGA personality load failed, continuing in basic mode\n");
+        return FLASHCART_OK;
     }
 
     directory_create("sd:/menu");
@@ -118,7 +124,7 @@ static flashcart_err_t ed64_xseries_deinit (void) {
 }
 
 static bool ed64_xseries_has_feature (flashcart_features_t feature) {
-    bool is_model_x7 = (ed64_bios_get_cart_id() == ED64_CART_ID_X7);
+    bool is_model_x7 = fpga_configured && (ed64_bios_get_cart_id() == ED64_CART_ID_X7);
     switch (feature) {
         case FLASHCART_FEATURE_RTC: return is_model_x7;
         case FLASHCART_FEATURE_USB: return is_model_x7;
@@ -128,6 +134,9 @@ static bool ed64_xseries_has_feature (flashcart_features_t feature) {
         // No hardware support for monitoring save writes; the pending-writeback flow above
         // flushes saves back to the SD card once the menu regains control (after RESET).
         case FLASHCART_FEATURE_SAVE_WRITEBACK: return true;
+        // The FPGA/ICE40 personality bitstreams are embedded assets in this same menu ROM,
+        // not separately-flashed cart firmware; updating the menu updates them too.
+        case FLASHCART_FEATURE_BIOS_UPDATE_FROM_MENU: return true;
         default: return false;
     }
 }
@@ -219,7 +228,8 @@ static flashcart_err_t ed64_xseries_load_save (char *save_path) {
 
     FIL fil;
     UINT br;
-    static uint8_t buffer[ED64_XSERIES_MAX_SAVE_SIZE] __attribute__((aligned(8)));
+    uint8_t *buffer = ed64_bios_save_buffer;
+    size_t buffer_size = ED64_BIOS_MAX_SAVE_SIZE;
 
     if (f_open(&fil, strip_fs_prefix(save_path), FA_READ) != FR_OK) {
         return FLASHCART_ERR_LOAD;
@@ -227,7 +237,7 @@ static flashcart_err_t ed64_xseries_load_save (char *save_path) {
 
     size_t save_size = f_size(&fil);
 
-    if (save_size > sizeof(buffer)) {
+    if (save_size > buffer_size) {
         f_close(&fil);
         return FLASHCART_ERR_LOAD;
     }

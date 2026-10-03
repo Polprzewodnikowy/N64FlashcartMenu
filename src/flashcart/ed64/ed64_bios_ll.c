@@ -4,6 +4,8 @@
 #include "../flashcart_utils.h"
 #include "ed64_bios_ll.h"
 
+uint8_t ed64_bios_save_buffer[ED64_BIOS_MAX_SAVE_SIZE] __attribute__((aligned(8)));
+
 /* Shared FPGA command register bank, active on every model once its full-feature
  * personality is loaded (see ed64_vseries_ll_configure_fpga for V series; X series
  * boots directly into this bank). Physical base 0x1F800000. */

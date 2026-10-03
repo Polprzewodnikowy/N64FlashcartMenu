@@ -17,6 +17,18 @@
  * @{
  */
 
+/** @brief Largest possible save size (SRAM_128K/FlashRAM). */
+#define ED64_BIOS_MAX_SAVE_SIZE  (128 * 1024)
+
+/**
+ * @brief Shared save-transfer scratch buffer, usable by V series and X series alike (only
+ *        one flashcart driver is ever active at a time on real hardware, and within a
+ *        single driver its own save-writeback and save-load paths never run concurrently
+ *        either) - avoids reserving 2 separate 128 KiB buffers per series (4 total, 512
+ *        KiB combined) for what is always just one save transfer at a time.
+ */
+extern uint8_t ed64_bios_save_buffer[ED64_BIOS_MAX_SAVE_SIZE];
+
 /** @brief Cart hardware model IDs, as reported by the shared EDID register. */
 typedef enum {
     ED64_CART_ID_UNKNOWN = 0,

@@ -151,6 +151,18 @@ static flashcart_err_t ed64_xseries_deinit (void) {
         f_close(&dbg);
     }
 
+    // Different ROMs can expect different PI DOM1 bus timing (the official OS re-applies
+    // this from the ROM header's own bytes 0x00-0x03 - see edReboot() in its everdrive.c).
+    // This must be the absolute last register/SD access before boot: the FPGA command
+    // register bank (including the save-type register above) lives in the same PI DOM1
+    // address range and needs the FPGA-register-safe timing set by the reconfigure step,
+    // not the ROM's own timing, to be written/read reliably.
+    uint8_t *header = (uint8_t *) (ROM_ADDRESS);
+    *PI_BSD_DOM1_LAT_REG = header[3];
+    *PI_BSD_DOM1_PWD_REG = header[2];
+    *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
+    *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
+
     return FLASHCART_OK;
 }
 
@@ -210,17 +222,6 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
-
-    // Different ROMs can expect different PI DOM1 bus timing (the official OS re-applies
-    // this from the ROM header's own bytes 0x00-0x03 before booting - see edReboot() in
-    // its everdrive.c); leaving the FPGA-register-access timing the FPGA reconfigure step
-    // needs (set earlier, in ed64_xseries_ll_configure_fpga()) active instead can leave
-    // some games unable to boot at all.
-    uint8_t *header = (uint8_t *) (ROM_ADDRESS);
-    *PI_BSD_DOM1_LAT_REG = header[3];
-    *PI_BSD_DOM1_PWD_REG = header[2];
-    *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
-    *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
 
     return FLASHCART_OK;
 }

@@ -20,6 +20,13 @@
 #define ED64_XSERIES_MAX_SAVE_SIZE  (KiB(128))
 #define ED64_XSERIES_STATE_FILE     "sd:/menu/ed64_xseries_state.ini"
 
+// N64 PI controller's own bus-timing registers (not cartridge-domain; see the matching
+// comment in ed64_xseries_ll.c).
+#define PI_BSD_DOM1_LAT_REG         ((volatile uint32_t *) (0xA4600014))
+#define PI_BSD_DOM1_PWD_REG         ((volatile uint32_t *) (0xA4600018))
+#define PI_BSD_DOM1_PGS_REG         ((volatile uint32_t *) (0xA460001C))
+#define PI_BSD_DOM1_RLS_REG         ((volatile uint32_t *) (0xA4600020))
+
 static ed64_save_type_t current_save_type = ED64_SAVE_TYPE_NONE;
 /** @brief Pending save-writeback state, persisted across the RESET button (see ed64_xseries_flush_pending_writeback). */
 static ed64_pseudo_writeback_t pending_writeback;
@@ -179,6 +186,17 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
     if (f_close(&fil) != FR_OK) {
         return FLASHCART_ERR_LOAD;
     }
+
+    // Different ROMs can expect different PI DOM1 bus timing (the official OS re-applies
+    // this from the ROM header's own bytes 0x00-0x03 before booting - see edReboot() in
+    // its everdrive.c); leaving the FPGA-register-access timing the FPGA reconfigure step
+    // needs (set earlier, in ed64_xseries_ll_configure_fpga()) active instead can leave
+    // some games unable to boot at all.
+    uint8_t *header = (uint8_t *) (ROM_ADDRESS);
+    *PI_BSD_DOM1_LAT_REG = header[3];
+    *PI_BSD_DOM1_PWD_REG = header[2];
+    *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
+    *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
 
     return FLASHCART_OK;
 }

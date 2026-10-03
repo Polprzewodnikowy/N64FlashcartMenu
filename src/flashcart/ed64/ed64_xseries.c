@@ -199,25 +199,6 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
     *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
     *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
 
-    // TEMPORARY DIAGNOSTIC: dump save-type/timing state right before boot to a file -
-    // console_init() is unsafe here (unlike during FPGA reconfigure, display_init() has
-    // already run by this point, since the menu's own UI has been rendering for a while).
-    FIL dbg;
-    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
-        char line[256];
-        UINT bw;
-        int len = snprintf(line, sizeof(line),
-            "current_save_type (wanted) = %d\n"
-            "ROM_CFG readback (actual)  = %d\n"
-            "header[0..3] = %02x %02x %02x %02x\n"
-            "DOM1 LAT=%02x PWD=%02x PGS=%02x RLS=%02x\n",
-            current_save_type, ed64_bios_get_save_type(),
-            header[0], header[1], header[2], header[3],
-            header[3], header[2], header[1] & 0x0F, header[1] >> 4);
-        f_write(&dbg, line, (UINT) (len), &bw);
-        f_close(&dbg);
-    }
-
     return FLASHCART_OK;
 }
 
@@ -260,6 +241,20 @@ static flashcart_err_t ed64_xseries_load_file (char *file_path, uint32_t rom_off
 }
 
 static flashcart_err_t ed64_xseries_load_save (char *save_path) {
+    // TEMPORARY DIAGNOSTIC: dump the save type as actually configured by set_save_type()
+    // (called before load_save() per flashcart_load_save()'s own sequencing) to a file.
+    FIL dbg;
+    if (f_open(&dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
+        char line[256];
+        UINT bw;
+        int len = snprintf(line, sizeof(line),
+            "ed64_xseries_load_save: current_save_type = %d\n"
+            "ROM_CFG readback (actual)  = %d\n",
+            current_save_type, ed64_bios_get_save_type());
+        f_write(&dbg, line, (UINT) (len), &bw);
+        f_close(&dbg);
+    }
+
     if (current_save_type == ED64_SAVE_TYPE_NONE) {
         return FLASHCART_OK;
     }

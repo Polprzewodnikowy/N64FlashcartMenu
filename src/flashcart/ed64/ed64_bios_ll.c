@@ -38,11 +38,17 @@ ed64_cart_id_t ed64_bios_get_cart_id (void) {
 }
 
 void ed64_bios_set_save_type (ed64_save_type_t save_type) {
-    io_write(ED64_BIOS_REG_ROM_CFG, (uint32_t) (save_type));
+    // Unlike EDID/BOOT_CFG above, this register proved unreliable via plain io_write() -
+    // use PI DMA instead, matching the official OS's bi_reg_wr() (everdrive.c), which
+    // always goes through a DMA-style PI transfer for every FPGA command register.
+    uint32_t aligned_value __attribute__((aligned(8))) = (uint32_t) (save_type);
+    pi_dma_write_data(&aligned_value, (void *) (ED64_BIOS_REG_ROM_CFG), sizeof(aligned_value));
 }
 
 ed64_save_type_t ed64_bios_get_save_type (void) {
-    return (ed64_save_type_t) (io_read(ED64_BIOS_REG_ROM_CFG) & 0xFFFF);
+    uint32_t aligned_value __attribute__((aligned(8)));
+    pi_dma_read_data((void *) (ED64_BIOS_REG_ROM_CFG), &aligned_value, sizeof(aligned_value));
+    return (ed64_save_type_t) (aligned_value & 0xFFFF);
 }
 
 /* flashram_init() reconfigures PI DOM2 for its own command protocol; re-apply libdragon's

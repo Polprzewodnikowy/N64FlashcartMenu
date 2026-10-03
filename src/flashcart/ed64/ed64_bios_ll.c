@@ -52,10 +52,17 @@ static void ed64_bios_set_sram_pi_timing (void) {
 
 void ed64_bios_read_save (ed64_save_type_t save_type, void *buffer, size_t size) {
     if ((save_type == ED64_SAVE_TYPE_EEPROM_4K) || (save_type == ED64_SAVE_TYPE_EEPROM_16K)) {
+        // The cart only answers joybus EEPROM probes while configured as one; FPGA
+        // reconfigure (which always runs on boot, including after a RESET) resets this
+        // register, and libdragon's own EEPROM probe caches its result for the whole boot
+        // session on first use - an unconfigured cart at that moment permanently breaks
+        // EEPROM access until the next power-on.
+        ed64_bios_set_save_type(save_type);
         uint8_t *dst = (uint8_t *) (buffer);
         for (size_t offset = 0; offset < size; offset += 8) {
             eeprom_read(offset / 8, &dst[offset]);
         }
+        ed64_bios_set_save_type(ED64_SAVE_TYPE_NONE);
         return;
     }
 
@@ -78,10 +85,13 @@ void ed64_bios_read_save (ed64_save_type_t save_type, void *buffer, size_t size)
 
 void ed64_bios_write_save (ed64_save_type_t save_type, void *buffer, size_t size) {
     if ((save_type == ED64_SAVE_TYPE_EEPROM_4K) || (save_type == ED64_SAVE_TYPE_EEPROM_16K)) {
+        // See the matching comment in ed64_bios_read_save().
+        ed64_bios_set_save_type(save_type);
         uint8_t *src = (uint8_t *) (buffer);
         for (size_t offset = 0; offset < size; offset += 8) {
             eeprom_write(offset / 8, &src[offset]);
         }
+        ed64_bios_set_save_type(ED64_SAVE_TYPE_NONE);
         return;
     }
 

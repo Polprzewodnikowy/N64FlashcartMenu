@@ -16,7 +16,6 @@
 #include "ed64_xseries_ll.h"
 #include "ed64_xseries.h"
 #include "ed64_pseudo_state.h"
-#include "../../boot/cic.h"
 
 #define ROM_ADDRESS                 (0xB0000000)
 #define ED64_XSERIES_MAX_SAVE_SIZE  (KiB(128))
@@ -140,22 +139,22 @@ static flashcart_err_t ed64_xseries_deinit (void) {
     // time now that no further SD card access will happen before the game boots.
     ed64_bios_set_save_type(current_save_type);
 
-    // TEMPORARY DIAGNOSTIC: check whether the save-type value just written already
-    // corrupts the very next ROM read (used by boot.c's own CIC detection later) - tests
-    // the hypothesis that SRAM-type ROM_CFG values interfere with normal ROM reads,
-    // while EEPROM values don't. Reuses the shared scratch buffer (already proven safe
-    // here, unlike a stack array inside load_rom()).
-    uint8_t *cic_probe_buf = ed64_bios_save_buffer;
-    memcpy(cic_probe_buf, (void *) (ROM_ADDRESS + 0x40), IPL3_LENGTH);
-    cic_type_t cic_probe = cic_detect(cic_probe_buf);
-    char cic_probe_line[64];
-    int cic_probe_len = snprintf(cic_probe_line, sizeof(cic_probe_line),
-        "ed64_xseries_deinit: cic_type right after set_save_type = %d\n", (int) (cic_probe));
-    FIL cic_probe_dbg;
-    if (f_open(&cic_probe_dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
+    // TEMPORARY DIAGNOSTIC: dump a few raw IPL3 bytes right after the save-type write, to
+    // compare against what boot.c's own CIC detection sees later - a plain byte dump (no
+    // loop/computation) rather than running the full CIC checksum algorithm here, since
+    // that crashed (twice, in two different functions) and is likely unsafe to run this
+    // late in menu_deinit(), before main.c's disable_interrupts() has run.
+    uint8_t *ipl3_bytes = (uint8_t *) (ROM_ADDRESS + 0x40);
+    char ipl3_line[96];
+    int ipl3_line_len = snprintf(ipl3_line, sizeof(ipl3_line),
+        "ed64_xseries_deinit: IPL3[0..7] = %02x %02x %02x %02x %02x %02x %02x %02x\n",
+        ipl3_bytes[0], ipl3_bytes[1], ipl3_bytes[2], ipl3_bytes[3],
+        ipl3_bytes[4], ipl3_bytes[5], ipl3_bytes[6], ipl3_bytes[7]);
+    FIL ipl3_dbg;
+    if (f_open(&ipl3_dbg, "/menu/debug_ed64.txt", FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
         UINT bw;
-        f_write(&cic_probe_dbg, cic_probe_line, (UINT) (cic_probe_len), &bw);
-        f_close(&cic_probe_dbg);
+        f_write(&ipl3_dbg, ipl3_line, (UINT) (ipl3_line_len), &bw);
+        f_close(&ipl3_dbg);
     }
 
     // TEMPORARY DIAGNOSTIC: exhaustively probe how ROM_CFG behaves (DMA vs plain

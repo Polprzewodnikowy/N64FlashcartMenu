@@ -241,9 +241,11 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
 
     // TEMPORARY DIAGNOSTIC: run CIC detection on the just-loaded ROM data right now,
     // before any save-type/GAMEMOD register work happens, to tell apart "the ROM data
-    // itself is already bad at load time" from "something afterward corrupts it".
-    uint8_t ipl3_probe[IPL3_LENGTH] __attribute__((aligned(8)));
-    memcpy(ipl3_probe, (void *) (ROM_ADDRESS + 0x40), sizeof(ipl3_probe));
+    // itself is already bad at load time" from "something afterward corrupts it". Uses
+    // the shared save-transfer scratch buffer rather than a stack-local array - IPL3_LENGTH
+    // (4032 bytes) is too large to put on the stack this deep in the call chain.
+    uint8_t *ipl3_probe = ed64_bios_save_buffer;
+    memcpy(ipl3_probe, (void *) (ROM_ADDRESS + 0x40), IPL3_LENGTH);
     cic_type_t cic_probe = cic_detect(ipl3_probe);
     char cic_line[64];
     int cic_line_len = snprintf(cic_line, sizeof(cic_line),

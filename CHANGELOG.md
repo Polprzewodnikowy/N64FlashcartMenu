@@ -14,6 +14,7 @@
 	- Menu now dogfoods embedded metadata.
 	- Menu now shows embedded metadata box/game/screenshot images in the boxart view.
 	- Menu colour themes.
+	- EverDrive-64 V series (V2/V2.5/V3) and X series (X5/X7): implemented EEPROM, SRAM, banked SRAM, and FlashRAM save support, with saves written back to the SD card after the RESET button is pressed (hardware can't monitor save writes live, so an unmodified save is skipped rather than needlessly rewritten, matching the official OS's own behavior). A true cold power-on no longer touches the SD card for this check at all, using the cart's own persistent "returned from a game" hardware flag (also used by the official OS) to know when it's actually needed. V2/V2.5/V3 and X5/X7 now also load their full-feature personality (RTC/USB/save registers) on every boot, same as the official OS; original V1 boards (which the official OS no longer supports either) skip this step and keep working in their basic, pre-existing capacity rather than being blocked by it.
 
 
 - **Bug Fixes**

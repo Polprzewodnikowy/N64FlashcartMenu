@@ -17,7 +17,6 @@ void ed64_pseudo_state_load (ed64_pseudo_writeback_t *state) {
     ini_t *ini = ini_try_load(ed64_pseudo_state_path);
 
     state->is_expecting_save_writeback = ini_get_bool(ini, "ed64", "is_expecting_save_writeback", false);
-    state->is_fram_save_type = ini_get_bool(ini, "ed64", "is_fram_save_type", false);
     state->save_type = (flashcart_save_type_t) ini_get_int(ini, "ed64", "save_type", FLASHCART_SAVE_TYPE_NONE);
 
     if (state->last_save_path) {
@@ -32,7 +31,6 @@ void ed64_pseudo_state_save (ed64_pseudo_writeback_t *state) {
     ini_t *ini = ini_try_load(ed64_pseudo_state_path);
 
     ini_set_bool(ini, "ed64", "is_expecting_save_writeback", state->is_expecting_save_writeback);
-    ini_set_bool(ini, "ed64", "is_fram_save_type", state->is_fram_save_type);
     ini_set_int(ini, "ed64", "save_type", state->save_type);
     ini_set_string(ini, "ed64", "last_save_path", state->last_save_path ? state->last_save_path : "");
 

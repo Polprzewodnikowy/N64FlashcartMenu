@@ -41,6 +41,10 @@ void ed64_bios_set_save_type (ed64_save_type_t save_type) {
     io_write(ED64_BIOS_REG_ROM_CFG, (uint32_t) (save_type));
 }
 
+ed64_save_type_t ed64_bios_get_save_type (void) {
+    return (ed64_save_type_t) (io_read(ED64_BIOS_REG_ROM_CFG) & 0xFFFF);
+}
+
 /* flashram_init() reconfigures PI DOM2 for its own command protocol; re-apply libdragon's
  * own sram.c timing explicitly before plain SRAM access rather than trusting leftover state. */
 static void ed64_bios_set_sram_pi_timing (void) {

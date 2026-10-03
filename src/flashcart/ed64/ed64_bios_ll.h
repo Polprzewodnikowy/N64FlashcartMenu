@@ -65,6 +65,13 @@ ed64_cart_id_t ed64_bios_get_cart_id (void);
 void ed64_bios_set_save_type (ed64_save_type_t save_type);
 
 /**
+ * @brief TEMPORARY DIAGNOSTIC: read back the cart's currently configured save type.
+ * 
+ * @return ed64_save_type_t The save type currently configured.
+ */
+ed64_save_type_t ed64_bios_get_save_type (void);
+
+/**
  * @brief Read the cart save RAM/EEPROM contents into a buffer.
  * 
  * @param save_type The save type to read as.

@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -197,6 +198,17 @@ static flashcart_err_t ed64_xseries_load_rom (char *rom_path, flashcart_progress
     *PI_BSD_DOM1_PWD_REG = header[2];
     *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
     *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
+
+    // TEMPORARY DIAGNOSTIC: print save-type/timing state right before boot and halt.
+    console_init();
+    console_set_render_mode(RENDER_MANUAL);
+    printf("ed64x pre-boot state\n\n");
+    printf("current_save_type (wanted) = %d\n", current_save_type);
+    printf("ROM_CFG readback (actual)  = %d\n", ed64_bios_get_save_type());
+    printf("header[0..3] = %02x %02x %02x %02x\n", header[0], header[1], header[2], header[3]);
+    printf("DOM1 LAT=%02x PWD=%02x PGS=%02x RLS=%02x\n", header[3], header[2], header[1] & 0x0F, header[1] >> 4);
+    console_render();
+    while (true) {}
 
     return FLASHCART_OK;
 }

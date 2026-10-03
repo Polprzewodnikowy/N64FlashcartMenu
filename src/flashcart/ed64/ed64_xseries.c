@@ -27,6 +27,10 @@
 #define PI_BSD_DOM1_PWD_REG         ((volatile uint32_t *) (0xA4600018))
 #define PI_BSD_DOM1_PGS_REG         ((volatile uint32_t *) (0xA460001C))
 #define PI_BSD_DOM1_RLS_REG         ((volatile uint32_t *) (0xA4600020))
+#define PI_BSD_DOM2_LAT_REG         ((volatile uint32_t *) (0xA4600024))
+#define PI_BSD_DOM2_PWD_REG         ((volatile uint32_t *) (0xA4600028))
+#define PI_BSD_DOM2_PGS_REG         ((volatile uint32_t *) (0xA460002C))
+#define PI_BSD_DOM2_RLS_REG         ((volatile uint32_t *) (0xA4600030))
 
 static ed64_save_type_t current_save_type = ED64_SAVE_TYPE_NONE;
 /** @brief Pending save-writeback state, persisted across the RESET button (see ed64_xseries_flush_pending_writeback). */
@@ -163,6 +167,16 @@ static flashcart_err_t ed64_xseries_deinit (void) {
     *PI_BSD_DOM1_PWD_REG = header[2];
     *PI_BSD_DOM1_PGS_REG = header[1] & 0x0F;
     *PI_BSD_DOM1_RLS_REG = header[1] >> 4;
+
+    // SRAM/FlashRAM save transfers (ed64_bios_set_sram_pi_timing()) leave PI DOM2 at
+    // menu-internal access timing; the official OS unconditionally resets DOM2 to this
+    // fixed value in edReboot() regardless of save type, as part of the same final
+    // pre-boot step as the DOM1 reset above. EEPROM-only games never touch DOM2 at all,
+    // which is why this was only ever observed to matter for SRAM/FlashRAM saves.
+    *PI_BSD_DOM2_LAT_REG = 0x40;
+    *PI_BSD_DOM2_PWD_REG = 0x12;
+    *PI_BSD_DOM2_PGS_REG = 0x07;
+    *PI_BSD_DOM2_RLS_REG = 0x03;
 
     return FLASHCART_OK;
 }

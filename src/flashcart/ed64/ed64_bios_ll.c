@@ -29,13 +29,17 @@ uint8_t ed64_bios_save_buffer[ED64_BIOS_MAX_SAVE_SIZE] __attribute__((aligned(8)
 #define PI_BSD_DOM2_RLS             ((volatile uint32_t *) (0xA4600030))
 
 ed64_cart_id_t ed64_bios_get_cart_id (void) {
-    uint32_t id = io_read(ED64_BIOS_REG_EDID);
+    // The official OS reads EDID via its own bi_reg_rd() (always PI DMA, sysPI_rd) for
+    // every model uniformly, never a plain io_read(). X series tolerated a plain poke here,
+    // but V series' physical CPLD may not - match the official pattern for both.
+    uint32_t aligned_value __attribute__((aligned(8)));
+    pi_dma_read_data((void *) (ED64_BIOS_REG_EDID), &aligned_value, sizeof(aligned_value));
 
-    if ((id & 0xFFFF0000) != ED64_BIOS_EDID_SIGNATURE) {
+    if ((aligned_value & 0xFFFF0000) != ED64_BIOS_EDID_SIGNATURE) {
         return ED64_CART_ID_UNKNOWN;
     }
 
-    return (ed64_cart_id_t) (id & 0xFFFF);
+    return (ed64_cart_id_t) (aligned_value & 0xFFFF);
 }
 
 void ed64_bios_set_save_type (ed64_save_type_t save_type) {

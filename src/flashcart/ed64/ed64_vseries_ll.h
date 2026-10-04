@@ -17,6 +17,14 @@
  */
 
 /**
+ * @brief Unlock the shared FPGA command register bank (KEY+SYS_CFG) so EDID/cart-id becomes
+ *        readable. The official OS's legacyInit() does this as its very first action, before
+ *        any hardware detection at all - cart-id is not reliably readable without it, even
+ *        before attempting any FPGA reconfiguration.
+ */
+void ed64_vseries_ll_unlock_shared_bank (void);
+
+/**
  * @brief Load and apply an RLE-compressed FPGA/CPLD image, switching the cart from its
  *        minimal cold-boot personality to the full one (RTC/USB/save emulation registers,
  *        shared with X series - see ed64_bios_ll.h). This is volatile (lost on power-off)

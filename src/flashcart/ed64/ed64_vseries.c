@@ -90,6 +90,10 @@ static flashcart_err_t ed64_vseries_flush_pending_writeback (void) {
 }
 
 static flashcart_err_t ed64_vseries_init (void) {
+    // EDID/cart-id is not reliably readable until this shared bank is unlocked - matches
+    // the official OS's legacyInit(), whose very first action is this same unlock, before
+    // any hardware detection (including its own cart-id check) happens at all.
+    ed64_vseries_ll_unlock_shared_bank();
     ed64_cart_id_t cart_id = ed64_bios_get_cart_id();
 
     // V series carts boot into a minimal CPLD personality; load the full one (RTC/USB/save

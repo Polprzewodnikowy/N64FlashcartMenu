@@ -46,6 +46,15 @@
  * loading). */
 static uint8_t ed64_vseries_ll_compressed_buffer[ED64_VSERIES_FPGA_COMPRESSED_MAX_SIZE];
 
+/* Forward declaration - ed64_vseries_ll_unlock_shared_bank() (public) needs this, and it's
+ * also used internally in the reconfigure retry loop below. */
+static void ed64_vseries_ll_reg_write (uint32_t address, uint32_t value);
+
+void ed64_vseries_ll_unlock_shared_bank (void) {
+    ed64_vseries_ll_reg_write(ED64_VSERIES_SHARED_REG_KEY, ED64_VSERIES_SHARED_KEY_UNLOCK);
+    ed64_vseries_ll_reg_write(ED64_VSERIES_SHARED_REG_SYS_CFG, ED64_VSERIES_SHARED_SYS_CFG_SDRAM_ON);
+}
+
 /* The official firmware accesses every legacy CPLD register (reg_wr_le()/reg_rd_le()) and
  * the shared FPGA command bank (bi_reg_wr()/bi_reg_rd()) through a real PI DMA transfer
  * rather than a direct io_write()/io_read() poke - matches the fix X series needed for its

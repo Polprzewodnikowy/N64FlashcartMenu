@@ -3,6 +3,7 @@
 #include <libdragon.h>
 
 #include "utils/utils.h"
+#include "../flashcart_utils.h"
 #include "ed64_bios_ll.h"
 #include "ed64_vseries_ll.h"
 
@@ -17,6 +18,23 @@
 #define ED64_VSERIES_CFG_SDRAM_ON      (1 << 0)
 #define ED64_VSERIES_KEY_UNLOCK        (0x1234)
 
+/* Shared FPGA command register bank (see ed64_bios_ll.c / ed64_xseries_ll.c) - EDID/cart-id
+ * becomes readable here only once this bank is unlocked, exactly like X series. The
+ * official OS's legacyInitFpga() calls bi_unlock_regs() (this same KEY+SYS_CFG write) on
+ * every retry iteration while waiting for the cart id to become valid - not the legacy CPLD
+ * key above, which only unlocks the legacy bank itself, not this separate shared one. */
+#define ED64_VSERIES_SHARED_BANK_BASE      (0x1F800000)
+#define ED64_VSERIES_SHARED_REG_SYS_CFG    (ED64_VSERIES_SHARED_BANK_BASE + 0x8000)
+#define ED64_VSERIES_SHARED_REG_KEY        (ED64_VSERIES_SHARED_BANK_BASE + 0x8004)
+#define ED64_VSERIES_SHARED_KEY_UNLOCK     (0xAA55)
+#define ED64_VSERIES_SHARED_SYS_CFG_SDRAM_ON (0)
+
+/* N64 PI controller's own bus-timing registers (not cartridge-domain; see the matching
+ * comment in ed64_xseries_ll.c). The official OS's legacyBcfgSave()/legacyInit() both note
+ * "less than 03 does not work for v2/v3" for this specific field - required for the legacy
+ * CPLD's own register bank to respond at all, not just for the FPGA bitstream load. */
+#define PI_BSD_DOM2_RLS_REG             ((volatile uint32_t *) (0xA4600030))
+
 #define ED64_VSERIES_FPGA_CONFIG_RETRIES       (100)
 #define ED64_VSERIES_FPGA_COMPRESSED_MAX_SIZE   (KiB(64)) // Largest known file is ~57 KiB.
 
@@ -27,6 +45,16 @@
  * exhaust memory badly enough to crash unrelated later allocations (e.g. menu sprite/font
  * loading). */
 static uint8_t ed64_vseries_ll_compressed_buffer[ED64_VSERIES_FPGA_COMPRESSED_MAX_SIZE];
+
+/* The official firmware accesses every legacy CPLD register (reg_wr_le()/reg_rd_le()) and
+ * the shared FPGA command bank (bi_reg_wr()/bi_reg_rd()) through a real PI DMA transfer
+ * rather than a direct io_write()/io_read() poke - matches the fix X series needed for its
+ * own command register bank (a direct poke isn't reliably honored by either bank's
+ * hardware). */
+static void ed64_vseries_ll_reg_write (uint32_t address, uint32_t value) {
+    uint32_t aligned_value __attribute__((aligned(8))) = value;
+    pi_dma_write_data(&aligned_value, (void *) (address), sizeof(aligned_value));
+}
 
 /* Streams a (control, data) byte-pair RLE file straight into the 16-bit config port word
  * by word, decoding from the fully-read-in compressed buffer in a tight loop so there's no
@@ -76,7 +104,7 @@ static bool ed64_vseries_ll_stream_image (const char *image_path) {
             }
             word_buffer[word_fill++] = (control == 1) ? *src++ : data;
             if (word_fill == sizeof(word_buffer)) {
-                io_write(ED64_VSERIES_REG_FPGA_DATA, (word_buffer[0] << 8) | word_buffer[1]);
+                ed64_vseries_ll_reg_write(ED64_VSERIES_REG_FPGA_DATA, (word_buffer[0] << 8) | word_buffer[1]);
                 word_fill = 0;
             }
         }
@@ -84,29 +112,42 @@ static bool ed64_vseries_ll_stream_image (const char *image_path) {
 
     // Config port transfers whole 16-bit words only; pad a trailing odd byte if needed.
     if (word_fill == 1) {
-        io_write(ED64_VSERIES_REG_FPGA_DATA, (word_buffer[0] << 8) | 0xFF);
+        ed64_vseries_ll_reg_write(ED64_VSERIES_REG_FPGA_DATA, (word_buffer[0] << 8) | 0xFF);
     }
 
     return true;
 }
 
 bool ed64_vseries_ll_configure_fpga (const char *image_path) {
-    io_write(ED64_VSERIES_REG_CFG, 0);
-    io_write(ED64_VSERIES_REG_FPGA_CNT, 0);
+    // Required for the legacy CPLD bank to respond at all on V2/V3 (see the register
+    // definition comment above) - save/restore around the whole reconfigure, matching the
+    // official OS's own legacyInit()/legacyBcfgSave().
+    uint32_t old_dom2_rls = *PI_BSD_DOM2_RLS_REG;
+    *PI_BSD_DOM2_RLS_REG = 0x03;
+
+    // Unlocks the legacy CPLD bank itself (separate from the shared bank unlocked in the
+    // retry loop below) - matches the official OS's legacyInit(), which writes this before
+    // ever touching REG_CFG.
+    ed64_vseries_ll_reg_write(ED64_VSERIES_REG_KEY, ED64_VSERIES_KEY_UNLOCK);
+    ed64_vseries_ll_reg_write(ED64_VSERIES_REG_CFG, 0);
+    ed64_vseries_ll_reg_write(ED64_VSERIES_REG_FPGA_CNT, 0);
     wait_ms(5);
-    io_write(ED64_VSERIES_REG_FPGA_CNT, 1);
+    ed64_vseries_ll_reg_write(ED64_VSERIES_REG_FPGA_CNT, 1);
     wait_ms(5);
 
     bool streamed = ed64_vseries_ll_stream_image(image_path);
 
     for (int i = 0; i < 512; i++) {
-        io_write(ED64_VSERIES_REG_FPGA_DATA, 0xFFFF);
+        ed64_vseries_ll_reg_write(ED64_VSERIES_REG_FPGA_DATA, 0xFFFF);
     }
 
     bool configured = false;
     if (streamed) {
         for (int attempt = 0; attempt < ED64_VSERIES_FPGA_CONFIG_RETRIES; attempt++) {
-            io_write(ED64_VSERIES_REG_KEY, ED64_VSERIES_KEY_UNLOCK);
+            // Unlock the SHARED bank that ed64_bios_get_cart_id() actually reads EDID from -
+            // not the legacy CPLD key again (see the register definition comment above).
+            ed64_vseries_ll_reg_write(ED64_VSERIES_SHARED_REG_KEY, ED64_VSERIES_SHARED_KEY_UNLOCK);
+            ed64_vseries_ll_reg_write(ED64_VSERIES_SHARED_REG_SYS_CFG, ED64_VSERIES_SHARED_SYS_CFG_SDRAM_ON);
 
             if (ed64_bios_get_cart_id() != ED64_CART_ID_UNKNOWN) {
                 configured = true;
@@ -117,7 +158,8 @@ bool ed64_vseries_ll_configure_fpga (const char *image_path) {
     }
 
     // Restore the SDRAM window regardless of outcome; ROM/save access depends on it.
-    io_write(ED64_VSERIES_REG_CFG, ED64_VSERIES_CFG_SDRAM_ON);
+    ed64_vseries_ll_reg_write(ED64_VSERIES_REG_CFG, ED64_VSERIES_CFG_SDRAM_ON);
+    *PI_BSD_DOM2_RLS_REG = old_dom2_rls;
 
     if (!configured) {
         debugf("ed64v: %s: cart id never became recognizable after reconfigure\n", image_path);

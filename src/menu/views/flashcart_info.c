@@ -21,10 +21,10 @@ static const char *format_cart_type () {
             return "64drive";
 
         case CART_EDX:
-            return "Series X EverDrive-64";
+            return "EVERDRIVE64-X";
 
         case CART_ED:
-            return "Series V EverDrive-64";
+            return "EVERDRIVE64-V";
 
         case CART_SC:
             return "SummerCart64";

@@ -1,6 +1,6 @@
 [submodule "libdragon"]
 	path = libdragon
-	url = https://github.com/DragonMinded/libdragon
+	url = https://github.com/n64brew/libdragon
 	branch = preview
 	ignore = dirty
 [submodule "src/libs/libspng"]

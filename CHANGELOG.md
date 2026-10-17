@@ -25,7 +25,37 @@
 
 ### Current known Issues
 - Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
-- Some users have reported crashes in Zelda OOT (anti-piracy checks). Menu V0.2.0 works as expected.
+- PixelFX HDMI mods may need to be updated to latest FW to support display.
+
+### Deprecation notices
+- None.
+
+## Release Notes 2026-10-17 - Tagged 0.3.5
+
+- **New Features**
+	- ~~Browser now allows hiding files and folders with hidden attributes set (thanks [Xeroxxx](https://github.com/Xeroxxx)).~~ Awaiting performance enhancement.
+
+- **Bug Fixes**
+	- Fix: Certain libdragon ROMs between August 2023 and April 2025 stopped working. Added Add VI->CR reset to boot.c
+	- Fix: Certain Aleck64 conversions not working. Added checksum match to boot.c
+
+- **Documentation**
+
+- **Refactor**
+
+- **Other**
+	- Updated the docbuilder Dockerfile.
+	- Updated license options wording for clarity.
+	- Updated PR template checklist items - Add a checkbox for AI helped. 
+
+### Breaking changes
+- None.
+
+### Notes
+- None.
+
+### Current known Issues
+- Fast Rebooting a 64DD disk once will result in a blank screen. Twice will return to menu. This is expected until disk swapping is fully implemented.
 - PixelFX HDMI mods may need to be updated to latest FW to support display.
 
 ### Deprecation notices

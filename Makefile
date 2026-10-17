@@ -222,7 +222,15 @@ sc64: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
 	@cp $< $(OUTPUT_DIR)/sc64menu.n64
 .PHONY: sc64
 
-all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64
+ed64-pro: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+	@cp $< $(OUTPUT_DIR)/menu.n64
+.PHONY: ed64-pro
+
+daisydrive: $(OUTPUT_DIR)/$(PROJECT_NAME).n64
+	@cp $< $(OUTPUT_DIR)/daisymenu.bin
+.PHONY: daisydrive
+
+all: $(OUTPUT_DIR)/$(PROJECT_NAME).n64 64drive ed64 ed64-clone sc64 ed64-pro daisydrive
 .PHONY: all
 
 clean:

@@ -16,6 +16,7 @@
  * @{
  */
 
+bool daisydrive_init_sdfs(const char *storage_prefix, int max_files);
 bool daisydrive_detected();
 flashcart_t *daisydrive_get_flashcart (void);
 

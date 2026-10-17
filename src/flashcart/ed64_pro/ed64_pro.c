@@ -22,7 +22,10 @@ bool ed64_pro_detected() {
     return false;
 }
 
-
+bool ed64_pro_init_sdfs(const char *storage_prefix, int max_files) {
+    // TODO: Implementation for initializing sdfs on ed64_pro
+    return false;
+}
 
 /** @brief Flashcart structure for ed64_pro. */
 static flashcart_t flashcart_ed64_pro = {

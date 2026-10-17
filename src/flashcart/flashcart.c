@@ -159,6 +159,25 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
         }
         return FLASHCART_OK;
     }
+    
+    if (daisydrive_detected()) {
+        *storage_prefix = "sd:/";
+        daisydrive_init_sdfs(*storage_prefix, -1);
+        flashcart = daisydrive_get_flashcart();
+        if ((err = flashcart->init()) != FLASHCART_OK) {
+            return err;
+        }
+        return FLASHCART_OK;
+    }
+    else if (ed64_pro_detected()) {
+        *storage_prefix = "sd:/";
+        ed64_pro_init_sdfs(*storage_prefix, -1);
+        flashcart = ed64_pro_get_flashcart();
+        if ((err = flashcart->init()) != FLASHCART_OK) {
+            return err;
+        }
+        return FLASHCART_OK;
+    }
 
     *storage_prefix = "sd:/";
     bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
@@ -168,7 +187,7 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             flashcart = d64_get_flashcart();
             break;
 
-        case CART_EDX:  // Official EverDrive 64 Series X 
+        case CART_EDX:  // Official EverDrive 64 Series X
             flashcart = ed64_xseries_get_flashcart();
             break;
 
@@ -181,18 +200,10 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             break;
 
         default: // These are not available in libCart, but we can still try to detect them
-            if (daisydrive_detected()) {
-                flashcart = daisydrive_get_flashcart();
-
-            } else if (ed64_pro_detected()) {
-                flashcart = ed64_pro_get_flashcart();
-
-            } else { // Probably emulator
-                    *storage_prefix = "rom:/";
-                    debug_init_isviewer();
-                    break;
-            }
-        }
+            *storage_prefix = "rom:/";
+            debug_init_isviewer();
+            break;
+    }
 
 #ifndef NDEBUG
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here

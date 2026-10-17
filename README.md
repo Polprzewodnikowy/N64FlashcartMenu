@@ -24,13 +24,13 @@ The current state of support is:
 
 ### Work in Progress
 * EverDrive-64 (X and V series)
+* DaisyDrive
+* EverDrive-64 Pro series
 * ED64P (clones)
 
 ### Not yet planned
 * Doctor V64
 * PicoCart
-* DaisyDrive
-* EverDrive-64 Pro series
 
 
 ## Current (notable) menu features

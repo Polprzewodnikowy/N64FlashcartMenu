@@ -23,6 +23,11 @@ bool daisydrive_detected() {
     return false;
 }
 
+bool daisydrive_init_sdfs(const char *storage_prefix, int max_files) {
+    // TODO: Implementation for initializing sdfs on daisydrive 
+    return false;
+}
+
 /** @brief Flashcart structure for daisydrive. */
 static flashcart_t flashcart_daisydrive = {
     .init = NULL,

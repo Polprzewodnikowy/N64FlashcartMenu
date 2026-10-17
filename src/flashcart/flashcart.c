@@ -13,8 +13,10 @@
 #include "utils/utils.h"
 #include "flashcart.h"
 #include "flashcart_utils.h"
+#include "daisydrive/daisydrive.h"
 #include "ed64/ed64_vseries.h"
 #include "ed64/ed64_xseries.h"
+#include "ed64_pro/ed64_pro.h"
 #include "64drive/64drive.h"
 #include "sc64/sc64.h"
 
@@ -161,7 +163,7 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
     *storage_prefix = "sd:/";
     bool sd_card_initialized = debug_init_sdfs(*storage_prefix, -1);
 
-    switch (cart_type) {
+    switch (cart_type) { //libCart detected flashcart type
         case CART_CI:   // 64drive
             flashcart = d64_get_flashcart();
             break;
@@ -178,11 +180,19 @@ flashcart_err_t flashcart_init (const char **storage_prefix) {
             flashcart = sc64_get_flashcart();
             break;
 
-        default:        // Probably emulator
-            *storage_prefix = "rom:/";
-            debug_init_isviewer();
-            break;
-    }
+        default: // These are not available in libCart, but we can still try to detect them
+            if (daisydrive_detected()) {
+                flashcart = daisydrive_get_flashcart();
+
+            } else if (ed64_pro_detected()) {
+                flashcart = ed64_pro_get_flashcart();
+
+            } else { // Probably emulator
+                    *storage_prefix = "rom:/";
+                    debug_init_isviewer();
+                    break;
+            }
+        }
 
 #ifndef NDEBUG
     // NOTE: Some flashcarts doesn't have USB port, can't throw error here

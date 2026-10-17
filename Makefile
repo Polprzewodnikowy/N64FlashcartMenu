@@ -40,7 +40,9 @@ SRCS = \
 	boot/reboot.S \
 	flashcart/64drive/64drive_ll.c \
 	flashcart/64drive/64drive.c \
+	flashcart/daisydrive/daisydrive.c \
 	flashcart/flashcart_utils.c \
+	flashcart/ed64_pro/ed64_pro.c \
 	flashcart/ed64/ed64_vseries.c \
 	flashcart/ed64/ed64_vseries_ll.c \
 	flashcart/ed64/ed64_xseries.c \

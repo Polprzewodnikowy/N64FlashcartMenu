@@ -22,7 +22,7 @@ The current state of support is:
 * SummerCart64
 * 64Drive
 
-### Work in Progress
+### Help wanted (Work in Progress)
 * EverDrive-64 (X and V series)
 * DaisyDrive
 * EverDrive-64 Pro series

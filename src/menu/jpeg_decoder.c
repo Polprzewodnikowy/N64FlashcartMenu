@@ -8,10 +8,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libdragon.h>
+#include <coroutine.h>
 #include "libs/tjpgd/tjpgd.h"
 #include "jpeg_decoder.h"
 
 #define JPEG_WORK_SIZE 4096
+#define JPEG_COROUTINE_STACK_SIZE 4096
+#define JPEG_BLOCKS_PER_POLL 8
 
 typedef struct {
     JDEC jd;
@@ -27,10 +30,15 @@ typedef struct {
     float progress;
     jpeg_callback_t *callback;
     void *callback_data;
+    coroutine_t *coroutine;
+    unsigned blocks_this_poll;
     bool prepared;
+    JRESULT result;
 } jpeg_decoder_t;
 
 static jpeg_decoder_t *decoder;
+
+static void jpeg_decode_coroutine (void *data);
 
 static size_t jpeg_input (JDEC *jd, uint8_t *buffer, size_t size) {
     jpeg_decoder_t *state = jd->device;
@@ -54,6 +62,7 @@ static size_t jpeg_input (JDEC *jd, uint8_t *buffer, size_t size) {
 static void jpeg_decoder_deinit (bool free_image) {
     if (decoder == NULL) return;
 
+    if (decoder->coroutine != NULL) coro_destroy(decoder->coroutine);
     if (decoder->f != NULL) fclose(decoder->f);
     free(decoder->mem_buf);
     free(decoder->work_buf);
@@ -83,7 +92,18 @@ static int jpeg_output (JDEC *jd, void *bitmap, JRECT *rect) {
     }
 
     state->progress = (float) (rect->bottom + 1) / state->dst_h;
+    state->blocks_this_poll++;
+    bool at_end = rect->right + 1 >= state->dst_w
+               && rect->bottom + 1 >= state->dst_h;
+    if (!at_end && state->blocks_this_poll >= JPEG_BLOCKS_PER_POLL) {
+        coro_yield();
+    }
     return 1;
+}
+
+static void jpeg_decode_coroutine (void *data) {
+    jpeg_decoder_t *state = data;
+    state->result = jd_decomp(&state->jd, jpeg_output, state->scale);
 }
 
 static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
@@ -137,6 +157,12 @@ static jpeg_err_t jpeg_decoder_setup (int max_width, int max_height) {
         return JPEG_ERR_OUT_OF_MEM;
     }
 
+    decoder->coroutine = coro_create(jpeg_decode_coroutine, decoder,
+                                     JPEG_COROUTINE_STACK_SIZE);
+    if (decoder->coroutine == NULL) {
+        jpeg_decoder_deinit(true);
+        return JPEG_ERR_OUT_OF_MEM;
+    }
     decoder->prepared = true;
     return JPEG_OK;
 }
@@ -191,12 +217,13 @@ jpeg_err_t jpeg_decoder_start_mem (void *buf, size_t buf_size, int max_width,
 void jpeg_decoder_poll (void) {
     if (decoder == NULL || !decoder->prepared) return;
 
-    JRESULT result = jd_decomp(&decoder->jd, jpeg_output, decoder->scale);
-    jpeg_err_t err = JPEG_OK;
-    if (result != JDR_OK) {
-        err = (result == JDR_MEM1 || result == JDR_MEM2)
+    decoder->blocks_this_poll = 0;
+    coro_resume(decoder->coroutine);
+    if (!coro_finished(decoder->coroutine)) return;
+
+    jpeg_err_t err = decoder->result == JDR_OK ? JPEG_OK
+        : (decoder->result == JDR_MEM1 || decoder->result == JDR_MEM2)
             ? JPEG_ERR_OUT_OF_MEM : JPEG_ERR_BAD_FILE;
-    }
 
     surface_t *image = err == JPEG_OK ? decoder->image : NULL;
     jpeg_callback_t *callback = decoder->callback;

@@ -26,7 +26,7 @@ static int max_scroll;
 #define OSS_LIBRARIES_TEXT \
     "\tlibdragon (UNLICENSE License)\n" \
     "\tlibspng (BSD 2-Clause License)\n" \
-    "\tlibjpeg-turbo (BSD 3-Clause License)\n" \
+    "\tTJpgDec (ChaN permissive license)\n" \
     "\tminimp3 (CC0 1.0 Universal)\n" \
     "\tdr_flac (MIT License)\n" \
     "\tminiz (MIT License)\n"

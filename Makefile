@@ -27,10 +27,6 @@ N64_ROM_EXPANSIONPAK = recommended
 FLAGS ?= -DFEATURE_AUTOLOAD_ROM_ENABLED
 
 N64_CFLAGS += -iquote $(SOURCE_DIR) -iquote $(ASSETS_DIR) -I $(SOURCE_DIR)/libs -isystem $(SOURCE_DIR)/libs/miniz -flto=auto $(FLAGS)
-N64_CFLAGS += -isystem $(SOURCE_DIR)/libs/libjpeg-turbo -isystem $(SOURCE_DIR)/libs/libjpeg-turbo/libjpeg-turbo-src/src
-
-JPEG_DIR = $(SOURCE_DIR)/libs/libjpeg-turbo
-JPEG_LIB = $(JPEG_DIR)/build/libjpeg.a
 
 SRCS = \
 	main.c \
@@ -52,6 +48,7 @@ SRCS = \
 	flashcart/sc64/sc64_ll.c \
 	flashcart/sc64/sc64.c \
 	libs/libspng/spng/spng.c \
+	libs/tjpgd/tjpgd.c \
 	libs/miniz/miniz_tdef.c \
 	libs/miniz/miniz_tinfl.c \
 	libs/miniz/miniz_zip.c \
@@ -188,10 +185,7 @@ $(BUILD_DIR)/$(PROJECT_NAME).dfs: $(FILESYSTEM)
 $(BUILD_DIR)/menu/views/credits.o: .FORCE
 $(BUILD_DIR)/menu/views/credits.o: FLAGS+=-DMENU_VERSION=\"$(MENU_VERSION)\" -DBUILD_TIMESTAMP=\"$(BUILD_TIMESTAMP)\"
 
-$(JPEG_LIB): .FORCE
-	$(MAKE) -C $(JPEG_DIR)
-
-$(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS) $(JPEG_LIB)
+$(BUILD_DIR)/$(PROJECT_NAME).elf: $(OBJS)
 
 disassembly: $(BUILD_DIR)/$(PROJECT_NAME).elf
 	@$(N64_OBJDUMP) -S $< > $(BUILD_DIR)/$(PROJECT_NAME).lst
@@ -237,7 +231,6 @@ clean:
 	@rm -f ./$(FILESYSTEM)
 	@find ./$(FILESYSTEM_DIR)/menu/ -type d -empty -delete
 	@rm -rf ./$(BUILD_DIR) ./$(OUTPUT_DIR)
-	@$(MAKE) -C $(JPEG_DIR) clean
 .PHONY: clean
 
 format:
